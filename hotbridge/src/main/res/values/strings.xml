@@ -1,0 +1,23 @@
+<resources>
+    <string name="btServerMode">Server</string>
+    <string name="btClientMode">Client</string>
+    <string name="btSingleUserMode">Single User</string>
+    <string name="discoverDevices">Discover Devices</string>
+    <string name="btSelectModePrompt">Select Bluetooth Mode:</string>
+    
+    <string name="app_name">Hot Bridge</string>
+    <string name="menuTwoPlayer">2-player</string>
+    <string name="deal">Deal</string>
+    <string name="iconSpade">\u2660</string>
+    <string name="iconHeart">\u2665</string>
+    <string name="iconDiamond">\u2666</string>
+    <string name="iconClub">\u2663</string>
+    <string name="me">Me</string>
+    <string name="us">Us</string>
+    <string name="all">All</string>
+    <string name="bid">Bid</string>
+    <string name="west">West</string>
+    <string name="north">North</string>
+    <string name="east">East</string>
+    <string name="south">South</string>
+</resources>

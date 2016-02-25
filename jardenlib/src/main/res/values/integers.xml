@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="upId">1</integer>
+    <integer name="downId">2</integer>
+    <integer name="leftId">3</integer>
+    <integer name="rightId">4</integer>
+</resources>

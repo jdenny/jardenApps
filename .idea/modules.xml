@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/JardenApps.iml" filepath="$PROJECT_DIR$/JardenApps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bluetoothapplib/bluetoothapplib.iml" filepath="$PROJECT_DIR$/bluetoothapplib/bluetoothapplib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hotbridge/hotbridge.iml" filepath="$PROJECT_DIR$/hotbridge/hotbridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jardenlib/jardenlib.iml" filepath="$PROJECT_DIR$/jardenlib/jardenlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spanish/spanish.iml" filepath="$PROJECT_DIR$/spanish/spanish.iml" />
+    </modules>
+  </component>
+</project>

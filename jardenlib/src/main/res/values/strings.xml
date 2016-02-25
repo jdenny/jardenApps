@@ -1,0 +1,24 @@
+<resources>
+
+    <string name="app_name">JardenAppClassses</string>
+    
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+    
+    <!-- DeviceListActivity -->
+    <string name="scanning">scanning for devices</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+    
+    <!-- Quiz apps -->
+    <string name="correct">right</string>
+    <string name="emptyAnswer">please supply an answer</string>
+    <string name="fail">wrong! the right answer is: </string>
+    <string name="incorrect">wrong; try again</string>
+    
+    
+</resources>

@@ -1,0 +1,99 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <!-- 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+	    <Button
+	        android:id="@+id/repeatButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/repeatStr" />
+	     -->
+    	<Button
+	        android:id="@+id/resetButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/resetStr" />
+    <!--
+	</LinearLayout> -->
+
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+	    <TextView
+	        android:id="@+id/laneALevel"
+	        style="@style/QuizRaceFont"
+	        android:text="@string/one"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" />
+        <jarden.app.race.LaneView
+		 	android:id="@+id/laneA"
+			android:layout_width="@dimen/laneWidth"
+	        android:layout_height="@dimen/laneHeight" />
+    </LinearLayout>
+        
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+	    <TextView
+	        android:id="@+id/laneBLevel"
+	        style="@style/QuizRaceFont"
+	        android:text="@string/one"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" />
+        <jarden.app.race.LaneView
+		 	android:id="@+id/laneB"
+			android:layout_width="@dimen/laneWidth"
+	        android:layout_height="@dimen/laneHeight" />
+    </LinearLayout>
+
+    <!-- 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:id="@+id/laneCLayout" >
+	    <TextView
+	        android:id="@+id/laneCLevel"
+	        style="@style/QuizRaceFont"
+	        android:text="@string/one"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" />
+        <jarden.app.race.LaneView
+		 	android:id="@+id/laneC"
+			android:layout_width="@dimen/laneWidth"
+	        android:layout_height="@dimen/laneHeight" />
+    </LinearLayout>
+     -->
+
+    <EditText
+        android:id="@+id/answerEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="20sp"
+	    android:imeOptions="actionGo"
+	    android:inputType="number|numberSigned"
+        android:hint="@string/numberPrompt"
+	    android:singleLine="true" >
+	        <requestFocus />
+    </EditText>
+    
+    <TextView
+        android:id="@+id/statusTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/questionTextFieldSize" />
+    
+</LinearLayout>
