@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity
 				"MainActivity.onCreate(savedInstanceState is " +
 				(savedInstanceState==null?"":"not ") + "null)");
 		getEngSpaDAO();
-		sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+		this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_main);
-//!!	Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-//		setSupportActionBar(toolBar);
-//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolBar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

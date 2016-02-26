@@ -18,7 +18,7 @@ import jarden.quiz.Quiz;
  * questionStyle & answerStyle: printed or spoken; see EngSpaFragment.currentQuestionStyle
  */
 public class EngSpaQuiz extends Quiz {
-	static interface QuizEventListener {
+	public interface QuizEventListener {
 		void onNewLevel();
 		void onTopicComplete();
 	}
