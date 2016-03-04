@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.content.Context;
@@ -28,11 +29,13 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,9 +43,10 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
-		ListView.OnItemClickListener {
+		ListView.OnItemClickListener, View.OnClickListener {
     public static final String TAG = "SpanishMain";
-	
+	public static final String SHOW_HELP_KEY = "SHOW_HELP_KEY";
+
     private static final String TITLE_KEY = "title";
     private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
     private static final String UPDATES_VERSION_KEY = "DataVersion";
@@ -72,7 +76,11 @@ public class MainActivity extends AppCompatActivity
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private String[] drawerTitles;
+	private ActionBarDrawerToggle drawerToggle;
 	private String engSpaTitle;
+	private String appTitle;
+	private TextView helpTextView;
+	private CheckBox showHelpCheckBox;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +93,20 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolBar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
+		this.helpTextView = (TextView) findViewById(R.id.helpTextView);
+		this.helpTextView.setMovementMethod(new ScrollingMovementMethod());
+		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
+		this.showHelpCheckBox.setOnClickListener(this);
+		boolean showHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
+		this.showHelpCheckBox.setChecked(showHelp);
+		setHelp(R.string.helpHomePage);
+		if (!showHelp) this.helpTextView.setVisibility(View.GONE);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		this.drawerList = (ListView) findViewById(R.id.left_drawer);
 		Resources resources = getResources();
+		this.appTitle = resources.getString(R.string.app_name);
 		this.drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
 		TypedArray iconArray = resources.obtainTypedArray(R.array.navigationDrawIcons);
 		int drawerTitlesLength = drawerTitles.length;
@@ -103,7 +119,7 @@ public class MainActivity extends AppCompatActivity
 				R.layout.drawer_list_item, drawerItems);
 		this.drawerList.setAdapter(adapter);
         this.drawerList.setOnItemClickListener(this);
-        
+
 		if (savedInstanceState == null) {
 			this.currentFragmentTag = ENGSPA;
 		} else {
@@ -116,8 +132,46 @@ public class MainActivity extends AppCompatActivity
 			String title = savedInstanceState.getString(TITLE_KEY);
 			if (title != null) setTitle(title);
 		}
+		this.drawerToggle = new ActionBarDrawerToggle(
+				this, drawerLayout,
+				R.string.drawer_open,
+				R.string.drawer_close) {
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				getSupportActionBar().setTitle(engSpaTitle);
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				getSupportActionBar().setTitle(appTitle);
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+			}
+		};
+		drawerLayout.addDrawerListener(drawerToggle);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 		loadDB();
 	}
+
+	@Override // EngSpaActivity
+	public void setHelp(int helpId) {
+		this.helpTextView.setText(helpId);
+	}
+
+	/* Called whenever we call invalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content view
+		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onPrepareOptionsMenu(); drawerOpen=" + drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
 	/*
 	 * use engspaversion.txt and sharedPreferences to see if there
 	 * is a new version of local resource file engspa.txt, and if
@@ -134,23 +188,20 @@ public class MainActivity extends AppCompatActivity
 			if (version <= savedVersion) {
 				dbLoadComplete();
 			} else {
-				String statusMessage =
-					(savedVersion == 0)?"Loading Spanish dictionary":
-					"Loading new dictionary version";
-				setStatus(statusMessage + "; please be patient with us!");
+				int statusId =
+					(savedVersion == 0)?R.string.loadingDB:R.string.reloadingDB;
+				setStatus(statusId);
 				setProgressBarVisible(true);
 				new Thread(new Runnable() {
-					private String threadResult;
 					@Override
 					public void run() {
-						threadResult = "rows inserted into database: " +
-								engSpaDAO.newDictionary();
+						engSpaDAO.newDictionary();
 						SharedPreferences.Editor editor = sharedPreferences.edit();
 						editor.putInt(ENGSPA_TXT_VERSION_KEY, version);
 						editor.commit();
 						runOnUiThread(new Runnable() {
 							public void run() {
-								setStatus(threadResult);
+								setStatus(R.string.loadDBDone);
 								setProgressBarVisible(false);
 								dbLoadComplete();
 							}
@@ -160,7 +211,7 @@ public class MainActivity extends AppCompatActivity
 			}
 		} catch (IOException e) {
 			Log.e(getTag(), "MainActivity.loadDB(): " + e);
-			setStatus("error loading database: " + e);
+			setStatus(R.string.errorLoadingDB);
 		}
 	}
 	private void dbLoadComplete() {
@@ -217,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 			this.engSpaFragment.speakSpanish(this.currentFragmentTag.equals(ENGSPA));
 			return true;
 		} else if (id == R.id.helpButton) {
-			this.statusTextView.setText(R.string.tipTip);
+			this.helpTextView.setText(R.string.tipTip);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -231,10 +282,9 @@ public class MainActivity extends AppCompatActivity
 			currentFragment = this.engSpaFragment;
 			setTitle(this.engSpaTitle);
 		}
-		/* TODO: what happens here?
 		if (drawerLayout.isDrawerOpen(drawerList)) {
 			super.onBackPressed();
-		} */
+		}
 	}
 
 	@Override // EngSpaActivity
@@ -242,6 +292,7 @@ public class MainActivity extends AppCompatActivity
 		if (this.topicDialog == null) this.topicDialog = new TopicDialog();
 		this.topicDialog.show(getSupportFragmentManager(), "TopicDialog");
 	}
+
 	@Override // TopicDialog.TopicListener
 	public void onTopicSelected(String topic) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
@@ -383,13 +434,30 @@ public class MainActivity extends AppCompatActivity
 	}
 	
 	@Override // EngSpaActivity
-	public void setStatus(String status) {
-		this.statusTextView.setText(status);
+	public void setStatus(int statusId) {
+		this.statusTextView.setText(statusId);
 	}
+
+	@Override // EngSpaActivity
+	public void setStatus(String statusText) {
+		this.statusTextView.setText(statusText);
+	}
+
 	@Override // EngSpaActivity
 	public String getTag() {
 		return TAG;
 	}
+
+	@Override // EngSpaActivity
+	public void onLost() {
+		engSpaFragment.onLost();
+	}
+
+	@Override // EngSpaActivity
+	public void onWrongAnswer() {
+		engSpaFragment.onWrongAnswer();
+	}
+
 	/**
 	 * questionSequence is a sequence number that is incremented
 	 * each time a question is asked.
@@ -424,17 +492,32 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // EngSpaActivity
 	public void setProgressBarVisible(boolean visible) {
-		progressBar.setVisibility(visible?ProgressBar.VISIBLE:ProgressBar.INVISIBLE);
+		progressBar.setVisibility(visible?ProgressBar.VISIBLE:ProgressBar.GONE);
 	}
-	@Override
+	@Override // EngSpaActivity
 	public SharedPreferences getSharedPreferences() {
 		return this.sharedPreferences;
 	}
-	@Override
+	@Override // EngSpaActivity
 	public EngSpaDAO getEngSpaDAO() {
 		if (this.engSpaDAO == null) {
 			this.engSpaDAO = EngSpaSQLite2.getInstance(this, TAG);
 		}
 		return this.engSpaDAO;
+	}
+
+	@Override // OnClickListener
+	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.showHelpCheckBox) {
+			boolean showHelp = showHelpCheckBox.isChecked();
+			this.helpTextView.setVisibility(
+					showHelp ? View.VISIBLE : View.GONE);
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putBoolean(SHOW_HELP_KEY, showHelp);
+			editor.commit();
+		} else {
+			this.statusTextView.setText("unrecognised onClick Id: " + id);
+		}
 	}
 }

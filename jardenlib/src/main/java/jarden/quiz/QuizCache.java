@@ -172,7 +172,7 @@ public abstract class QuizCache {
 	/**
 	 * We get our files from a server application written in Python. Python
 	 * passes files in UTF8, whereas Java's default encoding is Cp1252 (whatever
-	 * that is!). For example the spanish word estómago (stomach) is transmitted
+	 * that is!). For example the spanish word estÃ³mago (stomach) is transmitted
 	 * by java classes as est\u00F3mago, but by python as est\u00C3\u00B3mago
 	 * which java decodes incorrectly; hence we tell Java to read the
 	 * inputstream as UTF8, which decodes correctly.
@@ -298,7 +298,7 @@ public abstract class QuizCache {
 	 * whereas Properties.load(InputStreamReader) encodes with whatever
 	 * encoding is defined for the Reader, which by default - see above -
 	 * is Cp1252.
-	 * E.g. letter ó is:
+	 * E.g. letter Ã³ is:
 	 * 		0x00F3 in Unicode
 	 * 		0xF3 in iso-8859-1 and Cp1252
 	 * 		0xC3B3 in UTF8  

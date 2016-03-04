@@ -16,11 +16,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -41,20 +45,30 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	
 	private static final int PHRASE_ACTIVITY_CODE = 1002;
 	private static final Locale LOCALE_ES = new Locale("es", "ES");
+	private static final long[] WRONG_VIBRATE = {
+			0, 200, 200, 200
+	};
+	private static final long[] LOST_VIBRATE = {
+			0, 400, 400, 400, 400, 400
+	};
 
+	/*!!
 	private TextView userNameTextView;
 	private TextView currentCtTextView;
 	private TextView failCtTextView;
+	 */
 	private TextView questionTextView;
 	private TextView attributeTextView;
 	private EditText answerEditText;
-	private TextView statusTextView;
+	//!! private TextView statusTextView;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
 	private ImageButton micButton;
 	private String levelStr;
 
 	private Random random = new Random();
+	private int red;
+	private int blue;
 	private int orientation;
 	private QAStyle currentQAStyle;
 	private String question;
@@ -72,8 +86,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private EngSpaDAO engSpaDAO;
 	private EngSpaActivity engSpaActivity;
 	private TextToSpeech textToSpeech;
-	private int red;
-	private int blue;
+	private Vibrator vibrator;
+	private SoundPool soundPool;
+	private int soundError;
+	private int soundLost;
+	private String currentsLabel;
+	private String failsLabel;
+
 	/**
 	 * Used by QAStyle.alternate, which is used to alternate
 	 * between 2 QAStyles: spokenSpaToEng and writtenEngToSpa.
@@ -98,7 +117,29 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		Resources resources = getResources();
 		this.red = resources.getColor(R.color.samRed);
 		this.blue = resources.getColor(R.color.samBlue);
-		this.levelStr = getResources().getString(R.string.levelStr);
+		this.levelStr = resources.getString(R.string.levelStr);
+		this.vibrator = (Vibrator) getActivity().getSystemService(
+				FragmentActivity.VIBRATOR_SERVICE);
+		this.currentsLabel = resources.getString(R.string.currentStr);
+		this.failsLabel = resources.getString(R.string.failStr);
+		/* requires API 21 or above:
+		AudioAttributes audioAttributes = new AudioAttributes.Builder()
+				.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+				.setUsage(AudioAttributes.USAGE_GAME)
+				.build();
+		this.soundPool = new SoundPool.Builder()
+				.setMaxStreams(2)
+				.setAudioAttributes(audioAttributes)
+				.build();
+		Activity activity = getActivity();
+		this.soundError = soundPool.load(activity, R.raw.error, 1);
+		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
+		 */
+		this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+		Activity activity = getActivity();
+		this.soundError = soundPool.load(activity, R.raw.error, 1);
+		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
+
 		this.engSpaDAO = engSpaActivity.getEngSpaDAO();
 		this.engSpaUser = engSpaDAO.getUser();
 		if (this.engSpaUser == null) { // i.e. no user yet on database
@@ -133,17 +174,19 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			questionText = questionTextView.getText();
 			attributeText = attributeTextView.getText();
 			pendingAnswer = answerEditText.getText();
-			statusText = statusTextView.getText();
+			//!! statusText = statusTextView.getText();
 			selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
 		}
 		// Now get new layout
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+		/*!!
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
 		this.userNameTextView.setText(this.engSpaUser.getUserName());
 		this.currentCtTextView = (TextView) rootView.findViewById(R.id.currentCtTextView);
 		this.failCtTextView = (TextView) rootView.findViewById(R.id.failCtTextView);
 		failCtTextView.setOnLongClickListener(this);
 		rootView.findViewById(R.id.failCtLabel).setOnLongClickListener(this);
+		*/
 
 		this.selfMarkLayout = (ViewGroup) rootView.findViewById(R.id.selfMarkLayout);
 		this.buttonLayout = (ViewGroup) rootView.findViewById(R.id.buttonLayout);
@@ -163,12 +206,12 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.questionTextView = (TextView) rootView.findViewById(R.id.questionTextView);
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
-		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
+		//!! this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
 		if (questionTextView != null) {
 			this.questionTextView.setText(questionText);
 			this.answerEditText.setText(pendingAnswer);
 			this.attributeTextView.setText(attributeText);
-			this.statusTextView.setText(statusText);
+			//!! this.statusTextView.setText(statusText);
 			if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
 		}
 		this.answerEditText.setOnEditorActionListener(this);
@@ -232,11 +275,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return this.engSpaUser.getUserLevel() == EngSpaQuiz.USER_LEVEL_ALL;
 	}
 	private void showStats() {
+		/*!!
 		int fwct = engSpaQuiz.getFailedWordCount();
 		this.currentCtTextView.setText(
 				isUserLevelAll() ? "" :
 				Integer.toString(engSpaQuiz.getCurrentWordCount()));
 		this.failCtTextView.setText(Integer.toString(fwct));
+		*/
+		String fails = Integer.toString(engSpaQuiz.getFailedWordCount());
+		String currents = isUserLevelAll() ? "" :
+				Integer.toString(engSpaQuiz.getCurrentWordCount());
+		engSpaActivity.setStatus(this.currentsLabel + " " + currents +
+				"  " + this.failsLabel + " " + fails);
 		if (BuildConfig.DEBUG) {
 			String debugState = engSpaQuiz.getDebugState();
 			Log.d(engSpaActivity.getTag(), debugState);
@@ -262,7 +312,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				this.firstAlternative = !this.firstAlternative;
 			}
 		}
-		this.responseIfCorrect = "Right!";
+		this.responseIfCorrect = "";
 		if (this.currentQAStyle.spaQuestion) {
 			this.question = spanish;
 			if (this.currentQAStyle.spaAnswer) {
@@ -284,7 +334,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 
 	@Override // onClickListener
 	public void onClick(View view) {
-		engSpaActivity.setStatus("");
+		//!! engSpaActivity.setStatus("");
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			goPressed();
@@ -300,20 +350,27 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
     public boolean onLongClick(View view) {
 		int id = view.getId();
 		if (id == R.id.goButton) {
-			this.statusTextView.setText(R.string.goButtonTip);
+			engSpaActivity.setHelp(R.string.goButtonTip);
+			//!! this.statusTextView.setText(R.string.goButtonTip);
 			return true;
 		} else if (id == R.id.correctButton) {
-			this.statusTextView.setText(R.string.correctButtonTip);
+			//! this.statusTextView.setText(R.string.correctButtonTip);
+			engSpaActivity.setHelp(R.string.correctButtonTip);
 			return true;
 		} else if (id == R.id.incorrectButton) {
-			this.statusTextView.setText(R.string.incorrectButtonTip);
+			engSpaActivity.setHelp(R.string.incorrectButtonTip);
+			//!! this.statusTextView.setText(R.string.incorrectButtonTip);
 			return true;
 		} else if (id == R.id.micButton) {
-			this.statusTextView.setText(R.string.micButtonTip);
+			engSpaActivity.setHelp(R.string.micButtonTip);
+			//!! this.statusTextView.setText(R.string.micButtonTip);
 			return true;
+		/*!!
 		} else if (id == R.id.failCtLabel || id == R.id.failCtTextView) {
-			this.statusTextView.setText(R.string.failCtTip);
+			engSpaActivity.setHelp(R.string.failCtTip);
+			//!! this.statusTextView.setText(R.string.failCtTip);
 			return true;
+		 */
 		}
 		return false;
     }
@@ -321,12 +378,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onInit(int status) {
 		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onInit()");
 		engSpaActivity.setProgressBarVisible(false);
-		this.statusTextView.setText("");
+		//!! this.statusTextView.setText("");
 		if (status == TextToSpeech.SUCCESS) {
 			if (this.textToSpeech == null) {
 				// this could happen if activity is paused between creating
 				// new textToSpeech and getting the response back here
-				this.statusTextView.setText("textToSpeech closed down");
+				engSpaActivity.setStatus(R.string.ttsClosed);
+				//!! this.statusTextView.setText("textToSpeech closed down");
 				return;
 			}
 			int result = textToSpeech.setLanguage(LOCALE_ES);
@@ -335,13 +393,15 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			}
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
-				this.statusTextView.setText("TextToSpeech for Spanish is not supported");
+				// this.statusTextView.setText("TextToSpeech for Spanish is not supported");
+				engSpaActivity.setStatus(R.string.ttsNotSupported);
 			}
 			if (this.spanish != null) speakSpanish2(); 
 		} else {
 			Log.w(engSpaActivity.getTag(), "EngSpaFragment.onInit(" + status + ")");
-			this.statusTextView.setText(
-				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
+			//!! this.statusTextView.setText(
+			//!!	"Initilization of textToSpeech failed! Have you installed text-to-speech?");
+			engSpaActivity.setStatus(R.string.ttsFailed);
 		}
 	}
 	@Override // Fragment
@@ -388,7 +448,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (this.textToSpeech == null) {
 			// invokes onInit() on completion
 			textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), this);
-			this.statusTextView.setText("loading textToSpeech...");
+			//!! this.statusTextView.setText("loading textToSpeech...");
+			engSpaActivity.setStatus(R.string.ttsLoading);
 			engSpaActivity.setProgressBarVisible(true);
 		} else {
 			speakSpanish2();
@@ -435,17 +496,26 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			}
 			// show no correct answer yet, but allow user another try
 			// without penalty:
-			this.statusTextView.setText(matches.get(0) + " is wrong");
+			// TODO: vibrate and buzz, like RaceFragment, when wrong
+			// allow user to specify options: vibrate y/n, buzz y/n, message y/n
+			//!! this.statusTextView.setText(matches.get(0) + " is wrong");
+			this.answerEditText.setText(matches.get(0));
+			onWrongAnswer();
 		} else {
-			this.statusTextView.setText(
-					"resultCode from speech recognition: " + resultCode);
+			if (BuildConfig.DEBUG) {
+				Log.d(engSpaActivity.getTag(),
+						"resultCode from speech recognition: " + resultCode);
+			}
+			//!! this.statusTextView.setText(
+			//!!		"resultCode from speech recognition: " + resultCode);
+			engSpaActivity.setStatus(R.string.speechRecognitionError);
 		}
 	}
 	private String getSuppliedAnswer() {
 		return this.answerEditText.getText().toString().trim();
 	}
 	private void selfMarkButton(boolean isCorrect) {
-		this.statusTextView.setText("");
+		//!! this.statusTextView.setText("");
 		showButtonLayout();
 		engSpaQuiz.setCorrect(isCorrect, currentQAStyle);
 		askQuestion(true);
@@ -498,15 +568,26 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 	}
 	private void setIsCorrect(boolean isCorrect) {
+		/*!!
 		setIsCorrect(isCorrect, "Wrong!");
 	}
 	private void setIsCorrect(boolean isCorrect, String responseIfWrong) {
+	     */
 		engSpaQuiz.setCorrect(isCorrect, currentQAStyle);
+		if (isCorrect) {
+			if (this.responseIfCorrect.length() > 0) {
+				engSpaActivity.setStatus(this.responseIfCorrect);
+			}
+		} else {
+			onWrongAnswer();
+		}
+		/*!!
 		if (isCorrect) {
 			this.statusTextView.setText(this.responseIfCorrect);
 		} else {
 			this.statusTextView.setText(responseIfWrong);
 		}
+		*/
 		askQuestion(isCorrect);
 	}
 	/*
@@ -585,7 +666,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				engSpaUser.getUserName().equals(userName) &&
 				engSpaUser.getUserLevel() == userLevel &&
 				engSpaUser.getQAStyle() == qaStyle) {
-			this.statusTextView.setText("no changes made to user");
+			// this.statusTextView.setText("no changes made to user");
+			engSpaActivity.setStatus(R.string.userNotChanged);
 			return false;
 		}
 		boolean newLevel = true;
@@ -600,7 +682,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			engSpaUser.setQAStyle(qaStyle);
 			engSpaDAO.updateUser(engSpaUser);
 		}
-		userNameTextView.setText(engSpaUser.getUserName());
+		//!! userNameTextView.setText(engSpaUser.getUserName());
 		if (newLevel) {
 			getEngSpaQuiz().setUserLevel(userLevel);
 		}
@@ -620,7 +702,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.engSpaQuiz.setTopic(topic);
 		askQuestion(true);
 	}
-
 	@Override // QuizEventListener
 	public void onTopicComplete() {
 		showUserLevel();
@@ -631,5 +712,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				Integer.toString(engSpaUser.getUserLevel());
 		this.engSpaActivity.setEngSpaTitle(this.levelStr + " " +
 				userLevelStr);
+	}
+	public void onWrongAnswer() {
+		this.vibrator.vibrate(WRONG_VIBRATE, -1);
+		this.soundPool.play(soundError, 1.0f, 1.0f, 0, 0, 1.5f);
+	}
+	public void onLost() {
+		this.vibrator.vibrate(LOST_VIBRATE, -1);
+		this.soundPool.play(soundError, 1.0f, 1.0f, 0, 0, 1.5f);
 	}
 }

@@ -24,8 +24,8 @@ public class VerbUtils {
 	}
 	public enum Person {
 		yo(0, "yo", "I"),
-		tu(1, "tú", "thou"),
-		el(2, "él", "he"),
+		tu(1, "tÃº", "thou"),
+		el(2, "Ã©l", "he"),
 		ella(2, "ella", "she"),
 		usted(2, "usted", "you"),
 		nosotros(3, "nosotros", "we"),
@@ -196,7 +196,7 @@ public class VerbUtils {
 			RegularSpaVerb regularVerb;
 			if (ending.equals("er")) {
 				regularVerb = regularERVerb;
-			} else if (ending.equals("ir") || ending.equals("ír")) {
+			} else if (ending.equals("ir") || ending.equals("Ã­r")) {
 				regularVerb = regularIRVerb;
 			} else if (ending.equals("ar")) {
 				regularVerb = regularARVerb;
@@ -290,26 +290,26 @@ public class VerbUtils {
 	}
 	
 	private static String[] futureEndings = {
-		"é", "ás", "á", "emos", "án"
+		"Ã©", "Ã¡s", "Ã¡", "emos", "Ã¡n"
 	};
 	private static String[] erPresentEndings = {
 		"o", "es", "e", "emos", "en"
 	};
 	private static String[] erPreteriteEndings = {
-		"í", "iste", "ió", "imos", "ieron"
+		"Ã­", "iste", "iÃ³", "imos", "ieron"
 	};
 	private static String[] erImperfectEndings = {
-		"ía", "ías", "ía", "íamos", "ían"
+		"Ã­a", "Ã­as", "Ã­a", "Ã­amos", "Ã­an"
 	};
 	
 	private static String[] arPresentEndings = {
 		"o", "as", "a", "amos", "an"
 	};
 	private static String[] arPreteriteEndings = {
-		"é", "aste", "ó", "amos", "aron"
+		"Ã©", "aste", "Ã³", "amos", "aron"
 	};
 	private static String[] arImperfectEndings = {
-		"aba", "abas", "aba", "ábamos", "aban"
+		"aba", "abas", "aba", "Ã¡bamos", "aban"
 	};
 	private static String[] irPresentEndings = {
 		"o", "es", "e", "imos", "en"
@@ -320,10 +320,10 @@ public class VerbUtils {
 		{"p", agradecerPresent}, {"no", "agradezcas"} 
 	};
 
-	private static String[][] alcanzarPreterite = { {"yo", "alcancé"} };
+	private static String[][] alcanzarPreterite = { {"yo", "alcancÃ©"} };
 	private static Object[][] alcanzarTenses = { {"r", alcanzarPreterite} };
 
-	private static String[][] aparcarPreterite = { {"yo", "aparqué"} };
+	private static String[][] aparcarPreterite = { {"yo", "aparquÃ©"} };
 	private static Object[][] aparcarTenses = {
 		{"r", aparcarPreterite}, {"no", "aparques"}
 	};
@@ -332,20 +332,20 @@ public class VerbUtils {
 		{"yo", "caigo"}
 	};
 	private static String[][] caerPreterite = {
-		{"tu", "caíste"}, {"el", "cayó"},
-		{"n", "caímos"}, {"e", "cayeron"}
+		{"tu", "caÃ­ste"}, {"el", "cayÃ³"},
+		{"n", "caÃ­mos"}, {"e", "cayeron"}
 	};
 	private static Object[][] caerTenses = {
 		{"p", caerPresent}, {"r", caerPreterite},
 		{"f", "cae"}, {"no", "caigas"}
 	};
 	
-	private static String[][] cargarPreterite = { {"yo", "cargué"} };
+	private static String[][] cargarPreterite = { {"yo", "carguÃ©"} };
 	private static Object[][] cargarTenses = {
 		{"r", cargarPreterite}, {"no", "cargues"}
 	};
 	
-	private static String[][] chocarPreterite = { {"yo", "choqué"} };
+	private static String[][] chocarPreterite = { {"yo", "choquÃ©"} };
 	private static Object[][] chocarTenses = {
 		{"r", chocarPreterite}, {"no", "choques"}
 	};
@@ -366,11 +366,11 @@ public class VerbUtils {
 	};
 
 	private static String[][] continuarPresent = {
-		{"yo", "continúo"}, {"tu", "continúas"}, {"el", "continúa"},
-		{"e", "continúan"}
+		{"yo", "continÃºo"}, {"tu", "continÃºas"}, {"el", "continÃºa"},
+		{"e", "continÃºan"}
 	};
 	private static Object[][] continuarTenses = {
-		{"p", continuarPresent}, {"si", "continúa"}, {"no", "continúes"}
+		{"p", continuarPresent}, {"si", "continÃºa"}, {"no", "continÃºes"}
 
 	};
 
@@ -383,14 +383,14 @@ public class VerbUtils {
 	};
 
 	private static String[][] creerPreterite = {
-		{"tu", "creíste"}, {"el", "creyó"}, {"n", "creímos"},
+		{"tu", "creÃ­ste"}, {"el", "creyÃ³"}, {"n", "creÃ­mos"},
 		{"e", "creyeron"}
 	};
 	private static Object[][] creerTenses = {
 		{"r", creerPreterite}
 	};
 
-	private static String[][] cruzarPreterite = { {"yo", "crucé"} };
+	private static String[][] cruzarPreterite = { {"yo", "crucÃ©"} };
 	private static Object[][] cruzarTenses = {
 		{"r", cruzarPreterite}, {"no", "cruces"}
 	};
@@ -417,7 +417,7 @@ public class VerbUtils {
 		{"f", "dir"}, {"si", "di"}, {"no", "digas"}
 	};
 	
-	private static String[][] descargarPreterite = { {"yo", "descargué"} };
+	private static String[][] descargarPreterite = { {"yo", "descarguÃ©"} };
 	private static Object[][] descargarTenses = {
 		{"r", descargarPreterite}, {"no", "descargues"}
 	};
@@ -427,7 +427,7 @@ public class VerbUtils {
 		{"e", "despiden"}
 	};
 	private static String[][] despedirPreterite = {
-		{"el", "despidió"}
+		{"el", "despidiÃ³"}
 	};
 	private static Object[][] despedirTenses = {
 		{"p", despedirPresent}, {"r", despedirPreterite},
@@ -460,7 +460,7 @@ public class VerbUtils {
 		{"e", "duermen"}
 	};
 	private static String[][] dormirPreterite = {
-		{"el", "durmió"}, {"e", "durmieron"}
+		{"el", "durmiÃ³"}, {"e", "durmieron"}
 	};
 	private static Object[][] dormirTenses = {
 		{"p", dormirPresent}, {"r", dormirPreterite},
@@ -492,16 +492,16 @@ public class VerbUtils {
 	};
 
 	private static String[][] enviarPresent = {
-		{"yo", "envío"}, {"tu", "envías"},
-		{"el", "envía"}, {"e", "envían"}
+		{"yo", "envÃ­o"}, {"tu", "envÃ­as"},
+		{"el", "envÃ­a"}, {"e", "envÃ­an"}
 	};
 	private static Object[][] enviarTenses = {
-		{"p", enviarPresent}, {"si", "envía"}, {"no", "envíes"}
+		{"p", enviarPresent}, {"si", "envÃ­a"}, {"no", "envÃ­es"}
 	};
 
 	private static String[][] estarPresent = {
-		{"yo", "estoy"}, {"tu", "estás"}, {"el", "está"},
-		{"n", "estamos"}, {"e", "están"}
+		{"yo", "estoy"}, {"tu", "estÃ¡s"}, {"el", "estÃ¡"},
+		{"n", "estamos"}, {"e", "estÃ¡n"}
 	};
 	private static String[][] estarPreterite = {
 		{"yo", "estuve"}, {"tu", "estuviste"}, {"el", "estuvo"},
@@ -509,7 +509,7 @@ public class VerbUtils {
 	};
 	private static Object[][] estarTenses = {
 		{"p", estarPresent}, {"r", estarPreterite},
-		{"si", "está"}, {"no", "estés"}
+		{"si", "estÃ¡"}, {"no", "estÃ©s"}
 	};
 	
 	private static String[][] haberPresent = {
@@ -553,7 +553,7 @@ public class VerbUtils {
 	};
 	private static String[][] irImperfect = {
 		{"yo", "iba"}, {"tu", "ibas"}, {"el", "iba"},
-		{"n", "íbamos"},  {"e", "iban"}
+		{"n", "Ã­bamos"},  {"e", "iban"}
 	};
 	private static Object[][] irTenses = {
 		{"p", irPresent}, {"r", irPreterite}, {"i", irImperfect},
@@ -564,21 +564,21 @@ public class VerbUtils {
 		{"yo", "juego"}, {"tu", "juegas"}, {"el", "juega"},
 		{"n", "jugamos"}, {"e", "juegan"}
 	};
-	private static String[][] jugarPreterite = { {"yo", "jugué"} };
+	private static String[][] jugarPreterite = { {"yo", "juguÃ©"} };
 	private static Object[][] jugarTenses = {
 		{"p", jugarPresent}, {"r", jugarPreterite},
 		{"si", "juega"}, {"no", "juegues"}
 	};
 	
 	private static String[][] leerPreterite = {
-		{"tu", "leíste"}, {"el", "leyó"}, {"n", "leímos"},
+		{"tu", "leÃ­ste"}, {"el", "leyÃ³"}, {"n", "leÃ­mos"},
 		{"e", "leyeron"}
 	};
 	private static Object[][] leerTenses = {
 		{"r", leerPreterite}
 	};
 	
-	private static String[][] llegarPreterite = { {"yo", "llegué"} };
+	private static String[][] llegarPreterite = { {"yo", "lleguÃ©"} };
 	private static Object[][] llegarTenses = {
 		{"r", llegarPreterite}, {"no", "llegues"}
 	};
@@ -601,7 +601,7 @@ public class VerbUtils {
 		{"e", "mueren"}
 	};
 	private static String[][] morirPreterite = { 
-		{"el", "murió"}, {"e", "murieron"}
+		{"el", "muriÃ³"}, {"e", "murieron"}
 	};
 	private static Object[][] morirTenses = {
 		{"p", morirPresent}, {"r", morirPreterite}, {"f", "oir"},
@@ -625,11 +625,11 @@ public class VerbUtils {
 	};
 
 	private static String[][] oirPresent = {
-		{"yo", "oigo"}, {"tu", "oyes"}, {"el", "oye"}, {"n", "oímos"},
+		{"yo", "oigo"}, {"tu", "oyes"}, {"el", "oye"}, {"n", "oÃ­mos"},
 		{"e", "oyen"}
 	};
 	private static String[][] oirPreterite = {
-		{"tu", "oíste"}, {"el", "oyó"}, {"n", "oímos"}, {"e", "oyeron"}
+		{"tu", "oÃ­ste"}, {"el", "oyÃ³"}, {"n", "oÃ­mos"}, {"e", "oyeron"}
 	};
 	private static Object[][] oirTenses = {
 		{"p", oirPresent}, {"r", oirPreterite}, {"f", "oir"},
@@ -650,14 +650,14 @@ public class VerbUtils {
 		{"yo", "pido"}, {"tu", "pides"}, {"el", "pide"}, {"e", "piden"}
 	};
 	private static String[][] pedirPreterite = {
-		{"el", "pidió"}, {"e", "pidieron"}
+		{"el", "pidiÃ³"}, {"e", "pidieron"}
 	};
 	private static Object[][] pedirTenses = {
 		{"p", pedirPresent}, {"r", pedirPreterite},
 		{"si", "pide"}, {"no", "pidas"}
 	};
 
-	private static String[][] pegarPreterite = { {"yo", "pegué"} };
+	private static String[][] pegarPreterite = { {"yo", "peguÃ©"} };
 	private static Object[][] pegarTenses = {
 		{"r", pegarPreterite}, {"no", "pegues"}
 	};
@@ -678,7 +678,7 @@ public class VerbUtils {
 	};
 
 	private static String[][] pescarPreterite = {
-		{"yo", "pesqué"}
+		{"yo", "pesquÃ©"}
 	};
 	private static Object[][] pescarTenses = {
 		{"r", pescarPreterite}, {"no", "pesques"}
@@ -711,7 +711,7 @@ public class VerbUtils {
 		{"e", "prefieren"}
 	};
 	private static String[][] preferirPreterite = {
-		{"el", "prefirió"}, {"e", "prefirieron"}
+		{"el", "prefiriÃ³"}, {"e", "prefirieron"}
 	};
 	private static Object[][] preferirTenses = {
 		{"p", preferirPresent}, {"r", preferirPreterite},
@@ -728,7 +728,7 @@ public class VerbUtils {
 	};
 	private static Object[][] prevenirTenses = {
 		{"p", prevenirPresent}, {"r", prevenirPreterite}, {"f", "prevendr"},
-		{"si", "prevén"}, {"no", "prevengas"}
+		{"si", "prevÃ©n"}, {"no", "prevengas"}
 	};
 
 	private static String[][] quebrarPresent = {
@@ -761,33 +761,33 @@ public class VerbUtils {
 	};
 
 	private static String[][] reirPresent = {
-		{"yo", "río"}, {"tu", "ríes"}, {"el", "ríe"}, {"n", "reímos"},
-		{"e", "ríen"}
+		{"yo", "rÃ­o"}, {"tu", "rÃ­es"}, {"el", "rÃ­e"}, {"n", "reÃ­mos"},
+		{"e", "rÃ­en"}
 	};
 	private static String[][] reirPreterite = {
-		{"tu", "reíste"}, {"el", "rió"}, {"n", "reímos"}, {"e", "rieron"}
+		{"tu", "reÃ­ste"}, {"el", "riÃ³"}, {"n", "reÃ­mos"}, {"e", "rieron"}
 
 	};
 	private static Object[][] reirTenses = {
 		{"p", reirPresent}, {"r", reirPreterite},
-		{"f", "reir"}, {"si", "ríe"}, {"no", "rías"}
+		{"f", "reir"}, {"si", "rÃ­e"}, {"no", "rÃ­as"}
 	};
 
 	private static String[][] renirPresent = {
-		{"yo", "riño"}, {"tu", "riñes"}, {"el", "riñe"},
-		{"e", "riñen"}
+		{"yo", "riÃ±o"}, {"tu", "riÃ±es"}, {"el", "riÃ±e"},
+		{"e", "riÃ±en"}
 	};
 	private static String[][] renirPreterite = {
-		{"el", "riñó"}, {"e", "riñeron"}
+		{"el", "riÃ±Ã³"}, {"e", "riÃ±eron"}
 
 	};
 	private static Object[][] renirTenses = {
 		{"p", renirPresent}, {"r", renirPreterite},
-		{"si", "riñe"}, {"no", "riñas"}
+		{"si", "riÃ±e"}, {"no", "riÃ±as"}
 	};
 
 	private static String[][] saberPresent = {
-		{"yo", "sé"}
+		{"yo", "sÃ©"}
 	};
 	private static String[][] saberPreterite = {
 		{"yo", "supe"}, {"tu", "supiste"}, {"el", "supo"},
@@ -808,7 +808,7 @@ public class VerbUtils {
 		{"n", "seguimos"}, {"e", "siguen"}
 	};
 	private static String[][] seguirPreterite = {
-		{"el", "siguió"}, {"e", "siguieron"}
+		{"el", "siguiÃ³"}, {"e", "siguieron"}
 	};
 	private static Object[][] seguirTenses = {
 		{"p", seguirPresent}, {"r", seguirPreterite},
@@ -833,18 +833,18 @@ public class VerbUtils {
 	};
 	private static String[][] serImperfect = {
 		{"yo", "era"}, {"tu", "eras"}, {"el", "era"},
-		{"n", "éramos"}, {"e", "eran"}
+		{"n", "Ã©ramos"}, {"e", "eran"}
 	};
 	private static Object[][] serTenses = {
 		{"p", serPresent}, {"r", serPreterite},
-		{"i", serImperfect}, {"si", "sé"}, {"no", "seas"}
+		{"i", serImperfect}, {"si", "sÃ©"}, {"no", "seas"}
 	};
 
 	private static String[][] servirPresent = {
 		{"yo", "sirvo"}, {"tu", "sirves"}, {"el", "sirve"}, {"e", "sirven"}
 	};
 	private static String[][] servirPreterite = {
-		{"el", "sirvió"}, {"e", "sirvieron"}
+		{"el", "sirviÃ³"}, {"e", "sirvieron"}
 	};
 	private static Object[][] servirTenses = {
 		{"p", servirPresent}, {"r", servirPreterite},
@@ -860,15 +860,15 @@ public class VerbUtils {
 	};
 
 	private static String[][] sonreirPresent = {
-		{"yo", "sonrío"}, {"tu", "sonríes"}, {"el", "sonríe"},
-		{"n", "sonreímos"}, {"e", "sonríen"}
+		{"yo", "sonrÃ­o"}, {"tu", "sonrÃ­es"}, {"el", "sonrÃ­e"},
+		{"n", "sonreÃ­mos"}, {"e", "sonrÃ­en"}
 	};
 	private static String[][] sonreirPreterite = {
-		{"tu", "sonreíste"}, {"el", "sonrió"}, {"n", "sonreímos"}, {"e", "sonrieron"}
+		{"tu", "sonreÃ­ste"}, {"el", "sonriÃ³"}, {"n", "sonreÃ­mos"}, {"e", "sonrieron"}
 	};
 	private static Object[][] sonreirTenses = {
 		{"p", sonreirPresent}, {"r", sonreirPreterite},
-		{"f", "sonreir"}, {"si", "sonríe"}, {"no", "sonrías"}
+		{"f", "sonreir"}, {"si", "sonrÃ­e"}, {"no", "sonrÃ­as"}
 	};
 
 	private static String[][] tenerPresent = {
@@ -883,7 +883,7 @@ public class VerbUtils {
 		{"f", "tendr"}, {"si", "ten"}, {"no", "tengas"}
 	};
 
-	private static String[][] tocarPreterite = { {"yo", "toqué"} };
+	private static String[][] tocarPreterite = { {"yo", "toquÃ©"} };
 	private static Object[][] tocarTenses = {
 		{"r", tocarPreterite}, {"no", "toques"}
 	};
@@ -928,8 +928,8 @@ public class VerbUtils {
 		{"yo", "vi"}, {"el", "vio"}
 	};
 	private static String[][] verImperfect = {
-		{"yo", "veía"}, {"tu", "veías"}, {"el", "veía"},
-		{"n", "veíamos"}, {"e", "veían"}
+		{"yo", "veÃ­a"}, {"tu", "veÃ­as"}, {"el", "veÃ­a"},
+		{"n", "veÃ­amos"}, {"e", "veÃ­an"}
 	};
 	private static Object[][] verTenses = {
 		{"p", verPresent}, {"r", verPreterite},
@@ -956,7 +956,7 @@ public class VerbUtils {
 		{"llegar", llegarTenses}, {"llover", lloverTenses},
 		{"merecer", merecerTenses}, {"morir", morirTenses},
 		{"mostrar", mostrarTenses}, {"nevar", nevarTenses},
-		{"oír", oirTenses}, {"padecer", padecerTenses},
+		{"oÃ­r", oirTenses}, {"padecer", padecerTenses},
 		{"parecer", parecerTenses}, {"pedir", pedirTenses},
 		{"pegar", pegarTenses},
 		{"pensar", pensarTenses}, {"perder", perderTenses},
@@ -965,12 +965,12 @@ public class VerbUtils {
 		{"preferir", preferirTenses},
 		{"prevenir", prevenirTenses}, {"quebrar", quebrarTenses},
 		{"querer", quererTenses}, {"recordar", recordarTenses},
-		{"reír", reirTenses},{"reñir", renirTenses},
+		{"reÃ­r", reirTenses},{"reÃ±ir", renirTenses},
 		{"saber", saberTenses}, {"salir", salirTenses},
 		{"seguir", seguirTenses}, {"sentar", sentarTenses},
 		{"ser", serTenses}, {"servir", servirTenses},
 		{"sonar", sonarTenses},
-		{"sonreír", sonreirTenses}, {"tener", tenerTenses},
+		{"sonreÃ­r", sonreirTenses}, {"tener", tenerTenses},
 		{"torcer", torcerTenses},
 		{"tocar", tocarTenses}, {"traer", traerTenses},
 		{"valer", valerTenses}, {"venir", venirTenses},
@@ -998,7 +998,7 @@ public class VerbUtils {
 		{"hear", "heard"}, {"hide", "hid"}, {"hit", "hit"},
 		{"hurt", "hurt"}, {"hold", "held"}, {"know", "knew"},
 		{"leave", "left"}, {"lend", "lent"}, {"lose", "lost"}, {"make", "made"},
-		{"meet", "met"}, {"prefer", "preferred"},
+		{"meet", "met"}, {"pay", "paid"}, {"prefer", "preferred"},
 		{"put", "put"}, {"read", "read"}, {"regret", "regretted"},
 		{"reply", "replied"}, {"ring", "rang"}, {"run", "ran"}, {"say", "said"},
 		{"see", "saw"}, {"send", "sent"}, {"sell", "sold"}, {"shoot", "shot"},

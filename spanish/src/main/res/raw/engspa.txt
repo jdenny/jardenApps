@@ -37,7 +37,7 @@ be,ser,verb,transIntrans,n_a,1
 water,agua,noun,masculine,drink,1
 good morning,buenos días,phrase,n_a,n_a,1
 good afternoon,buenas tardes,phrase,n_a,n_a,1
-how are you,qué tal,phrase,n_a,n_a,1
+how are you?,¿qué tal?,phrase,n_a,n_a,1
 well,bien,adjective,n_a,n_a,1
 goodnight,buenas noches,phrase,n_a,n_a,1
 see you later,hasta luego,phrase,n_a,n_a,1
@@ -107,16 +107,16 @@ sock,calcetín,noun,masculine,clothing,1
 tie,corbata,noun,feminine,clothing,1
 belt,cinturón,noun,masculine,clothing,1
 dress,vestido,noun,masculine,clothing,1
-how much,cuánto,adjective,n_a,interrogative,1
-how many,cuántos,adjective,n_a,interrogative,1
-how,cómo,adverb,n_a,interrogative,1
-what for,para qué,phrase,n_a,interrogative,1
-what,qué,adverb,n_a,interrogative,1
-when,cuándo,adverb,n_a,interrogative,1
-where,dónde,adverb,n_a,interrogative,1
-which,cuál,adjective,n_a,interrogative,1
-who,quién,pronoun,n_a,interrogative,1
-why,por qué,adverb,n_a,interrogative,1
+how much?,¿cuánto?,adjective,n_a,interrogative,1
+how many?,¿cuántos?,adjective,n_a,interrogative,1
+how?,¿cómo?,adverb,n_a,interrogative,1
+what for?,¿para qué?,phrase,n_a,interrogative,1
+what?,¿qué?,adverb,n_a,interrogative,1
+when?,¿cuándo?,adverb,n_a,interrogative,1
+where?,¿dónde?,adverb,n_a,interrogative,1
+which?,¿cuál?,adjective,n_a,interrogative,1
+who?,¿quién?,pronoun,n_a,interrogative,1
+why?,¿por qué?,adverb,n_a,interrogative,1
 question,pregunta,noun,feminine,n_a,1
 walk,caminar,verb,transIntrans,n_a,1
 swim,nadar,verb,intransitive,n_a,1
@@ -330,12 +330,17 @@ outside,fuera,adjective,n_a,place,1
 upstairs,arriba,adverb,n_a,home,1
 below,abajo,adverb,n_a,home,1
 corridor,pasillo,noun,masculine,place,1
-serve,sirvir,verb,transIntrans,food,1
+serve,servir,verb,transIntrans,food,1
 shop,tienda,noun,feminine,building,1
 open,abrir,verb,transitive,n_a,1
-journey,viaje,noun,masculine,transport,1
+journey,viaje,noun,masculine,travel,1
 rent,alquilar,verb,transitive,home,1
-car,coche,noun,masculine,transport,1
+car,coche,noun,masculine,travel,1
+do you have any rooms free?,¿tiene habitaciones libres?,phrase,n_a,travel,1
+I'd like a single room,quisiera una habitación individual,phrase,n_a,travel,1
+I'd like to stay here for two nights,quisiera quedarme aquí dos noches,phrase,n_a,travel,1
+how much is it per night for one person?,¿cuánto es por noche para una persona?,phrase,n_a,travel,1
+I'll take it,la tomo,phrase,n_a,travel,1
 dine,cenar,verb,intransitive,food,1
 melon,melón,noun,masculine,food,1
 cherry,cereza,noun,feminine,food,1
@@ -618,9 +623,9 @@ subject,asignatura,noun,feminine,n_a,1
 paint,pintar,verb,transitive,n_a,1
 sea,mar,noun,masculine,n_a,1
 weather,tiempo,noun,masculine,weather,1
-coach,autocar,noun,masculine,transport,1
-bus,autobus,noun,masculine,transport,1
-car,coche,noun,masculine,transport,1
+coach,autocar,noun,masculine,travel,1
+bus,autobus,noun,masculine,travel,1
+car,coche,noun,masculine,travel,1
 me too,yo también,phrase,n_a,n_a,1
 busy,ocupado,adjective,n_a,n_a,1
 achieve,alcanzar,verb,n_a,n_a,1
@@ -1013,7 +1018,7 @@ where to,adónde,adverb,n_a,interrogative,1
 all the better,todo lo mejor,phrase,n_a,n_a,1
 good luck,buena suerte,phrase,n_a,n_a,1
 here you are,aquí lo tienes,phrase,n_a,n_a,1
-how do you spell that,cómo se escribe,phrase,n_a,n_a,1
+how do you spell that?,¿cómo se escribe?,phrase,n_a,n_a,1
 I don't mind,me da igual,phrase,n_a,n_a,1
 I've had enough,he tenido bastante,phrase,n_a,n_a,1
 in my opinion,en mi opinión,phrase,n_a,n_a,1
@@ -1401,34 +1406,34 @@ bath tub,bañera,noun,feminine,home,1
 beach,playa,noun,feminine,n_a,1
 bedlinen,ropa de cama,noun,feminine,home,1
 bunk,litera,noun,feminine,home,1
-bicycle,bicicleta,noun,feminine,transport,1
-motorbike,moto,noun,feminine,transport,1
-bike hire,alquiler de bicicletas,phrase,n_a,transport,1
-boat,barco,noun,masculine,transport,1
+bicycle,bicicleta,noun,feminine,travel,1
+motorbike,moto,noun,feminine,travel,1
+bike hire,alquiler de bicicletas,phrase,n_a,travel,1
+boat,barco,noun,masculine,travel,1
 book shop,librería,noun,feminine,building,1
 bowling alley,bolera,noun,feminine,building,1
 bridge,puente,noun,masculine,building,1
 brochure,folleto,noun,masculine,culture,1
 run,corrida,noun,feminine,sport,1
-bus,autobús,noun,masculine,transport,1
-bus stop,parada de autobús,noun,feminine,transport,1
+bus,autobús,noun,masculine,travel,1
+bus stop,parada de autobús,noun,feminine,travel,1
 bus station,estación de autobuses,noun,feminine,building,1
 trade,comercio,noun,masculine,n_a,1
 calm,tranquilo,adjective,n_a,n_a,1
 camp site,camping,noun,masculine,hobby,1
 capital,capital,noun,masculine,place,1
-car hire,alquiler de coches,phrase,n_a,transport,1
-caravan,caravana,noun,feminine,transport,1
-car park,aparcamiento,noun,masculine,transport,1
-carriage,vagón,noun,masculine,transport,1
+car hire,alquiler de coches,phrase,n_a,travel,1
+caravan,caravana,noun,feminine,travel,1
+car park,aparcamiento,noun,masculine,travel,1
+carriage,vagón,noun,masculine,travel,1
 carry straight on,siga todo recto,phrase,n_a,n_a,1
 city,ciudad,noun,feminine,place,1
-compartment,compartimento,noun,masculine,transport,1
+compartment,compartimento,noun,masculine,travel,1
 concert,concierto,noun,masculine,culture,1
 corner,esquina,noun,feminine,place,1
 scenery,paisaje,noun,masculine,n_a,1
-crossroads,cruce,noun,masculine,transport,1
-cycle path,vía para bicicletas,noun,feminine,transport,1
+crossroads,cruce,noun,masculine,travel,1
+cycle path,vía para bicicletas,noun,feminine,travel,1
 degree,grado,noun,masculine,size,1
 delay,retraso,noun,masculine,time,1
 direct,directo,adjective,n_a,n_a,1
@@ -1439,17 +1444,17 @@ district,barrio,noun,masculine,place,1
 diversion,desvío,noun,masculine,n_a,1
 double room,habitación doble,noun,feminine,place,1
 the drinking water,el agua potable,phrase,n_a,drink,1
-driver,conductor,noun,masculine,transport,1
-driving licence,permiso de conducir,noun,masculine,transport,1
+driver,conductor,noun,masculine,travel,1
+driving licence,permiso de conducir,noun,masculine,travel,1
 dustbin,cubo de la basura,noun,masculine,home,1
-enjoy your stay,que lo pases bien,phrase,n_a,n_a,1
+have a good time,que lo pases bien,phrase,n_a,n_a,1
 entertainment,entretenimiento,noun,masculine,culture,1
 entrance,entrada,noun,feminine,place,1
 exhibition,exposición,noun,feminine,place,1
 exit,salida,noun,feminine,place,1
 factory,fábrica,noun,feminine,place,1
 farm,granja,noun,feminine,place,1
-ferry,ferry,noun,masculine,transport,1
+ferry,ferry,noun,masculine,travel,1
 field,campo,noun,masculine,n_a,1
 fishmonger's,pescadería,noun,feminine,place,1
 apartment,apartamento,noun,masculine,place,1
@@ -1470,7 +1475,6 @@ hill,colina,noun,feminine,place,1
 historic,histórico,adjective,n_a,n_a,1
 festival,fiesta,noun,feminine,place,1
 hospital,hospital,noun,masculine,building,1
-hotel,hotel,noun,masculine,building,1
 hardware shop,droguería,noun,feminine,building,1
 hypermarket,hipermercado,noun,masculine,building,1
 ice rink,pista de patinaje,noun,feminine,place,1
@@ -1499,17 +1503,17 @@ touch,tocar,verb,transIntrans,person,1
 try,intentar,verb,transIntrans,n_a,1
 lift,ascensor,noun,masculine,building,1
 line,línea,noun,feminine,n_a,1
-lorry,camión,noun,masculine,transport,1
-luggage,equipaje,noun,masculine,transport,1
-main road,autovía,noun,feminine,transport,1
-map,mapa,noun,feminine,transport,1
+lorry,camión,noun,masculine,travel,1
+luggage,equipaje,noun,masculine,travel,1
+main road,autovía,noun,feminine,travel,1
+map,mapa,noun,feminine,travel,1
 marketplace,plaza del mercado,noun,feminine,place,1
 the media,el medios de comunicación,phrase,n_a,n_a,1
 metro,metro,noun,masculine,building,1
 meeting place,lugar de reunión,noun,masculine,place,1
 monument,monumento,noun,masculine,place,1
-moped,ciclomotor,noun,masculine,transport,1
-motorway,autopista,noun,feminine,transport,1
+moped,ciclomotor,noun,masculine,travel,1
+motorway,autopista,noun,feminine,travel,1
 mountain,montaña,noun,feminine,place,1
 nature,naturaleza,noun,feminine,n_a,1
 newspaper,periódico,noun,masculine,n_a,1
@@ -1528,13 +1532,13 @@ pavement,acera,noun,feminine,place,1
 pedestrian,peatón,noun,masculine,person,1
 pedestrian area,zona peatonal,noun,feminine,place,1
 pedestrian crossing,paso de peatones,noun,masculine,place,1
-petrol,gasolina,noun,feminine,transport,1
+petrol,gasolina,noun,feminine,travel,1
 petrol station,gasolinera,noun,feminine,place,1
 service station,estación de servicio,noun,feminine,place,1
 picturesque,pintoresco,adjective,n_a,n_a,1
 pillow,almohada,noun,feminine,home,1
 site,sitio,noun,masculine,place,1
-plane,avión,noun,masculine,transport,1
+plane,avión,noun,masculine,travel,1
 platform,andén,noun,masculine,place,1
 playground,área de recreo,noun,feminine,place,1
 police,policía,noun,feminine,person,1
@@ -1554,39 +1558,39 @@ region,región,noun,feminine,place,1
 area,zona,noun,feminine,place,1
 rent,alquiler,noun,masculine,money,1
 reservation,reserva,noun,feminine,n_a,1
-return ticket,billete de ida y vuelta,noun,masculine,transport,1
+return ticket,billete de ida y vuelta,noun,masculine,travel,1
 river,río,noun,masculine,size,1
-main road,carretera,noun,feminine,transport,1
-road map,mapa de carreteras,noun,masculine,transport,1
-street,calle,noun,feminine,transport,1
-roundabout,glorieta,noun,feminine,transport,1
+main road,carretera,noun,feminine,travel,1
+road map,mapa de carreteras,noun,masculine,travel,1
+street,calle,noun,feminine,travel,1
+roundabout,glorieta,noun,feminine,travel,1
 place of interest,lugar de interés,noun,masculine,place,1
 signal,señal,noun,feminine,n_a,1
 single room,habitación individual,noun,feminine,place,1
-single ticket,billete de ida,noun,masculine,transport,1
+single ticket,billete de ida,noun,masculine,travel,1
 sleeping bag,saco de dormir,noun,masculine,hobby,1
-sleeping car,coche-cama,noun,masculine,transport,1
+sleeping car,coche-cama,noun,masculine,travel,1
 souvenir,recuerdo,noun,masculine,hobby,1
 sports centre,polideportivo,noun,masculine,place,1
 square,plaza,noun,feminine,place,1
 stadium,estadio,noun,masculine,building,1
 suburb,suburbio,noun,masculine,place,1
 residential,residencial,adjective,n_a,place,1
-suitcase,maleta,noun,feminine,transport,1
+suitcase,maleta,noun,feminine,travel,1
 summer camp,campamento de verano,noun,feminine,place,1
 supplement,suplemento,noun,masculine,size,1
-taxi,taxi,noun,masculine,transport,1
+taxi,taxi,noun,masculine,travel,1
 telephone card,tarjeta telefónica,noun,feminine,n_a,1
 tennis court,cancha de tenis,noun,feminine,place,1
 theme park,parque temático,noun,masculine,place,1
-ticket,billete,noun,masculine,transport,1
+ticket,billete,noun,masculine,travel,1
 ticket office,despacho de billetes,noun,masculine,place,1
-timetable,horario,noun,masculine,transport,1
+timetable,horario,noun,masculine,travel,1
 to be situated,estar situado,phrase,n_a,n_a,1
 camp,acampar,verb,intransitive,hobby,1
 cross,cruzar,verb,transIntrans,place,1
 function,funcionar,verb,transIntrans,n_a,1
-park,aparcar,verb,transIntrans,transport,1
+park,aparcar,verb,transIntrans,travel,1
 confirm,confirmar,verb,transIntrans,n_a,1
 toilet paper,papel higiénico,noun,masculine,home,1
 toothbrush,cepillo de dientes,noun,masculine,home,1
@@ -1597,29 +1601,29 @@ tourist,turista,noun,masculine,person,1
 tower,torre,noun,feminine,building,1
 tower block,bloque de pisos,noun,masculine,building,1
 town centre,centro ciudad,noun,masculine,place,1
-platform,andén,noun,masculine,transport,1
-the traffic,la circulación,phrase,n_a,transport,1
-traffic jam,atasco,noun,masculine,transport,1
-traffic lights,semáforo,noun,masculine,transport,1
-train,tren,noun,masculine,transport,1
-tram,tranvía,noun,masculine,transport,1
+platform,andén,noun,masculine,travel,1
+the traffic,la circulación,phrase,n_a,travel,1
+traffic jam,atasco,noun,masculine,travel,1
+traffic lights,semáforo,noun,masculine,travel,1
+train,tren,noun,masculine,travel,1
+tram,tranvía,noun,masculine,travel,1
 twin room,habitación de dos camas,noun,feminine,place,1
-underground station,estación de metro,noun,feminine,transport,1
-unleaded,sin plomo,adjective,n_a,transport,1
+underground station,estación de metro,noun,feminine,travel,1
+unleaded,sin plomo,adjective,n_a,travel,1
 view,vista,noun,feminine,place,1
 village,aldea,noun,feminine,place,1
 visit,visita,noun,feminine,place,1
 waiting room,sala de espera,noun,feminine,place,1
 wardrobe,armario,noun,masculine,home,1
 wash basin,lavabo,noun,masculine,home,1
-path,camino,noun,masculine,transport,1
+path,camino,noun,masculine,travel,1
 welcome,bienvenido,adjective,n_a,n_a,1
 well worth seeing,vale la pena ver,phrase,n_a,n_a,1
 shop window,escaparate,noun,masculine,place,1
 forest,bosque,noun,masculine,place,1
 youth hostel,albergue juvenil,noun,masculine,building,1
-what's the weather like,qué tiempo hace,phrase,n_a,weather,1
-what will the weather be like tomorrow,qué tiempo hará mañana,phrase,n_a,weather,1
+what's the weather like?,¿qué tiempo hace?,phrase,n_a,weather,1
+what will the weather be like tomorrow?,¿qué tiempo hará mañana?,phrase,n_a,weather,1
 bad weather,mal tiempo,phrase,n_a,weather,1
 good weather,buen tiempo,phrase,n_a,weather,1
 climate,clima,noun,masculine,weather,1
@@ -1668,13 +1672,13 @@ windy,ventoso,adjective,n_a,weather,1
 I arrive on the third of October,yo llego el tres de octubre,phrase,n_a,time,1
 fifth of March 2016,cinco de marzo de 2016,phrase,n_a,time,1
 in the year 2012,en el año dos mil doce,phrase,n_a,time,1
-what are you doing tonight,qué haces esta noche,phrase,n_a,time,1
+what are you doing tonight?,¿qué haces esta noche?,phrase,n_a,time,1
 tomorrow morning,mañana por la mañana,phrase,n_a,time,1
 last week,la semana pasada,phrase,n_a,time,1
 every fortnight,cada quince días,phrase,n_a,time,1
 I would like an orange juice,quisiera un jugo de naranja,phrase,n_a,n_a,1
 I would like to talk,quisiera hablar,phrase,n_a,n_a,1
 it was nothing,de nada,phrase,n_a,n_a,1
-where do you come from,de dónde eres,phrase,n_a,n_a,1
-where do you live,dónde vives,phrase,n_a,n_a,1
+where do you come from?,¿de dónde eres?,phrase,n_a,n_a,1
+where do you live?,¿dónde vives?,phrase,n_a,n_a,1
 I live in England,vivo en Inglaterra,phrase,n_a,n_a,1

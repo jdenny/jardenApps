@@ -26,7 +26,17 @@ public interface EngSpaActivity {
 	 * @return
 	 */
 	String getTag();
-	
+
+	/**
+	 * Vibrate and play soundError.
+	 */
+	void onLost();
+
+	/**
+	 * Vibrate and play soundError.
+	 */
+	void onWrongAnswer();
+
 	void setProgressBarVisible(boolean visible);
 
 	/**
@@ -36,9 +46,15 @@ public interface EngSpaActivity {
 	 */
 	void setSpanish(String spanish);
 
-	void setStatus(String status);
+	/**
+	 * @param statusId String resource id
+	 */
+	void setStatus(int statusId);
+	void setStatus(String statusText);
 
 	void showTopicDialog();
+
+	void setHelp(int stringId);
 
 	/**
 	 * Set Spanish word (see setSpanish) and speak it.

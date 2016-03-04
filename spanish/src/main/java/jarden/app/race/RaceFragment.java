@@ -37,12 +37,14 @@ public class RaceFragment extends Fragment implements TimerListener,
 		OnClickListener, OnEditorActionListener, OnLongClickListener {
 	//!! private int mode; // see QuizRaceIF
 	private static final int CHASER_DELAY_TENTHS = 100;
+	/*!!
 	private static final long[] WRONG_VIBRATE = {
 		0, 200, 200, 200
 	};
 	private static final long[] LOST_VIBRATE = {
 		0, 400, 400, 400, 400, 400
 	};
+	*/
 	// these variables don't change once setup in onCreateView:
 	private LaneView laneBView;
 	private LaneView myLaneView;
@@ -62,10 +64,12 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private int laneCols;
 	private int raceLevel = 1;
 	private Quiz quiz = new NumbersQuiz();
+	/*!!
 	private Vibrator vibrator;
 	private SoundPool soundPool;
 	private int soundError;
 	private int soundLost;
+	*/
 	private EngSpaActivity engSpaActivity;
 	
 	@Override // Fragment
@@ -80,25 +84,14 @@ public class RaceFragment extends Fragment implements TimerListener,
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
+		/*!!
 		this.vibrator = (Vibrator) getActivity().getSystemService(
 				FragmentActivity.VIBRATOR_SERVICE);
-		/* requires API 21 or above:
-		AudioAttributes audioAttributes = new AudioAttributes.Builder()
-				.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-				.setUsage(AudioAttributes.USAGE_GAME)
-				.build();
-		this.soundPool = new SoundPool.Builder()
-				.setMaxStreams(2)
-				.setAudioAttributes(audioAttributes)
-				.build();
-		Activity activity = getActivity();
-		this.soundError = soundPool.load(activity, R.raw.error, 1);
-		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
-		 */
 		this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 		Activity activity = getActivity();
 		this.soundError = soundPool.load(activity, R.raw.error, 1);
 		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
+		 */
 		setRetainInstance(true);
 	}
 
@@ -167,8 +160,11 @@ public class RaceFragment extends Fragment implements TimerListener,
 			String status;
 			int result = quiz.isCorrect(answer);
 			if (result == Quiz.INCORRECT) {
+				engSpaActivity.onWrongAnswer();
+				/*!!
 				vibrator.vibrate(WRONG_VIBRATE, -1);
 				soundPool.play(soundError, 1.0f, 1.0f, 0, 0, 1.5f);
+				*/
 				status = answer + " " + getResources().getString(R.string.incorrect);
 				String hint = quiz.getHint();
 				if (hint != null && hint.length() > 0) {
@@ -183,8 +179,11 @@ public class RaceFragment extends Fragment implements TimerListener,
 					status = getResources().getString(R.string.correct);
 					onRightAnswer(); // move player in lane
 				} else { // result must be FAIL
+					engSpaActivity.onWrongAnswer();
+					/*!!
 					vibrator.vibrate(WRONG_VIBRATE, -1);
 					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
+					*/
 					status = " Answer: " + quiz.getCorrectAnswer();
 				}
 				nextQuestion();
@@ -304,8 +303,11 @@ public class RaceFragment extends Fragment implements TimerListener,
 					gameData.status = GameData.CAUGHT;
 					//!! transmitData(gameData);
 					//!! mainActivity.onLost();
+					/*!!
 					vibrator.vibrate(LOST_VIBRATE, -1);
 					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
+					*/
+					engSpaActivity.onLost();
 
 				}
             }

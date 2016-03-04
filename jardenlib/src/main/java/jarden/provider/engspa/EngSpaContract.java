@@ -93,7 +93,7 @@ public final class EngSpaContract {
 		animal, body, building, clothing, colour, culture, drink, food,
 		hobby, home, interrogative, language, mineral, money, music, n_a,
 		person, place, size, sport, technology, time,
-		transport, weather;
+		travel, weather;
 	}
 	public static final String[] wordTypeNames;
 	public static final String[] qualifierNames;

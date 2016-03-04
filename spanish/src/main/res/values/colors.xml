@@ -11,6 +11,7 @@
     
     <color name="samOrange">#f8c233</color>
     <color name="samRed">#df4241</color>
-    <color name="samBlue">#1b53af</color>
+    <!--<color name="samBlue">#1b53af</color>-->
+    <color name="samBlue">#3F51B5</color>
 
 </resources>
