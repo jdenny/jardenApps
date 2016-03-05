@@ -85,6 +85,9 @@ public class VerbUtils {
 			this.noEnding = noEnding;
 		}
 		public String conjugateVerb(String verbSpa, Tense tense, Person person) {
+			char cha = 'á';
+			char ch2 = 'á';
+
 			if (tense == Tense.future) {
 				// future is a special case because the endings are the same for
 				// all verbs; the only irregularity for some verbs is the stem.

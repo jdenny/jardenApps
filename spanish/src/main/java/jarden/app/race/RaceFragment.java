@@ -11,6 +11,7 @@ import jarden.quiz.Quiz;
 import jarden.timer.Timer;
 import jarden.timer.TimerListener;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -35,16 +36,9 @@ import android.widget.Toast;
 
 public class RaceFragment extends Fragment implements TimerListener,
 		OnClickListener, OnEditorActionListener, OnLongClickListener {
+	public static final String TAG = "RaceFragment";
 	//!! private int mode; // see QuizRaceIF
 	private static final int CHASER_DELAY_TENTHS = 100;
-	/*!!
-	private static final long[] WRONG_VIBRATE = {
-		0, 200, 200, 200
-	};
-	private static final long[] LOST_VIBRATE = {
-		0, 400, 400, 400, 400, 400
-	};
-	*/
 	// these variables don't change once setup in onCreateView:
 	private LaneView laneBView;
 	private LaneView myLaneView;
@@ -72,33 +66,29 @@ public class RaceFragment extends Fragment implements TimerListener,
 	*/
 	private EngSpaActivity engSpaActivity;
 	
+	// @SuppressWarnings("deprecation")
 	@Override // Fragment
-	public void onAttach(Activity activity) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onAttach()");
-		super.onAttach(activity);
-		this.engSpaActivity = (EngSpaActivity) activity;
+	public void onAttach(Context context) {
+		if (BuildConfig.DEBUG) Log.d(TAG, "onAttach()");
+		super.onAttach(context);
+		this.engSpaActivity = (EngSpaActivity) getActivity();
 	}
 	@SuppressWarnings("deprecation")
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onCreate(" +
+		if (BuildConfig.DEBUG) Log.d(TAG, "onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
-		/*!!
-		this.vibrator = (Vibrator) getActivity().getSystemService(
-				FragmentActivity.VIBRATOR_SERVICE);
-		this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		Activity activity = getActivity();
-		this.soundError = soundPool.load(activity, R.raw.error, 1);
-		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
-		 */
 		setRetainInstance(true);
 	}
 
-	@Override  // Fragment
+	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onCreateView()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
+		this.engSpaActivity = (EngSpaActivity) getActivity();
+		engSpaActivity.setHelp(R.string.helpNumbersGame);
+
 		Resources res = getResources();
 		this.laneCols = res.getInteger(R.integer.laneCols);
 		View view = inflater.inflate(R.layout.quizrace_layout, container, false);
@@ -142,7 +132,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	}
 	@Override // Fragment
 	public void onResume() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onResume()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "onResume()");
 		super.onResume();
 		if (isRunning()) {
 			startTimer();
@@ -205,7 +195,7 @@ public class RaceFragment extends Fragment implements TimerListener,
     }
 	@Override // Fragment
 	public void onPause() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onPause()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "onPause()");
 		super.onPause();
 		if (this.timer != null) {
 			timer.stop();
@@ -214,13 +204,13 @@ public class RaceFragment extends Fragment implements TimerListener,
 
 	@Override // Fragment
 	public void onStop() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onStop()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "onStop()");
 		super.onStop();
 	}
 	
 	@Override
 	public void onDestroy() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onDestroy()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "onDestroy()");
 		super.onDestroy();
 	}
 
@@ -237,8 +227,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 		// return if reset() called before onCreateView()
 		if (myLevelView == null) {
 			if (BuildConfig.DEBUG) {
-				Log.w(MainActivity.TAG,
-						"RaceFragment.reset() called before onCreateView()");
+				Log.w(TAG, "reset() called before onCreateView()");
 			}
 			return;
 		}
@@ -302,7 +291,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 					myLaneView.setStatus(GameData.CAUGHT);
 					gameData.status = GameData.CAUGHT;
 					//!! transmitData(gameData);
-					//!! mainActivity.onLost();
+					//!! onLost();
 					/*!!
 					vibrator.vibrate(LOST_VIBRATE, -1);
 					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
@@ -316,7 +305,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 
 	/*!! no bluetooth yet
 	private void transmitData(GameData gameData) {
-		if (this.mode == MainActivity.BLUETOOTH_MODE) {
+		if (this.mode == BLUETOOTH_MODE) {
 			byte[] data = new byte[3];
 			data[0] = (byte) gameData.position;
 			data[1] = (byte) gameData.level;
@@ -333,7 +322,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private void logMessage(String message) {
 		this.statusTextView.setText(message);
 		if (BuildConfig.DEBUG) {
-			Log.d(MainActivity.TAG, message);
+			Log.d(TAG, message);
 		}
 	}
 	

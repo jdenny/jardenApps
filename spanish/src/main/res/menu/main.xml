@@ -9,15 +9,13 @@
         android:title="@string/speakerStr"
         app:showAsAction="ifRoom"/>
 	
-	<item
-        android:id="@+id/helpButton"
-        android:icon="@drawable/help"
-        android:title="@string/questionMarkStr"
-        app:showAsAction="ifRoom"/>
-	
     <item
         android:id="@+id/userSettings"
         android:title="@string/userSettingsStr"
         app:showAsAction="never" />
-    
+
+    <item
+        android:id="@+id/deleteAllFails"
+        android:title="@string/deleteFailsStr"
+        app:showAsAction="never" />
 </menu>

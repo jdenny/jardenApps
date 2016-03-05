@@ -22,7 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class VerbTableFragment extends Fragment implements OnEditorActionListener {
+public class WordLookupFragment extends Fragment implements OnEditorActionListener {
+	public static final String TAG = "WordLookupFragment";
 
 	private EditText spanishVerbEditText;
 	private EditText englishVerbEditText;
@@ -35,15 +36,16 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.engSpaActivity = (EngSpaActivity) getActivity();
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "VerbTableFagment.onCreate(" +
+		if (BuildConfig.DEBUG) Log.d(TAG, "onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreateView()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
+		this.engSpaActivity = (EngSpaActivity) getActivity();
+		engSpaActivity.setHelp(R.string.helpWordLookup);
 
 		View rootView = inflater.inflate(R.layout.fragment_verb_table, container, false);
 		this.spanishVerbEditText = (EditText) rootView.findViewById(R.id.spanishVerbEditText);

@@ -25,7 +25,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-// TODO: merge EngSpaUtils into here
 public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private static EngSpaSQLite2 instance;
 	private static final String DB_NAME = "engspa.db";
@@ -33,6 +32,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private static final int DB_VERSION =
 			31; // updated 19 Feb 2016; now update engspaversion.txt!
 
+	private static final String TAG = "EngSpaSQLite";
 	private static final String CREATE_TABLE =
 		"CREATE TABLE " + TABLE + " (" +
 		BaseColumns._ID +          " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
@@ -92,25 +92,23 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private static final String USER_SELECTION = USER_ID + "=?";
 
 	private Context context;
-	private final String TAG;
 	private int dictionarySize = 0;
 	private Random random = new Random();
 
-	public static synchronized EngSpaSQLite2 getInstance(Context context, String debugTag) {
+	public static synchronized EngSpaSQLite2 getInstance(Context context) {
 		if (instance == null) {
-			instance = new EngSpaSQLite2(context, debugTag);
+			instance = new EngSpaSQLite2(context);
 		}
 		return instance;
 	}
-	private EngSpaSQLite2(Context context, String debugTag) {
+	private EngSpaSQLite2(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
 		this.context = context;
-		this.TAG = debugTag;
 	}
 
 	@Override // SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase engSpaDB) {
-		Log.i(this.TAG, "EngSpaSQLite.onCreate()");
+		Log.i(TAG, "onCreate()");
 		engSpaDB.execSQL(CREATE_TABLE);
 		engSpaDB.execSQL(CREATE_ATTRIBUTE_INDEX);
 		engSpaDB.execSQL(CREATE_USER_TABLE);
@@ -121,8 +119,8 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	// TODO: preserve data from user table across upgrades
 	@Override // SQLiteOpenHelper
 	public void onUpgrade(SQLiteDatabase engSpaDB, int oldVersion, int newVersion) {
-		Log.i(this.TAG,
-				"EngSpaSQLite.onUpgrade(oldVersion=" + oldVersion +
+		Log.i(TAG,
+				"onUpgrade(oldVersion=" + oldVersion +
 				", newVersion=" + newVersion + ")");
 		engSpaDB.execSQL(DROP_FAILED_WORD_VIEW);
 		engSpaDB.execSQL(DROP_TABLE); // also removes any indexes
@@ -177,7 +175,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			this.dictionarySize = this.bulkInsert(engSpaDB, contentValuesArray);
 			return this.dictionarySize; 
 		} catch (IOException e) {
-			Log.e(TAG, "exception in EngSpaSQLite.populateDatabase(): " + e);
+			Log.e(TAG, "exception in populateDatabase(): " + e);
 			return 0;
 		}
 	}

@@ -16,6 +16,7 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -43,8 +45,9 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
-		ListView.OnItemClickListener, View.OnClickListener {
-    public static final String TAG = "SpanishMain";
+		ListView.OnItemClickListener, ListView.OnItemLongClickListener,
+		View.OnClickListener {
+    public static final String TAG = "MainActivity";
 	public static final String SHOW_HELP_KEY = "SHOW_HELP_KEY";
 
     private static final String TITLE_KEY = "title";
@@ -60,12 +63,11 @@ public class MainActivity extends AppCompatActivity
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaDAO engSpaDAO;
 	private EngSpaFragment engSpaFragment;
-	private VerbTableFragment verbTableFragment;
+	private WordLookupFragment wordLookupFragment;
 	private RaceFragment raceFragment;
 	private Fragment currentFragment;
 	private String currentFragmentTag;
 	private DialogFragment userDialog;
-	private HelpDialog helpDialog;
 	private TopicDialog topicDialog;
 	private QAStyleDialog qaStyleDialog;
 	private ProgressBar progressBar;
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onCreate(savedInstanceState is " +
+				"onCreate(savedInstanceState is " +
 				(savedInstanceState==null?"":"not ") + "null)");
 		getEngSpaDAO();
 		this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
@@ -98,10 +100,11 @@ public class MainActivity extends AppCompatActivity
 		this.helpTextView.setMovementMethod(new ScrollingMovementMethod());
 		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
-		boolean showHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
-		this.showHelpCheckBox.setChecked(showHelp);
-		setHelp(R.string.helpHomePage);
-		if (!showHelp) this.helpTextView.setVisibility(View.GONE);
+		Button helpHomeButton = (Button) findViewById(R.id.helpHomeButton);
+		helpHomeButton.setOnClickListener(this);
+		boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
+		this.showHelpCheckBox.setChecked(isShowHelp);
+		if (!isShowHelp) this.helpTextView.setVisibility(View.GONE);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		this.drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -119,6 +122,7 @@ public class MainActivity extends AppCompatActivity
 				R.layout.drawer_list_item, drawerItems);
 		this.drawerList.setAdapter(adapter);
         this.drawerList.setOnItemClickListener(this);
+		this.drawerList.setOnItemLongClickListener(this);
 
 		if (savedInstanceState == null) {
 			this.currentFragmentTag = ENGSPA;
@@ -127,7 +131,7 @@ public class MainActivity extends AppCompatActivity
 			if (this.currentFragmentTag == null) this.currentFragmentTag = ENGSPA;
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
-			this.verbTableFragment = (VerbTableFragment) fragmentManager.findFragmentByTag(WORD_SEARCH);
+			this.wordLookupFragment = (WordLookupFragment) fragmentManager.findFragmentByTag(WORD_SEARCH);
 			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
 			String title = savedInstanceState.getString(TITLE_KEY);
 			if (title != null) setTitle(title);
@@ -168,7 +172,7 @@ public class MainActivity extends AppCompatActivity
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onPrepareOptionsMenu(); drawerOpen=" + drawerOpen);
+				"onPrepareOptionsMenu(); drawerOpen=" + drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -210,7 +214,7 @@ public class MainActivity extends AppCompatActivity
 				}).start();
 			}
 		} catch (IOException e) {
-			Log.e(getTag(), "MainActivity.loadDB(): " + e);
+			Log.e(TAG, "loadDB(): " + e);
 			setStatus(R.string.errorLoadingDB);
 		}
 	}
@@ -239,16 +243,18 @@ public class MainActivity extends AppCompatActivity
 		} else if (position == 4) {
 			this.engSpaFragment.setTopic(null);
 			showFragment(ENGSPA);
-		} else if (position == 5) {
-			if (this.helpDialog == null) this.helpDialog = new HelpDialog();
-			this.helpDialog.show(getSupportFragmentManager(), "HelpDialog");
 		} else {
 			this.statusTextView.setText("unrecognised item position: " + position);
 		}
 		this.drawerList.setItemChecked(position, true);
 		this.drawerList.setSelection(position);
 		this.drawerLayout.closeDrawer(this.drawerList);
-    }	
+    }
+	@Override // OnItemLongClickListener - for DrawerList
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		Snackbar.make(view, "position=" + position + "; id=" + id, Snackbar.LENGTH_LONG).show();
+		return false;
+	}
 	@Override // Activity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -256,7 +262,7 @@ public class MainActivity extends AppCompatActivity
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onOptionsItemSelected(itemId=" + id);
+				"onOptionsItemSelected(itemId=" + id);
 		if (id == android.R.id.home) {
 			drawerLayout.openDrawer(drawerList);
 			return true;
@@ -267,8 +273,8 @@ public class MainActivity extends AppCompatActivity
 		} else if (id == R.id.speakerButton) {
 			this.engSpaFragment.speakSpanish(this.currentFragmentTag.equals(ENGSPA));
 			return true;
-		} else if (id == R.id.helpButton) {
-			this.helpTextView.setText(R.string.tipTip);
+		} else if (id == R.id.deleteAllFails) {
+			this.engSpaDAO.deleteAllUserWords(-1);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -296,20 +302,20 @@ public class MainActivity extends AppCompatActivity
 	@Override // TopicDialog.TopicListener
 	public void onTopicSelected(String topic) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onTopicSelected(" + topic + ")");
+				"onTopicSelected(" + topic + ")");
 		this.engSpaFragment.setTopic(topic);
 	}
 	@Override // QAStyleDialog.QAStyleListener
 	public void onQAStyleSelected(QAStyle qaStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onQAStyleSelected(" + qaStyle + ")");
+				"onQAStyleSelected(" + qaStyle + ")");
 		this.engSpaFragment.setUserQAStyle(qaStyle);
 	}
 	@Override // Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		CharSequence title = getTitle();
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onSaveInstanceState(); title=" + title);
+				"onSaveInstanceState(); title=" + title);
 		if (title != null) {
 			savedInstanceState.putString(TITLE_KEY, title.toString());
 		}
@@ -367,7 +373,7 @@ public class MainActivity extends AppCompatActivity
 	private void showFragment(String fragmentTag) {
 		if (this.currentFragmentTag.equals(fragmentTag)) {
 			if (BuildConfig.DEBUG) Log.d(TAG,
-					"MainActivity.showFragment(" + fragmentTag +
+					"showFragment(" + fragmentTag +
 					"); already current fragment");
 			return;
 		}
@@ -381,10 +387,10 @@ public class MainActivity extends AppCompatActivity
 			}
 			this.currentFragment = engSpaFragment;
 		} else if (this.currentFragmentTag.equals(WORD_SEARCH)) {
-			if (this.verbTableFragment == null) {
-				this.verbTableFragment = new VerbTableFragment();
+			if (this.wordLookupFragment == null) {
+				this.wordLookupFragment = new WordLookupFragment();
 			}
-			this.currentFragment = verbTableFragment;
+			this.currentFragment = wordLookupFragment;
 		} else if (this.currentFragmentTag.equals(NUMBER_GAME)) {
 			if (this.raceFragment == null) {
 				this.raceFragment = new RaceFragment();
@@ -397,7 +403,7 @@ public class MainActivity extends AppCompatActivity
 		// pressing 'back'
 		boolean popped = manager.popBackStackImmediate();
 		if (BuildConfig.DEBUG) {
-			Log.d(TAG, "MainActivity.showFragment(); popped=" + popped);
+			Log.d(TAG, "showFragment(); popped=" + popped);
 		}
 		FragmentTransaction transaction = manager.beginTransaction();
 		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
@@ -416,7 +422,7 @@ public class MainActivity extends AppCompatActivity
 	@Override // UserSettingsListener
 	public void onUpdateUser(String userName, int userLevel, QAStyle qaStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onUpdateUser(" + userName + ", " + userLevel +
+				"onUpdateUser(" + userName + ", " + userLevel +
 				", " + qaStyle + ")");
 		if (userName.length() < 1) {
 			this.statusTextView.setText("no user name supplied");
@@ -441,11 +447,6 @@ public class MainActivity extends AppCompatActivity
 	@Override // EngSpaActivity
 	public void setStatus(String statusText) {
 		this.statusTextView.setText(statusText);
-	}
-
-	@Override // EngSpaActivity
-	public String getTag() {
-		return TAG;
 	}
 
 	@Override // EngSpaActivity
@@ -486,13 +487,13 @@ public class MainActivity extends AppCompatActivity
 	@Override // EngSpaActivity
 	public void setEngSpaTitle(String title) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.setEngSpaTitle(" + title + ")");
+				"setEngSpaTitle(" + title + ")");
 		this.engSpaTitle = title;
 		super.setTitle(title);
 	}
 	@Override // EngSpaActivity
 	public void setProgressBarVisible(boolean visible) {
-		progressBar.setVisibility(visible?ProgressBar.VISIBLE:ProgressBar.GONE);
+		progressBar.setVisibility(visible ? ProgressBar.VISIBLE : ProgressBar.GONE);
 	}
 	@Override // EngSpaActivity
 	public SharedPreferences getSharedPreferences() {
@@ -501,23 +502,32 @@ public class MainActivity extends AppCompatActivity
 	@Override // EngSpaActivity
 	public EngSpaDAO getEngSpaDAO() {
 		if (this.engSpaDAO == null) {
-			this.engSpaDAO = EngSpaSQLite2.getInstance(this, TAG);
+			this.engSpaDAO = EngSpaSQLite2.getInstance(getApplicationContext());
 		}
 		return this.engSpaDAO;
 	}
-
 	@Override // OnClickListener
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.showHelpCheckBox) {
-			boolean showHelp = showHelpCheckBox.isChecked();
-			this.helpTextView.setVisibility(
-					showHelp ? View.VISIBLE : View.GONE);
-			SharedPreferences.Editor editor = sharedPreferences.edit();
-			editor.putBoolean(SHOW_HELP_KEY, showHelp);
-			editor.commit();
+			showHelp(showHelpCheckBox.isChecked());
+		} else if (id == R.id.helpHomeButton) {
+			setHelp(R.string.helpHomePage);
+			if (!showHelpCheckBox.isChecked()) {
+				// if help not already showing, show it
+				showHelpCheckBox.setChecked(true);
+				showHelp(true);
+			}
 		} else {
 			this.statusTextView.setText("unrecognised onClick Id: " + id);
 		}
 	}
+	private void showHelp(boolean isShowHelp) {
+		this.helpTextView.setVisibility(
+				isShowHelp ? View.VISIBLE : View.GONE);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(SHOW_HELP_KEY, isShowHelp);
+		editor.commit();
+	}
+
 }

@@ -6,7 +6,7 @@
 	    <item>Word Lookup</item>
 	    <item>Numbers Game</item>
 	    <item>Questions By Level</item>
-	    <item>Help</item>
+	    <!-- <item>Help</item> -->
 	</string-array>
 
 	<array name="navigationDrawIcons">
@@ -15,7 +15,7 @@
         <item>@drawable/search</item>
         <item>@drawable/number</item>
         <item>@drawable/levels</item>
-        <item>@drawable/help</item>
+		<!-- <item>@drawable/help</item> -->
     </array>
     
 </resources>

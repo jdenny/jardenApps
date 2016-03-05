@@ -22,12 +22,6 @@ public interface EngSpaActivity {
 	SharedPreferences getSharedPreferences();
 	
 	/**
-	 * Get DEBUG tag
-	 * @return
-	 */
-	String getTag();
-
-	/**
 	 * Vibrate and play soundError.
 	 */
 	void onLost();

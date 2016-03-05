@@ -427,4 +427,74 @@ public class EngSpaQuiz extends Quiz {
 		QAStyle qaStyle = (cfpChar == 'F') ? this.currentWord.getQaStyle() : null; 
 		return qaStyle;
 	}
+	/**
+	 * Compare 2 Spanish words for equality.
+	 *
+	 * @return -1 if equal, -2 if different, 0 or positive if
+	 * 			differ only in accents at position n
+	 */
+	public static int compareSpaWords(String word1, String word2) {
+		int pos;
+		int res = -1;
+		for (pos = 0; pos < word1.length(); pos++) {
+			char char1 = word1.charAt(pos);
+			char char2 = word2.charAt(pos);
+			if (char1 != char2) {
+				if (sameWithoutAccent(char1, char2)) {
+					if (res < 0) res = pos; // only capture 1st difference
+				}
+				else return -2;
+			}
+		}
+		if (pos < word2.length()) res = -2;
+		return res;
+
+	}
+	/*
+	 * Assuming char1 and char2 are different, and both in lowercase,
+	 * would they be the same if their accents were removed?
+	 *
+	 * @return true if same with the accents removed
+	 */
+	private static boolean sameWithoutAccent(char char1, char char2) {
+		char char1a = removeAccent(char1);
+		char char2a = removeAccent(char2);
+		return char1a == char2a;
+	}
+	/**
+		UTF-8   ISO-8859-1 & cp1252
+	á   C3A1    E1 (225)
+	é   C3A9    E9 (233)
+	í   C3AD    ED (237)
+	ó   C3B3    F3 (243)
+	ú   C3BA    FA (250)
+	ñ   C3B1    F1 (241)
+
+	Á   C381    C1
+	É   C389    C9
+	Í   C38D    CD
+	Ó   C393    D3
+	Ú   C39A    DA
+	Ñ   C391    D1
+
+	¡   C2A1    A1
+	¿   C3BF    BF
+	 */
+	private static char removeAccent(char ch) {
+		final char[] spaChars = {'á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü'};
+		final char[] engChars = {'a', 'a', 'i', 'o', 'u', 'n', 'u'};
+		for (int i = 0; i < spaChars.length; i++) {
+			if (ch == spaChars[i]) return engChars[i];
+		}
+		/*!!
+		if (ch == 'á') return 'a';
+		if (ch == 'é') return 'e';
+		if (ch == 'í') return 'i';
+		if (ch == 'ó') return 'o';
+		if (ch == 'ú') return 'u';
+		if (ch == 'ñ') return 'n';
+		if (ch == 'ü') return 'u';
+		*/
+		return ch;
+	}
 }

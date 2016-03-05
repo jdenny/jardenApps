@@ -34,17 +34,32 @@
 	        android:visibility="gone"
 	        android:layout_height="wrap_content" />
 
-		<CheckBox
-			android:layout_width="wrap_content"
+		<LinearLayout
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/showHelpLit"
-			android:id="@+id/showHelpCheckBox" />
+			android:orientation="horizontal" >
+
+			<CheckBox
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/showHelpLit"
+				android:id="@+id/showHelpCheckBox" />
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/helpHome"
+				android:id="@+id/helpHomeButton"/>
+
+		</LinearLayout>
 
 		<TextView
 			android:id="@+id/helpTextView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:scrollbars = "vertical" />
+			android:scrollbars = "vertical"
+			android:text="@string/helpHomePage"
+			android:textSize="@dimen/helpTextFieldSize"/>
 
 	</LinearLayout>
 	
