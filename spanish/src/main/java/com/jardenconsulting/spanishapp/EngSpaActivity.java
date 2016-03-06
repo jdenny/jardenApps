@@ -46,9 +46,8 @@ public interface EngSpaActivity {
 	void setStatus(int statusId);
 	void setStatus(String statusText);
 
+	void setHelp(String pageName);
 	void showTopicDialog();
-
-	void setHelp(int stringId);
 
 	/**
 	 * Set Spanish word (see setSpanish) and speak it.

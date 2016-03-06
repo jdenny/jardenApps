@@ -7,78 +7,19 @@
     <string name="chooseTopicStr">Choose Topic</string>
     <string name="conjugateStr">Conjugate</string>
     <string name="correctQueryStr">Correct?</string>
-    <string name="correctButtonTip">
-        Press if your mental guess was correct, or you want to skip this word;
-        it will not be added to your list of failed words</string>
     <string name="currentStr">Currents:</string>
     <string name="deleteFailsStr">Delete all fails</string>
     <string name="englishStr">English</string>
     <string name="errorLoadingDB">Error loading database!</string>
     <string name="explainLit">Explain</string>
     <string name="failStr">Fails:</string>
-    <string name="failCtTip">
-        Number of words you got wrong at this level or carried over from
-        previous levels</string>
-    <string name="goButtonTip">
-        The question is as shown in the top coloured line. Think of your answer (if the
-        required answer is Spanish, ideally speak it aloud) and press Go and we will fill
-        in the correct answer; you can then tell us if you got it right or not.
-        Note: if you want to skip a word, just pretend you got it right!
-        Alternatively type in your answer and press Go, and we will mark it for you.
-        Self mark mode only works if the answer is blank.
-    </string>
     <string name="goStr">Go</string>
-    <string name="helpEngSpa">
-        Depending on <i>Question Style</i>, we speak the question or print it in
-        first coloured field (blue for English, red for Spanish); 2nd field is
-        a hint if relevant; 3rd field is for the answer; type in the answer and
-        we will mark it, or press Go with the answer field blank, and we will
-        let you mark it yourself.
-
-        Using <i>Question Style</i> you can choose Spanish-to-English or
-        English-to-Spanish; the question can be printed or spoken; normally
-        we mark our own answers (to save fiddling with small keyboards) but if
-        you want to check your spelling you can type in the answer. If you want
-        to check your Spanish pronunciation and you have Wi-Fi, you can speak
-        the answer and we will use Google speech recognition to try to decipher
-        what you are saying.
-
-    </string>
-    <string name="helpHomePage">
-        <b>¡Bienvenida! Welcome!</b>\n
-        Left swipe from side of screen to see main menu; long press on a button
-        to show tip. Spanish has several words for <i>you</i>;
-        to differentiate in English we use <i>thou</i> for the familiar, and <i>YOU</i>
-        for the plural. If you have any comments or suggestions for improving this app,
-        please send an email to amazemequiz@gmail.com
-    </string>
-    <string name="helpNumbersGame">
-        Listen to the numbers spoken in Spanish, and type in that number; if you
-        get the number correct, your blue man will move forward; if the red man
-        reaches the end before you, you have lost; if you get to the end before
-        him, you go back to the beginning at the next level, where the red man
-        gets slightly faster, and the questions get slightly harder. If you get
-        caught, you can still continue to answer questions, but you will stay
-        at the same level.
-    </string>
-    <string name="helpWordLookup">
-        Type in a word, either Spanish or English, and press <i>Go</i> on the soft
-        keyboard. If the word is a verb, the full conjugation will be shown;
-        otherwise we show the definition of that word from the dictionary.
-        Press <i>back</i> button to return to the main screen, or swipe in
-        from the left for the main menu.
-    </string>
     <string name="homeStr">Home</string>
-    <string name="incorrectButtonTip">
-Press if your mental guess was wrong; this word will be added to
-your list of failed words</string>
     <string name="levelStr">Level:</string>
     <string name="listFailsStr">List all fails</string>
     <string name="loadDBDone">Loading Spanish dictionary complete</string>
     <string name="loadingDB">Loading Spanish dictionary - please be patient with us!</string>
     <string name="reloadingDB">Loading new dictionary version - please be patient with us!</string>
-    <string name="micButtonTip">
-        Allows you to speak the answer; requires internet connection</string>
     <string name="micStr">Mic</string>
     <string name="noLit">No</string>
     <string name="numberGameStr">Number Game</string>
@@ -91,15 +32,12 @@ your list of failed words</string>
     <string name="questionMarkStr">¿\?</string>
     <string name="questionStyleStr">Question Style</string>
     <string name="repeatStr">Repeat</string>
-    <string name="repeatButtonTip">Repeat the spoken question</string>
     <string name="resetStr">Reset</string>
-    <string name="resetButtonTip">Restart the game, 2 levels below current</string>
     <string name="sentenceStr">Sentence</string>
     <string name="showHelpLit">Show Help</string>
     <string name="showStr">Show</string>
     <string name="spanishHelpStr">Spanish Help</string>
     <string name="spanishStr">Spanish</string>
-    <string name="speakerButtonTip">Listen to the current Spanish word</string>
     <string name="speechRecognitionError">Speech recognition failed!</string>
     <string name="speakerStr">Speaker</string>
     <string name="ttsClosed">textToSpeech closed down</string>

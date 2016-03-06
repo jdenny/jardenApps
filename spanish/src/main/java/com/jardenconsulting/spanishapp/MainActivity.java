@@ -2,9 +2,11 @@ package com.jardenconsulting.spanishapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
+import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaSQLite2;
@@ -16,6 +18,7 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -30,6 +33,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity
 	private String appTitle;
 	private TextView helpTextView;
 	private CheckBox showHelpCheckBox;
+	private DocumentTextView documentTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,15 +105,33 @@ public class MainActivity extends AppCompatActivity
 		this.helpTextView.setMovementMethod(new ScrollingMovementMethod());
 		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
+		Resources resources = getResources();
+		HashMap<String, String> helpMap = new HashMap<>();
+		helpMap.put("Main", resources.getString(R.string.Main));
+		helpMap.put("Home", resources.getString(R.string.Home));
+		helpMap.put("WordLookup", resources.getString(R.string.WordLookup));
+		helpMap.put("NumbersGame", resources.getString(R.string.NumbersGame));
+		helpMap.put("failCtTip", resources.getString(R.string.failCtTip));
+		helpMap.put("goButtonTip", resources.getString(R.string.goButtonTip));
+		helpMap.put("incorrectButtonTip", resources.getString(R.string.incorrectButtonTip));
+		helpMap.put("micButtonTip", resources.getString(R.string.micButtonTip));
+		helpMap.put("resetButtonTip", resources.getString(R.string.resetButtonTip));
+		helpMap.put("speakerButtonTip", resources.getString(R.string.speakerButtonTip));
+		helpMap.put("correctButtonTip", resources.getString(R.string.correctButtonTip));
+		this.documentTextView = new DocumentTextView(helpTextView, helpMap, "Home");
+		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		helpTextView.setHighlightColor(Color.TRANSPARENT);
+
+		/*!!
 		Button helpHomeButton = (Button) findViewById(R.id.helpHomeButton);
 		helpHomeButton.setOnClickListener(this);
+		*/
 		boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
 		this.showHelpCheckBox.setChecked(isShowHelp);
 		if (!isShowHelp) this.helpTextView.setVisibility(View.GONE);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		this.drawerList = (ListView) findViewById(R.id.left_drawer);
-		Resources resources = getResources();
 		this.appTitle = resources.getString(R.string.app_name);
 		this.drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
 		TypedArray iconArray = resources.obtainTypedArray(R.array.navigationDrawIcons);
@@ -162,8 +185,8 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override // EngSpaActivity
-	public void setHelp(int helpId) {
-		this.helpTextView.setText(helpId);
+	public void setHelp(String pageName) {
+		this.documentTextView.showPage(pageName);
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
@@ -274,7 +297,7 @@ public class MainActivity extends AppCompatActivity
 			this.engSpaFragment.speakSpanish(this.currentFragmentTag.equals(ENGSPA));
 			return true;
 		} else if (id == R.id.deleteAllFails) {
-			this.engSpaDAO.deleteAllUserWords(-1);
+			getEngSpaQuiz().deleteAllFails();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -469,6 +492,9 @@ public class MainActivity extends AppCompatActivity
 			questionSequenceKey = "QSN_" + getEngSpaUser().getUserId();
 		}
 		int questionSeq = sharedPreferences.getInt(questionSequenceKey, 0);
+		if (questionSeq == 0 && BuildConfig.DEBUG) {
+			Log.w(TAG, "getQuestionSequence() returning zero");
+		}
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(questionSequenceKey, ++questionSeq);
 		editor.commit();
@@ -511,6 +537,7 @@ public class MainActivity extends AppCompatActivity
 		int id = view.getId();
 		if (id == R.id.showHelpCheckBox) {
 			showHelp(showHelpCheckBox.isChecked());
+		/*!!
 		} else if (id == R.id.helpHomeButton) {
 			setHelp(R.string.helpHomePage);
 			if (!showHelpCheckBox.isChecked()) {
@@ -518,6 +545,7 @@ public class MainActivity extends AppCompatActivity
 				showHelpCheckBox.setChecked(true);
 				showHelp(true);
 			}
+			*/
 		} else {
 			this.statusTextView.setText("unrecognised onClick Id: " + id);
 		}

@@ -427,6 +427,15 @@ public class EngSpaQuiz extends Quiz {
 		QAStyle qaStyle = (cfpChar == 'F') ? this.currentWord.getQaStyle() : null; 
 		return qaStyle;
 	}
+
+	/**
+	 * Used in an emergency! Deletes all fail words.
+	 */
+	public void deleteAllFails() {
+		this.engSpaDAO.deleteAllUserWords(-1);
+		failedWordList.clear();
+	}
+
 	/**
 	 * Compare 2 Spanish words for equality.
 	 *

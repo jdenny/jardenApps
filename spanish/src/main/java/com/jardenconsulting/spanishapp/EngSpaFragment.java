@@ -156,7 +156,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					"; savedInstanceState is " + (savedInstanceState==null?"":"not ") + "null");
 		}
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp(R.string.helpEngSpa);
+		engSpaActivity.setHelp("Main");
 		// Potentially restore state after configuration change; before we re-create
 		// the views, get relevant information from current values. See knowledgeBase.txt
 		CharSequence questionText = null;
@@ -337,27 +337,17 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		// TODO: turn on show help if not already on
 		int id = view.getId();
 		if (id == R.id.goButton) {
-			engSpaActivity.setHelp(R.string.goButtonTip);
-			//!! this.statusTextView.setText(R.string.goButtonTip);
+			engSpaActivity.setHelp("goButtonTip");
 			return true;
 		} else if (id == R.id.correctButton) {
-			//! this.statusTextView.setText(R.string.correctButtonTip);
-			engSpaActivity.setHelp(R.string.correctButtonTip);
+			engSpaActivity.setHelp("correctButtonTip");
 			return true;
 		} else if (id == R.id.incorrectButton) {
-			engSpaActivity.setHelp(R.string.incorrectButtonTip);
-			//!! this.statusTextView.setText(R.string.incorrectButtonTip);
+			engSpaActivity.setHelp("incorrectButtonTip");
 			return true;
 		} else if (id == R.id.micButton) {
-			engSpaActivity.setHelp(R.string.micButtonTip);
-			//!! this.statusTextView.setText(R.string.micButtonTip);
+			engSpaActivity.setHelp("micButtonTip");
 			return true;
-		/*!!
-		} else if (id == R.id.failCtLabel || id == R.id.failCtTextView) {
-			engSpaActivity.setHelp(R.string.failCtTip);
-			//!! this.statusTextView.setText(R.string.failCtTip);
-			return true;
-		 */
 		}
 		return false;
     }
@@ -365,13 +355,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onInit(int status) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onInit()");
 		engSpaActivity.setProgressBarVisible(false);
-		//!! this.statusTextView.setText("");
 		if (status == TextToSpeech.SUCCESS) {
 			if (this.textToSpeech == null) {
 				// this could happen if activity is paused between creating
 				// new textToSpeech and getting the response back here
 				engSpaActivity.setStatus(R.string.ttsClosed);
-				//!! this.statusTextView.setText("textToSpeech closed down");
 				return;
 			}
 			int result = textToSpeech.setLanguage(LOCALE_ES);
@@ -386,8 +374,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			if (this.spanish != null) speakSpanish2(); 
 		} else {
 			Log.w(TAG, "onInit(" + status + ")");
-			//!! this.statusTextView.setText(
-			//!!	"Initilization of textToSpeech failed! Have you installed text-to-speech?");
 			engSpaActivity.setStatus(R.string.ttsFailed);
 		}
 	}

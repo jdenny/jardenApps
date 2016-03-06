@@ -87,7 +87,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp(R.string.helpNumbersGame);
+		engSpaActivity.setHelp("helpNumbersGame");
 
 		Resources res = getResources();
 		this.laneCols = res.getInteger(R.integer.laneCols);

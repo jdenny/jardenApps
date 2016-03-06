@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Main">
+        [a]Home[/a] Depending on [i]Question Style[/i], we speak the question or
+        print it in first coloured field (blue for English, red for Spanish);
+        2nd field is a hint if relevant; 3rd field is for the answer; type in the
+        answer and we will mark it, or press Go with the answer field blank, and
+        we will let you mark it yourself.\n
+        \n
+        Using [i]Question Style[/i] you can choose Spanish-to-English or
+        English-to-Spanish; the question can be printed or spoken; normally
+        we mark our own answers (to save fiddling with small keyboards) but if
+        you want to check your spelling you can type in the answer. If you want
+        to check your Spanish pronunciation and you have Wi-Fi, you can speak
+        the answer and we will use Google speech recognition to try to decipher
+        what you are saying.
+    </string>
+    <string name="Home">
+        [b]¡Bienvenida! Welcome![/b]\n
+        Left swipe from side of screen to see main menu; long press on a button
+        to show tip. Spanish has several words for [i]you[/i];
+        to differentiate in English we use [i]thou[/i] for the familiar, and [i]YOU[/i]
+        for the plural.\n
+        Help Topics: [a]Main[/a], [a]NumbersGame[/a], [a]WordLookup[/a].
+        If you have any comments or suggestions for improving this app,
+        please send an email to amazemequiz@gmail.com
+    </string>
+    <string name="NumbersGame">
+        [a]Home[/a] Listen to the numbers spoken in Spanish, and type in that number; if you
+        get the number correct, your blue man will move forward; if the red man
+        reaches the end before you, you have lost; if you get to the end before
+        him, you go back to the beginning at the next level, where the red man
+        gets slightly faster, and the questions get slightly harder. If you get
+        caught, you can still continue to answer questions, but you will stay
+        at the same level.
+    </string>
+    <string name="WordLookup">
+        [a]Home[/a] Type in a word, either Spanish or English, and press [i]Go[/i] on the soft
+        keyboard. If the word is a verb, the full conjugation will be shown;
+        otherwise we show the definition of that word from the dictionary.
+        Press [i]back[/i] button to return to the main screen, or swipe in
+        from the left for the main menu.
+    </string>
+    <string name="failCtTip">
+        [a]Home[/a] Number of words you got wrong at this level or carried over from
+        previous levels</string>
+    <string name="goButtonTip">
+        [a]Home[/a] The question is as shown in the top coloured line. Think of your answer (if the
+        required answer is Spanish, ideally speak it aloud) and press Go and we will fill
+        in the correct answer; you can then tell us if you got it right or not.
+        Note: if you want to skip a word, just pretend you got it right!
+        Alternatively type in your answer and press Go, and we will mark it for you.
+        Self mark mode only works if the answer is blank.
+    </string>
+    <string name="incorrectButtonTip">
+        [a]Home[/a] Press if your mental guess was wrong; this word will be added to
+        your list of failed words
+    </string>
+    <string name="micButtonTip">
+        [a]Home[/a] Allows you to speak the answer; requires internet connection
+    </string>
+    <string name="resetButtonTip">
+        [a]Home[/a] Restart the game, 2 levels below current
+    </string>
+    <string name="speakerButtonTip">
+        [a]Home[/a] Listen to the current Spanish word
+    </string>
+    <string name="correctButtonTip">
+        [a]Home[/a]Press if your mental guess was correct, or you want to skip this
+        word; it will not be added to your list of failed words
+    </string>
+</resources>

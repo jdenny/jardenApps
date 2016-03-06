@@ -45,7 +45,7 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp(R.string.helpWordLookup);
+		engSpaActivity.setHelp("helpWordLookup");
 
 		View rootView = inflater.inflate(R.layout.fragment_verb_table, container, false);
 		this.spanishVerbEditText = (EditText) rootView.findViewById(R.id.spanishVerbEditText);
