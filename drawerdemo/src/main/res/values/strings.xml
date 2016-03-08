@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">DrawerDemo</string>
+    <string name="correctQueryStr">Correct?</string>
+    <string name="currentStr">Currents:</string>
+    <string name="drawer_close">Drawer Close</string>
+    <string name="drawer_open">Drawer Open</string>
+
+    <string name="failStr">Fails:</string>
+    <string name="goStr">Go</string>
+    <string name="lunes">Lunes fragment</string>
+    <string name="martes">Martes fragment</string>
+    <string name="micStr">Mic</string>
+    <string name="noStr">No</string>
+    <string name="spanishStr">Spanish</string>
+    <string name="yesStr">Yes</string>
+    <string name="hyperStr">
+        Some text containing <b>bold</b>, <u>underline</u> and <i>italics</i>
+    </string>
+    <string name="EngSpa">
+        [a]Home[/a] Plus some [b]bold[/b] text telling you how to use EngSpa!
+    </string>
+    <string name="Home">
+        Welcome!\n
+        [a]EngSpa[/a]\n
+        [a]WordLookup[/a]\n
+        Isn\'t this [b]great![/b]\n
+        This is [r]red[/r]; this is [l]large[/l]\n
+        Bullet points:\n
+        [t]point 1[/t]\n
+        [t]point 2[/t]
+    </string>
+    <string name="WordLookup">
+        Word Lookup Help. [a]Home[/a]\n
+        Plus some text telling you how to use [i]Word Lookup[/i]!
+    </string>
+    <string name="miercoles">Miércoles</string>
+
+</resources>
