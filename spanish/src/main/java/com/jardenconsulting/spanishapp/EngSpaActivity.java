@@ -46,7 +46,7 @@ public interface EngSpaActivity {
 	void setStatus(int statusId);
 	void setStatus(String statusText);
 
-	void setHelp(String pageName);
+	void setHelp(int resId);
 	void showTopicDialog();
 
 	/**
@@ -55,12 +55,8 @@ public interface EngSpaActivity {
 	 */
 	void speakSpanish(String spanish);
 	
-	/**
-	 * Set engSpa title in the App bar. This is specifically the
-	 * title used in EngSpaFragment.
-	 * @param title
-	 */
-	void setEngSpaTitle(String title);
+	void setAppBarTitle(int resId);
+    void setAppBarTitle(String title);
 }
 
 

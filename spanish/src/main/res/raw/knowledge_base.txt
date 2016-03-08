@@ -1,0 +1,289 @@
+git
+---
+https://github.com/jdenny/Jarden.git
+
+WorkingDirectory	   LocalRepository
+		  StagingArea(index)
+		  			   			  RemoteRepository
+
+WD -add-> SA -commit-> LR -push-> RR
+
+WD <-checkout--------- LR <-pull- RR
+WD <-merge------------ LR
+
+HEAD is the most recent commit on the current branch
+
+SQLite
+------
+sqlite3.exe is client; see http://developer.android.com/tools/help/sqlite3.html
+but sqlite is not installed on my device!
+
+in DOS shell:
+>cd C:\Program Files (x86)\Android\android-sdk\platform-tools
+>adb shell
+shell@android:/ $ sqlite3
+
+using google sites
+------------------
+go to https://sites.google.com/
+if logged into Google as me, will show my sites
+within a site, can hold html web pages - create page, web page
+	or create a folder to hold raw files - create page, file cabinet
+	
+Problems on re-opening Eclipse
+------------------------------
+"Unable to get system library for the project"
+see http://droidarc.blogspot.co.uk/2012/08/unable-to-get-system-library-for-project.html
+remove entry "unable to get..."
+right-click project, android tools, fix project properties
+
+Deleting files on device
+------------------------
+open DOS window
+>cd C:\Program Files (x86)\Android\android-sdk\platform-tools
+>adb shell
+shell@flo:/ $ cd /mnt/shell/emulated/0
+
+useful unix
+-----------
+$ hexdump -C VerbUtils.java
+
+Linking projects together
+-------------------------
+Java project can refer to Android project (library or otherwise)
+	e.g. AmazeQuiz, Properties, Java Build Path, Projects -> JardenAppLib
+	e.g. AppClassTest, Properties, Java Build Path, Projects -> KnowMeApp3
+
+Android project can refer to Android library project
+	e.g. QuizRaceApp, Properties, Android, Library -> JardenAppLib
+
+An Android project can link to a Java project, but will fail at run time
+when it tries to access a class - java.lang.VerifyError; class files are incompatible!
+okay if it's just interfaces
+
+Coping with configuration changes
+---------------------------------
+If all layouts are the same for landscape and portrait, then the
+easiest solution is to include the following in the manifest file
+	android:configChanges="orientation|keyboardHidden|screenSize"
+However this doesn't cope with the app being interrupted by another
+app (user chooses Home, open another app, return to first app, or
+user receives a phone call), so it's still worth the effort to
+get it right, as follows.
+
+In each Fragment, in onCreate(), call setRetainInstance(true);
+this means onCreate() and onDestroy() will not be called on recreation,
+e.g. configuration change. But onCreateView() will still be called,
+so the view can be created from different resources. The instance
+values will be retained, but the contents of the Views (as they
+are re-created) will not be. One trick I've discovered is to get any
+old values from Views before they are re-created, e.g.
+	Fragment.onCreateView(...) {
+		String pendingAnswer = null;
+		if (this.answerEditText != null) pendingAnswer = 
+			answerEditText.getText().toString();
+		View rootView = inflater.inflate(...);
+		this.answerEditText = rootView.findViewById(...);
+		if (pendingAnswer != null) {
+			answerEditText.setText(pendingAnswer);
+
+The Activity itself will be recreated, so the fragments mustn't
+have references to the activity, or else those references will
+still be the old one; not only memory leaks, but the 2 versions
+will soon be out of sync.
+
+Where we manually create fragments within the activity (so it's easier
+if we don't!) we need to check if the fragment has been retained, e.g.
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		if (savedInstanceState == null) {
+			this.gameFragment = new GameFragment();
+			FragmentTransaction ft = fragmentManager.beginTransaction();
+			ft.add(R.id.container, this.gameFragment, GAME);
+			ft.commit();
+		} else {
+			this.gameFragment = (GameFragment) fragmentManager.findFragmentByTag(GAME);
+		}
+	}
+	
+E.g. for SpanishApp:
+fresh start of app:
+	MainActivity.onCreate(state null)
+	EngSpaFragment.onAttach()
+	EngSpaFragment.onCreate(state null)
+	EngSpaFragment.onCreateView()
+	EngSpaFragment.onResume()
+
+on open app after Android has destroyed it:
+	EngSpaFragment.onAttach()
+	EngSpaFragment.onCreate(state not null)
+	MainActivity.onCreate(state not null)
+	EngSpaFragment.onCreateView()
+	EngSpaFragment.onResume()
+
+rotate device:
+	same as above, except no Fragment.onCreate()
+	EngSpaFragment.onPause() // closing down previous
+	
+	EngSpaFragment.onAttach()
+	MainActivity.onCreate(state not null)
+	EngSpaFragment.onCreateView()
+	EngSpaFragment.onResume()
+
+run another app:
+	EngSpaFragment.onPause() // closing down previous
+	
+	EngSpaFragment.onResume()
+
+back from other fragment:
+	EngSpaFragment.onCreateView(state is null)
+	EngSpaFragment.onResume()
+
+Note that removing or replacing a fragment in a fragmentTransaction will destroy
+the fragment, unless it is added to the backStack as part of the same transaction.
+
+Spinners
+--------
+When the spinner layout is calculated, list is set up,
+the method onItemSelected() is automatically invoked.
+If the items in the list are later changed, onItemSelected()
+is NOT automatically invoked.
+
+Publishing an app
+-----------------
+Note: java's keystore: C:\Program Files\Java\jdk1.7.0_51\jre\lib\security\cacerts
+	default password: changeit; new password: <insecure>
+	
+create john's private key and public certificate:
+	keytool -genkey -alias john2 -keypass <insecure> [-keysize 512] -keyalg RSA \
+		-keystore c:/users/john/java/keystores/johnIdentity2.jks -storepass <insecure>
+		Owner: CN=john, OU=Android, O=John Denny Limited, L=Bournemouth, ST=Dorset, C=UK
+	Notes: WebLogic requires RSA
+		list keys in keystore
+			keytool -list -v
+		export public cert
+			keytool -export -alias john2 -file johnCertFile.cer
+		import cert into BEA's CertStore:
+			keytool -import -alias john2 -file johnCertFile.cer -keypass johncertpass
+	
+in eclipse
+	export android application
+	use existing keystore:
+		C:\Users\John\java\keystores\johnIdentity2.jks
+		
+open Android developer console:
+	https://play.google.com/apps/publish/
+	upload <app>.apk to alpha testing
+	manage list of testers: johnsandroidtesters@googlegroups.com
+
+Screen shots
+------------
+On Nexus 7
+	simultaneously press power and volume down buttons; saved in Photos
+On S3 mini
+	simultaneously press power and home buttons; saved in Gallery
+On Samsung Galaxy Young
+	Press and hold Home key, press and release Power key, release home key
+	Screen shots saved to Gallery, under ScreenCapture
+	click on notification to connect storage to PC
+
+Launch Icons					Scale factor	Action bar icons
+------------					For bitmaps		----------------
+ldpi	~120 dpi	36x36		0.75
+mdpi	~160 dpi	48x48		1.0 [1]			32x32
+hdpi	~240 dpi	72x72		1.5				48x48
+xhdpi	~320 dpi	96x96		2.0				64x64
+xxhdpi	~480 dpi	144x144		3.0				96x96
+xxxhdpi	~640 dpi	192x192		4.0				128x128
+
+Plus, for play store:
+	hi-res icon: 32-bit PNG (with alpha), 512 x 512, max file size: 1024KB
+	feature graphic: JPEG or 24-bit PNG (no alpha), 1024 by 500
+
+[1] baseline; px = dp * (dpi / 160)
+	dpi means dots per inch
+
+Screen sizes
+------------
+small	>= 426dp x 320dp
+normal	>= 470dp x 320dp
+large	>= 640dp x 480dp
+xlarge	>= 960dp x 720dp
+
+my devices
+----------
+Samsung Galaxy S3 Mini, GT-I8190N
+	480 x 800 pixels, 4.0", ~233 ppi
+	Android 4.1.2, Jellybean, API 16
+	8Gb, 1Gb RAM
+	7.34Gb SD card
+Asus Google Nexus 7
+	1200 x 1920 pixels, 7.0 inches ~323 ppi
+		or 595 x 950 dp
+	32Gb Memory, 2Gb RAM
+	Android 6.0.1, Marshmallow, API 23
+Samsung Galaxy Note 3, SM-N9005
+	1080 x 1920 pixels, 5.7", ~386 ppi
+	Android 5.0, Lollipop, API 21
+	32Gb, 3Gb RAM
+samsung galaxy young (Y) GT-S5360
+	240 x 320 pixels, 3.0 inches, ~133 ppi
+		or 290 x 385 dp
+	Android 2.3.6, Gingerbread, API 10
+	160Mb available memory, 290Mb Ram
+	
+Media
+-----
+Some useful code!
+	String state = Environment.getExternalStorageState();
+	if (!state.equals(Environment.MEDIA_MOUNTED)) {
+		Toast.makeText(this, "external storage state: " + state, Toast.LENGTH_LONG).show();
+		this.finish();
+	}
+	File sdDir = Environment.getExternalStorageDirectory();
+	
+	MediaPlayer mediaPlayer = new MediaPlayer();
+	mediaPlayer.setDataSource(fullPath);
+	mediaPlayer.prepare();
+	mediaPlayer.start();
+	
+	public void onPause() {
+		if (this.mediaPlayer != null) {
+			mediaPlayer.stop();
+			mediaPlayer.release();
+			mediaPlayer = null;
+		}
+	}
+
+Change font size in Eclipse
+---------------------------
+window -> preferences -> general -> appearance ->
+	colors and fonts -> Java Editor Text Font -> Edit
+	e.g. Consolas 16
+
+Layouts for making a form
+-------------------------
+LinearLayout
+	LinearLayout
+		TextView, layout_width="0dp", layout_weight="0.3"
+		EditText, layout_width="0dp", layout_weight="0.7"
+	LinearLayout etc
+
+(GridLayout from API 14, or use android.support.v7.widget.GridLayout)
+GridLayout, columnCount=2
+	TextView, layout_row="0", layout_column="0" (no width or height)
+	EditText, layout_row="0", layout_column="1"
+	TextView, layout_row="1" etc
+
+TableLayout, stretchColumns="1" (column/s to fill extra space)
+	TableRow
+		TextView (no width or height)
+		EditText
+	TableRow etc
+	TableRow
+		LinearLayout, layout_span="2"
+			Button, layout_width="wrap_content"
+			Button

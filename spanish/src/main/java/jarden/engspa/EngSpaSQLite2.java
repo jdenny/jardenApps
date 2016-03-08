@@ -133,14 +133,14 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	public int newDictionary() {
 		SQLiteDatabase engSpaDB = getWritableDatabase();
 		int delRowCt = delete(engSpaDB, null, null);
-		Log.i(TAG, "EngSpaSQLite2.newDictionary(); rows deleted from database: " + delRowCt);
+		Log.i(TAG, "newDictionary(); rows deleted from database: " + delRowCt);
 		return populateDatabase(engSpaDB);
 	}
 	
 	@Override // EngSpaDAO
 	public int updateDictionary(List<String> updateLines) {
 		if (BuildConfig.DEBUG)
-			Log.d(TAG, "EngSpaSQLite2.updateDictionary(); updateLines.size=" +
+			Log.d(TAG, "updateDictionary(); updateLines.size=" +
 					updateLines.size());
 		int rowCount = 0;
 		for (String line: updateLines) {
@@ -162,7 +162,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 					if (BuildConfig.DEBUG) Log.d(TAG, "id of new row: " + id);
 				}
 			} catch (Exception e) {
-				Log.e(TAG, "EngSpaSQLite2.updateDictionary(); exception: " + e);
+				Log.e(TAG, "updateDictionary(); exception: " + e);
 			}
 		}
 		return rowCount;
@@ -186,7 +186,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			Attribute.valueOf((String) values.get(ATTRIBUTE));
 			return true;
 		} catch(Exception ex) {
-			Log.e(TAG, "exception in EngSpaSQLite2.validateValues(" + values + "): " + ex);
+			Log.e(TAG, "exception in validateValues(" + values + "): " + ex);
 			return false;
 		}
 	}
@@ -200,14 +200,14 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		if (valuesArray == null || valuesArray.length == 0) {
 			// restoreDB from local file
 			rows = delete(engSpaDB, null, null);
-			Log.i(TAG, "EngSpaSQLite2.bulkInsert(); rows deleted from database: " + rows);
+			Log.i(TAG, "bulkInsert(); rows deleted from database: " + rows);
 			rows = populateDatabase(engSpaDB);
 		} else {
 			for (ContentValues contentValues: valuesArray) {
 				if (insert(engSpaDB, contentValues) > 0) ++rows;
 			}
 		}
-		Log.i(TAG, "EngSpaSQLite2.bulkInsert(); rows added to database: " + rows);
+		Log.i(TAG, "bulkInsert(); rows added to database: " + rows);
 		return rows;
 	}
 	private Cursor getCursor(String[] columns, String selection,
@@ -275,7 +275,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public List<EngSpa> getFailedWordList(int userId) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"EngSpaSQLite2.getFailedWordList(userId=" + userId + ")");
+				"getFailedWordList(userId=" + userId + ")");
 		Cursor cursor = null;
 		try {
 			cursor = getReadableDatabase().query(
@@ -297,7 +297,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				wordList.add(engSpa);
 			}
 			if (BuildConfig.DEBUG) {
-				Log.d(TAG, "EngSpaSQLite2.getFailedWordList got " +
+				Log.d(TAG, "getFailedWordList got " +
 						wordList.size() + " words");
 			}
 			return wordList;
@@ -382,7 +382,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		String sql = "select * from " + TABLE +
 				" where _id >= " + firstId + " and _id < " + lastId;
 		if (BuildConfig.DEBUG) Log.d(TAG,
-			"EngSpaSQLite2.getCurrentWordList(" + userLevel +
+			"getCurrentWordList(" + userLevel +
 			"); about to get words from " + firstId + " to " + (lastId-1));
 		Cursor cursor = null;
 		try {
@@ -392,7 +392,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				wordList.add(engSpaFromCursor(cursor));
 			}
 			if (BuildConfig.DEBUG) Log.d(TAG,
-					"EngSpaSQLite2.getCurrentWordList(); words obtains: " +
+					"getCurrentWordList(); words obtains: " +
 					wordList.size());
 			return wordList;
 		} finally {
@@ -425,7 +425,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	@Override // EngSpaDAO
 	public EngSpa getWordById(int id) {
-		if (BuildConfig.DEBUG) Log.d(TAG, "EngSpaSQLite2.getWordById(" + id + ")");
+		if (BuildConfig.DEBUG) Log.d(TAG, "getWordById(" + id + ")");
 		Cursor cursor = null;
 		try {
 			cursor = getCursor(PROJECTION_ALL_FIELDS,
@@ -438,7 +438,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			if (cursor.moveToFirst()) {
 				return engSpaFromCursor(cursor);
 			} else {
-				Log.w(TAG, "EngSpaSQLite2.getWordById; moveToFirst() was false!");
+				Log.w(TAG, "getWordById; moveToFirst() was false!");
 				return null;
 			}
 		} finally {
@@ -548,7 +548,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
 				user = new EngSpaUser(userId, userName, userLevel,
 						qaStyle);
-				Log.i(TAG, "EngSpaSQLite2.getUser() retrieved from database: " + user);
+				Log.i(TAG, "getUser() retrieved from database: " + user);
 			}
 			return user;
 		} finally {

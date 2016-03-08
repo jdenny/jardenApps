@@ -14,6 +14,7 @@
     <string name="explainLit">Explain</string>
     <string name="failStr">Fails:</string>
     <string name="goStr">Go</string>
+    <string name="helpHome">Help Home</string>
     <string name="homeStr">Home</string>
     <string name="levelStr">Level:</string>
     <string name="listFailsStr">List all fails</string>
@@ -22,7 +23,7 @@
     <string name="reloadingDB">Loading new dictionary version - please be patient with us!</string>
     <string name="micStr">Mic</string>
     <string name="noLit">No</string>
-    <string name="numberGameStr">Number Game</string>
+    <string name="numbersGameLit">Numbers Game</string>
     <string name="numberPrompt">Number</string>
     <string name="one">1</string>
     <string name="passStr">Pass</string>
@@ -40,6 +41,7 @@
     <string name="spanishStr">Spanish</string>
     <string name="speechRecognitionError">Speech recognition failed!</string>
     <string name="speakerStr">Speaker</string>
+    <string name="supplyWord">Please supply Spanish or English word</string>
     <string name="ttsClosed">textToSpeech closed down</string>
     <string name="ttsFailed">
         Initialisation of textToSpeech failed! Have you installed text-to-speech?</string>
@@ -51,11 +53,10 @@
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
     <string name="userSettingsStr">User Settings</string>
-    <!--<string name="verbTableStr">Verb Table</string>-->
     <string name="verbsOnlyStr">Verbs Only</string>
     <string name="wordStr">Word</string>
+    <string name="wordLookupLit">Word Lookup</string>
     <string name="yesLit">Yes</string>
-    <string name="helpHome">Help Home</string>
 
 
 </resources>

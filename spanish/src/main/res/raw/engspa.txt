@@ -146,7 +146,6 @@ purple,morado,adjective,n_a,colour,1
 violet,violeta,adjective,n_a,colour,1
 light blue,azul claro,adjective,n_a,colour,1
 dark blue,azul oscuro,adjective,n_a,colour,1
-and,y,conjunction,n_a,n_a,1
 but,pero,conjunction,n_a,n_a,1
 if,si,conjunction,n_a,n_a,1
 though,aunque,conjunction,n_a,n_a,1
@@ -336,6 +335,7 @@ open,abrir,verb,transitive,n_a,1
 journey,viaje,noun,masculine,travel,1
 rent,alquilar,verb,transitive,home,1
 car,coche,noun,masculine,travel,1
+round trip,ida y vuelta,phrase,n_a,travel,1
 do you have any rooms free?,¿tiene habitaciones libres?,phrase,n_a,travel,1
 I'd like a single room,quisiera una habitación individual,phrase,n_a,travel,1
 I'd like to stay here for two nights,quisiera quedarme aquí dos noches,phrase,n_a,travel,1

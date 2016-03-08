@@ -28,7 +28,6 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 	private EditText spanishVerbEditText;
 	private EditText englishVerbEditText;
 	private ListView conjugationListView;
-	private TextView statusTextView;
 	private EngSpaQuiz engSpaQuiz;
 	private ArrayAdapter<String> conjugateListAdapter;
 	private EngSpaActivity engSpaActivity;
@@ -45,15 +44,15 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp("helpWordLookup");
+		engSpaActivity.setHelp(R.string.WordLookup);
+        engSpaActivity.setAppBarTitle(R.string.wordLookupLit);
 
-		View rootView = inflater.inflate(R.layout.fragment_verb_table, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_word_lookup, container, false);
 		this.spanishVerbEditText = (EditText) rootView.findViewById(R.id.spanishVerbEditText);
 		this.englishVerbEditText = (EditText) rootView.findViewById(R.id.englishVerbEditText);
 		this.spanishVerbEditText.setOnEditorActionListener(this);
 		this.englishVerbEditText.setOnEditorActionListener(this);
 		this.conjugationListView = (ListView) rootView.findViewById(R.id.conjugationListView);
-		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
 		this.conjugateListAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_list_item_1);
 		this.conjugationListView.setAdapter(conjugateListAdapter);
@@ -74,12 +73,12 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 			if (verb.length() > 0) {
 				matches = engSpaQuiz.eng2Spa(verb);
 			} else {
-				this.statusTextView.setText("please supply Spanish or English verb");
+				engSpaActivity.setStatus(R.string.supplyWord);
 				return;
 			}
 		}
 		if (matches.size() < 1) {
-			this.statusTextView.setText(verb + " not found on our dictionary");
+			engSpaActivity.setStatus(verb + " not found on our dictionary");
 			return;
 		}
 		// TODO: sort out may have more than 1 match

@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Main">
-        [a]Home[/a] Depending on [i]Question Style[/i], we speak the question or
-        print it in first coloured field (blue for English, red for Spanish);
-        2nd field is a hint if relevant; 3rd field is for the answer; type in the
-        answer and we will mark it, or press Go with the answer field blank, and
-        we will let you mark it yourself.\n
-        \n
-        Using [i]Question Style[/i] you can choose Spanish-to-English or
-        English-to-Spanish; the question can be printed or spoken; normally
-        we mark our own answers (to save fiddling with small keyboards) but if
-        you want to check your spelling you can type in the answer. If you want
-        to check your Spanish pronunciation and you have Wi-Fi, you can speak
-        the answer and we will use Google speech recognition to try to decipher
-        what you are saying.
+        Think of (don\'t type!) your answer and press Go
+        [a]More[/a]
+    </string>
+    <string name="More">
+        Depending on [i]Question Style[/i], we speak the question or
+        show it in the first coloured field (blue for English, red for Spanish);
+        2nd field is a hint if relevant; 3rd field is for the answer. Think of
+        your answer and press Go; we will fill in the correct
+        answer and you then tell us if you got it right or not. If you are not
+        sure of the spelling, you can type in the answer and we will mark it for
+        you; self-mark mode only applies if the answer field is blank. If you want
+        to check your Spanish pronunciation and you have Wi-Fi, you can press the
+        microphone button and speak the answer; we will use Google speech
+        recognition to try to decipher what you are saying. [a]Main[/a]
+    </string>
+    <string name="SelfMark">
+        Look at the answer that we have provided in the 3rd coloured field.
+        Tell us whether or not you got it right.
     </string>
     <string name="Home">
         [b]¡Bienvenida! Welcome![/b]\n
@@ -26,7 +31,7 @@
         please send an email to amazemequiz@gmail.com
     </string>
     <string name="NumbersGame">
-        [a]Home[/a] Listen to the numbers spoken in Spanish, and type in that number; if you
+        Listen to the numbers spoken in Spanish, and type in that number; if you
         get the number correct, your blue man will move forward; if the red man
         reaches the end before you, you have lost; if you get to the end before
         him, you go back to the beginning at the next level, where the red man
@@ -35,17 +40,17 @@
         at the same level.
     </string>
     <string name="WordLookup">
-        [a]Home[/a] Type in a word, either Spanish or English, and press [i]Go[/i] on the soft
+        Type in a word, either Spanish or English, and press [i]Go[/i] on the soft
         keyboard. If the word is a verb, the full conjugation will be shown;
         otherwise we show the definition of that word from the dictionary.
         Press [i]back[/i] button to return to the main screen, or swipe in
         from the left for the main menu.
     </string>
     <string name="failCtTip">
-        [a]Home[/a] Number of words you got wrong at this level or carried over from
+        Number of words you got wrong at this level or carried over from
         previous levels</string>
     <string name="goButtonTip">
-        [a]Home[/a] The question is as shown in the top coloured line. Think of your answer (if the
+        The question is as shown in the top coloured line. Think of your answer (if the
         required answer is Spanish, ideally speak it aloud) and press Go and we will fill
         in the correct answer; you can then tell us if you got it right or not.
         Note: if you want to skip a word, just pretend you got it right!
@@ -53,20 +58,20 @@
         Self mark mode only works if the answer is blank.
     </string>
     <string name="incorrectButtonTip">
-        [a]Home[/a] Press if your mental guess was wrong; this word will be added to
+        Press if your mental guess was wrong; this word will be added to
         your list of failed words
     </string>
     <string name="micButtonTip">
-        [a]Home[/a] Allows you to speak the answer; requires internet connection
+        Allows you to speak the answer; requires internet connection
     </string>
     <string name="resetButtonTip">
-        [a]Home[/a] Restart the game, 2 levels below current
+        Restart the game, 2 levels below current
     </string>
     <string name="speakerButtonTip">
-        [a]Home[/a] Listen to the current Spanish word
+        Listen to the current Spanish word
     </string>
     <string name="correctButtonTip">
-        [a]Home[/a]Press if your mental guess was correct, or you want to skip this
+        Press if your mental guess was correct, or you want to skip this
         word; it will not be added to your list of failed words
     </string>
 </resources>

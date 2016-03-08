@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bluetoothapplib/bluetoothapplib.iml" filepath="$PROJECT_DIR$/bluetoothapplib/bluetoothapplib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/drawerdemo/drawerdemo.iml" filepath="$PROJECT_DIR$/drawerdemo/drawerdemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/hotbridge/hotbridge.iml" filepath="$PROJECT_DIR$/hotbridge/hotbridge.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenApps.iml" filepath="$PROJECT_DIR$/jardenApps.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenlib/jardenlib.iml" filepath="$PROJECT_DIR$/jardenlib/jardenlib.iml" />

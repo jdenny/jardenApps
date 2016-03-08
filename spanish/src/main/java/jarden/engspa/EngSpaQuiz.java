@@ -418,6 +418,9 @@ public class EngSpaQuiz extends Quiz {
 			Collections.shuffle(this.currentWordList);
 		}
 	}
+    public String getTopic() {
+        return this.topic;
+    }
 	/**
 	 * if the current word is a failed word, return the QAStyle used when
 	 * the user got it wrong; otherwise return null.

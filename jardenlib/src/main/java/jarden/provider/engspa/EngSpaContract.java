@@ -57,19 +57,32 @@ public final class EngSpaContract {
 		voice, text, both;
 	}
 	public enum QAStyle {
-		spokenSpaToSpa(VoiceText.voice, true, true),
-		spokenSpaToEng(VoiceText.voice, true, false),
-		spokenWrittenSpaToEng(VoiceText.both, true, false),
-		writtenSpaToEng(VoiceText.text, true, false),
+        /*!!
+		spokenSpaToSpa("Spoken Spa-Spa", VoiceText.voice, true, true),
+		spokenSpaToEng("Spoken Spa-Spa", VoiceText.voice, true, false),
+		spokenWrittenSpaToEng("Spoken Spa-Spa", VoiceText.both, true, false),
+		writtenSpaToEng("Spoken Spa-Spa", VoiceText.text, true, false),
 		writtenEngToSpa(VoiceText.text, false, true),
 		random(null, false, false),
 		alternate(null, false, false);
-		
-		public final VoiceText voiceText;
+		*/
+
+        writtenSpaToEng("1. Written Spa-Eng", VoiceText.text, true, false),
+        writtenEngToSpa("2. Written Eng-Spa", VoiceText.text, false, true),
+        spokenSpaToEng("3. Spoken Spa-Eng", VoiceText.voice, true, false),
+        spokenSpaToSpa("4. Spoken Spa-Spa", VoiceText.voice, true, true),
+        spokenWrittenSpaToEng("5. Spoken & Written Spa-Eng", VoiceText.both, true, false),
+        random("Random 1 to 5", null, false, false),
+        alternate("Alternate 2 & 3", null, false, false);
+
+
+        public final String fullName;
+        public final VoiceText voiceText;
 		public final boolean spaQuestion;
 		public final boolean spaAnswer;
 
-		QAStyle(VoiceText voiceText, boolean spaQ, boolean spaA) {
+		QAStyle(String fullName, VoiceText voiceText, boolean spaQ, boolean spaA) {
+            this.fullName = fullName;
 			this.voiceText = voiceText;
 			this.spaQuestion = spaQ;
 			this.spaAnswer = spaA;
@@ -78,7 +91,7 @@ public final class EngSpaContract {
 	
 	public enum WordType {
 		noun, verb, adjective, adverb, number,
-		pronoun, preposition, conjunction, phrase;
+		pronoun, preposition, conjunction, phrase
 	}
 	
 	public enum Qualifier {
@@ -93,7 +106,7 @@ public final class EngSpaContract {
 		animal, body, building, clothing, colour, culture, drink, food,
 		hobby, home, interrogative, language, mineral, money, music, n_a,
 		person, place, size, sport, technology, time,
-		travel, weather;
+		travel, weather
 	}
 	public static final String[] wordTypeNames;
 	public static final String[] qualifierNames;
@@ -119,7 +132,7 @@ public final class EngSpaContract {
 		QAStyle[] qaStyles = QAStyle.values();
 		qaStyleNames = new String[qaStyles.length];
 		for (int i = 0; i < qaStyles.length; i++) {
-			qaStyleNames[i] = qaStyles[i].name();
+			qaStyleNames[i] = qaStyles[i].fullName;
 		}
 
 	}

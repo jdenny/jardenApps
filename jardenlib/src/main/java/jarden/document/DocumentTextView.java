@@ -1,5 +1,7 @@
 package jarden.document;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -17,7 +19,7 @@ import java.util.Set;
 
 /**
  * Utility class to produce and process SpannableStrings to allow
- * rich text in TextViews. Markup:<ul>
+ * hypertext in TextViews. Markup:<ul>
  *     <li>[a]links[/a]</li>
  *     <li>[b]bold[/b]</li>
  *     <li>[i]italics[/i]</li>
@@ -31,28 +33,45 @@ import java.util.Set;
 public class DocumentTextView {
     private static final String TAG = "DocumentTextView";
     private final TextView textView;
-    private HashMap<String, CharSequence> spannableMap;
-    private CharSequence homePage;
+    private final HashMap<String, CharSequence> spannableMap;
 
-    public DocumentTextView(TextView textView, HashMap<String, String> stringMap, String homeName) {
-        this(textView, stringMap, homeName, false);
+    /**
+     *
+     * @param appContext
+     * @param textView to hold hypertext
+     * @param resIds string resource ids; first one assumed to be home page
+     */
+    public DocumentTextView(Context appContext, TextView textView, int[] resIds) {
+        this(appContext, textView, resIds, false);
     }
-    public DocumentTextView(TextView textView, HashMap<String, String> stringMap,
-                            String homeName, boolean withPageNames) {
+    /**
+     *
+     * @param appContext
+     * @param textView to hold hypertext
+     * @param resIds string resource ids; first one assumed to be home page
+     * @param withPageNames show page name as title at head of page
+     */
+    public DocumentTextView(Context appContext, TextView textView, int[] resIds,
+                boolean withPageNames) {
         this.textView = textView;
         this.spannableMap = new HashMap<>();
-        Set<String> nameSet = stringMap.keySet();
-        for (String name: nameSet) {
-            String pageName = withPageNames ? "name" : null;
-            CharSequence ss = getSpannable(stringMap.get(name), pageName);
-            spannableMap.put(name, ss);
+        Resources resources = appContext.getResources();
+        for (int resId: resIds) {
+            String pageName = resources.getResourceEntryName(resId);
+            String pageText = resources.getString(resId);
+            String pageHeader = withPageNames ? pageName : null;
+            CharSequence ss = getSpannable(pageText, pageHeader);
+            spannableMap.put(pageName, ss);
+
         }
-        this.homePage = spannableMap.get(homeName);
+        String homePageName = resources.getResourceEntryName(resIds[0]);
+        CharSequence homePage = spannableMap.get(homePageName);
         textView.setText(homePage);
     }
     public void showPage(String name) {
         CharSequence ss = spannableMap.get(name);
         textView.setText(ss);
+        textView.scrollTo(0, 0);
     }
     private SpannableStringBuilder getSpannable(String src, String pageName) {
         int index = 0;
@@ -126,10 +145,6 @@ public class DocumentTextView {
 
         @Override
         public void onClick(View widget) {
-            /*!!
-            CharSequence ss = spannableMap.get(linkStr);
-            textView.setText(ss);
-            */
             showPage(linkName);
         }
     }

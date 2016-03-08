@@ -32,8 +32,11 @@ public class QAStyleDialog extends DialogFragment implements DialogInterface.OnC
 	}
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		String qaStyleStr = EngSpaContract.qaStyleNames[which];
+		/*!!
+        String qaStyleStr = EngSpaContract.qaStyleNames[which];
 		QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
+		*/
+        QAStyle qaStyle = QAStyle.values()[which];
 		qaStyleListener.onQAStyleSelected(qaStyle);
 	}
 }

@@ -2,7 +2,6 @@ package jarden.app.race;
 
 import com.jardenconsulting.spanishapp.BuildConfig;
 import com.jardenconsulting.spanishapp.EngSpaActivity;
-import com.jardenconsulting.spanishapp.MainActivity;
 import com.jardenconsulting.spanishapp.R;
 
 import jarden.quiz.EndOfQuestionsException;
@@ -13,12 +12,8 @@ import jarden.timer.TimerListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,7 +42,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private TextView myLevelView;
 	private EditText answerEditText;
 	//!! private TextView opponentLevelView;
-	private TextView statusTextView;
 	// these variables change their values during the game:
 	private Timer timer;
 	/*!! no bluetooth - yet!
@@ -58,12 +52,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private int laneCols;
 	private int raceLevel = 1;
 	private Quiz quiz = new NumbersQuiz();
-	/*!!
-	private Vibrator vibrator;
-	private SoundPool soundPool;
-	private int soundError;
-	private int soundLost;
-	*/
 	private EngSpaActivity engSpaActivity;
 	
 	// @SuppressWarnings("deprecation")
@@ -87,11 +75,12 @@ public class RaceFragment extends Fragment implements TimerListener,
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp("helpNumbersGame");
+		engSpaActivity.setHelp(R.string.NumbersGame);
+        engSpaActivity.setAppBarTitle(R.string.numbersGameLit);
 
 		Resources res = getResources();
 		this.laneCols = res.getInteger(R.integer.laneCols);
-		View view = inflater.inflate(R.layout.quizrace_layout, container, false);
+		View view = inflater.inflate(R.layout.fragment_race, container, false);
 		LaneView laneAView = (LaneView) view.findViewById(R.id.laneA);
 		laneAView.setBitmapId(R.drawable.blue_man);
 		TextView levelAView = (TextView) view.findViewById(R.id.laneALevel);
@@ -103,7 +92,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 		laneCView.setBitmapId(R.drawable.green_man);
 		TextView levelCView = (TextView) view.findViewById(R.id.laneCLevel);
 		*/
-		this.statusTextView = (TextView) view.findViewById(R.id.statusTextView);
 		this.answerEditText = (EditText) view.findViewById(R.id.answerEditText);
 		this.answerEditText.setOnEditorActionListener(this);
 		Button button = (Button) view.findViewById(R.id.resetButton);
@@ -178,7 +166,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 				}
 				nextQuestion();
 			}
-			this.statusTextView.setText(status);
+			this.engSpaActivity.setStatus(status);
 			return true;
 		}
 		return false;
@@ -188,7 +176,7 @@ public class RaceFragment extends Fragment implements TimerListener,
     public boolean onLongClick(View view) {
 		int id = view.getId();
 		if (id == R.id.resetButton) {
-			this.statusTextView.setText(R.string.resetButtonTip);
+			this.engSpaActivity.setHelp(R.string.resetButtonTip);
 			return true;
 		}
 		return false;
@@ -245,7 +233,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 			answerEditText.setText("");
 			poseQuestion(spanish);
 		} catch (EndOfQuestionsException e) {
-			this.statusTextView.setText(e.getMessage());
+			Log.e(TAG, "nextQuestion(); endOfQuestionsException");
 		}
 	}
 	
@@ -255,7 +243,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 			if (myPos >= this.laneCols) {
 				myLaneView.reset();
 				laneBView.reset();
-				logMessage("well done!");
 				setLevel(raceLevel + 1);
 				timer.setInterval(getCurrentBaddySleep());
 			}
@@ -285,20 +272,20 @@ public class RaceFragment extends Fragment implements TimerListener,
 		// run code within UI thread
 		laneBView.post(new Runnable() {
             public void run() {
-				int himPos = laneBView.moveOn();
-				if (himPos >= laneCols) {
-					timer.stop();
-					myLaneView.setStatus(GameData.CAUGHT);
-					gameData.status = GameData.CAUGHT;
-					//!! transmitData(gameData);
-					//!! onLost();
+                int himPos = laneBView.moveOn();
+                if (himPos >= laneCols) {
+                    timer.stop();
+                    myLaneView.setStatus(GameData.CAUGHT);
+                    gameData.status = GameData.CAUGHT;
+                    //!! transmitData(gameData);
+                    //!! onLost();
 					/*!!
 					vibrator.vibrate(LOST_VIBRATE, -1);
 					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
 					*/
-					engSpaActivity.onLost();
+                    engSpaActivity.onLost();
 
-				}
+                }
             }
         });
 	}
@@ -319,13 +306,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 	}
 	*/
 
-	private void logMessage(String message) {
-		this.statusTextView.setText(message);
-		if (BuildConfig.DEBUG) {
-			Log.d(TAG, message);
-		}
-	}
-	
 	private void setLevel(int level) {
 		String levelStr = String.valueOf(level);
 		myLevelView.setText(levelStr);
