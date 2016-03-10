@@ -75,7 +75,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp(R.string.NumbersGame);
+		engSpaActivity.setTip(R.string.numbersGameTip);
         engSpaActivity.setAppBarTitle(R.string.numbersGameLit);
 
 		Resources res = getResources();
@@ -176,7 +176,7 @@ public class RaceFragment extends Fragment implements TimerListener,
     public boolean onLongClick(View view) {
 		int id = view.getId();
 		if (id == R.id.resetButton) {
-			this.engSpaActivity.setHelp(R.string.resetButtonTip);
+			this.engSpaActivity.setTip(R.string.resetButtonTip);
 			return true;
 		}
 		return false;

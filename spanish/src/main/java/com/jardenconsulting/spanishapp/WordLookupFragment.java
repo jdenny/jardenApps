@@ -3,6 +3,7 @@ package com.jardenconsulting.spanishapp;
 import java.util.List;
 
 import jarden.engspa.EngSpa;
+import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.VerbUtils;
 import jarden.engspa.VerbUtils.Person;
@@ -28,7 +29,7 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 	private EditText spanishVerbEditText;
 	private EditText englishVerbEditText;
 	private ListView conjugationListView;
-	private EngSpaQuiz engSpaQuiz;
+    private EngSpaDAO engSpaDAO;
 	private ArrayAdapter<String> conjugateListAdapter;
 	private EngSpaActivity engSpaActivity;
 
@@ -44,7 +45,7 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setHelp(R.string.WordLookup);
+		engSpaActivity.setTip(R.string.WordLookupTip);
         engSpaActivity.setAppBarTitle(R.string.wordLookupLit);
 
 		View rootView = inflater.inflate(R.layout.fragment_word_lookup, container, false);
@@ -62,23 +63,23 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 
 	private void goPressed() {
 		List<EngSpa> matches;
-		if (this.engSpaQuiz == null) {
-			this.engSpaQuiz = engSpaActivity.getEngSpaQuiz();
+		if (this.engSpaDAO == null) {
+			this.engSpaDAO = engSpaActivity.getEngSpaDAO();
 		}
-		String verb = this.spanishVerbEditText.getText().toString().trim();
-		if (verb.length() > 0) {
-			matches = engSpaQuiz.spa2Eng(verb);
+		String wordStr = this.spanishVerbEditText.getText().toString().trim();
+		if (wordStr.length() > 0) {
+			matches = engSpaDAO.getSpanishWord(wordStr);
 		} else {
-			verb = this.englishVerbEditText.getText().toString().trim();
-			if (verb.length() > 0) {
-				matches = engSpaQuiz.eng2Spa(verb);
+			wordStr = this.englishVerbEditText.getText().toString().trim();
+			if (wordStr.length() > 0) {
+				matches = engSpaDAO.getEnglishWord(wordStr);
 			} else {
 				engSpaActivity.setStatus(R.string.supplyWord);
 				return;
 			}
 		}
 		if (matches.size() < 1) {
-			engSpaActivity.setStatus(verb + " not found on our dictionary");
+			engSpaActivity.setStatus(wordStr + " not found on our dictionary");
 			return;
 		}
 		// TODO: sort out may have more than 1 match

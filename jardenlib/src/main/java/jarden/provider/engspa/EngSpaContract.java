@@ -57,16 +57,6 @@ public final class EngSpaContract {
 		voice, text, both;
 	}
 	public enum QAStyle {
-        /*!!
-		spokenSpaToSpa("Spoken Spa-Spa", VoiceText.voice, true, true),
-		spokenSpaToEng("Spoken Spa-Spa", VoiceText.voice, true, false),
-		spokenWrittenSpaToEng("Spoken Spa-Spa", VoiceText.both, true, false),
-		writtenSpaToEng("Spoken Spa-Spa", VoiceText.text, true, false),
-		writtenEngToSpa(VoiceText.text, false, true),
-		random(null, false, false),
-		alternate(null, false, false);
-		*/
-
         writtenSpaToEng("1. Written Spa-Eng", VoiceText.text, true, false),
         writtenEngToSpa("2. Written Eng-Spa", VoiceText.text, false, true),
         spokenSpaToEng("3. Spoken Spa-Eng", VoiceText.voice, true, false),

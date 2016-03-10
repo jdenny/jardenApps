@@ -7,7 +7,6 @@ import java.util.List;
 import jarden.app.race.RaceFragment;
 import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpaDAO;
-import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
@@ -39,7 +38,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -51,20 +49,20 @@ public class MainActivity extends AppCompatActivity
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
 		ListView.OnItemClickListener, ListView.OnItemLongClickListener,
 		View.OnClickListener {
-    public static final String TAG = "MainActivity";
+	public static final String TAG = "MainActivity";
 	public static final String SHOW_HELP_KEY = "SHOW_HELP_KEY";
-    private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
-    private static final String UPDATES_VERSION_KEY = "DataVersion";
-    private static final String ENG_SPA_UPDATES_NAME = 
-    		QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
-    private static final String CURRENT_FRAGMENT_TAG =
-    		"currentFragmentTag";
-    private static String questionSequenceKey = null;
+	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
+	private static final String UPDATES_VERSION_KEY = "DataVersion";
+	private static final String ENG_SPA_UPDATES_NAME =
+			QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
+	private static final String CURRENT_FRAGMENT_TAG =
+			"currentFragmentTag";
+	private static String questionSequenceKey = null;
 	private static final String WORD_LOOKUP = "WORD_LOOKUP";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaDAO engSpaDAO;
-    private FragmentManager fragmentManager;
+	private FragmentManager fragmentManager;
 	private EngSpaFragment engSpaFragment;
 	private WordLookupFragment wordLookupFragment;
 	private RaceFragment raceFragment;
@@ -80,29 +78,23 @@ public class MainActivity extends AppCompatActivity
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
-	private String[] drawerTitles;
-	//!! private ActionBarDrawerToggle drawerToggle;
-	//?? private String engSpaTitle;
-	//?? private String appTitle;
 	private TextView helpTextView;
 	private CheckBox showHelpCheckBox;
-    private Button helpHomeButton;
 	private DocumentTextView documentTextView;
-    private boolean doubleBackToExitPressedOnce = false;
+	private boolean doubleBackToExitPressedOnce = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"onCreate(savedInstanceState is " +
+		if (BuildConfig.DEBUG) Log.d(TAG, "onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		getEngSpaDAO();
 		this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_main);
 		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.helpTextView = (TextView) findViewById(R.id.helpTextView);
@@ -110,30 +102,32 @@ public class MainActivity extends AppCompatActivity
 		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
 
-        Resources resources = getResources();
-        int[] helpResIds = {
-                R.string.Home, R.string.Main, R.string.More,
-                R.string.SelfMark, R.string.WordLookup, R.string.NumbersGame,
-                R.string.failCtTip, R.string.goButtonTip,
-                R.string.incorrectButtonTip, R.string.micButtonTip,
-                R.string.resetButtonTip, R.string.speakerButtonTip,
-                R.string.correctButtonTip
-        };
-        this.documentTextView = new DocumentTextView(getApplicationContext(),
-                helpTextView, helpResIds);
+		Resources resources = getResources();
+		int[] helpResIds = {
+				R.string.HomeHelp,
+				R.string.QuickStartHelp,
+				R.string.QuestionsByLevelHelp,
+				R.string.QuestionStyleHelp,
+				R.string.WordLookupHelp,
+				R.string.NumbersGameHelp,
+				R.string.SelectTopicHelp,
+				R.string.FeedbackHelp,
+				R.string.incorrectButtonTip,
+				R.string.HintsNTipsHelp
+		};
+		this.documentTextView = new DocumentTextView(getApplicationContext(),
+				helpTextView, helpResIds);
 
 		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        helpTextView.setHighlightColor(Color.TRANSPARENT);
+		helpTextView.setHighlightColor(Color.TRANSPARENT);
 
-		this.helpHomeButton = (Button) findViewById(R.id.helpHomeButton);
-		this.helpHomeButton.setOnClickListener(this);
 		boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
 		this.showHelpCheckBox.setChecked(isShowHelp);
-        showHelpButtons(isShowHelp);
+		showHelpButtons(isShowHelp);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		this.drawerList = (ListView) findViewById(R.id.left_drawer);
-		this.drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
+        String[] drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
 		TypedArray iconArray = resources.obtainTypedArray(R.array.navigationDrawIcons);
 		int drawerTitlesLength = drawerTitles.length;
 		DrawerItem[] drawerItems = new DrawerItem[drawerTitlesLength];
@@ -144,67 +138,58 @@ public class MainActivity extends AppCompatActivity
 		DrawerItemAdapter adapter = new DrawerItemAdapter(this,
 				R.layout.drawer_list_item, drawerItems);
 		this.drawerList.setAdapter(adapter);
-        this.drawerList.setOnItemClickListener(this);
+		this.drawerList.setOnItemClickListener(this);
 		this.drawerList.setOnItemLongClickListener(this);
 
-        this.fragmentManager = getSupportFragmentManager();
-        this.engSpaFragment =
-                (EngSpaFragment) fragmentManager.findFragmentById(R.id.engSpaFragment);
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.hide(this.engSpaFragment);
-        ft.commit();
+		this.fragmentManager = getSupportFragmentManager();
+		this.engSpaFragment =
+				(EngSpaFragment) fragmentManager.findFragmentById(R.id.engSpaFragment);
+        /*
+        if savedInstanceState != null (i.e. not clean start of app)
+            show currentFragmentTag if not null
+        else if showHelp false
+            show engSpaFragment
+         */
+        // TODO: move this login into dbLoadComplete
+        // bear in mind that engSpaFragment has already loaded up questions
+        // from a database that may be about to be replaced!
 		if (savedInstanceState == null) {
-			//!! this.currentFragmentTag = ENGSPA;
-            loadDB();
+			loadDB();
+            if (isShowHelp) {
+                // this.currentFragmentTag left null,
+                // so showFragment() will show no fragment
+                //? hideEngSpaFragment();
+                setHelp(R.string.HomeHelp);
+            } else {
+                this.currentFragmentTag = ENGSPA;
+                //? engSpaFragment.showMe();
+            }
 		} else {
-            this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
-			//!! if (this.currentFragmentTag == null) this.currentFragmentTag = ENGSPA;
-			//!! this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
-			this.wordLookupFragment = (WordLookupFragment) fragmentManager.findFragmentByTag(WORD_LOOKUP);
+			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+			this.wordLookupFragment =
+                    (WordLookupFragment) fragmentManager.findFragmentByTag(WORD_LOOKUP);
 			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
+            showFragment();
 		}
-        /*!!
-		this.drawerToggle = new ActionBarDrawerToggle(
-				this, drawerLayout,
-				R.string.drawer_open,
-				R.string.drawer_close) {
-
-			// Called when a drawer has settled in a completely closed state.
-			public void onDrawerClosed(View view) {
-				super.onDrawerClosed(view);
-				//?? getSupportActionBar().setTitle(engSpaTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
-
-			// Called when a drawer has settled in a completely open state.
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-				//?? getSupportActionBar().setTitle(appTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
-		};
-		drawerLayout.addDrawerListener(drawerToggle);
-		*/
-		//!! loadDB();
 	}
+    private void dbLoadComplete() {
+        showFragment();
+        checkForDBUpdates();
+    }
 
+    @Override // Activity
+    public void onResume() {
+        super.onResume();
+        if (BuildConfig.DEBUG) Log.d(TAG, "onResume()");
+    }
 	@Override // EngSpaActivity
-	public void setHelp(int resId) {
-        String pageName = getResources().getResourceEntryName(resId);
-        this.documentTextView.showPage(pageName);
+    public void setTip(int resId) {
+        this.helpTextView.setText(resId);
+    }
+	private void setHelp(int resId) {
+		String pageName = getResources().getResourceEntryName(resId);
+		this.documentTextView.showPage(pageName);
 	}
-
-	/*!!
-	// Called whenever we call invalidateOptionsMenu()
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content view
-		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"onPrepareOptionsMenu(); drawerOpen=" + drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
-	*/
 
 	/*
 	 * use engspaversion.txt and sharedPreferences to see if there
@@ -212,46 +197,49 @@ public class MainActivity extends AppCompatActivity
 	 * so, reload the database from engspa.txt 
 	 */
 	private void loadDB() {
-        // TODO: put the first part in a background thread as well!
-		InputStream is = getResources().openRawResource(R.raw.engspaversion);
-		List<String> engSpaVersionLines;
-		try {
-			engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
-			final int version = Integer.parseInt(engSpaVersionLines.get(0));
-			final SharedPreferences sharedPreferences = getSharedPreferences();
-			int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
-			if (version <= savedVersion) {
-				dbLoadComplete();
-			} else {
-				int statusId =
-					(savedVersion == 0)?R.string.loadingDB:R.string.reloadingDB;
-				setStatus(statusId);
-				setProgressBarVisible(true);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						engSpaDAO.newDictionary();
-						SharedPreferences.Editor editor = sharedPreferences.edit();
-						editor.putInt(ENGSPA_TXT_VERSION_KEY, version);
-						editor.commit();
-						runOnUiThread(new Runnable() {
-							public void run() {
-								setStatus(R.string.loadDBDone);
-								setProgressBarVisible(false);
-								dbLoadComplete();
-							}
-						});
-					}
-				}).start();
-			}
-		} catch (IOException e) {
-			Log.e(TAG, "loadDB(): " + e);
-			setStatus(R.string.errorLoadingDB);
-		}
-	}
-	private void dbLoadComplete() {
-		if (this.currentFragmentTag != null) showFragment();
-        checkForDBUpdates();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InputStream is = getResources().openRawResource(R.raw.engspaversion);
+                List<String> engSpaVersionLines;
+                try {
+                    engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
+                    final int version = Integer.parseInt(engSpaVersionLines.get(0));
+                    final SharedPreferences sharedPreferences = getSharedPreferences();
+                    final int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
+                    final boolean newDictionary = version > savedVersion;
+                    // report results so far:
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            if (!newDictionary) {
+                                dbLoadComplete();
+                            } else {
+                                int statusId = (savedVersion == 0) ?
+                                        R.string.loadingDB : R.string.reloadingDB;
+                                setStatus(statusId);
+                                setProgressBarVisible(true);
+                            }
+                        }
+                    });
+                    if (newDictionary) {
+                        engSpaDAO.newDictionary();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(ENGSPA_TXT_VERSION_KEY, version);
+                        editor.apply();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                setStatus(R.string.loadDBDone);
+                                setProgressBarVisible(false);
+                                dbLoadComplete();
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "loadDB(): " + e);
+                    setStatus(R.string.errorLoadingDB);
+                }
+            }
+        }).start();
 	}
 	@Override // Activity
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -268,20 +256,23 @@ public class MainActivity extends AppCompatActivity
 			showTopicDialog();
 		} else if (position == 2) {
 			showFragment(WORD_LOOKUP);
-			//?? setTitle(drawerTitles[position]);
 		} else if (position == 3) {
 			showFragment(NUMBER_GAME);
-			//?? setTitle(drawerTitles[position]);
 		} else if (position == 4) {
 			this.engSpaFragment.setTopic(null);
 			showFragment(ENGSPA);
+        } else if (position == 5) {
+            showNoFragment();
+        } else if (position == 6) {
+            super.onBackPressed();
+            return;
 		} else {
-			this.statusTextView.setText("unrecognised item position: " + position);
+			Log.e(TAG, "unrecognised item position: " + position);
 		}
 		this.drawerList.setItemChecked(position, true);
 		this.drawerList.setSelection(position);
-		this.drawerLayout.closeDrawer(this.drawerList);
-    }
+        this.drawerLayout.closeDrawer(this.drawerList);
+	}
 	@Override // OnItemLongClickListener - for DrawerList
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		Snackbar.make(view, "position=" + position + "; id=" + id, Snackbar.LENGTH_LONG).show();
@@ -303,58 +294,52 @@ public class MainActivity extends AppCompatActivity
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
 		} else if (id == R.id.speakerButton) {
-			this.engSpaFragment.speakSpanish(this.currentFragmentTag.equals(ENGSPA));
+			this.engSpaFragment.speakSpanish(ENGSPA.equals(this.currentFragmentTag));
 			return true;
 		} else if (id == R.id.deleteAllFails) {
-			getEngSpaQuiz().deleteAllFails();
+			this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-    @Override // Activity
+	@Override // Activity
 	public void onBackPressed() {
-        Log.d(TAG, "onBackPressed(); currentFragmentTag=" + this.currentFragmentTag);
-        if (this.currentFragmentTag == null) {
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
-            }
-            this.doubleBackToExitPressedOnce = true;
-            Snackbar.make(this.statusTextView, "Please click BACK again to exit",
-                    Snackbar.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "onBackPressed(); currentFragmentTag=" +
+                this.currentFragmentTag);
+		if (this.currentFragmentTag == null) {
+			if (doubleBackToExitPressedOnce) {
+				super.onBackPressed();
+				return;
+			}
+			this.doubleBackToExitPressedOnce = true;
+			Snackbar.make(this.statusTextView, "Please click BACK again to exit",
+					Snackbar.LENGTH_SHORT).show();
+			new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
-        } else {
-            FragmentTransaction transaction = this.fragmentManager.beginTransaction();
-            if (this.currentFragmentTag.equals(ENGSPA)) {
-                transaction.hide(this.engSpaFragment);
-            } else {
-                transaction.remove(this.currentFragment);
-            }
-            transaction.commit();
-            this.currentFragment = null;
-            this.currentFragmentTag = null;
-            //!! setTitle(this.title); // TODO: do we need any of this?
-            //!! this.textView.setText("back to MainActivity!");
-        }
-        /*!!
-		super.onBackPressed();
-		if (!this.currentFragmentTag.equals(ENGSPA)) {
-			currentFragmentTag = ENGSPA;
-			currentFragment = this.engSpaFragment;
+		} else {
+            showNoFragment();
 		}
-		*/
 	}
+    private void showNoFragment() {
+        FragmentTransaction transaction = this.fragmentManager.beginTransaction();
+        transaction.hide(this.engSpaFragment);
+        if (this.currentFragment != null) transaction.remove(this.currentFragment);
+        transaction.commit();
+        this.currentFragment = null;
+        this.currentFragmentTag = null;
+        setTitle(R.string.app_name);
+        setHelp(R.string.HomeHelp);
+    }
 
-	@Override // EngSpaActivity
-	public void showTopicDialog() {
+    @Override // EngSpaActivity
+    public void showTopicDialog() {
 		if (this.topicDialog == null) this.topicDialog = new TopicDialog();
-		this.topicDialog.show(getSupportFragmentManager(), "TopicDialog");
+        this.topicDialog.show(getSupportFragmentManager(), "TopicDialog");
 	}
 
 	@Override // TopicDialog.TopicListener
@@ -362,24 +347,24 @@ public class MainActivity extends AppCompatActivity
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onTopicSelected(" + topic + ")");
 		this.engSpaFragment.setTopic(topic);
-        showFragment(ENGSPA);
+		showFragment(ENGSPA);
 	}
 	@Override // QAStyleDialog.QAStyleListener
 	public void onQAStyleSelected(QAStyle qaStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onQAStyleSelected(" + qaStyle + ")");
 		this.engSpaFragment.setUserQAStyle(qaStyle);
-        showFragment(ENGSPA);
+		showFragment(ENGSPA);
 	}
 	@Override // Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
-                    this.currentFragmentTag);
-        }
+		if (BuildConfig.DEBUG) {
+			Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
+					this.currentFragmentTag);
+		}
 		if (this.currentFragment != null) {
 			savedInstanceState.putString(CURRENT_FRAGMENT_TAG,
-                    this.currentFragmentTag);
+					this.currentFragmentTag);
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -388,12 +373,11 @@ public class MainActivity extends AppCompatActivity
 	 * engspaupdates.txt on server. Version determined from
 	 * dateLastModified, which is saved in SharedPreferences.
 	 */
-	public void checkForDBUpdates() {
-        // TODO: if this works, we can take it out of EngSpaActivity interface
-        engSpaFileModified = false;
+	private void checkForDBUpdates() {
+		engSpaFileModified = false;
 		// this.statusTextView.setText("checking for updates...");
-        Toast.makeText(this, "checking for updates...", Toast.LENGTH_LONG).show();
-        new Thread(new Runnable() {
+		Toast.makeText(this, "checking for updates...", Toast.LENGTH_LONG).show();
+		new Thread(new Runnable() {
 			private String statusMessage = "";
 			@Override
 			public void run() {
@@ -419,21 +403,16 @@ public class MainActivity extends AppCompatActivity
 				}
 				runOnUiThread(new Runnable() {
 					public void run() {
-						//!! statusTextView.setText(statusMessage);
-                        Toast.makeText(MainActivity.this, statusMessage,
-                                Toast.LENGTH_LONG).show();
-                    }
+						Toast.makeText(MainActivity.this, statusMessage,
+								Toast.LENGTH_LONG).show();
+					}
 				});
 			}
 		}).start();
 	}
 	
-	@Override
-	public EngSpaQuiz getEngSpaQuiz() {
-		return this.engSpaFragment.getEngSpaQuiz();
-	}
 	private void showFragment(String fragmentTag) {
-		if (this.currentFragmentTag != null && this.currentFragmentTag.equals(fragmentTag)) {
+		if (this.currentFragmentTag != null && fragmentTag.equals(this.currentFragmentTag)) {
 			if (BuildConfig.DEBUG) Log.d(TAG,
 					"showFragment(" + fragmentTag +
 					"); already current fragment");
@@ -442,53 +421,38 @@ public class MainActivity extends AppCompatActivity
 		this.currentFragmentTag = fragmentTag;
 		showFragment();
 	}
+    private void hideEngSpaFragment() {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.hide(this.engSpaFragment);
+        ft.commit();
+    }
 	private void showFragment() {
-		if (this.currentFragmentTag.equals(ENGSPA)) {
+        if (this.currentFragmentTag == null) {
+            showNoFragment();
+        } else if (this.currentFragmentTag.equals(ENGSPA)) {
+            this.engSpaFragment.showMe();
 			FragmentTransaction ft = fragmentManager.beginTransaction();
+			if (this.currentFragment != null) ft.remove(this.currentFragment);
             ft.show(this.engSpaFragment);
-            if (this.currentFragment != null) ft.remove(this.currentFragment);
-            ft.commit();
-            this.currentFragment = engSpaFragment;
-            /*!!
-            if (this.engSpaFragment == null) {
-				this.engSpaFragment = new EngSpaFragment();
-			}
-			*/
+			ft.commit();
 			this.currentFragment = engSpaFragment;
 		} else {
-            if (this.currentFragmentTag.equals(WORD_LOOKUP)) {
-                if (this.wordLookupFragment == null) {
-                    this.wordLookupFragment = new WordLookupFragment();
-                }
-                this.currentFragment = wordLookupFragment;
-            } else if (this.currentFragmentTag.equals(NUMBER_GAME)) {
-                if (this.raceFragment == null) {
-                    this.raceFragment = new RaceFragment();
-                }
-                this.currentFragment = raceFragment;
-            }
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.hide(this.engSpaFragment);
-            transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
-            transaction.commit();
-        }
-        /*!!
-		// pop backstack if there is anything to pop;
-		// in case user chooses fragments from drawer without
-		// pressing 'back'
-		boolean popped = fragmentManager.popBackStackImmediate();
-		if (BuildConfig.DEBUG) {
-			Log.d(TAG, "showFragment(); popped=" + popped);
+			if (this.currentFragmentTag.equals(WORD_LOOKUP)) {
+				if (this.wordLookupFragment == null) {
+					this.wordLookupFragment = new WordLookupFragment();
+				}
+				this.currentFragment = wordLookupFragment;
+			} else if (this.currentFragmentTag.equals(NUMBER_GAME)) {
+				if (this.raceFragment == null) {
+					this.raceFragment = new RaceFragment();
+				}
+				this.currentFragment = raceFragment;
+			}
+			FragmentTransaction transaction = fragmentManager.beginTransaction();
+			transaction.hide(this.engSpaFragment);
+			transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
+			transaction.commit();
 		}
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
-		if (currentFragmentTag.equals(WORD_LOOKUP) ||
-				currentFragmentTag.equals(NUMBER_GAME)) {
-			transaction.addToBackStack(currentFragmentTag);
-		}
-        //!! if (currentFragmentTag != null) transaction.addToBackStack(currentFragmentTag);
-		transaction.commit();
-		*/
 	}
 
 	/**
@@ -565,12 +529,12 @@ public class MainActivity extends AppCompatActivity
 		this.engSpaFragment.speakSpanish(spanish);
 	}
 
-    @Override // EngSpaActivity
-    public void setAppBarTitle(int resId) {
-        super.setTitle(resId);
-    }
+	@Override // EngSpaActivity
+	public void setAppBarTitle(int resId) {
+		super.setTitle(resId);
+	}
 
-    @Override // EngSpaActivity
+	@Override // EngSpaActivity
 	public void setAppBarTitle(String title) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"setEngSpaTitle(" + title + ")");
@@ -596,22 +560,19 @@ public class MainActivity extends AppCompatActivity
 		int id = view.getId();
 		if (id == R.id.showHelpCheckBox) {
 			showHelp(showHelpCheckBox.isChecked());
-		} else if (id == R.id.helpHomeButton) {
-			setHelp(R.string.Home);
 		} else {
-			this.statusTextView.setText("unrecognised onClick Id: " + id);
+            this.statusTextView.setText("unrecognised onClick Id: " + id);
 		}
 	}
 	private void showHelp(boolean isShowHelp) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(SHOW_HELP_KEY, isShowHelp);
 		editor.apply();
-        showHelpButtons(isShowHelp);
+		showHelpButtons(isShowHelp);
 	}
-    private void showHelpButtons(boolean isShowHelp) {
-        int visibility = isShowHelp ? View.VISIBLE : View.GONE;
-        this.helpTextView.setVisibility(visibility);
-        this.helpHomeButton.setVisibility(visibility);
-    }
+	private void showHelpButtons(boolean isShowHelp) {
+		int visibility = isShowHelp ? View.VISIBLE : View.GONE;
+		this.helpTextView.setVisibility(visibility);
+	}
 
 }

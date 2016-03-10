@@ -5,12 +5,7 @@ import jarden.engspa.EngSpaQuiz;
 import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
-	/**
-	 * Check the dictionary update file on the server.
-	 */
-	void checkForDBUpdates();
 	EngSpaDAO getEngSpaDAO();
-	EngSpaQuiz getEngSpaQuiz();
 
 	/**
 	 * Each question is given a unique, increment sequence
@@ -46,7 +41,7 @@ public interface EngSpaActivity {
 	void setStatus(int statusId);
 	void setStatus(String statusText);
 
-	void setHelp(int resId);
+	void setTip(int resId);
 	void showTopicDialog();
 
 	/**

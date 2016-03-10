@@ -99,8 +99,8 @@ public class UserDialog extends DialogFragment
 					userLevel = -1;
 				}
 			}
-			String qaStyleStr = (String) qaStyleSpinner.getSelectedItem();
-			QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
+            int selectedIndex = qaStyleSpinner.getSelectedItemPosition();
+            QAStyle qaStyle = QAStyle.values()[selectedIndex];
 			this.userSettingsListener.onUpdateUser(userName, userLevel, qaStyle);
 		}
 	}

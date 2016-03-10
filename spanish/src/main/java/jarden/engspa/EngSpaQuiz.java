@@ -364,12 +364,14 @@ public class EngSpaQuiz extends Quiz {
 	public String getEnglish() {
 		return english;
 	}
+    /*!!
 	public List<EngSpa> eng2Spa(String eng) {
 		return this.engSpaDAO.getEnglishWord(eng);
 	}
 	public List<EngSpa> spa2Eng(String spa) {
 		return this.engSpaDAO.getSpanishWord(spa);
 	}
+	*/
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
 		StringBuilder sb = new StringBuilder("EngSpaQuiz.currentWord=" +
@@ -498,15 +500,6 @@ public class EngSpaQuiz extends Quiz {
 		for (int i = 0; i < spaChars.length; i++) {
 			if (ch == spaChars[i]) return engChars[i];
 		}
-		/*!!
-		if (ch == 'á') return 'a';
-		if (ch == 'é') return 'e';
-		if (ch == 'í') return 'i';
-		if (ch == 'ó') return 'o';
-		if (ch == 'ú') return 'u';
-		if (ch == 'ñ') return 'n';
-		if (ch == 'ü') return 'u';
-		*/
 		return ch;
 	}
 }

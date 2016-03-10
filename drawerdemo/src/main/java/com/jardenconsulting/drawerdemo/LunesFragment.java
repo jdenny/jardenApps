@@ -43,17 +43,15 @@ public class LunesFragment extends Fragment {
 
         Resources resources = getResources();
         int[] helpResIds = {
-                R.string.Home, R.string.EngSpa, R.string.WordLookup
+                R.string.Home,
+                R.string.EngSpa,
+                R.string.WordLookup
         };
         this.documentTextView = new DocumentTextView(getActivity().getApplicationContext(),
                 helpTextView, helpResIds);
 
         helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
         helpTextView.setHighlightColor(Color.TRANSPARENT);
-        /*!!
-        CharSequence hyperTxt = resources.getText(R.string.hyperStr);
-        statusTextView.setText(hyperTxt); // or simply statusTextView.setText(R.string.hyperStr)
-         */
         return rootView;
     }
     @Override // Fragment
