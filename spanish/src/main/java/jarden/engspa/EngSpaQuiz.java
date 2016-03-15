@@ -101,9 +101,8 @@ public class EngSpaQuiz extends Quiz {
 	/**
 	 * if userLevel > maximum, based on size of dictionary,
 	 * replace with USER_LEVEL_ALL.
-	 * @param userLevel
-	 * @return
 	 */
+    /*!!
 	public int validateUserLevel(int userLevel) {
 		int maxUserLevel = engSpaDAO.getMaxUserLevel();
 		if (userLevel > maxUserLevel) {
@@ -111,6 +110,7 @@ public class EngSpaQuiz extends Quiz {
 		}
 		return userLevel;
 	}
+	*/
 	/*
 	 * Words on DB should be in difficulty order. A level is deemed to correspond
 	 * to 10 words. So to get words of difficulty n, we get 10 words starting from
@@ -158,7 +158,8 @@ public class EngSpaQuiz extends Quiz {
 				this.failedWordList.size() == 0) {
 			// reached end of questions:
 			if (topic == null) {
-				int newUserLevel = validateUserLevel(this.engSpaUser.getUserLevel() + 1);
+				int newUserLevel = this.engSpaDAO.validateUserLevel(
+                        this.engSpaUser.getUserLevel() + 1);
 				setUserLevel(newUserLevel);
 				if (this.quizEventListener != null) {
 					quizEventListener.onNewLevel();
@@ -450,6 +451,7 @@ public class EngSpaQuiz extends Quiz {
 	public static int compareSpaWords(String word1, String word2) {
 		int pos;
 		int res = -1;
+        if (word1.length() != word2.length()) return -2;
 		for (pos = 0; pos < word1.length(); pos++) {
 			char char1 = word1.charAt(pos);
 			char char2 = word2.charAt(pos);
@@ -460,7 +462,7 @@ public class EngSpaQuiz extends Quiz {
 				else return -2;
 			}
 		}
-		if (pos < word2.length()) res = -2;
+		//!! if (pos < word2.length()) res = -2;
 		return res;
 
 	}

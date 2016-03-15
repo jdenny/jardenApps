@@ -340,7 +340,7 @@ public class VerbUtils {
 	};
 	private static Object[][] caerTenses = {
 		{"p", caerPresent}, {"r", caerPreterite},
-		{"f", "cae"}, {"no", "caigas"}
+		{"si", "cae"}, {"no", "caigas"}
 	};
 	
 	private static String[][] cargarPreterite = { {"yo", "cargué"} };
@@ -607,7 +607,7 @@ public class VerbUtils {
 		{"el", "murió"}, {"e", "murieron"}
 	};
 	private static Object[][] morirTenses = {
-		{"p", morirPresent}, {"r", morirPreterite}, {"f", "oir"},
+		{"p", morirPresent}, {"r", morirPreterite},
 		{"si", "muere"}, {"no", "mueras"}
 	};
 

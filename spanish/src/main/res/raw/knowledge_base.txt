@@ -287,3 +287,13 @@ TableLayout, stretchColumns="1" (column/s to fill extra space)
 		LinearLayout, layout_span="2"
 			Button, layout_width="wrap_content"
 			Button
+
+Clear system cache on Nexus 7
+-----------------------------
+power off
+hold power and volume down for 10 seconds
+"recovery mode", power, android on back with "no command"
+power and volume up for 3 seconds; release volume up
+"wipe cache partition"
+"reboot system now"
+

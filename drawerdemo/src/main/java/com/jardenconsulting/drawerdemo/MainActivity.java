@@ -16,24 +16,26 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements AdapterView.OnItemClickListener {
     private static final String TAG = "MainActivity";
+    private static final String VIEWLESS = "VIEWLESS";
     private TextView textView;
     private String[] dayTitles = {
             "lunes", "martes", "miércoles", "jueves", "viernes", "Exit"
     };
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
+    private ActionBarDrawerToggle drawerToggle;
     private CharSequence drawerTitle;
     private CharSequence title;
     private LunesFragment lunesFragment;
     private MartesFragment martesFragment;
     private MiercolesFragment miercolesFragment;
+    private ViewlessFragment viewlessFragment;
     private String currentTag;
     private Fragment currentFragment;
     private FragmentManager fragmentManager;
@@ -41,26 +43,43 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate(state is " + (savedInstanceState == null ? "" : "not ") + "null)");
+        Log.d(TAG, "onCreate(" + (savedInstanceState == null ? "" : "not ") + "null)");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         title = drawerTitle = getTitle();
 
         Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         this.textView = (TextView) findViewById(R.id.textView);
         String spanishPhrase = "aá eé ií oó uú nñ ¡qué! ¿cómo?";
         textView.setText(spanishPhrase);
-        this.fragmentManager = getSupportFragmentManager();
-        this.lunesFragment = (LunesFragment) fragmentManager.findFragmentById(R.id.lunesFragment);
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.hide(this.lunesFragment);
-        ft.commit();
-
         this.drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         this.drawerListView = (ListView) findViewById(R.id.left_drawer);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        /*??
+        this.drawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close) {
+
+            // Called when a drawer has settled in a completely closed state.
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(title);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            // Called when a drawer has settled in a completely open state.
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle(drawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        drawerLayout.addDrawerListener(drawerToggle);
+        */
 
         // Set the adapter for the list view
         this.drawerListView.setAdapter(new ArrayAdapter<String>(this,
@@ -68,6 +87,29 @@ public class MainActivity extends AppCompatActivity
         // Set the list's click listener
         this.drawerListView.setOnItemClickListener(this);
 
+        this.fragmentManager = getSupportFragmentManager();
+        this.lunesFragment = (LunesFragment) fragmentManager.findFragmentById(
+                R.id.lunesFragment);
+        if (savedInstanceState == null) {
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.hide(this.lunesFragment);
+            this.viewlessFragment = new ViewlessFragment();
+            ft.add(this.viewlessFragment, VIEWLESS);
+            ft.commit();
+        } else {
+            this.viewlessFragment = (ViewlessFragment) fragmentManager
+                    .findFragmentByTag(VIEWLESS);
+        }
+    }
+
+    // Called whenever we call invalidateOptionsMenu()
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerListView);
+        Log.d(TAG, "onPrepareOptionsMenu(drawerOpen=" + drawerOpen + ")");
+        Snackbar.make(textView, "drawerOpen=" + drawerOpen, Snackbar.LENGTH_INDEFINITE).show();
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override // OnItemClickListener
@@ -155,5 +197,20 @@ public class MainActivity extends AppCompatActivity
             setTitle(this.title);
             this.textView.setText("back to MainActivity!");
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        Log.d(TAG, "onItemClick(" + savedInstanceState == null ? "" : "not " + "null)");
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        if (drawerToggle != null) drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d(TAG, "onConfigurationChanged(" + newConfig + ")");
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 }

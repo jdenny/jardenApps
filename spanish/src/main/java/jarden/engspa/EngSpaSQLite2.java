@@ -332,7 +332,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public long replaceUserWord(UserWord userWord) {
 		return getWritableDatabase().replace(
-				USER_WORD_TABLE, null, getContentValues(userWord));
+                USER_WORD_TABLE, null, getContentValues(userWord));
 	}
 
 	private static String[] getSelectionArgs(UserWord userWord) {
@@ -525,8 +525,22 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	public int getMaxUserLevel() {
 		return getDictionarySize() / WORDS_PER_LEVEL;
 	}
+    /**
+     * if userLevel > maximum, based on size of dictionary,
+     * replace with USER_LEVEL_ALL.
+     * @param userLevel
+     * @return
+     */
+    public int validateUserLevel(int userLevel) {
+        int maxUserLevel = getMaxUserLevel();
+        if (userLevel > maxUserLevel) {
+            userLevel = EngSpaQuiz.USER_LEVEL_ALL;
+        }
+        return userLevel;
+    }
 
-	// TODO: maybe pass user name as param, rather than 1st user
+
+    // TODO: maybe pass user name as param, rather than 1st user
 	@Override // EngSpaDAO
 	public EngSpaUser getUser() {
 		Cursor cursor = null;

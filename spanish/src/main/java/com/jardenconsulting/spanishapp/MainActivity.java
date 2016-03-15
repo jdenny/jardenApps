@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
-import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
@@ -16,7 +16,6 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
-import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -31,14 +30,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,26 +43,32 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
-		ListView.OnItemClickListener, ListView.OnItemLongClickListener,
-		View.OnClickListener {
-	public static final String TAG = "MainActivity";
-	public static final String SHOW_HELP_KEY = "SHOW_HELP_KEY";
+		ListView.OnItemClickListener, ListView.OnItemLongClickListener {
+
+    private static final String TAG = "MainActivity";
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
 	private static final String UPDATES_VERSION_KEY = "DataVersion";
 	private static final String ENG_SPA_UPDATES_NAME =
 			QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
+    // Fragment tags:
 	private static final String CURRENT_FRAGMENT_TAG =
 			"currentFragmentTag";
-	private static String questionSequenceKey = null;
+    private String previousFragmentTag;
 	private static final String WORD_LOOKUP = "WORD_LOOKUP";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
+    private static final String HELP = "HELP";
+    private static final String VIEWLESS = "VIEWLESS";
+    // end of Fragment tags
+    private static String questionSequenceKey = null;
 	private EngSpaDAO engSpaDAO;
 	private FragmentManager fragmentManager;
 	private EngSpaFragment engSpaFragment;
 	private WordLookupFragment wordLookupFragment;
 	private RaceFragment raceFragment;
 	private Fragment currentFragment;
+    private HelpFragment helpFragment;
+    private ViewlessFragment viewlessFragment;
 	private String currentFragmentTag;
 	private DialogFragment userDialog;
 	private TopicDialog topicDialog;
@@ -78,55 +80,32 @@ public class MainActivity extends AppCompatActivity
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
-	private TextView helpTextView;
-	private CheckBox showHelpCheckBox;
-	private DocumentTextView documentTextView;
+    private TextView tipTextView;
 	private boolean doubleBackToExitPressedOnce = false;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
+        super.onCreate(savedInstanceState);
 		getEngSpaDAO();
 		this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-		setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolBar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
-		this.helpTextView = (TextView) findViewById(R.id.helpTextView);
-		this.helpTextView.setMovementMethod(new ScrollingMovementMethod());
-		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
-		this.showHelpCheckBox.setOnClickListener(this);
+        // TODO: put tipTextView into each fragment; maybe use include?
+        this.tipTextView = (TextView) findViewById(R.id.tipTextView);
+        boolean isShowTips = sharedPreferences.getBoolean(SHOW_TIPS_KEY, true);
+        setShowTips(isShowTips);
 
-		Resources resources = getResources();
-		int[] helpResIds = {
-				R.string.HomeHelp,
-				R.string.QuickStartHelp,
-				R.string.QuestionsByLevelHelp,
-				R.string.QuestionStyleHelp,
-				R.string.WordLookupHelp,
-				R.string.NumbersGameHelp,
-				R.string.SelectTopicHelp,
-				R.string.FeedbackHelp,
-				R.string.incorrectButtonTip,
-				R.string.HintsNTipsHelp
-		};
-		this.documentTextView = new DocumentTextView(getApplicationContext(),
-				helpTextView, helpResIds);
-
-		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		helpTextView.setHighlightColor(Color.TRANSPARENT);
-
-		boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
-		this.showHelpCheckBox.setChecked(isShowHelp);
-		showHelpButtons(isShowHelp);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		this.drawerList = (ListView) findViewById(R.id.left_drawer);
+        Resources resources = getResources();
         String[] drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
 		TypedArray iconArray = resources.obtainTypedArray(R.array.navigationDrawIcons);
 		int drawerTitlesLength = drawerTitles.length;
@@ -142,33 +121,28 @@ public class MainActivity extends AppCompatActivity
 		this.drawerList.setOnItemLongClickListener(this);
 
 		this.fragmentManager = getSupportFragmentManager();
-		this.engSpaFragment =
-				(EngSpaFragment) fragmentManager.findFragmentById(R.id.engSpaFragment);
-        /*
-        if savedInstanceState != null (i.e. not clean start of app)
-            show currentFragmentTag if not null
-        else if showHelp false
-            show engSpaFragment
-         */
-        // TODO: move this login into dbLoadComplete
-        // bear in mind that engSpaFragment has already loaded up questions
-        // from a database that may be about to be replaced!
 		if (savedInstanceState == null) {
-			loadDB();
+            this.viewlessFragment = new ViewlessFragment();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.add(this.viewlessFragment, VIEWLESS);
+            ft.commit();
+            boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
             if (isShowHelp) {
-                // this.currentFragmentTag left null,
-                // so showFragment() will show no fragment
-                //? hideEngSpaFragment();
-                setHelp(R.string.HomeHelp);
+                this.currentFragmentTag = HELP;
             } else {
                 this.currentFragmentTag = ENGSPA;
-                //? engSpaFragment.showMe();
             }
+            loadDB(); // which in turn -> dbLoadComplete() -> showFragment()
 		} else {
 			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+            this.viewlessFragment =
+                    (ViewlessFragment) fragmentManager.findFragmentByTag(VIEWLESS);
 			this.wordLookupFragment =
                     (WordLookupFragment) fragmentManager.findFragmentByTag(WORD_LOOKUP);
 			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
+            this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
+            this.helpFragment = (HelpFragment) fragmentManager.findFragmentByTag(HELP);
+            if (this.currentFragmentTag == null) this.currentFragmentTag = ENGSPA;
             showFragment();
 		}
 	}
@@ -184,12 +158,17 @@ public class MainActivity extends AppCompatActivity
     }
 	@Override // EngSpaActivity
     public void setTip(int resId) {
-        this.helpTextView.setText(resId);
+        this.tipTextView.setText((resId));
     }
-	private void setHelp(int resId) {
-		String pageName = getResources().getResourceEntryName(resId);
-		this.documentTextView.showPage(pageName);
-	}
+    @Override // EngSpaActivity
+    public void setShowTips(boolean isShowTips) {
+        int visibility = isShowTips ? View.VISIBLE : View.GONE;
+        this.tipTextView.setVisibility(visibility);
+        SharedPreferences.Editor editor =
+                this.sharedPreferences.edit();
+        editor.putBoolean(EngSpaActivity.SHOW_TIPS_KEY, isShowTips);
+        editor.apply();
+    }
 
 	/*
 	 * use engspaversion.txt and sharedPreferences to see if there
@@ -259,10 +238,9 @@ public class MainActivity extends AppCompatActivity
 		} else if (position == 3) {
 			showFragment(NUMBER_GAME);
 		} else if (position == 4) {
-			this.engSpaFragment.setTopic(null);
-			showFragment(ENGSPA);
+            onTopicSelected(null);
         } else if (position == 5) {
-            showNoFragment();
+            showFragment(HELP);
         } else if (position == 6) {
             super.onBackPressed();
             return;
@@ -294,8 +272,14 @@ public class MainActivity extends AppCompatActivity
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
 		} else if (id == R.id.speakerButton) {
-			this.engSpaFragment.speakSpanish(ENGSPA.equals(this.currentFragmentTag));
-			return true;
+            boolean spoken = this.viewlessFragment.speakSpanish();
+            if (!spoken) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "speakButton(); this.spanish==null");
+                }
+                this.setStatus(R.string.spanishNull);
+            }
+            return true;
 		} else if (id == R.id.deleteAllFails) {
 			this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
 			return true;
@@ -307,7 +291,7 @@ public class MainActivity extends AppCompatActivity
 	public void onBackPressed() {
         if (BuildConfig.DEBUG) Log.d(TAG, "onBackPressed(); currentFragmentTag=" +
                 this.currentFragmentTag);
-		if (this.currentFragmentTag == null) {
+        if (ENGSPA.equals(this.currentFragmentTag)) {
 			if (doubleBackToExitPressedOnce) {
 				super.onBackPressed();
 				return;
@@ -322,19 +306,13 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 2000);
 		} else {
-            showNoFragment();
+            super.onBackPressed();
+            // must be returning to EngSpaFragment as this is the only fragment
+            // we ever put on the backStack
+            this.currentFragmentTag = ENGSPA;
+            this.currentFragment = this.engSpaFragment;
 		}
 	}
-    private void showNoFragment() {
-        FragmentTransaction transaction = this.fragmentManager.beginTransaction();
-        transaction.hide(this.engSpaFragment);
-        if (this.currentFragment != null) transaction.remove(this.currentFragment);
-        transaction.commit();
-        this.currentFragment = null;
-        this.currentFragmentTag = null;
-        setTitle(R.string.app_name);
-        setHelp(R.string.HomeHelp);
-    }
 
     @Override // EngSpaActivity
     public void showTopicDialog() {
@@ -346,14 +324,15 @@ public class MainActivity extends AppCompatActivity
 	public void onTopicSelected(String topic) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onTopicSelected(" + topic + ")");
-		this.engSpaFragment.setTopic(topic);
+		lazyEngSpaFragment();
+        this.engSpaFragment.setTopic(topic);
 		showFragment(ENGSPA);
 	}
 	@Override // QAStyleDialog.QAStyleListener
 	public void onQAStyleSelected(QAStyle qaStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onQAStyleSelected(" + qaStyle + ")");
-		this.engSpaFragment.setUserQAStyle(qaStyle);
+        this.viewlessFragment.getEngSpaUser().setQAStyle(qaStyle);
 		showFragment(ENGSPA);
 	}
 	@Override // Activity
@@ -368,6 +347,11 @@ public class MainActivity extends AppCompatActivity
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
+    private void lazyEngSpaFragment() {
+        if (this.engSpaFragment == null) {
+            this.engSpaFragment = new EngSpaFragment();
+        }
+    }
 	/**
 	 * Update EngSpa table on database if there is a new version of
 	 * engspaupdates.txt on server. Version determined from
@@ -410,7 +394,7 @@ public class MainActivity extends AppCompatActivity
 			}
 		}).start();
 	}
-	
+
 	private void showFragment(String fragmentTag) {
 		if (this.currentFragmentTag != null && fragmentTag.equals(this.currentFragmentTag)) {
 			if (BuildConfig.DEBUG) Log.d(TAG,
@@ -418,6 +402,7 @@ public class MainActivity extends AppCompatActivity
 					"); already current fragment");
 			return;
 		}
+        this.previousFragmentTag = this.currentFragmentTag;
 		this.currentFragmentTag = fragmentTag;
 		showFragment();
 	}
@@ -427,32 +412,40 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 	private void showFragment() {
-        if (this.currentFragmentTag == null) {
-            showNoFragment();
-        } else if (this.currentFragmentTag.equals(ENGSPA)) {
-            this.engSpaFragment.showMe();
-			FragmentTransaction ft = fragmentManager.beginTransaction();
-			if (this.currentFragment != null) ft.remove(this.currentFragment);
-            ft.show(this.engSpaFragment);
-			ft.commit();
-			this.currentFragment = engSpaFragment;
-		} else {
-			if (this.currentFragmentTag.equals(WORD_LOOKUP)) {
-				if (this.wordLookupFragment == null) {
-					this.wordLookupFragment = new WordLookupFragment();
-				}
-				this.currentFragment = wordLookupFragment;
-			} else if (this.currentFragmentTag.equals(NUMBER_GAME)) {
-				if (this.raceFragment == null) {
-					this.raceFragment = new RaceFragment();
-				}
-				this.currentFragment = raceFragment;
-			}
-			FragmentTransaction transaction = fragmentManager.beginTransaction();
-			transaction.hide(this.engSpaFragment);
-			transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
-			transaction.commit();
-		}
+        if (this.currentFragmentTag.equals(ENGSPA)) {
+            if (this.engSpaFragment == null) {
+                this.engSpaFragment = new EngSpaFragment();
+            }
+            this.currentFragment = engSpaFragment;
+        } else if (this.currentFragmentTag.equals(WORD_LOOKUP)) {
+            if (this.wordLookupFragment == null) {
+                this.wordLookupFragment = new WordLookupFragment();
+            }
+            this.currentFragment = wordLookupFragment;
+        } else if (this.currentFragmentTag.equals(NUMBER_GAME)) {
+            if (this.raceFragment == null) {
+                this.raceFragment = new RaceFragment();
+            }
+            this.currentFragment = raceFragment;
+        } else if (this.currentFragmentTag.equals(HELP)) {
+            if (this.helpFragment == null) {
+                this.helpFragment = new HelpFragment();
+            }
+            this.currentFragment = helpFragment;
+        }
+        // pop backstack if there is anything to pop;
+        // in case user chooses fragments from drawer without
+        // pressing 'back'
+        boolean popped = this.fragmentManager.popBackStackImmediate();
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "showFragment(); popped=" + popped);
+        }
+        FragmentTransaction transaction = this.fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
+        if (ENGSPA.equals(previousFragmentTag)) {
+            transaction.addToBackStack(ENGSPA);
+        }
+        transaction.commit();
 	}
 
 	/**
@@ -473,14 +466,20 @@ public class MainActivity extends AppCompatActivity
 			this.statusTextView.setText("invalid userLevel supplied");
 			return;
 		}
-		this.engSpaFragment.setUser(userName, userLevel, qaStyle);
+		boolean isNewLevel = this.viewlessFragment.setUser(userName, userLevel, qaStyle);
+        if (isNewLevel) {
+            if (this.engSpaFragment != null) {
+                // if null, nothing to do!
+                this.engSpaFragment.newUserLevel();
+            }
+        }
 	}
-	@Override // UserSettingsListener
+	@Override // UserSettingsListener && EngSpaActivity
 	public EngSpaUser getEngSpaUser() {
-		return this.engSpaFragment.getEngSpaUser();
+        return this.viewlessFragment.getEngSpaUser();
 	}
-	
-	@Override // EngSpaActivity
+
+    @Override // EngSpaActivity
 	public void setStatus(int statusId) {
 		this.statusTextView.setText(statusId);
 	}
@@ -492,12 +491,12 @@ public class MainActivity extends AppCompatActivity
 
 	@Override // EngSpaActivity
 	public void onLost() {
-		engSpaFragment.onLost();
+        this.viewlessFragment.onLost();
 	}
 
 	@Override // EngSpaActivity
 	public void onWrongAnswer() {
-		engSpaFragment.onWrongAnswer();
+        this.viewlessFragment.onWrongAnswer();
 	}
 
 	/**
@@ -520,13 +519,11 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // EngSpaActivity
 	public void setSpanish(String spanish) {
-		// note: spanish String is held in engSpaFragment, so
-		// it can survive screen rotation. 
-		this.engSpaFragment.setSpanish(spanish);
+        this.viewlessFragment.setSpanish(spanish);
 	}
 	@Override // EngSpaActivity
 	public void speakSpanish(String spanish) {
-		this.engSpaFragment.speakSpanish(spanish);
+        this.viewlessFragment.speakSpanish(spanish);
 	}
 
 	@Override // EngSpaActivity
@@ -555,24 +552,4 @@ public class MainActivity extends AppCompatActivity
 		}
 		return this.engSpaDAO;
 	}
-	@Override // OnClickListener
-	public void onClick(View view) {
-		int id = view.getId();
-		if (id == R.id.showHelpCheckBox) {
-			showHelp(showHelpCheckBox.isChecked());
-		} else {
-            this.statusTextView.setText("unrecognised onClick Id: " + id);
-		}
-	}
-	private void showHelp(boolean isShowHelp) {
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putBoolean(SHOW_HELP_KEY, isShowHelp);
-		editor.apply();
-		showHelpButtons(isShowHelp);
-	}
-	private void showHelpButtons(boolean isShowHelp) {
-		int visibility = isShowHelp ? View.VISIBLE : View.GONE;
-		this.helpTextView.setVisibility(visibility);
-	}
-
 }

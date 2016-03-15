@@ -2,10 +2,16 @@ package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
+import jarden.engspa.EngSpaUser;
+
 import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
+    String SHOW_HELP_KEY = "SHOW_HELP_KEY";
+    String SHOW_TIPS_KEY = "SHOW_TIPS_KEY";
+
 	EngSpaDAO getEngSpaDAO();
+    EngSpaUser getEngSpaUser();
 
 	/**
 	 * Each question is given a unique, increment sequence
@@ -25,8 +31,8 @@ public interface EngSpaActivity {
 	 * Vibrate and play soundError.
 	 */
 	void onWrongAnswer();
-
 	void setProgressBarVisible(boolean visible);
+    void setShowTips(boolean isShowTips);
 
 	/**
 	 * Set Spanish word if user later clicks on
@@ -45,7 +51,7 @@ public interface EngSpaActivity {
 	void showTopicDialog();
 
 	/**
-	 * Set Spanish word (see setSpanish) and speak it.
+	 * Set Spanish word (see {@link #setSpanish(String)}) and speak it.
 	 * @param spanish
 	 */
 	void speakSpanish(String spanish);

@@ -5,7 +5,8 @@ import java.util.List;
 public interface EngSpaDAO {
 	int getDictionarySize();
 	int getMaxUserLevel();
-	
+    int validateUserLevel(int userLevel);
+
 	EngSpaUser getUser();
 	long insertUser(EngSpaUser engSpaUser);
 	int updateUser(EngSpaUser engSpaUser);
