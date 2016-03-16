@@ -75,7 +75,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setTip(R.string.numbersGameTip);
+		//!! engSpaActivity.setTip(R.string.numbersGameTip);
         engSpaActivity.setAppBarTitle(R.string.numbersGameLit);
 
 		Resources res = getResources();
@@ -166,6 +166,8 @@ public class RaceFragment extends Fragment implements TimerListener,
 				}
 				nextQuestion();
 			}
+            // TODO: set this as a tip, not status; same for reporting wrong answer
+            // in EngSpaFragment
 			this.engSpaActivity.setStatus(status);
 			return true;
 		}
@@ -320,6 +322,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	}
 	private void poseQuestion(String question) {
 		this.engSpaActivity.speakSpanish(question);
+        this.engSpaActivity.setTip(R.string.numbersGameTip);
 	}
 
 

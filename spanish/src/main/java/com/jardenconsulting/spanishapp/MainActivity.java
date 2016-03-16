@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity
             // we ever put on the backStack
             this.currentFragmentTag = ENGSPA;
             this.currentFragment = this.engSpaFragment;
-		}
+        }
 	}
 
     @Override // EngSpaActivity

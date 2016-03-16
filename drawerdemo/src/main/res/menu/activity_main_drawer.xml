@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/help"
+            android:icon="@drawable/help"
+            android:title="Help"/>
+        <item
+            android:id="@+id/levels"
+            android:icon="@drawable/levels"
+            android:title="Levels"/>
+        <item
+            android:id="@+id/number"
+            android:icon="@drawable/number"
+            android:title="Number Game"/>
+        <item
+            android:id="@+id/qaStyle"
+            android:icon="@drawable/qastyle"
+            android:title="QA Style"/>
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/search"
+                android:icon="@drawable/search"
+                android:title="Search"/>
+            <item
+                android:id="@+id/topic"
+                android:icon="@drawable/topic"
+                android:title="Topic"/>
+        </menu>
+    </item>
+
+</menu>

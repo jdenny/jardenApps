@@ -53,6 +53,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private ViewGroup buttonLayout;
 	private ImageButton micButton;
 	private String levelStr;
+    private int tipResId;
 
 	private Random random = new Random();
 	private int red;
@@ -80,7 +81,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onAttach(Context context) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onAttach()");
 		super.onAttach(context);
-		this.engSpaActivity = (EngSpaActivity) getActivity();
+		//!! this.engSpaActivity = (EngSpaActivity) getActivity();
 	}
 	@SuppressWarnings("deprecation")
 	@Override // Fragment
@@ -94,11 +95,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.blue = resources.getColor(R.color.samBlue);
 		this.levelStr = resources.getString(R.string.levelStr);
 
-		this.engSpaDAO = engSpaActivity.getEngSpaDAO();
+		/*!
+        this.engSpaDAO = engSpaActivity.getEngSpaDAO();
         this.engSpaUser = engSpaActivity.getEngSpaUser();
 		this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
 		this.engSpaQuiz.setQuizEventListener(this);
         if (this.topic != null) setTopic2();
+        */
 	}
 	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,7 +111,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					"onCreateView(); question=" + question +
 					"; savedInstanceState is " + (savedInstanceState==null?"":"not ") + "null");
 		}
-		this.engSpaActivity = (EngSpaActivity) getActivity();
+		//!! this.engSpaActivity = (EngSpaActivity) getActivity();
 		// Potentially restore state after configuration change; before we re-create
 		// the views, get relevant information from current values. See knowledgeBase.txt
 		CharSequence questionText = null;
@@ -152,6 +155,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
 		}
 		this.answerEditText.setOnEditorActionListener(this);
+        /*!!
 		if (this.spanish == null) {
 			askQuestion(true);
 			showUserLevel();
@@ -161,19 +165,46 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			showStats();
 		}
         setAppBarTitle2(this.engSpaQuiz.getTopic());
+        */
 		return rootView;
 	}
 	@Override // Fragment
+    /*
+    The design approach we've gone for: only access View elements
+    before we get to onResume()
+     */
 	public void onResume() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onResume(); question=" + question
             );
 		}
 		super.onResume();
+        this.engSpaActivity = (EngSpaActivity) getActivity();
+        if (this.engSpaDAO == null) {
+            this.engSpaDAO = engSpaActivity.getEngSpaDAO();
+            this.engSpaUser = engSpaActivity.getEngSpaUser();
+            this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
+            this.engSpaQuiz.setQuizEventListener(this);
+            if (this.topic != null) setTopic2();
+        }
+        if (this.spanish == null) {
+            askQuestion(true);
+            showUserLevel();
+        } else {
+            // in case user presses speaker button
+            this.engSpaActivity.setSpanish(spanish);
+            speakSpanishIfRequired();
+            if (this.tipResId != 0) this.engSpaActivity.setTip(tipResId);
+            showStats();
+        }
+        setAppBarTitle2(this.engSpaQuiz.getTopic());
+
+        /*!!
         if (this.spanish != null) {
             speakSpanishIfRequired();
             //!! showStats(); yes or no?
         }
+        */
 	}
     private void speakSpanishIfRequired() {
         if (this.currentQAStyle.voiceText != VoiceText.text) {
@@ -210,8 +241,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.questionTextView.setText(this.question);
 		}
         // TODO: fix this!
-        // if (!isCorrect) engSpaActivity.setTip(R.string.tryGoAgainTip);
-		engSpaActivity.setTip(R.string.engSpaTip);
+        // if (!isCorrect) /*!!engSpaActivity.*/setTip(R.string.tryGoAgainTip);
+		/*!!engSpaActivity.*/setTip(R.string.engSpaTip);
 		showStats();
 	}
 	private boolean isUserLevelAll() {
@@ -286,16 +317,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		// TODO: turn on show help if not already on
 		int id = view.getId();
 		if (id == R.id.goButton) {
-			engSpaActivity.setTip(R.string.goButtonTip);
+			/*!!engSpaActivity.*/setTip(R.string.goButtonTip);
 			return true;
 		} else if (id == R.id.correctButton) {
-			engSpaActivity.setTip(R.string.correctButtonTip);
+			/*!!engSpaActivity.*/setTip(R.string.correctButtonTip);
 			return true;
 		} else if (id == R.id.incorrectButton) {
-			engSpaActivity.setTip(R.string.incorrectButtonTip);
+			/*!!engSpaActivity.*/setTip(R.string.incorrectButtonTip);
 			return true;
 		} else if (id == R.id.micButton) {
-			engSpaActivity.setTip(R.string.micButtonTip);
+			/*!!engSpaActivity.*/setTip(R.string.micButtonTip);
 			return true;
 		}
 		return false;
@@ -384,7 +415,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 						.getEnglish() : engSpaQuiz.getSpanish();
 				this.questionTextView.setText(translated);
 			}
-			engSpaActivity.setTip(R.string.selfMarkTip);
+			/*!!engSpaActivity.*/setTip(R.string.selfMarkTip);
 		} else {
 			String normalisedCorrectAnswer = normalise(this.correctAnswer);
 			String normalisedSuppliedAnswer = normalise(suppliedAnswer);
@@ -402,6 +433,10 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			setIsCorrect(isCorrect);
 		}
 	}
+    private void setTip(int tipResId) {
+        this.tipResId = tipResId;
+        this.engSpaActivity.setTip(tipResId);
+    }
 	private void setIsCorrect(boolean isCorrect) {
 		engSpaQuiz.setCorrect(isCorrect, currentQAStyle);
 		if (isCorrect) {

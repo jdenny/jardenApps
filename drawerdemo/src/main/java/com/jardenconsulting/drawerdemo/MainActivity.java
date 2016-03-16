@@ -2,10 +2,12 @@ package com.jardenconsulting.drawerdemo;
 
 import android.content.res.Configuration;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,14 +15,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
-        implements AdapterView.OnItemClickListener {
+        implements /*!!AdapterView.OnItemClickListener*/
+        NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private static final String VIEWLESS = "VIEWLESS";
     private TextView textView;
@@ -46,46 +47,37 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onCreate(" + (savedInstanceState == null ? "" : "not ") + "null)");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        title = drawerTitle = getTitle();
+        //!! title = drawerTitle = getTitle();
 
-        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolBar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        /*!!
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        */
 
         this.textView = (TextView) findViewById(R.id.textView);
         String spanishPhrase = "aá eé ií oó uú nñ ¡qué! ¿cómo?";
         textView.setText(spanishPhrase);
         this.drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        this.drawerListView = (ListView) findViewById(R.id.left_drawer);
-        /*??
-        this.drawerToggle = new ActionBarDrawerToggle(
-                this, drawerLayout,
-                R.string.drawer_open,
-                R.string.drawer_close) {
 
-            // Called when a drawer has settled in a completely closed state.
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(title);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            // Called when a drawer has settled in a completely open state.
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(drawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        drawerLayout.addDrawerListener(drawerToggle);
-        */
+        /*!! this.drawerListView = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
         this.drawerListView.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, dayTitles));
         // Set the list's click listener
         this.drawerListView.setOnItemClickListener(this);
+         */
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         this.fragmentManager = getSupportFragmentManager();
         this.lunesFragment = (LunesFragment) fragmentManager.findFragmentById(
@@ -102,16 +94,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /*!!
     // Called whenever we call invalidateOptionsMenu()
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerListView);
+        boolean drawerOpen = this.drawerLayout.isDrawerOpen(drawerListView);
         Log.d(TAG, "onPrepareOptionsMenu(drawerOpen=" + drawerOpen + ")");
         Snackbar.make(textView, "drawerOpen=" + drawerOpen, Snackbar.LENGTH_INDEFINITE).show();
         return super.onPrepareOptionsMenu(menu);
     }
+    */
 
+    /*!!
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d(TAG, "onItemClick(position=" + position + ")");
@@ -120,6 +115,31 @@ public class MainActivity extends AppCompatActivity
         String tag = this.drawerTitle.toString();
         showFragment(tag);
         drawerLayout.closeDrawer(drawerListView);
+    }
+    */
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.d(TAG, "onItemClick(position=" + id + ")");
+        String tag;
+        if (id == R.id.help) {
+            tag = "lunes";
+        } else if (id == R.id.levels) {
+            tag = "martes";
+        } else if (id == R.id.number) {
+            tag = "miércoles";
+        } else if (id == R.id.qaStyle) {
+            tag = "jueves";
+        } else if (id == R.id.search) {
+            tag = "viernes";
+        } else if (id == R.id.topic) {
+            tag = "sábado";
+        } else tag = "domingo";
+        showFragment(tag);
+
+        //!! DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
     private void showFragment(String tag) {
         Log.d(TAG, "showFragment(tag=" + tag + ")");
@@ -171,7 +191,9 @@ public class MainActivity extends AppCompatActivity
     @Override // Activity
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed(); currentTag=" + this.currentTag);
-        if (this.currentTag == null) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (this.currentTag == null) {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
