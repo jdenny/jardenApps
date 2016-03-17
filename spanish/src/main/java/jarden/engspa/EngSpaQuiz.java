@@ -101,17 +101,7 @@ public class EngSpaQuiz extends Quiz {
 	/**
 	 * if userLevel > maximum, based on size of dictionary,
 	 * replace with USER_LEVEL_ALL.
-	 */
-    /*!!
-	public int validateUserLevel(int userLevel) {
-		int maxUserLevel = engSpaDAO.getMaxUserLevel();
-		if (userLevel > maxUserLevel) {
-			userLevel = USER_LEVEL_ALL;
-		}
-		return userLevel;
-	}
-	*/
-	/*
+     *
 	 * Words on DB should be in difficulty order. A level is deemed to correspond
 	 * to 10 words. So to get words of difficulty n, we get 10 words starting from
 	 * position (n - 1) * 10.
@@ -365,14 +355,6 @@ public class EngSpaQuiz extends Quiz {
 	public String getEnglish() {
 		return english;
 	}
-    /*!!
-	public List<EngSpa> eng2Spa(String eng) {
-		return this.engSpaDAO.getEnglishWord(eng);
-	}
-	public List<EngSpa> spa2Eng(String spa) {
-		return this.engSpaDAO.getSpanishWord(spa);
-	}
-	*/
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
 		StringBuilder sb = new StringBuilder("EngSpaQuiz.currentWord=" +
@@ -462,7 +444,6 @@ public class EngSpaQuiz extends Quiz {
 				else return -2;
 			}
 		}
-		//!! if (pos < word2.length()) res = -2;
 		return res;
 
 	}

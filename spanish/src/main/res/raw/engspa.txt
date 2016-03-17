@@ -479,6 +479,15 @@ swimming pool,piscina,noun,feminine,building,1
 park,parque,noun,masculine,place,1
 hospital,hospital,noun,masculine,building,1
 shopping centre,centro comercial,noun,masculine,building,1
+where is the station please?,¿dónde está la estación por favor?,phrase,n_a,travel,1
+is there a chemist near here?,¿hay una farmacia por aquí?,phrase,n_a,travel,1
+is it far from here?,¿está lejos de aquí?,phrase,n_a,travel,1
+it's two kilometres away,está a dos kilómetros,phrase,n_a,travel,1
+how do I get to the bank?,¿para ir al banco?,phrase,n_a,travel,1
+go straight on,siga todo recto,phrase,n_a,travel,1
+go right,gire a la derecha,phrase,n_a,travel,1
+go left,gire a la izquierda,phrase,n_a,travel,1
+on the corner,en la esquina,phrase,n_a,travel,1
 France,Francia,noun,feminine,place,1
 Germany,Alemania,noun,feminine,place,1
 Italy,Italia,noun,feminine,place,1

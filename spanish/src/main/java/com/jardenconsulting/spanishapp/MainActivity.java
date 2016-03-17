@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity
             boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
             if (isShowHelp) {
                 this.currentFragmentTag = HELP;
+                showFragment(); // user can read help while db is loading
             } else {
                 this.currentFragmentTag = ENGSPA;
             }
