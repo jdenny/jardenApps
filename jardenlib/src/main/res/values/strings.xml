@@ -19,6 +19,14 @@
     <string name="emptyAnswer">please supply an answer</string>
     <string name="fail">wrong! the right answer is: </string>
     <string name="incorrect">wrong; try again</string>
-    
+
+    <string name="qaStyle">Question Style</string>
+    <string name="selectTopic">Select Topic</string>
+    <string name="wordLookup">Word Lookup</string>
+    <string name="numbersGame">Numbers Game</string>
+    <string name="qByLevel">Questions By Level</string>
+    <string name="help">Help</string>
+    <string name="exit">Exit</string>
+
     
 </resources>

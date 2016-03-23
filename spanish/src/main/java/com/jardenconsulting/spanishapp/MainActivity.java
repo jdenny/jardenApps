@@ -17,12 +17,15 @@ import jarden.quiz.QuizCache;
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.content.Context;
@@ -43,7 +46,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
-		ListView.OnItemClickListener, ListView.OnItemLongClickListener {
+		/*!!ListView.OnItemClickListener*/ NavigationView.OnNavigationItemSelectedListener,
+        ListView.OnItemLongClickListener {
 
     private static final String TAG = "MainActivity";
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
@@ -82,6 +86,8 @@ public class MainActivity extends AppCompatActivity
 	private ListView drawerList;
     private TextView tipTextView;
 	private boolean doubleBackToExitPressedOnce = false;
+    private ActionBar actionBar;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,19 +97,23 @@ public class MainActivity extends AppCompatActivity
 		getEngSpaDAO();
 		this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
-		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolBar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+        this.actionBar = getSupportActionBar();
+        /*!!
+        this.actionBar.setDisplayHomeAsUpEnabled(true);
+        this.actionBar.setHomeButtonEnabled(true);
+        */
 
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
         // TODO: put tipTextView into each fragment; maybe use include?
         this.tipTextView = (TextView) findViewById(R.id.tipTextView);
         boolean isShowTips = sharedPreferences.getBoolean(SHOW_TIPS_KEY, true);
         setShowTips(isShowTips);
-
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*!!
 		this.drawerList = (ListView) findViewById(R.id.left_drawer);
         Resources resources = getResources();
         String[] drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
@@ -119,6 +129,16 @@ public class MainActivity extends AppCompatActivity
 		this.drawerList.setAdapter(adapter);
 		this.drawerList.setOnItemClickListener(this);
 		this.drawerList.setOnItemLongClickListener(this);
+		*/
+        this.drawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
 		this.fragmentManager = getSupportFragmentManager();
 		if (savedInstanceState == null) {
@@ -227,6 +247,7 @@ public class MainActivity extends AppCompatActivity
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+    /*!!
 	@Override // OnItemClickListener - for DrawerList
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (position == 0) {
@@ -252,6 +273,32 @@ public class MainActivity extends AppCompatActivity
 		this.drawerList.setSelection(position);
         this.drawerLayout.closeDrawer(this.drawerList);
 	}
+	*/
+    @Override // OnNavigationItemSelectedListener
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.d(TAG, "onNavigationItemSelected(menuItem.id=" + id + ")");
+        if (id == R.id.qaStyle) {
+            if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
+            this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
+        } else if (id == R.id.topic) {
+            showTopicDialog();
+        } else if (id == R.id.wordLookup) {
+            showFragment(WORD_LOOKUP);
+        } else if (id == R.id.numbersGame) {
+            showFragment(NUMBER_GAME);
+        } else if (id == R.id.qByLevel) {
+            onTopicSelected(null);
+        } else if (id == R.id.help) {
+            showFragment(HELP);
+        } else if (id == R.id.exit) {
+            super.onBackPressed();
+        } else {
+            Log.e(TAG, "unrecognised drawer menu item id: " + id);
+        }
+        this.drawerLayout.closeDrawers();
+        return true;
+    }
 	@Override // OnItemLongClickListener - for DrawerList
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		Snackbar.make(view, "position=" + position + "; id=" + id, Snackbar.LENGTH_LONG).show();

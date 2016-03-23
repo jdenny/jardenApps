@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/qaStyle"
+            android:icon="@drawable/qastyle"
+            android:title="@string/qaStyle"/>
+        <item
+            android:id="@+id/topic"
+            android:icon="@drawable/topic"
+            android:title="@string/selectTopic"/>
+        <item
+            android:id="@+id/wordLookup"
+            android:icon="@drawable/search"
+            android:title="@string/wordLookup"/>
+        <item
+            android:id="@+id/numbersGame"
+            android:icon="@drawable/number"
+            android:title="@string/numbersGame"/>
+        <item
+            android:id="@+id/qByLevel"
+            android:icon="@drawable/levels"
+            android:title="@string/qByLevel"/>
+    </group>
+
+    <!--
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/help"
+            android:icon="@drawable/help"
+            android:title="@string/help"/>
+        <item
+            android:id="@+id/exit"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:title="@string/exit"/>
+    </group>
+    -->
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/help"
+                android:icon="@drawable/help"
+                android:title="@string/help"/>
+            <item
+                android:id="@+id/exit"
+                android:icon="@android:drawable/ic_menu_close_clear_cancel"
+                android:title="@string/exit"/>
+        </menu>
+    </item>
+
+</menu>

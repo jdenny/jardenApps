@@ -986,7 +986,8 @@ public class VerbUtils {
 	
 	/******************English verb data*****************************/
 	private static String[][] irregEnglish3rdPersonSingularPresent = {
-		{"be", "is"}, { "do", "does"}, { "go", "goes" }, {"have", "has"}
+		{"be", "is"}, { "do", "does"}, { "go", "goes" }, {"have", "has"},
+            {"study", "studies"}
 	};
 	private static String[][] irregEnglishPreterites = {
 		{"accompany", "accompanied"},
@@ -1018,7 +1019,7 @@ public class VerbUtils {
 		{"chat", "chatt"}, {"die", "dy"}, {"forget", "forgett"},
 		{"hit", "hitt"}, {"prefer", "preferr"}, {"put", "putt"},
 		{"quarrel", "quarrell"}, {"run", "runn"},
-		{"regret", "regrett"}, {"swim", "swimm"}, {"win", "winn"}
+		{"regret", "regrett"}, {"stop", "stopp"}, {"swim", "swimm"}, {"win", "winn"}
 	};
 	private static HashMap<String, String> irregEnglish3rdPersonSingularPresentMap;
 	private static HashMap<String, String> irregEnglishPreteritesMap;

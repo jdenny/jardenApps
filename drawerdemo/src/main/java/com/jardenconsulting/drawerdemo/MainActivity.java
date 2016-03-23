@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,15 +20,13 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+// TODO: see http://blog.teamtreehouse.com/add-navigation-drawer-android
 public class MainActivity extends AppCompatActivity
         implements /*!!AdapterView.OnItemClickListener*/
         NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private static final String VIEWLESS = "VIEWLESS";
     private TextView textView;
-    private String[] dayTitles = {
-            "lunes", "martes", "miércoles", "jueves", "viernes", "Exit"
-    };
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
     private ActionBarDrawerToggle drawerToggle;
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment currentFragment;
     private FragmentManager fragmentManager;
     private boolean doubleBackToExitPressedOnce = false;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +51,10 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.actionBar = getSupportActionBar();
         /*!!
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        this.actionBar.setDisplayHomeAsUpEnabled(true);
+        this.actionBar.setHomeButtonEnabled(true);
         */
 
         this.textView = (TextView) findViewById(R.id.textView);
@@ -69,12 +70,12 @@ public class MainActivity extends AppCompatActivity
         // Set the list's click listener
         this.drawerListView.setOnItemClickListener(this);
          */
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        this.drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
                 R.string.drawer_open,
                 R.string.drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -93,6 +94,19 @@ public class MainActivity extends AppCompatActivity
                     .findFragmentByTag(VIEWLESS);
         }
     }
+
+    /*!!
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.d(TAG, "onOptionsItemSelected(menuItem.id=" + id + ")");
+        if (id == android.R.id.home) {
+            drawerLayout.openDrawer(GravityCompat.START);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    */
 
     /*!!
     // Called whenever we call invalidateOptionsMenu()
@@ -117,30 +131,36 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.closeDrawer(drawerListView);
     }
     */
-    @Override
+    @Override // OnNavigationItemSelectedListener
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Log.d(TAG, "onItemClick(position=" + id + ")");
+        Log.d(TAG, "onNavigationItemSelected(menuItem.id=" + id + ")");
         String tag;
-        if (id == R.id.help) {
+        if (id == R.id.qaStyle) {
             tag = "lunes";
-        } else if (id == R.id.levels) {
-            tag = "martes";
-        } else if (id == R.id.number) {
-            tag = "miércoles";
-        } else if (id == R.id.qaStyle) {
-            tag = "jueves";
-        } else if (id == R.id.search) {
-            tag = "viernes";
         } else if (id == R.id.topic) {
+            tag = "martes";
+        } else if (id == R.id.wordLookup) {
+            tag = "miércoles";
+        } else if (id == R.id.numbersGame) {
+            tag = "jueves";
+        } else if (id == R.id.qByLevel) {
+            tag = "viernes";
+        } else if (id == R.id.help) {
             tag = "sábado";
-        } else tag = "domingo";
+        } else if (id == R.id.exit) {
+            super.onBackPressed();
+            return true;
+        } else {
+            throw new IllegalStateException("unrecognised id: " + id);
+        }
         showFragment(tag);
 
         //!! DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private void showFragment(String tag) {
         Log.d(TAG, "showFragment(tag=" + tag + ")");
         if (tag.equals(this.currentTag)) {
@@ -221,10 +241,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /*!!
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Log.d(TAG, "onItemClick(" + savedInstanceState == null ? "" : "not " + "null)");
+        Log.d(TAG, "onPostCreate(" + savedInstanceState == null ? "" : "not " + "null)");
         // Sync the toggle state after onRestoreInstanceState has occurred.
         if (drawerToggle != null) drawerToggle.syncState();
     }
@@ -235,4 +256,5 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onConfigurationChanged(" + newConfig + ")");
         drawerToggle.onConfigurationChanged(newConfig);
     }
+    */
 }
