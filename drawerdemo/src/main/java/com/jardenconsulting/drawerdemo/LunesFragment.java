@@ -48,7 +48,7 @@ public class LunesFragment extends Fragment {
                 R.string.WordLookup
         };
         this.documentTextView = new DocumentTextView(getActivity().getApplicationContext(),
-                helpTextView, helpResIds);
+                helpTextView, helpResIds, null);
 
         helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
         helpTextView.setHighlightColor(Color.TRANSPARENT);

@@ -212,9 +212,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			this.questionTextView.setText(this.question);
 		}
-        // TODO: fix this!
-        // if (!isCorrect) setTip(R.string.tryGoAgainTip);
-		setTip(R.string.engSpaTip);
+        setTip(getNext ? R.string.engSpaTip : R.string.tryGoAgainTip);
+        /*!!
+        if (!getNext) setTip(R.string.tryGoAgainTip);
+		else setTip(R.string.engSpaTip);
+		*/
 		showStats();
 	}
 	private boolean isUserLevelAll() {

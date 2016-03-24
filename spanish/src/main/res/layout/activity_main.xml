@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jardenconsulting.spanishapp.MainActivity"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start">-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,6 +20,30 @@
 		    android:layout_height="?attr/actionBarSize"
 		    android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 		<!-- android:background="?attr/colorPrimary" -->
+
+        <LinearLayout
+            android:id="@+id/tipLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tipTextView"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:scrollbars = "vertical"
+                android:layout_marginBottom="@dimen/spanishMargin"
+                android:textSize="@dimen/helpTextFieldSize"
+                android:background="@color/hintBackground"/>
+            <Button
+                android:id="@+id/hideHelpButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hideHelp" />
+        </LinearLayout>
 
         <FrameLayout
 	        android:id="@+id/fragmentLayout"
@@ -37,14 +61,6 @@
 	        android:visibility="gone"
 	        android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/tipTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars = "vertical"
-            android:textSize="@dimen/helpTextFieldSize"
-            android:background="@color/hintBackground"/>
-
 	</LinearLayout>
 	
     <android.support.design.widget.NavigationView
@@ -55,19 +71,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_spanish"
         app:menu="@menu/spanish_drawer"/>
-
-    <!--
-    <ListView android:id="@+id/left_drawer"
-              android:layout_width="240dp"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              android:choiceMode="singleChoice"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:divider="@android:color/transparent"
-              android:dividerHeight="0dp"
-              android:background="#e3e3e3"/>
-         -->
 
 </android.support.v4.widget.DrawerLayout>
 

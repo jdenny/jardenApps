@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
+import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
-import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
@@ -24,20 +24,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,11 +45,12 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
-		/*!!ListView.OnItemClickListener*/ NavigationView.OnNavigationItemSelectedListener,
-        ListView.OnItemLongClickListener {
+		NavigationView.OnNavigationItemSelectedListener,
+        ListView.OnItemLongClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
+    private String SHOW_HELP_KEY = "SHOW_HELP_KEY";
 	private static final String UPDATES_VERSION_KEY = "DataVersion";
 	private static final String ENG_SPA_UPDATES_NAME =
 			QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
@@ -83,11 +83,9 @@ public class MainActivity extends AppCompatActivity
 	private long dateEngSpaFileModified;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
-	private ListView drawerList;
     private TextView tipTextView;
+    private LinearLayout tipLayout;
 	private boolean doubleBackToExitPressedOnce = false;
-    private ActionBar actionBar;
-    private ActionBarDrawerToggle drawerToggle;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,38 +97,22 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-        this.actionBar = getSupportActionBar();
-        /*!!
-        this.actionBar.setDisplayHomeAsUpEnabled(true);
-        this.actionBar.setHomeButtonEnabled(true);
-        */
 
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
         // TODO: put tipTextView into each fragment; maybe use include?
         this.tipTextView = (TextView) findViewById(R.id.tipTextView);
+        this.tipLayout = (LinearLayout) findViewById(R.id.tipLayout);
+        Button hideHelpButton = (Button) findViewById(R.id.hideHelpButton);
+        hideHelpButton.setOnClickListener(this);
+
+        /*!!
         boolean isShowTips = sharedPreferences.getBoolean(SHOW_TIPS_KEY, true);
         setShowTips(isShowTips);
+        */
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        /*!!
-		this.drawerList = (ListView) findViewById(R.id.left_drawer);
-        Resources resources = getResources();
-        String[] drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
-		TypedArray iconArray = resources.obtainTypedArray(R.array.navigationDrawIcons);
-		int drawerTitlesLength = drawerTitles.length;
-		DrawerItem[] drawerItems = new DrawerItem[drawerTitlesLength];
-		for (int i = 0; i < drawerTitlesLength; i++) {
-			drawerItems[i] = new DrawerItem(iconArray.getDrawable(i), drawerTitles[i]);
-		}
-		iconArray.recycle();
-		DrawerItemAdapter adapter = new DrawerItemAdapter(this,
-				R.layout.drawer_list_item, drawerItems);
-		this.drawerList.setAdapter(adapter);
-		this.drawerList.setOnItemClickListener(this);
-		this.drawerList.setOnItemLongClickListener(this);
-		*/
-        this.drawerToggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
                 R.string.drawer_open,
                 R.string.drawer_close);
@@ -151,6 +133,7 @@ public class MainActivity extends AppCompatActivity
                 this.currentFragmentTag = HELP;
                 showFragment(); // user can read help while db is loading
             } else {
+                this.tipLayout.setVisibility(View.GONE);
                 this.currentFragmentTag = ENGSPA;
             }
             loadDB(); // which in turn -> dbLoadComplete() -> showFragment()
@@ -172,6 +155,19 @@ public class MainActivity extends AppCompatActivity
         checkForDBUpdates();
     }
 
+    @Override // OnClickListener
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.hideHelpButton) {
+            // hide tipLayout
+            // save as preference
+            // if currently showing help fragment, switch to EngSpa
+            setShowHelp(false);
+            if (this.currentFragmentTag.equals(HELP)) {
+                showFragment(ENGSPA);
+            }
+        }
+    }
     @Override // Activity
     public void onResume() {
         super.onResume();
@@ -182,13 +178,8 @@ public class MainActivity extends AppCompatActivity
         this.tipTextView.setText((resId));
     }
     @Override // EngSpaActivity
-    public void setShowTips(boolean isShowTips) {
-        int visibility = isShowTips ? View.VISIBLE : View.GONE;
-        this.tipTextView.setVisibility(visibility);
-        SharedPreferences.Editor editor =
-                this.sharedPreferences.edit();
-        editor.putBoolean(EngSpaActivity.SHOW_TIPS_KEY, isShowTips);
-        editor.apply();
+    public void showEngSpaFragment() {
+        showFragment(ENGSPA);
     }
 
 	/*
@@ -205,6 +196,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
                     final int version = Integer.parseInt(engSpaVersionLines.get(0));
+                    // Note: this code is sometimes run before end of onCreate()
                     final SharedPreferences sharedPreferences = getSharedPreferences();
                     final int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
                     final boolean newDictionary = version > savedVersion;
@@ -245,35 +237,19 @@ public class MainActivity extends AppCompatActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+        if (BuildConfig.DEBUG) {
+            // programmatically add debug items:
+            MenuItem findDupsItem = menu.add("Find Duplicates");
+            findDupsItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    findDuplicates();
+                    return true;
+                }
+            });
+        }
 		return true;
 	}
-    /*!!
-	@Override // OnItemClickListener - for DrawerList
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (position == 0) {
-			if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
-			this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
-		} else if (position == 1) {
-			showTopicDialog();
-		} else if (position == 2) {
-			showFragment(WORD_LOOKUP);
-		} else if (position == 3) {
-			showFragment(NUMBER_GAME);
-		} else if (position == 4) {
-            onTopicSelected(null);
-        } else if (position == 5) {
-            showFragment(HELP);
-        } else if (position == 6) {
-            super.onBackPressed();
-            return;
-		} else {
-			Log.e(TAG, "unrecognised item position: " + position);
-		}
-		this.drawerList.setItemChecked(position, true);
-		this.drawerList.setSelection(position);
-        this.drawerLayout.closeDrawer(this.drawerList);
-	}
-	*/
     @Override // OnNavigationItemSelectedListener
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -290,6 +266,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.qByLevel) {
             onTopicSelected(null);
         } else if (id == R.id.help) {
+            setShowHelp(true);
             showFragment(HELP);
         } else if (id == R.id.exit) {
             super.onBackPressed();
@@ -298,6 +275,13 @@ public class MainActivity extends AppCompatActivity
         }
         this.drawerLayout.closeDrawers();
         return true;
+    }
+    private void setShowHelp(boolean showHelp) {
+        this.tipLayout.setVisibility(showHelp ? View.VISIBLE : View.GONE);
+        SharedPreferences.Editor editor =
+                this.sharedPreferences.edit();
+        editor.putBoolean(SHOW_HELP_KEY, showHelp);
+        editor.apply();
     }
 	@Override // OnItemLongClickListener - for DrawerList
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -311,11 +295,8 @@ public class MainActivity extends AppCompatActivity
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"onOptionsItemSelected(itemId=" + id);
-		if (id == android.R.id.home) {
-			drawerLayout.openDrawer(drawerList);
-			return true;
-		} else if (id == R.id.userSettings) {
+				"onOptionsItemSelected(itemId=" + id + ")");
+        if (id == R.id.userSettings) {
 			if (this.userDialog == null) this.userDialog = new UserDialog();
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
@@ -329,11 +310,50 @@ public class MainActivity extends AppCompatActivity
             }
             return true;
 		} else if (id == R.id.deleteAllFails) {
-			this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
-			return true;
+            this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
+            return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+    private void findDuplicates() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (engSpaDAO == null) {
+                    engSpaDAO = EngSpaSQLite2.getInstance(getApplicationContext());
+                }
+                // for each word, using word id
+                // find words by English
+                // find words by Spanish
+                int dbSize = engSpaDAO.getDictionarySize();
+                if (dbSize == 0) dbSize = 100;
+                Log.i(TAG, "findDuplicates(); dbSize=" + dbSize);
+                EngSpa engSpa;
+                String english, spanish;
+                List<EngSpa> englishList, spanishList;
+                for (int id = 1; id < dbSize; id++) {
+                    engSpa = engSpaDAO.getWordById(id);
+                    english = engSpa.getEnglish();
+                    englishList = engSpaDAO.getEnglishWord(english);
+                    if (englishList.size() > 1) {
+                        Log.i(TAG, "duplicates for " + english);
+                        for (EngSpa es: englishList) {
+                            Log.i(TAG, "  " + es);
+                        }
+                    }
+                    spanish = engSpa.getSpanish();
+                    spanishList = engSpaDAO.getSpanishWord(spanish);
+                    if (spanishList.size() > 1) {
+                        Log.i(TAG, "duplicates for " + spanish);
+                        for (EngSpa es: spanishList) {
+                            Log.i(TAG, "  " + es);
+                        }
+                    }
+                }
+                Log.i(TAG, "end of findDuplicates()");
+            }
+        }).start();
+    }
 
 	@Override // Activity
 	public void onBackPressed() {
@@ -392,7 +412,7 @@ public class MainActivity extends AppCompatActivity
 		if (this.currentFragment != null) {
 			savedInstanceState.putString(CURRENT_FRAGMENT_TAG,
 					this.currentFragmentTag);
-		}
+        }
 		super.onSaveInstanceState(savedInstanceState);
 	}
     private void lazyEngSpaFragment() {
@@ -424,7 +444,7 @@ public class MainActivity extends AppCompatActivity
 						engSpaDAO.updateDictionary(engSpaLines);
 						SharedPreferences.Editor editor = sharedPreferences.edit();
 						editor.putLong(UPDATES_VERSION_KEY, dateEngSpaFileModified);
-						editor.commit();
+						editor.apply();
 						statusMessage = "dictionary updated";
 					} else {
 						statusMessage = "dictionary up to date";
@@ -454,11 +474,6 @@ public class MainActivity extends AppCompatActivity
 		this.currentFragmentTag = fragmentTag;
 		showFragment();
 	}
-    private void hideEngSpaFragment() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.hide(this.engSpaFragment);
-        ft.commit();
-    }
 	private void showFragment() {
         if (this.currentFragmentTag.equals(ENGSPA)) {
             if (this.engSpaFragment == null) {
@@ -562,7 +577,7 @@ public class MainActivity extends AppCompatActivity
 		}
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(questionSequenceKey, ++questionSeq);
-		editor.commit();
+		editor.apply();
 		return questionSeq;
 	}
 	@Override // EngSpaActivity
@@ -600,4 +615,5 @@ public class MainActivity extends AppCompatActivity
 		}
 		return this.engSpaDAO;
 	}
+
 }

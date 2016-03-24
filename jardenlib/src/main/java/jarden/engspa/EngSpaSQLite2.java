@@ -1,21 +1,5 @@
 package jarden.engspa;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
-import com.jardenconsulting.spanishapp.BuildConfig;
-import com.jardenconsulting.spanishapp.R;
-
-import static jarden.engspa.EngSpaQuiz.WORDS_PER_LEVEL;
-import static jarden.provider.engspa.EngSpaContract.*;
-import jarden.provider.engspa.EngSpaContract.Attribute;
-import jarden.provider.engspa.EngSpaContract.Qualifier;
-import jarden.provider.engspa.EngSpaContract.QAStyle;
-import jarden.provider.engspa.EngSpaContract.WordType;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -24,6 +8,41 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
+
+import com.jardenconsulting.jardenlib.BuildConfig;
+import com.jardenconsulting.jardenlib.R;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+import jarden.provider.engspa.EngSpaContract.Attribute;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
+import jarden.provider.engspa.EngSpaContract.Qualifier;
+import jarden.provider.engspa.EngSpaContract.WordType;
+
+import static jarden.provider.engspa.EngSpaContract.ATTRIBUTE;
+import static jarden.provider.engspa.EngSpaContract.CONSEC_RIGHT_CT;
+import static jarden.provider.engspa.EngSpaContract.ENGLISH;
+import static jarden.provider.engspa.EngSpaContract.FAILED_WORD_VIEW;
+import static jarden.provider.engspa.EngSpaContract.LEVEL;
+import static jarden.provider.engspa.EngSpaContract.NAME;
+import static jarden.provider.engspa.EngSpaContract.PROJECTION_ALL_FAILED_WORD_FIELDS;
+import static jarden.provider.engspa.EngSpaContract.PROJECTION_ALL_FIELDS;
+import static jarden.provider.engspa.EngSpaContract.PROJECTION_ALL_USER_FIELDS;
+import static jarden.provider.engspa.EngSpaContract.QA_STYLE;
+import static jarden.provider.engspa.EngSpaContract.QUALIFIER;
+import static jarden.provider.engspa.EngSpaContract.QUESTION_SEQUENCE;
+import static jarden.provider.engspa.EngSpaContract.SPANISH;
+import static jarden.provider.engspa.EngSpaContract.TABLE;
+import static jarden.provider.engspa.EngSpaContract.USER_ID;
+import static jarden.provider.engspa.EngSpaContract.USER_TABLE;
+import static jarden.provider.engspa.EngSpaContract.USER_WORD_TABLE;
+import static jarden.provider.engspa.EngSpaContract.WORD_ID;
+import static jarden.provider.engspa.EngSpaContract.WORD_TYPE;
 
 public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private static EngSpaSQLite2 instance;
@@ -373,12 +392,12 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public List<EngSpa> getCurrentWordList(int userLevel) {
 		if (userLevel < 1) userLevel = 1;
-		int firstId = (userLevel - 1) * WORDS_PER_LEVEL + 1;
+		int firstId = (userLevel - 1) * EngSpaQuiz.WORDS_PER_LEVEL + 1;
 		int dbSize = getDictionarySize();
-		if (firstId > (dbSize - WORDS_PER_LEVEL)) {
-			firstId = random.nextInt(dbSize - WORDS_PER_LEVEL);
+		if (firstId > (dbSize - EngSpaQuiz.WORDS_PER_LEVEL)) {
+			firstId = random.nextInt(dbSize - EngSpaQuiz.WORDS_PER_LEVEL);
 		}
-		int lastId = firstId + WORDS_PER_LEVEL;
+		int lastId = firstId + EngSpaQuiz.WORDS_PER_LEVEL;
 		String sql = "select * from " + TABLE +
 				" where _id >= " + firstId + " and _id < " + lastId;
 		if (BuildConfig.DEBUG) Log.d(TAG,
@@ -417,7 +436,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public EngSpa getRandomPassedWord(int userLevel) {
 		if (userLevel < 2) return null;
-		int max = (userLevel - 1) * WORDS_PER_LEVEL;
+		int max = (userLevel - 1) * EngSpaQuiz.WORDS_PER_LEVEL;
 		int dbSize = getDictionarySize();
 		if (max > dbSize) max = dbSize;
 		int id = random.nextInt(max) + 1; // id starts from 1
@@ -516,14 +535,14 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public int getDictionarySize() {
 		if (this.dictionarySize == 0) {
-			this.dictionarySize = (int) // getRowCount(TABLE);
+			this.dictionarySize = (int)
 				DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE);
 		}
 		return this.dictionarySize;
 	}
 	@Override // EngSpaDAO
 	public int getMaxUserLevel() {
-		return getDictionarySize() / WORDS_PER_LEVEL;
+		return getDictionarySize() / EngSpaQuiz.WORDS_PER_LEVEL;
 	}
     /**
      * if userLevel > maximum, based on size of dictionary,

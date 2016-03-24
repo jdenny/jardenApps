@@ -34,9 +34,14 @@ import java.util.Set;
  * @author john.denny@gmail.com
  */
 public class DocumentTextView {
+    public interface OnShowPageListener {
+        void onShowPage(String pageName);
+    }
 	private static final String TAG = "DocumentTextView";
+    private OnShowPageListener onShowPageListener;
 	private final TextView textView;
 	private final HashMap<String, CharSequence> spannableMap;
+    private final String homePageName;
 
 	/**
 	 *
@@ -44,8 +49,9 @@ public class DocumentTextView {
 	 * @param textView to hold hypertext
 	 * @param resIds string resource ids; first one assumed to be home page
 	 */
-	public DocumentTextView(Context appContext, TextView textView, int[] resIds) {
-		this(appContext, textView, resIds, false);
+	public DocumentTextView(Context appContext, TextView textView, int[] resIds,
+                            OnShowPageListener onShowPageListener) {
+		this(appContext, textView, resIds, false, onShowPageListener);
 	}
 	/**
 	 *
@@ -55,9 +61,10 @@ public class DocumentTextView {
 	 * @param withPageNames show page name as title at head of page
 	 */
 	public DocumentTextView(Context appContext, TextView textView, int[] resIds,
-				boolean withPageNames) {
+				boolean withPageNames, OnShowPageListener onShowPageListener) {
 		this.textView = textView;
-		this.spannableMap = new HashMap<>();
+        this.onShowPageListener = onShowPageListener;
+        this.spannableMap = new HashMap<>();
 		Resources resources = appContext.getResources();
 		for (int resId: resIds) {
 			String pageName = resources.getResourceEntryName(resId);
@@ -65,20 +72,29 @@ public class DocumentTextView {
 			String pageHeader = withPageNames ? pageName : null;
 			CharSequence ss = getSpannable(pageText, pageHeader);
 			spannableMap.put(pageName, ss);
-
 		}
-		String homePageName = resources.getResourceEntryName(resIds[0]);
-		CharSequence homePage = spannableMap.get(homePageName);
-		textView.setText(homePage);
+        this.homePageName = resources.getResourceEntryName(resIds[0]);
+        showHomePage();
 	}
+    public void showHomePage() {
+        showPage(this.homePageName);
+    }
 	public void showPage(String name) {
 		CharSequence ss = spannableMap.get(name);
         if (ss == null && BuildConfig.DEBUG) Log.w(TAG,
                 "showPage(" + name + "); name not found");
 		textView.setText(ss);
-		textView.scrollTo(0, 0);
+        textView.scrollTo(0, 0);
+        if (this.onShowPageListener != null) {
+            this.onShowPageListener.onShowPage(name);
+        }
 	}
-	private SpannableStringBuilder getSpannable(String src, String pageName) {
+    /*!!
+    public void setOnShowPageListener(OnShowPageListener onShowPageListener) {
+        this.onShowPageListener = onShowPageListener;
+    }
+    */
+    private SpannableStringBuilder getSpannable(String src, String pageName) {
 		int index = 0;
 		int startIndex; // index of '[' in [tag]
 		int endIndex; // index of '[' in [/tag]

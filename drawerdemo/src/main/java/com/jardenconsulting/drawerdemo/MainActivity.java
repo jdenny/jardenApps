@@ -1,6 +1,5 @@
 package com.jardenconsulting.drawerdemo;
 
-import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -9,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,20 +15,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
+
+import jarden.engspa.EngSpa;
+import jarden.engspa.EngSpaSQLite2;
 
 // TODO: see http://blog.teamtreehouse.com/add-navigation-drawer-android
 public class MainActivity extends AppCompatActivity
-        implements /*!!AdapterView.OnItemClickListener*/
-        NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private static final String VIEWLESS = "VIEWLESS";
     private TextView textView;
     private DrawerLayout drawerLayout;
-    private ListView drawerListView;
     private ActionBarDrawerToggle drawerToggle;
-    private CharSequence drawerTitle;
     private CharSequence title;
     private LunesFragment lunesFragment;
     private MartesFragment martesFragment;
@@ -40,36 +39,22 @@ public class MainActivity extends AppCompatActivity
     private Fragment currentFragment;
     private FragmentManager fragmentManager;
     private boolean doubleBackToExitPressedOnce = false;
-    private ActionBar actionBar;
+    private EngSpaSQLite2 engSpaDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate(" + (savedInstanceState == null ? "" : "not ") + "null)");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //!! title = drawerTitle = getTitle();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        this.actionBar = getSupportActionBar();
-        /*!!
-        this.actionBar.setDisplayHomeAsUpEnabled(true);
-        this.actionBar.setHomeButtonEnabled(true);
-        */
 
         this.textView = (TextView) findViewById(R.id.textView);
         String spanishPhrase = "aá eé ií oó uú nñ ¡qué! ¿cómo?";
         textView.setText(spanishPhrase);
         this.drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
-        /*!! this.drawerListView = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        this.drawerListView.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, dayTitles));
-        // Set the list's click listener
-        this.drawerListView.setOnItemClickListener(this);
-         */
         this.drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
                 R.string.drawer_open,
@@ -94,43 +79,6 @@ public class MainActivity extends AppCompatActivity
                     .findFragmentByTag(VIEWLESS);
         }
     }
-
-    /*!!
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Log.d(TAG, "onOptionsItemSelected(menuItem.id=" + id + ")");
-        if (id == android.R.id.home) {
-            drawerLayout.openDrawer(GravityCompat.START);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
-
-    /*!!
-    // Called whenever we call invalidateOptionsMenu()
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = this.drawerLayout.isDrawerOpen(drawerListView);
-        Log.d(TAG, "onPrepareOptionsMenu(drawerOpen=" + drawerOpen + ")");
-        Snackbar.make(textView, "drawerOpen=" + drawerOpen, Snackbar.LENGTH_INDEFINITE).show();
-        return super.onPrepareOptionsMenu(menu);
-    }
-    */
-
-    /*!!
-    @Override // OnItemClickListener
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick(position=" + position + ")");
-        drawerListView.setItemChecked(position, true);
-        this.drawerTitle = dayTitles[position];
-        String tag = this.drawerTitle.toString();
-        showFragment(tag);
-        drawerLayout.closeDrawer(drawerListView);
-    }
-    */
     @Override // OnNavigationItemSelectedListener
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -240,21 +188,55 @@ public class MainActivity extends AppCompatActivity
             this.textView.setText("back to MainActivity!");
         }
     }
-
-    /*!!
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        Log.d(TAG, "onPostCreate(" + savedInstanceState == null ? "" : "not " + "null)");
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        if (drawerToggle != null) drawerToggle.syncState();
+    @Override // Activity
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override // Activity
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (BuildConfig.DEBUG) Log.d(TAG,
+                "onOptionsItemSelected(itemId=" + id + ")");
+        if (id == R.id.findDuplicates) {
+            findDuplicates();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    private void findDuplicates() {
+        if (this.engSpaDAO == null) {
+            this.engSpaDAO = EngSpaSQLite2.getInstance(getApplicationContext());
+        }
+        // for each word, using word id
+        // find words by English
+        // find words by Spanish
+        int dbSize = this.engSpaDAO.getDictionarySize();
+        if (dbSize == 0) dbSize = 100;
+        Log.i(TAG, "findDuplicates(); dbSize=" + dbSize);
+        EngSpa engSpa;
+        String english, spanish;
+        List<EngSpa> englishList, spanishList;
+        for (int id = 0; id < dbSize; id++) {
+            engSpa = this.engSpaDAO.getWordById(id);
+            english = engSpa.getEnglish();
+            englishList = this.engSpaDAO.getEnglishWord(english);
+            if (englishList.size() > 1) {
+                Log.i(TAG, "duplicates for " + english);
+                for (EngSpa es: englishList) {
+                    Log.i(TAG, "  " + es);
+                }
+            }
+            spanish = engSpa.getEnglish();
+            spanishList = this.engSpaDAO.getEnglishWord(spanish);
+            if (spanishList.size() > 1) {
+                Log.i(TAG, "duplicates for " + spanish);
+                for (EngSpa es: spanishList) {
+                    Log.i(TAG, "  " + es);
+                }
+            }
+        }
+        Log.i(TAG, "end of findDuplicates()");
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.d(TAG, "onConfigurationChanged(" + newConfig + ")");
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-    */
 }

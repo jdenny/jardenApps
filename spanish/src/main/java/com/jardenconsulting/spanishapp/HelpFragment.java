@@ -11,16 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import jarden.document.DocumentTextView;
 
-public class HelpFragment extends Fragment implements View.OnClickListener {
+public class HelpFragment extends Fragment implements View.OnClickListener,
+        DocumentTextView.OnShowPageListener {
     private static final String TAG = "HelpFragment";
-    private CheckBox showHelpCheckBox;
-    private CheckBox showTipsCheckBox;
     private EngSpaActivity engSpaActivity;
+    private DocumentTextView documentTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,35 +29,30 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_help, container, false);
         TextView helpTextView = (TextView) rootView.findViewById(R.id.helpTextView);
         helpTextView.setMovementMethod(new ScrollingMovementMethod());
-        this.showHelpCheckBox = (CheckBox) rootView.findViewById(R.id.showHelpCheckBox);
-        this.showHelpCheckBox.setOnClickListener(this);
-        this.showTipsCheckBox = (CheckBox) rootView.findViewById(R.id.showTipsCheckBox);
-        this.showTipsCheckBox.setOnClickListener(this);
+        Button homeButton = (Button) rootView.findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(this);
+        Button reviseButton = (Button) rootView.findViewById(R.id.reviseButton);
+        reviseButton.setOnClickListener(this);
 
         this.engSpaActivity = (EngSpaActivity) getActivity();
-        SharedPreferences sharedPreferences = engSpaActivity.getSharedPreferences();
-        boolean isShowHelp = sharedPreferences.getBoolean(
-                EngSpaActivity.SHOW_HELP_KEY, true);
-        this.showHelpCheckBox.setChecked(isShowHelp);
-        boolean isShowTips = sharedPreferences.getBoolean(
-                EngSpaActivity.SHOW_TIPS_KEY, true);
-        this.showTipsCheckBox.setChecked(isShowTips);
         this.engSpaActivity.setTip(R.string.helpTip);
 
         int[] helpResIds = {
                 R.string.HomeHelp,
                 R.string.QuickStartHelp,
+                R.string.MoreQuickHelp,
                 R.string.QuestionsByLevelHelp,
                 R.string.QuestionStyleHelp,
-                R.string.WordLookupHelp,
-                R.string.NumbersGameHelp,
                 R.string.SelectTopicHelp,
                 R.string.FeedbackHelp,
-                R.string.incorrectButtonTip,
+                R.string.SelfMarkHelp,
+                R.string.NumbersGameHelp,
+                R.string.WordLookupHelp,
                 R.string.HintsNTipsHelp
         };
-        new DocumentTextView(getActivity().getApplicationContext(),
-                helpTextView, helpResIds);
+        this.documentTextView = new DocumentTextView(
+                getActivity().getApplicationContext(),
+                helpTextView, helpResIds, this);
         helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
         helpTextView.setHighlightColor(Color.TRANSPARENT);
         return rootView;
@@ -65,18 +61,17 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     @Override // OnClickListener
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.showHelpCheckBox) {
-            boolean isShowHelp = showHelpCheckBox.isChecked();
-            SharedPreferences.Editor editor =
-                    this.engSpaActivity.getSharedPreferences().edit();
-            editor.putBoolean(EngSpaActivity.SHOW_HELP_KEY, isShowHelp);
-            editor.apply();
-        } else if (id == R.id.showTipsCheckBox) {
-            boolean isShowTips = showTipsCheckBox.isChecked();
-            this.engSpaActivity.setShowTips(isShowTips);
+        if (id == R.id.homeButton) {
+            this.documentTextView.showHomePage();
+        } else if (id == R.id.reviseButton) {
+            this.engSpaActivity.showEngSpaFragment();
         } else {
             Log.e(TAG, "unrecognised onClick Id: " + id);
         }
 
+    }
+    @Override
+    public void onShowPage(String pageName) {
+        this.engSpaActivity.setAppBarTitle(pageName);
     }
 }

@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/jardenlib/src/main/java/jarden/engspa/EngSpaUtils.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/jardenlib/src/main/java/jarden/engspa/VerbUtils.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/jardenlib/src/main/res/raw/engspa.txt" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/spanish/src/main/res/raw/engspa.txt" charset="ISO-8859-1" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

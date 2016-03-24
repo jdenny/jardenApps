@@ -1,0 +1,306 @@
+					TODO - ALL APPS
+Factory reset of S3 Mini
+	apps to re-install: JW Library, Hot Bridge, Spanish, Pano Tuner
+	front page: Hot Bridge, KnowMe, Revise Spanish
+		JW Library, Translate, SPlanner, Hangouts
+		Camera, Drive, Pano Tuner, Maps
+	Footer: Phone, Chrome, GMail, Apps
+	old_telephone.mp3
+SCALA
+https://bcomposes.wordpress.com/2011/08/22/first-steps-in-scala-for-first-time-programmers-part-1/
+
+CARDS
+To Test
+	bluetooth still works - but how is it to be used now?
+ToDo:
+	stay on same hand if rotate or go to another app
+	lastBid, bidList, westDeal, primaryBid, bidNumber should
+		all be in business class, not presentation class; also keep
+		track of 3 consecutive passes
+	align east to right of screen
+
+AMAZEQUIZ
+merge in QuizRace:
+	add AnagramQuiz; sort out why Files not working; option with no race!
+	input type to be text or number; don't throw any exceptions!
+	add 'Go' button to keyboard; delete QuizRace
+	try out wi-fi direct: http://developer.android.com/guide/topics/connectivity/wifip2p.html
+possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
+	as done by EngSpaQuiz2
+
+SPANISH
+* help fragment creating document text view every time; use retain instance etc;
+* rename numbers game to gato y ratón
+* utility to find multiple DB entries - e.g. favourite, free, below, however, love
+* turn off each tip after 3 shows?
+* all fragments should survive screen rotation
+* are we using gustar correctly?
+* sound at new level (cat & mouse and main engSpa)
+* add Cara to list of testers
+
+remove option for multiple users
+
+No help for word lookup; still got it's own status field
+Numbers game: no help; got its own status field
+Replace and with phrase
+More and less buttons and home?
+Word help indicates typing is a desperate measure
+Selecting topic or qastyle or questions by level should open main window
+Reorder question style; use real words!
+set title & helpText of each fragment in onCreateView
+
+2 entries for great
+Awful - horrible
+3 entries for outside
+3 entries for bajo
+If first time on app, wait for user to read home page. At show help and home to return to this page
+2 entries for tras
+
+ideas from demo to Julie
+	userGuide in guideTextView in MainActivity; wait for user to press Continue
+	to go onto EngSpaActivity; checkboxShowAtStartup (saved in preferences)
+	can return to userGuide from entry in drawerList
+
+	"think of your answer - no need to type the answer, it only slows you down! Press "GO",
+	look at answer we provide, then tell us if you were right. Sometimes you may want to
+	type in, to check your spelling; if you do so, and get it wrong, and give up trying
+	to guess, clear the answer field then press GO"
+
+	each fragment has its own contextual tipTextField; ditch long press?
+
+	Write a complete user-guide as a Google Doc, and use that as the basis for the help.
+
+	Status: loading dictionary - please wait
+	HelpDocument: userGuide
+	back destroys the fragment, which we don't want to do; proposed way forward:
+		intercept back key; don't put things on back-stack; always go back to MainActivity;
+		if already on MainActivity, prompt user (Snackbar) to back again to exit
+
+check with Joe: 1 user? bluetooth?
+
+when we add > 1 user, don't forget to save showHelp as part of user
+(but still update it via showHelpCheckbox, not user dialog)
+
+check duolingo to see if we actually need to cater for more than 1 user!
+
+different layouts for landscape!
+optionally split verb into two stages: infinitive then conjugate
+	e.g. Q: I will eat; A: comer; right, now try to conjugate or wrong try again
+each tip automatically stops after 3 shows?
+
+Show qaStyle
+Different layout when keyboard shows
+Volume control
+Catch connection error and output more sensible message
+
+get rid of obvious words; add words from GCSE book
+add long press everywhere?
+different layout when keyboard shows
+in word-lookup, copy eng to spa and spa to eng, but have
+	easy way to clear input fields
+
+Only apply alternate style to past words
+in debug app, have fragment that allows us to fire SQL to database
+	and invoke methods of EngSpaDAO
+
+save the current level of race game; remember last topic in EngSpaUser
+extra tenses: reflexive, I have eaten (present perfect),
+	I had eaten (past perfect or pluperfect)
+some verbs only 3rd person singular, e.g. to snow
+reset function, on overflow menu:
+	delete all userwords, shared preferences
+for countries and towns and nationalities don't add article
+write a proper test suite!
+when loading new dictionary, show how much progress we have made so far
+	based on size of dictionary file
+navigation drawer:
+	http://developer.android.com/training/implementing-navigation/nav-drawer.html
+help page with hyperlinks: see BKH and
+	http://www.androidengineer.com/2010/08/easy-method-for-formatting-android.html
+allow for multiple users; set userName to 'admin', to allow extra features?
+http://stackoverflow.com/questions/16411056/how-to-adjust-layout-when-soft-keyboard-appears
+see TODOs
+outstanding tests
+	test invalid value for one of enums in engspa.txt
+	only turn on textToSpeech if question style requires it
+	if not noun or verb, and attribute is n_a: use word type as hint
+	Combine status fields and stats into one
+	accent error not working
+Short-term
+	sort words in engspa.txt, to reflect school words; complete GCSE words
+	split big topics into 2 or 3 groups, e.g. building, building1, building2;
+		for hint, remove number at end
+	Sam's icon as title of drawer
+	have search icon in toolBar (was actionBar) as alternative to enter
+		Word Search; fill in drop-down of words as user types into search
+		rename VerbTableFragment to WordSearchFragment
+		see http://developer.android.com/training/appbar/action-views.html
+Long-term
+	need a way to force reload of DB, from built-in or from web site
+		in case load from server fails
+	use same dialog or fragment for updating user in JardenProviders & Spanish
+	random mode (when reached max level): set EngSpaQuiz.questionSequence to AAF
+	re-factor EngSpaContract.QuestionStyle to be like the other enums
+	have main dictionary in JardenProviders (or perhaps better in Spanish),
+		plus extra text file(s) online; document why do we need a dictionary,
+		instead of set of text files like BKH.
+		as words mature, they can migrate to JardenProviders;
+		this would require an extra column on the database, but we
+		could use the now redundant LEVEL - see EngSpaQuiz.setUserLevel()
+		Note that if we set words from main file to LEVEL=1, and words
+		from extra file to LEVEL=2, when we updated the extra file we
+		would have to delete all words with LEVEL=2, and reset nextID
+		to numberOfRows + 1
+	extend verbTable menu option to include all words:
+		menu verbTable -> Word Lookup; search for English or Spanish, as now,
+		but some kind of auto-completion and/or wild cards in search
+		if verb chosen, option to show conjugation; search menu option
+		on toolbar; button to speak selected word
+	change EngSpa.Attribute from enum to a String?
+	for time and dates and places, use preposition, e.g.
+		last Tuesday; at five o'clock; next June; to England; at the chemist
+	make Spanish pronoun optional
+	after successful DB update show how many rows inserted
+		after failed update, dialog to ask if want to retry or restore to
+		factory-installed version
+	add checkBox to Activity Menu: "Verbs Only" (i.e. not in user settings, as it's temporary)
+Original design spec:
+	start work on new player fragment
+		show existing players; add, update, delete player
+		for new player, determine current level, and preferred
+			question style; explain menu options
+		save player level & fail data
+		save user's preference for question type
+	check can handle > 1 player
+	
+	abandon questionType (word, phrase, sentence) and add more phrases
+		(and sentences!) to database
+	long hold over anything pops up help text; explain this
+		in introduction
+	extend Provider to add search and sort criteria
+	option to choose words from selected category, like in Python
+	add id to wordFile, so when update database it still matches
+	option to show fails as ListView; could select from them
+		to choose next word
+	check for duplicates when loading database
+	free-standing java app to update and validate data file
+		if duplicates, allow for alternative translations
+	add level two words; see http://www.bbc.co.uk/schools/primarylanguages/spanish/all_about_me/colours/
+	word (default), phrase, sentence
+		word: the/a lion; he will eat; slowly; red; under // done
+		phrase: the/a red lion; he will slowly eat
+		sentence: the red lion will slowly eat a cow
+	check if typed in wrong language? difficult!
+	proper database design: have table for each type (wordType, qualifier, attribute)
+		e.g. WordTypes = { int id, String wordType}
+		this ensures database integrity, reduces size of DB, and saves me validating
+		the ContentValues.
+		This also gives us the option to get the types for the spinners from the DB!
+		(like we did in Django/Python)
+		See https://gate.ac.uk/
+
+IMPROVEMENTS OVER AMAZEQUIZ
+random files of Spanish now on SQLite database
+proper concept of levels for PresetQuiz
+userLevel held on database
+improved algorithm for choosing next question
+	user decides how many goes to have per word
+	number of required rights based on number of wrongs
+		at current level and previous levels
+algorithm for establishing level of new user - not yet implemented!
+
+SpanishQuiz requirements
+----------------------------------------------
+choose one of:
+	1. word, verb phrase (e.g. we were eating), or phrase (e.g. the dog was eating the green carrot)
+Note: generate random, but grammatically correct Spanish phrases
+
+Use Cases:
+	1. speak Spanish -> type Spanish
+	2. speak Spanish -> type English
+	3. speak & print Spanish -> type English
+	4. print Spanish -> type English
+	5. print English -> type Spanish
+	6. random: any of above
+
+Go: if no input, show answer
+	if input
+		check answer & mark accordingly (see below)
+		if wrong ask question again (i.e. repeat until correct or no input)
+		allow alternative answers 
+
+Radio: word, verb phrase, sentence
+Spinner: see use cases above
+questionTextView
+answerEditText
+goButton, repeatButton (only applicable to use cases 1-3)
+
+ability to download extra dictionary elements from web site
+	i.e. similar to AmazeQuiz
+	at start of app, check can connect to my server
+	if so, check date of EngSpa.dat; if newer give user option to download new version
+	also provide (menu?) option to download new version
+
+objectives:
+	suitable app for schools
+	POC for using Scala and Python in Android
+	help me with my Spanish
+
+PLAN
+done: textToSpeech; sqlite; conjugate verbs; download new words;
+	replace Contract with EngSpaContract
+	add extra fields to engSpa: attribute, difficulty
+	return QuestionAnswer, instead of trashing EngSpa!
+	refresh EngSpaList when database updated
+	validate values for insert and update; this should be done
+		using extra tables on database, e.g. WordTypes.
+	restore database
+	calculate student level - see levelAlgorithm.txt
+
+PROPOSED ARCHITECTURE
+EngSpaQuiz replace by Levels
+	List<EngSpa> etc, as for Levels
+
+EngSpa with added history
+
+CURRENT ARCHITECTURE
+* on method means @Override
+
+SQLiteOpenHelper
+	onCreate()
+	onUpgrade()
+	getWritableDatabase() -> returns engSpaDB:SQLiteDatabase
+
+EngSpaSQLite (extends SQLiteOpenHelper)
+	*onCreate() -> createTables; bulkInsert(rows from local file)
+	bulkInsert(rows) -> iterate on insert(row)
+	*onUpgrade() -> dropTable; onCreate()
+	getCursor(criteria) -> engSpaDB.query(criteria)
+	insert(row) -> engSpaDB.insert(row)
+	insert(row, selection) -> engSpaDB.insert(row, selection)
+	update(row) -> engSpaDB.update(row)
+	delete(criteria) -> engSpaDB.delete(criteria)
+
+EngSpaProvider (extends ContentProvider)
+	*delete(criteria) -> engSpaSQLite.delete(criteria)
+	*insert(row) -> engSpaSQLite.insert(row)
+	*onCreate() -> new EngSpaSQLite()
+	*query(criteria) -> engSpaSQLite.query(criteria)
+	*update(row, criteria) -> engSpaSQLite.update(row, criteria)
+	*bulkInsert(rows) -> engSpaSQLite.bulkInsert(rows)
+
+ContentResolver
+	query(criteria) -> engSpaProvider.query(criteria)
+	insert(row) -> engSpaProvider.insert(row)
+	update(row) -> engSpaProvider.update(row)
+	delete(criteria) -> engSpaProvider.delete(criteria)
+	bulkInsert(rows) -> engSpaProvider.bulkInsert(rows)
+	call(customMethod) -> not used
+
+SpanishApp
+	onCreateView() ->...->	contentResolver.query(all rows)
+	dbUpdate() -> getRowsFromWebPage
+		contentResolver.delete(all rows)
+		contentResolver.bulkInsert(rows)
+	dbRestore() -> restore from local file in case dbUpdate fails
+	

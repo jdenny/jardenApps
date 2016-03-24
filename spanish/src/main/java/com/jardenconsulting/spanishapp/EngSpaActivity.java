@@ -7,8 +7,10 @@ import jarden.engspa.EngSpaUser;
 import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
+    /*!!
     String SHOW_HELP_KEY = "SHOW_HELP_KEY";
     String SHOW_TIPS_KEY = "SHOW_TIPS_KEY";
+    */
 
 	EngSpaDAO getEngSpaDAO();
     EngSpaUser getEngSpaUser();
@@ -21,7 +23,7 @@ public interface EngSpaActivity {
 	int getQuestionSequence();
 	
 	SharedPreferences getSharedPreferences();
-	
+
 	/**
 	 * Vibrate and play soundError.
 	 */
@@ -31,8 +33,10 @@ public interface EngSpaActivity {
 	 * Vibrate and play soundError.
 	 */
 	void onWrongAnswer();
+    void setAppBarTitle(int resId);
+    void setAppBarTitle(String title);
 	void setProgressBarVisible(boolean visible);
-    void setShowTips(boolean isShowTips);
+    //!! void setShowTips(boolean isShowTips);
 
 	/**
 	 * Set Spanish word if user later clicks on
@@ -47,7 +51,12 @@ public interface EngSpaActivity {
 	void setStatus(int statusId);
 	void setStatus(String statusText);
 
-	void setTip(int resId);
+    /**
+     * Resource id of String to be shown in tip field
+     * @param resId
+     */
+    void setTip(int resId);
+    void showEngSpaFragment();
 	void showTopicDialog();
 
 	/**
@@ -56,8 +65,6 @@ public interface EngSpaActivity {
 	 */
 	void speakSpanish(String spanish);
 	
-	void setAppBarTitle(int resId);
-    void setAppBarTitle(String title);
 }
 
 
