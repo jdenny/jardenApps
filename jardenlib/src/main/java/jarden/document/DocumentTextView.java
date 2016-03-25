@@ -79,15 +79,26 @@ public class DocumentTextView {
     public void showHomePage() {
         showPage(this.homePageName);
     }
-	public void showPage(String name) {
+
+    /**
+     * Show hypertext page with given name. Return false if
+     * name not found.
+     * @param name
+     * @return
+     */
+    public boolean showPage(String name) {
 		CharSequence ss = spannableMap.get(name);
-        if (ss == null && BuildConfig.DEBUG) Log.w(TAG,
-                "showPage(" + name + "); name not found");
+        if (ss == null) {
+            if (BuildConfig.DEBUG) Log.w(TAG,
+                    "showPage(" + name + "); name not found");
+            return false;
+        }
 		textView.setText(ss);
         textView.scrollTo(0, 0);
         if (this.onShowPageListener != null) {
             this.onShowPageListener.onShowPage(name);
         }
+        return true;
 	}
     /*!!
     public void setOnShowPageListener(OnShowPageListener onShowPageListener) {

@@ -7,11 +7,13 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!-- Jarden dimensions -->
+    <!-- Jarden dimensions. Note: recommendation is to use sp for text sizes
+         and dp for other sizes -->
     <dimen name="toolbarElevation">4dp</dimen>
     <dimen name="smallMargin">6dp</dimen>
     <dimen name="spanishMargin">8dp</dimen>
-    <dimen name="spanishTextFieldSize">30sp</dimen>
+    <dimen name="spanishTextFieldSize">25sp</dimen>
+    <dimen name="helpTextFieldSize">20sp</dimen>
 
     <!-- My values for QuizRace -->
     <dimen name="small_margin">5dp</dimen>

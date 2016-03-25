@@ -8,7 +8,8 @@
     <string name="failStr">Fails:</string>
     <string name="findDuplicates">Find Duplicates</string>
     <string name="goStr">Go</string>
-    <string name="lunes">Lunes fragment</string>
+    <string name="help">Help fragment</string>
+    <string name="helpHome">Help Home</string>
     <string name="martes">Martes fragment</string>
     <string name="micStr">Mic</string>
     <string name="noStr">No</string>

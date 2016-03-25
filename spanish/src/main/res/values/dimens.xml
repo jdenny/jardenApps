@@ -3,11 +3,4 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 	
-	<!-- Jarden dimensions. Note: recommendation is to use sp for text sizes
-	     and dp for other sizes -->
-    <dimen name="toolbarElevation">4dp</dimen>
-    <dimen name="smallMargin">6dp</dimen>
-    <dimen name="spanishMargin">8dp</dimen>
-    <dimen name="spanishTextFieldSize">25sp</dimen>
-    <dimen name="helpTextFieldSize">20sp</dimen>
 </resources>

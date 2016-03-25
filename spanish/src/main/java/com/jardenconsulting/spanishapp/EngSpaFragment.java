@@ -212,11 +212,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			this.questionTextView.setText(this.question);
 		}
-        setTip(getNext ? R.string.engSpaTip : R.string.tryGoAgainTip);
-        /*!!
-        if (!getNext) setTip(R.string.tryGoAgainTip);
-		else setTip(R.string.engSpaTip);
-		*/
+        setTip(getNext ? R.string.engSpaHelp : R.string.tryGoAgainTip);
 		showStats();
 	}
 	private boolean isUserLevelAll() {
@@ -300,7 +296,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			setTip(R.string.incorrectButtonTip);
 			return true;
 		} else if (id == R.id.micButton) {
-			setTip(R.string.micButtonTip);
+			setTip(R.string.micButtonHelp);
 			return true;
 		}
 		return false;
@@ -389,7 +385,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 						.getEnglish() : engSpaQuiz.getSpanish();
 				this.questionTextView.setText(translated);
 			}
-			setTip(R.string.selfMarkTip);
+			setTip(R.string.SelfMarkHelp);
 		} else {
 			String normalisedCorrectAnswer = normalise(this.correctAnswer);
 			String normalisedSuppliedAnswer = normalise(suppliedAnswer);

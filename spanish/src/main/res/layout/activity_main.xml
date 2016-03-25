@@ -21,6 +21,7 @@
 		    android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 		<!-- android:background="?attr/colorPrimary" -->
 
+        <!--
         <LinearLayout
             android:id="@+id/tipLayout"
             android:layout_width="match_parent"
@@ -44,12 +45,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hideHelp" />
         </LinearLayout>
+        -->
 
         <FrameLayout
 	        android:id="@+id/fragmentLayout"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content" />
-	
+
+        <CheckBox
+            android:id="@+id/showHelpCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/showHelp"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_gravity="right"/>
+
+        <TextView
+            android:id="@+id/helpTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars = "vertical"
+            android:text="@string/welcome"
+            android:textSize="@dimen/helpTextFieldSize"/>
+
 	    <TextView
 	        android:id="@+id/statusTextView"
 	        android:layout_width="wrap_content"
@@ -61,7 +79,8 @@
 	        android:visibility="gone"
 	        android:layout_height="wrap_content" />
 
-	</LinearLayout>
+
+    </LinearLayout>
 	
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

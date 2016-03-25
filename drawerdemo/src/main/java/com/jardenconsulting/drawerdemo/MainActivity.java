@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private CharSequence title;
-    private LunesFragment lunesFragment;
+    private HelpFragment helpFragment;
     private MartesFragment martesFragment;
     private MiercolesFragment miercolesFragment;
     private ViewlessFragment viewlessFragment;
@@ -66,11 +66,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         this.fragmentManager = getSupportFragmentManager();
-        this.lunesFragment = (LunesFragment) fragmentManager.findFragmentById(
-                R.id.lunesFragment);
+        this.helpFragment = (HelpFragment) fragmentManager.findFragmentById(
+                R.id.helpFragment);
         if (savedInstanceState == null) {
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.hide(this.lunesFragment);
+            ft.hide(this.helpFragment);
             this.viewlessFragment = new ViewlessFragment();
             ft.add(this.viewlessFragment, VIEWLESS);
             ft.commit();
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onNavigationItemSelected(menuItem.id=" + id + ")");
         String tag;
         if (id == R.id.qaStyle) {
-            tag = "lunes";
+            tag = "help";
         } else if (id == R.id.topic) {
             tag = "martes";
         } else if (id == R.id.wordLookup) {
@@ -115,12 +115,12 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "fragment already showing: " + tag);
             return;
         }
-        if (tag.equals("lunes")) {
+        if (tag.equals("help")) {
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.show(this.lunesFragment);
+            ft.show(this.helpFragment);
             if (this.currentFragment != null) ft.remove(this.currentFragment);
             ft.commit();
-            currentFragment = lunesFragment;
+            currentFragment = helpFragment;
             this.currentTag = tag;
         } else {
             if (tag.equals("martes")) {
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity
             }
             this.currentTag = tag;
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.hide(this.lunesFragment);
+            transaction.hide(this.helpFragment);
             transaction.replace(R.id.fragmentLayout, currentFragment, tag);
             transaction.commit();
         }
@@ -177,8 +177,8 @@ public class MainActivity extends AppCompatActivity
             }, 2000);
         } else {
             FragmentTransaction transaction = this.fragmentManager.beginTransaction();
-            if (this.currentTag.equals("lunes")) {
-                transaction.hide(this.lunesFragment);
+            if (this.currentTag.equals("help")) {
+                transaction.hide(this.helpFragment);
             } else {
                 transaction.remove(this.currentFragment);
             }

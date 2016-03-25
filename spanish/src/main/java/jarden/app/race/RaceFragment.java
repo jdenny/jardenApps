@@ -322,7 +322,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	}
 	private void poseQuestion(String question) {
 		this.engSpaActivity.speakSpanish(question);
-        this.engSpaActivity.setTip(R.string.numbersGameTip);
+        this.engSpaActivity.setTip(R.string.NumbersGameHelp);
 	}
 
 

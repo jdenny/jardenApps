@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="HomeHelp">
-		[b]¡Bienvenida! Welcome![/b]\n
-        For quick start, press [i]Revise![/i] above and follow the tips in blue
-        above.\n
-        For quick overview of [i]Revise Spanish[/i], press
-        [a]QuickStartHelp|here[/a].\n
-		For further details, press on a link below.\n
-		[a]QuestionStyleHelp|Question Style[/a]\n
-		[a]SelectTopicHelp|Select Topic[/a]\n
-		[a]WordLookupHelp|Word Lookup[/a]\n
-		[a]NumbersGameHelp|NumbersGame[/a]\n
-		[a]QuestionsByLevelHelp|Questions By Level[/a]\n
-		[a]FeedbackHelp|Feedback[/a]\n
-		[a]HintsNTipsHelp|Hints and Tips[/a]
-	</string>
-	<string name="QuickStartHelp">
-        To open main menu, left swipe from side of screen, or press
-        on menu icon (3 horizontal lines) at top left of screen. Either select
-        an item from the menu or close the menu with a swipe to the left.\n
-		Most of the time you should think of answer, not type it; for further info
-		see [a]SelfMarkHelp|Self-Marking[/a]\n
-		Spanish has several words for [i]you[/i]; to differentiate in English, we at
-        [i]Revise Spanish[/i] use [i]thou[/i] for the familiar, and [i]YOU[/i]
-        for the plural.\n
-        You can turn off [i]Help[/i] at any time by pressing on [i]Hide Help[/i]
-        on the top right of the screen. [a]MoreQuickHelp|More[/a]
-	</string>
-	<string name="MoreQuickHelp">
-		Depending on [i]Question Style[/i], we speak the question or
+    <string name="engSpaHelp">
+        Think of (don\'t type) your answer and press Go.
+        [a]EngSpaMoreHelp|More[/a]
+    </string>
+	<string name="EngSpaMoreHelp">
+		Depending on [a]QuestionStyleHelp|Question Style[/a], we speak the question or
 		show it in the first coloured field (blue for English, red for Spanish);
 		2nd field is a hint if relevant; 3rd field is for the answer. Think of
 		your answer and press Go; we will fill in the correct
 		answer and you then tell us if you got it right or not. If you are not
 		sure of the spelling, you can type in the answer and we will mark it for
-		you; self-mark mode only applies if the answer field is blank. If you want
-		to check your Spanish pronunciation and you have Wi-Fi, you can press the
-		microphone button and speak the answer; we will use Google speech
-		recognition to try to decipher what you are saying.
+		you; self-mark mode only applies if the answer field is blank.
+        Spanish has several words for [i]you[/i]; to differentiate in English, we at
+        [i]Revise Spanish[/i] use [i]thou[/i] for the familiar, and [i]YOU[/i]
+        for the plural.\n
+        Long press on a button for specific help on that button.\n
+        Press the speaker at the top right of the screen to hear the current
+        Spanish word spoken.
+	</string>
+	<string name="FeedbackHelp">
+		We have put a lot of love and care into this app, because we also love
+		learning Spanish. We want you to enjoy this app as much as we enjoy
+		playing with it ourselves. Everyone is different, and there are many
+		different learning styles. If you have any comments or suggestions for
+		improving this app, please send an email to amazemequiz@gmail.com
+	</string>
+    <string name="MenuHelp">
+        To open main menu: left swipe from side of screen, or press on menu icon
+        (3 horizontal lines) at top left of screen. Either select
+        an item from the menu or close the menu with a swipe from right to left.
+    </string>
+	<string name="micButtonHelp">
+		Allows you to speak the Spanish answer to check your pronunciation;
+        requires internet connection.
+        [a]MicButtonMoreHelp|More[/a]
+	</string>
+    <string name="MicButtonMoreHelp">
+        Because speech recognition can be unreliable (yes, even using Google!),
+        we don\'t mark you down if you get it wrong, but we notice if you get it
+        right; if after a few attempts you want to give up, clear out the answer
+        and press GO.
+    </string>
+	<string name="NumbersGameHelp">
+		Type the number you hear; use speaker button to repeat question.
+        [a]NumbersGameMoreHelp|More[/a]
+	</string>
+	<string name="NumbersGameMoreHelp">
+		Listen to the numbers spoken in Spanish, and type in that number; if you
+		get the number correct, your blue man will move forward; if the red man
+		reaches the end before you, you have lost; if you get to the end before
+		him, you go back to the beginning at the next level, where the red man
+		gets slightly faster, and the questions get slightly harder. If you get
+		caught, you can still continue to answer questions, but you will stay
+		at the same level.
+        [a]FeedbackHelp|Feedback[/a]
 	</string>
 	<string name="QuestionsByLevelHelp">
         Each level consists of 10 words or phrases from the dictionary;
@@ -51,14 +68,11 @@
 		need to be answered correctly once more.
         QuestionsByLevel is the normal mode of the app; it is taken out of this
         mode when you [a]SelectTopicHelp|select a topic[/a].
-
 	</string>
 	<string name="QuestionStyleHelp">
 		QuestionStyle allows you to choose from questions in Spanish, answers
-		in English, or vice versa; the question can be spoken or printed. When
-		the answer is in Spanish, you can practice your pronunciation by pressing
-		the Mic button, and speaking the answer; this requires internet access
-		as it uses Google speech recognition.
+		in English, or vice versa; the question can be spoken or printed.
+        QuestionStyle is on the [a]MenuHelp|main menu[/a].
 	</string>
 	<string name="SelectTopicHelp">
 		Many words and phrases in the dictionary are given a topic: e.g. food, travel,
@@ -67,14 +81,12 @@
 		refers to your selected topic, i.e. we will randomly ask you questions from
 		topic, any previous level and failed words.
 	</string>
-	<string name="FeedbackHelp">
-		We have put a lot of love and care into this app, because we also love
-		learning Spanish. We want you to enjoy this app as much as we enjoy
-		playing with it ourselves. Everyone is different, and there are many
-		different learning styles. If you have any comments or suggestions for
-		improving this app, please send an email to amazemequiz@gmail.com
-	</string>
 	<string name="SelfMarkHelp">
+		Look at the answer that we have provided in the 3rd coloured field.
+		Tell us whether or not you got it right.
+        [a]SelfMarkMoreHelp|More[/a]
+	</string>
+	<string name="SelfMarkMoreHelp">
 		Because keyboards are usually small and fiddly, and most of us are not
 		brilliant typists, we realised the learning process could be sped up
 		considerably if you didn\'t have to type the answer. So you think of
@@ -85,15 +97,6 @@
 		level until you have got it right twice consecutively; just to make
 		sure, we will ask you it again at the next level.
 	</string>
-	<string name="NumbersGameHelp">
-		Listen to the numbers spoken in Spanish, and type in that number; if you
-		get the number correct, your blue man will move forward; if the red man
-		reaches the end before you, you have lost; if you get to the end before
-		him, you go back to the beginning at the next level, where the red man
-		gets slightly faster, and the questions get slightly harder. If you get
-		caught, you can still continue to answer questions, but you will stay
-		at the same level.
-	</string>
 	<string name="WordLookupHelp">
 		Type in a word, either Spanish or English, and press [i]Go[/i] on the soft
 		keyboard. If the word is a verb, the full conjugation will be shown;
@@ -101,8 +104,5 @@
 		Press [i]back[/i] button to return to the main screen, or swipe in
 		from the left for the main menu. If you supply a word in both the Spanish
 		and English fields, we assume you want the Spanish one translated.
-	</string>
-	<string name="HintsNTipsHelp">
-		None so far!
 	</string>
 </resources>

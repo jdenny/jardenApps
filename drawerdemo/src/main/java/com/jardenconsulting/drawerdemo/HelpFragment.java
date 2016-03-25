@@ -10,12 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import jarden.document.DocumentTextView;
 
-public class LunesFragment extends Fragment {
-    private static final String TAG = "LunesFragment";
+public class HelpFragment extends Fragment implements View.OnClickListener,
+        DocumentTextView.OnShowPageListener {
+    private static final String TAG = "HelpFragment";
 
     private TextView helpTextView;
     private TextView statusTextView;
@@ -37,9 +39,11 @@ public class LunesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_lunes, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_help, container, false);
         this.helpTextView = (TextView) rootView.findViewById(R.id.helpTextView);
         this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
+        Button homeButton = (Button) rootView.findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(this);
 
         Resources resources = getResources();
         int[] helpResIds = {
@@ -48,8 +52,9 @@ public class LunesFragment extends Fragment {
                 R.string.WordLookup
         };
         this.documentTextView = new DocumentTextView(getActivity().getApplicationContext(),
-                helpTextView, helpResIds, null);
+                helpTextView, helpResIds, this);
 
+        //?? helpTextView.setMovementMethod(new ScrollingMovementMethod());
         helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
         helpTextView.setHighlightColor(Color.TRANSPARENT);
         return rootView;
@@ -64,10 +69,25 @@ public class LunesFragment extends Fragment {
         super.onPause();
         if (BuildConfig.DEBUG) Log.d(TAG, "onPause()");
     }
-    @Override
+    @Override // Fragment
     public void onDestroy() {
         if (BuildConfig.DEBUG) Log.d(TAG, "onDestroy()");
         super.onDestroy();
+    }
+
+    @Override // DocumentTextView.OnShowPageListener
+    public void onShowPage(String pageName) {
+        getActivity().setTitle(pageName);
+    }
+
+    @Override // OnClickListener
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.homeButton) {
+            this.documentTextView.showHomePage();
+        } else {
+            Log.e(TAG, "unrecognised onClick Id: " + id);
+        }
     }
 }
 

@@ -43,11 +43,11 @@
 
 
         <fragment
-                android:id="@+id/lunesFragment"
+                android:id="@+id/helpFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:name="com.jardenconsulting.drawerdemo.LunesFragment"
-                tools:layout="@layout/fragment_lunes"/>
+                android:name="com.jardenconsulting.drawerdemo.HelpFragment"
+                tools:layout="@layout/fragment_help"/>
 
             <FrameLayout
                 android:id="@+id/fragmentLayout"

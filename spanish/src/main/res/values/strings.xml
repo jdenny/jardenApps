@@ -25,7 +25,7 @@
     <string name="numberPrompt">Number</string>
     <string name="one">1</string>
     <string name="resetStr">Reset</string>
-    <string name="revise">Revise!</string>
+    <string name="showHelp">Show Help</string>
     <string name="spanishNull">No Spanish word chosen</string>
     <string name="spanishStr">Spanish</string>
     <string name="speechRecognitionError">Speech recognition failed!</string>
@@ -42,6 +42,7 @@
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
     <string name="userSettingsStr">User Settings</string>
+    <string name="welcome">[b]¡Bienvenida! Welcome![/b] to Revise Spanish</string>
     <string name="wordLookupLit">Word Lookup</string>
     <string name="yesLit">Yes</string>
 
@@ -51,7 +52,6 @@
 		Press if your mental guess was correct, or you want to skip this
 		word; it will not be added to your list of failed words
 	</string>
-    <string name="engSpaTip">Think of your answer and press Go</string>
 	<string name="failCtTip">
 		Number of words you got wrong at this level or carried over from
 		previous levels
@@ -64,18 +64,8 @@
 		Press if your mental guess was wrong; this word will be added to
 		your list of failed words
 	</string>
-	<string name="micButtonTip">
-		Allows you to speak the answer; requires internet connection
-	</string>
-	<string name="numbersGameTip">
-		Use speaker button to repeat question
-	</string>
 	<string name="resetButtonTip">
 		Restart the game, 2 levels below current
-	</string>
-	<string name="selfMarkTip">
-		Look at the answer that we have provided in the 3rd coloured field.
-		Tell us whether or not you got it right
 	</string>
 	<string name="speakerButtonTip">
 		Listen to the current Spanish word

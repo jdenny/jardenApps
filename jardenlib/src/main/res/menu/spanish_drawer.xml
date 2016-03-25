@@ -22,32 +22,10 @@
             android:id="@+id/qByLevel"
             android:icon="@drawable/levels"
             android:title="@string/qByLevel"/>
-    </group>
-
-    <!--
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/help"
-            android:icon="@drawable/help"
-            android:title="@string/help"/>
         <item
             android:id="@+id/exit"
             android:icon="@android:drawable/ic_menu_close_clear_cancel"
             android:title="@string/exit"/>
     </group>
-    -->
-
-    <item android:title="">
-        <menu>
-            <item
-                android:id="@+id/help"
-                android:icon="@drawable/help"
-                android:title="@string/help"/>
-            <item
-                android:id="@+id/exit"
-                android:icon="@android:drawable/ic_menu_close_clear_cancel"
-                android:title="@string/exit"/>
-        </menu>
-    </item>
 
 </menu>

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
+import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaSQLite2;
@@ -16,6 +17,7 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -30,12 +32,14 @@ import android.support.v7.widget.Toolbar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -48,6 +52,22 @@ public class MainActivity extends AppCompatActivity
 		NavigationView.OnNavigationItemSelectedListener,
         ListView.OnItemLongClickListener, View.OnClickListener {
 
+    private static final int[] helpResIds = {
+            R.string.engSpaHelp,
+            R.string.EngSpaMoreHelp,
+            R.string.FeedbackHelp,
+            R.string.MenuHelp,
+            R.string.micButtonHelp,
+            R.string.MicButtonMoreHelp,
+            R.string.NumbersGameHelp,
+            R.string.NumbersGameMoreHelp,
+            R.string.QuestionsByLevelHelp,
+            R.string.QuestionStyleHelp,
+            R.string.SelectTopicHelp,
+            R.string.SelfMarkHelp,
+            R.string.SelfMarkMoreHelp,
+            R.string.WordLookupHelp
+    };
     private static final String TAG = "MainActivity";
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
     private String SHOW_HELP_KEY = "SHOW_HELP_KEY";
@@ -61,7 +81,6 @@ public class MainActivity extends AppCompatActivity
 	private static final String WORD_LOOKUP = "WORD_LOOKUP";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
-    private static final String HELP = "HELP";
     private static final String VIEWLESS = "VIEWLESS";
     // end of Fragment tags
     private static String questionSequenceKey = null;
@@ -71,7 +90,6 @@ public class MainActivity extends AppCompatActivity
 	private WordLookupFragment wordLookupFragment;
 	private RaceFragment raceFragment;
 	private Fragment currentFragment;
-    private HelpFragment helpFragment;
     private ViewlessFragment viewlessFragment;
 	private String currentFragmentTag;
 	private DialogFragment userDialog;
@@ -83,9 +101,10 @@ public class MainActivity extends AppCompatActivity
 	private long dateEngSpaFileModified;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
-    private TextView tipTextView;
-    private LinearLayout tipLayout;
+    private TextView helpTextView;
+    private DocumentTextView documentTextView;
 	private boolean doubleBackToExitPressedOnce = false;
+    private CheckBox showHelpCheckBox;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,17 +117,25 @@ public class MainActivity extends AppCompatActivity
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
-        // TODO: put tipTextView into each fragment; maybe use include?
-        this.tipTextView = (TextView) findViewById(R.id.tipTextView);
-        this.tipLayout = (LinearLayout) findViewById(R.id.tipLayout);
-        Button hideHelpButton = (Button) findViewById(R.id.hideHelpButton);
-        hideHelpButton.setOnClickListener(this);
+        this.helpTextView = (TextView) findViewById(R.id.helpTextView);
+        this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 
-        /*!!
-        boolean isShowTips = sharedPreferences.getBoolean(SHOW_TIPS_KEY, true);
-        setShowTips(isShowTips);
-        */
+        this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
+        this.showHelpCheckBox.setOnClickListener(this);
+        boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
+        if (!isShowHelp) {
+            this.helpTextView.setVisibility(View.GONE);
+        }
+        this.showHelpCheckBox.setChecked(isShowHelp);
+
+        this.documentTextView = new DocumentTextView(
+                getApplicationContext(),
+                helpTextView, helpResIds, null);
+        helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        //?? helpTextView.setMovementMethod(new ScrollingMovementMethod());
+
+        helpTextView.setHighlightColor(Color.TRANSPARENT);
+
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,19 +150,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 		this.fragmentManager = getSupportFragmentManager();
+
 		if (savedInstanceState == null) {
             this.viewlessFragment = new ViewlessFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(this.viewlessFragment, VIEWLESS);
             ft.commit();
-            boolean isShowHelp = sharedPreferences.getBoolean(SHOW_HELP_KEY, true);
-            if (isShowHelp) {
-                this.currentFragmentTag = HELP;
-                showFragment(); // user can read help while db is loading
-            } else {
-                this.tipLayout.setVisibility(View.GONE);
-                this.currentFragmentTag = ENGSPA;
-            }
+            this.currentFragmentTag = ENGSPA;
             loadDB(); // which in turn -> dbLoadComplete() -> showFragment()
 		} else {
 			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
@@ -145,7 +166,6 @@ public class MainActivity extends AppCompatActivity
                     (WordLookupFragment) fragmentManager.findFragmentByTag(WORD_LOOKUP);
 			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
             this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
-            this.helpFragment = (HelpFragment) fragmentManager.findFragmentByTag(HELP);
             if (this.currentFragmentTag == null) this.currentFragmentTag = ENGSPA;
             showFragment();
 		}
@@ -158,14 +178,8 @@ public class MainActivity extends AppCompatActivity
     @Override // OnClickListener
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.hideHelpButton) {
-            // hide tipLayout
-            // save as preference
-            // if currently showing help fragment, switch to EngSpa
-            setShowHelp(false);
-            if (this.currentFragmentTag.equals(HELP)) {
-                showFragment(ENGSPA);
-            }
+        if (id == R.id.showHelpCheckBox) {
+            setShowHelp(this.showHelpCheckBox.isChecked());
         }
     }
     @Override // Activity
@@ -175,7 +189,10 @@ public class MainActivity extends AppCompatActivity
     }
 	@Override // EngSpaActivity
     public void setTip(int resId) {
-        this.tipTextView.setText((resId));
+        if (!this.documentTextView.showPage(getResources().getResourceEntryName(resId))) {
+            // so that it doesn't all lock up if resId not found:
+            this.helpTextView.setText((resId));
+        }
     }
     @Override // EngSpaActivity
     public void showEngSpaFragment() {
@@ -265,9 +282,6 @@ public class MainActivity extends AppCompatActivity
             showFragment(NUMBER_GAME);
         } else if (id == R.id.qByLevel) {
             onTopicSelected(null);
-        } else if (id == R.id.help) {
-            setShowHelp(true);
-            showFragment(HELP);
         } else if (id == R.id.exit) {
             super.onBackPressed();
         } else {
@@ -277,7 +291,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     private void setShowHelp(boolean showHelp) {
-        this.tipLayout.setVisibility(showHelp ? View.VISIBLE : View.GONE);
+        this.helpTextView.setVisibility(showHelp ? View.VISIBLE : View.GONE);
         SharedPreferences.Editor editor =
                 this.sharedPreferences.edit();
         editor.putBoolean(SHOW_HELP_KEY, showHelp);
@@ -490,11 +504,6 @@ public class MainActivity extends AppCompatActivity
                 this.raceFragment = new RaceFragment();
             }
             this.currentFragment = raceFragment;
-        } else if (this.currentFragmentTag.equals(HELP)) {
-            if (this.helpFragment == null) {
-                this.helpFragment = new HelpFragment();
-            }
-            this.currentFragment = helpFragment;
         }
         // pop backstack if there is anything to pop;
         // in case user chooses fragments from drawer without
