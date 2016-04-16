@@ -271,6 +271,11 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		contentValues.put(QA_STYLE, engSpaUser.getQAStyle().toString());
 		return contentValues;
 	}
+    private static ContentValues getContentValues(int userLevel) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(LEVEL, userLevel);
+        return contentValues;
+    }
 	@Override // EngSpaDAO
 	public int updateUser(EngSpaUser engSpaUser) {
 		return getWritableDatabase().update(
@@ -279,6 +284,14 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				"_id=?",
 				getSelectionArgs(engSpaUser) );
 	}
+    @Override // EngSpaDAO
+    public int updateUserLevel(int level) {
+        return getWritableDatabase().update(
+                USER_TABLE,
+                getContentValues(level),
+                "_id=1",
+                null );
+    }
 	private static String[] getSelectionArgs(EngSpaUser engSpaUser) {
 		return new String[] {Integer.toString(engSpaUser.getUserId())};
 	}

@@ -29,23 +29,39 @@
         android:layout_marginBottom="@dimen/spanishMargin"
         android:textSize="@dimen/spanishTextFieldSize" />
 	    
-    <EditText
-        android:id="@+id/answerEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:background="@color/samRed"
-        android:ems="10"
-        android:hint="@string/spanishStr"
-        android:imeOptions="actionGo"
-        android:inputType="text"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/hintColor"
-        android:textSize="@dimen/spanishTextFieldSize" >
 
-        <requestFocus />
-    </EditText>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/answerEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@color/samRed"
+            android:ems="10"
+            android:hint="@string/spanishStr"
+            android:imeOptions="actionGo"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hintColor"
+            android:textSize="@dimen/spanishTextFieldSize" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/clearAnswerButton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="@dimen/small_margin"
+            android:layout_gravity="right|center_vertical"
+            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_marginBottom="@dimen/spanishMargin"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/buttonLayout"
@@ -62,7 +78,7 @@
         <ImageButton
             android:id="@+id/micButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:contentDescription="@string/micStr"
             android:src="@drawable/mic" />
 

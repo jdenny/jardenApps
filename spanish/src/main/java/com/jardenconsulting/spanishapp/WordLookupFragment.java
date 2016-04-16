@@ -4,7 +4,6 @@ import java.util.List;
 
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
-import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.VerbUtils;
 import jarden.engspa.VerbUtils.Person;
 import jarden.engspa.VerbUtils.Tense;
@@ -18,16 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class WordLookupFragment extends Fragment implements OnEditorActionListener {
+public class WordLookupFragment extends Fragment implements OnEditorActionListener,
+        View.OnClickListener {
 	public static final String TAG = "WordLookupFragment";
 
-	private EditText spanishVerbEditText;
-	private EditText englishVerbEditText;
+	private EditText spanishLookupEditText;
+	private EditText englishLookupEditText;
 	private ListView conjugationListView;
     private EngSpaDAO engSpaDAO;
 	private ArrayAdapter<String> conjugateListAdapter;
@@ -49,10 +50,14 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
         engSpaActivity.setAppBarTitle(R.string.wordLookupLit);
 
 		View rootView = inflater.inflate(R.layout.fragment_word_lookup, container, false);
-		this.spanishVerbEditText = (EditText) rootView.findViewById(R.id.spanishVerbEditText);
-		this.englishVerbEditText = (EditText) rootView.findViewById(R.id.englishVerbEditText);
-		this.spanishVerbEditText.setOnEditorActionListener(this);
-		this.englishVerbEditText.setOnEditorActionListener(this);
+		this.spanishLookupEditText = (EditText) rootView.findViewById(R.id.spanishLookupEditText);
+		this.englishLookupEditText = (EditText) rootView.findViewById(R.id.englishLookupEditText);
+		Button button = (Button) rootView.findViewById(R.id.clearSpanishButton);
+        button.setOnClickListener(this);
+        button = (Button) rootView.findViewById(R.id.clearEnglishButton);
+        button.setOnClickListener(this);
+        this.spanishLookupEditText.setOnEditorActionListener(this);
+		this.englishLookupEditText.setOnEditorActionListener(this);
 		this.conjugationListView = (ListView) rootView.findViewById(R.id.conjugationListView);
 		this.conjugateListAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_list_item_1);
@@ -61,57 +66,78 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 		return rootView;
 	}
 
-	private void goPressed() {
-		List<EngSpa> matches;
-		if (this.engSpaDAO == null) {
-			this.engSpaDAO = engSpaActivity.getEngSpaDAO();
-		}
-		String wordStr = this.spanishVerbEditText.getText().toString().trim();
-		if (wordStr.length() > 0) {
-			matches = engSpaDAO.getSpanishWord(wordStr);
-		} else {
-			wordStr = this.englishVerbEditText.getText().toString().trim();
-			if (wordStr.length() > 0) {
-				matches = engSpaDAO.getEnglishWord(wordStr);
-			} else {
-				engSpaActivity.setStatus(R.string.supplyWord);
-				return;
-			}
-		}
-		if (matches.size() < 1) {
-			engSpaActivity.setStatus(wordStr + " not found on our dictionary");
-			return;
-		}
-		// TODO: sort out may have more than 1 match
-		EngSpa engSpa = matches.get(0);
-		String spanish = engSpa.getSpanish();
-		engSpaActivity.setSpanish(spanish);
-		this.conjugateListAdapter.setNotifyOnChange(false);
-		this.conjugateListAdapter.clear();
-		if (engSpa.getWordType() == WordType.verb) {
-			String english = engSpa.getEnglish();
-			String line;
-			for (Tense tense: Tense.values()) {
-				if (tense.isDiffPersons()) {
-					for (Person person: Person.values()) {
-						line = person.getSpaPronoun() + " " +
-							VerbUtils.conjugateSpanishVerb(spanish, tense, person) + "; " +
-							person.getEngPronoun() + " " +
-							VerbUtils.conjugateEnglishVerb(english, tense, person);
-						conjugateListAdapter.add(line);
-					}
-				} else {
-					line = tense + ": " +
-						VerbUtils.conjugateSpanishVerb(spanish, tense, null) + "; " +
-						VerbUtils.conjugateEnglishVerb(english, tense, null);
-					conjugateListAdapter.add(line);
-				}
-			}
-		} else {
-			for (EngSpa es: matches) {
-				conjugateListAdapter.add(es.getDictionaryString());
-			}
-		}
+    /**
+     * Lookup word, from either Spanish or English.
+     * If Spanish or English word provided, translate that;
+     * if both provided, use the word in focus;
+     * if neither provided, prompt user to supply a word
+     */
+    private void goPressed() {
+        String engStr = this.englishLookupEditText.getText().toString().trim();
+        String spaStr = this.spanishLookupEditText.getText().toString().trim();
+        boolean spaToEng = true;
+        if (spaStr.length() > 0) {
+            if (engStr.length() > 0) {
+                View focusedView = getActivity().getCurrentFocus();
+                if (focusedView == this.englishLookupEditText) spaToEng = false;
+            }
+        } else { // no spanish phrase supplied
+            if (engStr.length() > 0) {
+                spaToEng = false;
+            } else {
+                engSpaActivity.setStatus(R.string.supplyWord);
+                return;
+            }
+        }
+        // now we know which way to translate, as specified by spaToEng
+        if (this.engSpaDAO == null) {
+            this.engSpaDAO = engSpaActivity.getEngSpaDAO();
+        }
+        List<EngSpa> matches;
+        if (spaToEng) {
+            matches = engSpaDAO.getSpanishWord(spaStr);
+        } else {
+            matches = engSpaDAO.getEnglishWord(engStr);
+        }
+        this.conjugateListAdapter.setNotifyOnChange(false);
+        this.conjugateListAdapter.clear();
+        if (matches.size() < 1) {
+            engSpaActivity.setStatus(
+                    (spaToEng ? spaStr : engStr) + " not found in our dictionary");
+        } else {
+            engSpaActivity.setStatus("");
+            // TODO: sort out may have more than 1 match
+            EngSpa engSpa = matches.get(0);
+            String spanish = engSpa.getSpanish();
+            engSpaActivity.setSpanish(spanish);
+            this.spanishLookupEditText.setText(spanish);
+            this.englishLookupEditText.setText(engSpa.getEnglish());
+            if (engSpa.getWordType() == WordType.verb) {
+                String english = engSpa.getEnglish();
+                String line;
+                for (Tense tense: Tense.values()) {
+                    if (tense.isDiffPersons()) {
+                        for (Person person: Person.values()) {
+                            line = person.getSpaPronoun() + " " +
+                                    VerbUtils.conjugateSpanishVerb(spanish, tense, person) + "; " +
+                                    person.getEngPronoun() + " " +
+                                    VerbUtils.conjugateEnglishVerb(english, tense, person);
+                            conjugateListAdapter.add(line);
+                        }
+                    } else {
+                        line = tense + ": " +
+                                VerbUtils.conjugateSpanishVerb(spanish, tense, null) + "; " +
+                                VerbUtils.conjugateEnglishVerb(english, tense, null);
+                        conjugateListAdapter.add(line);
+                    }
+                }
+            } else {
+                for (EngSpa es: matches) {
+                    conjugateListAdapter.add(es.getDictionaryString());
+                }
+            }
+
+        }
 		this.conjugateListAdapter.notifyDataSetChanged();
 	}
 	@Override
@@ -123,4 +149,13 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 		}
 		return handled;
 	}
+    @Override // onClickListener
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.clearEnglishButton) {
+            this.englishLookupEditText.getText().clear();
+        } else if (id == R.id.clearSpanishButton) {
+            this.spanishLookupEditText.getText().clear();
+        }
+    }
 }

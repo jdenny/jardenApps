@@ -10,7 +10,8 @@ public interface EngSpaDAO {
 	EngSpaUser getUser();
 	long insertUser(EngSpaUser engSpaUser);
 	int updateUser(EngSpaUser engSpaUser);
-	int deleteUser(EngSpaUser engSpaUser); 
+    int updateUserLevel(int level);
+	int deleteUser(EngSpaUser engSpaUser);
 	
 	/**
 	 * Delete all existing EngSpa rows and insert new rows

@@ -1,4 +1,16 @@
-					TODO - ALL APPS
+CURRENT PROJECTS
+Fun
+	David musical
+	plan Dartmoor walk
+	write song and publish
+	publish Revise Spanish
+	singing, dancing
+Required
+	Emails
+	Tidy desk
+	Mow lawn
+
+					To Do - all apps
 Factory reset of S3 Mini
 	apps to re-install: JW Library, Hot Bridge, Spanish, Pano Tuner
 	front page: Hot Bridge, KnowMe, Revise Spanish
@@ -6,13 +18,11 @@ Factory reset of S3 Mini
 		Camera, Drive, Pano Tuner, Maps
 	Footer: Phone, Chrome, GMail, Apps
 	old_telephone.mp3
-SCALA
-https://bcomposes.wordpress.com/2011/08/22/first-steps-in-scala-for-first-time-programmers-part-1/
 
 CARDS
 To Test
 	bluetooth still works - but how is it to be used now?
-ToDo:
+To-Do:
 	stay on same hand if rotate or go to another app
 	lastBid, bidList, westDeal, primaryBid, bidNumber should
 		all be in business class, not presentation class; also keep
@@ -29,52 +39,82 @@ possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
 	as done by EngSpaQuiz2
 
 SPANISH
+New ideas on qaStyle: *************************************************
+	qaStyle:
+		1. written spa-eng
+		2. written eng-spa
+		3. spoken spa-eng
+		4. spoken spa-spa
+		5. spoken & written spa-eng
+		random 1 to 5
+		alternate 2 & 3
+	learn mode; for each level:
+		phase 1: spoken & written spa -> eng
+		phase 2: eng -> spa
+		for both phases: CFPCF
+			P = random words from previous levels, alternate between spa-eng and eng-spa
+			F = fails, using saved style
+	practice mode (only applicable where userLevel > 1)
+		does not progress levels
+		P = based on qaStyle
+		F = as for learn mode
+	audio mode:
+		speaks both english and spanish with pauses
+		P = as for learn mode
+	topic mode: as it is now
+
+	decisions so far:
+		default mode to be new 1
+		remove old random 1 to 5
+		alternate 2 & 3 only applies up to current level
+
+	strategy
+		update alternate to only apply up to current level, i.e. not increment level
+		and only random completed words, and alternating between new 1 and 2 above
+		add audio mode; try it alternating
+
+end of New ideas on qaStyle: *************************************************
+
+* at start, if loading new dictionary, shows engSpaFragment help message,
+	and not main help
+* Can lose track of question count
+* At end of level can ask question twice
+* follow Material design patterns: layout, fonts, icons,
+	e.g. https://design.google.com/icons/index.html
+* Back from numbers sometimes exits app
+* Long press should turn on showHelp
+* Padding around text
+Sam-style progress bar
+! at beginning of imperatives; see engSpaFragment.normalise()
+try answer field without single line
+Add more mf's eg soltero,
+Spoken numbers don't work come out as eg 5 not cinco
+Delete button appears when you start typing
+Numbers game: pass button; in field width.
+margins
+
+! At start of imperatives
+Should faltar be lack rather than miss?
+* remove option for multiple users
+	add new class that holds level, raceLevel, qaStyle;
+	keeps in sync with sharedPreferences
 * help fragment creating document text view every time; use retain instance etc;
 * rename numbers game to gato y ratón
-* utility to find multiple DB entries - e.g. favourite, free, below, however, love
-* turn off each tip after 3 shows?
 * all fragments should survive screen rotation
 * are we using gustar correctly?
-* sound at new level (cat & mouse and main engSpa)
-* add Cara to list of testers
-
-remove option for multiple users
 
 No help for word lookup; still got it's own status field
 Numbers game: no help; got its own status field
 Replace and with phrase
-More and less buttons and home?
-Word help indicates typing is a desperate measure
 Selecting topic or qastyle or questions by level should open main window
-Reorder question style; use real words!
 set title & helpText of each fragment in onCreateView
 
-2 entries for great
-Awful - horrible
-3 entries for outside
-3 entries for bajo
-If first time on app, wait for user to read home page. At show help and home to return to this page
-2 entries for tras
-
 ideas from demo to Julie
-	userGuide in guideTextView in MainActivity; wait for user to press Continue
-	to go onto EngSpaActivity; checkboxShowAtStartup (saved in preferences)
-	can return to userGuide from entry in drawerList
-
-	"think of your answer - no need to type the answer, it only slows you down! Press "GO",
-	look at answer we provide, then tell us if you were right. Sometimes you may want to
-	type in, to check your spelling; if you do so, and get it wrong, and give up trying
-	to guess, clear the answer field then press GO"
-
-	each fragment has its own contextual tipTextField; ditch long press?
 
 	Write a complete user-guide as a Google Doc, and use that as the basis for the help.
 
 	Status: loading dictionary - please wait
 	HelpDocument: userGuide
-	back destroys the fragment, which we don't want to do; proposed way forward:
-		intercept back key; don't put things on back-stack; always go back to MainActivity;
-		if already on MainActivity, prompt user (Snackbar) to back again to exit
 
 check with Joe: 1 user? bluetooth?
 
@@ -89,17 +129,12 @@ optionally split verb into two stages: infinitive then conjugate
 each tip automatically stops after 3 shows?
 
 Show qaStyle
-Different layout when keyboard shows
-Volume control
 Catch connection error and output more sensible message
 
 get rid of obvious words; add words from GCSE book
 add long press everywhere?
 different layout when keyboard shows
-in word-lookup, copy eng to spa and spa to eng, but have
-	easy way to clear input fields
 
-Only apply alternate style to past words
 in debug app, have fragment that allows us to fire SQL to database
 	and invoke methods of EngSpaDAO
 

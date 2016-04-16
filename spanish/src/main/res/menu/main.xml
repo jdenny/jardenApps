@@ -10,8 +10,13 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/userSettings"
-        android:title="@string/userSettingsStr"
+        android:id="@+id/setUserLevel"
+        android:title="@string/setUserLevel"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/audioMode"
+        android:title="@string/audioMode"
         app:showAsAction="never" />
 
     <item

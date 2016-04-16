@@ -36,6 +36,7 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     private EngSpaActivity engSpaActivity;
     private TextToSpeech textToSpeech;
     private String spanish; // word to be spoken
+    private String english; // word to be spoken
     private Vibrator vibrator;
     private SoundPool soundPool;
     private int soundError;
@@ -131,6 +132,7 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
             } else {
                 engSpaActivity.setStatus("");
             }
+            getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
             if (this.spanish != null) speakSpanish2();
         } else {
             Log.w(TAG, "onInit(" + status + ")");
@@ -150,36 +152,31 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
         this.orientation = getResources().getConfiguration().orientation;
     }
     /**
-     * Create or update engSpaUser.
+     * update engSpaUser.
      * @return true if level changed
      */
-    public boolean setUser(String userName, int userLevel,
-                           EngSpaContract.QAStyle qaStyle) {
+    public boolean setUserLevel(int userLevel) {
         userLevel = this.engSpaDAO.validateUserLevel(userLevel);
-        if (engSpaUser != null &&
-                engSpaUser.getUserName().equals(userName) &&
-                engSpaUser.getUserLevel() == userLevel &&
-                engSpaUser.getQAStyle() == qaStyle) {
+        if (userLevel == engSpaUser.getUserLevel()) {
             engSpaActivity.setStatus(R.string.userNotChanged);
             return false;
         }
-        boolean isNewLevel = true;
-        if (engSpaUser == null) { // i.e. new user
-            this.engSpaUser = new EngSpaUser(userName,
-                    userLevel, qaStyle);
-            engSpaDAO.insertUser(engSpaUser);
-        } else { // update to existing user
-            isNewLevel = engSpaUser.getUserLevel() != userLevel;
-            engSpaUser.setUserName(userName);
-            engSpaUser.setUserLevel(userLevel);
-            engSpaUser.setQAStyle(qaStyle);
-            engSpaDAO.updateUser(engSpaUser);
-        }
-        return isNewLevel;
+        engSpaUser.setUserLevel(userLevel);
+        engSpaDAO.updateUserLevel(userLevel);
+        return true;
     }
     public EngSpaUser getEngSpaUser() {
         return this.engSpaUser;
     }
+    public void onWrongAnswer() {
+        this.vibrator.vibrate(WRONG_VIBRATE, -1);
+        this.soundPool.play(soundError, 1.0f, 1.0f, 0, 0, 1.5f);
+    }
+    public void onLost() {
+        this.vibrator.vibrate(LOST_VIBRATE, -1);
+        this.soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
+    }
+    // TextToSpeech methods:
     public void setSpanish(String spanish) {
         this.spanish = spanish;
     }
@@ -196,28 +193,56 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     public boolean speakSpanish() {
         if (this.spanish == null) return false;
         if (this.textToSpeech == null) {
-            // invokes onInit() on completion
-            textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), this);
-            engSpaActivity.setStatus(R.string.ttsLoading);
-            engSpaActivity.setProgressBarVisible(true);
+            startTextToSpeech();
         } else {
             speakSpanish2();
         }
         return true;
     }
+    private void startTextToSpeech() {
+        // if in audio mode, this may be a background thread
+        // if already the UI thread, will run immediately:
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // invokes onInit() on completion
+                textToSpeech = new TextToSpeech(getActivity().getApplicationContext(),
+                        ViewlessFragment.this);
+                engSpaActivity.setStatus(R.string.ttsLoading);
+                engSpaActivity.setProgressBarVisible(true);
+            }
+        });
+    }
     /**
-     * Part 2 of speakSpanish, invoked when textToSpeech initialised.
+     * Part 2 of speakSpanish, invoked after textToSpeech initialised.
      */
     @SuppressWarnings("deprecation")
     private void speakSpanish2() {
+        textToSpeech.setLanguage(LOCALE_ES);
         textToSpeech.speak(this.spanish, TextToSpeech.QUEUE_ADD, null);
     }
-    public void onWrongAnswer() {
-        this.vibrator.vibrate(WRONG_VIBRATE, -1);
-        this.soundPool.play(soundError, 1.0f, 1.0f, 0, 0, 1.5f);
+    public void setEnglish(String english) {
+        this.english = english;
     }
-    public void onLost() {
-        this.vibrator.vibrate(LOST_VIBRATE, -1);
-        this.soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
+    public void speakEnglish(String english) {
+        setEnglish(english);
+        speakEnglish();
+    }
+    public boolean speakEnglish() {
+        if (this.english == null) return false;
+        if (this.textToSpeech == null) {
+            startTextToSpeech();
+        } else {
+            speakEnglish2();
+        }
+        return true;
+    }
+    /**
+     * Part 2 of speakEnglish; invoked after textToSpeech initialised.
+     */
+    @SuppressWarnings("deprecation")
+    private void speakEnglish2() {
+        textToSpeech.setLanguage(Locale.ENGLISH);
+        textToSpeech.speak(this.english, TextToSpeech.QUEUE_ADD, null);
     }
 }

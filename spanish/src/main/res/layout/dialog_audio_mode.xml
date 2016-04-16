@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:text="@string/pauseTime"/>
+
+        <EditText
+	        android:id="@+id/pauseEditText"
+	        android:layout_width="0dp"
+            android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+            android:text="@string/pauseTimeDefault"
+	        android:inputType="number" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update"
+            android:id="@+id/setPauseButton"/>
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/playPauseImageButton"
+        android:contentDescription="@string/play"
+        android:src="@android:drawable/ic_media_pause" />
+
+</LinearLayout>

@@ -1011,10 +1011,10 @@ public class VerbUtils {
 		{"steal", "stole"}, {"stick", "stuck"}, {"stop", "stopped"}, {"study", "studied"},
 		{"swim", "swam"}, {"take", "took"}, {"teach", "taught"},
 		{"tell", "told"}, {"think", "thought"}, {"throw", "threw"},
-		{"tidy", "tidied"}, {"understand", "understood"}, 
+		{"tidy", "tidied"}, {"try", "tried"}, {"understand", "understood"},
 		{"wear", "wore"}, {"win", "won"}, {"write", "wrote"}
 	};
-	// irregularities when adding 'ing' ( or 'ed'
+	// irregularities when adding 'ing'
 	private static String[][] irregEnglishGerundStem = {
 		{"chat", "chatt"}, {"die", "dy"}, {"forget", "forgett"},
 		{"hit", "hitt"}, {"prefer", "preferr"}, {"put", "putt"},

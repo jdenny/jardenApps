@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
     private DocumentTextView documentTextView;
 	private boolean doubleBackToExitPressedOnce = false;
     private CheckBox showHelpCheckBox;
+    private AudioModeDialog audioModeDialog;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity
             ft.add(this.viewlessFragment, VIEWLESS);
             ft.commit();
             this.currentFragmentTag = ENGSPA;
+            setTip(R.string.FeedbackHelp);
             loadDB(); // which in turn -> dbLoadComplete() -> showFragment()
 		} else {
 			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
@@ -194,11 +196,6 @@ public class MainActivity extends AppCompatActivity
             this.helpTextView.setText((resId));
         }
     }
-    @Override // EngSpaActivity
-    public void showEngSpaFragment() {
-        showFragment(ENGSPA);
-    }
-
 	/*
 	 * use engspaversion.txt and sharedPreferences to see if there
 	 * is a new version of local resource file engspa.txt, and if
@@ -310,10 +307,9 @@ public class MainActivity extends AppCompatActivity
 		int id = item.getItemId();
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onOptionsItemSelected(itemId=" + id + ")");
-        if (id == R.id.userSettings) {
+        if (id == R.id.setUserLevel) {
 			if (this.userDialog == null) this.userDialog = new UserDialog();
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
-			return true;
 		} else if (id == R.id.speakerButton) {
             boolean spoken = this.viewlessFragment.speakSpanish();
             if (!spoken) {
@@ -322,12 +318,22 @@ public class MainActivity extends AppCompatActivity
                 }
                 this.setStatus(R.string.spanishNull);
             }
-            return true;
 		} else if (id == R.id.deleteAllFails) {
             this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
-            return true;
-		}
-		return super.onOptionsItemSelected(item);
+        } else if (id == R.id.audioMode) {
+            int level = getEngSpaUser().getUserLevel();
+            if (level < 2) {
+                setStatus(R.string.userLevelError);
+            } else {
+                if (this.audioModeDialog == null) {
+                    this.audioModeDialog = new AudioModeDialog();
+                }
+                this.audioModeDialog.show(getSupportFragmentManager(), "AudioModeDialog");
+            }
+		} else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
 	}
     private void findDuplicates() {
         new Thread(new Runnable() {
@@ -526,27 +532,22 @@ public class MainActivity extends AppCompatActivity
 	 * user chose to update it.
 	 */
 	@Override // UserSettingsListener
-	public void onUpdateUser(String userName, int userLevel, QAStyle qaStyle) {
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"onUpdateUser(" + userName + ", " + userLevel +
-				", " + qaStyle + ")");
-		if (userName.length() < 1) {
-			this.statusTextView.setText("no user name supplied");
-			return;
-		}
-		if (userLevel < 1) {
-			this.statusTextView.setText("invalid userLevel supplied");
-			return;
-		}
-		boolean isNewLevel = this.viewlessFragment.setUser(userName, userLevel, qaStyle);
+    public void onUpdateUserLevel(int userLevel) {
+        if (BuildConfig.DEBUG) Log.d(TAG,
+                "onUpdateUserLevel(" + userLevel + ")");
+        if (userLevel < 1) {
+            this.statusTextView.setText("invalid userLevel supplied");
+            return;
+        }
+        boolean isNewLevel = this.viewlessFragment.setUserLevel(userLevel);
         if (isNewLevel) {
             if (this.engSpaFragment != null) {
                 // if null, nothing to do!
                 this.engSpaFragment.newUserLevel();
             }
         }
-	}
-	@Override // UserSettingsListener && EngSpaActivity
+    }
+    @Override // UserSettingsListener && EngSpaActivity
 	public EngSpaUser getEngSpaUser() {
         return this.viewlessFragment.getEngSpaUser();
 	}
@@ -594,9 +595,13 @@ public class MainActivity extends AppCompatActivity
         this.viewlessFragment.setSpanish(spanish);
 	}
 	@Override // EngSpaActivity
-	public void speakSpanish(String spanish) {
-        this.viewlessFragment.speakSpanish(spanish);
+	public void speakEnglish(String english) {
+        this.viewlessFragment.speakEnglish(english);
 	}
+    @Override // EngSpaActivity
+    public void speakSpanish(String spanish) {
+        this.viewlessFragment.speakSpanish(spanish);
+    }
 
 	@Override // EngSpaActivity
 	public void setAppBarTitle(int resId) {

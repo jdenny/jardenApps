@@ -16,7 +16,7 @@ five,cinco,number,n_a,n_a,1
 cat,gato,noun,masculine,animal,1
 dog,perro,noun,masculine,animal,1
 eat,comer,verb,transIntrans,food,1
-drink,beber,verb,transIntrans,food,1
+drink,beber,verb,transIntrans,drink,1
 six,seis,number,n_a,n_a,1
 seven,siete,number,n_a,n_a,1
 eight,ocho,number,n_a,n_a,1
@@ -130,6 +130,8 @@ want,querer,verb,transIntrans,n_a,1
 play,tocar,verb,transIntrans,music,1
 hear,oír,verb,transIntrans,n_a,1
 make,hacer,verb,transitive,n_a,1
+can,poder,verb,transitive,n_a,1
+lie down and go back to sleep,acuéstese y volver a dormir,phrase,n_a,n_a,1
 colour,color,noun,masculine,colour,1
 black,negro,adjective,n_a,colour,1
 white,blanco,adjective,n_a,colour,1
@@ -340,6 +342,8 @@ I'd like a single room,quisiera una habitación individual,phrase,n_a,travel,1
 I'd like to stay here for two nights,quisiera quedarme aquí dos noches,phrase,n_a,travel,1
 how much is it per night for one person?,¿cuánto es por noche para una persona?,phrase,n_a,travel,1
 I'll take it,la tomo,phrase,n_a,travel,1
+I'd like to take the train,quisiera tomar el tren,phrase,n_a,travel,1
+is there a train to Madrid?,¿hay un tren para Madrid?,phrase,n_a,travel,1
 dine,cenar,verb,intransitive,food,1
 melon,melón,noun,masculine,food,1
 cherry,cereza,noun,feminine,food,1
@@ -797,7 +801,7 @@ flexible,flexible,adjective,n_a,n_a,1
 free,gratis,adjective,n_a,money,1
 free,libre,adjective,n_a,n_a,1
 grateful,agradecido,adjective,n_a,n_a,1
-great,gran,adjective,n_a,n_a,1
+great,gran,adjective,n_a,size,1
 handsome,guapo,adjective,n_a,n_a,1
 happy,alegre,adjective,n_a,n_a,1
 hard,duro,adjective,n_a,n_a,1
@@ -966,7 +970,6 @@ evening,tarde,noun,feminine,time,1
 every day,todos los días,phrase,n_a,time,1
 from time to time,de vez en cuando,phrase,n_a,time,1
 straight away,ahora mismo,phrase,n_a,time,1
-last,pasado,adjective,n_a,time,1
 last year,año pasado,phrase,n_a,time,1
 night,noche,noun,feminine,time,1
 now,ahora,adverb,n_a,time,1
@@ -995,7 +998,7 @@ in autumn,en otoño,phrase,n_a,time,1
 in spring,en primavera,phrase,n_a,time,1
 in summer,en verano,phrase,n_a,time,1
 in winter,en invierno,phrase,n_a,time,1
-where to,adónde,adverb,n_a,interrogative,1
+where to?,¿adónde?,adverb,n_a,interrogative,1
 all the better,todo lo mejor,phrase,n_a,n_a,1
 good luck,buena suerte,phrase,n_a,n_a,1
 here you are,aquí lo tienes,phrase,n_a,n_a,1
@@ -1145,13 +1148,13 @@ niece,sobrina,noun,feminine,person,1
 no sense of humour,sin sentido del humor,phrase,n_a,person,1
 normal,normal,adjective,n_a,n_a,1
 older,mayor,adjective,n_a,n_a,1
-oldest brother,el mayor hermano,phrase,n_a,person,1
+my older brother,mi hermano mayor,phrase,n_a,person,1
 an only child,un hijo único,phrase,n_a,person,1
 optimistic,optimista,adjective,n_a,person,1
 penfriend,amigo por correspondencia,noun,masculine,person,1
 people,gente,noun,feminine,person,1
 pessimistic,pesimista,adjective,n_a,person,1
-pet,mascota,noun,masculine,animal,1
+pet,mascota,noun,feminine,animal,1
 picture,cuadro,noun,masculine,n_a,1
 painting,pintura,noun,feminine,n_a,1
 place of residence,lugar de residencia,noun,masculine,home,1
@@ -1411,7 +1414,6 @@ exhibition,exposición,noun,feminine,place,1
 exit,salida,noun,feminine,place,1
 factory,fábrica,noun,feminine,place,1
 farm,granja,noun,feminine,place,1
-ferry,ferry,noun,masculine,travel,1
 fishmonger's,pescadería,noun,feminine,place,1
 apartment,apartamento,noun,masculine,place,1
 forbidden,prohibido,adjective,n_a,n_a,1
@@ -1488,8 +1490,7 @@ pillow,almohada,noun,feminine,home,1
 site,sitio,noun,masculine,place,1
 plane,avión,noun,masculine,travel,1
 platform,andén,noun,masculine,travel,1
-playground,área de recreo,noun,feminine,place,1
-police,policía,noun,feminine,person,1
+playground,patio de recreo,noun,masculine,place,1
 police station,comisaría de policía,noun,feminine,place,1
 policeman,policía,noun,masculine,person,1
 postcard,tarjeta postal,noun,feminine,culture,1

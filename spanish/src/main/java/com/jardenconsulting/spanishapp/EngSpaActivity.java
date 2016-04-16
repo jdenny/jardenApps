@@ -1,16 +1,11 @@
 package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpaDAO;
-import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 
 import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
-    /*!!
-    String SHOW_HELP_KEY = "SHOW_HELP_KEY";
-    String SHOW_TIPS_KEY = "SHOW_TIPS_KEY";
-    */
 
 	EngSpaDAO getEngSpaDAO();
     EngSpaUser getEngSpaUser();
@@ -36,7 +31,6 @@ public interface EngSpaActivity {
     void setAppBarTitle(int resId);
     void setAppBarTitle(String title);
 	void setProgressBarVisible(boolean visible);
-    //!! void setShowTips(boolean isShowTips);
 
 	/**
 	 * Set Spanish word if user later clicks on
@@ -56,9 +50,9 @@ public interface EngSpaActivity {
      * @param resId
      */
     void setTip(int resId);
-    void showEngSpaFragment();
 	void showTopicDialog();
 
+    void speakEnglish(String english);
 	/**
 	 * Set Spanish word (see {@link #setSpanish(String)}) and speak it.
 	 * @param spanish

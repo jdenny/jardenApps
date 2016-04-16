@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/qaStyle"
-            android:icon="@drawable/qastyle"
+            android:icon="@drawable/qastyle72"
             android:title="@string/qaStyle"/>
         <item
             android:id="@+id/topic"

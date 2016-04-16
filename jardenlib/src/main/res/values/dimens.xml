@@ -16,7 +16,7 @@
     <dimen name="helpTextFieldSize">20sp</dimen>
 
     <!-- My values for QuizRace -->
-    <dimen name="small_margin">5dp</dimen>
+    <dimen name="small_margin">4dp</dimen>
     <dimen name="questionTextFieldSize">20dp</dimen>
     <dimen name="smallTextSize">12dp</dimen>
     <dimen name="cellSize">32dp</dimen>

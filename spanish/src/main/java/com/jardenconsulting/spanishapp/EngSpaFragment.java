@@ -1,5 +1,6 @@
 package com.jardenconsulting.spanishapp;
 
+import jarden.engspa.EngSpa;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.VoiceText;
 import jarden.engspa.EngSpaDAO;
@@ -8,7 +9,6 @@ import jarden.engspa.EngSpaQuiz.QuizEventListener;
 import jarden.engspa.EngSpaUser;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -16,15 +16,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -76,6 +70,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 */
 	private boolean firstAlternative;
     private String topic;
+    private Button clearAnswerButton;
 
     @Override // Fragment
 	public void onAttach(Context context) {
@@ -126,15 +121,21 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		Button button = (Button) rootView.findViewById(R.id.goButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
+        int goButtonHeight = button.getHeight();
 		this.micButton = (ImageButton) rootView.findViewById(R.id.micButton);
 		this.micButton.setOnClickListener(this);
 		this.micButton.setOnLongClickListener(this);
+        this.micButton.setMaxHeight(goButtonHeight);
 		button = (Button) rootView.findViewById(R.id.incorrectButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
 		button = (Button) rootView.findViewById(R.id.correctButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
+        this.clearAnswerButton = (Button) rootView.findViewById(R.id.clearAnswerButton);
+        this.clearAnswerButton.setOnClickListener(this);
+        this.clearAnswerButton.setOnLongClickListener(this);
+        this.clearAnswerButton.setVisibility(View.GONE);
 		this.questionTextView = (TextView) rootView.findViewById(R.id.questionTextView);
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
@@ -262,8 +263,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			this.correctAnswer = english;
 		}
-		this.answerEditText.getText().clear();
+		clearAnswerText();
 	}
+    private void clearAnswerText() {
+        this.answerEditText.getText().clear();
+    }
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
 	}
@@ -280,6 +284,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			selfMarkButton(true);
         } else if (id == R.id.incorrectButton) {
 			selfMarkButton(false);
+        } else if (id == R.id.clearAnswerButton) {
+            clearAnswerText();
 		}
 	}
 	@Override // OnLongClickListener
@@ -298,6 +304,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else if (id == R.id.micButton) {
 			setTip(R.string.micButtonHelp);
 			return true;
+        } else if (id == R.id.clearAnswerButton) {
+            setTip(R.string.clearAnswerTip);
+            return true;
 		}
 		return false;
 	}
@@ -375,6 +384,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if spokenSpaToSpa also show English
 	 */
 	private void goPressed() {
+        this.clearAnswerButton.setVisibility(View.GONE);
 		String suppliedAnswer = getSuppliedAnswer().trim();
 		if (suppliedAnswer.length() == 0) {
 			showSelfMarkLayout();
@@ -400,6 +410,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
                             suppliedAnswer;
 				}
 			}
+            this.clearAnswerButton.setVisibility(isCorrect ? View.GONE : View.VISIBLE);
 			setIsCorrect(isCorrect);
 		}
 	}
@@ -511,6 +522,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		String userLevelStr = isUserLevelAll() ? "ALL" :
 				Integer.toString(engSpaUser.getUserLevel());
 		this.engSpaActivity.setAppBarTitle(this.levelStr + " " +
-				userLevelStr);
+                userLevelStr);
 	}
 }
