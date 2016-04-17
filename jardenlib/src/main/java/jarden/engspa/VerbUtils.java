@@ -252,23 +252,30 @@ public class VerbUtils {
 		        	else engVerbModified = "are";
 			    }
 		    } else if (tense == Tense.imperfect) {
-	        	if (thirdPersonSingular || person == Person.yo) prefix = "was";
-	        	else prefix = "were";
-		        suffix = "ing";
-		        String stem = irregEnglishGerundMap.get(englishVerb);
-		        if (stem == null) {
-			        if (englishVerb.endsWith("e") && !englishVerb.equals("be") &&
-			        		!englishVerb.equals("see")) {
-			        	stem = englishVerb.substring(0, englishVerb.length() - 1);
-			        } else if (englishVerb.endsWith("et") && !englishVerb.endsWith("eet")) {
-			            stem = englishVerb + "t";
-			        } else {
-			            stem = englishVerb;
-			        }
-		        }
-		        engVerbModified = prefix + " " + stem + suffix;
+                if (englishVerb.equals("can")) engVerbModified = "could";
+                else {
+                    if (thirdPersonSingular || person == Person.yo) prefix = "was";
+                    else prefix = "were";
+                    suffix = "ing";
+                    String stem = irregEnglishGerundMap.get(englishVerb);
+                    if (stem == null) {
+                        if (englishVerb.endsWith("e") && !englishVerb.equals("be") &&
+                                !englishVerb.equals("see")) {
+                            stem = englishVerb.substring(0, englishVerb.length() - 1);
+                        } else if (englishVerb.endsWith("et") && !englishVerb.endsWith("eet")) {
+                            stem = englishVerb + "t";
+                        } else {
+                            stem = englishVerb;
+                        }
+                    }
+                    engVerbModified = prefix + " " + stem + suffix;
+                }
 		    } else if (tense == Tense.future) {
-		        engVerbModified = "will " + englishVerb;
+                if (englishVerb.equals("can")) {
+                    engVerbModified = "will be able";
+                } else {
+                    engVerbModified = "will " + englishVerb;
+                }
 		    } else if (tense == Tense.preterite) {
 		        if (englishVerb.equals("be")) {
 		        	if (thirdPersonSingular || person == Person.yo) engVerbModified = "was";
@@ -986,8 +993,8 @@ public class VerbUtils {
 	
 	/******************English verb data*****************************/
 	private static String[][] irregEnglish3rdPersonSingularPresent = {
-		{"be", "is"}, { "do", "does"}, { "go", "goes" }, {"have", "has"},
-            {"study", "studies"}
+            {"be", "is"}, {"can", "can"}, { "do", "does"}, { "go", "goes" },
+            {"have", "has"}, {"study", "studies"}
 	};
 	private static String[][] irregEnglishPreterites = {
 		{"accompany", "accompanied"},

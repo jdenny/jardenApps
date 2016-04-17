@@ -78,9 +78,9 @@
         <ImageButton
             android:id="@+id/micButton"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:contentDescription="@string/micStr"
-            android:src="@drawable/mic" />
+            android:src="@drawable/ic_mic_black_24dp" />
 
         <TextView
             android:layout_width="wrap_content"

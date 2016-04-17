@@ -94,8 +94,10 @@ public class MainActivity extends AppCompatActivity
             tag = "jueves";
         } else if (id == R.id.qByLevel) {
             tag = "viernes";
+            /*!!
         } else if (id == R.id.help) {
             tag = "sábado";
+            */
         } else if (id == R.id.exit) {
             super.onBackPressed();
             return true;

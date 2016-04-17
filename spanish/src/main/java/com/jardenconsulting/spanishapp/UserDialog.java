@@ -58,7 +58,7 @@ public class UserDialog extends DialogFragment
 			builder.setNegativeButton(R.string.cancelStr, this);
 		}
 		builder.setView(view);
-		builder.setPositiveButton(R.string.updateStr, this);
+		builder.setPositiveButton(R.string.update, this);
 		this.alertDialog = builder.create();
 		return alertDialog;
 	}

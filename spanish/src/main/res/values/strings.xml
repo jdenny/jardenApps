@@ -2,7 +2,6 @@
 <resources>
     <string name="allLit">ALL</string>
     <string name="app_name">Revise Spanish</string>
-    <string name="audioMode">Audio Mode</string>
     <string name="cancelStr">Cancel</string>
     <string name="chooseQAStyleStr">Choose Question/Answer Style</string>
     <string name="chooseTopicStr">Choose Topic</string>
@@ -42,11 +41,12 @@
     <string name="ttsLoading">Loading textToSpeech...</string>
 	<string name="ttsNotSupported">
 		TextToSpeech for Spanish is not supported on this device</string>
-    <string name="updateStr">Update</string>
+    <string name="update">Update</string>
     <string name="setUserLevel">Set User level</string>
     <string name="userLevel">User level</string>
     <string name="userLevelError">
-        User level must be at least 2 for this feature
+        User level must be at least 2 for this feature; you can increase
+        your levels in Learn mode
     </string>
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
@@ -89,6 +89,5 @@
 		Type in a word, either Spanish or English, and press <i>GO</i> on the soft
 		keyboard.
 	</string>
-    <string name="update">Update</string>
 
 </resources>

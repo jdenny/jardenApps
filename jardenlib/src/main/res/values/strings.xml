@@ -20,13 +20,13 @@
     <string name="fail">wrong! the right answer is: </string>
     <string name="incorrect">wrong; try again</string>
 
-    <string name="qaStyle">Question Style</string>
-    <string name="selectTopic">Select Topic</string>
-    <string name="wordLookup">Word Lookup</string>
-    <string name="numbersGame">Numbers Game</string>
-    <string name="qByLevel">Questions By Level</string>
-    <string name="help">Help</string>
+    <string name="audioMode">Audio Mode</string>
     <string name="exit">Exit</string>
+    <string name="learnMode">Learn Mode</string>
+    <string name="numbersGame">Numbers Game</string>
+    <string name="practiceMode">Practice Mode</string>
+    <string name="qaStyle">Question Style</string>
+    <string name="selectTopic">Topic Mode</string>
+    <string name="wordLookup">Word Lookup</string>
 
-    
 </resources>

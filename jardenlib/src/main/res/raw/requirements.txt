@@ -45,7 +45,7 @@ New ideas on qaStyle: *************************************************
 		2. written eng-spa
 		3. spoken spa-eng
 		4. spoken spa-spa
-		5. spoken & written spa-eng
+		5. spoken & written spa-eng // put this first
 		random 1 to 5
 		alternate 2 & 3
 	learn mode; for each level:
@@ -58,10 +58,23 @@ New ideas on qaStyle: *************************************************
 		does not progress levels
 		P = based on qaStyle
 		F = as for learn mode
-	audio mode:
+	audio mode: (userLevel > 1)
 		speaks both english and spanish with pauses
 		P = as for learn mode
 	topic mode: as it is now
+
+	new navigation drawer:
+		learn mode
+		----------
+		question style
+		topic mode
+		practice mode
+		-----------
+		audio mode
+		word lookup
+		numbers game
+		exit
+
 
 	decisions so far:
 		default mode to be new 1
@@ -75,8 +88,6 @@ New ideas on qaStyle: *************************************************
 
 end of New ideas on qaStyle: *************************************************
 
-* at start, if loading new dictionary, shows engSpaFragment help message,
-	and not main help
 * Can lose track of question count
 * At end of level can ask question twice
 * follow Material design patterns: layout, fonts, icons,

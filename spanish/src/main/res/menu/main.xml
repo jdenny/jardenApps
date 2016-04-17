@@ -5,18 +5,13 @@
 
     <item
         android:id="@+id/speakerButton"
-        android:icon="@drawable/speaker"
+        android:icon="@drawable/ic_volume_up_black_24dp"
         android:title="@string/speakerStr"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/setUserLevel"
         android:title="@string/setUserLevel"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/audioMode"
-        android:title="@string/audioMode"
         app:showAsAction="never" />
 
     <item

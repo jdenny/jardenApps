@@ -17,6 +17,7 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.content.Context;
@@ -281,6 +283,28 @@ public class MainActivity extends AppCompatActivity
             onTopicSelected(null);
         } else if (id == R.id.exit) {
             super.onBackPressed();
+        } else if (id == R.id.audioMode) {
+            int level = getEngSpaUser().getUserLevel();
+            if (level < 2) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.audioMode);
+                builder.setMessage(R.string.userLevelError)
+                        .setPositiveButton("OK", null);
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                if (this.audioModeDialog == null) {
+                    this.audioModeDialog = new AudioModeDialog();
+                }
+                this.audioModeDialog.show(getSupportFragmentManager(), "AudioModeDialog");
+            }
+        } else if (id == R.id.practiceMode) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.practiceMode);
+            builder.setMessage("Not yet built! As they used to say at IBM: It's Being Made!")
+                    .setPositiveButton("OK", null);
+            AlertDialog alert = builder.create();
+            alert.show();
         } else {
             Log.e(TAG, "unrecognised drawer menu item id: " + id);
         }
@@ -320,16 +344,6 @@ public class MainActivity extends AppCompatActivity
             }
 		} else if (id == R.id.deleteAllFails) {
             this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
-        } else if (id == R.id.audioMode) {
-            int level = getEngSpaUser().getUserLevel();
-            if (level < 2) {
-                setStatus(R.string.userLevelError);
-            } else {
-                if (this.audioModeDialog == null) {
-                    this.audioModeDialog = new AudioModeDialog();
-                }
-                this.audioModeDialog.show(getSupportFragmentManager(), "AudioModeDialog");
-            }
 		} else {
             return super.onOptionsItemSelected(item);
         }
