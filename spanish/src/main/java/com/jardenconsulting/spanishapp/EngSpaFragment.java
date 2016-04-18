@@ -1,6 +1,5 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.engspa.EngSpa;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.VoiceText;
 import jarden.engspa.EngSpaDAO;
@@ -221,7 +220,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return this.engSpaUser.getUserLevel() == EngSpaQuiz.USER_LEVEL_ALL;
 	}
 	private void showStats() {
-        // TODO: show something a bit more user-friendly than -1!
 		int fwct = engSpaQuiz.getFailedWordCount();
         this.failCtTextView.setText((fwct < 0) ? "n/a" : Integer.toString(fwct));
         int cwct = engSpaQuiz.getCurrentWordCount();
@@ -269,12 +267,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
     private void clearAnswerText() {
         this.answerEditText.getText().clear();
     }
-	/*!!
-	public EngSpaQuiz getEngSpaQuiz() {
-		return this.engSpaQuiz;
-	}
-	 */
-
 	@Override // onClickListener
 	public void onClick(View view) {
 		engSpaActivity.setStatus("");

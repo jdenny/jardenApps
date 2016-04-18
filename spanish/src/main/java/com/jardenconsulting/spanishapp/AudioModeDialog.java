@@ -14,8 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import jarden.engspa.EngSpa;
-import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 
 /**
@@ -27,8 +25,6 @@ public class AudioModeDialog extends DialogFragment
     private boolean playing = true;
     private Thread speakingThread;
     private EngSpaActivity engSpaActivity;
-    private int userLevel;
-    //!! private EngSpaDAO engSpaDAO;
     private EngSpaQuiz engSpaQuiz;
     private EditText pauseEditText;
     private ImageButton playPauseImageButton;
@@ -51,8 +47,6 @@ public class AudioModeDialog extends DialogFragment
         this.playPauseImageButton.setOnClickListener(this);
 
         this.engSpaActivity = (EngSpaActivity) activity;
-        this.userLevel = engSpaActivity.getEngSpaUser().getUserLevel();
-        // this.engSpaDAO = engSpaActivity.getEngSpaDAO();
         this.engSpaQuiz = engSpaActivity.getEngSpaQuiz();
         builder.setTitle(R.string.audioMode);
         builder.setView(view);
@@ -74,7 +68,7 @@ public class AudioModeDialog extends DialogFragment
     @Override
     public void run() {
         try {
-            while (!Thread.currentThread().interrupted()) {
+            while (!Thread.interrupted()) {
                 initNextQuestion();
                 engSpaActivity.speakSpanish(spanish);
                 Thread.sleep(sleepTimeMillis);
@@ -84,17 +78,6 @@ public class AudioModeDialog extends DialogFragment
                 engSpaActivity.speakEnglish(english);
                 Thread.sleep(sleepTimeMillis);
                 engSpaActivity.speakSpanish(spanish);
-                /*!!
-                es = engSpaDAO.getRandomPassedWord(userLevel);
-                engSpaActivity.speakSpanish(es.getSpanish());
-                Thread.sleep(sleepTimeMillis);
-                engSpaActivity.speakEnglish(es.getEnglish());
-                Thread.sleep(sleepTimeMillis);
-                es = engSpaDAO.getRandomPassedWord(userLevel);
-                engSpaActivity.speakEnglish(es.getEnglish());
-                Thread.sleep(sleepTimeMillis);
-                engSpaActivity.speakSpanish(es.getSpanish());
-                */
                 Thread.sleep(sleepTimeMillis);
             }
         } catch (InterruptedException e) {
