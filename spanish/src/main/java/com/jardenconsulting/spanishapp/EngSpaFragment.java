@@ -163,7 +163,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
         if (this.engSpaDAO == null) {
             this.engSpaDAO = engSpaActivity.getEngSpaDAO();
             this.engSpaUser = engSpaActivity.getEngSpaUser();
-            this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
+            //!! this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
+            this.engSpaQuiz = engSpaActivity.getEngSpaQuiz();
             this.engSpaQuiz.setQuizEventListener(this);
             if (this.topic != null) setTopic2();
         }
@@ -220,11 +221,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return this.engSpaUser.getUserLevel() == EngSpaQuiz.USER_LEVEL_ALL;
 	}
 	private void showStats() {
+        // TODO: show something a bit more user-friendly than -1!
 		int fwct = engSpaQuiz.getFailedWordCount();
-		this.currentCtTextView.setText(
-				isUserLevelAll() ? "" :
-				Integer.toString(engSpaQuiz.getCurrentWordCount()));
-        this.failCtTextView.setText(Integer.toString(fwct));
+        this.failCtTextView.setText((fwct < 0) ? "n/a" : Integer.toString(fwct));
+        int cwct = engSpaQuiz.getCurrentWordCount();
+		this.currentCtTextView.setText((cwct < 0) ? "n/a" : Integer.toString(cwct));
 		if (BuildConfig.DEBUG) {
 			String debugState = engSpaQuiz.getDebugState();
 			Log.d(TAG, debugState);
@@ -268,9 +269,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
     private void clearAnswerText() {
         this.answerEditText.getText().clear();
     }
+	/*!!
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
 	}
+	 */
 
 	@Override // onClickListener
 	public void onClick(View view) {
@@ -524,4 +527,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.engSpaActivity.setAppBarTitle(this.levelStr + " " +
                 userLevelStr);
 	}
+    public void setQuizMode(EngSpaQuiz.QuizMode quizMode) {
+        this.engSpaQuiz.setMode(quizMode);
+        askQuestion(true);
+    }
 }

@@ -5,7 +5,7 @@
         android:id="@+id/menuTop"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/qByLevel"
+            android:id="@+id/learnMode"
             android:icon="@drawable/ic_school_black_24dp"
             android:title="@string/learnMode"/>
     </group>
@@ -17,7 +17,7 @@
             android:icon="@drawable/qastyle"
             android:title="@string/qaStyle"/>
         <item
-            android:id="@+id/topic"
+            android:id="@+id/topicMode"
             android:icon="@drawable/ic_subject_black_24dp"
             android:title="@string/selectTopic"/>
         <item

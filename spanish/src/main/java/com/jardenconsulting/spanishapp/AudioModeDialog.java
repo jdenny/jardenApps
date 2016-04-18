@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
 
 /**
  * Created by john.denny@gmail.com on 16/04/2016.
@@ -27,10 +28,14 @@ public class AudioModeDialog extends DialogFragment
     private Thread speakingThread;
     private EngSpaActivity engSpaActivity;
     private int userLevel;
-    private EngSpaDAO engSpaDAO;
+    //!! private EngSpaDAO engSpaDAO;
+    private EngSpaQuiz engSpaQuiz;
     private EditText pauseEditText;
     private ImageButton playPauseImageButton;
     private int sleepTimeMillis = 3000;
+    private String spanish;
+    private String english;
+
 
     @SuppressLint("InflateParams")
     @Override
@@ -47,7 +52,8 @@ public class AudioModeDialog extends DialogFragment
 
         this.engSpaActivity = (EngSpaActivity) activity;
         this.userLevel = engSpaActivity.getEngSpaUser().getUserLevel();
-        this.engSpaDAO = engSpaActivity.getEngSpaDAO();
+        // this.engSpaDAO = engSpaActivity.getEngSpaDAO();
+        this.engSpaQuiz = engSpaActivity.getEngSpaQuiz();
         builder.setTitle(R.string.audioMode);
         builder.setView(view);
         AlertDialog alertDialog = builder.create();
@@ -67,9 +73,18 @@ public class AudioModeDialog extends DialogFragment
     }
     @Override
     public void run() {
-        EngSpa es;
         try {
             while (!Thread.currentThread().interrupted()) {
+                initNextQuestion();
+                engSpaActivity.speakSpanish(spanish);
+                Thread.sleep(sleepTimeMillis);
+                engSpaActivity.speakEnglish(english);
+                Thread.sleep(sleepTimeMillis);
+                initNextQuestion();
+                engSpaActivity.speakEnglish(english);
+                Thread.sleep(sleepTimeMillis);
+                engSpaActivity.speakSpanish(spanish);
+                /*!!
                 es = engSpaDAO.getRandomPassedWord(userLevel);
                 engSpaActivity.speakSpanish(es.getSpanish());
                 Thread.sleep(sleepTimeMillis);
@@ -79,15 +94,17 @@ public class AudioModeDialog extends DialogFragment
                 engSpaActivity.speakEnglish(es.getEnglish());
                 Thread.sleep(sleepTimeMillis);
                 engSpaActivity.speakSpanish(es.getSpanish());
+                */
                 Thread.sleep(sleepTimeMillis);
             }
         } catch (InterruptedException e) {
             Log.w(TAG, "audioMode thread interrupted");
         }
     }
-    private void pause() throws InterruptedException {
-        int pauseSeconds = Integer.parseInt(this.pauseEditText.getText().toString());
-
+    private void initNextQuestion() {
+        spanish = engSpaQuiz.getNextQuestion2(
+                engSpaActivity.getQuestionSequence());
+        english = engSpaQuiz.getEnglish();
     }
     @Override
     public void onClick(View view) {

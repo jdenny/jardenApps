@@ -15,6 +15,7 @@
     <string name="goStr">Go</string>
     <string name="helpHome">Help Home</string>
     <string name="hideHelp">Hide Help</string>
+    <string name="invalidUserLevel">invalid userLevel supplied</string>
     <string name="levelStr">Level:</string>
     <string name="loadDBDone">Loading Spanish dictionary complete</string>
     <string name="loadingDB">Loading Spanish dictionary - please be patient with us!</string>

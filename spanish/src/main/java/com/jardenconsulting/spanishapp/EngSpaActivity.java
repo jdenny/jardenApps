@@ -1,6 +1,7 @@
 package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 public interface EngSpaActivity {
 
 	EngSpaDAO getEngSpaDAO();
+    EngSpaQuiz getEngSpaQuiz();
     EngSpaUser getEngSpaUser();
 
 	/**
@@ -58,7 +60,6 @@ public interface EngSpaActivity {
 	 * @param spanish
 	 */
 	void speakSpanish(String spanish);
-	
 }
 
 

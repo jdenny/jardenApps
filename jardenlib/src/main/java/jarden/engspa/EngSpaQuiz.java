@@ -18,6 +18,9 @@ import jarden.quiz.Quiz;
  * questionStyle & answerStyle: printed or spoken; see EngSpaFragment.currentQuestionStyle
  */
 public class EngSpaQuiz extends Quiz {
+    public enum QuizMode {
+        LEARN, TOPIC, PRACTICE, AUDIO
+    }
 	public interface QuizEventListener {
 		void onNewLevel();
 		void onTopicComplete();
@@ -25,12 +28,15 @@ public class EngSpaQuiz extends Quiz {
 	public static final int WORDS_PER_LEVEL = 10;
 	public static final int USER_LEVEL_ALL = 12345;
 
+	private QuizMode quizMode;
 	/*
 	 * controls which list of words to choose the next question from,
 	 * one of current, fails and passed
 	 */
-	private static final char[] NORMAL_CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
-	private static final char[] ALL_LEVELS_CFP_LIST = {'F', 'P'};
+	private static final char[] LEARN_CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
+	private static final char[] TOPIC_CFP_LIST = {'C', 'F'};
+    private static final char[] PRACTICE_CFP_LIST = {'P', 'F'};
+    private static final char[] AUDIO_CFP_LIST = {'P'};
 	private char[] cfpList;
 	
 	private String spanish;
@@ -88,7 +94,21 @@ public class EngSpaQuiz extends Quiz {
 		this.engSpaDAO = engSpaDAO;
 		int userLevel = engSpaUser.getUserLevel();
 		setUserLevel(userLevel);
-	} 
+	}
+    public void setMode(QuizMode quizMode) {
+        this.quizMode = quizMode;
+        if (quizMode == QuizMode.LEARN)  {
+            initWordsForLearn();
+        } else if (quizMode == QuizMode.PRACTICE)  {
+            initWordsForPractice();
+        } else if (quizMode == QuizMode.AUDIO)  {
+            this.cfpList = AUDIO_CFP_LIST;
+            this.currentWordList = null; // no currentWordList
+            this.cfpListIndex = 0;
+            this.failedWordList = null;  // no failedWordList
+        }
+        // Note: mode is set to TOPIC in setTopic(topic)
+    }
 	public void setQuizEventListener(QuizEventListener listener) {
 		this.quizEventListener = listener;
 	}
@@ -98,6 +118,28 @@ public class EngSpaQuiz extends Quiz {
 	public EngSpa getCurrentWord() {
 		return this.currentWord;
 	}
+    public void setTopic(String topic) {
+        if (topic == null) endOfTopic();
+        else {
+            this.topic = topic;
+            this.quizMode = QuizMode.TOPIC;
+            this.cfpList = TOPIC_CFP_LIST;
+            this.levelWordList = currentWordList; // to go back to later if necessary
+            this.currentWordList = engSpaDAO.findWordsByTopic(topic);
+            Collections.shuffle(this.currentWordList);
+            this.cfpListIndex = 0;
+            this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
+        }
+    }
+    private void endOfTopic() {
+        if (this.topic != null) {
+            this.currentWordList = this.levelWordList; // TODO: or initWordsForLearn()?
+                        // in which case ditch this.levelWordList; at least rename it
+                        // to learnWordList!
+            this.quizMode = QuizMode.LEARN;
+            this.topic = null;
+        }
+    }
 	/**
 	 * if userLevel > maximum, based on size of dictionary,
 	 * replace with USER_LEVEL_ALL.
@@ -108,19 +150,29 @@ public class EngSpaQuiz extends Quiz {
 	 * To make it more flexible, we've replaced 10 with WORDS_PER_LEVEL.
 	 */
 	public void setUserLevel(int level) {
-		this.engSpaUser.setUserLevel(level);
-		this.engSpaDAO.updateUser(engSpaUser);
+        this.engSpaUser.setUserLevel(level);
+        this.engSpaDAO.updateUser(engSpaUser);
+        initWordsForLearn();
+    }
+    private void initWordsForLearn() {
+        int level = this.engSpaUser.getUserLevel();
 		if (level == USER_LEVEL_ALL) {
-			this.cfpList = ALL_LEVELS_CFP_LIST;
-			this.currentWordList = null; // no currentWordList
-			this.cfpListIndex = 0;
+            initWordsForPractice();
 		} else {
-			this.cfpList = NORMAL_CFP_LIST;
+            this.quizMode = QuizMode.LEARN; // yes, may already be set, but might not!
+			this.cfpList = LEARN_CFP_LIST;
 			this.currentWordList =  this.engSpaDAO.getCurrentWordList(level);
 			Collections.shuffle(currentWordList);
+            this.cfpListIndex = 0;
+            this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
 		}
-		this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
 	}
+    private void initWordsForPractice() {
+        this.cfpList = PRACTICE_CFP_LIST;
+        this.currentWordList = null; // no currentWordList
+        this.cfpListIndex = 0;
+        this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
+    }
 	
 	/**
 	 * Get questions from Current, Passed and Failed lists.
@@ -143,24 +195,32 @@ public class EngSpaQuiz extends Quiz {
 	 */
 	public String getNextQuestion2(int questionSequence) {
 		this.questionSequence = questionSequence;
+        /*!!
 		if (this.currentWordList != null &&
 				this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
-			// reached end of questions:
-			if (topic == null) {
-				int newUserLevel = this.engSpaDAO.validateUserLevel(
-                        this.engSpaUser.getUserLevel() + 1);
-				setUserLevel(newUserLevel);
-				if (this.quizEventListener != null) {
-					quizEventListener.onNewLevel();
-				}
-			}
-			else {
-				endOfTopic();
-				if (this.quizEventListener != null) {
-					quizEventListener.onTopicComplete();
-				}
-			}
+		 */
+        if (this.quizMode == QuizMode.LEARN || this.quizMode == QuizMode.TOPIC) {
+            if (this.currentWordList.size() == 0 &&
+                    this.failedWordList.size() == 0) {
+                // reached end of questions:
+                //!! if (topic == null) {
+                if (this.quizMode == QuizMode.LEARN) {
+                    int newUserLevel = this.engSpaDAO.validateUserLevel(
+                            this.engSpaUser.getUserLevel() + 1);
+                    setUserLevel(newUserLevel);
+                    if (this.quizEventListener != null) {
+                        quizEventListener.onNewLevel();
+                    }
+                }
+                else {
+                    endOfTopic();
+                    if (this.quizEventListener != null) {
+                        quizEventListener.onTopicComplete();
+                    }
+                    // TODO: should we return null here?
+                }
+            }
 		}
 		// check each of the question types; there should be at least one available
 		this.currentWord = null;
@@ -258,10 +318,10 @@ public class EngSpaQuiz extends Quiz {
 	 * word the required number of times.
 	 */
 	public int getCurrentWordCount() {
-		return this.currentWordList.size();
+        return (this.currentWordList == null) ? -1 : this.currentWordList.size();
 	}
 	public int getFailedWordCount() {
-		return this.failedWordList.size();
+        return (this.failedWordList == null) ? -1 : this.failedWordList.size();
 	}
 	public void setCorrect(boolean correct, QAStyle qaStyle) {
 		boolean inFailedList = this.failedWordList.contains(currentWord);
@@ -359,10 +419,13 @@ public class EngSpaQuiz extends Quiz {
 	public String getDebugState() {
 		StringBuilder sb = new StringBuilder("EngSpaQuiz.currentWord=" +
 				currentWord.getEnglish() + "; questionSequence=" +
-				questionSequence + "; cfpChar=" + cfpChar + "; failedWordList:\n"); 
-		for (EngSpa word: this.failedWordList) {
-			sb.append("  " + word + "\n");
-		}
+				questionSequence + "; cfpChar=" + cfpChar);
+        if (this.failedWordList != null) {
+            sb.append("; failedWordList:\n");
+            for (EngSpa word: this.failedWordList) {
+                sb.append("  " + word + "\n");
+            }
+        }
 		List<EngSpa> dbFailedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
 		sb.append("\ndbFailedWordList:\n");
 		for (EngSpa word: dbFailedWordList) {
@@ -387,21 +450,6 @@ public class EngSpaQuiz extends Quiz {
 	@Override // Quiz
 	public String getNextQuestion(int level) throws EndOfQuestionsException {
 		return "who wants to know?";
-	}
-	private void endOfTopic() {
-		if (this.topic != null) {
-			this.currentWordList = this.levelWordList;
-			this.topic = null;
-		}
-	}
-	public void setTopic(String topic) {
-		if (topic == null) endOfTopic();
-		else {
-			this.topic = topic;
-			this.levelWordList = currentWordList; // to go back to later if necessary
-			this.currentWordList = engSpaDAO.findWordsByTopic(topic);
-			Collections.shuffle(this.currentWordList);
-		}
 	}
     public String getTopic() {
         return this.topic;

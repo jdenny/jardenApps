@@ -32,7 +32,6 @@ public class TopicDialog extends DialogFragment implements DialogInterface.OnCli
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		topicListener.onTopicSelected(EngSpaContract.attributeNames[which]);
-		
 	}
 
 }

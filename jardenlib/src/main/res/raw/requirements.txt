@@ -40,54 +40,79 @@ possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
 
 SPANISH
 New ideas on qaStyle: *************************************************
-	qaStyle:
-		1. written spa-eng
-		2. written eng-spa
-		3. spoken spa-eng
-		4. spoken spa-spa
-		5. spoken & written spa-eng // put this first
-		random 1 to 5
-		alternate 2 & 3
-	learn mode; for each level:
-		phase 1: spoken & written spa -> eng
-		phase 2: eng -> spa
-		for both phases: CFPCF
-			P = random words from previous levels, alternate between spa-eng and eng-spa
-			F = fails, using saved style
-	practice mode (only applicable where userLevel > 1)
-		does not progress levels
-		P = based on qaStyle
-		F = as for learn mode
-	audio mode: (userLevel > 1)
-		speaks both english and spanish with pauses
-		P = as for learn mode
-	topic mode: as it is now
+qaStyle:
+	1. spoken & written spa-eng (was 5)
+	2. written eng-spa
+	3. spoken spa-eng
+	4. written spa-eng (was 1)
+	5. spoken spa-spa (was 4)
+	random 1 to 5
+	alternate 2 & 3
+learn mode; for each level:
+	phase 1: spoken & written spa -> eng
+	phase 2: eng -> spa
+	for both phases: CFPCF
+		P = random words from previous levels,
+			alternate between spa-eng and eng-spa
+		F = fails, using saved style
+practice mode (only applicable where userLevel > 1)
+	does not progress levels
+	P = based on qaStyle
+	F = as for learn mode
+audio mode: (userLevel > 1)
+	speaks both english and spanish with pauses
+	P = as for learn mode
+topic mode: as it is now
 
-	new navigation drawer:
-		learn mode
-		----------
-		question style
-		topic mode
-		practice mode
-		-----------
-		audio mode
-		word lookup
-		numbers game
-		exit
+new navigation drawer:
+	learn mode: CFPCF; current from userLevel
+	----------
+	question style
+	topic mode: CF[PCF]; current from topic
+	practice mode: PF
+	-----------
+	audio mode: P
+	word lookup
+	numbers game
+	exit
 
+learn mode design
+	EngSpaQuiz
+		setMode(learnMode)
+			set cfpList to CFPCF
+			get current words at userLevel
+			get failed words
+		setMode(practiceMode)
+			set cfpList to PF
+			get failed words
+		setMode(audioMode)
+			set cfpList to P
+			get failed words
+		setMode(topicMode)
+			set cfpList to CF
+			get current words from topic
+			get failed words
+		setLevel(level)
+			-> setMode(learnMode)
+		getNextQuestion2()
+			if learnMode or topicMode
+				if end of questions
+					if learnMode: next level
+					else: next topic
+	note: learn, practice & topic modes all use EngSpaFragment
 
-	decisions so far:
-		default mode to be new 1
-		remove old random 1 to 5
-		alternate 2 & 3 only applies up to current level
+decisions so far:
+	default mode to be new 1
+	alternate 2 & 3 only applies up to current level
 
-	strategy
-		update alternate to only apply up to current level, i.e. not increment level
-		and only random completed words, and alternating between new 1 and 2 above
-		add audio mode; try it alternating
+strategy
+	update alternate to only apply up to current level, i.e. not increment level
+	and only random completed words, and alternating between new 1 and 2 above
+	add audio mode; try it alternating
 
 end of New ideas on qaStyle: *************************************************
-
+* put new screen shots onto developer console
+* status option: level, quizMode, qaStyle, fails, currents
 * Can lose track of question count
 * At end of level can ask question twice
 * follow Material design patterns: layout, fonts, icons,
@@ -107,7 +132,8 @@ margins
 ! At start of imperatives
 Should faltar be lack rather than miss?
 * remove option for multiple users
-	add new class that holds level, raceLevel, qaStyle;
+	add new class that holds level, raceLevel, qaStyle, quizMode,
+		learnModePhase (1 or 2)
 	keeps in sync with sharedPreferences
 * help fragment creating document text view every time; use retain instance etc;
 * rename numbers game to gato y ratón

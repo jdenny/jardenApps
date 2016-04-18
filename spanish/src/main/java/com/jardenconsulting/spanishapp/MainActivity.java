@@ -8,6 +8,7 @@ import jarden.app.race.RaceFragment;
 import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
@@ -17,7 +18,6 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -40,9 +40,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -108,6 +106,7 @@ public class MainActivity extends AppCompatActivity
 	private boolean doubleBackToExitPressedOnce = false;
     private CheckBox showHelpCheckBox;
     private AudioModeDialog audioModeDialog;
+    private AlertDialog alertDialog;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -273,43 +272,52 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.qaStyle) {
             if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
             this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
-        } else if (id == R.id.topic) {
+        } else if (id == R.id.topicMode) {
             showTopicDialog();
         } else if (id == R.id.wordLookup) {
             showFragment(WORD_LOOKUP);
         } else if (id == R.id.numbersGame) {
             showFragment(NUMBER_GAME);
-        } else if (id == R.id.qByLevel) {
-            onTopicSelected(null);
+        } else if (id == R.id.learnMode) {
+            //!! onTopicSelected(null);
+            showEngSpaFragment(EngSpaQuiz.QuizMode.LEARN);
         } else if (id == R.id.exit) {
             super.onBackPressed();
         } else if (id == R.id.audioMode) {
             int level = getEngSpaUser().getUserLevel();
             if (level < 2) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.audioMode);
-                builder.setMessage(R.string.userLevelError)
-                        .setPositiveButton("OK", null);
-                AlertDialog alert = builder.create();
-                alert.show();
+                showAlertDialog(R.string.audioMode);
             } else {
                 if (this.audioModeDialog == null) {
                     this.audioModeDialog = new AudioModeDialog();
                 }
+                this.engSpaFragment.setQuizMode(EngSpaQuiz.QuizMode.AUDIO);
                 this.audioModeDialog.show(getSupportFragmentManager(), "AudioModeDialog");
             }
         } else if (id == R.id.practiceMode) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.practiceMode);
-            builder.setMessage("Not yet built! As they used to say at IBM: It's Being Made!")
-                    .setPositiveButton("OK", null);
-            AlertDialog alert = builder.create();
-            alert.show();
+            int level = getEngSpaUser().getUserLevel();
+            if (level < 2) {
+                showAlertDialog(R.string.practiceMode);
+            } else {
+                showEngSpaFragment(EngSpaQuiz.QuizMode.PRACTICE);
+            }
         } else {
             Log.e(TAG, "unrecognised drawer menu item id: " + id);
         }
         this.drawerLayout.closeDrawers();
         return true;
+    }
+    private void showAlertDialog(int titleRes) {
+        if (this.alertDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            //!! builder.setTitle(R.string.audioMode);
+            builder.setMessage(R.string.userLevelError)
+                    .setPositiveButton("OK", null);
+            this.alertDialog = builder.create();
+        }
+        this.alertDialog.setTitle(titleRes);
+        this.alertDialog.show();
+
     }
     private void setShowHelp(boolean showHelp) {
         this.helpTextView.setVisibility(showHelp ? View.VISIBLE : View.GONE);
@@ -343,7 +351,7 @@ public class MainActivity extends AppCompatActivity
                 this.setStatus(R.string.spanishNull);
             }
 		} else if (id == R.id.deleteAllFails) {
-            this.engSpaFragment.getEngSpaQuiz().deleteAllFails();
+            this.viewlessFragment.getEngSpaQuiz().deleteAllFails();
 		} else {
             return super.onOptionsItemSelected(item);
         }
@@ -426,9 +434,9 @@ public class MainActivity extends AppCompatActivity
 	public void onTopicSelected(String topic) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onTopicSelected(" + topic + ")");
-		lazyEngSpaFragment();
+		showEngSpaFragment(EngSpaQuiz.QuizMode.TOPIC);
         this.engSpaFragment.setTopic(topic);
-		showFragment(ENGSPA);
+
 	}
 	@Override // QAStyleDialog.QAStyleListener
 	public void onQAStyleSelected(QAStyle qaStyle) {
@@ -449,10 +457,12 @@ public class MainActivity extends AppCompatActivity
         }
 		super.onSaveInstanceState(savedInstanceState);
 	}
-    private void lazyEngSpaFragment() {
+    private void showEngSpaFragment(EngSpaQuiz.QuizMode quizMode) {
         if (this.engSpaFragment == null) {
             this.engSpaFragment = new EngSpaFragment();
         }
+        this.engSpaFragment.setQuizMode(quizMode);
+        showFragment(ENGSPA);
     }
 	/**
 	 * Update EngSpa table on database if there is a new version of
@@ -550,7 +560,7 @@ public class MainActivity extends AppCompatActivity
         if (BuildConfig.DEBUG) Log.d(TAG,
                 "onUpdateUserLevel(" + userLevel + ")");
         if (userLevel < 1) {
-            this.statusTextView.setText("invalid userLevel supplied");
+            this.statusTextView.setText(R.string.invalidUserLevel);
             return;
         }
         boolean isNewLevel = this.viewlessFragment.setUserLevel(userLevel);
@@ -643,5 +653,10 @@ public class MainActivity extends AppCompatActivity
 		}
 		return this.engSpaDAO;
 	}
+
+    @Override // EngSpaActivity
+    public EngSpaQuiz getEngSpaQuiz() {
+        return viewlessFragment.getEngSpaQuiz();
+    }
 
 }

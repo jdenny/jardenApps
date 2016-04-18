@@ -14,6 +14,7 @@ import android.util.Log;
 import java.util.Locale;
 
 import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 import jarden.provider.engspa.EngSpaContract;
 
@@ -43,7 +44,7 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     private int soundLost;
     private EngSpaDAO engSpaDAO;
     private EngSpaUser engSpaUser;
-
+    private EngSpaQuiz engSpaQuiz;
 
     @Override // Fragment
     public void onAttach(Context context) {
@@ -80,9 +81,10 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
         this.engSpaUser = engSpaDAO.getUser();
         if (this.engSpaUser == null) { // i.e. no user yet on database
             this.engSpaUser = new EngSpaUser("your name",
-                    1, EngSpaContract.QAStyle.writtenSpaToEng);
+                    1, EngSpaContract.QAStyle.spokenWrittenSpaToEng);
             engSpaDAO.insertUser(engSpaUser);
         }
+        this.engSpaQuiz = new EngSpaQuiz(this.engSpaDAO, this.engSpaUser);
         saveOrientation();
     }
 
@@ -244,5 +246,8 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     private void speakEnglish2() {
         textToSpeech.setLanguage(Locale.ENGLISH);
         textToSpeech.speak(this.english, TextToSpeech.QUEUE_ADD, null);
+    }
+    public EngSpaQuiz getEngSpaQuiz() {
+        return engSpaQuiz;
     }
 }
