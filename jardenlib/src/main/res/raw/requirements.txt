@@ -48,21 +48,30 @@ qaStyle:
 	5. spoken spa-spa (was 4)
 	random 1 to 5
 	alternate 2 & 3
-learn mode; for each level:
-	phase 1: spoken & written spa -> eng
-	phase 2: eng -> spa
-	for both phases: CFPCF
-		P = random words from previous levels,
-			alternate between spa-eng and eng-spa
-		F = fails, using saved style
+learn mode; CFPCF; for each level:
+	C = phase 1: qaStyle 1
+		phase 2: qaStyle 2
+	P = random words from previous levels,
+		based on user.qaStyle
+		NOTE: current code uses same style as C for P
+	F = fails, using style saved in failed word
 practice mode (only applicable where userLevel > 1)
+	PF, where P & F same as learn mode
 	does not progress levels
-	P = based on qaStyle
-	F = as for learn mode
 audio mode: (userLevel > 1)
 	speaks both english and spanish with pauses
 	P = as for learn mode
-topic mode: as it is now
+topic mode; CFPCF:
+	C & P = user.qaStyle
+	F = as for learn mode
+	NOTE: should C be same as learn?
+
+Summary
+	P always uses user.qaStyle
+	F always uses style saved in failed word
+	C only applies to Learn & Topic
+		learn: 1 for phase 1, 2 for phase 2
+
 
 new navigation drawer:
 	learn mode: CFPCF; current from userLevel
@@ -84,7 +93,9 @@ learn mode design
 			get failed words
 		setMode(practiceMode)
 			set cfpList to PF
-			get failed words
+			get failed words; options:
+				as is; don't remove from memory copy until 3 right; extra button to
+				reload fails from DB?
 		setMode(audioMode)
 			set cfpList to P
 			get failed words
@@ -112,6 +123,8 @@ strategy
 
 end of New ideas on qaStyle: *************************************************
 * put new screen shots onto developer console
+* don't repeat speech after rotate
+* both fields can be red on word lookup!
 * status option: level, quizMode, qaStyle, fails, currents
 * Can lose track of question count
 * At end of level can ask question twice
@@ -119,6 +132,7 @@ end of New ideas on qaStyle: *************************************************
 	e.g. https://design.google.com/icons/index.html
 * Back from numbers sometimes exits app
 * Long press should turn on showHelp
+* should audio mode continue after screen turns off?
 * Padding around text
 Sam-style progress bar
 ! at beginning of imperatives; see engSpaFragment.normalise()

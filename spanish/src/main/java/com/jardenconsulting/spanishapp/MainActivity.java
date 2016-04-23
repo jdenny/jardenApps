@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity
 		NavigationView.OnNavigationItemSelectedListener,
         ListView.OnItemLongClickListener, View.OnClickListener {
 
-    private static final int[] helpResIds = {
+	//!! private static final String TAG = "MainActivity";
+	private static final int[] helpResIds = {
             R.string.engSpaHelp,
             R.string.EngSpaMoreHelp,
             R.string.FeedbackHelp,
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity
             R.string.SelfMarkMoreHelp,
             R.string.WordLookupHelp
     };
-    private static final String TAG = "MainActivity";
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
     private String SHOW_HELP_KEY = "SHOW_HELP_KEY";
 	private static final String UPDATES_VERSION_KEY = "DataVersion";
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity
                     engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
                     final int version = Integer.parseInt(engSpaVersionLines.get(0));
                     // Note: this code is sometimes run before end of onCreate()
-                    final SharedPreferences sharedPreferences = getSharedPreferences();
+                    //!! final SharedPreferences sharedPreferences = getSharedPreferences();
                     final int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
                     final boolean newDictionary = version > savedVersion;
                     // report results so far:
@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.numbersGame) {
             showFragment(NUMBER_GAME);
         } else if (id == R.id.learnMode) {
-            //!! onTopicSelected(null);
             showEngSpaFragment(EngSpaQuiz.QuizMode.LEARN);
         } else if (id == R.id.exit) {
             super.onBackPressed();
@@ -310,7 +309,6 @@ public class MainActivity extends AppCompatActivity
     private void showAlertDialog(int titleRes) {
         if (this.alertDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            //!! builder.setTitle(R.string.audioMode);
             builder.setMessage(R.string.userLevelError)
                     .setPositiveButton("OK", null);
             this.alertDialog = builder.create();
@@ -551,9 +549,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	/**
-	 * Called on completion of UserDialog, which was called either
-	 * because there is no EngSpaUser yet defined, or because the
-	 * user chose to update it.
+	 * Called on completion of UserDialog.
 	 */
 	@Override // UserSettingsListener
     public void onUpdateUserLevel(int userLevel) {
@@ -642,10 +638,12 @@ public class MainActivity extends AppCompatActivity
 	public void setProgressBarVisible(boolean visible) {
 		progressBar.setVisibility(visible ? ProgressBar.VISIBLE : ProgressBar.GONE);
 	}
+	/*!!
 	@Override // EngSpaActivity
 	public SharedPreferences getSharedPreferences() {
 		return this.sharedPreferences;
 	}
+	*/
 	@Override // EngSpaActivity
 	public EngSpaDAO getEngSpaDAO() {
 		if (this.engSpaDAO == null) {

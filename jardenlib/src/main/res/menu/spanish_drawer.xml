@@ -18,7 +18,7 @@
             android:title="@string/qaStyle"/>
         <item
             android:id="@+id/topicMode"
-            android:icon="@drawable/ic_subject_black_24dp"
+            android:icon="@drawable/ic_storage_black_24dp"
             android:title="@string/selectTopic"/>
         <item
             android:id="@+id/practiceMode"
@@ -38,7 +38,7 @@
             android:title="@string/wordLookup"/>
         <item
             android:id="@+id/numbersGame"
-            android:icon="@drawable/ic_exposure_plus_2_black_24dp"
+            android:icon="@drawable/ic_casino_black_24dp"
             android:title="@string/numbersGame"/>
         <item
             android:id="@+id/exit"

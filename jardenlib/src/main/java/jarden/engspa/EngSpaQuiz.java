@@ -21,10 +21,12 @@ public class EngSpaQuiz extends Quiz {
     public enum QuizMode {
         LEARN, TOPIC, PRACTICE, AUDIO
     }
+	/*!!
 	public interface QuizEventListener {
 		void onNewLevel();
 		void onTopicComplete();
 	}
+	*/
 	public static final int WORDS_PER_LEVEL = 10;
 	public static final int USER_LEVEL_ALL = 12345;
 
@@ -77,7 +79,7 @@ public class EngSpaQuiz extends Quiz {
 	private static final int RECENTS_CT = 3;
 	private EngSpa[] recentWords = new EngSpa[RECENTS_CT];
 	private EngSpa currentWord;
-	private QuizEventListener quizEventListener;
+	//!! private QuizEventListener quizEventListener;
 	private EngSpaDAO engSpaDAO;
 	private char cfpChar; // C=current, F=failed, P=passed
 	private int questionSequence;
@@ -109,9 +111,11 @@ public class EngSpaQuiz extends Quiz {
         }
         // Note: mode is set to TOPIC in setTopic(topic)
     }
+	/*!!
 	public void setQuizEventListener(QuizEventListener listener) {
 		this.quizEventListener = listener;
 	}
+	*/
 	public int getUserLevel() {
 		return this.engSpaUser.getUserLevel();
 	}
@@ -193,18 +197,20 @@ public class EngSpaQuiz extends Quiz {
 	get random Passed
 		can't be recent word
 	 */
-	public String getNextQuestion2(int questionSequence) {
-		this.questionSequence = questionSequence;
-        /*!!
-		if (this.currentWordList != null &&
+	public String getNextQuestion2(int questionSequence) throws EndOfQuestionsException {
+		if ((this.quizMode == QuizMode.LEARN || this.quizMode == QuizMode.TOPIC) &&
 				this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
-		 */
+			throw new EndOfQuestionsException("quizMode=" + this.quizMode);
+		}
+		// TODO: merge this with getNextQuestion! get questionSequence from
+		// userSettings?
+		this.questionSequence = questionSequence;
+		/*!!
         if (this.quizMode == QuizMode.LEARN || this.quizMode == QuizMode.TOPIC) {
             if (this.currentWordList.size() == 0 &&
                     this.failedWordList.size() == 0) {
                 // reached end of questions:
-                //!! if (topic == null) {
                 if (this.quizMode == QuizMode.LEARN) {
                     int newUserLevel = this.engSpaDAO.validateUserLevel(
                             this.engSpaUser.getUserLevel() + 1);
@@ -222,6 +228,7 @@ public class EngSpaQuiz extends Quiz {
                 }
             }
 		}
+		*/
 		// check each of the question types; there should be at least one available
 		this.currentWord = null;
 		for (int i = 0; i < cfpList.length && currentWord == null; i++) {

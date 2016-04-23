@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import jarden.engspa.EngSpaQuiz;
+import jarden.quiz.EndOfQuestionsException;
 
 /**
  * Created by john.denny@gmail.com on 16/04/2016.
@@ -85,9 +86,14 @@ public class AudioModeDialog extends DialogFragment
         }
     }
     private void initNextQuestion() {
-        spanish = engSpaQuiz.getNextQuestion2(
-                engSpaActivity.getQuestionSequence());
-        english = engSpaQuiz.getEnglish();
+		try {
+			spanish = engSpaQuiz.getNextQuestion2(
+					engSpaActivity.getQuestionSequence());
+		} catch (EndOfQuestionsException e) {
+			if (BuildConfig.DEBUG) Log.e(TAG, "initNextQuestion() it's all gone wrong!");
+			engSpaActivity.setStatus("end of exceptions error!");
+		}
+		english = engSpaQuiz.getEnglish();
     }
     @Override
     public void onClick(View view) {

@@ -30,7 +30,7 @@ horse,caballo,noun,masculine,animal,1
 bird,pájaro,noun,masculine,animal,1
 man,hombre,noun,masculine,person,1
 woman,mujer,noun,feminine,person,1
-child,niño,noun,masculine,person,1
+child,niño,noun,mf,person,1
 apple,manzana,noun,feminine,food,1
 bread,pan,noun,masculine,food,1
 be,ser,verb,transIntrans,n_a,1
@@ -131,7 +131,7 @@ play,tocar,verb,transIntrans,music,1
 hear,oír,verb,transIntrans,n_a,1
 make,hacer,verb,transitive,n_a,1
 can,poder,verb,transitive,n_a,1
-lie down and go back to sleep,acuéstese y volver a dormir,phrase,n_a,n_a,1
+lie down and go back to sleep,acuéstese y volver a dormir,phrase,n_a,person,1
 colour,color,noun,masculine,colour,1
 black,negro,adjective,n_a,colour,1
 white,blanco,adjective,n_a,colour,1
@@ -961,7 +961,6 @@ however,sin embargo,conjunction,n_a,n_a,1
 so,pues,conjunction,n_a,n_a,1
 afterwards,luego,conjunction,n_a,n_a,1
 then,entonces,conjunction,n_a,n_a,1
-fortnight,quince días,noun,masculine,time,1
 afternoon,tarde,noun,feminine,time,1
 ago,hace,adverb,n_a,time,1
 the day after tomorrow,pasado mañana,phrase,n_a,time,1
@@ -986,7 +985,7 @@ in the evening,de la tarde,phrase,n_a,time,1
 in the morning,de la mañana,phrase,n_a,time,1
 it's one o'clock,es la una,phrase,n_a,time,1
 it's two o'clock,son las dos,phrase,n_a,time,1
-quarter past five,cinco y cuarto,phrase,n_a,time,1
+quarter past five,las cinco y cuarto,phrase,n_a,time,1
 quarter to six,las seis menos cuarto,phrase,n_a,time,1
 ten to seven,las siete menos diez,phrase,n_a,time,1
 on Monday,el lunes,phrase,n_a,time,1
@@ -1170,7 +1169,6 @@ a semi-detached house,una casa adosada,phrase,n_a,home,1
 separated,separado,adjective,n_a,person,1
 single,soltero,adjective,n_a,person,1
 daughter-in-law,nuera,noun,feminine,person,1
-straight,lacio,adjective,n_a,n_a,1
 study,estudio,noun,masculine,home,1
 surname,apellido,noun,masculine,person,1
 survey,encuesta,noun,feminine,n_a,1
@@ -1629,3 +1627,5 @@ it was nothing,de nada,phrase,n_a,n_a,1
 where do you come from?,¿de dónde eres?,phrase,n_a,n_a,1
 where do you live?,¿dónde vives?,phrase,n_a,n_a,1
 I live in England,vivo en Inglaterra,phrase,n_a,n_a,1
+how do you get there?,¿cómo vas?,phrase,n_a,travel,1
+I go on foot,voy a pie,phrase,n_a,travel,1

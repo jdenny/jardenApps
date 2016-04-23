@@ -2,6 +2,7 @@ package com.jardenconsulting.spanishapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -84,6 +85,10 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
                     1, EngSpaContract.QAStyle.spokenWrittenSpaToEng);
             engSpaDAO.insertUser(engSpaUser);
         }
+		SharedPreferences sharedPreferences =
+				activity.getSharedPreferences(EngSpaActivity.TAG,
+						Context.MODE_PRIVATE);
+		this.engSpaUser.setSharedPreferences(sharedPreferences);
         this.engSpaQuiz = new EngSpaQuiz(this.engSpaDAO, this.engSpaUser);
         saveOrientation();
     }

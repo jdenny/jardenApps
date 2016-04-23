@@ -4,13 +4,14 @@ import com.jardenconsulting.spanishapp.BuildConfig;
 import com.jardenconsulting.spanishapp.EngSpaActivity;
 import com.jardenconsulting.spanishapp.R;
 
+import jarden.engspa.EngSpaUser;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.NumbersQuiz;
 import jarden.quiz.Quiz;
 import jarden.timer.Timer;
 import jarden.timer.TimerListener;
 import android.app.Activity;
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,35 +33,22 @@ import android.widget.Toast;
 public class RaceFragment extends Fragment implements TimerListener,
 		OnClickListener, OnEditorActionListener, OnLongClickListener {
 	public static final String TAG = "RaceFragment";
-	//!! private int mode; // see QuizRaceIF
 	private static final int CHASER_DELAY_TENTHS = 100;
 	// these variables don't change once setup in onCreateView:
 	private LaneView laneBView;
 	private LaneView myLaneView;
-	//!! private LaneView opponentLaneView;
 	private TextView levelBView;
 	private TextView myLevelView;
 	private EditText answerEditText;
-	//!! private TextView opponentLevelView;
-	// these variables change their values during the game:
 	private Timer timer;
-	/*!! no bluetooth - yet!
-	private BluetoothService bluetoothService;
-	*/
-	private GameData gameData = new GameData();
-	//!! private boolean clientMode = false;
 	private int laneCols;
-	private int raceLevel = 1;
+	private int raceLevel;
+	private boolean caught = false;
 	private Quiz quiz = new NumbersQuiz();
 	private EngSpaActivity engSpaActivity;
-	
-	// @SuppressWarnings("deprecation")
-	@Override // Fragment
-	public void onAttach(Context context) {
-		if (BuildConfig.DEBUG) Log.d(TAG, "onAttach()");
-		super.onAttach(context);
-		this.engSpaActivity = (EngSpaActivity) getActivity();
-	}
+	private SharedPreferences sharedPreferences;
+	private EngSpaUser engSpaUser;
+
 	@SuppressWarnings("deprecation")
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,10 +62,9 @@ public class RaceFragment extends Fragment implements TimerListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
-		this.engSpaActivity = (EngSpaActivity) getActivity();
-		//!! engSpaActivity.setTip(R.string.numbersGameTip);
+		Activity activity = getActivity();
+		this.engSpaActivity = (EngSpaActivity) activity;
         engSpaActivity.setAppBarTitle(R.string.numbersGameLit);
-
 		Resources res = getResources();
 		this.laneCols = res.getInteger(R.integer.laneCols);
 		View view = inflater.inflate(R.layout.fragment_race, container, false);
@@ -87,34 +74,19 @@ public class RaceFragment extends Fragment implements TimerListener,
 		laneBView = (LaneView) view.findViewById(R.id.laneB);
 		laneBView.setBitmapId(R.drawable.red_man);
 		levelBView = (TextView) view.findViewById(R.id.laneBLevel);
-		/*!!
-		LaneView laneCView = (LaneView) view.findViewById(R.id.laneC);
-		laneCView.setBitmapId(R.drawable.green_man);
-		TextView levelCView = (TextView) view.findViewById(R.id.laneCLevel);
-		*/
 		this.answerEditText = (EditText) view.findViewById(R.id.answerEditText);
 		this.answerEditText.setOnEditorActionListener(this);
 		Button button = (Button) view.findViewById(R.id.resetButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
-		/*!!
-		if (clientMode) {
-			myLaneView = laneCView;
-			opponentLaneView = laneAView;
-			myLevelView = levelCView;
-			opponentLevelView = levelAView;
-		} else { */
-			myLaneView = laneAView;
-			myLevelView = levelAView;
-			//!! opponentLaneView = laneCView;
-			//!! opponentLevelView = levelCView;
-		//!! }
-		/*!!
-		getActivity().getWindow().setSoftInputMode(
-			WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-		 */
-		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+		myLaneView = laneAView;
+		myLevelView = levelAView;
+		this.engSpaUser = this.engSpaActivity.getEngSpaUser();
+		this.raceLevel = this.engSpaUser.getRaceLevel();
+		showLevel();
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+				Activity.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 		nextQuestion();
 		return view;
 	}
@@ -122,7 +94,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	public void onResume() {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onResume()");
 		super.onResume();
-		if (isRunning()) {
+		if (/*isRunning()*/ !this.caught) {
 			startTimer();
 		}
 	}
@@ -139,10 +111,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 			int result = quiz.isCorrect(answer);
 			if (result == Quiz.INCORRECT) {
 				engSpaActivity.onWrongAnswer();
-				/*!!
-				vibrator.vibrate(WRONG_VIBRATE, -1);
-				soundPool.play(soundError, 1.0f, 1.0f, 0, 0, 1.5f);
-				*/
 				status = answer + " " + getResources().getString(R.string.incorrect);
 				String hint = quiz.getHint();
 				if (hint != null && hint.length() > 0) {
@@ -158,10 +126,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 					onRightAnswer(); // move player in lane
 				} else { // result must be FAIL
 					engSpaActivity.onWrongAnswer();
-					/*!!
-					vibrator.vibrate(WRONG_VIBRATE, -1);
-					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
-					*/
 					status = " Answer: " + quiz.getCorrectAnswer();
 				}
 				nextQuestion();
@@ -204,29 +168,26 @@ public class RaceFragment extends Fragment implements TimerListener,
 		super.onDestroy();
 	}
 
-	public void reset() {
-		// from QAFragment:
+	private void reset() {
 		this.raceLevel -= 2;
 		if (raceLevel < 1)
 			raceLevel = 1;
+		this.engSpaUser.setRaceLevel(raceLevel);
 		answerEditText.setText("");
 		answerEditText.requestFocus();
 		nextQuestion();
 
-		// from RaceFragment:
-		// return if reset() called before onCreateView()
 		if (myLevelView == null) {
 			if (BuildConfig.DEBUG) {
 				Log.w(TAG, "reset() called before onCreateView()");
 			}
 			return;
 		}
-		gameData = new GameData();
+		//! gameData = new GameData();
 		setLevel(raceLevel);
-		myLaneView.setStatus(GameData.RUNNING);
+		myLaneView.setCaught(false);
 		myLaneView.reset();
 		laneBView.reset();
-		//!! opponentLaneView.reset();
 		startTimer();
 	}
 	private void nextQuestion() {
@@ -236,11 +197,12 @@ public class RaceFragment extends Fragment implements TimerListener,
 			poseQuestion(spanish);
 		} catch (EndOfQuestionsException e) {
 			Log.e(TAG, "nextQuestion(); endOfQuestionsException");
+			this.engSpaActivity.setStatus("unexpected end of questions!");
 		}
 	}
 	
 	public void onRightAnswer() {
-		if (this.gameData.status != GameData.CAUGHT) {
+		if (!this.caught) {
 			int myPos = myLaneView.moveOn();
 			if (myPos >= this.laneCols) {
 				myLaneView.reset();
@@ -248,74 +210,43 @@ public class RaceFragment extends Fragment implements TimerListener,
 				setLevel(raceLevel + 1);
 				timer.setInterval(getCurrentBaddySleep());
 			}
-			gameData.position = myLaneView.getPosition();
-			//!! transmitData(gameData);
 		}
 	}
-
-	private boolean isRunning() {
-		return this.gameData != null && this.gameData.status == GameData.RUNNING;
-	}
-	
 	private void startTimer() {
 		if (this.timer != null) {
 			timer.stop();
 		}
-		this.gameData.status = GameData.RUNNING;
+		this.caught = false;
 		this.timer = new Timer(this, getCurrentBaddySleep());
 	}
-
 	@Override
 	public void onTimerEvent() {
     	// check to see if game already over before we
 		// create new runnable object:
-    	int himPos = laneBView.getPosition();
-    	if (himPos >= laneCols) return;
+    	if (laneBView.getPosition() >= laneCols) return;
 		// run code within UI thread
 		laneBView.post(new Runnable() {
             public void run() {
-                int himPos = laneBView.moveOn();
-                if (himPos >= laneCols) {
+                if (laneBView.moveOn() >= laneCols) {
                     timer.stop();
-                    myLaneView.setStatus(GameData.CAUGHT);
-                    gameData.status = GameData.CAUGHT;
-                    //!! transmitData(gameData);
-                    //!! onLost();
-					/*!!
-					vibrator.vibrate(LOST_VIBRATE, -1);
-					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
-					*/
+					myLaneView.setCaught(true);
+					caught = true;
                     engSpaActivity.onLost();
-
                 }
             }
         });
 	}
-
-	/*!! no bluetooth yet
-	private void transmitData(GameData gameData) {
-		if (this.mode == BLUETOOTH_MODE) {
-			byte[] data = new byte[3];
-			data[0] = (byte) gameData.position;
-			data[1] = (byte) gameData.level;
-			data[2] = (byte) gameData.status;
-	        if (this.bluetoothService.getState() == BluetoothService.BTState.connected) {
-				bluetoothService.write(data);
-	        } else {
-	            Toast.makeText(mainActivity, "Not connected", Toast.LENGTH_LONG).show();
-	        }
-		}
-	}
-	*/
-
 	private void setLevel(int level) {
-		String levelStr = String.valueOf(level);
+		this.raceLevel = level;
+		this.engSpaUser.setRaceLevel(raceLevel);
+		showLevel();
+	}
+	private void showLevel() {
+		String levelStr = String.valueOf(this.raceLevel);
 		myLevelView.setText(levelStr);
 		levelBView.setText(levelStr);
-		gameData.level = level;
-		raceLevel = level;
-	}
 
+	}
 	private int getCurrentBaddySleep() {
 		return (int) (CHASER_DELAY_TENTHS /
 				(1 + 0.2 * this.raceLevel));
@@ -324,29 +255,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 		this.engSpaActivity.speakSpanish(question);
         this.engSpaActivity.setTip(R.string.NumbersGameHelp);
 	}
-
-
-	/*!!
-	public void setMode(int mode) {
-		this.mode = mode;
-	}
-	*/
-
-	/*!! no bluetooth yet
-	public void setBluetoothService(BluetoothService bluetoothService) {
-		this.bluetoothService = bluetoothService;
-	}
-
-	public void onMessageRead(byte[] data) {
-		GameData gameData = new GameData(data[0], data[1], data[2]);
-		opponentLaneView.setData(gameData);
-		opponentLevelView.setText(String.valueOf(gameData.level));
-	}
-
-	public void setClientMode(boolean clientMode) {
-		this.clientMode = clientMode;
-	}
-	*/
 	@Override // OnClickListener
 	public void onClick(View view) {
 		int viewId = view.getId();

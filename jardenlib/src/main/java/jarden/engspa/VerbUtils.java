@@ -993,8 +993,11 @@ public class VerbUtils {
 	
 	/******************English verb data*****************************/
 	private static String[][] irregEnglish3rdPersonSingularPresent = {
-            {"be", "is"}, {"can", "can"}, { "do", "does"}, { "go", "goes" },
-            {"have", "has"}, {"study", "studies"}
+            {"accompany", "accompanies"}, {"be", "is"},
+            {"can", "can"}, {"carry", "carries"}, {"cry", "cries"},
+            { "do", "does"}, { "go", "goes" },
+            {"have", "has"}, {"reply", "replies"}, {"study", "studies"},
+            {"tidy", "tidies"}, {"try", "tries"}
 	};
 	private static String[][] irregEnglishPreterites = {
 		{"accompany", "accompanied"},

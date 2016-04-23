@@ -5,7 +5,10 @@ import android.content.SharedPreferences;
 import jarden.engspa.EngSpaQuiz.QuizMode;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 
-public class EngSpaUser {
+/**
+ * Created by john.denny@gmail.com on 22/04/2016.
+ */
+public class UserSettings {
 	private static final String LEARN_LEVEL_KEY = "LEARN_LEVEL";
 	private static final String LEARN_MODE_PHASE2_KEY = "LEARN_MODE_PHASE2";
 	private static final String QA_STYLE_KEY = "QA_STYLE";
@@ -13,59 +16,35 @@ public class EngSpaUser {
 	private static final String RACE_LEVEL_KEY = "RACE_LEVEL";
 
 	private SharedPreferences sharedPreferences;
-	private int userId;
-	private String userName;
-	private int userLevel = -1;
+	private int learnLevel = -1;
 	private int raceLevel = -1;
 	private QAStyle qaStyle = null;
 	private QuizMode quizMode = null;
 	private Boolean learnModePhase2 = null;
 
-	public EngSpaUser(int userId, String userName, int userLevel,
-			QAStyle qaStyle) {
-		this(userName, userLevel, qaStyle);
-		this.userId = userId;
-	}
-	public EngSpaUser(String userName, int userLevel,
-			QAStyle qaStyle) {
-		this.userName = userName;
-		this.userLevel = userLevel;
-		this.qaStyle = qaStyle;
-	}
-	public void setSharedPreferences(SharedPreferences sharedPreferences) {
+	public UserSettings(SharedPreferences sharedPreferences) {
 		this.sharedPreferences = sharedPreferences;
 	}
 	@Override
 	public String toString() {
-		return "EngSpaUser [userLevel=" + userLevel +
-				", learnModePhase2=" + learnModePhase2 +
+		return "UserSettings{" +
+				"learnLevel=" + learnLevel +
 				", raceLevel=" + raceLevel +
 				", qaStyle=" + qaStyle +
-				", quizMode=" + quizMode + "]";
+				", quizMode=" + quizMode +
+				'}';
 	}
-	public int getUserId() {
-		return userId;
+	public int getLearnLevel() {
+		if (this.learnLevel < 1) {
+			this.learnLevel = sharedPreferences.getInt(LEARN_LEVEL_KEY, 1);
+		}
+		return this.learnLevel;
 	}
-	public String getUserName() {
-		return userName;
-	}
-	public int getUserLevel() {
-		return userLevel;
-	}
-	public QAStyle getQAStyle() {
-		return qaStyle;
-	}
-	public void setQAStyle(QAStyle qaStyle) {
-		this.qaStyle = qaStyle;
-	}
-	public void setId(int userId) {
-		this.userId = userId;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public void setUserLevel(int userLevel) {
-		this.userLevel = userLevel;
+	public void setLearnLevel(int learnLevel) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(LEARN_LEVEL_KEY, learnLevel);
+		editor.apply();
+		this.learnLevel = learnLevel;
 	}
 	public int getRaceLevel() {
 		if (this.raceLevel < 1) {
@@ -91,4 +70,25 @@ public class EngSpaUser {
 		editor.apply();
 		this.learnModePhase2 = learnModePhase2;
 	}
+	public QAStyle getQAStyle() {
+		String qaStyleStr = sharedPreferences.getString(QA_STYLE_KEY, null);
+		return (qaStyleStr == null) ?
+				QAStyle.spokenWrittenSpaToEng : QAStyle.valueOf(qaStyleStr);
+	}
+	public void setQAStyle(QAStyle qaStyle) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(LEARN_LEVEL_KEY, qaStyle.name());
+		editor.apply();
+	}
+	public QuizMode getQuizMode() {
+		String quizModeStr = sharedPreferences.getString(QUIZ_MODE_KEY, null);
+		return (quizModeStr == null) ?
+				QuizMode.LEARN : QuizMode.valueOf(quizModeStr);
+	}
+	public void setQuizMode(QuizMode quizMode) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(QUIZ_MODE_KEY, quizMode.name());
+		editor.apply();
+	}
 }
+

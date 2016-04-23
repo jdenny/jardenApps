@@ -21,7 +21,7 @@ public class LaneView extends View {
 	private Paint mePaint;
 	private Bitmap meBitmap = null;
 	private int xposition = 0;
-	private int status = GameData.RUNNING;
+	private boolean caught = false;
 
 	static {
 		gridPaint = new Paint();
@@ -64,8 +64,8 @@ public class LaneView extends View {
 	public int getPosition() {
 		return this.xposition;
 	}
-	public void setStatus(int status) {
-		this.status = status;
+	public void setCaught(boolean caught) {
+		this.caught = caught;
 		invalidate();
 	}
 
@@ -82,13 +82,9 @@ public class LaneView extends View {
 		float ty =  cellSize / 2;
 		float radius = (cellSize - border) / 2;
 		canvas.drawBitmap(this.meBitmap, cellSize * xposition + 2, 2, mePaint);
-		if (this.status == GameData.CAUGHT) {
+		//! if (this.status == GameData.CAUGHT) {
+		if (this.caught) {
 			canvas.drawLine(tx - radius, ty + radius, tx + radius, ty - radius, gridPaint);
 		}
-	}
-	public void setData(GameData gameData) {
-		this.xposition = gameData.position;
-		this.status = gameData.status;
-		this.invalidate();
 	}
 }
