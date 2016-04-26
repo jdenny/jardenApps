@@ -10,6 +10,14 @@
 
     <color name="samOrange">#f8c233</color>
     <color name="samRed">#df4241</color>
-    <!--<color name="samBlue">#1b53af</color>-->
-    <color name="samBlue">#3F51B5</color>
+    <color name="samBlue">#1b53af</color>
+    <color name="samBlue2">#3F51B5</color>
+
+    <color name="materialRed">#F44336</color>
+    <color name="materialAmber">#FFC107</color>
+    <color name="materialBlue">#2196F3</color>
+
+    <color name="spanishRed">#F44336</color>
+    <color name="spanishAmber">#FFC107</color>
+    <color name="spanishBlue">#0D47A1</color>
 </resources>

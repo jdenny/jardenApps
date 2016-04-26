@@ -17,6 +17,16 @@
             <option value="$PROJECT_DIR$/spanish" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/bluetoothapplib" />
+            <option value="$PROJECT_DIR$/drawerdemo" />
+            <option value="$PROJECT_DIR$/hotbridge" />
+            <option value="$PROJECT_DIR$/jardenlib" />
+            <option value="$PROJECT_DIR$/spanish" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

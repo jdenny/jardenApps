@@ -47,7 +47,6 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
 		engSpaActivity.setTip(R.string.WordLookupTip);
-        engSpaActivity.setAppBarTitle(R.string.wordLookupLit);
 
 		View rootView = inflater.inflate(R.layout.fragment_word_lookup, container, false);
 		this.spanishLookupEditText = (EditText) rootView.findViewById(R.id.spanishLookupEditText);

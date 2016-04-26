@@ -64,7 +64,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		Activity activity = getActivity();
 		this.engSpaActivity = (EngSpaActivity) activity;
-        engSpaActivity.setAppBarTitle(R.string.numbersGameLit);
 		Resources res = getResources();
 		this.laneCols = res.getInteger(R.integer.laneCols);
 		View view = inflater.inflate(R.layout.fragment_race, container, false);

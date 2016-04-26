@@ -100,11 +100,6 @@ public class DocumentTextView {
         }
         return true;
 	}
-    /*!!
-    public void setOnShowPageListener(OnShowPageListener onShowPageListener) {
-        this.onShowPageListener = onShowPageListener;
-    }
-    */
     private SpannableStringBuilder getSpannable(String src, String pageName) {
 		int index = 0;
 		int startIndex; // index of '[' in [tag]

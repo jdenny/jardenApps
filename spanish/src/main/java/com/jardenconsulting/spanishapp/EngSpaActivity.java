@@ -1,10 +1,10 @@
 package com.jardenconsulting.spanishapp;
 
+import android.content.SharedPreferences;
+
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
-
-//!! import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
 	EngSpaDAO getEngSpaDAO();
@@ -18,7 +18,7 @@ public interface EngSpaActivity {
 	 */
 	int getQuestionSequence();
 	
-	//!! SharedPreferences getSharedPreferences();
+	SharedPreferences getSharedPreferences();
 
 	/**
 	 * Vibrate and play soundError.
@@ -29,8 +29,6 @@ public interface EngSpaActivity {
 	 * Vibrate and play soundError.
 	 */
 	void onWrongAnswer();
-    void setAppBarTitle(int resId);
-    void setAppBarTitle(String title);
 	void setProgressBarVisible(boolean visible);
 
 	/**
@@ -59,8 +57,6 @@ public interface EngSpaActivity {
 	 * @param spanish
 	 */
 	void speakSpanish(String spanish);
-
-	String TAG = "MainActivity";
 }
 
 

@@ -22,8 +22,7 @@ public class UserDialog extends DialogFragment
 	private EditText userLevelEditText;
 	private UserSettingsListener userSettingsListener;
 	private AlertDialog alertDialog;
-	private CheckBox allCheckBox;
-	
+
 	public interface UserSettingsListener {
         void onUpdateUserLevel(int userLevel);
 		EngSpaUser getEngSpaUser();
@@ -44,16 +43,13 @@ public class UserDialog extends DialogFragment
 		builder.setTitle(R.string.userSettingsStr);
 		View view = inflater.inflate(R.layout.dialog_user, null);
 		this.userLevelEditText = (EditText) view.findViewById(R.id.userLevelEditText);
-		this.allCheckBox = (CheckBox) view.findViewById(R.id.allCheckBox);
-		allCheckBox.setOnCheckedChangeListener(this);
 		EngSpaUser user = userSettingsListener.getEngSpaUser();
 		if (user == null) {
 			// if it's a new engSpaUser, the user must supply the values
 			setCancelable(false);
 		} else {
-			int userLevel = user.getUserLevel();
+			int userLevel = user.getLearnLevel();
 			userLevelEditText.setText(String.valueOf(userLevel));
-			if (userLevel == EngSpaQuiz.USER_LEVEL_ALL) this.allCheckBox.setChecked(true);
 			// cancel button provided only for updates
 			builder.setNegativeButton(R.string.cancelStr, this);
 		}
@@ -74,14 +70,11 @@ public class UserDialog extends DialogFragment
 			positiveButton.setEnabled(false);
 			String userLevelStr = userLevelEditText.getText().toString();
 			int userLevel;
-			if (allCheckBox.isChecked()) userLevel = EngSpaQuiz.USER_LEVEL_ALL;
-			else {
-				try {
-					userLevel = Integer.parseInt(userLevelStr);
-				} catch (NumberFormatException nfe) {
-					userLevel = -1;
-				}
-			}
+            try {
+                userLevel = Integer.parseInt(userLevelStr);
+            } catch (NumberFormatException nfe) {
+                userLevel = -1;
+            }
             this.userSettingsListener.onUpdateUserLevel(userLevel);
 		}
 	}

@@ -61,34 +61,26 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
         setRetainInstance(true);
         this.vibrator = (Vibrator) getActivity().getSystemService(
                 FragmentActivity.VIBRATOR_SERVICE);
-		// requires API 21 or above:
-//		AudioAttributes audioAttributes = new AudioAttributes.Builder()
-//				.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//				.setUsage(AudioAttributes.USAGE_GAME)
-//				.build();
-//		this.soundPool = new SoundPool.Builder()
-//				.setMaxStreams(2)
-//				.setAudioAttributes(audioAttributes)
-//				.build();
-//		Activity activity = getActivity();
-//		this.soundError = soundPool.load(activity, R.raw.error, 1);
-//		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
+		/* requires API 21 or above:
+		AudioAttributes audioAttributes = new AudioAttributes.Builder()
+				.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+				.setUsage(AudioAttributes.USAGE_GAME)
+				.build();
+		this.soundPool = new SoundPool.Builder()
+				.setMaxStreams(2)
+				.setAudioAttributes(audioAttributes)
+				.build();
+		Activity activity = getActivity();
+		this.soundError = soundPool.load(activity, R.raw.error, 1);
+		this.soundLost = soundPool.load(activity, R.raw.lost, 1);
+		*/
         this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
         Activity activity = getActivity();
         this.engSpaActivity = (EngSpaActivity) activity;
         this.soundError = soundPool.load(activity, R.raw.error, 1);
         this.soundLost = soundPool.load(activity, R.raw.lost, 1);
         this.engSpaDAO = engSpaActivity.getEngSpaDAO();
-        this.engSpaUser = engSpaDAO.getUser();
-        if (this.engSpaUser == null) { // i.e. no user yet on database
-            this.engSpaUser = new EngSpaUser("your name",
-                    1, EngSpaContract.QAStyle.spokenWrittenSpaToEng);
-            engSpaDAO.insertUser(engSpaUser);
-        }
-		SharedPreferences sharedPreferences =
-				activity.getSharedPreferences(EngSpaActivity.TAG,
-						Context.MODE_PRIVATE);
-		this.engSpaUser.setSharedPreferences(sharedPreferences);
+		this.engSpaUser = new EngSpaUser(this.engSpaActivity.getSharedPreferences());
         this.engSpaQuiz = new EngSpaQuiz(this.engSpaDAO, this.engSpaUser);
         saveOrientation();
     }
@@ -157,20 +149,6 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     }
     private void saveOrientation() {
         this.orientation = getResources().getConfiguration().orientation;
-    }
-    /**
-     * update engSpaUser.
-     * @return true if level changed
-     */
-    public boolean setUserLevel(int userLevel) {
-        userLevel = this.engSpaDAO.validateUserLevel(userLevel);
-        if (userLevel == engSpaUser.getUserLevel()) {
-            engSpaActivity.setStatus(R.string.userNotChanged);
-            return false;
-        }
-        engSpaUser.setUserLevel(userLevel);
-        engSpaDAO.updateUserLevel(userLevel);
-        return true;
     }
     public EngSpaUser getEngSpaUser() {
         return this.engSpaUser;

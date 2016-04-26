@@ -5,14 +5,7 @@ import java.util.List;
 public interface EngSpaDAO {
 	int getDictionarySize();
 	int getMaxUserLevel();
-    int validateUserLevel(int userLevel);
 
-	EngSpaUser getUser();
-	long insertUser(EngSpaUser engSpaUser);
-	int updateUser(EngSpaUser engSpaUser);
-    int updateUserLevel(int level);
-	int deleteUser(EngSpaUser engSpaUser);
-	
 	/**
 	 * Delete all existing EngSpa rows and insert new rows
 	 * from contentValues. Return number of rows added.
@@ -39,12 +32,9 @@ public interface EngSpaDAO {
 	List<EngSpa> findWordsByTopic(String topic);
 	
 	/**
-	 * if userId < 1: return all fails
-	 * else: return fails for specified user
-	 * @param userId
-	 * @return
+	 * return all fails
 	 */
-	List<EngSpa> getFailedWordList(int userId);
+	List<EngSpa> getFailedWordList();
 	long insertUserWord(UserWord userWord);
 	int updateUserWord(UserWord userWord);
 	int deleteUserWord(UserWord userWord);
@@ -56,10 +46,8 @@ public interface EngSpaDAO {
 	long replaceUserWord(UserWord userWord);
 	/**
 	 * 
-	 * @param userId if < 1 then delete all user words
-	 *  else delete all users words for specified user.
 	 * @return number of rows deleted
 	 */
-	int deleteAllUserWords(int userId);
+	int deleteAllUserWords();
 
 }

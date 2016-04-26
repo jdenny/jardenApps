@@ -66,7 +66,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		BaseColumns._ID +          " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
 		NAME +      " TEXT NOT NULL, " +
 		LEVEL +     " INTEGER, " +
-		QA_STYLE + " TEXT NOT NULL);";
+		QA_STYLE +  " TEXT NOT NULL);";
 	private static final String CREATE_USER_WORD_TABLE =
 		"CREATE TABLE " + USER_WORD_TABLE + " (" +
 		USER_ID +   " INTEGER NOT NULL, " +
@@ -107,8 +107,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		// or: delete from SQLITE_SEQUENCE where NAME = '" + TABLE + "'"
 
 	private static final String SELECTION = BaseColumns._ID + "=?";
-	private static final String USER_WORD_SELECTION = USER_ID + "=? and " + WORD_ID + "=?";
-	private static final String USER_SELECTION = USER_ID + "=?";
+	private static final String USER_WORD_SELECTION = USER_ID + "=1 and " + WORD_ID + "=?";
 
 	private Context context;
 	private int dictionarySize = 0;
@@ -255,73 +254,25 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		}
 		return rows;
 	}
-	
-	// methods for User table: ****************************************
-	@Override // EngSpaDAO
-	public long insertUser(EngSpaUser engSpaUser) {
-		return getWritableDatabase().insert(
-				USER_TABLE, null, getContentValues(engSpaUser));
-	}
-	private static ContentValues getContentValues(EngSpaUser engSpaUser) {
-		ContentValues contentValues = new ContentValues();
-		// TODO: currently only supports one user, so this doesn't matter
-		//?? contentValues.put(BaseColumns._ID, engSpaUser.getUserId());
-		contentValues.put(NAME, engSpaUser.getUserName());
-		contentValues.put(LEVEL, engSpaUser.getUserLevel());
-		contentValues.put(QA_STYLE, engSpaUser.getQAStyle().toString());
-		return contentValues;
-	}
-    private static ContentValues getContentValues(int userLevel) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(LEVEL, userLevel);
-        return contentValues;
-    }
-	@Override // EngSpaDAO
-	public int updateUser(EngSpaUser engSpaUser) {
-		return getWritableDatabase().update(
-				USER_TABLE,
-				getContentValues(engSpaUser),
-				"_id=?",
-				getSelectionArgs(engSpaUser) );
-	}
-    @Override // EngSpaDAO
-    public int updateUserLevel(int level) {
-        return getWritableDatabase().update(
-                USER_TABLE,
-                getContentValues(level),
-                "_id=1",
-                null );
-    }
-	private static String[] getSelectionArgs(EngSpaUser engSpaUser) {
-		return new String[] {Integer.toString(engSpaUser.getUserId())};
-	}
-	@Override // EngSpaDAO
-	public int deleteUser(EngSpaUser engSpaUser) {
-		return getWritableDatabase().delete(
-				USER_TABLE,
-				"_id=?", // selection
-				getSelectionArgs(engSpaUser) );
-	}
 
 	// methods for UserWord table: **********************************************
 	@Override // EngSpaDAO
-	public List<EngSpa> getFailedWordList(int userId) {
+	public List<EngSpa> getFailedWordList() {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"getFailedWordList(userId=" + userId + ")");
+				"getFailedWordList()");
 		Cursor cursor = null;
 		try {
 			cursor = getReadableDatabase().query(
 					FAILED_WORD_VIEW,
 					PROJECTION_ALL_FAILED_WORD_FIELDS,
-					USER_SELECTION, // selection
-					getUserSelectionArgs(userId), // selectionArgs
+					null, // selection
+					null, // getUserSelectionArgs(userId), // selectionArgs
 					null, // groupBy
 					null, // having
 					null); // orderBy
 			List<EngSpa> wordList = new LinkedList<EngSpa>();
 			while (cursor.moveToNext()) {
 				EngSpa engSpa = engSpaFromCursor(cursor);
-				engSpa.setUserId(userId);
 				engSpa.setConsecutiveRightCt(cursor.getInt(7));
 				engSpa.setQuestionSequence(cursor.getInt(8));
 				String qaStyleStr = cursor.getString(9); 
@@ -345,7 +296,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	private static ContentValues getContentValues(UserWord userWord) {
 		ContentValues userWordValues = new ContentValues();
-		userWordValues.put(USER_ID, userWord.getUserId());
+		userWordValues.put(USER_ID, 1);
 		userWordValues.put(WORD_ID, userWord.getWordId());
 		userWordValues.put(CONSEC_RIGHT_CT, userWord.getConsecutiveRightCt());
 		userWordValues.put(QUESTION_SEQUENCE, userWord.getQuestionSequence());
@@ -369,12 +320,8 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 
 	private static String[] getSelectionArgs(UserWord userWord) {
 		return new String[] {
-			Integer.toString(userWord.getUserId()),
 			Integer.toString(userWord.getWordId())
 		};
-	}
-	private String[] getUserSelectionArgs(int userId) {
-		return new String[] { Integer.toString(userId) };
 	}
 
 	@Override // EngSpaDAO
@@ -386,16 +333,11 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	
 	@Override // EngSpaDAO
-	public int deleteAllUserWords(int userId) {
+	public int deleteAllUserWords() {
 		String selection;
 		String[] selectionArguments;
-		if (userId < 1) {
-			selection = null;
-			selectionArguments = null;
-		} else {
-			selection = USER_SELECTION;
-			selectionArguments = getUserSelectionArgs(userId);
-		}
+        selection = null;
+        selectionArguments = null;
 		return getWritableDatabase().delete(
 				USER_WORD_TABLE,
 				selection,
@@ -556,49 +498,5 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public int getMaxUserLevel() {
 		return getDictionarySize() / EngSpaQuiz.WORDS_PER_LEVEL;
-	}
-    /**
-     * if userLevel > maximum, based on size of dictionary,
-     * replace with USER_LEVEL_ALL.
-     * @param userLevel
-     * @return
-     */
-    public int validateUserLevel(int userLevel) {
-        int maxUserLevel = getMaxUserLevel();
-        if (userLevel > maxUserLevel) {
-            userLevel = EngSpaQuiz.USER_LEVEL_ALL;
-        }
-        return userLevel;
-    }
-
-
-    // TODO: maybe pass user name as param, rather than 1st user
-	@Override // EngSpaDAO
-	public EngSpaUser getUser() {
-		Cursor cursor = null;
-		EngSpaUser user = null;
-		try {
-			cursor = getReadableDatabase().query(
-					USER_TABLE,
-					PROJECTION_ALL_USER_FIELDS,
-					null, // selection
-					null, // selectionArgs
-					null, // groupBy
-					null, // having
-					null); // orderBy
-			if (cursor.moveToFirst()) {
-				int userId = cursor.getInt(0);
-				String userName = cursor.getString(1);
-				int userLevel = cursor.getInt(2);
-				String qaStyleStr = cursor.getString(3);
-				QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
-				user = new EngSpaUser(userId, userName, userLevel,
-						qaStyle);
-				Log.i(TAG, "getUser() retrieved from database: " + user);
-			}
-			return user;
-		} finally {
-			if (cursor != null) cursor.close();
-		}
 	}
 }

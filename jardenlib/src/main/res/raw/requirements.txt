@@ -39,6 +39,58 @@ possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
 	as done by EngSpaQuiz2
 
 SPANISH
+Main Quiz Logic ************************************************
+clean open of app
+	getUser (level, quizMode, qaStyle)
+	new EngSpaQuiz(DAO, user)
+		save DAO & user
+		modeInitialised = false
+	quiz.resetMode()
+		get questions based on user settings
+	open engSpaFragment
+	engSpaFrag.askQuestion(true), i.e. get and ask next question
+
+set level or set quizMode
+	quiz.reset
+
+engSpaFragment.onResume
+	nothing!
+
+significant events:
+	new Quiz
+	quiz.setQuizMode
+	new EngSpaFragment (from mainActivity)
+	engSpaFra.createView - savedInstance may be null or not
+	engSpaFra -> getNextQuestion
+
+	from users viewpoint
+		start app from scratch
+		return to app after other app, rotate, timeout
+		change level or quizMode
+Notes: may not use Quiz! (audio mode or numbers game or word lookup)
+
+Proposed Design
+---------------
+remove USER_LEVEL_ALL; in userDialog, if number too big:
+	"level > maximum; to include words from all levels, select
+	practice mode from main menu"
+
+new EngSpaQuiz: modeInitialised = false
+EngSpaQuiz.setLevel
+	can't set level to 1 if practice or audio mode
+	modeInitialised = false
+EngSpaQuiz.setQuizMode(mode)
+	modeInitialised = false
+	engSpaUser.setQuizMode(mode)
+EngSpaQuiz.getNextQuestion
+	if (!modeInitialised)
+		resetMode (including Topic mode)
+		modeInitialised = true
+MainActivity.selectMode
+	can't select learnMode if level > maxLevel
+
+End of main Quiz Logic *****************************************
+
 New ideas on qaStyle: *************************************************
 qaStyle:
 	1. spoken & written spa-eng (was 5)
@@ -55,10 +107,10 @@ learn mode; CFPCF; for each level:
 		based on user.qaStyle
 		NOTE: current code uses same style as C for P
 	F = fails, using style saved in failed word
-practice mode (only applicable where userLevel > 1)
+practice mode (only applicable where learnLevel > 1)
 	PF, where P & F same as learn mode
 	does not progress levels
-audio mode: (userLevel > 1)
+audio mode: (learnLevel > 1)
 	speaks both english and spanish with pauses
 	P = as for learn mode
 topic mode; CFPCF:
@@ -74,7 +126,7 @@ Summary
 
 
 new navigation drawer:
-	learn mode: CFPCF; current from userLevel
+	learn mode: CFPCF; current from learnLevel
 	----------
 	question style
 	topic mode: CF[PCF]; current from topic
@@ -89,7 +141,7 @@ learn mode design
 	EngSpaQuiz
 		setMode(learnMode)
 			set cfpList to CFPCF
-			get current words at userLevel
+			get current words at learnLevel
 			get failed words
 		setMode(practiceMode)
 			set cfpList to PF
@@ -122,9 +174,10 @@ strategy
 	add audio mode; try it alternating
 
 end of New ideas on qaStyle: *************************************************
+* both fields can be red on word lookup!
+* check Log messages; check TODOs
 * put new screen shots onto developer console
 * don't repeat speech after rotate
-* both fields can be red on word lookup!
 * status option: level, quizMode, qaStyle, fails, currents
 * Can lose track of question count
 * At end of level can ask question twice
@@ -149,6 +202,7 @@ Should faltar be lack rather than miss?
 	add new class that holds level, raceLevel, qaStyle, quizMode,
 		learnModePhase (1 or 2)
 	keeps in sync with sharedPreferences
+	done except for database!
 * help fragment creating document text view every time; use retain instance etc;
 * rename numbers game to gato y ratón
 * all fragments should survive screen rotation
@@ -288,7 +342,7 @@ Original design spec:
 IMPROVEMENTS OVER AMAZEQUIZ
 random files of Spanish now on SQLite database
 proper concept of levels for PresetQuiz
-userLevel held on database
+learnLevel held on database
 improved algorithm for choosing next question
 	user decides how many goes to have per word
 	number of required rights based on number of wrongs
