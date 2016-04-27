@@ -271,8 +271,12 @@ public class MainActivity extends AppCompatActivity
 		Log.d(TAG, "onNavigationItemSelected(menuItem.id=" + id + ")");
 		EngSpaQuiz engSpaQuiz = getEngSpaQuiz();
 		if (id == R.id.qaStyle) {
-			if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
-			this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
+            if (getEngSpaUser().getQuizMode() == QuizMode.LEARN) {
+                showAlertDialog(R.string.questionStyleError);
+            } else {
+                if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
+                this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
+            }
 		} else if (id == R.id.topicMode) {
 			showTopicDialog();
 		} else if (id == R.id.wordLookup) {
@@ -282,25 +286,24 @@ public class MainActivity extends AppCompatActivity
 		} else if (id == R.id.learnMode) {
 			engSpaQuiz.setQuizMode(QuizMode.LEARN);
 			showFragment(FragmentTag.ENGSPA);
-            setAppBarTitle("Learn Mode");
+            setAppBarTitle("LEARN Mode");
 		} else if (id == R.id.exit) {
 			super.onBackPressed();
 		} else if (id == R.id.audioMode) {
 			int level = getEngSpaUser().getLearnLevel();
 			if (level < 2) {
-				showAlertDialog(R.string.audioMode);
+				showAlertDialog(R.string.userLevelErrorAudio);
 			} else {
                 showAudioModeDialog();
-                // TODO: remove QuizMode.AUDIO
 			}
 		} else if (id == R.id.practiceMode) {
 			int level = getEngSpaUser().getLearnLevel();
 			if (level < 2) {
-				showAlertDialog(R.string.practiceMode);
+				showAlertDialog(R.string.userLevelErrorPractice);
 			} else {
 				engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
 				showFragment(FragmentTag.ENGSPA);
-                setAppBarTitle("Practice Mode");
+                setAppBarTitle("PRACTICE Mode");
 			}
 		} else {
 			Log.e(TAG, "unrecognised drawer menu item id: " + id);
@@ -309,14 +312,16 @@ public class MainActivity extends AppCompatActivity
         setAppBarTitle();
 		return true;
 	}
-	private void showAlertDialog(int titleRes) {
+    private void showAlertDialog(int messageId) {
+        showAlertDialog(getString(messageId));
+    }
+	private void showAlertDialog(String message) {
 		if (this.alertDialog == null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.userLevelError)
-					.setPositiveButton("OK", null);
+			builder.setPositiveButton("OK", null);
 			this.alertDialog = builder.create();
 		}
-		this.alertDialog.setTitle(titleRes);
+		this.alertDialog.setMessage(message);
 		this.alertDialog.show();
 
 	}
@@ -570,7 +575,8 @@ public class MainActivity extends AppCompatActivity
 			return;
 		}
 		QuizMode quizMode = getEngSpaUser().getQuizMode();
-		if (userLevel == 1 && (quizMode == QuizMode.PRACTICE || quizMode == QuizMode.AUDIO)) {
+        //!! if (userLevel == 1 && quizMode == (QuizMode.PRACTICE || quizMode == QuizMode.AUDIO)) {
+		if (userLevel == 1 && quizMode == QuizMode.PRACTICE) {
 			this.statusTextView.setText(R.string.invalidUserLevelForMode);
 			return;
 		}
@@ -637,15 +643,14 @@ public class MainActivity extends AppCompatActivity
 		this.viewlessFragment.speakSpanish(spanish);
 	}
     private void setAppBarTitle() {
-        // TODO: add to quizMode a title attribute
         EngSpaUser engSpaUser =  getEngSpaUser();
         QuizMode quizMode = engSpaUser.getQuizMode();
         String title = "Revise Spanish"; // TODO: use String resources
         if (currentFragmentTag == FragmentTag.WORD_LOOKUP) title = "Word Lookup";
         else if (currentFragmentTag == FragmentTag.NUMBER_GAME) title = "Numbers Game";
         else { // must be ENGSPA
-            if (quizMode == QuizMode.AUDIO) title = "Audio Mode";
-            else if (quizMode == QuizMode.PRACTICE) title = "Practice Mode";
+            /*!!if (quizMode == QuizMode.AUDIO) title = "Audio Mode";
+            else*/ if (quizMode == QuizMode.PRACTICE) title = "Practice Mode";
             else if (quizMode == QuizMode.TOPIC) title = engSpaUser.getTopic();
             else if (quizMode == QuizMode.LEARN) title = "Learn Mode";
         }

@@ -174,11 +174,11 @@ strategy
 	add audio mode; try it alternating
 
 end of New ideas on qaStyle: *************************************************
+* update engspa.txt; finish google doc and add highlights to playstore; publish to public!
 * both fields can be red on word lookup!
 * check Log messages; check TODOs
-* put new screen shots onto developer console
-* don't repeat speech after rotate
-* status option: level, quizMode, qaStyle, fails, currents
+* Padding around text
+
 * Can lose track of question count
 * At end of level can ask question twice
 * follow Material design patterns: layout, fonts, icons,
@@ -186,13 +186,10 @@ end of New ideas on qaStyle: *************************************************
 * Back from numbers sometimes exits app
 * Long press should turn on showHelp
 * should audio mode continue after screen turns off?
-* Padding around text
 Sam-style progress bar
 ! at beginning of imperatives; see engSpaFragment.normalise()
 try answer field without single line
-Add more mf's eg soltero,
 Spoken numbers don't work come out as eg 5 not cinco
-Delete button appears when you start typing
 Numbers game: pass button; in field width.
 margins
 

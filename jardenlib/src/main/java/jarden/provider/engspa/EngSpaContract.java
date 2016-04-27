@@ -25,7 +25,7 @@ public final class EngSpaContract {
 	public static final String USER_TABLE = "User";
 	public static final String CONTENT_URI_USER_STR = "content://" +
 			AUTHORITY  + "/" + USER_TABLE;
-	public static final Uri CONTENT_URI_USER = Uri.parse(CONTENT_URI_USER_STR);
+	//!! public static final Uri CONTENT_URI_USER = Uri.parse(CONTENT_URI_USER_STR);
 	public static final String NAME = "name";
 	// TODO: change literal to "qaStyle" next time we update database
 	public static final String QA_STYLE = "questionStyle";
@@ -43,9 +43,11 @@ public final class EngSpaContract {
 	public static final String WORD_ID = "wordId";
 	public static final String CONSEC_RIGHT_CT = "consecutiveRightCt";
 	public static final String QUESTION_SEQUENCE = "questionSequence";
+    /*!!
 	public static final String[] PROJECTION_ALL_USER_WORD_FIELDS = {
 		USER_ID, WORD_ID, CONSEC_RIGHT_CT, QUESTION_SEQUENCE, QA_STYLE
 	};
+	*/
 	public static final String[] PROJECTION_ALL_FAILED_WORD_FIELDS = {
 		BaseColumns._ID, ENGLISH, SPANISH, WORD_TYPE, QUALIFIER,
 		ATTRIBUTE, LEVEL,
@@ -54,7 +56,7 @@ public final class EngSpaContract {
 	public static final String FAILED_WORD_VIEW = "FailedWordView";
 	
 	public enum VoiceText {
-		voice, text, both;
+		voice, text, both
 	}
 	public enum QAStyle {
         spokenWrittenSpaToEng("1. Spoken & Written Spa→Eng", VoiceText.both, true, false),

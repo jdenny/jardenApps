@@ -208,14 +208,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private void showStats() {
 		int fwct = engSpaQuiz.getFailedWordCount();
         int cwct = engSpaQuiz.getCurrentWordCount();
-        StringBuilder sb = new StringBuilder("L=");
+        StringBuilder sb = new StringBuilder("Level=");
         sb.append(Integer.toString(engSpaUser.getLearnLevel()));
         if (engSpaUser.getQuizMode() == QuizMode.LEARN) {
             sb.append(engSpaUser.isLearnModePhase2() ? 'B' : 'A');
         }
-        if (cwct >= 0) sb.append("; C=" + cwct);
-        if (fwct >= 0) sb.append("; F=" + fwct);
-        // TODO: also show qaStyle
+        //?? sb.append("; S=" + engSpaUser.getQAStyle().ordinal());
+        if (cwct >= 0) sb.append(" Current=" + cwct);
+        if (fwct >= 0) sb.append(" Fails=" + fwct);
 		this.currentCtTextView.setText(sb.toString());
 		if (BuildConfig.DEBUG) {
 			String debugState = engSpaQuiz.getDebugState();
@@ -261,7 +261,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		
 		// get qaStyle:
 		// 	if failed word: from question
-		//  else if Learn mode: qaStyle 2 or 3 depending on phase
+		//  else if LEARN mode: qaStyle 2 or 3 depending on phase
 		//  otherwise: from user
 		this.currentQAStyle = engSpaQuiz.getQAStyleFromQuestion();
 		if (this.currentQAStyle == null) { // i.e. if it's not a failed word

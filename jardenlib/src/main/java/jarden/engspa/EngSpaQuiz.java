@@ -20,7 +20,7 @@ import jarden.quiz.Quiz;
 public class EngSpaQuiz extends Quiz {
 
     public enum QuizMode {
-        LEARN, TOPIC, PRACTICE, AUDIO
+        LEARN, TOPIC, PRACTICE //!! , AUDIO
     }
 	public static final int WORDS_PER_LEVEL = 10;
 
@@ -31,7 +31,7 @@ public class EngSpaQuiz extends Quiz {
 	private static final char[] LEARN_CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
 	private static final char[] TOPIC_CFP_LIST = {'C', 'F'};
     private static final char[] PRACTICE_CFP_LIST = {'P', 'F'};
-    private static final char[] AUDIO_CFP_LIST = {'P'};
+    //!! private static final char[] AUDIO_CFP_LIST = {'P'};
 	private char[] cfpList;
 	
 	private String spanish;
@@ -252,9 +252,10 @@ public class EngSpaQuiz extends Quiz {
             initWordsForLearn();
         } else if (quizMode == QuizMode.PRACTICE)  {
             initWordsForPractice();
+        /*!!
         } else if (quizMode == QuizMode.AUDIO)  {
             this.cfpList = AUDIO_CFP_LIST;
-            this.cfpListIndex = 0;
+            this.cfpListIndex = 0; */
         } else if (quizMode == QuizMode.TOPIC) {
             initWordsForTopic();
         }
@@ -348,7 +349,7 @@ public class EngSpaQuiz extends Quiz {
         es = engSpaDAO.getRandomPassedWord(level);
         int wordId = es.getWordId();
         int maxId = (level - 1) * WORDS_PER_LEVEL;
-        for (int i = 0; isRecentWord(es) && i < 4; i++) { // TODO: should this be 3?
+        for (int i = 0; isRecentWord(es) && i < 3; i++) {
             wordId++;
             if (wordId > maxId) wordId -= WORDS_PER_LEVEL;
             es = engSpaDAO.getWordById(wordId);

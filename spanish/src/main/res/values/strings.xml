@@ -34,6 +34,10 @@
     <string name="pauseTime">Pause (seconds)</string>
     <string name="pauseTimeDefault">3</string>
     <string name="play">Play</string>
+    <string name="questionStyleError">
+        Question Style does not apply to Learn Mode,
+        only Practice Mode and Topic Mode
+    </string>
     <string name="reloadingDB">Loading new dictionary version - please be patient with us!</string>
     <string name="resetStr">Reset</string>
     <string name="showHelp">Show Help</string>
@@ -51,9 +55,13 @@
     <string name="update">Update</string>
     <string name="setUserLevel">Set User level</string>
     <string name="learnLevel">User level</string>
-    <string name="userLevelError">
-        User level must be at least 2 for this feature; you can increase
-        your levels in Learn mode
+    <string name="userLevelErrorAudio">
+        User level must be at least 2 for Audio Mode; you can increase
+        your levels in Learn Mode
+    </string>
+    <string name="userLevelErrorPractice">
+        User level must be at least 2 for Practice Mode;
+        you can increase your levels in Learn Mode
     </string>
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
