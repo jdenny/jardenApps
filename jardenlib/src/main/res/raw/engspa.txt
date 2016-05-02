@@ -48,6 +48,7 @@ excuse me,perdón,phrase,n_a,n_a,1
 speak,hablar,verb,transIntrans,n_a,1
 Spanish,español,adjective,n_a,language,1
 wine,vino,noun,masculine,drink,1
+slowly,despacio,adverb,n_a,n_a,1
 book,libro,noun,masculine,n_a,1
 letter,carta,noun,feminine,n_a,1
 write,escribir,verb,transIntrans,n_a,1
@@ -69,10 +70,12 @@ tomato,tomate,noun,masculine,food,1
 lunch,almuerzo,noun,masculine,food,1
 strawberry,fresa,noun,feminine,food,1
 lemon,limón,noun,masculine,food,1
+can you speak more slowly please,puede hablar más despacio por favor,phrase,n_a,n_a,1
 food,comida,noun,feminine,food,1
 potato,patata,noun,feminine,food,1
 sauce,salsa,noun,feminine,food,1
 onion,cebolla,noun,feminine,food,1
+please repeat that,por favor repita eso,phrase,n_a,n_a,1
 dinner,cena,noun,feminine,food,1
 breakfast,desayuno,noun,masculine,food,1
 sugar,azúcar,noun,masculine,food,1
@@ -337,6 +340,7 @@ journey,viaje,noun,masculine,travel,1
 rent,alquilar,verb,transitive,home,1
 car,coche,noun,masculine,travel,1
 round trip,ida y vuelta,phrase,n_a,travel,1
+ticket,billete,noun,masculine,travel,1
 do you have any rooms free?,¿tiene habitaciones libres?,phrase,n_a,travel,1
 I'd like a single room,quisiera una habitación individual,phrase,n_a,travel,1
 I'd like to stay here for two nights,quisiera quedarme aquí dos noches,phrase,n_a,travel,1
@@ -1524,13 +1528,12 @@ stadium,estadio,noun,masculine,building,1
 suburb,suburbio,noun,masculine,place,1
 residential,residencial,adjective,n_a,place,1
 suitcase,maleta,noun,feminine,travel,1
-summer camp,campamento de verano,noun,feminine,place,1
+summer camp,campamento de verano,noun,masculine,place,1
 supplement,suplemento,noun,masculine,size,1
 taxi,taxi,noun,masculine,travel,1
 telephone card,tarjeta telefónica,noun,feminine,n_a,1
 tennis court,cancha de tenis,noun,feminine,place,1
 theme park,parque temático,noun,masculine,place,1
-ticket,billete,noun,masculine,travel,1
 ticket office,despacho de billetes,noun,masculine,place,1
 timetable,horario,noun,masculine,travel,1
 to be situated,estar situado,phrase,n_a,n_a,1

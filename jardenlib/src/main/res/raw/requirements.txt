@@ -6,6 +6,8 @@ Fun
 	publish Revise Spanish
 	singing, dancing
 Required
+	Android course into Studio
+	Window bar
 	Emails
 	Tidy desk
 	Mow lawn
@@ -174,7 +176,31 @@ strategy
 	add audio mode; try it alternating
 
 end of New ideas on qaStyle: *************************************************
-* update engspa.txt; finish google doc and add highlights to playstore; publish to public!
+	/*
+	currentWordList != null
+	QuizMode
+		Learn
+			P can't be in current
+			C already removed
+			F phase1, could be in current? so delete from current
+			F phase2, don't want to delete, as now eng->spa
+		Topic
+			P can be in current, so delete
+			C already removed
+			F can also be in current, so delete from current
+	 */
+	/*!!
+	if (currentWordList != null) {
+		currentWordList.remove(currentWord); // remove if in list
+	}
+	*/
+
+* design document!
+* phrase generator! e.g. I go to the city by bus
+	conjugate go; use any place, not just city; metro, bike, car, coach etc;
+	see page 39 of GCSE book
+	go to [place,noun] by [travel] - but needs some work!
+* update engspa.txt - more phrases! publish to public!
 * both fields can be red on word lookup!
 * check Log messages; check TODOs
 * Padding around text
@@ -195,11 +221,7 @@ margins
 
 ! At start of imperatives
 Should faltar be lack rather than miss?
-* remove option for multiple users
-	add new class that holds level, raceLevel, qaStyle, quizMode,
-		learnModePhase (1 or 2)
-	keeps in sync with sharedPreferences
-	done except for database!
+* remove user from database
 * help fragment creating document text view every time; use retain instance etc;
 * rename numbers game to gato y ratón
 * all fragments should survive screen rotation
@@ -208,8 +230,6 @@ Should faltar be lack rather than miss?
 No help for word lookup; still got it's own status field
 Numbers game: no help; got its own status field
 Replace and with phrase
-Selecting topic or qastyle or questions by level should open main window
-set title & helpText of each fragment in onCreateView
 
 ideas from demo to Julie
 
@@ -220,17 +240,12 @@ ideas from demo to Julie
 
 check with Joe: 1 user? bluetooth?
 
-when we add > 1 user, don't forget to save showHelp as part of user
-(but still update it via showHelpCheckbox, not user dialog)
-
-check duolingo to see if we actually need to cater for more than 1 user!
-
-different layouts for landscape!
+* different layouts for landscape!
+* different layouts for tablets
 optionally split verb into two stages: infinitive then conjugate
 	e.g. Q: I will eat; A: comer; right, now try to conjugate or wrong try again
 each tip automatically stops after 3 shows?
 
-Show qaStyle
 Catch connection error and output more sensible message
 
 get rid of obvious words; add words from GCSE book
@@ -240,7 +255,6 @@ different layout when keyboard shows
 in debug app, have fragment that allows us to fire SQL to database
 	and invoke methods of EngSpaDAO
 
-save the current level of race game; remember last topic in EngSpaUser
 extra tenses: reflexive, I have eaten (present perfect),
 	I had eaten (past perfect or pluperfect)
 some verbs only 3rd person singular, e.g. to snow

@@ -31,7 +31,6 @@ public class EngSpaQuiz extends Quiz {
 	private static final char[] LEARN_CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
 	private static final char[] TOPIC_CFP_LIST = {'C', 'F'};
     private static final char[] PRACTICE_CFP_LIST = {'P', 'F'};
-    //!! private static final char[] AUDIO_CFP_LIST = {'P'};
 	private char[] cfpList;
 	
 	private String spanish;
@@ -246,16 +245,11 @@ public class EngSpaQuiz extends Quiz {
 		return this.spanish;
 	}
     private void resetMode() {
-
         QuizMode quizMode = engSpaUser.getQuizMode();
         if (quizMode == QuizMode.LEARN)  {
             initWordsForLearn();
         } else if (quizMode == QuizMode.PRACTICE)  {
             initWordsForPractice();
-        /*!!
-        } else if (quizMode == QuizMode.AUDIO)  {
-            this.cfpList = AUDIO_CFP_LIST;
-            this.cfpListIndex = 0; */
         } else if (quizMode == QuizMode.TOPIC) {
             initWordsForTopic();
         }
@@ -279,7 +273,19 @@ public class EngSpaQuiz extends Quiz {
 	public int getFailedWordCount() {
         return (this.failedWordList == null) ? -1 : this.failedWordList.size();
 	}
+
+    /**
+     * @param qaStyle may be different from engSpaUser.qaStyle
+     */
 	public void setCorrect(boolean correct, QAStyle qaStyle) {
+        if (cfpChar == 'C') {
+            // we could remove this in getCurrentLevelWord()
+            // but we wait until the user has attempted an answer;
+            // this avoids stats of C=0; F=0 (i.e. the only thing
+            // left at this level is the current question) which
+            // would seem odd
+            currentWordList.remove(currentWord);
+        }
 		boolean inFailedList = this.failedWordList.contains(currentWord);
 		int consecRights = currentWord.addResult(correct, questionSequence, qaStyle);
 		if (correct) {
@@ -293,7 +299,13 @@ public class EngSpaQuiz extends Quiz {
 					engSpaDAO.updateUserWord(currentWord);
 				}
 			}
-			if (currentWordList != null) {
+            if (currentWordList != null &&
+                    !(engSpaUser.getQuizMode() == QuizMode.LEARN &&
+                    engSpaUser.isLearnModePhase2() && cfpChar == 'F')) {
+                // remove from currentWordList if in list, except for the case
+                // where we're in phase2 of learn mode, and we've just done a failed
+                // word from phase1; seems complicated, but we want the user to get
+                // it right for both phases, as the question is asked differently
 				currentWordList.remove(currentWord); // remove if in list
 			}
 		} else { // not correct

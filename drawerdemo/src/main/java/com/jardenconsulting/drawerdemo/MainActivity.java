@@ -86,18 +86,14 @@ public class MainActivity extends AppCompatActivity
         String tag;
         if (id == R.id.qaStyle) {
             tag = "help";
-        } else if (id == R.id.topic) {
+        } else if (id == R.id.topicMode) {
             tag = "martes";
         } else if (id == R.id.wordLookup) {
             tag = "miércoles";
         } else if (id == R.id.numbersGame) {
             tag = "jueves";
-        } else if (id == R.id.qByLevel) {
+        } else if (id == R.id.learnMode) {
             tag = "viernes";
-            /*!!
-        } else if (id == R.id.help) {
-            tag = "sábado";
-            */
         } else if (id == R.id.exit) {
             super.onBackPressed();
             return true;
