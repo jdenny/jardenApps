@@ -101,6 +101,6 @@
     <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-23.2.0" level="project" />
     <orderEntry type="module" module-name="jardenlib" exported="" />
-    <orderEntry type="module" module-name="bluetoothapplib" exported="" />
+    <orderEntry type="module" module-name="bluetoothlib" exported="" />
   </component>
 </module>

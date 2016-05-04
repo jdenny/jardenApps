@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="greeting">Hola Mundo Android! Crear cuenta: </string>
+    <string name="menu_settings">Settings</string>
+    <string name="go">Ir</string>
+    <string name="messageHint">Escriba un mensaje</string>
+    <string name="title_activity_display_message">MostrarMensaje</string>
+
+</resources>

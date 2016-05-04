@@ -196,6 +196,8 @@ end of New ideas on qaStyle: *************************************************
 	*/
 
 * design document!
+* adjectives and adverbs, e.g. the green bus; el autobus verde
+	he ran quickly
 * phrase generator! e.g. I go to the city by bus
 	conjugate go; use any place, not just city; metro, bike, car, coach etc;
 	see page 39 of GCSE book

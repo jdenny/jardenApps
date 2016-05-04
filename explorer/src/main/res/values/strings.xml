@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Settings</string>
+    <string name="app_name">Explorer</string>
+    <string name="cancelStr">Cancel</string>
+    <string name="okStr">OK</string>
+    <string name="imageView">Image View</string>
+    <string name="searchStr">File Name (may contain \'*\'s)</string>
+    
+</resources>

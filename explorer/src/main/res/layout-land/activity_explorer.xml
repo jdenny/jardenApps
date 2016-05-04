@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    tools:context="com.jardenconsulting.explorerapp.ExplorerActivity"
+    tools:ignore="MergeRootFrame" >
+    
+	<fragment
+	    android:id="@+id/explorerFragment"
+	    android:name="jarden.explorer.ExplorerFragment"
+	    android:layout_width="0dp"
+	    android:layout_weight="0.4"
+	    android:layout_height="wrap_content"
+	    tools:layout="@layout/fragment_explorer" />
+	 
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="0dp"
+	    android:layout_weight="0.6"
+	    android:layout_height="match_parent" >
+	    
+		<fragment
+		    android:id="@+id/textFragment"
+		    android:name="jarden.explorer.TextFileFragment"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    tools:layout="@layout/fragment_text" />
+		 
+		 <fragment
+		    android:id="@+id/videoFragment"
+		    android:name="jarden.explorer.MediaFragment"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    tools:layout="@layout/fragment_media" />
+		 
+		 <fragment
+		    android:id="@+id/imageFragment"
+		    android:name="jarden.explorer.ImageFragment"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    tools:layout="@layout/fragment_image" />
+	 </LinearLayout>
+	 	 
+</LinearLayout>
+

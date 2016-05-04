@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jardenconsulting.androidcourse.LayoutsActivity" >
+
+    <item
+        android:id="@+id/linear"
+        android:title="@string/linearStr" />
+    <item
+        android:id="@+id/relative"
+        android:title="@string/relativeStr" />
+    <item
+        android:id="@+id/table"
+        android:title="@string/tableStr" />
+    
+</menu>

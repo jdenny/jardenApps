@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jardenconsulting.explorerapp.ExplorerActivity" >
+
+    <item android:id="@+id/actionSearch"
+        android:title="@string/searchStr"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_search" />
+    
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+    
+    <!-- android:icon="@drawable/abc_ic_search_api_mtrl_alpha" -->
+
+</menu>

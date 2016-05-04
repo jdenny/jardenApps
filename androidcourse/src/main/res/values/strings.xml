@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Settings</string>
+    <string name="app_name">AndroidCourse</string>
+    <string name="connect">Connect</string>
+    <string name="connectToServerStr">Select from list to connect to server:</string>
+    <string name="contactName">Contact Name</string>
+    <string name="contactNumber">Number</string>
+    <string name="correctStr">Correct!</string>
+    <string name="countryStr">Country</string>
+
+    <integer name="defaultLevel">1</integer>
+
+    <string name="fileStr">File</string>
+    <string name="go">Go</string>
+    <string name="greeting">Hello Android World! Create count: </string>
+    <string name="idStr">Id</string>
+    <string name="levelStr">Level</string>
+    <string name="linearStr">Linear</string>
+    <string name="menu_settings">Settings</string>
+    <string name="messageHint">Enter a message</string>
+    <string name="myPhoneNo">07874619507</string>
+    <string name="newContact">New</string>
+    <string name="nonIntegerAnswer">Supply an Integer value for answer</string>
+    <string name="phoneStr">Phone</string>
+    <string name="photoStr">PhotoActivity under construction!</string>
+    <string name="refreshStr">Refresh</string>
+    <string name="relativeStr">Relative</string>
+    <string name="sendMessageStr">Send Message</string>
+    <string name="savedLevelTag">savedLevelTag</string>
+    <string name="startServerStr">Start Server</string>
+    <string name="stopClientStr">Stop Client</string>
+    <string name="stopServerStr">Stop Server</string>
+    <string name="tableStr">Table</string>
+    <string name="threads">Threads</string>
+    <string name="threads2">Threads2</string>
+    <string name="title_activity_layouts">LayoutsActivity</string>
+    <string name="title_activity_auto_complete">AutoCompleteActivity</string>
+    <string name="title_activity_bluetooth">BluetoothActivity</string>
+    <string name="title_activity_display_message">DisplayMessageActivity</string>
+    <string name="title_activity_photo">PhotoActivity</string>
+    <string name="title_activity_quiz">QuizActivity</string>
+    <string name="typeStr">Type</string>
+    <string name="wrongStr">Wrong!</string>
+    <string name="yourAnswerStr">your answer</string>
+
+    <string-array name="countries">
+        <item>Belgium</item>
+        <item>Denmark</item>
+        <item>England</item>
+        <item>Finland</item>
+        <item>France</item>
+        <item>Germany</item>
+        <item>Greece</item>
+        <item>Ireland</item>
+        <item>Italy</item>
+        <item>Netherlands</item>
+        <item>Norway</item>
+        <item>Portugal</item>
+        <item>Spain</item>
+        <item>Sweden</item>
+    </string-array>
+
+    <string name="title_activity_dynamic_form">DynamicFormActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_progress">ProgressActivity</string>
+    <string name="longTaskStr">Long Task</string>
+    <string name="title_activity_text_to_speech">TextToSpeechActivity</string>
+    <string name="phrasePrompt">type phrase to be spoken</string>
+    <string name="speakStr">Speak!</string>
+
+</resources>

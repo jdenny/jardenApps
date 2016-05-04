@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.jardenconsulting.androidcourse.LayoutsActivity" >
+
+    <TextView
+        android:id="@+id/TextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="2"
+        android:text="@string/typeStr" />
+
+    <EditText
+        android:id="@+id/layoutType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/TextView1"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/TextView1"
+        android:layout_weight="3" />
+
+    <TextView
+        android:id="@+id/TextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/TextView1"
+        android:layout_below="@id/TextView1"
+        android:layout_marginTop="24dp"
+        android:layout_weight="2"
+        android:text="@string/fileStr" />
+
+    <EditText
+        android:id="@+id/layoutFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/TextView2"
+        android:layout_alignLeft="@id/layoutType"
+        android:layout_toRightOf="@id/TextView2"
+        android:layout_weight="3" />
+
+    <TextView
+        android:id="@+id/TextView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/TextView1"
+        android:layout_below="@id/TextView2"
+        android:layout_marginTop="24dp"
+        android:layout_weight="2"
+        android:text="@string/idStr" />
+
+    <EditText
+        android:id="@+id/layoutId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/TextView3"
+        android:layout_alignLeft="@id/layoutType"
+        android:layout_toRightOf="@id/TextView3"
+        android:layout_weight="3" />
+    
+    <Button android:id="@+id/linear"
+        android:layout_below="@id/layoutId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/linearStr" />   
+          
+    <Button android:id="@+id/relative"
+        android:layout_toRightOf="@id/linear"
+        android:layout_alignBottom="@id/linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/relativeStr" /> 
+            
+    <Button android:id="@+id/table"
+        android:layout_toRightOf="@id/relative"
+        android:layout_alignBottom="@id/linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tableStr" />     
+    
+</RelativeLayout>
