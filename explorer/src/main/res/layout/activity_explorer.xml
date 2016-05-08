@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jardenconsulting.explorerapp.ExplorerActivity"
+    tools:context="com.jardenconsulting.explorer.ExplorerActivity"
     tools:ignore="MergeRootFrame" >
     
 	<fragment
@@ -13,21 +13,21 @@
 	    android:layout_height="wrap_content"
 	    tools:layout="@layout/fragment_explorer" />
 	 
-	 <fragment
+    <fragment
 	    android:id="@+id/textFragment"
 	    android:name="jarden.explorer.TextFileFragment"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    tools:layout="@layout/fragment_text" />
 	 
-	 <fragment
+    <fragment
 	    android:id="@+id/videoFragment"
 	    android:name="jarden.explorer.MediaFragment"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    tools:layout="@layout/fragment_media" />
 	 
-	 <fragment
+    <fragment
 	    android:id="@+id/imageFragment"
 	    android:name="jarden.explorer.ImageFragment"
 	    android:layout_width="match_parent"

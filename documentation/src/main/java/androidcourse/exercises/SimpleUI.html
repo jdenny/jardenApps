@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>SimpleUI</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Simple User Interface</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Objectives of exercise:<ul>
+	<li>Define first draft UI for Quiz</li>
+	<li>Use ArithmeticQuiz</li>
+</ul>
+
+<h3>Change layout type</h3>
+By default, Android Studio creates new layouts with RelativeLayout; this
+layout is useful, but can sometimes be awkward to manipulate visually.
+It is largely a matter of taste, but we prefer LinearLayout for simple UI;
+you may prefer to stick with the relative layout.
+
+<h3>Create Views</h3>
+	
+<p>Drag views from palette to screen; use EditText, Button, TextView,
+to get something like this (don't worry yet about the exact layout):</p>
+	<form>
+	Level: <input type="text" value="quizLevel" ><br/>
+	7 * 6? <input type="text" value="your answer" ><br/>
+	<input type="submit" value="Go"><br/>
+	</form>
+	Correct! (or Wrong!)
+
+<p>Set properties:</p><ul>
+	<li>click on view, and use Properties pane</li>
+	<li>For strings, click on elipses (...) and create or use a string
+	 resource</li>
+</ul>
+Your views should have the following properties:<pre>
+TextView
+   Text="@string/level" where string resource = "Level"
+EditText
+   id="@+id/levelEditText"
+   Text="1"
+   Input Type="number"
+TextView
+   id="@+id/questionTextView"
+EditText
+   id="@+id/answerEditText"
+   Hint="@string/answerHint" where answerHint = "your answer"
+   Input Type="number"
+Button
+   id="@+id/goButton"
+   Text="@string/go" where string resource = "Go"
+TextView
+   id="@+id/resultTextView"
+</pre>
+Run the app to see what it looks like.
+
+<h3>Interact with Views</h3>
+Programmatically set the question to some String; in
+<code>MainActivity.onCreate(...)</code>, after <code>setContentView()</code>:<ul>
+	<li>use findViewById() to get questionTextView<pre>
+this.questionTextView = (TextView) findViewById(R.id.questionTextView);</pre></li>
+	<li>use method setText() to set the question<pre>
+this.questionTextView.setText("7 * 6?");</pre></li>
+</ul>
+
+Respond to button: process input, check answer and output result<ul>
+	<li>use findViewById to get goButton, answerEditText & resultTextView<br/>
+<pre><code>Button goButton = (Button) findViewById(R.id.goButton);
+this.answerEditText = (EditText) findViewById(R.id.answerEditText);
+this.resultTextView = (TextView) findViewById(R.id.resultTextView);</code></pre></li>
+   <li>set callback method for button<br/>
+<pre><code>MainActivity extends... implements OnClickListener
+...
+goButton.setOnClickListener(this);
+...</code></pre></li>
+   <li>handle button click<br/>
+<pre><code>@Override
+public void onClick(View view) {
+   String answerStr = this.answerEditText.getText().toString();
+   int answer = Integer.parseInt(answerStr);
+   if (answer == 42) {
+      this.resultTextView.setText("correct!");
+   } else {
+      this.resultTextView.setText(answerStr + " is wrong!");
+   }
+}</code></pre></li>
+</ul>
+
+<p>Run your app, to see if it asks the question and properly responds to
+your answer.</p>
+
+<h3>Use code provided by jardenlib</h3>
+Create an object of type ArithmeticQuiz:<pre>
+private Quiz quiz;
+   ...
+   onCreate(...) {
+      this.quiz = new ArithmeticQuiz();
+</pre>
+Note, this will give compilation errors, as jardenlib needs to be linked to the current module.
+An easy way of doing this is click on Quiz; in the left-hand margin a red lightbulb should
+appear; click on it, and select "Add dependency on module 'jardenlib'". This should update
+build.gradle. Android Studio will also add the relevant import statements if you follow
+its suggestions.
+
+<p>Use the Quiz methods:</p><pre>
+String getNextQuestion(int level) throws EndOfQuestionsException;
+/**
+ * @return Quiz.CORRECT if correct
+ *         Quiz.INCORRECT if wrong but still got more attempts
+ *         Quiz.FAIL if still wrong after 3 attempts
+ */
+int isCorrect(String answer);
+String getAnswer();
+</pre>
+<p>Note: you need to wrap <code>getNextQuestion()</code> in a <code>try</code>
+block; in the catch, report the exception in
+<code>resultTextView</code>.</p> Do not use <code>printStackTrace()</code>;
+unexpected exceptions are best reported in the log, using something like<pre>
+catch (Exception exception) {
+   Log.e(exception.toString());
+}
+</pre>
+More on logging later.
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

@@ -87,6 +87,7 @@ public class QuizActivity extends AppCompatActivity implements OnClickListener,
 	private void loadQuizzes() {
 		// do this in a background thread, as cannot access the network on main thread
 		Runnable runnable = new Runnable() {
+            private String message = "end of loadQuizzes()";
 			@Override
 			public void run() {
 				InputStream inputStream = getResources().openRawResource(R.raw.capitals);
@@ -95,32 +96,30 @@ public class QuizActivity extends AppCompatActivity implements OnClickListener,
 					capitalProps.load(inputStream);
 					capitalsQuiz = new PresetQuiz(capitalProps);
 				} catch (IOException e) {
-					Log.e(TAG, "exception trying to create capitalsQuiz: " + e);
-					Toast.makeText(QuizActivity.this, "exception trying to create capitalsQuiz",
-							Toast.LENGTH_LONG).show();
+                    message = "exception trying to create capitalsQuiz: " + e;
+					Log.e(TAG, message);
 				}
 				try {
 					URL spanishURL = new URL(serverUrlStr + "spanish.txt?attredirects=0&d=1");
 					// iso-8859 needed for Android, and maybe for Java;
 					spanishQuiz = new PresetQuiz(spanishURL.openStream(), "iso-8859-1");
 				} catch (IOException e) {
-					Log.e(TAG, "exception trying to create spanishQuiz: " + e);
-					Toast.makeText(QuizActivity.this, "exception trying to create spanishQuiz",
-							Toast.LENGTH_LONG).show();
+                    message = "exception trying to create spanishQuiz: " + e;
+					Log.e(TAG, message);
 				}
 				ContentResolver contentResolver = getContentResolver();
 				List<QuestionAnswer> engSpaList = new ArrayList<QuestionAnswer>();
 				String selection = null;
 				String sortOrder = null;
 				String[] projection = { EngSpaContract.ENGLISH, EngSpaContract.SPANISH };
-
 				Cursor cursor = contentResolver.query(
 						EngSpaContract.CONTENT_URI_ENGSPA,
 						projection,
 						selection,
 						null, sortOrder);
 				if (cursor == null) {
-					Toast.makeText(QuizActivity.this, "no matching DB entries found!", Toast.LENGTH_LONG).show();
+                    message = "no matching DB entries found!";
+                    Log.w(TAG, message);
 				} else {
 					while (cursor.moveToNext()) {
 						String english = cursor.getString(0);
@@ -130,6 +129,11 @@ public class QuizActivity extends AppCompatActivity implements OnClickListener,
 					cursor.close();
 				}
 				engSpaQuiz = new PresetQuiz(engSpaList);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(QuizActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
+                });
 			}
 		};
 		new Thread(runnable).start();
@@ -170,22 +174,17 @@ public class QuizActivity extends AppCompatActivity implements OnClickListener,
 			String answerStr = this.answerEditText.getText().toString();
 			Log.d(TAG, "Go button pressed; answer is " + answerStr);
 			String resultStr;
-			try {
-				int answer = Integer.parseInt(answerStr);
-				int res = this.quiz.isCorrect(answer);
-				if (res == Quiz.CORRECT) {
-					resultStr = getString(R.string.correctStr);
-					showNextQuestion();
-				} else if (res == Quiz.FAIL) {
-					resultStr = getString(R.string.wrongStr) + " The correct answer is: " +
-							this.quiz.getCorrectAnswer();
-					showNextQuestion();
-				} else {
-					resultStr = getString(R.string.wrongStr) + " Try again";
-				}
-			} catch (NumberFormatException nfe) {
-				resultStr = getString(R.string.nonIntegerAnswer);
-			}
+            int res = this.quiz.isCorrect(answerStr);
+            if (res == Quiz.CORRECT) {
+                resultStr = getString(R.string.correctStr);
+                showNextQuestion();
+            } else if (res == Quiz.FAIL) {
+                resultStr = getString(R.string.wrongStr) + " The correct answer is: " +
+                        this.quiz.getCorrectAnswer();
+                showNextQuestion();
+            } else {
+                resultStr = getString(R.string.wrongStr) + " Try again";
+            }
 			this.resultTextView.setText(resultStr);
 		}
 	}

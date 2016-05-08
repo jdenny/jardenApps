@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>UpNSearch</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Add <i>Up</i> and <i>Search</i> Buttons
+		to Explorer</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Ensure Explorer extends AppCompatActivity and is using correct theme
+(see slides).</p>
+
+<p>In <code>ExplorerActivity.onCreate()</code>, add the line:<pre>
+getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+</pre>
+	
+<p>In <code>AndroidManifest.xml</code>, set the parent activity name, e.g.<pre>
+&lt;activity
+   android:name=".ExplorerActivity"
+   ...
+   android:parentActivityName=".MainActivity" >
+   &lt;!-- Parent activity meta-data to support API level 7+ -->
+   &lt;meta-data
+      android:name="android.support.PARENT_ACTIVITY"
+      android:value=".MainActivity" />
+&lt;/activity>
+</pre>
+
+<p>Run your app; invoke Explorer; navigate down the directories;
+confirm that the <i>back</i> button takes you to the parent directory;
+the <i>up</i> button on the action bar should return to MainActivity.</p>
+
+<h3>Search</h3>
+<p>One of the key features we want on a file explorer, is search. We will
+add a search icon to the options menu.</p>
+
+<p>Edit <code>res/menu/explorer.xml</code>, e.g.<pre>
+&lt;item android:id="@+id/actionSearch"
+   android:title="@string/searchStr"
+   app:showAsAction="ifRoom"
+   android:icon="@android:drawable/ic_menu_search" />
+</pre>
+
+<p>Add code to <code>ExplorerActivity.onOptionsItemSelected()</code> to
+handle when the search option is selected; for now, log a message, e.g.<pre>
+if (id == R.id.actionSearch) {
+   if (BuildConfig.DEBUG) {
+      Log.d(TAG, "onOptionsItemSelected(actionSearch)");
+   }
+   return true;
+}
+</pre>
+
+<p>Run your app, to confirm the search icon appears in the ActionBar,
+and your app detects when it is clicked.</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

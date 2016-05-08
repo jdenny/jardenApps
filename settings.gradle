@@ -1,1 +1,1 @@
-include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':drawerdemo', ':androidcourse', ':explorer'
+include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':drawerdemo', ':androidcourse', ':explorer', ':documentation', ':jardenprovider'

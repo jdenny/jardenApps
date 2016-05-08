@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Media</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Playing Media - Part 1</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>To start off, let's play back some audio. Edit
+<code>ExplorerFragment.showFile()</code> to use MediaPlayer, e.g.<pre>
+if (fileName.endsWith(".mp3")) {
+   Uri uri =  Uri.fromFile(file);
+   this.mediaPlayer = MediaPlayer.create(
+         getActivity(), uri);
+   this.mediaPlayer.start(); 
+}
+</pre>
+
+<p>Provide method to stop the media, e.g.</p><pre>
+private void stopMedia() {
+   if (this.mediaPlayer != null && this.mediaPlayer.isPlaying()) {
+      this.mediaPlayer.stop();
+   }
+}
+</pre>
+
+<p>Call this new method from various places, e.g.</p><pre>
+showFile() // user has chosen a new file
+showCurrentDirectory() // back key to parent directory
+onStop() // user exiting from activity
+</pre>
+
+<p>Run explorer; select an mp3 file.
+(Suggestion: look in /sdcard/Download/) It should play the sound file.</p>
+
+</body>
+</html>

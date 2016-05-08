@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>ListView</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Add Fragment with ListView to Explorer</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h3>ListView & Adapter</h3>
+
+<p>Add a fragment to the app; we will discuss fragments later, but essentially
+a fragment represents a window, as a light-weight, re-usable alternative to an activity.</p><ul>
+    <li>File, New, Fragment, Blank Fragment</li>
+    <li>Name = ExplorerFragment; include interface callbacks=no</li>
+    <li>Finish</li>
+</ul>
+
+<p>Include the new fragment in ExplorerActivity</p><ul>
+    <li>open <code>activity_explorer</code> in design mode</li>
+    <li>Palette, Custom, fragment, choose ExplorerFragment from list of Fragments</li>
+    <li>OK to close the list of fragments; move the mouse pointer to where you want
+        the fragment to appear (i.e. in the graphic representing the device) and
+        click the mouse</li>
+    <li>check in Text mode that the fragment element has been added</li>
+    <li>change fragment id to <code>explorerFragment</code></li>
+</ul>
+
+<p>Update <code>fragment_explorer.xml</code>: replace TextView with ListView - in
+Design view, it's under Containers in the Palette</p>
+
+In <code>ExplorerFragment.onCreate()</code>, set the current
+directory, e.g.<pre>
+this.currentDirectory = new File("/");
+</pre>
+
+<p>In <code>ExplorerFragment.onCreateView()</code>:<ul>
+	<li>create an ArrayAdapter, e.g.
+<pre>this.fileListAdapter = new ArrayAdapter&lt;String>(
+   getActivity(), android.R.layout.simple_list_item_1);
+</pre></li>
+	<li>Find the ListView within the layout; similar to code in an Activity,
+but slightly different for a Fragment, e.g.<pre>
+ListView fileListView = (ListView) rootView.findViewById(R.id.listView);
+</pre></li>
+	<li>Set the adapter for the ListView, e.g.
+<pre>fileListView.setAdapter(fileListAdapter);
+</pre></li>
+	<li>Invoke a new method showCurrentDirectory(), as below</li>
+</ul>
+
+<p>Define new method <code>void showCurrentDirectory()</code></p><ul>
+	<li>Get the contents of the directory, e.g.
+<pre>String[] fileNames = this.currentDirectory.list();
+</pre></li>
+	<li>Sort the file names, e.g.
+<pre>Arrays.sort(fileNames);
+</pre></li>
+	<li>Invoke new method showFileNames, as below</li>
+</ul>
+
+<p>Define new method:</p>
+<pre>void showFileNames(String[] fileNames) {
+   this.fileListAdapter.setNotifyOnChange(false);
+   this.fileListAdapter.clear();
+   for (String fileName: fileNames) {
+      this.fileListAdapter.add(fileName);
+   }
+   this.fileListAdapter.notifyDataSetChanged();
+}
+</pre>
+
+<p>Run the app; it should show the top level directory of your device,
+sorted alphabetically.</p>
+
+<p>In <code>ExplorerFragment</code>, set the callback method to handle selection within
+    the ListView, e.g.
+<pre>fileListView.setOnItemClickListener(...);
+</pre>
+Note: when implementing OnItemClickListener, there are 2 possible packages;
+use <code>android.widget.AdapterView.OnItemClickListener</code>
+
+<p>In the callback method, create a new File object, based on the current
+directory and the name of the file selected, which can be obtained from
+the View passed to onItemClick(); if the file is a directory, e.g.
+<code>file.isDirectory()</code>, list the contents of this new directory;
+if not a directory, show a Toast message with the name of the file
+selected, e.g.</p><pre>
+@Override
+public void onItemClick(AdapterView&lt;?> parent, View view,
+      int position, long id) {
+   TextView textView = (TextView) view;
+   String fileName = textView.getText().toString();
+   if (BuildConfig.DEBUG) {
+      Log.d(TAG,
+         "ExplorerFragment.onItemClick(fileName=" +
+         fileName + ")");
+   }
+   showFile(fileName);
+}
+private void showFile(String fileName) {
+   File file;
+   if (fileName.startsWith("/")) {
+      file = new File(fileName);
+   } else {
+      file = new File(this.currentDirectory, fileName);
+   }
+   if (file.isDirectory()) {
+      this.currentDirectory = file;
+      showCurrentDirectory();
+   } else {
+      Toast.makeText(getActivity(),
+         "selected file: " + file.getAbsolutePath(),
+         Toast.LENGTH_LONG).show();
+   }
+}
+</pre>
+
+<p>Run your app. If it works, when you select a directory from the list,
+the contents of that directory are shown. Note that <i>back</i> won't
+return to the parent directory - yet!</p>
+
+<p>Finally, show the current directory in activity.title, using methods:</p>
+<pre>Activity.setTitle(String);
+Fragment.getActivity();
+</pre>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

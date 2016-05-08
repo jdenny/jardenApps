@@ -1,0 +1,29 @@
+mouse,ratón,noun,masculine,animal,2
+rat,rata,noun,feminine,animal,1
+cow,vaca,noun,feminine,animal,1
+dog,perro,noun,masculine,animal,1
+bird,pájaro,noun,masculine,animal,3
+cat,gato,noun,masculine,animal,1
+horse,caballo,noun,masculine,animal,3
+bread,pan,noun,masculine,animal,2
+cake,pastel,noun,masculine,food,2
+fish,pescado,noun,masculine,food,2
+onion,cebolla,noun,feminine,food,3
+eat,comer,verb,transIntrans,food,1
+drink,beber,verb,transIntrans,food,1
+cook,cocinar,verb,transIntrans,food,2
+hello,hola,phrase,n_a,n_a,1
+boy,chico,noun,masculine,person,1
+goodbye,adiós,phrase,n_a,n_a,1
+girl,chica,noun,feminine,person,1
+my name is,me llamo,phrase,n_a,n_a,1
+I am well,estoy bien,phrase,n_a,n_a,1
+I am not well,estoy mal,phrase,n_a,n_a,1
+please,por favor,adverb,n_a,n_a,1
+thank you,gracias,phrase,n_a,n_a,1
+my pleasure,mucho gusto,phrase,n_a,n_a,1
+one,uno,number,n_a,n_a,1
+two,dos,number,n_a,n_a,1
+three,tres,number,n_a,n_a,1
+four,cuatro,number,n_a,n_a,1
+five,cinco,number,n_a,n_a,1

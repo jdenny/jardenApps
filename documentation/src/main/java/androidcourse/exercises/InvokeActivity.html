@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>InvokeActivity</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Invoke Explorer Activity</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Create a new activity in your project, ExplorerActivity:</p><ul>
+	<li>right-click package; New; Activity; Empty Activity</li>
+	<li>in "Configure Activity", set Activity Name to ExplorerActivity; Finish</li>
+</ul>
+Notice ExplorerActivity now added to <code>AndroidManifest.xml</code><br/>
+
+<p>Add a button to end of MainActivity layout, to invoke ExplorerActivity;
+set the onClickListener, as we did for goButton.</p>
+
+<p>In method <code>onClick(...)</code> determine which button has been clicked,
+by getting its id:</p>
+<pre><code>int view.getId(); // returns resource identifier
+</code></pre>
+<p>When the 'go' button is clicked, execute the code already in place for
+checking the supplied answer to the quiz; when the 'explorer' button is
+clicked, start the new activity:</p>
+<pre><code>Intent intent = new Intent(this, ExplorerActivity.class);
+startActivity(intent);</code></pre>
+	
+<p>Run your app. Ensure you can start ExplorerActivity by clicking the
+button. Use the back button to return to MainActivity.</p>
+
+<p>In ExplorerActivity, override life-cycle callback methods:<br/>
+<code>onStart(), onResume(), onPause(), onStop(), onDestroy()</code><ul>
+	<li>right-click within ExplorerActivity.java where you want the new
+    methods to go</li>
+	<li>choose Generate..., Override/Implement Methods...</li>
+    <li>select the methods as above</li>
+</ul>
+
+<p>Add logging to all the life-cycle callback methods, including
+<code>Activity.onCreate()</code>, e.g.</p><code><pre>
+public final static String TAG = "ExplorerActivity";
+...
+@Override
+protected void onStop() {
+   if (BuildConfig.DEBUG) Log.d(TAG, "onStop()");
+   super.onStop();
+}</pre></code>	
+
+<p>Make sure that every log message matches the method name.</p>
+
+<p>In method Activity.onCreate() issue Toast message, e.g.</p><code><pre>
+Toast.makeText(this, "ExplorerActivity.onCreate()",
+Toast.LENGTH_LONG).show();
+</pre></code>
+		
+<p>Run your app again. Look in logcat, in Android Monitor.
+See what log messages you get when you enter Explorer; also when you
+rotate the device, and when you go back to MainActivity.</p>
+
+<p>Note: so far ExplorerActivity doesn't do anything interesting, but we
+will add functionality later.</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

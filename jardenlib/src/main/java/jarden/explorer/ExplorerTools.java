@@ -37,13 +37,18 @@ public class ExplorerTools {
 	    findRegexMatches(directory, regex, fileList, maxHits);
 	    return fileList;
 	}
-	/**
-	 * Convenience method that calls {@link #findFileNames(File, String, int)}
-	 * i.e. defaults to maxHits of 20.
-	 * @param directory
-	 * @param searchName
-	 * @return
-	 */
+    /**
+     * Convenience method that calls {@link #findFileNames(File, String, int)}
+     * i.e. defaults to maxHits of 20.
+     * Return names of all files in directory and all its sub-directories recursively
+     * where the file names match the searchName. The searchName can contain
+     * any number of '*' chars, which represent zero or more of any chars, e.g.
+     * 			*.mp3		all file names ending in '.mp3'
+     * 			*android*	all file names containing 'android'
+     * @param directory directory to search
+     * @param searchName name of files; may contain '*' as wild-cards
+     * @return array of names of matching files and directories
+     */
 	public static String[] findFileNames(File directory, String searchName) {
 		return findFileNames(directory, searchName, MAX_HITS_DEFAULT);
 	}

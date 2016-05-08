@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>BackButton</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Handle Back Button</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Add callback method <code>onBackPressed()</code> to ExplorerActivity.
+Add log message to this method. Make sure you call the super-class version.</p>
+
+<p>Run the app to confirm the log message appears.</p>
+
+<p>Save the explorerFragment in an instance variable, e.g. in
+<code>ExplorerActivity.onCreate()</code>:</p><pre>
+this.fragmentManager = getSupportFragmentManager();
+this.explorerFragment =
+    (ExplorerFragment) this.fragmentManager.findFragmentById(
+    R.id.explorerFragment);</pre>
+Now, still in <code>ExplorerActivity</code>, provide  a proper implementation of
+<code>onBackPressed()</code>. Note that we could put all the logic in this
+activity, but it's better to let <code>ExplorerFragment</code> handle the logic
+for navigating the file store, so we notify the fragment that the
+back button has been pressed.<pre>
+@Override
+public void onBackPressed() {
+    if (BuildConfig.DEBUG) Log.d(TAG, "onBackPressed()");
+    boolean dealtWith = explorerFragment.onBackPressed();
+    if (!dealtWith) super.onBackPressed();
+}
+</pre>
+
+<p>Now add the following method to <code>ExplorerFragment</code><pre>
+/**
+ * @return true if back button dealt with
+ */
+public boolean onBackPressed() {
+    if (currentDirectory != null) {
+        currentDirectory = currentDirectory.getParentFile();
+    }
+    if (currentDirectory != null) {
+        showCurrentDirectory();
+        return true;
+    } else {
+        return false;
+    }
+}
+</pre>
+
+<h3>Accessing External Storage</h3>
+<p>To access external storage of the device, we can declare the
+permission in <code>AndroidManifest.xml</code>. When a user installs
+your app, Android will list the permissions you have requested. Before
+API level 19, this permission is not necessary.</p>
+
+<pre>
+&lt;manifest ...>
+    &lt;uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    ...
+&lt;/manifest>
+</pre>
+
+<h3>Coping With Screen Rotation</h3>
+Navigate to a sub-directory in Explorer. Now rotate the screen. Does it return
+to the root directory? If we look at the life-cycle messages in the log, we
+can see that rotating the device destroys both the Activity and the Fragment.
+This is because we may well have different layout files for portrait and 
+landscape, so Android destroys the Activity and all its Fragments, and
+runs <code>Activity.onCreate()</code>, and when a Fragment is included in
+the Activity layout, calls <code>Fragment.onCreate()</code> and
+<code>Fragment.onCreateView()</code>.
+This isn't always what we want, so there is a
+method we can call in Fragment.onCreate():<pre>
+setRetainInstance(true);
+</pre>
+This doesn't affect the Activity, but does mean that for the Fragment,
+<code>onCreate()</code> and <code>onDestroy()</code> will not be called on
+a configuration change - which is why we set the initial value of
+currentDirectory in <code>onCreate()</code>. But onCreateView() will still
+be called, so the view can be created from different resources.</p>
+
+<p>With <code>setRetainInstance(true)</code> the current directory should now
+be preserved when we rotate the phone. But what about preserving state within
+the activity? If the activity is being re-created as a result of a configuration
+change, or a pause while we receive a phone call, the UI state is preserved
+in a Bundle which is passed to <code>onCreate()</code>. We don't have any state
+to preserve yet, but we will later, when we add more fragments.
+
+<p>Re-run Explorer to check that the current directory is now be preserved during
+screen rotations, and the <i>back</i> button still works.</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

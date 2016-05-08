@@ -1,0 +1,42 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.jardenconsulting.jardenprovider"
+          android:installLocation="preferExternal" >
+
+<permission
+    android:name="com.jardenconsulting.permission.ENGSPA_READ"
+    android:protectionLevel="normal"
+    android:title="If you need to read from the English-Spanish database"/>
+<permission
+    android:name="com.jardenconsulting.permission.ENGSPA_WRITE"
+    android:protectionLevel="normal"
+    android:title="If you want to update the English-Spanish database"/>
+<uses-permission android:name="android.permission.INTERNET" />
+
+<application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:theme="@style/AppTheme" >
+    <activity
+        android:name=".MainActivity"
+        android:configChanges="orientation|keyboardHidden"
+        android:label="@string/app_name" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+    <provider
+        android:name="jarden.provider.EngSpaProvider"
+        android:authorities="com.jardenconsulting.engspa.provider"
+        android:enabled="true"
+        android:exported="true"
+        android:readPermission="com.jardenconsulting.permission.ENGSPA_READ"
+        android:writePermission="com.jardenconsulting.permission.ENGSPA_WRITE"
+        />
+</application>
+
+</manifest>
+

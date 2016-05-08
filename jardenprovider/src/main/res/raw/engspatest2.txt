@@ -1,0 +1,14 @@
+mouse,ratón,noun,masculine,animal,2
+rat,rata,noun,feminine,animal,1
+cow,vaca,noun,feminine,animal,1
+dog,perro,noun,masculine,animal,1
+bird,pájaro,noun,masculine,animal,3
+cat,gato,noun,masculine,animal,1
+horse,caballo,noun,masculine,animal,3
+bread,pan,noun,masculine,animal,2
+cake,pastel,noun,masculine,food,2
+fish,pescado,noun,masculine,food,2
+onion,cebolla,noun,feminine,food,3
+eat,comer,verb,transIntrans,food,1
+drink,beber,verb,transIntrans,food,1
+cook,cocinar,verb,transIntrans,food,2

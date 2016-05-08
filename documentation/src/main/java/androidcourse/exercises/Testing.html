@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Testing</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Android Testing - Introduction</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h3>Traditional Development Model</h3>
+
+<pre>
+work out what the app should do
+for each component:
+    do:
+        design and write code
+        test it manually
+    while not working
+</pre>
+
+<h3>Test-Driven Development Model</h3>
+
+<pre>
+work out what the app should do
+for each component:
+    write code to test it automatically
+    do while not working:
+        run test code
+        design and write code to pass test
+</pre>
+
+<p>Note: Any code that does not make calls to the Android API should be tested
+with normal JUnit; this is what we have done for the Quiz code in JardenAppLib.</p>
+
+<h3>Testing QuizActivity</h3>
+
+<p>Create new Android Test Project; name is usually the target project
+name + "Test", e.g. AndroidStudentTest.</p>
+
+<p>In the package already provided, create new class; name is usually the
+target activity + "Test", e.g. MainActivityTest</p>
+	
+<p>update MainActivityTest to extend
+ActivityInstrumentationTestCase2&lt;<i>target activity</i>>, e.g.</p>
+<pre>
+public class MainActivityTest extends
+    ActivityInstrumentationTestCase2<MainActivity> {
+    ...
+</pre>
+	
+<p>Provide a default constructor that calls the superclass constructor
+with the target class, e.g.</p><pre>
+public MainActivityTest() {
+    super(MainActivity.class);
+}
+</pre>
+        
+<p>Override setUp(), to obtain the target activity, plus any views from the
+target layout that you want access to, e.g.<pre>
+@Override
+protected void setUp() throws Exception {
+    super.setUp();
+    // required if testing UI:
+    setActivityInitialTouchMode(true);
+    this.mainActivity = getActivity();
+    this.questionTextView = (TextView) mainActivity
+            .findViewById(R.id.questionTextView);
+    ...
+</pre>
+    
+<p>Write individual test methods, e.g.</p><pre>
+public void testBlankAnswer() {
+    TouchUtils.clickView(this, this.goButton);
+    String answer = this.resultTextView.getText().toString();
+    String blankAnswer = this.mainActivity
+            .getString(R.string.nonIntegerAnswer);
+    assertEquals(blankAnswer, answer);
+}
+
+public void testNonNumericAnswer() {
+    this.mainActivity.runOnUiThread(new Runnable() {
+        public void run() {
+            answerEditText.setText("abc");
+        }
+    });
+
+    this.instrumentation.waitForIdleSync();
+    String answer = this.answerEditText.getText().toString();
+    assertEquals("abc", answer);
+    TouchUtils.clickView(this, this.goButton);
+    String result = this.resultTextView.getText().toString();
+    String nonNumericAnswer = this.mainActivity
+            .getString(R.string.nonIntegerAnswer);
+    assertEquals(nonNumericAnswer, result);
+}
+</pre>
+
+<p><b>Notes</b></p><ul>
+	<li>test methods start with "test", or we can include JUnit 4 and use @Test</li>
+	<li>by default methods run outside the UI thread, so can access UI components
+	but not update them (e.g. see testBlankAnswer above)</li>
+	<li>to run code on the UI thread, can annotate method with @UiThreadTest;
+	but there are certain statements that cannot be run on the UI thread, e.g.
+	<code>TouchUtils.clickView()</code></li>
+	<li>as an alternative to above, run some of a method on a UI thread, using
+	activity.runOnUiThread(), e.g. as in testNonNumericAnswer() above</li>
+</ul>
+
+<p>Run the test class as Android JUnit Test; results show up
+in JUnit pane</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

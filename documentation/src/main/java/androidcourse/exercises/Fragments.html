@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Fragments</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Dynamic UI with Fragments</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>We will create a fragment to manage audio (mp3) and video (mp4) files.
+This will be instead of the code in ExplorerActivity which used a
+MediaPlayer to play an audio file. This time we will use a MediaController,
+which is a view containing controls for a MediaPlayer.</p>
+
+<p>Define a new class to extend Fragment, and define a new layout xml file
+for use by this Fragment. Note: if you want to support devices with versions
+of Android as early as API 4, use android.support.v4.app.Fragment.</p>
+
+<p>Add a new fragment to the app:</p><ul>
+    <li>File, New, Fragment, Blank Fragment</li>
+    <li>Name = MediaFragment; include interface callbacks=no</li>
+    <li>Finish</li>
+</ul>
+
+<p>Include the new fragment in ExplorerActivity, like we did when we created
+<code>ExplorerFragment</code>. See <a href='ListView.html'>ListView</a> for
+a reminder.</p>
+
+<p>
+    For Explorer, we want want to display only one fragment at a time. We will do
+    this by hiding and showing fragments as required. <i>As an alternative approach we
+    could have one container element in <code>layout/activity_explorer.xml</code>,
+    and set it to contain the appropriate fragment; this is better when some of the
+    fragments are not often used - they can be created and added when necessary.</i>
+</p>
+
+<p>
+    In <code>ExplorerActivity.onCreate()</code>, get the new fragment, then hide it:</p>
+<pre>
+this.mediaFragment = (MediaFragment)
+    this.fragmentManager.findFragmentById(R.id.mediaFragment);
+FragmentTransaction ft = fragmentManager.beginTransaction();
+ft.hide(mediaFragment);
+ft.commit();
+</pre>
+
+<p>The MediaFragment will be shown when a media file is selected; so
+the ExplorerFragment needs to notify the Activity. For this we define
+a new interface; typically, this interface is defined within the Fragment
+class, in this case <code>ExplorerFragment</code>.
+</p><pre>
+public interface OnFileSelectedListener {
+   void onFileSelected(File file);
+}
+</pre>
+
+<p>Make ExplorerActivity implement this interface, e.g.</p><pre>
+@Override
+public void onFileSelected(File file) {
+    String fileName = file.getName();
+    if (fileName.endsWith(".mp3") || fileName.endsWith(".mp4")) {
+        if (this.mediaFragment == null) {
+            this.mediaFragment = new MediaFragment();
+        }
+        FragmentManager fragMan = getSupportFragmentManager();
+        fragMan.beginTransaction()
+                    .hide(explorerFragment)
+                    .show(mediaFragment)
+                    .commit();
+    } else {
+        Toast.makeText(this,
+            "selected file: " + file.getAbsolutePath(),
+            Toast.LENGTH_LONG).show();
+    }
+}
+</pre>
+
+<p>Edit ExplorerFragment.showFile: replace the code that plays the file
+with mediaPlayer, and instead pass the file to the Activity, e.g.</p>
+<pre><code>private void showFile(String fileName) {
+   ...
+   if (file.isDirectory()) {
+      this.currentDirectory = file;
+      showCurrentDirectory();
+   } else {
+      /* old way of doing it commented out:
+      if (fileName.endsWith(".mp3")) {
+      ...
+      }
+      */
+      ((OnFileSelectedListener) getActivity()).onFileSelected(file);
+   }
+}
+</code></pre>
+
+<p>Run your app, to see if it is working so far; navigate to a suitable
+media file (e.g. *.mp3 or *.mp4), and click on it. This should show
+MediaFragment. Back button will probably not work - yet.</p>
+
+<p>Edit the new layout file (e.g. layout/fragment_media.xml): delete the
+TextView, and add a VideoView (in Containers section of the Palette panel)</p>
+
+<p>Override <code>MediaFragment.onCreate()</code>, and add the
+statement:</p><pre>
+setRetainInstance(true);
+</pre>
+<p>as we did for ExplorerFragment, to stop the fragment being re-created
+on a configuration change.</p>
+
+<p>Edit <code>MediaFragment.onCreateView()</code> to find and save the
+VideoView, e.g.</p><pre>
+@Override
+public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState) {
+    View rootView = inflater.inflate(
+        R.layout.fragment_media, container, false);
+    this.videoView = (VideoView) rootView.findViewById(R.id.videoView);
+    return rootView;
+}
+</pre>
+
+<p>Add a new method to MediaFragment to set the media file, e.g.</p><pre>
+public void setFile(File file) {
+    this.mediaController =
+        new android.widget.MediaController(getActivity());
+    this.videoView.setMediaController(mediaController);
+    videoView.setVideoPath(file.getAbsolutePath());
+    videoView.requestFocus();
+    videoView.start();
+}
+</pre>
+
+<p>Edit <code>ExplorerActivity.onFileSelected()</code> to call MediaFragment's new
+method, e.g.</p><pre>
+if (fileName.endsWith(".mp3") || fileName.endsWith(".mp4")) {
+   ... commit();
+   mediaFragment.setFile(file); // this is the new line
+} else { ...
+</pre>
+
+<p>
+    Run your app to see if you can now play both video and audio files. Notice that if
+    you tap on the media image, you should get media controls - play, pause, etc.
+</p>
+
+<p>
+    To make sure media doesn't carry on playing when we don't want it to,
+    pause and resume the vidioView, e.g. add the following two methods to
+    <code>MediaFragment</code>:
+</p><pre>
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onResume()");
+        }
+        if (this.mediaController != null) {
+            this.videoView.setMediaController(mediaController);
+            this.videoView.resume();
+        }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onPause()");
+        }
+        if (this.videoView.isPlaying()) {
+            this.videoView.pause();
+        }
+    }
+</pre>
+
+<p>
+    Finally, let's get the back button working when we're in MediaFragment. The default
+    behaviour of the back button is close the Activity on the stack, and resume the Activity
+    below on the back-stack. We have overridden <code>ExplorerActivity.onBackPressed()</code>
+    to navigate up the parent directory; we now only want to do this if we are currently
+    showing ExplorerFragment.
+    If MediaFragment is currently visible, we want to stop any media, and switch to
+    ExplorerFragment, e.g.
+</p><pre>
+@Override
+public void onBackPressed() {
+    if (BuildConfig.DEBUG) Log.d(TAG, "onBackPressed()");
+    if (this.explorerFragment.isVisible()) {
+        boolean dealtWith = explorerFragment.onBackPressed();
+        if (!dealtWith) super.onBackPressed();
+    } else if (this.mediaFragment.isVisible()) {
+        this.mediaFragment.onPause(); // stop any media playing
+        FragmentManager fragMan = getSupportFragmentManager();
+        fragMan.beginTransaction()
+                .show(explorerFragment)
+                .hide(mediaFragment)
+                .commit();
+    } else {
+        if (BuildConfig.DEBUG) Log.e(TAG, "onBackPressed() with no fragment visible!");
+    }
+}
+</pre>
+
+<p>Run Explorer. If it works, you have created a half-decent app!</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

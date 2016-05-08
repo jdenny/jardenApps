@@ -1,0 +1,18 @@
+<resources>
+    <string name="action_settings">Settings</string>
+    <string name="app_name">Jarden Provider</string>
+    <string name="deleteStr">Delete</string>
+    <string name="difficultyLevelStr">Difficulty Level</string>
+    <string name="endOfListStr">***End Of List***</string>
+    <string name="english">English</string>
+    <string name="levelStr">Level</string>
+    <string name="nameStr">Name</string>
+    <string name="newStr">New</string>
+    <string name="restoreDBStr">Restore Database</string>
+    <string name="spanish">Spanish</string>
+    <string name="updateStr">Update</string>
+    <string name="userTableStr">User Table</string>
+    <string name="wordTableStr">Word Table</string>
+
+</resources>
+

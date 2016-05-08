@@ -1,0 +1,83 @@
+If we want to implement a 2-player game, played on two devices, the two devices need to communicate with each other. They can do this indirectly, via a web service running on a web server; or they can communicate directly, using WiFi point-to-point, or Bluetooth. This tutorial describes the steps involved in setting up a Bluetooth connection on an Android device.
+
+The classes provided by the  Android Bluetooth APIs are quite low-level; the coder is required to deal with several threads, allow these thread to communicate with the UI thread, and provide quite detailed to handle errors and retry various steps. To make the task easier, we have provided some helper classes that allow your application to "concentrate on the business logic". These helper classes are described later.
+
+Within the Android documentation there is a Bluetooth tutorial; see http://developer.android.com/guide/topics/connectivity/bluetooth.html
+
+As part of the Android SDK distribution, there is also a sample Bluetooth application called BluetoothChat.
+
+Set Bluetooth permissions:
+<manifest ... >
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  ...
+</manifest>
+
+BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+// if null, then device doesn't support bluetooth
+
+if (bluetoothAdapter.isEnabled()) {...
+// check if bluetooth turned on for this device; if not, can start an activity to ask the user if it can be turned on:
+startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), requestCode1);
+
+// in a separate thread (see AcceptThread, below) listen for connections:
+BluetoothServerSocket btServerSocket = bluetoothAdapter.listenUsing[Insecure]RfcommWithServiceRecord(BLUETOOTH_SERVICE_NAME, BLUETOOTH_UUID);
+BluetoothSocket btSocket = btServerSocket.accept();
+
+// meanwhile, try to connect to other device:
+startActivityForResult(
+	new Intent(activity, DeviceListActivity.class),
+	requestCode2);
+// this activity will list all the devices that have been paired with the current device; a device in this list may not be in range or have bluetooth turned on or have an application listening for bluetooth connections. When the user selects a device from the list, its MAC addressed will be forwarded to onActivityResult() in the Indent data.
+
+BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+// Use the MAC address to create an object representing the remote device
+
+AcceptThread: awaits incoming connections
+ConnectThread: tries to connect to remote device
+ConnectedThread: awaits incoming messages from the device we are connected to
+
+One or both devices run the AcceptThread;
+one device tries to connect to the other, using the ConnectThread; if the connection is successful, both devices stop their AcceptThread and ConnectThread and start running their ConnectedThread; both devices can now send each other messages.
+
+My guess at life-cycle
+client
+------
+initial state = 0
+state_change: 0 -> 1 (listening)
+1 -> 2 (connecting)
+what=4: message_server_device_name
+2 -> 3 (connected)
+what=2: read
+
+server
+initial state = 0
+state_change: 0 -> 1 (listening)
+what=6: message_client_device_name
+1 -> 3 (connected)
+what=2: read
+
+Build a simple bluetooth application
+------------------------------------
+1. Create a new project, e.g. SimpleTeamAppBT
+2. Build simple app!
+	e.g. MainActivity, plus GameFragment that shows:
+	TextView, EditText, Button for "Send";
+	on clicking Send, take text from editText
+	and place it in textView.
+	Check this works.
+3. Add BluetoothAppLib
+	project properties; Android; Add -> in Project Selection
+	select BluetoothAppLib; OK; OK
+4. Make your MainActivity implement the interface:
+	com.jardenconsulting.bluetooth.BluetoothListener
+	see the documentation on the interface for what each
+	method should do.
+5. In your layout, add a fragment element to hold the BluetoothFragment.
+	Initially hide your game fragment (created in step 2 above) and
+	show the BluetoothFragment. On bluetooth connection, hide the
+	bluetooth fragment and show the game fragment.
+6. In your AndroidManifest.xml file, add the following permissions (between <uses-sdk> and <application>)
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+

@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Dialog</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Implement Search Using a Dialog</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Define a class that extends <code>DialogFragment</code>.
+Override the method <code>onCreateDialog()</code>, e.g.
+<pre><code>@Override
+public Dialog onCreateDialog(Bundle savedInstanceState) {
+   Activity activity = getActivity();
+   OnClickListener onClickListener = (OnClickListener) activity;
+   AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+   this.searchEditText= new EditText(activity);
+   builder.setMessage(R.string.search)
+         .setPositiveButton(R.string.ok, onClickListener)
+         .setView(searchEditText)
+         .setNegativeButton(R.string.cancel, onClickListener);
+   return builder.create();
+}
+</code></pre>
+
+<p>This builds a simple dialog consisting of an EditText field to hold the
+search expression, plus 2 buttons for OK and Cancel (button labels defined
+as string resources).</p>
+
+Add a method to return the search expression, i.e. the value supplied
+in the <code>EditText</code>, e.g.
+<pre><code>public String getSearchExpr() {
+   return this.searchEditText.getText().toString();
+}
+</code></pre>
+
+<p>Update <code>ExplorerActivity.onOptionsItemSelected()</code>, to create
+and pop-up the search dialog when the search icon is pressed, e.g.
+<pre><code>if (id == R.id.actionSearch) {
+    if (this.searchDialog == null) {
+        this.searchDialog = new SearchDialog();
+    }
+    this.searchDialog.show(
+        getSupportFragmentManager(), "search");
+    return true;
+}
+</code></pre>
+
+<p>Update ExplorerActivity to implement <code>DialogInterface.OnClickListener</code>;
+add the required method; for now just log the result, e.g.
+<pre><code>public void onClick(DialogInterface dialog, int id) {
+   if (id == DialogInterface.BUTTON_POSITIVE) {
+      String searchExpr = searchDialog.getSearchExpr();
+      if (BuildConfig.DEBUG) Log.d(TAG, "searchExpr=" +
+         searchExpr);
+   } else if (id == DialogInterface.BUTTON_NEGATIVE) {
+      if (BuildConfig.DEBUG) Log.d(TAG, "search.cancel");
+   }
+}
+</code></pre>
+
+<p>The callback methods, called when the user presses one of the buttons,
+can be defined within the dialog, or in the activity that uses the dialog.
+We have chosen the latter option as it makes the Dialog more re-usable.</p>
+
+<p>Run your app, to ensure the search expression is logged correctly.</p>
+
+<p>Hint: to make testing easier, set a default value for the search
+expression in the dialog; e.g. in <code>SearchDialog.onCreateDialog()</code>,
+add the statement:</p><pre>
+this.searchEditText.setText("*.mp3"); // set default value
+</pre>
+
+<p>Now use that search expression to search for matching files. We have
+provided a helper method <code>findFileNames()</code> for this in module
+<code>jardenlib</code>.
+You will also need to add the method <code>getCurrentDirectory()</code>
+to <code>ExplorerFragment</code>. Your method <code>ExplorerActivity.onClick()</code>
+should now include something like this:</p>
+<pre><code>String[] fileNames = ExplorerTools.findFileNames(
+    explorerFragment.getCurrentDirectory(), searchExpr);
+explorerFragment.showFileNames(fileNames);
+</code></pre>
+
+<p>Run the app to see if search works! If it does, help someone else
+(and have a good gloat that you've finished!)</p>
+
+<p>Note that the UI locks while the search takes place. What's going on?
+We hope there's a solution soon!</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

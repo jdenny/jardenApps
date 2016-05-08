@@ -3,12 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/androidcourse/androidcourse.iml" filepath="$PROJECT_DIR$/androidcourse/androidcourse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bluetoothlib/bluetoothapplib.iml" filepath="$PROJECT_DIR$/bluetoothlib/bluetoothapplib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bluetoothlib/bluetoothlib.iml" filepath="$PROJECT_DIR$/bluetoothlib/bluetoothlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/documentation/documentation.iml" filepath="$PROJECT_DIR$/documentation/documentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/drawerdemo/drawerdemo.iml" filepath="$PROJECT_DIR$/drawerdemo/drawerdemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/explorer/explorer.iml" filepath="$PROJECT_DIR$/explorer/explorer.iml" />
       <module fileurl="file://$PROJECT_DIR$/hotbridge/hotbridge.iml" filepath="$PROJECT_DIR$/hotbridge/hotbridge.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenApps.iml" filepath="$PROJECT_DIR$/jardenApps.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenlib/jardenlib.iml" filepath="$PROJECT_DIR$/jardenlib/jardenlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jardenprovider/jardenprovider.iml" filepath="$PROJECT_DIR$/jardenprovider/jardenprovider.iml" />
       <module fileurl="file://$PROJECT_DIR$/spanish/spanish.iml" filepath="$PROJECT_DIR$/spanish/spanish.iml" />
     </modules>
   </component>

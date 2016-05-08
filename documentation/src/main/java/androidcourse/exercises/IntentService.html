@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>IntentService</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Intent Service, Notification</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Exercise Objectives:</p><ul>
+	<li>Define a service so that file searches, which may be lengthy,
+	can run in the background</li>
+	<li>Return the results to the user via a Notification</li>
+</ul>
+
+<p>Define a class, SearchService (either manually, or using the Android Studio
+wizard: File, New, Service, Intent Service, Include helper start methods = no?), that
+extends IntentService, provides a default constructor, and overrides
+<code>onHandleIntent()</code>, e.g.<pre>
+public SearchService() {
+   super("SearchService");
+}
+@Override
+public void onHandleIntent(Intent intent) {
+   // get the data passed to the service:
+   String directory = intent.getStringExtra(ExplorerActivity.DIRECTORY_TAG);
+   String searchExpr = intent.getStringExtra(ExplorerActivity.SEARCH_EXPR_TAG);
+   // do the processing:
+   String[] fileNames = ExplorerTools.findFileNames(new File(directory), searchExpr);
+   // for now, log the results:
+   for (String fileName: fileNames) {
+      Log.d(TAG, fileName);
+   }
+}
+</pre>
+
+<p>Note: DIRECTORY_TAG and SEARCH_EXPR_TAG are 2 String literals used as part
+of the communication between the Activity and the IntentService, e.g.</p><pre>
+public static final String DIRECTORY_TAG = "directory";
+</pre>
+
+<p>A service is a top-level application component, and needs to be declared
+in AndroidManifest.xml, e.g.
+<pre>&lt;application
+   ...
+   &ltservice
+       android:name=".SearchService"
+       android:exported="false"/>
+&lt/application>
+</pre>
+
+<p>Invoke the IntentService from the Activity, e.g. in
+<code>ExplorerActivity.onClick()</code>, comment out the code that calls
+the search and uses the results, and insert the following:</p>
+<pre>Intent searchIntent = new Intent(this, SearchService.class);
+searchIntent.putExtra(DIRECTORY_TAG,
+   currentDirectory.getAbsolutePath());
+searchIntent.putExtra(SEARCH_EXPR_TAG, searchExpr);
+startService(searchIntent);
+</pre>
+
+<p>Run your app, and check the correct output (i.e. list of matching
+fileNames) appears in the log.</p>
+
+<p>Okay, so if that all works fine, we next need to update
+<code>SearchService.onHandleIntent()</code> to pass back the results to
+the ExplorerActivity. We will use a Notification; this notifies the user
+that the results have arrived, but doesn't interrupt the current activity
+until the user is ready to look at them.</p>
+
+<p>We first create an Intent to invoke the ExplorerActivity, as we did
+when ExplorerActivity invoked SearchService:</p><pre>
+Intent notifyIntent = new Intent(this, ExplorerActivity.class);
+notifyIntent.putExtra(ExplorerActivity.FILE_NAMES_TAG, fileNames);
+</pre>
+		
+<p>We may also want to return the parameters passed to the search, so
+they can be displayed with the results, e.g.</p><pre>
+notifyIntent.putExtra(ExplorerActivity.DIRECTORY_TAG, directory);
+notifyIntent.putExtra(ExplorerActivity.SEARCH_EXPR_TAG, searchExpr);
+</pre>
+
+<p>A PendingIntent is a wrapper for another Intent; in this case the other
+Intent is the notifyIntent we created above, which will be activated when
+the user clicks on the notification.</p><pre>
+PendingIntent pendingIntent = PendingIntent.getActivity(
+      this, 0, notifyIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT);
+</pre>
+
+<p>We are now ready to build the Notification itself; this can be done
+with the Builder inner class, e.g.</p><pre>
+NotificationCompat.Builder mBuilder =
+   new NotificationCompat.Builder(this)
+   .setContentIntent(pendingIntent)
+   .setSmallIcon(R.drawable.abc_ic_search_api_mtrl_alpha)
+   .setAutoCancel(true)
+   .setDefaults(Notification.DEFAULT_SOUND)
+   .setContentTitle("Explorer Search")
+   .setContentText("Results are in for: " + searchExpr);
+NotificationManager mNotifyMgr =
+   (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+mNotifyMgr.notify(SEARCH_NOTIFICATION_ID, mBuilder.build());
+</pre>
+
+<p>Note: SEARCH_NOTIFICATION_ID is an int, an identifier for this
+notification unique within your application</p>
+
+<p>The final stage is to update ExplorerActivity.onCreate() to detect
+that it has been started as a result of the notification, rather than
+normal start, e.g.</p><pre>
+Intent intent = getIntent();
+String[] fileNames = intent.getStringArrayExtra(FILE_NAMES_TAG);
+if (fileNames != null) { // intent from Notification
+   String directory = intent.getStringExtra(DIRECTORY_TAG);
+   String searchExpr = intent.getStringExtra(SEARCH_EXPR_TAG);
+   setTitle(directory + " (" + searchExpr + ")");
+   explorerFragment.setFileNames(fileNames);
+}
+</pre>
+
+<p>This requires a new method in ExplorerFragment to save the String
+array, e.g.</p>
+<pre>public void setFileNames(String[] fileNames) {
+   this.fileNames = fileNames;
+}
+</pre>
+
+<p>Change ExplorerFragment.onCreateView() to detect that the fileNames
+have been set from the notification, e.g.</p>
+<pre>if (this.fileNames != null) {
+   showFileNames(fileNames); // arrived here via notification
+   this.fileNames = null;
+} else {
+   showCurrentDirectory();
+}
+</pre>
+
+<p>Run your app again. Perform a search. You should see the search icon
+appear in the notification bar; click on it, and you should see the results
+within your app. If the matching files are not shown, it may be that
+<code>ExplorerFragment.setFileNames()</code> is called after <code>onCreateView()</code>.
+One way round this is to add code in <code>setFileNames()</code> to see if the views
+have been created (e.g. <code>fileListView</code> is not null) and if so call
+<code>showFileNames()</code>.</p>
+
+<p>When everything works, permit yourself a pat on the back,
+then go and help someone else por favor.</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

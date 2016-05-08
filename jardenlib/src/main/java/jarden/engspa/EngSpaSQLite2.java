@@ -32,7 +32,6 @@ import static jarden.provider.engspa.EngSpaContract.LEVEL;
 import static jarden.provider.engspa.EngSpaContract.NAME;
 import static jarden.provider.engspa.EngSpaContract.PROJECTION_ALL_FAILED_WORD_FIELDS;
 import static jarden.provider.engspa.EngSpaContract.PROJECTION_ALL_FIELDS;
-import static jarden.provider.engspa.EngSpaContract.PROJECTION_ALL_USER_FIELDS;
 import static jarden.provider.engspa.EngSpaContract.QA_STYLE;
 import static jarden.provider.engspa.EngSpaContract.QUALIFIER;
 import static jarden.provider.engspa.EngSpaContract.QUESTION_SEQUENCE;
@@ -228,23 +227,8 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		Log.i(TAG, "bulkInsert(); rows added to database: " + rows);
 		return rows;
 	}
-	private Cursor getCursor(String[] columns, String selection,
-			String[] selectionArgs, String groupBy, String having,
-			String orderBy) {
-		Cursor cursor = getReadableDatabase().query(
-				TABLE, columns, selection, selectionArgs,
-				groupBy, having, orderBy);
-		return cursor;
-	}
 	private Cursor getCursor(String sql, String[] selectionArgs) {
 		return getReadableDatabase().rawQuery(sql, selectionArgs);
-	}
-	private int update(ContentValues values, String selection,
-			String[] selectionArgs) {
-		if (validateValues(values)) {
-			return getWritableDatabase().update(TABLE, values,
-					selection, selectionArgs);
-		} else return 0;
 	}
 	private int delete(SQLiteDatabase engSpaDB, String selection, String[] selectionArgs) {
 		int rows = engSpaDB.delete(TABLE, selection, selectionArgs);
@@ -254,6 +238,31 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		}
 		return rows;
 	}
+    // methods for Content Provider: ********************************************
+    public Cursor getCursor(String[] columns, String selection,
+                            String[] selectionArgs, String groupBy, String having,
+                            String orderBy) {
+        Cursor cursor = getReadableDatabase().query(
+                TABLE, columns, selection, selectionArgs,
+                groupBy, having, orderBy);
+        return cursor;
+    }
+    public int update(ContentValues values, String selection,
+                       String[] selectionArgs) {
+        if (validateValues(values)) {
+            return getWritableDatabase().update(TABLE, values,
+                    selection, selectionArgs);
+        } else return 0;
+    }
+    public int delete(String selection, String[] selectionArgs) {
+        return delete(getWritableDatabase(), selection, selectionArgs);
+    }
+    public long insert(ContentValues values) {
+        return insert(getWritableDatabase(), values);
+    }
+    public int bulkInsert(ContentValues[] values) {
+        return bulkInsert(getWritableDatabase(), values);
+    }
 
 	// methods for UserWord table: **********************************************
 	@Override // EngSpaDAO
