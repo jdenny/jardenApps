@@ -234,8 +234,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					this.engSpaUser.setLearnModePhase2(false);
                     int newUserLevel = userLevel + 1;
                     if (newUserLevel > this.engSpaDAO.getMaxUserLevel()) {
-                        this.engSpaActivity.setStatus(R.string.levelsComplete);
-                        engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
+                        startPracticeMode(R.string.levelsComplete);
                     } else {
                         engSpaQuiz.setUserLevel(newUserLevel);
                     }
@@ -243,19 +242,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					engSpaQuiz.unsetModeInitialised();
                     this.engSpaUser.setLearnModePhase2(true);
 				}
-				try {
-					this.spanish = engSpaQuiz.getNextQuestion(
-							engSpaActivity.getQuestionSequence());
-				} catch (EndOfQuestionsException e1) {
-					if (BuildConfig.DEBUG) Log.e(TAG, "nextQuestion() it's all gone wrong!");
-					engSpaActivity.setStatus("end of exceptions error!");
-				}
+			} else { // must be topic mode
+                startPracticeMode(R.string.endOfTopic);
 			}
-			else { // must be topic mode
-                // TODO: show this message in an alert dialog?
-                engSpaActivity.setStatus("end of topic; now practice mode");
-                engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
-			}
+            try {
+                this.spanish = engSpaQuiz.getNextQuestion(
+                        engSpaActivity.getQuestionSequence());
+            } catch (EndOfQuestionsException e1) {
+                if (BuildConfig.DEBUG) Log.e(TAG, "nextQuestion() it's all gone wrong!");
+                engSpaActivity.setStatus("end of exceptions error!");
+            }
 		}
 		String english = engSpaQuiz.getEnglish();
 		
@@ -298,6 +294,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		clearAnswerText();
 	}
+    private void startPracticeMode(int messageId) {
+        Toast.makeText(getActivity(), messageId, Toast.LENGTH_LONG).show();
+        engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
+        engSpaActivity.setAppBarTitle();
+    }
     private void clearAnswerText() {
         this.answerEditText.getText().clear();
     }

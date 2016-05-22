@@ -242,7 +242,9 @@ public class VerbUtils {
 					String irreg = irregEnglish3rdPersonSingularPresentMap.get(englishVerb);
 			        if (irreg != null) {
 			        	engVerbModified = irreg;
-			        } else if (englishVerb.endsWith("ss")) {
+			        } else if (englishVerb.endsWith("ss") ||
+                            englishVerb.endsWith("sh") ||
+                            englishVerb.endsWith("ch")) {
 			        	engVerbModified = englishVerb + "es";
 			        } else {
 			        	engVerbModified = englishVerb + "s";
@@ -994,10 +996,12 @@ public class VerbUtils {
 	/******************English verb data*****************************/
 	private static String[][] irregEnglish3rdPersonSingularPresent = {
             {"accompany", "accompanies"}, {"be", "is"},
-            {"can", "can"}, {"carry", "carries"}, {"cry", "cries"},
+            {"can", "can"}, {"carry", "carries"},
+            {"cry", "cries"},
             { "do", "does"}, { "go", "goes" },
-            {"have", "has"}, {"reply", "replies"}, {"study", "studies"},
-            {"tidy", "tidies"}, {"try", "tries"}
+            {"have", "has"},
+            {"reply", "replies"}, {"study", "studies"},
+            {"tidy", "tidies"}, {"try", "tries"},
 	};
 	private static String[][] irregEnglishPreterites = {
 		{"accompany", "accompanied"},

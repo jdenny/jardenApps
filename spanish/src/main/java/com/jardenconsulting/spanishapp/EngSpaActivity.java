@@ -29,7 +29,8 @@ public interface EngSpaActivity {
 	 * Vibrate and play soundError.
 	 */
 	void onWrongAnswer();
-	void setProgressBarVisible(boolean visible);
+    void setAppBarTitle();
+    void setProgressBarVisible(boolean visible);
 
 	/**
 	 * Set Spanish word if user later clicks on

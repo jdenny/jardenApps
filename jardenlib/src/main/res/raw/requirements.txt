@@ -21,6 +21,12 @@ Factory reset of S3 Mini
 	Footer: Phone, Chrome, GMail, Apps
 	old_telephone.mp3
 
+ANDROIDCOURSE
+alternative way of passing results back - see app in CourseApp
+(then delete CourseApp!)
+Video to survive screen rotation!
+locations of data, e.g. url of server
+
 CARDS
 To Test
 	bluetooth still works - but how is it to be used now?
@@ -41,6 +47,10 @@ possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
 	as done by EngSpaQuiz2
 
 SPANISH
+remove hockey?
+in the morning?
+more phrases
+
 Main Quiz Logic ************************************************
 clean open of app
 	getUser (level, quizMode, qaStyle)

@@ -38,9 +38,16 @@ this.currentDirectory = new File("/");
 </pre>
 
 <p>In <code>ExplorerFragment.onCreateView()</code>:<ul>
-	<li>create an ArrayAdapter, e.g.
-<pre>this.fileListAdapter = new ArrayAdapter&lt;String>(
-   getActivity(), android.R.layout.simple_list_item_1);
+	<li>inflate the layout; similar to what happens in Activity
+        but the way we do it is slightly different:
+<pre>
+View rootView = inflater.inflate(R.layout.fragment_explorer,
+   container, false);
+</pre></li>
+    <li>create an ArrayAdapter, e.g.
+<pre>
+this.fileListAdapter = new ArrayAdapter&lt;String>(
+getActivity(), android.R.layout.simple_list_item_1);
 </pre></li>
 	<li>Find the ListView within the layout; similar to code in an Activity,
 but slightly different for a Fragment, e.g.<pre>

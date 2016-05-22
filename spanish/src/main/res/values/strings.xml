@@ -8,7 +8,7 @@
     <string name="correctQueryStr">Correct?</string>
     <string name="currentStr">Currents:</string>
     <string name="deleteFailsStr">Delete all fails</string>
-    <string name="helpTip">Contextual help shows here</string>
+    <string name="endOfTopic">End of topic</string>
     <string name="englishStr">English</string>
     <string name="errorLoadingDB">Error loading database!</string>
     <string name="failStr">Fails:</string>
@@ -19,21 +19,23 @@
     <string name="invalidUserLevelForMode">
         learnLevel cannot be 1 for Practice or Audio mode
     </string>
+    <string name="learnMode">Learn Mode</string>
     <string name="levelsComplete">
-        Congratulations - all levels completed! Starting practice mode
+        Congratulations - all levels completed! Starting Practice Mode
     </string>
     <string name="levelStr">Level:</string>
     <string name="loadDBDone">Loading Spanish dictionary complete</string>
     <string name="loadingDB">Loading Spanish dictionary - please be patient with us!</string>
     <string name="micStr">Mic</string>
     <string name="noLit">No</string>
-    <string name="numbersGameLit">Numbers Game</string>
+    <string name="numbersGame">Numbers Game</string>
     <string name="numberPrompt">Number</string>
     <string name="one">1</string>
     <string name="pause">Pause</string>
     <string name="pauseTime">Pause (seconds)</string>
     <string name="pauseTimeDefault">3</string>
     <string name="play">Play</string>
+    <string name="practiceMode">Practice Mode</string>
     <string name="questionStyleError">
         Question Style does not apply to Learn Mode,
         only Practice Mode and Topic Mode
@@ -67,7 +69,7 @@
     <string name="userNotChanged">No changes made to user</string>
     <string name="userSettingsStr">User Settings</string>
     <string name="welcome">[b]¡Bienvenida! Welcome![/b] to Revise Spanish</string>
-    <string name="wordLookupLit">Word Lookup</string>
+    <string name="wordLookup">Word Lookup</string>
     <string name="yesLit">Yes</string>
 
     <!-- ******** Tip Strings ****************** -->

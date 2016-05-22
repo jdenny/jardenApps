@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
 			R.string.WordLookupHelp
 	};
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
+    private static final int TOPIC_FOR_TITLE = -1;
 	private String SHOW_HELP_KEY = "SHOW_HELP_KEY";
 	private static final String UPDATES_VERSION_KEY = "DataVersion";
 	private static final String ENG_SPA_UPDATES_NAME =
@@ -286,7 +287,7 @@ public class MainActivity extends AppCompatActivity
 		} else if (id == R.id.learnMode) {
 			engSpaQuiz.setQuizMode(QuizMode.LEARN);
 			showFragment(FragmentTag.ENGSPA);
-            setAppBarTitle("LEARN Mode");
+            setAppBarTitle(R.string.learnMode);
 		} else if (id == R.id.exit) {
 			super.onBackPressed();
 		} else if (id == R.id.audioMode) {
@@ -303,7 +304,7 @@ public class MainActivity extends AppCompatActivity
 			} else {
 				engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
 				showFragment(FragmentTag.ENGSPA);
-                setAppBarTitle("PRACTICE Mode");
+                setAppBarTitle(R.string.practiceMode);
 			}
 		} else {
 			Log.e(TAG, "unrecognised drawer menu item id: " + id);
@@ -443,7 +444,7 @@ public class MainActivity extends AppCompatActivity
 		getEngSpaQuiz().setQuizMode(QuizMode.TOPIC);
         this.getEngSpaUser().setTopic(topic);
 		showFragment(FragmentTag.ENGSPA);
-        setAppBarTitle(topic);
+        setAppBarTitle(TOPIC_FOR_TITLE);
 		this.engSpaFragment.reset();
 
 	}
@@ -642,25 +643,26 @@ public class MainActivity extends AppCompatActivity
 	public void speakSpanish(String spanish) {
 		this.viewlessFragment.speakSpanish(spanish);
 	}
-    private void setAppBarTitle() {
+
+    @Override // EngSpaActivity
+    public void setAppBarTitle() {
         EngSpaUser engSpaUser =  getEngSpaUser();
         QuizMode quizMode = engSpaUser.getQuizMode();
-        String title = "Revise Spanish"; // TODO: use String resources
-        if (currentFragmentTag == FragmentTag.WORD_LOOKUP) title = "Word Lookup";
-        else if (currentFragmentTag == FragmentTag.NUMBER_GAME) title = "Numbers Game";
+        int titleId = R.string.app_name;
+        if (currentFragmentTag == FragmentTag.WORD_LOOKUP) titleId = R.string.wordLookup;
+        else if (currentFragmentTag == FragmentTag.NUMBER_GAME) titleId = R.string.numbersGame;
         else { // must be ENGSPA
-            /*!!if (quizMode == QuizMode.AUDIO) title = "Audio Mode";
-            else*/ if (quizMode == QuizMode.PRACTICE) title = "Practice Mode";
-            else if (quizMode == QuizMode.TOPIC) title = engSpaUser.getTopic();
-            else if (quizMode == QuizMode.LEARN) title = "Learn Mode";
+            if (quizMode == QuizMode.PRACTICE) titleId = R.string.practiceMode;
+            else if (quizMode == QuizMode.TOPIC) titleId = TOPIC_FOR_TITLE;
+            else if (quizMode == QuizMode.LEARN) titleId = R.string.learnMode;
         }
-        setAppBarTitle(title);
-
+        setAppBarTitle(titleId);
     }
-	private void setAppBarTitle(String title) {
+	private void setAppBarTitle(int titleId) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"setEngSpaTitle(" + title + ")");
-		super.setTitle(title);
+				"setAppBarTitle(" + titleId + ")");
+        if (titleId == TOPIC_FOR_TITLE) super.setTitle(getEngSpaUser().getTopic());
+		else super.setTitle(titleId);
 	}
 	@Override // EngSpaActivity
 	public void setProgressBarVisible(boolean visible) {

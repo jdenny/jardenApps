@@ -20,7 +20,7 @@ import jarden.quiz.Quiz;
 public class EngSpaQuiz extends Quiz {
 
     public enum QuizMode {
-        LEARN, TOPIC, PRACTICE //!! , AUDIO
+        LEARN, TOPIC, PRACTICE
     }
 	public static final int WORDS_PER_LEVEL = 10;
 
@@ -132,21 +132,9 @@ public class EngSpaQuiz extends Quiz {
 	/**
 	 * Get questions from Current, Passed and Failed lists.
 	 * @return spanish
-	Note: all fails kept in sync with database using userWordTable (i.e.
-	fails are per user!)
-	Logic:
-	if no currents and no fails: endOfQuestions
-	in sequence defined by CFP_LIST and cfpListIndex:
-	 	if list empty, go to next list in sequence
-	get Current; start from 1st
-		can't be recent word
-	get Failed; start from 1st
-		if consecRights < 2
-			can't be recent word
-		else
-			can't be one of previous 10 words
-	get random Passed
-		can't be recent word
+     Note: all fails kept in sync with database using userWordTable
+     3
+
 	 */
 	@Override // Quiz
 	public String getNextQuestion(int questionSequence) throws EndOfQuestionsException {
@@ -157,7 +145,6 @@ public class EngSpaQuiz extends Quiz {
                 this.failedWordList.size() == 0) {
             throw new EndOfQuestionsException("quizMode=" + quizMode);
         }
-        // TODO: get questionSequence from userSettings?
         this.questionSequence = questionSequence;
         // check each of the question types; there should be at least one available
         this.currentWord = null;
@@ -174,10 +161,10 @@ public class EngSpaQuiz extends Quiz {
         }
         if (this.currentWord == null) {
             // running out of words; this can only happen at level 1
-            // (so no passed words) and when currentWordList is empty
-            // and when words in failed list are also in recentWords
-            this.cfpChar = 'F';
-            this.currentWord = failedWordList.get(0);
+            // (so no passed words) and when any words in current or
+            // failed lists are also in recentWords (e.g. in phase2)
+            // so get word (not recently used) from previous and current level
+            this.currentWord = getPassedWord2(this.engSpaUser.getLearnLevel() + 1);
         }
         return conjugateCurrentWord(this.currentWord);
     }
@@ -347,18 +334,20 @@ public class EngSpaQuiz extends Quiz {
 
     /**
      * Get random word from below current learnLevel.
-     * @return
+     * @return null if learnLevel 1, or return a word
+     * that has not been recently used.
      */
 	public EngSpa getPassedWord() {
         /*
          * get random word from previous level (i.e. previously got right);
          * being random, it may be recently used, so have up to 3 attempts
          */
-		EngSpa es;
-		int level = engSpaUser.getLearnLevel();
-		if (level < 2) return null;
-
-        es = engSpaDAO.getRandomPassedWord(level);
+        int level = engSpaUser.getLearnLevel();
+        if (level < 2) return null;
+        return getPassedWord2(level);
+    }
+    private EngSpa getPassedWord2(int level) {
+        EngSpa es = engSpaDAO.getRandomPassedWord(level);
         int wordId = es.getWordId();
         int maxId = (level - 1) * WORDS_PER_LEVEL;
         for (int i = 0; isRecentWord(es) && i < 3; i++) {
