@@ -8,8 +8,8 @@ android {
         applicationId "com.jardenconsulting.spanishapp"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 24
-        versionName "2.1"
+        versionCode 25
+        versionName "2.2"
     }
     buildTypes {
         release {
