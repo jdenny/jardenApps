@@ -2,6 +2,7 @@ package com.jardenconsulting.spanishapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Deque;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
@@ -19,6 +20,7 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -40,9 +42,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,32 +53,32 @@ public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
 		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
 		NavigationView.OnNavigationItemSelectedListener,
-		ListView.OnItemLongClickListener, View.OnClickListener {
+        View.OnClickListener {
 
-	private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity";
 	private static final int[] helpResIds = {
-			R.string.engSpaHelp,
-			R.string.EngSpaMoreHelp,
-			R.string.FeedbackHelp,
-			R.string.MenuHelp,
-			R.string.micButtonHelp,
-			R.string.MicButtonMoreHelp,
+            R.string.IntroHelp, // 1st in list shown initially
+            R.string.ContentsHelp,
+            R.string.AudioModeHelp,
+            R.string.FeedbackHelp,
+			R.string.LearnModeHelp,
+            R.string.MenuHelp,
+			R.string.MicButtonHelp,
 			R.string.NumbersGameHelp,
-			R.string.NumbersGameMoreHelp,
-			R.string.QuestionsByLevelHelp,
+            R.string.PracticeModeHelp,
 			R.string.QuestionStyleHelp,
-			R.string.SelectTopicHelp,
 			R.string.SelfMarkHelp,
-			R.string.SelfMarkMoreHelp,
+            R.string.TopicModeHelp,
 			R.string.WordLookupHelp
 	};
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
     private static final int TOPIC_FOR_TITLE = -1;
-	private String SHOW_HELP_KEY = "SHOW_HELP_KEY";
 	private static final String UPDATES_VERSION_KEY = "DataVersion";
 	private static final String ENG_SPA_UPDATES_NAME =
 			QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
-	// Fragment tags:
+    private static final String STATUS_TEXT_KEY = "StatusText";
+
+    // Fragment tags:
 	private enum FragmentTag {
 		WORD_LOOKUP, NUMBER_GAME, ENGSPA, VIEWLESS
 	}
@@ -105,10 +107,12 @@ public class MainActivity extends AppCompatActivity
 	private DocumentTextView documentTextView;
 	private boolean doubleBackToExitPressedOnce = false;
 	private CheckBox showHelpCheckBox;
+    private Button helpContentsButton;
+    private Button helpBackButton;
 	private AudioModeDialog audioModeDialog;
 	private AlertDialog alertDialog;
 
-	@Override
+	@Override // Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
@@ -117,50 +121,47 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
 		this.helpTextView = (TextView) findViewById(R.id.helpTextView);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
-
+        this.statusTextView.setVisibility(View.GONE); // hidden if no message is shown
 		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
-		boolean isShowHelp = getSharedPreferences().getBoolean(SHOW_HELP_KEY, true);
-		if (!isShowHelp) {
-			this.helpTextView.setVisibility(View.GONE);
-		}
-		this.showHelpCheckBox.setChecked(isShowHelp);
-
+        this.helpContentsButton = (Button) findViewById(R.id.helpContentsButton);
+        helpContentsButton.setOnClickListener(this);
+        this.helpBackButton = (Button) findViewById(R.id.helpBackButton);
+        helpBackButton.setOnClickListener(this);
+        helpBackButton.setVisibility(View.GONE); // until further notice!!
 		this.documentTextView = new DocumentTextView(
 				getApplicationContext(),
 				helpTextView, helpResIds, null);
 		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		//?? helpTextView.setMovementMethod(new ScrollingMovementMethod());
-
 		helpTextView.setHighlightColor(Color.TRANSPARENT);
-
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
 				this, drawerLayout, toolbar,
 				R.string.drawer_open,
-				R.string.drawer_close);
+				R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                closeKeyboard();
+            }
+        };
 		drawerLayout.addDrawerListener(drawerToggle);
 		drawerToggle.syncState();
-
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
-
 		this.fragmentManager = getSupportFragmentManager();
-
 		if (savedInstanceState == null) {
 			this.viewlessFragment = new ViewlessFragment();
 			FragmentTransaction ft = fragmentManager.beginTransaction();
 			ft.add(this.viewlessFragment, FragmentTag.VIEWLESS.name());
 			ft.commit();
 			this.currentFragmentTag = FragmentTag.ENGSPA;
-			setTip(R.string.FeedbackHelp);
 			loadDB(); // which in turn -> dbLoadComplete() -> showFragment()
 		} else {
+            setStatus(savedInstanceState.getString(STATUS_TEXT_KEY));
             String currentFragmentStr = savedInstanceState.getString(CURRENT_FRAGMENT_KEY);
             this.currentFragmentTag = (currentFragmentStr == null) ?
                 FragmentTag.ENGSPA : FragmentTag.valueOf(currentFragmentStr);
@@ -175,17 +176,41 @@ public class MainActivity extends AppCompatActivity
 			showFragment();
 		}
 	}
-	private void dbLoadComplete() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (BuildConfig.DEBUG) Log.d(TAG, "onStart()");
+        boolean isShowHelp = viewlessFragment.getEngSpaUser().isShowHelp();
+        if (!isShowHelp) {
+            hideHelp();
+        }
+        this.showHelpCheckBox.setChecked(isShowHelp);
+    }
+    private void hideHelp() {
+        this.helpTextView.setVisibility(View.GONE);
+        this.helpContentsButton.setVisibility(View.GONE);
+        this.helpBackButton.setVisibility(View.GONE);
+    }
+    private void dbLoadComplete() {
 		showFragment();
 		checkForDBUpdates();
 	}
-
 	@Override // OnClickListener
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.showHelpCheckBox) {
 			setShowHelp(this.showHelpCheckBox.isChecked());
-		}
+		} else if (id == R.id.helpContentsButton) {
+            setTip(R.string.ContentsHelp);
+        } else if (id == R.id.helpBackButton) {
+            Deque<Integer> helpHistory = this.viewlessFragment.getHelpHistory();
+            if (helpHistory.isEmpty()) {
+                Toast.makeText(this, "help history empty", Toast.LENGTH_LONG).show();
+            } else {
+                int helpId = helpHistory.pop();
+                setTip(helpId);
+            }
+        }
 	}
 	@Override // Activity
 	public void onResume() {
@@ -197,7 +222,9 @@ public class MainActivity extends AppCompatActivity
 		if (!this.documentTextView.showPage(getResources().getResourceEntryName(resId))) {
 			// so that it doesn't all lock up if resId not found:
 			this.helpTextView.setText((resId));
-		}
+            Deque<Integer> helpHistory = this.viewlessFragment.getHelpHistory();
+            helpHistory.push(resId);
+        }
 	}
 	/*
 	 * use engspaversion.txt and sharedPreferences to see if there
@@ -214,7 +241,7 @@ public class MainActivity extends AppCompatActivity
 					engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
 					final int version = Integer.parseInt(engSpaVersionLines.get(0));
 					// Note: this code is sometimes run before end of onCreate()
-					final int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
+					final int savedVersion = getSharedPreferences().getInt(ENGSPA_TXT_VERSION_KEY, 0);
 					final boolean newDictionary = version > savedVersion;
 					// report results so far:
 					runOnUiThread(new Runnable() {
@@ -286,8 +313,8 @@ public class MainActivity extends AppCompatActivity
 			showFragment(FragmentTag.NUMBER_GAME);
 		} else if (id == R.id.learnMode) {
 			engSpaQuiz.setQuizMode(QuizMode.LEARN);
+            engSpaFragment.reset();
 			showFragment(FragmentTag.ENGSPA);
-            setAppBarTitle(R.string.learnMode);
 		} else if (id == R.id.exit) {
 			super.onBackPressed();
 		} else if (id == R.id.audioMode) {
@@ -303,14 +330,14 @@ public class MainActivity extends AppCompatActivity
 				showAlertDialog(R.string.userLevelErrorPractice);
 			} else {
 				engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
+                engSpaFragment.reset();
 				showFragment(FragmentTag.ENGSPA);
-                setAppBarTitle(R.string.practiceMode);
 			}
 		} else {
 			Log.e(TAG, "unrecognised drawer menu item id: " + id);
 		}
 		this.drawerLayout.closeDrawers();
-        setAppBarTitle();
+        //!! setAppBarTitle(); // what does this do??
 		return true;
 	}
     private void showAlertDialog(int messageId) {
@@ -326,17 +353,22 @@ public class MainActivity extends AppCompatActivity
 		this.alertDialog.show();
 
 	}
+    @Override
+    /**
+     * Set help views visible if not already so.
+     */
+    public void setShowHelp() {
+        if (this.helpTextView.getVisibility() != View.VISIBLE) {
+            setShowHelp(true);
+        }
+    }
 	private void setShowHelp(boolean showHelp) {
-		this.helpTextView.setVisibility(showHelp ? View.VISIBLE : View.GONE);
-		SharedPreferences.Editor editor =
-				this.sharedPreferences.edit();
-		editor.putBoolean(SHOW_HELP_KEY, showHelp);
-		editor.apply();
-	}
-	@Override // OnItemLongClickListener - for DrawerList
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		Snackbar.make(view, "position=" + position + "; id=" + id, Snackbar.LENGTH_LONG).show();
-		return false;
+        if (showHelp) {
+            this.helpTextView.setVisibility(View.VISIBLE);
+            this.helpContentsButton.setVisibility(View.VISIBLE);
+            this.helpBackButton.setVisibility(View.GONE); // until further notice!!
+        } else hideHelp();
+        this.viewlessFragment.getEngSpaUser().setShowHelp(showHelp);
 	}
 	@Override // Activity
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -443,10 +475,8 @@ public class MainActivity extends AppCompatActivity
 				"onTopicSelected(" + topic + ")");
 		getEngSpaQuiz().setQuizMode(QuizMode.TOPIC);
         this.getEngSpaUser().setTopic(topic);
+        this.engSpaFragment.reset();
 		showFragment(FragmentTag.ENGSPA);
-        setAppBarTitle(TOPIC_FOR_TITLE);
-		this.engSpaFragment.reset();
-
 	}
 	@Override // QAStyleDialog.QAStyleListener
 	public void onQAStyleSelected(QAStyle qaStyle) {
@@ -465,6 +495,8 @@ public class MainActivity extends AppCompatActivity
 			savedInstanceState.putString(CURRENT_FRAGMENT_KEY,
 					this.currentFragmentTag.name());
 		}
+        savedInstanceState.putString(STATUS_TEXT_KEY,
+                this.statusTextView.getText().toString());
 		super.onSaveInstanceState(savedInstanceState);
 	}
 	/**
@@ -480,7 +512,7 @@ public class MainActivity extends AppCompatActivity
 			private String statusMessage = "";
 			@Override
 			public void run() {
-				long savedVersion = sharedPreferences.getLong(UPDATES_VERSION_KEY, 0);
+				long savedVersion = getSharedPreferences().getLong(UPDATES_VERSION_KEY, 0);
 				try {
 					String urlStr = ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1";
 					dateEngSpaFileModified = MyHttpClient.getLastModified(urlStr);
@@ -511,12 +543,13 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	private void showFragment(FragmentTag fragmentTag) {
-		if (this.currentFragmentTag != null && fragmentTag.equals(this.currentFragmentTag)) {
+		if (this.currentFragmentTag != null && fragmentTag == this.currentFragmentTag) {
 			if (BuildConfig.DEBUG) Log.d(TAG,
 					"showFragment(" + fragmentTag +
 					"); already current fragment");
             if (fragmentTag == FragmentTag.ENGSPA) {
-                setAppBarTitle(); // could be different version of EngSpaFragment
+                // could be different QuizMode (hence different title) of EngSpaFragment
+                setAppBarTitle();
             }
 			return;
 		}
@@ -562,6 +595,15 @@ public class MainActivity extends AppCompatActivity
         }
         this.audioModeDialog.show(getSupportFragmentManager(), "AudioModeDialog");
     }
+    private void closeKeyboard() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "closeKeyboard()");
+        View currentView = this.getCurrentFocus();
+        if (currentView != null) {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
+        }
+    }
 
 	/**
 	 * Called on completion of UserDialog.
@@ -570,7 +612,6 @@ public class MainActivity extends AppCompatActivity
 	public void onUpdateUserLevel(int userLevel) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"onUpdateUserLevel(" + userLevel + ")");
-		// TODO: can we put this validation into UserDialog?
 		if (userLevel < 1 || userLevel > this.engSpaDAO.getMaxUserLevel()) {
 			this.statusTextView.setText(R.string.invalidUserLevel);
 			return;
@@ -595,14 +636,24 @@ public class MainActivity extends AppCompatActivity
 
 	@Override // EngSpaActivity
 	public void setStatus(int statusId) {
-		this.statusTextView.setText(statusId);
+        if (statusId == CLEAR_STATUS) clearStatus();
+        else {
+            this.statusTextView.setText(statusId);
+            this.statusTextView.setVisibility(View.VISIBLE);
+        }
 	}
-
+    private void clearStatus() {
+        this.statusTextView.setText("");
+        this.statusTextView.setVisibility(View.GONE);
+    }
 	@Override // EngSpaActivity
 	public void setStatus(String statusText) {
-		this.statusTextView.setText(statusText);
+        if (statusText == null || statusText.length() == 0) clearStatus();
+        else {
+            this.statusTextView.setText(statusText);
+            this.statusTextView.setVisibility(View.VISIBLE);
+        }
 	}
-
 	@Override // EngSpaActivity
 	public void onLost() {
 		this.viewlessFragment.onLost();
@@ -622,7 +673,7 @@ public class MainActivity extends AppCompatActivity
 		if (questionSequenceKey == null) {
 			questionSequenceKey = "QSN_1";
 		}
-		int questionSeq = sharedPreferences.getInt(questionSequenceKey, 0);
+		int questionSeq = getSharedPreferences().getInt(questionSequenceKey, 0);
 		if (questionSeq == 0 && BuildConfig.DEBUG) {
 			Log.w(TAG, "getQuestionSequence() returning zero");
 		}
@@ -649,12 +700,18 @@ public class MainActivity extends AppCompatActivity
         EngSpaUser engSpaUser =  getEngSpaUser();
         QuizMode quizMode = engSpaUser.getQuizMode();
         int titleId = R.string.app_name;
-        if (currentFragmentTag == FragmentTag.WORD_LOOKUP) titleId = R.string.wordLookup;
-        else if (currentFragmentTag == FragmentTag.NUMBER_GAME) titleId = R.string.numbersGame;
-        else { // must be ENGSPA
-            if (quizMode == QuizMode.PRACTICE) titleId = R.string.practiceMode;
-            else if (quizMode == QuizMode.TOPIC) titleId = TOPIC_FOR_TITLE;
-            else if (quizMode == QuizMode.LEARN) titleId = R.string.learnMode;
+        if (currentFragmentTag == FragmentTag.WORD_LOOKUP) {
+            titleId = R.string.wordLookup;
+        } else if (currentFragmentTag == FragmentTag.NUMBER_GAME) {
+            titleId = R.string.numbersGame;
+        } else { // must be ENGSPA
+            if (quizMode == QuizMode.PRACTICE) {
+                titleId = R.string.practiceMode;
+            } else if (quizMode == QuizMode.TOPIC) {
+                titleId = TOPIC_FOR_TITLE;
+            } else if (quizMode == QuizMode.LEARN) {
+                titleId = R.string.learnMode;
+            }
         }
         setAppBarTitle(titleId);
     }

@@ -6,20 +6,9 @@ Fun
 	publish Revise Spanish
 	singing, dancing
 Required
-	Android course into Studio
-	Window bar
-	Emails
 	Tidy desk
-	Mow lawn
 
 					To Do - all apps
-Factory reset of S3 Mini
-	apps to re-install: JW Library, Hot Bridge, Spanish, Pano Tuner
-	front page: Hot Bridge, KnowMe, Revise Spanish
-		JW Library, Translate, SPlanner, Hangouts
-		Camera, Drive, Pano Tuner, Maps
-	Footer: Phone, Chrome, GMail, Apps
-	old_telephone.mp3
 
 ANDROIDCOURSE
 alternative way of passing results back - see app in CourseApp

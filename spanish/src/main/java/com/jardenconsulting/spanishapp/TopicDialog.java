@@ -25,7 +25,7 @@ public class TopicDialog extends DialogFragment implements DialogInterface.OnCli
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	    builder.setTitle(R.string.chooseTopicStr)
+	    builder.setTitle(R.string.chooseTopic)
 	           .setItems(EngSpaContract.attributeNames, this);
 	    return builder.create();
 	}

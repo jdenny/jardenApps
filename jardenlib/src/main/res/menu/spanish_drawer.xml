@@ -13,10 +13,6 @@
         android:id="@+id/menuSecond"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/qaStyle"
-            android:icon="@drawable/qastyle"
-            android:title="@string/qaStyle"/>
-        <item
             android:id="@+id/topicMode"
             android:icon="@drawable/ic_storage_black_24dp"
             android:title="@string/selectTopic"/>
@@ -24,6 +20,10 @@
             android:id="@+id/practiceMode"
             android:icon="@drawable/ic_fitness_center_black_24dp"
             android:title="@string/practiceMode"/>
+        <item
+            android:id="@+id/qaStyle"
+            android:icon="@drawable/qastyle"
+            android:title="@string/qaStyle"/>
     </group>
     <group
         android:id="@+id/menuThird"

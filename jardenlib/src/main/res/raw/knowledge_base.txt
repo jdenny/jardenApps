@@ -1,3 +1,13 @@
+Factory reset of S3 Mini
+------------------------
+Settings, Backup and Reset, Factory Data Reset
+apps to re-install: JW Library, Hot Bridge, Spanish, Pano Tuner
+front page: Memo, Hot Bridge, KnowMe, Revise Spanish
+	JW Library, Translate, SPlanner, Hangouts
+	Camera, Drive, Pano Tuner, Maps
+Footer: Phone, Chrome, GMail, Apps
+old_telephone.mp3
+
 git
 ---
 https://github.com/jdenny/Jarden.git

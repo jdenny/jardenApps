@@ -2,9 +2,10 @@
 <resources>
     <!--<string name="allLit">ALL</string>-->
     <string name="app_name">Revise Spanish</string>
-    <string name="cancelStr">Cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="chooseQAStyleStr">Choose Question/Answer Style</string>
-    <string name="chooseTopicStr">Choose Topic</string>
+    <string name="chooseTopic">Choose Topic</string>
+    <string name="contents">Contents</string>
     <string name="correctQueryStr">Correct?</string>
     <string name="currentStr">Currents:</string>
     <string name="deleteFailsStr">Delete all fails</string>
@@ -16,18 +17,18 @@
     <string name="helpHome">Help Home</string>
     <string name="hideHelp">Hide Help</string>
     <string name="invalidUserLevel">invalid learnLevel supplied</string>
-    <string name="invalidUserLevelForMode">
-        learnLevel cannot be 1 for Practice or Audio mode
+    <string name="invalidUserLevelForMode">LearnLevel cannot be 1 for
+        Practice or Audio mode
     </string>
     <string name="learnMode">Learn Mode</string>
-    <string name="levelsComplete">
-        Congratulations - all levels completed! Starting Practice Mode
+    <string name="levelsComplete">Congratulations -
+        all levels completed! Starting Practice Mode
     </string>
-    <string name="levelStr">Level:</string>
+    <string name="level">Level:</string>
     <string name="loadDBDone">Loading Spanish dictionary complete</string>
     <string name="loadingDB">Loading Spanish dictionary - please be patient with us!</string>
     <string name="micStr">Mic</string>
-    <string name="noLit">No</string>
+    <string name="no">No</string>
     <string name="numbersGame">Numbers Game</string>
     <string name="numberPrompt">Number</string>
     <string name="one">1</string>
@@ -36,11 +37,11 @@
     <string name="pauseTimeDefault">3</string>
     <string name="play">Play</string>
     <string name="practiceMode">Practice Mode</string>
-    <string name="questionStyleError">
-        Question Style does not apply to Learn Mode,
-        only Practice Mode and Topic Mode
+    <string name="questionStyleError">Question Style does not apply to
+        Learn Mode, only Practice Mode and Topic Mode
     </string>
-    <string name="reloadingDB">Loading new dictionary version - please be patient with us!</string>
+    <string name="reloadingDB">Loading new dictionary version -
+        please be patient with us!</string>
     <string name="resetStr">Reset</string>
     <string name="showHelp">Show Help</string>
     <string name="spanishNull">No Spanish word chosen</string>
@@ -49,21 +50,19 @@
     <string name="speakerStr">Speaker</string>
     <string name="supplyWord">Please supply Spanish or English word</string>
     <string name="ttsClosed">textToSpeech closed down</string>
-	<string name="ttsFailed">
-		Initialisation of textToSpeech failed! Have you installed text-to-speech?</string>
+	<string name="ttsFailed">Initialisation of textToSpeech failed!
+        Have you installed text-to-speech?</string>
     <string name="ttsLoading">Loading textToSpeech...</string>
-	<string name="ttsNotSupported">
-		TextToSpeech for Spanish is not supported on this device</string>
+	<string name="ttsNotSupported">TextToSpeech for Spanish is not
+        supported on this device</string>
     <string name="update">Update</string>
     <string name="setUserLevel">Set User level</string>
     <string name="learnLevel">User level</string>
-    <string name="userLevelErrorAudio">
-        User level must be at least 2 for Audio Mode; you can increase
-        your levels in Learn Mode
-    </string>
-    <string name="userLevelErrorPractice">
-        User level must be at least 2 for Practice Mode;
+    <string name="userLevelErrorAudio">User level must be at least 2 for Audio Mode;
         you can increase your levels in Learn Mode
+    </string>
+    <string name="userLevelErrorPractice">User level must be at least 2 for
+        Practice Mode; you can increase your levels in Learn Mode
     </string>
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
@@ -74,37 +73,26 @@
 
     <!-- ******** Tip Strings ****************** -->
 
-    <string name="clearAnswerTip">
-        Click here to clear answer field; then Go to activate self-mark mode
+    <string name="clearAnswerTip">Click here to clear answer field;
+        then Go to activate self-mark mode
     </string>
-	<string name="correctButtonTip">
-		Press if your mental guess was correct, or you want to skip this
-		word; it will not be added to your list of failed words
+	<string name="correctButtonTip">Press if your mental guess was correct, or you
+        want to skip this word; it will not be added to your list of failed words
 	</string>
-	<string name="failCtTip">
-		Number of words you got wrong at this level or carried over from
-		previous levels
+	<string name="failCtTip">Number of words you got wrong at this level or carried
+        over from previous levels
 	</string>
-	<string name="goButtonTip">
-		If the answer field is blank, we will provide the answer and you can tell
-        us if the answer you thought of is right
+	<string name="goButtonTip">If the answer field is blank, we will provide the
+        answer and you can tell us if the answer you thought of is right
 	</string>
-	<string name="incorrectButtonTip">
-		Press if your mental guess was wrong; this word will be added to
-		your list of failed words
+	<string name="incorrectButtonTip">Press if your mental guess was wrong;
+        this word will be added to your list of failed words
 	</string>
-	<string name="resetButtonTip">
-		Restart the game, 2 levels below current
+	<string name="resetButtonTip">Restart the game, 2 levels below current
 	</string>
-	<string name="speakerButtonTip">
-		Listen to the current Spanish word
+	<string name="speakerButtonTip">Listen to the current Spanish word
 	</string>
-    <string name="tryGoAgainTip">
-        Try again, or clear answer field and press GO
+    <string name="tryGoAgainTip">Try again, or clear answer field and press <i>GO</i>
     </string>
-	<string name="WordLookupTip">
-		Type in a word, either Spanish or English, and press <i>GO</i> on the soft
-		keyboard.
-	</string>
 
 </resources>

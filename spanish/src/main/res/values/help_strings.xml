@@ -1,108 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="engSpaHelp">
-        Think of (don\'t type) your answer and press Go.
-        [a]EngSpaMoreHelp|More[/a]
+    <string name="ContentsHelp">[a]IntroHelp|Introduction[/a]
+        \n\n[a]LearnModeHelp|Learn Mode[/a]
+        \n\n[a]TopicModeHelp|Topic Mode[/a]
+        \n\n[a]PracticeModeHelp|Practice Mode[/a]
+        \n\n[a]QuestionStyleHelp|Question Style[/a]
+        \n\n[a]AudioModeHelp|Audio Mode[/a]
+        \n\n[a]WordLookupHelp|Word Lookup[/a]
+        \n\n[a]NumbersGameHelp|Numbers Game[/a]
+        \n\n[a]FeedbackHelp|Feedback[/a]
     </string>
-	<string name="EngSpaMoreHelp">
-		Depending on [a]QuestionStyleHelp|Question Style[/a], we speak the question or
-		show it in the first coloured field (blue for English, red for Spanish);
-		2nd field is a hint if relevant; 3rd field is for the answer. Think of
-		your answer and press Go; we will fill in the correct
-		answer and you then tell us if you got it right or not. If you are not
-		sure of the spelling, you can type in the answer and we will mark it for
-		you; self-mark mode only applies if the answer field is blank.
-        Spanish has several words for [i]you[/i]; to differentiate in English, we at
-        [i]Revise Spanish[/i] use [i]thou[/i] for the familiar, and [i]YOU[/i]
-        for the plural.\n
-        Long press on a button for specific help on that button.\n
-        Press the speaker at the top right of the screen to hear the current
-        Spanish word spoken.
-	</string>
-	<string name="FeedbackHelp">
-		We have put a lot of love and care into this app, because we also love
+    <string name="AudioModeHelp">Similar to [a]PracticeModeHelp|Practice Mode[/a],
+        except we speak the question, pause, speak the answer, then go on
+        to the next question, alternating between English to Spanish and
+        Spanish to English - all completely hands free! Works well with
+        earphones, sitting on a bus or on the beach.
+    </string>
+	<string name="FeedbackHelp">We have put a lot of love and care into this app,
+        because we also love
 		learning Spanish. We want you to enjoy this app as much as we enjoy
-		playing with it ourselves. Everyone is different, and there are many
+		playing it ourselves. Everyone is different, and there are many
 		different learning styles. If you have any comments or suggestions for
 		improving this app, please send an email to amazemequiz@gmail.com
 	</string>
-    <string name="MenuHelp">
-        To open main menu: left swipe from side of screen, or press on menu icon
+    <string name="IntroHelp">[b]¡Bienvenida! Welcome![/b] to Revise Spanish.\n
+        To open main menu: left swipe from side of screen [a]MenuHelp|More[/a].\n
+        Spanish has several words for [i]you[/i]; to differentiate in English, we at
+        [i]Revise Spanish[/i] use [i]thou[/i] for the familiar, and [i]YOU[/i]
+        for the plural.\n
+        We recommend the [a]SelfMarkHelp|self-mark[/a] feature for most of the time.\n
+        At any time, press the speaker at the top right of the screen to hear the
+        current Spanish word.\n
+        Long press on a button for specific help on that button.
+    </string>
+    <string name="LearnModeHelp">We speak the question or
+		show it in the first coloured field (blue for English, red for Spanish);
+		2nd field is a hint if relevant; 3rd field is for the answer. Think of
+		your answer and press [i]GO[/i]; we will fill in the correct
+		answer and you then tell us if you got it right or not
+        ([a]SelfMarkHelp|self-mark[/a]). If you are not
+		sure of the spelling, you can type in the answer and we will mark it for
+		you; self-mark mode only applies if the answer field is blank.\n
+        In [i]Learn Mode[/i] we will ask you questions from 3 categories:
+        the current level; any previous level; words failed at this level or
+        the previous level. We show you the current level number, plus the number
+        of words at this level still to be asked, plus the number of failed
+        words. Each level consists of 10 words or phrases from the dictionary;
+		if you get a word wrong it is added
+		to the list of fails; we will ask you the failed word again
+		until you get it right twice consecutively. You move to the next
+		level when you have answered all the 10 words and cleared all the
+		fails. Fails are also carried on to the next level, where they
+		need to be answered correctly once more.
+        Each level is done in two phases: in phase A we show and speak the
+        question in Spanish, for you to answer in English; in phase B we
+        ask you the same 10 words, but this time we show the question in
+        English, for you to answer in Spanish.
+	</string>
+    <string name="MenuHelp">To open main menu: left swipe from side of screen,
+        or press on menu icon
         (3 horizontal lines) at top left of screen. Either select
         an item from the menu or close the menu with a swipe from right to left.
     </string>
-	<string name="micButtonHelp">
-		Allows you to speak the Spanish answer to check your pronunciation;
-        requires internet connection.
-        [a]MicButtonMoreHelp|More[/a]
-	</string>
-    <string name="MicButtonMoreHelp">
-        Because speech recognition can be unreliable (yes, even using Google!),
+	<string name="MicButtonHelp">Allows you to speak the Spanish answer to
+        check your pronunciation; requires internet connection. Because speech
+        recognition can be unreliable (yes, even using Google!),
         we don\'t mark you down if you get it wrong, but we notice if you get it
         right; if after a few attempts you want to give up, clear out the answer
-        and press GO.
+        and press [i]GO[/i].
     </string>
-	<string name="NumbersGameHelp">
-		Type the number you hear; use speaker button to repeat question.
-        [a]NumbersGameMoreHelp|More[/a]
-	</string>
-	<string name="NumbersGameMoreHelp">
-		Listen to the numbers spoken in Spanish, and type in that number; if you
+	<string name="NumbersGameHelp">Type the number you hear; use speaker button
+        to repeat question. If you
 		get the number correct, your blue man will move forward; if the red man
 		reaches the end before you, you have lost; if you get to the end before
 		him, you go back to the beginning at the next level, where the red man
 		gets slightly faster, and the questions get slightly harder. If you get
 		caught, you can still continue to answer questions, but you will stay
 		at the same level.
-        [a]FeedbackHelp|Feedback[/a]
 	</string>
-	<string name="QuestionsByLevelHelp">
-        Each level consists of 10 words or phrases from the dictionary;
-		we will randomly ask you words from 3 categories: the current level;
-		any previous level; words failed at this level or the previous
-		level. If you get a word wrong it is added
-		to the list of fails; we will ask you the failed word again
-		until you get it right twice consecutively. You move to the next
-		level when you have answered all the 10 words and cleared all the
-		fails. Fails are also carried on to the next level, where they
-		need to be answered correctly once more.
-        QuestionsByLevel is the normal mode of the app; it is taken out of this
-        mode when you [a]SelectTopicHelp|select a topic[/a].
+	<string name="PracticeModeHelp">
+        To have a break from learning new words, [i]Practice Mode[/i] randomly
+        asks you questions from previous levels that you have answered in
+        [a]LearnModeHelp|Learn Mode[/a], plus any failed words.\n
+        You can select the way the questions are asked (e.g. spoken Spanish to
+        English) using [a]QuestionStyleHelp|Question Style[/a] from the
+        [a]MenuHelp|Main Menu[/a].
 	</string>
-	<string name="QuestionStyleHelp">
-		QuestionStyle allows you to choose from questions in Spanish, answers
-		in English, or vice versa; the question can be spoken or printed.
+	<string name="QuestionStyleHelp">QuestionStyle allows you to choose from
+        questions in Spanish, answers
+		in English, or vice versa; the question can be spoken or shown.
         QuestionStyle is on the [a]MenuHelp|main menu[/a].
 	</string>
-	<string name="SelectTopicHelp">
-		Many words and phrases in the dictionary are given a topic: e.g. food, travel,
-		hobby. You can choose words from a specific topic; this is then similar
-		to [a]QuestionsByLevelHelp|Questions by level[/a], except that current now
-		refers to your selected topic, i.e. we will randomly ask you questions from
-		topic, any previous level and failed words.
-	</string>
-	<string name="SelfMarkHelp">
-		Look at the answer that we have provided in the 3rd coloured field.
-		Tell us whether or not you got it right.
-        [a]SelfMarkMoreHelp|More[/a]
-	</string>
-	<string name="SelfMarkMoreHelp">
-		Because keyboards are usually small and fiddly, and most of us are not
+	<string name="SelfMarkHelp">Look at the answer we have provided in
+        the 3rd coloured field. Tell us whether or not you got it right.
+        Because keyboards are usually small and fiddly, and most of us are not
 		brilliant typists, we realised the learning process could be sped up
 		considerably if you didn\'t have to type the answer. So you think of
 		your answer (or if the answer is Spanish, ideally speak it aloud),
-		press [i]GO[/i], and we will supply the answer. You then check if you
+		press [i]GO[/i], and we supply the answer. You then check if you
 		were right - or at least close enough. If you mark yourself wrong, that
 		word will appear again shortly; in fact you won\'t progress to the next
 		level until you have got it right twice consecutively; just to make
 		sure, we will ask you it again at the next level.
 	</string>
-	<string name="WordLookupHelp">
-		Type in a word, either Spanish or English, and press [i]Go[/i] on the soft
+	<string name="TopicModeHelp">Many words and phrases in the dictionary
+        are given a topic: e.g. food, travel, hobby.
+        You can choose words from a specific topic; this is then similar
+		to [a]LearnModeHelp|Learn Mode[/a], except that [i]current[/i] now
+		refers to your selected topic, i.e. we will randomly ask you questions
+        from topic, any previous level and failed words.\n
+        You can select the way the questions are asked (e.g. spoken Spanish to
+        English) using [a]QuestionStyleHelp|Question Style[/a] from the
+        [a]MenuHelp|Main Menu[/a].
+	</string>
+	<string name="WordLookupHelp">Type in a word, either Spanish or English,
+        and press [i]Go[/i] on the
 		keyboard. If the word is a verb, the full conjugation will be shown;
 		otherwise we show the definition of that word from the dictionary.
 		Press [i]back[/i] button to return to the main screen, or swipe in
-		from the left for the main menu. If you supply a word in both the Spanish
-		and English fields, we assume you want the Spanish one translated.
+		from the left for the main menu.
 	</string>
 </resources>

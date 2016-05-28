@@ -1,6 +1,5 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,7 +11,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -51,7 +49,7 @@ public class UserDialog extends DialogFragment
 			int userLevel = user.getLearnLevel();
 			userLevelEditText.setText(String.valueOf(userLevel));
 			// cancel button provided only for updates
-			builder.setNegativeButton(R.string.cancelStr, this);
+			builder.setNegativeButton(R.string.cancel, this);
 		}
 		builder.setView(view);
 		builder.setPositiveButton(R.string.update, this);

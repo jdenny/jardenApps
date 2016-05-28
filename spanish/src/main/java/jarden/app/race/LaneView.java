@@ -37,6 +37,7 @@ public class LaneView extends View {
 	}
 	public LaneView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
 		Resources res = getResources();
 		this.cellSize = res.getDimensionPixelSize(R.dimen.cellSize);
 		if (cellSize == 0) cellSize = 24;

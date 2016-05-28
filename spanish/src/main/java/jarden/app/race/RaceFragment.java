@@ -86,6 +86,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
 				Activity.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        this.engSpaActivity.setTip(R.string.NumbersGameHelp);
 		nextQuestion();
 		return view;
 	}
@@ -93,7 +94,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	public void onResume() {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onResume()");
 		super.onResume();
-		if (/*isRunning()*/ !this.caught) {
+		if (!this.caught) {
 			startTimer();
 		}
 	}
@@ -129,8 +130,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 				}
 				nextQuestion();
 			}
-            // TODO: set this as a tip, not status; same for reporting wrong answer
-            // in EngSpaFragment
 			this.engSpaActivity.setStatus(status);
 			return true;
 		}
@@ -182,7 +181,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 			}
 			return;
 		}
-		//! gameData = new GameData();
 		setLevel(raceLevel);
 		myLaneView.setCaught(false);
 		myLaneView.reset();
@@ -252,7 +250,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 	}
 	private void poseQuestion(String question) {
 		this.engSpaActivity.speakSpanish(question);
-        this.engSpaActivity.setTip(R.string.NumbersGameHelp);
 	}
 	@Override // OnClickListener
 	public void onClick(View view) {

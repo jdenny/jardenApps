@@ -38,8 +38,19 @@ public PresetQuiz(List&lt;QuestionAnswer> qaList)
 public PresetQuiz(InputStreamReader isReader) throws IOException
 </code></pre>
 
-<p>Retrieve Quiz data from file; server (HTTP); database (using EngSpa
-content provider); use buttons or menu items or a spinner to choose
+<p>Retrieve Quiz data from various sources:</p><ul>
+    <li>file; e.g. use <code>res/raw/capitals.properties</code> from sample solution module
+    androidcourse</li>
+    <li>server (HTTP); use URL of
+        <code>https://sites.google.com/site/amazequiz/home/problems/spanish.txt?attredirects=0&d=1</code></li>
+    <li>database; run module jardenprovider; it has a sample Activity to test if the database
+        is working; link to this provider using <code>jarden.provider.engspa.EngSpaContract</code>
+        in module <code>jardenlib</code>; the key constants you need are:<pre>
+EngSpaContract.ENGLISH
+EngSpaContract.SPANISH
+EngSpaContract.CONTENT_URI_ENGSPA</pre></li>
+</ul>
+Use buttons or menu items or a spinner to choose
 quizType; set <code>answerEditText</code> type to number or text
 depending on quizType.
 

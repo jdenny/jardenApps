@@ -12,6 +12,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Locale;
 
 import jarden.engspa.EngSpaDAO;
@@ -46,6 +48,7 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     private EngSpaDAO engSpaDAO;
     private EngSpaUser engSpaUser;
     private EngSpaQuiz engSpaQuiz;
+    private Deque<Integer> helpHistory = new ArrayDeque<Integer>();
 
     @Override // Fragment
     public void onAttach(Context context) {
@@ -129,7 +132,7 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
                 // this.statusTextView.setText("TextToSpeech for Spanish is not supported");
                 engSpaActivity.setStatus(R.string.ttsNotSupported);
             } else {
-                engSpaActivity.setStatus("");
+                engSpaActivity.setStatus(EngSpaActivity.CLEAR_STATUS);
             }
             getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
             if (this.spanish != null) speakSpanish2();
@@ -149,9 +152,6 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     }
     private void saveOrientation() {
         this.orientation = getResources().getConfiguration().orientation;
-    }
-    public EngSpaUser getEngSpaUser() {
-        return this.engSpaUser;
     }
     public void onWrongAnswer() {
         this.vibrator.vibrate(WRONG_VIBRATE, -1);
@@ -232,5 +232,11 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     }
     public EngSpaQuiz getEngSpaQuiz() {
         return engSpaQuiz;
+    }
+    public EngSpaUser getEngSpaUser() {
+        return this.engSpaUser;
+    }
+    public Deque<Integer> getHelpHistory() {
+        return this.helpHistory;
     }
 }

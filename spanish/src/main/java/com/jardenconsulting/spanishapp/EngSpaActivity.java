@@ -7,7 +7,9 @@ import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 
 public interface EngSpaActivity {
-	EngSpaDAO getEngSpaDAO();
+    int CLEAR_STATUS = -1;
+
+    EngSpaDAO getEngSpaDAO();
     EngSpaQuiz getEngSpaQuiz();
     EngSpaUser getEngSpaUser();
 
@@ -31,6 +33,7 @@ public interface EngSpaActivity {
 	void onWrongAnswer();
     void setAppBarTitle();
     void setProgressBarVisible(boolean visible);
+    void setShowHelp();
 
 	/**
 	 * Set Spanish word if user later clicks on

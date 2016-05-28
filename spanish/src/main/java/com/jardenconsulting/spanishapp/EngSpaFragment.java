@@ -202,7 +202,19 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			this.questionTextView.setText(this.question);
 		}
-        setTip(getNext ? R.string.engSpaHelp : R.string.tryGoAgainTip);
+        //!! setTip(getNext ? R.string.LearnModeHelp : R.string.tryGoAgainTip);
+        int helpId;
+        if (getNext) {
+            QuizMode quizMode = engSpaUser.getQuizMode();
+            if (quizMode == QuizMode.PRACTICE) {
+                helpId = R.string.PracticeModeHelp;
+            } else if (quizMode == QuizMode.TOPIC) {
+                helpId = R.string.TopicModeHelp;
+            } else { // must be LEARN
+                helpId = R.string.LearnModeHelp;
+            }
+        } else helpId = R.string.tryGoAgainTip;
+        setTip(helpId);
 		showStats();
 	}
 	private void showStats() {
@@ -304,7 +316,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
     }
 	@Override // onClickListener
 	public void onClick(View view) {
-		engSpaActivity.setStatus("");
+		engSpaActivity.setStatus(EngSpaActivity.CLEAR_STATUS);
         int id = view.getId();
 		if (id == R.id.goButton) {
 			goPressed();
@@ -320,7 +332,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	@Override // OnLongClickListener
 	public boolean onLongClick(View view) {
-		// TODO: turn on show help if not already on
+        this.engSpaActivity.setShowHelp();
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			setTip(R.string.goButtonTip);
@@ -332,7 +344,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			setTip(R.string.incorrectButtonTip);
 			return true;
 		} else if (id == R.id.micButton) {
-			setTip(R.string.micButtonHelp);
+			setTip(R.string.MicButtonHelp);
 			return true;
         } else if (id == R.id.clearAnswerButton) {
             setTip(R.string.clearAnswerTip);

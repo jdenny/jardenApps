@@ -46,8 +46,7 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(TAG, "onCreateView()");
 		this.engSpaActivity = (EngSpaActivity) getActivity();
-		engSpaActivity.setTip(R.string.WordLookupTip);
-
+		engSpaActivity.setTip(R.string.WordLookupHelp);
 		View rootView = inflater.inflate(R.layout.fragment_word_lookup, container, false);
 		this.spanishLookupEditText = (EditText) rootView.findViewById(R.id.spanishLookupEditText);
 		this.englishLookupEditText = (EditText) rootView.findViewById(R.id.englishLookupEditText);
@@ -104,7 +103,7 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
             engSpaActivity.setStatus(
                     (spaToEng ? spaStr : engStr) + " not found in our dictionary");
         } else {
-            engSpaActivity.setStatus("");
+            engSpaActivity.setStatus(EngSpaActivity.CLEAR_STATUS);
             // TODO: sort out may have more than 1 match
             EngSpa engSpa = matches.get(0);
             String spanish = engSpa.getSpanish();

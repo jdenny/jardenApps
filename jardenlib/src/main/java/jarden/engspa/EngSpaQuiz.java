@@ -458,12 +458,13 @@ public class EngSpaQuiz extends Quiz {
 	}
 	/**
 		UTF-8   ISO-8859-1 & cp1252
-	á   C3A1    E1 (225)
+	á   C3A1    E1 (225)    option+e then vowel
 	é   C3A9    E9 (233)
 	í   C3AD    ED (237)
 	ó   C3B3    F3 (243)
 	ú   C3BA    FA (250)
-	ñ   C3B1    F1 (241)
+	ñ   C3B1    F1 (241)    option+n then n
+    ü                       uption+u then u
 
 	Á   C381    C1
 	É   C389    C9
@@ -472,8 +473,8 @@ public class EngSpaQuiz extends Quiz {
 	Ú   C39A    DA
 	Ñ   C391    D1
 
-	¡   C2A1    A1
-	¿   C3BF    BF
+	¡   C2A1    A1          option+1
+	¿   C3BF    BF          option+? (doesn't work in Studio!)
 	 */
 	private static char removeAccent(char ch) {
 		final char[] spaChars = {'á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü'};

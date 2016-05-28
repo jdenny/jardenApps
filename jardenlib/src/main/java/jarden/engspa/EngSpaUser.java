@@ -12,6 +12,7 @@ public class EngSpaUser {
 	private static final String QA_STYLE_KEY = "QA_STYLE";
 	private static final String QUIZ_MODE_KEY = "QUIZ_MODE";
 	private static final String RACE_LEVEL_KEY = "RACE_LEVEL";
+    private static final String SHOW_HELP_KEY = "SHOW_HELP_KEY";
     private static final String TOPIC_KEY = "TOPIC";
 
 	private SharedPreferences sharedPreferences;
@@ -21,6 +22,7 @@ public class EngSpaUser {
 	private QAStyle qaStyle = null;
 	private QuizMode quizMode = null;
 	private Boolean learnModePhase2 = null;
+    private Boolean showHelp = null;
     private String topic = null;
     // end of cached copies
 
@@ -34,7 +36,8 @@ public class EngSpaUser {
 				", raceLevel=" + raceLevel +
 				", qaStyle=" + qaStyle +
 				", quizMode=" + quizMode +
-                ", topic=" + topic + "]";
+                ", topic=" + topic +
+                ", showHelp=" + showHelp + "]";
 	}
 	public int getLearnLevel() {
 		if (this.learnLevel < 1) {
@@ -74,6 +77,19 @@ public class EngSpaUser {
 		editor.apply();
 		this.learnModePhase2 = learnModePhase2;
 	}
+    public boolean isShowHelp() {
+        if (this.showHelp == null) {
+            this.showHelp = sharedPreferences.getBoolean(
+                    SHOW_HELP_KEY, true);
+        }
+        return this.showHelp;
+    }
+    public void setShowHelp(boolean showHelp) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SHOW_HELP_KEY, showHelp);
+        editor.apply();
+        this.showHelp = showHelp;
+    }
 	public QAStyle getQAStyle() {
         if (this.qaStyle == null) {
             String qaStyleStr = sharedPreferences.getString(QA_STYLE_KEY, null);
