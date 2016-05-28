@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity
 			showFragment(FragmentTag.NUMBER_GAME);
 		} else if (id == R.id.learnMode) {
 			engSpaQuiz.setQuizMode(QuizMode.LEARN);
-            engSpaFragment.reset();
+            if (engSpaFragment != null) engSpaFragment.reset();
 			showFragment(FragmentTag.ENGSPA);
 		} else if (id == R.id.exit) {
 			super.onBackPressed();
@@ -330,14 +330,13 @@ public class MainActivity extends AppCompatActivity
 				showAlertDialog(R.string.userLevelErrorPractice);
 			} else {
 				engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
-                engSpaFragment.reset();
+                if (engSpaFragment != null) engSpaFragment.reset();
 				showFragment(FragmentTag.ENGSPA);
 			}
 		} else {
 			Log.e(TAG, "unrecognised drawer menu item id: " + id);
 		}
 		this.drawerLayout.closeDrawers();
-        //!! setAppBarTitle(); // what does this do??
 		return true;
 	}
     private void showAlertDialog(int messageId) {
@@ -455,12 +454,15 @@ public class MainActivity extends AppCompatActivity
 				}
 			}, 2000);
 		} else {
+            /*!!
 			super.onBackPressed();
 			// must be returning to EngSpaFragment as this is the only fragment
 			// we ever put on the backStack
 			this.currentFragmentTag = FragmentTag.ENGSPA;
 			this.currentFragment = this.engSpaFragment;
             setAppBarTitle();
+            */
+            showFragment(FragmentTag.ENGSPA);
 		}
 	}
 	@Override // EngSpaActivity
@@ -475,7 +477,7 @@ public class MainActivity extends AppCompatActivity
 				"onTopicSelected(" + topic + ")");
 		getEngSpaQuiz().setQuizMode(QuizMode.TOPIC);
         this.getEngSpaUser().setTopic(topic);
-        this.engSpaFragment.reset();
+        if (engSpaFragment != null) this.engSpaFragment.reset();
 		showFragment(FragmentTag.ENGSPA);
 	}
 	@Override // QAStyleDialog.QAStyleListener
@@ -574,6 +576,7 @@ public class MainActivity extends AppCompatActivity
 			}
 			this.currentFragment = raceFragment;
 		}
+        /*!!
 		// pop backstack if there is anything to pop;
 		// in case user chooses fragments from drawer without
 		// pressing 'back'
@@ -581,11 +584,14 @@ public class MainActivity extends AppCompatActivity
 		if (BuildConfig.DEBUG) {
 			Log.d(TAG, "showFragment(); popped=" + popped);
 		}
+		*/
 		FragmentTransaction transaction = this.fragmentManager.beginTransaction();
 		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag.name());
+        /*!!
 		if (FragmentTag.ENGSPA == previousFragmentTag) {
 			transaction.addToBackStack(FragmentTag.ENGSPA.name());
 		}
+		*/
 		transaction.commit();
         setAppBarTitle();
 	}
@@ -617,7 +623,6 @@ public class MainActivity extends AppCompatActivity
 			return;
 		}
 		QuizMode quizMode = getEngSpaUser().getQuizMode();
-        //!! if (userLevel == 1 && quizMode == (QuizMode.PRACTICE || quizMode == QuizMode.AUDIO)) {
 		if (userLevel == 1 && quizMode == QuizMode.PRACTICE) {
 			this.statusTextView.setText(R.string.invalidUserLevelForMode);
 			return;
@@ -627,7 +632,8 @@ public class MainActivity extends AppCompatActivity
 			return;
 		}
 		getEngSpaQuiz().setUserLevel(userLevel);
-		if (this.currentFragmentTag == FragmentTag.ENGSPA) this.engSpaFragment.reset();
+		if (this.currentFragmentTag == FragmentTag.ENGSPA &&
+                this.engSpaFragment != null) this.engSpaFragment.reset();
 	}
 	@Override // UserSettingsListener && EngSpaActivity
 	public EngSpaUser getEngSpaUser() {
