@@ -8,6 +8,17 @@ front page: Memo, Hot Bridge, KnowMe, Revise Spanish
 Footer: Phone, Chrome, GMail, Apps
 old_telephone.mp3
 
+MAC keyboard shortcuts for AS
+-----------------------------
+option+enter	show red-bulb options
+shift+F6		refactor-rename
+option+F7		find usages
+F1				view javadoc
+F2				go to next error
+cmd+N			generate
+cmd+[,cmd+]		previous, next cursor history
+cmd+P			parameters
+
 git
 ---
 https://github.com/jdenny/Jarden.git

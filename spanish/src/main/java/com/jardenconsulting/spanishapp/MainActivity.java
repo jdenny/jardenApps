@@ -43,7 +43,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -57,19 +56,27 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 	private static final int[] helpResIds = {
-            R.string.IntroHelp, // 1st in list shown initially
-            R.string.ContentsHelp,
-            R.string.AudioModeHelp,
-            R.string.FeedbackHelp,
-			R.string.LearnModeHelp,
-            R.string.MenuHelp,
-			R.string.MicButtonHelp,
-			R.string.NumbersGameHelp,
-            R.string.PracticeModeHelp,
-			R.string.QuestionStyleHelp,
-			R.string.SelfMarkHelp,
-            R.string.TopicModeHelp,
-			R.string.WordLookupHelp
+            R.string.Contents, // 1st in list shown initially
+            R.string.Introduction,
+            R.string.Audio_Mode,
+            R.string.Feedback,
+			R.string.Learn_Mode,
+            R.string.Main_Menu,
+			R.string.Mic_Button,
+			R.string.Numbers_Game,
+            R.string.Practice_Mode,
+			R.string.Question_Style,
+			R.string.Self_Mark,
+            R.string.Topic_Mode,
+			R.string.Word_Lookup,
+            R.string.clearAnswerTip,
+            R.string.correctButtonTip,
+            R.string.statsTip,
+            R.string.goButtonTip,
+            R.string.incorrectButtonTip,
+            R.string.resetButtonTip,
+            R.string.speakerButtonTip,
+            R.string.tryGoAgainTip
 	};
 	private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
     private static final int TOPIC_FOR_TITLE = -1;
@@ -84,7 +91,6 @@ public class MainActivity extends AppCompatActivity
 	}
 	private static final String CURRENT_FRAGMENT_KEY =
 			"currentFragmentTag";
-	private FragmentTag previousFragmentTag;
     private FragmentTag currentFragmentTag;
 	private static String questionSequenceKey = null;
 	private EngSpaDAO engSpaDAO;
@@ -104,11 +110,8 @@ public class MainActivity extends AppCompatActivity
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private TextView helpTextView;
-	private DocumentTextView documentTextView;
 	private boolean doubleBackToExitPressedOnce = false;
 	private CheckBox showHelpCheckBox;
-    private Button helpContentsButton;
-    private Button helpBackButton;
 	private AudioModeDialog audioModeDialog;
 	private AlertDialog alertDialog;
 
@@ -126,14 +129,6 @@ public class MainActivity extends AppCompatActivity
         this.statusTextView.setVisibility(View.GONE); // hidden if no message is shown
 		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
-        this.helpContentsButton = (Button) findViewById(R.id.helpContentsButton);
-        helpContentsButton.setOnClickListener(this);
-        this.helpBackButton = (Button) findViewById(R.id.helpBackButton);
-        helpBackButton.setOnClickListener(this);
-        helpBackButton.setVisibility(View.GONE); // until further notice!!
-		this.documentTextView = new DocumentTextView(
-				getApplicationContext(),
-				helpTextView, helpResIds, null);
 		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		//?? helpTextView.setMovementMethod(new ScrollingMovementMethod());
 		helpTextView.setHighlightColor(Color.TRANSPARENT);
@@ -173,6 +168,7 @@ public class MainActivity extends AppCompatActivity
                     FragmentTag.NUMBER_GAME.name());
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(
                     FragmentTag.ENGSPA.name());
+            getDocumentTextView().setTextView(this.helpTextView);
 			showFragment();
 		}
 	}
@@ -186,10 +182,18 @@ public class MainActivity extends AppCompatActivity
         }
         this.showHelpCheckBox.setChecked(isShowHelp);
     }
+    private DocumentTextView getDocumentTextView() {
+        DocumentTextView documentTextView = viewlessFragment.getDocumentTextView();
+        if (documentTextView == null) {
+            documentTextView = new DocumentTextView(
+                    getApplicationContext(),
+                    helpTextView, helpResIds, null);
+            viewlessFragment.setDocumentTextView(documentTextView);
+        }
+        return documentTextView;
+    }
     private void hideHelp() {
         this.helpTextView.setVisibility(View.GONE);
-        this.helpContentsButton.setVisibility(View.GONE);
-        this.helpBackButton.setVisibility(View.GONE);
     }
     private void dbLoadComplete() {
 		showFragment();
@@ -200,16 +204,6 @@ public class MainActivity extends AppCompatActivity
 		int id = view.getId();
 		if (id == R.id.showHelpCheckBox) {
 			setShowHelp(this.showHelpCheckBox.isChecked());
-		} else if (id == R.id.helpContentsButton) {
-            setTip(R.string.ContentsHelp);
-        } else if (id == R.id.helpBackButton) {
-            Deque<Integer> helpHistory = this.viewlessFragment.getHelpHistory();
-            if (helpHistory.isEmpty()) {
-                Toast.makeText(this, "help history empty", Toast.LENGTH_LONG).show();
-            } else {
-                int helpId = helpHistory.pop();
-                setTip(helpId);
-            }
         }
 	}
 	@Override // Activity
@@ -219,12 +213,7 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // EngSpaActivity
 	public void setTip(int resId) {
-		if (!this.documentTextView.showPage(getResources().getResourceEntryName(resId))) {
-			// so that it doesn't all lock up if resId not found:
-			this.helpTextView.setText((resId));
-            Deque<Integer> helpHistory = this.viewlessFragment.getHelpHistory();
-            helpHistory.push(resId);
-        }
+        getDocumentTextView().showPage(resId);
 	}
 	/*
 	 * use engspaversion.txt and sharedPreferences to see if there
@@ -356,16 +345,15 @@ public class MainActivity extends AppCompatActivity
     /**
      * Set help views visible if not already so.
      */
-    public void setShowHelp() {
+    public void showHelp() {
         if (this.helpTextView.getVisibility() != View.VISIBLE) {
+            this.showHelpCheckBox.setChecked(true);
             setShowHelp(true);
         }
     }
 	private void setShowHelp(boolean showHelp) {
         if (showHelp) {
             this.helpTextView.setVisibility(View.VISIBLE);
-            this.helpContentsButton.setVisibility(View.VISIBLE);
-            this.helpBackButton.setVisibility(View.GONE); // until further notice!!
         } else hideHelp();
         this.viewlessFragment.getEngSpaUser().setShowHelp(showHelp);
 	}
@@ -454,14 +442,6 @@ public class MainActivity extends AppCompatActivity
 				}
 			}, 2000);
 		} else {
-            /*!!
-			super.onBackPressed();
-			// must be returning to EngSpaFragment as this is the only fragment
-			// we ever put on the backStack
-			this.currentFragmentTag = FragmentTag.ENGSPA;
-			this.currentFragment = this.engSpaFragment;
-            setAppBarTitle();
-            */
             showFragment(FragmentTag.ENGSPA);
 		}
 	}
@@ -555,7 +535,6 @@ public class MainActivity extends AppCompatActivity
             }
 			return;
 		}
-		this.previousFragmentTag = this.currentFragmentTag;
 		this.currentFragmentTag = fragmentTag;
 		showFragment();
 	}
@@ -576,22 +555,8 @@ public class MainActivity extends AppCompatActivity
 			}
 			this.currentFragment = raceFragment;
 		}
-        /*!!
-		// pop backstack if there is anything to pop;
-		// in case user chooses fragments from drawer without
-		// pressing 'back'
-		boolean popped = this.fragmentManager.popBackStackImmediate();
-		if (BuildConfig.DEBUG) {
-			Log.d(TAG, "showFragment(); popped=" + popped);
-		}
-		*/
 		FragmentTransaction transaction = this.fragmentManager.beginTransaction();
 		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag.name());
-        /*!!
-		if (FragmentTag.ENGSPA == previousFragmentTag) {
-			transaction.addToBackStack(FragmentTag.ENGSPA.name());
-		}
-		*/
 		transaction.commit();
         setAppBarTitle();
 	}

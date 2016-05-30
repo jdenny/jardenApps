@@ -43,33 +43,12 @@
                 android:visibility="gone"
                 android:layout_height="wrap_content" />
 
-            <LinearLayout
+            <CheckBox
+                android:id="@+id/showHelpCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:orientation="horizontal" >
-
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/contents"
-                    android:id="@+id/helpContentsButton"/>
-
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Back"
-                    android:id="@+id/helpBackButton"/>
-
-                <CheckBox
-                    android:id="@+id/showHelpCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/showHelp"/>
-
-            </LinearLayout>
+                android:text="@string/showHelp"/>
 
             <TextView
                 android:id="@+id/helpTextView"

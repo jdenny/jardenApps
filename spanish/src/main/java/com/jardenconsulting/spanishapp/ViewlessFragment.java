@@ -16,6 +16,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
+import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
@@ -49,6 +50,7 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     private EngSpaUser engSpaUser;
     private EngSpaQuiz engSpaQuiz;
     private Deque<Integer> helpHistory = new ArrayDeque<Integer>();
+    private DocumentTextView documentTextView;
 
     @Override // Fragment
     public void onAttach(Context context) {
@@ -238,5 +240,11 @@ public class ViewlessFragment extends Fragment implements TextToSpeech.OnInitLis
     }
     public Deque<Integer> getHelpHistory() {
         return this.helpHistory;
+    }
+    public DocumentTextView getDocumentTextView() {
+        return this.documentTextView;
+    }
+    public void setDocumentTextView(DocumentTextView documentTextView) {
+        this.documentTextView = documentTextView;
     }
 }

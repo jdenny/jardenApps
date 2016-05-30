@@ -33,7 +33,7 @@ public interface EngSpaActivity {
 	void onWrongAnswer();
     void setAppBarTitle();
     void setProgressBarVisible(boolean visible);
-    void setShowHelp();
+    void showHelp();
 
 	/**
 	 * Set Spanish word if user later clicks on

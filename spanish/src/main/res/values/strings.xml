@@ -67,32 +67,7 @@
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
     <string name="userSettingsStr">User Settings</string>
-    <string name="welcome">[b]¡Bienvenida! Welcome![/b] to Revise Spanish</string>
+    <string name="welcome"><b>¡Bienvenida! Welcome!</b> to Revise Spanish</string>
     <string name="wordLookup">Word Lookup</string>
     <string name="yesLit">Yes</string>
-
-    <!-- ******** Tip Strings ****************** -->
-
-    <string name="clearAnswerTip">Click here to clear answer field;
-        then Go to activate self-mark mode
-    </string>
-	<string name="correctButtonTip">Press if your mental guess was correct, or you
-        want to skip this word; it will not be added to your list of failed words
-	</string>
-	<string name="failCtTip">Number of words you got wrong at this level or carried
-        over from previous levels
-	</string>
-	<string name="goButtonTip">If the answer field is blank, we will provide the
-        answer and you can tell us if the answer you thought of is right
-	</string>
-	<string name="incorrectButtonTip">Press if your mental guess was wrong;
-        this word will be added to your list of failed words
-	</string>
-	<string name="resetButtonTip">Restart the game, 2 levels below current
-	</string>
-	<string name="speakerButtonTip">Listen to the current Spanish word
-	</string>
-    <string name="tryGoAgainTip">Try again, or clear answer field and press <i>GO</i>
-    </string>
-
 </resources>

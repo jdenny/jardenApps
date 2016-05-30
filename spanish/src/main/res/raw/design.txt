@@ -1,0 +1,453 @@
+QuizModes
+  Learn, Practice, Topic => ENGSPA
+Fragments
+  WordLookup, NumbersGame, EngSpa, Viewless
+
+clean open of app
+  MainActivity.onCreate(null)
+    show ENGSPA fragment
+      new EngSpaFragment; set to fragmentLayout
+  ViewLessFragment.onAttach()
+  ViewLessFragment.onCreate(null)
+  MainActivity.onStart()
+    show/hide help
+  MainActivity.onResume()
+  ViewLessFragment.onResume()
+  MainActivity.showFragment()
+  MainActivity.setAppBarTitle()
+  EngSpaFragment.onAttach()
+  EngSpaFragment.onCreate(null)
+  EngSpaFragment.onResume(question=null)
+    if spanish == null askQuestion(true)
+
+pause
+  EngSpaFragment.onPause()
+  MainActivity.onSaveInstanceState(); currentFragmentTag=ENGSPA
+
+select topic mode
+  MainActivity.onTopicSelected(animal)
+    Quiz.setQuizMode(TOPIC)
+    User.setTopic(animal)
+    engSpaFragment.reset()
+    show ENGSPA fragment
+  MainActivity.showFragment(ENGSPA); already current fragment
+  MainActivity.setAppBarTitle(TOPIC_FOR_TITLE)
+  EngSpaFragment.reset()
+
+
+Main Quiz Logic ************************************************
+clean open of app
+	getUser (level, quizMode, qaStyle)
+	new EngSpaQuiz(DAO, user)
+		save DAO & user
+		modeInitialised = false
+	quiz.resetMode()
+		get questions based on user settings
+	open engSpaFragment
+	engSpaFrag.askQuestion(true), i.e. get and ask next question
+
+set level or set quizMode
+	quiz.reset
+
+engSpaFragment.onResume
+	nothing!
+
+significant events:
+	new Quiz
+	quiz.setQuizMode
+	new EngSpaFragment (from mainActivity)
+	engSpaFra.createView - savedInstance may be null or not
+	engSpaFra -> getNextQuestion
+
+	from users viewpoint
+		start app from scratch
+		return to app after other app, rotate, timeout
+		change level or quizMode
+Notes: may not use Quiz! (audio mode or numbers game or word lookup)
+
+Proposed Design
+---------------
+remove USER_LEVEL_ALL; in userDialog, if number too big:
+	"level > maximum; to include words from all levels, select
+	practice mode from main menu"
+
+new EngSpaQuiz: modeInitialised = false
+EngSpaQuiz.setLevel
+	can't set level to 1 if practice or audio mode
+	modeInitialised = false
+EngSpaQuiz.setQuizMode(mode)
+	modeInitialised = false
+	engSpaUser.setQuizMode(mode)
+EngSpaQuiz.getNextQuestion
+	if (!modeInitialised)
+		resetMode (including Topic mode)
+		modeInitialised = true
+MainActivity.selectMode
+	can't select learnMode if level > maxLevel
+
+End of main Quiz Logic *****************************************
+
+New ideas on qaStyle: *************************************************
+qaStyle:
+	1. spoken & written spa-eng (was 5)
+	2. written eng-spa
+	3. spoken spa-eng
+	4. written spa-eng (was 1)
+	5. spoken spa-spa (was 4)
+	random 1 to 5
+	alternate 2 & 3
+learn mode; CFPCF; for each level:
+	C = phase 1: qaStyle 1
+		phase 2: qaStyle 2
+	P = random words from previous levels,
+		based on user.qaStyle
+		NOTE: current code uses same style as C for P
+	F = fails, using style saved in failed word
+practice mode (only applicable where learnLevel > 1)
+	PF, where P & F same as learn mode
+	does not progress levels
+audio mode: (learnLevel > 1)
+	speaks both english and spanish with pauses
+	P = as for learn mode
+topic mode; CFPCF:
+	C & P = user.qaStyle
+	F = as for learn mode
+	NOTE: should C be same as learn?
+
+Summary
+	P always uses user.qaStyle
+	F always uses style saved in failed word
+	C only applies to Learn & Topic
+		learn: 1 for phase 1, 2 for phase 2
+
+
+new navigation drawer:
+	learn mode: CFPCF; current from learnLevel
+	----------
+	question style
+	topic mode: CF[PCF]; current from topic
+	practice mode: PF
+	-----------
+	audio mode: P
+	word lookup
+	numbers game
+	exit
+
+learn mode design
+	EngSpaQuiz
+		setMode(learnMode)
+			set cfpList to CFPCF
+			get current words at learnLevel
+			get failed words
+		setMode(practiceMode)
+			set cfpList to PF
+			get failed words; options:
+				as is; don't remove from memory copy until 3 right; extra button to
+				reload fails from DB?
+		setMode(audioMode)
+			set cfpList to P
+			get failed words
+		setMode(topicMode)
+			set cfpList to CF
+			get current words from topic
+			get failed words
+		setLevel(level)
+			-> setMode(learnMode)
+		getNextQuestion2()
+			if learnMode or topicMode
+				if end of questions
+					if learnMode: next level
+					else: next topic
+	note: learn, practice & topic modes all use EngSpaFragment
+
+decisions so far:
+	default mode to be new 1
+	alternate 2 & 3 only applies up to current level
+
+strategy
+	update alternate to only apply up to current level, i.e. not increment level
+	and only random completed words, and alternating between new 1 and 2 above
+	add audio mode; try it alternating
+
+end of New ideas on qaStyle: *************************************************
+	/*
+	currentWordList != null
+	QuizMode
+		Learn
+			P can't be in current
+			C already removed
+			F phase1, could be in current? so delete from current
+			F phase2, don't want to delete, as now eng->spa
+		Topic
+			P can be in current, so delete
+			C already removed
+			F can also be in current, so delete from current
+	 */
+	/*!!
+	if (currentWordList != null) {
+		currentWordList.remove(currentWord); // remove if in list
+	}
+	*/
+
+* design document!
+* adjectives and adverbs, e.g. the green bus; el autobus verde
+	he ran quickly
+* phrase generator! e.g. I go to the city by bus
+	conjugate go; use any place, not just city; metro, bike, car, coach etc;
+	see page 39 of GCSE book
+	go to [place,noun] by [travel] - but needs some work!
+* update engspa.txt - more phrases! publish to public!
+* both fields can be red on word lookup!
+* check Log messages; check TODOs
+* Padding around text
+
+* Can lose track of question count
+* At end of level can ask question twice
+* follow Material design patterns: layout, fonts, icons,
+	e.g. https://design.google.com/icons/index.html
+* Back from numbers sometimes exits app
+* Long press should turn on showHelp
+* should audio mode continue after screen turns off?
+Sam-style progress bar
+! at beginning of imperatives; see engSpaFragment.normalise()
+try answer field without single line
+Spoken numbers don't work come out as eg 5 not cinco
+Numbers game: pass button; in field width.
+margins
+
+! At start of imperatives
+Should faltar be lack rather than miss?
+* remove user from database
+* help fragment creating document text view every time; use retain instance etc;
+* rename numbers game to gato y ratón
+* all fragments should survive screen rotation
+* are we using gustar correctly?
+
+No help for word lookup; still got it's own status field
+Numbers game: no help; got its own status field
+Replace and with phrase
+
+ideas from demo to Julie
+
+	Write a complete user-guide as a Google Doc, and use that as the basis for the help.
+
+	Status: loading dictionary - please wait
+	HelpDocument: userGuide
+
+check with Joe: 1 user? bluetooth?
+
+* different layouts for landscape!
+* different layouts for tablets
+optionally split verb into two stages: infinitive then conjugate
+	e.g. Q: I will eat; A: comer; right, now try to conjugate or wrong try again
+each tip automatically stops after 3 shows?
+
+Catch connection error and output more sensible message
+
+get rid of obvious words; add words from GCSE book
+add long press everywhere?
+different layout when keyboard shows
+
+in debug app, have fragment that allows us to fire SQL to database
+	and invoke methods of EngSpaDAO
+
+extra tenses: reflexive, I have eaten (present perfect),
+	I had eaten (past perfect or pluperfect)
+some verbs only 3rd person singular, e.g. to snow
+reset function, on overflow menu:
+	delete all userwords, shared preferences
+for countries and towns and nationalities don't add article
+write a proper test suite!
+when loading new dictionary, show how much progress we have made so far
+	based on size of dictionary file
+navigation drawer:
+	http://developer.android.com/training/implementing-navigation/nav-drawer.html
+help page with hyperlinks: see BKH and
+	http://www.androidengineer.com/2010/08/easy-method-for-formatting-android.html
+allow for multiple users; set userName to 'admin', to allow extra features?
+http://stackoverflow.com/questions/16411056/how-to-adjust-layout-when-soft-keyboard-appears
+see TODOs
+outstanding tests
+	test invalid value for one of enums in engspa.txt
+	only turn on textToSpeech if question style requires it
+	if not noun or verb, and attribute is n_a: use word type as hint
+	Combine status fields and stats into one
+	accent error not working
+Short-term
+	sort words in engspa.txt, to reflect school words; complete GCSE words
+	split big topics into 2 or 3 groups, e.g. building, building1, building2;
+		for hint, remove number at end
+	Sam's icon as title of drawer
+	have search icon in toolBar (was actionBar) as alternative to enter
+		Word Search; fill in drop-down of words as user types into search
+		rename VerbTableFragment to WordSearchFragment
+		see http://developer.android.com/training/appbar/action-views.html
+Long-term
+	need a way to force reload of DB, from built-in or from web site
+		in case load from server fails
+	use same dialog or fragment for updating user in JardenProviders & Spanish
+	random mode (when reached max level): set EngSpaQuiz.questionSequence to AAF
+	re-factor EngSpaContract.QuestionStyle to be like the other enums
+	have main dictionary in JardenProviders (or perhaps better in Spanish),
+		plus extra text file(s) online; document why do we need a dictionary,
+		instead of set of text files like BKH.
+		as words mature, they can migrate to JardenProviders;
+		this would require an extra column on the database, but we
+		could use the now redundant LEVEL - see EngSpaQuiz.setUserLevel()
+		Note that if we set words from main file to LEVEL=1, and words
+		from extra file to LEVEL=2, when we updated the extra file we
+		would have to delete all words with LEVEL=2, and reset nextID
+		to numberOfRows + 1
+	extend verbTable menu option to include all words:
+		menu verbTable -> Word Lookup; search for English or Spanish, as now,
+		but some kind of auto-completion and/or wild cards in search
+		if verb chosen, option to show conjugation; search menu option
+		on toolbar; button to speak selected word
+	change EngSpa.Attribute from enum to a String?
+	for time and dates and places, use preposition, e.g.
+		last Tuesday; at five o'clock; next June; to England; at the chemist
+	make Spanish pronoun optional
+	after successful DB update show how many rows inserted
+		after failed update, dialog to ask if want to retry or restore to
+		factory-installed version
+	add checkBox to Activity Menu: "Verbs Only" (i.e. not in user settings, as it's temporary)
+Original design spec:
+	start work on new player fragment
+		show existing players; add, update, delete player
+		for new player, determine current level, and preferred
+			question style; explain menu options
+		save player level & fail data
+		save user's preference for question type
+	check can handle > 1 player
+
+	abandon questionType (word, phrase, sentence) and add more phrases
+		(and sentences!) to database
+	long hold over anything pops up help text; explain this
+		in introduction
+	extend Provider to add search and sort criteria
+	option to choose words from selected category, like in Python
+	add id to wordFile, so when update database it still matches
+	option to show fails as ListView; could select from them
+		to choose next word
+	check for duplicates when loading database
+	free-standing java app to update and validate data file
+		if duplicates, allow for alternative translations
+	add level two words; see http://www.bbc.co.uk/schools/primarylanguages/spanish/all_about_me/colours/
+	word (default), phrase, sentence
+		word: the/a lion; he will eat; slowly; red; under // done
+		phrase: the/a red lion; he will slowly eat
+		sentence: the red lion will slowly eat a cow
+	check if typed in wrong language? difficult!
+	proper database design: have table for each type (wordType, qualifier, attribute)
+		e.g. WordTypes = { int id, String wordType}
+		this ensures database integrity, reduces size of DB, and saves me validating
+		the ContentValues.
+		This also gives us the option to get the types for the spinners from the DB!
+		(like we did in Django/Python)
+		See https://gate.ac.uk/
+
+IMPROVEMENTS OVER AMAZEQUIZ
+random files of Spanish now on SQLite database
+proper concept of levels for PresetQuiz
+learnLevel held on database
+improved algorithm for choosing next question
+	user decides how many goes to have per word
+	number of required rights based on number of wrongs
+		at current level and previous levels
+algorithm for establishing level of new user - not yet implemented!
+
+SpanishQuiz requirements
+----------------------------------------------
+choose one of:
+	1. word, verb phrase (e.g. we were eating), or phrase (e.g. the dog was eating the green carrot)
+Note: generate random, but grammatically correct Spanish phrases
+
+Use Cases:
+	1. speak Spanish -> type Spanish
+	2. speak Spanish -> type English
+	3. speak & print Spanish -> type English
+	4. print Spanish -> type English
+	5. print English -> type Spanish
+	6. random: any of above
+
+Go: if no input, show answer
+	if input
+		check answer & mark accordingly (see below)
+		if wrong ask question again (i.e. repeat until correct or no input)
+		allow alternative answers
+
+Radio: word, verb phrase, sentence
+Spinner: see use cases above
+questionTextView
+answerEditText
+goButton, repeatButton (only applicable to use cases 1-3)
+
+ability to download extra dictionary elements from web site
+	i.e. similar to AmazeQuiz
+	at start of app, check can connect to my server
+	if so, check date of EngSpa.dat; if newer give user option to download new version
+	also provide (menu?) option to download new version
+
+objectives:
+	suitable app for schools
+	POC for using Scala and Python in Android
+	help me with my Spanish
+
+PLAN
+done: textToSpeech; sqlite; conjugate verbs; download new words;
+	replace Contract with EngSpaContract
+	add extra fields to engSpa: attribute, difficulty
+	return QuestionAnswer, instead of trashing EngSpa!
+	refresh EngSpaList when database updated
+	validate values for insert and update; this should be done
+		using extra tables on database, e.g. WordTypes.
+	restore database
+	calculate student level - see levelAlgorithm.txt
+
+PROPOSED ARCHITECTURE
+EngSpaQuiz replace by Levels
+	List<EngSpa> etc, as for Levels
+
+EngSpa with added history
+
+CURRENT ARCHITECTURE
+* on method means @Override
+
+SQLiteOpenHelper
+	onCreate()
+	onUpgrade()
+	getWritableDatabase() -> returns engSpaDB:SQLiteDatabase
+
+EngSpaSQLite (extends SQLiteOpenHelper)
+	*onCreate() -> createTables; bulkInsert(rows from local file)
+	bulkInsert(rows) -> iterate on insert(row)
+	*onUpgrade() -> dropTable; onCreate()
+	getCursor(criteria) -> engSpaDB.query(criteria)
+	insert(row) -> engSpaDB.insert(row)
+	insert(row, selection) -> engSpaDB.insert(row, selection)
+	update(row) -> engSpaDB.update(row)
+	delete(criteria) -> engSpaDB.delete(criteria)
+
+EngSpaProvider (extends ContentProvider)
+	*delete(criteria) -> engSpaSQLite.delete(criteria)
+	*insert(row) -> engSpaSQLite.insert(row)
+	*onCreate() -> new EngSpaSQLite()
+	*query(criteria) -> engSpaSQLite.query(criteria)
+	*update(row, criteria) -> engSpaSQLite.update(row, criteria)
+	*bulkInsert(rows) -> engSpaSQLite.bulkInsert(rows)
+
+ContentResolver
+	query(criteria) -> engSpaProvider.query(criteria)
+	insert(row) -> engSpaProvider.insert(row)
+	update(row) -> engSpaProvider.update(row)
+	delete(criteria) -> engSpaProvider.delete(criteria)
+	bulkInsert(rows) -> engSpaProvider.bulkInsert(rows)
+	call(customMethod) -> not used
+
+SpanishApp
+	onCreateView() ->...->	contentResolver.query(all rows)
+	dbUpdate() -> getRowsFromWebPage
+		contentResolver.delete(all rows)
+		contentResolver.bulkInsert(rows)
+	dbRestore() -> restore from local file in case dbUpdate fails
+

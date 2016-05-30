@@ -3,8 +3,10 @@ package jarden.document;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.AlignmentSpan;
 import android.text.style.BulletSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -37,11 +39,14 @@ public class DocumentTextView {
     public interface OnShowPageListener {
         void onShowPage(String pageName);
     }
+
 	private static final String TAG = "DocumentTextView";
     private OnShowPageListener onShowPageListener;
-	private final TextView textView;
+    private Resources resources;
+	private TextView textView;
 	private final HashMap<String, CharSequence> spannableMap;
     private final String homePageName;
+    private Object homeWhat;
 
 	/**
 	 *
@@ -51,7 +56,7 @@ public class DocumentTextView {
 	 */
 	public DocumentTextView(Context appContext, TextView textView, int[] resIds,
                             OnShowPageListener onShowPageListener) {
-		this(appContext, textView, resIds, false, onShowPageListener);
+		this(appContext, textView, resIds, true, onShowPageListener, true);
 	}
 	/**
 	 *
@@ -61,11 +66,16 @@ public class DocumentTextView {
 	 * @param withPageNames show page name as title at head of page
 	 */
 	public DocumentTextView(Context appContext, TextView textView, int[] resIds,
-				boolean withPageNames, OnShowPageListener onShowPageListener) {
+                            boolean withPageNames, OnShowPageListener onShowPageListener,
+                            boolean addHomeLink) {
 		this.textView = textView;
         this.onShowPageListener = onShowPageListener;
         this.spannableMap = new HashMap<>();
-		Resources resources = appContext.getResources();
+		this.resources = appContext.getResources();
+        this.homePageName = resources.getResourceEntryName(resIds[0]);
+        if (addHomeLink) {
+            this.homeWhat = new MyClickableSpan(homePageName);
+        } else this.homeWhat = null;
 		for (int resId: resIds) {
 			String pageName = resources.getResourceEntryName(resId);
 			String pageText = resources.getString(resId);
@@ -73,18 +83,26 @@ public class DocumentTextView {
 			CharSequence ss = getSpannable(pageText, pageHeader);
 			spannableMap.put(pageName, ss);
 		}
-        this.homePageName = resources.getResourceEntryName(resIds[0]);
         showHomePage();
 	}
+    public void setTextView(TextView textView) {
+        this.textView = textView;
+    }
     public void showHomePage() {
         showPage(this.homePageName);
     }
-
     /**
-     * Show hypertext page with given name. Return false if
-     * name not found.
-     * @param name
-     * @return
+     * Show hypertext page with given id.
+     * @param resId id of string resource
+     * @return false if resId not found
+     */
+    public boolean showPage(int resId) {
+        return showPage(this.resources.getResourceEntryName(resId));
+    }
+    /**
+     * Show hypertext page with given name.
+     * @param name of page
+     * @return false if name doesn't match ids passed to constructor
      */
     public boolean showPage(String name) {
 		CharSequence ss = spannableMap.get(name);
@@ -93,7 +111,12 @@ public class DocumentTextView {
                     "showPage(" + name + "); name not found");
             return false;
         }
-		textView.setText(ss);
+        /* possibly save navigation history at some point:
+        Deque<Integer> helpHistory = this.viewlessFragment.getHelpHistory();
+        helpHistory.push(resId);
+        */
+
+        textView.setText(ss);
         textView.scrollTo(0, 0);
         if (this.onShowPageListener != null) {
             this.onShowPageListener.onShowPage(name);
@@ -112,11 +135,30 @@ public class DocumentTextView {
 		Object what;
 
 		SpannableStringBuilder builder = new SpannableStringBuilder();
-		if (pageName != null && pageName.length() > 0) {
-			builder.append(pageName + "\n\n");
-			builder.setSpan(new RelativeSizeSpan(1.6f), 0, pageName.length(),
-					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
+        boolean rightAlignHomeLink = true; // could be a parameter passed to ctor?
+        if (this.homeWhat != null && !this.homePageName.equals(pageName)) {
+            // put link to home page at top, unless this is the home page
+            startSpanIndex = builder.length();
+            builder.append(homePageName);
+            builder.setSpan(homeWhat, startSpanIndex,
+                    startSpanIndex + homePageName.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (rightAlignHomeLink) {
+                builder.setSpan(
+                        new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE),
+                        startSpanIndex, startSpanIndex + homePageName.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            builder.append("\n");
+        }
+        if (pageName != null && pageName.length() > 0) {
+            startSpanIndex = builder.length();
+            builder.append(pageName);
+            builder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
+                    startSpanIndex, startSpanIndex + pageName.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+        }
 		while (true) {
 			startIndex = src.indexOf('[', index);
 			if (startIndex < 0 || (startIndex + 2) >= src.length()) break;

@@ -39,7 +39,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public static final String TAG = "EngSpaFragment";
 	private static final int PHRASE_ACTIVITY_CODE = 1002;
 
-	private TextView currentCtTextView;
+	private TextView statsTextView;
     private TextView questionTextView;
 	private TextView attributeTextView;
 	private EditText answerEditText;
@@ -108,8 +108,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		// Now get new layout
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		this.currentCtTextView = (TextView) rootView.findViewById(R.id.currentCtTextView);
-
+		this.statsTextView = (TextView) rootView.findViewById(R.id.statsTextView);
+        this.statsTextView.setOnLongClickListener(this);
 		this.selfMarkLayout = (ViewGroup) rootView.findViewById(R.id.selfMarkLayout);
 		this.buttonLayout = (ViewGroup) rootView.findViewById(R.id.buttonLayout);
 		this.selfMarkLayout.setVisibility(View.GONE);
@@ -202,16 +202,15 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			this.questionTextView.setText(this.question);
 		}
-        //!! setTip(getNext ? R.string.LearnModeHelp : R.string.tryGoAgainTip);
         int helpId;
         if (getNext) {
             QuizMode quizMode = engSpaUser.getQuizMode();
             if (quizMode == QuizMode.PRACTICE) {
-                helpId = R.string.PracticeModeHelp;
+                helpId = R.string.Practice_Mode;
             } else if (quizMode == QuizMode.TOPIC) {
-                helpId = R.string.TopicModeHelp;
+                helpId = R.string.Topic_Mode;
             } else { // must be LEARN
-                helpId = R.string.LearnModeHelp;
+                helpId = R.string.Learn_Mode;
             }
         } else helpId = R.string.tryGoAgainTip;
         setTip(helpId);
@@ -228,7 +227,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
         //?? sb.append("; S=" + engSpaUser.getQAStyle().ordinal());
         if (cwct >= 0) sb.append(" Current=" + cwct);
         if (fwct >= 0) sb.append(" Fails=" + fwct);
-		this.currentCtTextView.setText(sb.toString());
+		this.statsTextView.setText(sb.toString());
 		if (BuildConfig.DEBUG) {
 			String debugState = engSpaQuiz.getDebugState();
 			Log.d(TAG, debugState);
@@ -332,7 +331,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	@Override // OnLongClickListener
 	public boolean onLongClick(View view) {
-        this.engSpaActivity.setShowHelp();
+        this.engSpaActivity.showHelp();
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			setTip(R.string.goButtonTip);
@@ -344,10 +343,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			setTip(R.string.incorrectButtonTip);
 			return true;
 		} else if (id == R.id.micButton) {
-			setTip(R.string.MicButtonHelp);
+			setTip(R.string.Mic_Button);
 			return true;
         } else if (id == R.id.clearAnswerButton) {
             setTip(R.string.clearAnswerTip);
+            return true;
+        } else if (id == R.id.statsTextView) {
+            setTip(R.string.statsTip);
             return true;
 		}
 		return false;
@@ -437,7 +439,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 						.getEnglish() : engSpaQuiz.getSpanish();
 				this.questionTextView.setText(translated);
 			}
-			setTip(R.string.SelfMarkHelp);
+			setTip(R.string.Self_Mark);
 		} else {
 			String normalisedCorrectAnswer = normalise(this.correctAnswer);
 			String normalisedSuppliedAnswer = normalise(suppliedAnswer);

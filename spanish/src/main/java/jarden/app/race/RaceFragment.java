@@ -86,7 +86,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
 				Activity.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        this.engSpaActivity.setTip(R.string.NumbersGameHelp);
+        this.engSpaActivity.setTip(R.string.Numbers_Game);
 		nextQuestion();
 		return view;
 	}

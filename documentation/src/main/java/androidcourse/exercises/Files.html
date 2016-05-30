@@ -10,9 +10,12 @@
 
 <p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
 
-<p>Add new quiz types to your QuizActivity. Use jarden.quiz.PresetQuiz
-(defined in module <code>jardenlib</code>), which is a subclass of Quiz. It has the
-following constructors:</p>
+<p>Add new quiz types to your QuizActivity. Where the answers are
+    text, rather than numbers, you'll need to set
+    <code>answerEditText</code> type to text. Where you previously used
+    jarden.quiz.ArithmeticQuiz, also use jarden.quiz.PresetQuiz
+    (defined in module <code>jardenlib</code>), which is also a subclass of Quiz.
+    It has the following constructors:</p>
 <pre><code>/**
  * Build a Quiz from properties, where for each property,
  * name is the question, and value is the answer.
@@ -50,12 +53,12 @@ EngSpaContract.ENGLISH
 EngSpaContract.SPANISH
 EngSpaContract.CONTENT_URI_ENGSPA</pre></li>
 </ul>
-Use buttons or menu items or a spinner to choose
-quizType; set <code>answerEditText</code> type to number or text
-depending on quizType.
 
-<p>If you've still got time (frankly my dear, I'm amazed), save the
-high scores for each type of quiz.</p>
+<p>If you've still got time (that would be amazing), try some of the
+    following:</p><ul>
+    <li>use buttons or menu items or a spinner to choose quizType</li>
+    <li>save the high scores for each type of quiz</li>
+</ul>
 
 <p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
 
