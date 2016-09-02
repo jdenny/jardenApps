@@ -2,7 +2,6 @@ package com.jardenconsulting.spanishapp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
-import jarden.provider.engspa.EngSpaContract;
 
 /**
  * Created by john.denny@gmail.com on 10/03/2016.

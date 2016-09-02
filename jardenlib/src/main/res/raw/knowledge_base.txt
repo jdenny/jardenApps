@@ -44,6 +44,19 @@ in DOS shell:
 >adb shell
 shell@android:/ $ sqlite3
 
+on macbook:
+$ cd /Users/john/Library/Android/sdk/platform-tools
+$ ./adb push /usr/bin/sqlite3 /data/local/tmp/sqlite3
+$ ./adb shell
+$ cd /data/data/com.jardenconsulting.spanishapp
+$ /data/local/tmp/sqlite3 engspa.db # didn't work!
+
+MonkeyRunner
+------------
+$ export PATH=/Users/john/Library/Android/sdk/tools:$PATH
+$ monkeyrunner /Users/john/Documents/monkey.py
+
+
 using google sites
 ------------------
 go to https://sites.google.com/
@@ -317,4 +330,15 @@ hold power and volume down for 10 seconds
 power and volume up for 3 seconds; release volume up
 "wipe cache partition"
 "reboot system now"
+
+Android Versions
+----------------
+API		NAME			VERSION
+11-13	Honeycomb		3.0-3.2.6	Fragment, ActionBar
+14-15	Ice Cream Sand.	4.0.4.0.4
+16-18	Jelly Bean		4.1-4.3.1
+19-20	KitKat			4.4
+21-22	Lollipop		5.0-5.1.1	Toolbar
+23		Marshmallow		6.0-6.0.1
+		N
 

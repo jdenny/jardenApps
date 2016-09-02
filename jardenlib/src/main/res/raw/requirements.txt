@@ -3,6 +3,7 @@ alternative way of passing results back - see app in CourseApp
 (then delete CourseApp!)
 Video to survive screen rotation! Done it in courseApp; transfer code and instructions
 	to AndroidCourse
+Add service component
 
 CARDS
 To Test
@@ -24,21 +25,111 @@ possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
 	as done by EngSpaQuiz2
 
 SPANISH
-code review!
-remove hockey?
-in the morning?
-more phrases
+engspa.txt
+	remove hockey?
+	guitar, qualifier from time to music
+	comedor shouldn't be food
+	in the morning?
+	more phrases
+	get rid of obvious words; add words from GCSE book
+	Should faltar be lack rather than miss?
+	are we using gustar correctly?
+	sort words in engspa.txt, to reflect school words; complete GCSE words
+	split big topics into 2 or 3 groups, e.g. building, building1, building2;
+		for hint, remove number at end
 
-put more logic into DocumentTextView:
-	produce list of contents, and show link to it at beginning of document
-	keep track of navigation and provide previous/next
+small changes
+* when click on x (delete field) set focus
+* numbers game, change button to Start; when started, change it to Restart
+	add Pass button?
+* ! at beginning of imperatives; see engSpaFragment.normalise()
+* try answer field without single line
+* Spoken numbers don't work come out as eg 5 not cinco
+* try context menu as long click - see QAANDDEV, Menus (07) slide 9
+* try passing parameters to Fragments view Bundle - see QAANDDEV, module 15, slide 10 notes
+* Catch connection error and output more sensible message
+* should we check we can connect before connecting to a server?
+	See QAANDDEV, mod 11, slide 4
+* when we're not sure of the order of creation of some objects, could we put
+	some code in Fragment.onActivityCreated()?
+* back button when showing navigation drawer should close navigation drawer
+* rename numbers game to gato y ratón?
 
-numbers game, change button to Start; when started, change it to Restart
+big changes
+* phrase generator: "the [noun] is in the [building or place]"
+	adjectives and adverbs, e.g. the green bus; el autobus verde; he ran quickly
+	I go to the city by bus; conjugate go; use any place, not just city;
+		metro, bike, car, coach etc; see page 39 of GCSE book
+	go to [place,noun] by [travel] - but needs some work!
+* in practice mode, with more than 5 fails, pop-up option to "revise recent fails?"
+* layouts for other devices: nexus 7, note 3; landscape; keyboard showing
+	http://stackoverflow.com/questions/16411056/how-to-adjust-layout-when-soft-keyboard-appears
+	on Cara’s motorg phone, tool bar hides part of “revise spanish” of drawer menu
+* should audio mode continue after screen turns off? should it be run as a Service?
+* review style; get input from Joe boy; follow Material design patterns:
+	layout, fonts, icons, e.g. https://design.google.com/icons/index.html
+    Sam-style progress bar?
+* some verbs only 3rd person singular, e.g. to snow
+* for countries and towns and nationalities don't add article
+* when loading new dictionary, show how much progress we have made so far
+  	based on size of dictionary file
 
-on Cara’s motorg phone, tool bar hides part of “revise spanish” of drawer menu
+long term
+* design.txt (writing this will incorporate a code review)
+* close keyboard on click away, like ios; google for "hide soft keyboard on android
+	after clicking outside EditText"
+* test harness! check Log messages; check TODOs
+* remove user from database
+* all fragments should survive screen rotation
+* optionally split verb into two stages: infinitive then conjugate
+	e.g. Q: I will eat; A: comer; right, now try to conjugate or wrong try again
+* in debug app, have fragment that allows us to fire SQL to database
+	and invoke methods of EngSpaDAO
+* extra tenses: reflexive, I have eaten (present perfect),
+	I had eaten (past perfect or pluperfect)
 
-close keyboard on click away, like ios
+TODO: merge these todos with lists above!
+outstanding tests
+	test invalid value for one of enums in engspa.txt
+	only turn on textToSpeech if question style requires it
+	if not noun or verb, and attribute is n_a: use word type as hint
+	Combine status fields and stats into one
+	accent error not working
+Short-term
+	Sam's icon as title of drawer
+	have search icon in toolBar (was actionBar) as alternative to enter
+		Word Search; fill in drop-down of words as user types into search
+		rename VerbTableFragment to WordSearchFragment
+		see http://developer.android.com/training/appbar/action-views.html
+Long-term
+	need a way to force reload of DB, from built-in or from web site
+		in case load from server fails
+	use same dialog or fragment for updating user in JardenProviders & Spanish
+	random mode (when reached max level): set EngSpaQuiz.questionSequence to AAF
+	re-factor EngSpaContract.QuestionStyle to be like the other enums
+	have main dictionary in JardenProviders (or perhaps better in Spanish),
+		plus extra text file(s) online; document why do we need a dictionary,
+		instead of set of text files like BKH.
+		as words mature, they can migrate to JardenProviders;
+		this would require an extra column on the database, but we
+		could use the now redundant LEVEL - see EngSpaQuiz.setUserLevel()
+		Note that if we set words from main file to LEVEL=1, and words
+		from extra file to LEVEL=2, when we updated the extra file we
+		would have to delete all words with LEVEL=2, and reset nextID
+		to numberOfRows + 1
+	extend verbTable menu option to include all words:
+		menu verbTable -> Word Lookup; search for English or Spanish, as now,
+		but some kind of auto-completion and/or wild cards in search
+		if verb chosen, option to show conjugation; search menu option
+		on toolbar; button to speak selected word
+	change EngSpa.Attribute from enum to a String?
+	for time and dates and places, use preposition, e.g.
+		last Tuesday; at five o'clock; next June; to England; at the chemist
+	make Spanish pronoun optional
+	after successful DB update show how many rows inserted
+		after failed update, dialog to ask if want to retry or restore to
+		factory-installed version
+	add checkBox to Activity Menu: "Verbs Only" (i.e. not in user settings, as it's temporary)
 
-test harness!
 
 
