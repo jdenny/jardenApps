@@ -26,7 +26,14 @@ public Dialog onCreateDialog(Bundle savedInstanceState) {
 }
 </code></pre>
 
-<p>This builds a simple dialog consisting of an EditText field to hold the
+<p>Some of the imports have multiple options; select the following:<ul><code>
+    <li>android.content.DialogInterface.OnClickListener</li>
+    <li>android.support.v4.app.DialogFragment</li>
+    <li>android.support.v7.app.AlertDialog</li>
+</code>
+</ul>
+
+<p>The above method builds a simple dialog consisting of an EditText field to hold the
 search expression, plus 2 buttons for OK and Cancel (button labels defined
 as string resources).</p>
 

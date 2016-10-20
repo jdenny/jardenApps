@@ -51,6 +51,9 @@ public boolean onBackPressed() {
 }
 </pre>
 
+<p>Run the app; back button in Explorer should now go to the parent directory
+    or, if already at the root directory, return to the main Activity.</p>
+
 <h3>Accessing External Storage</h3>
 <p>To access external storage of the device, we can declare the
 permission in <code>AndroidManifest.xml</code>. When a user installs
@@ -68,9 +71,9 @@ API level 19, this permission is not necessary.</p>
 Navigate to a sub-directory in Explorer. Now rotate the screen. Does it return
 to the root directory? If we look at the life-cycle messages in the log, we
 can see that rotating the device destroys both the Activity and the Fragment.
-This is because we may well have different layout files for portrait and 
-landscape, so Android destroys the Activity and all its Fragments, and
-runs <code>Activity.onCreate()</code>, and when a Fragment is included in
+An app may have different layout files for portrait and landscape, so when the
+device is rotated, Android destroys the Activity and all its Fragments, and
+runs <code>Activity.onCreate()</code>, and for each Fragment included in
 the Activity layout, calls <code>Fragment.onCreate()</code> and
 <code>Fragment.onCreateView()</code>.
 This isn't always what we want, so there is a

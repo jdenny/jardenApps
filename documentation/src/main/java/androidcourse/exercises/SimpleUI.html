@@ -94,7 +94,10 @@ public void onClick(View view) {
 your answer.</p>
 
 <h3>Use code provided by jardenlib</h3>
-Create an object of type ArithmeticQuiz:<pre>
+If you haven't yet imported the modules supplied for the course, follow the
+instructions in <a href='Setup.html'>Setup</a> to do so now.
+
+<p>Still in MainActivity, create an object of type ArithmeticQuiz:<pre>
 private Quiz quiz;
    ...
    onCreate(...) {
@@ -106,7 +109,8 @@ appear; click on it, and select "Add dependency on module 'jardenlib'". This sho
 build.gradle. Android Studio will also add the relevant import statements if you follow
 its suggestions.
 
-<p>Use the Quiz methods:</p><pre>
+<p>Use the Quiz methods to get the next question (instead of hard-coding the question
+    to '7 * 6' as previously), and to check the answer:</p><pre>
 String getNextQuestion(int level) throws EndOfQuestionsException;
 /**
  * @return Quiz.CORRECT if correct
@@ -121,7 +125,7 @@ block; in the catch, report the exception in
 <code>resultTextView</code>.</p> Do not use <code>printStackTrace()</code>;
 unexpected exceptions are best reported in the log, using something like<pre>
 catch (Exception exception) {
-   Log.e(exception.toString());
+   Log.e("my first app", exception.toString());
 }
 </pre>
 More on logging later.

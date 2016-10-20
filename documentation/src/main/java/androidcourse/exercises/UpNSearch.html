@@ -10,7 +10,7 @@
 
 <p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
 
-<p>Ensure Explorer extends AppCompatActivity and is using correct theme
+<p>Ensure Explorer Activity extends AppCompatActivity and is using correct theme
 (see slides).</p>
 
 <p>In <code>ExplorerActivity.onCreate()</code>, add the line:<pre>
@@ -34,17 +34,26 @@ confirm that the <i>back</i> button takes you to the parent directory;
 the <i>up</i> button on the action bar should return to MainActivity.</p>
 
 <h3>Search</h3>
-<p>One of the key features we want on a file explorer, is search. We will
-add a search icon to the options menu.</p>
+<p>One of the key features we want on a file explorer is search. We will
+add a search icon to the options menu. <b>Note:</b> depending on the version of Android Studio
+you are using, the wizard for creating a new Activity may or may not have added the
+code for an options menu. If not, in <code>res/menu/</code> copy <code>menu_main.xml</code>
+to <code>menu_explorer.xml</code>, and copy methods <code>onCreateOptionsMenu()</code> and
+<code>onOptionsItemSelected()</code> from <code>MainActivity</code> to
+<code>ExplorerActivity</code></p>
 
-<p>Edit <code>res/menu/explorer.xml</code>, e.g.<pre>
+<p>Edit <code>res/menu/menu_explorer.xml</code>
+    to replace the settings item with:<pre>
 &lt;item android:id="@+id/actionSearch"
-   android:title="@string/searchStr"
+   android:title="@string/search"
    app:showAsAction="ifRoom"
    android:icon="@android:drawable/ic_menu_search" />
 </pre>
 
-<p>Add code to <code>ExplorerActivity.onOptionsItemSelected()</code> to
+<p>Amend <code>ExplorerActivity.onCreateOptionsMenu()</code> to use correct xml file:
+<code>menu_explorer.xml</code></p>
+
+<p>Amend <code>ExplorerActivity.onOptionsItemSelected()</code> to
 handle when the search option is selected; for now, log a message, e.g.<pre>
 if (id == R.id.actionSearch) {
    if (BuildConfig.DEBUG) {

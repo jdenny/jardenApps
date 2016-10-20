@@ -15,16 +15,14 @@
 <p>Add a fragment to the app; we will discuss fragments later, but essentially
 a fragment represents a window, as a light-weight, re-usable alternative to an activity.</p><ul>
     <li>File, New, Fragment, Blank Fragment</li>
-    <li>Name = ExplorerFragment; include interface callbacks=no</li>
+    <li>Name = ExplorerFragment; include interface callbacks=no;
+        include fragment factory methods=no</li>
     <li>Finish</li>
 </ul>
 
 <p>Include the new fragment in ExplorerActivity</p><ul>
     <li>open <code>activity_explorer</code> in design mode</li>
-    <li>Palette, Custom, fragment, choose ExplorerFragment from list of Fragments</li>
-    <li>OK to close the list of fragments; move the mouse pointer to where you want
-        the fragment to appear (i.e. in the graphic representing the device) and
-        click the mouse</li>
+    <li>Palette, Layouts, fragment, choose ExplorerFragment from list of Fragments; OK</li>
     <li>check in Text mode that the fragment element has been added</li>
     <li>change fragment id to <code>explorerFragment</code></li>
 </ul>
@@ -32,8 +30,8 @@ a fragment represents a window, as a light-weight, re-usable alternative to an a
 <p>Update <code>fragment_explorer.xml</code>: replace TextView with ListView - in
 Design view, it's under Containers in the Palette</p>
 
-In <code>ExplorerFragment.onCreate()</code>, set the current
-directory, e.g.<pre>
+Add new <code>Override</code> method <code>ExplorerFragment.onCreate()</code>;
+in this method, set the current directory, e.g.<pre>
 this.currentDirectory = new File("/");
 </pre>
 
@@ -57,6 +55,7 @@ ListView fileListView = (ListView) rootView.findViewById(R.id.listView);
 <pre>fileListView.setAdapter(fileListAdapter);
 </pre></li>
 	<li>Invoke a new method showCurrentDirectory(), as below</li>
+    <li>Return the rootView created above</li>
 </ul>
 
 <p>Define new method <code>void showCurrentDirectory()</code></p><ul>
@@ -70,7 +69,7 @@ ListView fileListView = (ListView) rootView.findViewById(R.id.listView);
 </ul>
 
 <p>Define new method:</p>
-<pre>void showFileNames(String[] fileNames) {
+<pre>private void showFileNames(String[] fileNames) {
    this.fileListAdapter.setNotifyOnChange(false);
    this.fileListAdapter.clear();
    for (String fileName: fileNames) {
