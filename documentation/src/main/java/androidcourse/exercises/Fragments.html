@@ -13,15 +13,15 @@
 <p>We will create a fragment to manage audio (mp3) and video (mp4) files.
 This will be instead of the code in ExplorerActivity which used a
 MediaPlayer to play an audio file. This time we will use a MediaController,
-which is a view containing controls for a MediaPlayer.</p>
+which is a view containing play-back controls for a MediaPlayer.</p>
 
 <p>Define a new class to extend Fragment, and define a new layout xml file
 for use by this Fragment. Note: if you want to support devices with versions
-of Android as early as API 4, use android.support.v4.app.Fragment.</p>
-
-<p>Add a new fragment to the app:</p><ul>
+of Android as early as API 4, use android.support.v4.app.Fragment.
+An easy way to do this is with the Android Studio Wizard:</p><ul>
     <li>File, New, Fragment, Blank Fragment</li>
-    <li>Name = MediaFragment; include interface callbacks=no</li>
+    <li>Name = MediaFragment; include interface callbacks=no;
+        include fragment factory methods=no</li>
     <li>Finish</li>
 </ul>
 
@@ -98,10 +98,10 @@ with mediaPlayer, and instead pass the file to the Activity, e.g.</p>
 
 <p>Run your app, to see if it is working so far; navigate to a suitable
 media file (e.g. *.mp3 or *.mp4), and click on it. This should show
-MediaFragment. Back button will probably not work - yet.</p>
+MediaFragment (with no media yet!). Back button will probably not work - yet.</p>
 
 <p>Edit the new layout file (e.g. layout/fragment_media.xml): delete the
-TextView, and add a VideoView (in Containers section of the Palette panel)</p>
+TextView, and add a VideoView (in Images & Media section of the Palette panel)</p>
 
 <p>Override <code>MediaFragment.onCreate()</code>, and add the
 statement:</p><pre>
@@ -151,27 +151,27 @@ if (fileName.endsWith(".mp3") || fileName.endsWith(".mp4")) {
     pause and resume the vidioView, e.g. add the following two methods to
     <code>MediaFragment</code>:
 </p><pre>
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onResume()");
-        }
-        if (this.mediaController != null) {
-            this.videoView.setMediaController(mediaController);
-            this.videoView.resume();
-        }
+@Override
+public void onResume() {
+    super.onResume();
+    if (BuildConfig.DEBUG) {
+        Log.d(TAG, "onResume()");
     }
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onPause()");
-        }
-        if (this.videoView.isPlaying()) {
-            this.videoView.pause();
-        }
+    if (this.mediaController != null) {
+        this.videoView.setMediaController(mediaController);
+        this.videoView.resume();
     }
+}
+@Override
+public void onPause() {
+    super.onPause();
+    if (BuildConfig.DEBUG) {
+        Log.d(TAG, "onPause()");
+    }
+    if (this.videoView.isPlaying()) {
+        this.videoView.pause();
+    }
+}
 </pre>
 
 <p>

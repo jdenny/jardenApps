@@ -21,7 +21,20 @@ public class PresetQuiz extends Quiz {
 	private int index = -1;
 	private String questionTemplate = null;
 
-	public PresetQuiz(InputStream is, String encoding) throws IOException {
+    /**
+     * Build a Quiz from the InputStream. Assumes the inputStream contains
+     * text in the form:
+     *		Q: question1
+     *		A: answer1
+     *		Q: question2
+     *		A: answer2
+     *		etc
+     *
+     * @param is an input stream containing the text
+     * @param encoding e.g. "iso-8859-1"
+     * @throws IOException
+     */
+    public PresetQuiz(InputStream is, String encoding) throws IOException {
 		this(new InputStreamReader(is, encoding));
 	}
 	public PresetQuiz(InputStreamReader isReader) throws IOException {

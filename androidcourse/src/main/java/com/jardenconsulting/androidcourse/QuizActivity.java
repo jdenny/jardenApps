@@ -171,7 +171,7 @@ public class QuizActivity extends AppCompatActivity implements OnClickListener,
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.buttonGo) {
-			String answerStr = this.answerEditText.getText().toString();
+			String answerStr = this.answerEditText.getText().toString().trim();
 			Log.d(TAG, "Go button pressed; answer is " + answerStr);
 			String resultStr;
             int res = this.quiz.isCorrect(answerStr);

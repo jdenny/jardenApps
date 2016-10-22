@@ -43,7 +43,8 @@ public static final String DIRECTORY_TAG = "directory";
 </pre>
 
 <p>A service is a top-level application component, and needs to be declared
-in AndroidManifest.xml, e.g.
+in AndroidManifest.xml; this may already be done by the Android Studio wizard;
+if not, add it manually, e.g.
 <pre>&lt;application
    ...
    &ltservice
@@ -106,8 +107,11 @@ NotificationManager mNotifyMgr =
 mNotifyMgr.notify(SEARCH_NOTIFICATION_ID, mBuilder.build());
 </pre>
 
-<p>Note: SEARCH_NOTIFICATION_ID is an int, an identifier for this
-notification unique within your application</p>
+<p>Notes: SEARCH_NOTIFICATION_ID is an int, an identifier for this
+notification unique within your application. There is more than one
+version of <code>NotificationCompat</code>; import the one in
+<code>android.support.v4.app.NotificationCompat</code>
+</p>
 
 <p>The final stage is to update ExplorerActivity.onCreate() to detect
 that it has been started as a result of the notification, rather than

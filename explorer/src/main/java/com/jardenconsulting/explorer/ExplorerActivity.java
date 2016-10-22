@@ -69,9 +69,8 @@ implements DialogInterface.OnClickListener, OnFileSelectedListener  {
 	private TextFileFragment textFragment;
 	private MediaFragment videoFragment;
 	private ImageFragment imageFragment;
-	//! private Fragment currentFragment;
 	private Fragment[] fragments;
-	private static enum FragmentNameEnum {
+	private enum FragmentNameEnum {
 		EXPLORER, TEXT, VIDEO, IMAGE
 	}
 	private FragmentNameEnum currentFragmentNameEnum;
@@ -180,7 +179,7 @@ implements DialogInterface.OnClickListener, OnFileSelectedListener  {
 		if (this.searchDialog == null) {
 			this.searchDialog = new SearchDialog();
 		}
-		this.searchDialog.show(fragMan.beginTransaction(), SEARCH_DIALOG);
+		this.searchDialog.show(fragMan, SEARCH_DIALOG);
 	}
 
 	@Override // button pressed in SearchDialog

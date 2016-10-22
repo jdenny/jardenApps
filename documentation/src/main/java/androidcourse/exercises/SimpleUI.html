@@ -80,12 +80,11 @@ goButton.setOnClickListener(this);
    <li>handle button click<br/>
 <pre><code>@Override
 public void onClick(View view) {
-   String answerStr = this.answerEditText.getText().toString();
-   int answer = Integer.parseInt(answerStr);
-   if (answer == 42) {
+   String answer = this.answerEditText.getText().toString().trim();
+   if (answer.equals("42")) {
       this.resultTextView.setText("correct!");
    } else {
-      this.resultTextView.setText(answerStr + " is wrong!");
+      this.resultTextView.setText(answer + " is wrong!");
    }
 }</code></pre></li>
 </ul>
@@ -118,7 +117,7 @@ String getNextQuestion(int level) throws EndOfQuestionsException;
  *         Quiz.FAIL if still wrong after 3 attempts
  */
 int isCorrect(String answer);
-String getAnswer();
+String getCorrectAnswer();
 </pre>
 <p>Note: you need to wrap <code>getNextQuestion()</code> in a <code>try</code>
 block; in the catch, report the exception in
