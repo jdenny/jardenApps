@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
         Button button = (Button) findViewById(R.id.goButton);
         button.setOnClickListener(this);
+        button = (Button) findViewById(R.id.playButton);
+        button.setOnClickListener(this);
+        button = (Button) findViewById(R.id.cButton);
+        button.setOnClickListener(this);
         this.upButton = (Button) findViewById(R.id.upButton);
         this.upButton.setOnClickListener(this);
         this.downButton = (Button) findViewById(R.id.downButton);
@@ -42,15 +46,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.goButton) {
-            staveView.invalidate();
+            staveView.newNotes();
+        } else if (id == R.id.playButton) {
+            staveView.playNext();
+        } else if (id == R.id.cButton) {
+            staveView.playC();
         } else if (id == R.id.downButton) {
             int maxPitch = this.staveView.getMaxPitch() - 1;
             setMaxPitch(maxPitch);
-            staveView.invalidate();
+            staveView.newNotes();
         } else if (id == R.id.upButton) {
             int maxPitch = this.staveView.getMaxPitch() + 1;
             setMaxPitch(maxPitch);
-            this.staveView.invalidate();
+            this.staveView.newNotes();
         } else {
             Toast.makeText(this, "unrecognised onClick()", Toast.LENGTH_LONG).show();
         }

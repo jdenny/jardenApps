@@ -20,20 +20,20 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-"
+            android:text="@string/minus"
             android:id="@+id/downButton"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"
+            android:text="@string/three"
             android:id="@+id/maxPitchTextView"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
+            android:text="@string/plus"
             android:id="@+id/upButton"/>
 
         <Button
@@ -41,6 +41,18 @@
             android:layout_height="wrap_content"
             android:text="@string/go"
             android:id="@+id/goButton"/>
+
+        <Button
+            android:text="@string/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/playButton"/>
+
+        <Button
+            android:text="@string/c1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cButton"/>
 
     </LinearLayout>
 

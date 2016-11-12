@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">music</string>
     <string name="go">Go</string>
+    <string name="play">Play</string>
+    <string name="stop">Stop</string>
+    <string name="c1">C\'</string>
+    <string name="minus">-</string>
+    <string name="three">3</string>
+    <string name="plus">+</string>
 </resources>
