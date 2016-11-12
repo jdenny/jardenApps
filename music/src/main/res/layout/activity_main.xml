@@ -11,6 +11,11 @@
     android:orientation="vertical"
     tools:context="com.jardenconsulting.music.MainActivity">
 
+    <jarden.music.StaveView
+        android:id="@+id/staveView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/staveHeight" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -55,10 +60,5 @@
             android:id="@+id/cButton"/>
 
     </LinearLayout>
-
-    <jarden.music.StaveView
-        android:id="@+id/staveView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/staveHeight" />
 
 </LinearLayout>

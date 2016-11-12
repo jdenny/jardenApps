@@ -5,13 +5,16 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.SoundPool;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import com.jardenconsulting.music.BuildConfig;
 import com.jardenconsulting.music.R;
 
 import java.util.Random;
@@ -20,16 +23,15 @@ import java.util.Random;
  * Created by john.denny@gmail.com on 01/09/2016.
  */
 public class StaveView extends View {
-    public static final double[] FREQUENCIES = {
-          261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251
-    };
+    public interface StaveActivity {
+        int getMaxPitch();
+    }
+
     private static final int INDENT = 5;
     private static final int NOTE_CT = 12;
+    private static final String TAG = "StaveView";
 
     /*
-    add sound:
-    http://stackoverflow.com/questions/2413426/playing-an-arbitrary-tone-with-android
-
         current strategy, which only copes with key of C:
         pitches are specified relative to middle c (c'):
             c'=0, d'=1, e'=2, f'=3, etc, c''=7
@@ -45,10 +47,11 @@ public class StaveView extends View {
         private static final int[] pitchMapping = {10, 10, 9, 9, 8, 7, 7, 6, 6, 5, 5, 4, 3};
      */
 
-    private int maxPitch = 3;
+    private StaveActivity staveActivity;
     private int staveGap;
     private int radius;
     private int noteGap;
+    private int bulge;
     private Paint blackPaint = new Paint();
     private Paint redPaint;
     private int[] notePitches = new int[NOTE_CT];
@@ -65,15 +68,23 @@ public class StaveView extends View {
     }
     public StaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        this.staveActivity = (StaveActivity) context;
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "StaveView(context, attrs)");
+        }
         Resources res = getResources();
         redPaint = new Paint();
         redPaint.setColor(Color.RED);
         this.staveGap = res.getDimensionPixelSize(R.dimen.staveGap);
+        this.bulge = res.getDimensionPixelSize(R.dimen.bulge);
         this.radius = staveGap / 2;
         this.noteGap = 3 * staveGap;
         this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
         guitarSounds = new int[8];
+        /*
+        To create new sounds, use QuickTime player, trim, save,
+        copy m4a files to res/raw; m4a are audio files
+         */
         guitarSounds[0] = soundPool.load(context, R.raw.guitarc, 1);
         guitarSounds[1] = soundPool.load(context, R.raw.guitard, 1);
         guitarSounds[2] = soundPool.load(context, R.raw.guitare, 1);
@@ -82,7 +93,7 @@ public class StaveView extends View {
         guitarSounds[5] = soundPool.load(context, R.raw.guitara, 1);
         guitarSounds[6] = soundPool.load(context, R.raw.guitarb, 1);
         guitarSounds[7] = soundPool.load(context, R.raw.guitarc2, 1);
-        newNotes();
+        newNotes2();
     }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -93,6 +104,9 @@ public class StaveView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onDraw()");
+        }
         for (int i = 0; i < 5; i++) {
             int y = INDENT + i * this.staveGap;
             canvas.drawLine(0, y, viewWidth, y, this.blackPaint);
@@ -103,11 +117,14 @@ public class StaveView extends View {
         }
     }
     public void newNotes() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "newNotes()");
         highlightedNote = -1;
         newNotes2();
         invalidate();
     }
     private void newNotes2() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "newNotes2()");
+        int maxPitch = staveActivity.getMaxPitch();
         for (int i = 0; i < NOTE_CT; i++) {
             int newPitch = random.nextInt(maxPitch);
             // don't have same note 3 times in succession
@@ -120,19 +137,16 @@ public class StaveView extends View {
     private void showNote(Canvas canvas, int position, int notePitch, Paint paint) {
         int x = INDENT + position * noteGap;
         int y = INDENT + (10 - notePitch) * radius;
-        canvas.drawCircle(x, y, radius, paint);
-        canvas.drawLine(x - radius, y, x - radius, y + 80, paint);
-        if (notePitch < 1) {  // TODO: may need several ledger lines
+        int left = x - radius - bulge;
+        canvas.rotate(-20, x, y);
+        canvas.drawOval(new RectF(left, y - radius, x + radius + bulge, y + radius),
+                paint);
+        canvas.rotate(20, x, y);
+        canvas.drawLine(left, y, left, y + 80, paint);
+        if (notePitch < 1) {
             canvas.drawLine(x - radius * 2, y, x + radius * 2, y, blackPaint);
         }
     }
-    public int getMaxPitch() {
-        return maxPitch;
-    }
-    public void setMaxPitch(int maxPitch) {
-        this.maxPitch = maxPitch;
-    }
-
     public void playNext() {
         if (++highlightedNote >= notePitches.length) highlightedNote = 0;
         invalidate(); // i.e. redraw showing new highlighted note
@@ -144,7 +158,12 @@ public class StaveView extends View {
     public void stop() {
         this.stopping = true;
     }
+
     // alternative way of playing sounds:
+    public static final double[] FREQUENCIES = {
+            261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251
+    };
+
     private void playSound(double frequency, int duration) {
         // AudioTrack definition
         int mBufferSize = AudioTrack.getMinBufferSize(44100,

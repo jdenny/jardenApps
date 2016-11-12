@@ -11,7 +11,8 @@ import android.widget.Toast;
 
 import jarden.music.StaveView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, StaveView.StaveActivity {
     private static final String TAG = "MainActivity";
     private static final String MAX_PITCH_KEY = "MaxPitch";
 
@@ -20,13 +21,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button downButton;
     private Button upButton;
     private TextView maxPitchTextView;
+    private int maxPitch = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // get maxPitch before setContentView():
+        this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        this.maxPitch = this.sharedPreferences.getInt(MAX_PITCH_KEY, 3);
         setContentView(R.layout.activity_main);
         this.staveView = (StaveView) findViewById(R.id.staveView);
-        this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
         Button button = (Button) findViewById(R.id.goButton);
         button.setOnClickListener(this);
         button = (Button) findViewById(R.id.playButton);
@@ -38,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.downButton = (Button) findViewById(R.id.downButton);
         this.downButton.setOnClickListener(this);
         this.maxPitchTextView = (TextView) findViewById(R.id.maxPitchTextView);
-        int maxPitch = this.sharedPreferences.getInt(MAX_PITCH_KEY, 3);
         setMaxPitch2(maxPitch);
     }
 
@@ -52,12 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.cButton) {
             staveView.playC();
         } else if (id == R.id.downButton) {
-            int maxPitch = this.staveView.getMaxPitch() - 1;
-            setMaxPitch(maxPitch);
+            setMaxPitch(maxPitch - 1);
             staveView.newNotes();
         } else if (id == R.id.upButton) {
-            int maxPitch = this.staveView.getMaxPitch() + 1;
-            setMaxPitch(maxPitch);
+            setMaxPitch(maxPitch + 1);
             this.staveView.newNotes();
         } else {
             Toast.makeText(this, "unrecognised onClick()", Toast.LENGTH_LONG).show();
@@ -73,6 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.upButton.setEnabled(maxPitch <= 12);
         this.downButton.setEnabled(maxPitch >= 3);
         this.maxPitchTextView.setText(Integer.toString(maxPitch));
-        this.staveView.setMaxPitch(maxPitch);
+        this.maxPitch = maxPitch;
+    }
+
+    @Override
+    public int getMaxPitch() {
+        return this.maxPitch;
     }
 }
