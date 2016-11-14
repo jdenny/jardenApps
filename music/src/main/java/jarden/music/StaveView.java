@@ -1,6 +1,8 @@
 package jarden.music;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -68,7 +70,7 @@ public class StaveView extends View {
     }
     public StaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.staveActivity = (StaveActivity) context;
+        this.staveActivity = (StaveActivity) getActivity();
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "StaveView(context, attrs)");
         }
@@ -79,20 +81,20 @@ public class StaveView extends View {
         this.bulge = res.getDimensionPixelSize(R.dimen.bulge);
         this.radius = staveGap / 2;
         this.noteGap = 3 * staveGap;
-        this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-        guitarSounds = new int[8];
-        /*
-        To create new sounds, use QuickTime player, trim, save,
-        copy m4a files to res/raw; m4a are audio files
-         */
-        guitarSounds[0] = soundPool.load(context, R.raw.guitarc, 1);
-        guitarSounds[1] = soundPool.load(context, R.raw.guitard, 1);
-        guitarSounds[2] = soundPool.load(context, R.raw.guitare, 1);
-        guitarSounds[3] = soundPool.load(context, R.raw.guitarf, 1);
-        guitarSounds[4] = soundPool.load(context, R.raw.guitarg, 1);
-        guitarSounds[5] = soundPool.load(context, R.raw.guitara, 1);
-        guitarSounds[6] = soundPool.load(context, R.raw.guitarb, 1);
-        guitarSounds[7] = soundPool.load(context, R.raw.guitarc2, 1);
+        if (!this.isInEditMode()) {
+            this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+            guitarSounds = new int[8];
+            // To create new sounds, use QuickTime player, trim, save,
+            // copy m4a files to res/raw; m4a are audio files
+            guitarSounds[0] = soundPool.load(context, R.raw.guitarc, 1);
+            guitarSounds[1] = soundPool.load(context, R.raw.guitard, 1);
+            guitarSounds[2] = soundPool.load(context, R.raw.guitare, 1);
+            guitarSounds[3] = soundPool.load(context, R.raw.guitarf, 1);
+            guitarSounds[4] = soundPool.load(context, R.raw.guitarg, 1);
+            guitarSounds[5] = soundPool.load(context, R.raw.guitara, 1);
+            guitarSounds[6] = soundPool.load(context, R.raw.guitarb, 1);
+            guitarSounds[7] = soundPool.load(context, R.raw.guitarc2, 1);
+        }
         newNotes2();
     }
     @Override
@@ -122,9 +124,19 @@ public class StaveView extends View {
         newNotes2();
         invalidate();
     }
+    private Activity getActivity() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
+    }
     private void newNotes2() {
         if (BuildConfig.DEBUG) Log.d(TAG, "newNotes2()");
-        int maxPitch = staveActivity.getMaxPitch();
+        int maxPitch = (staveActivity == null) ? 5 : staveActivity.getMaxPitch();
         for (int i = 0; i < NOTE_CT; i++) {
             int newPitch = random.nextInt(maxPitch);
             // don't have same note 3 times in succession
