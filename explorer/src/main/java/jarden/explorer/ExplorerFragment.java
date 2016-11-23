@@ -3,8 +3,12 @@ package jarden.explorer;
 import java.io.File;
 import java.util.Arrays;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +24,8 @@ import com.jardenconsulting.explorer.ExplorerActivity;
 import com.jardenconsulting.explorer.R;
 
 public class ExplorerFragment extends Fragment implements OnItemClickListener {
+    private static final String TAG = "ExplorerFragment";
+    // if we don't have read access to root directory, try "/sdcard"
 	private static final File ROOT_DIR = new File("/");
 
 	private ListView fileListView;
@@ -42,6 +48,20 @@ public class ExplorerFragment extends Fragment implements OnItemClickListener {
 					(savedInstanceState==null?"":"!") + "=null)");
 		}
 		this.currentDir = ROOT_DIR;
+        /*
+        This is needed for SDK 23 or higher; still needs to be requested
+        in the manifest file
+         */
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, 1);
+            Log.d(TAG, "can NOT read external storage");
+        } else {
+            Log.d(TAG, "CAN read external storage");
+        }
 		setRetainInstance(true);
 	}
 	public void showRootDirectory() {

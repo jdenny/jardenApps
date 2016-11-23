@@ -1,3 +1,10 @@
+Course timetable
+----------------
+Mon: 34, Invoking Activities Exercise
+Tue: 59, Action Bar Exercise
+Wed:
+Thur: 101, End!
+
 Factory reset of S3 Mini
 ------------------------
 Settings, Backup and Reset, Factory Data Reset
@@ -8,9 +15,9 @@ front page: Memo, Hot Bridge, KnowMe, Revise Spanish
 Footer: Phone, Chrome, GMail, Apps
 old_telephone.mp3
 
-MAC keyboard shortcuts for AS
------------------------------
-option+enter	show red-bulb options
+MAC keyboard shortcuts for AS			Windows
+-----------------------------			-------
+alt+enter		show red-bulb options
 shift+F6		refactor-rename
 option+F7		find usages
 F1				view javadoc
@@ -18,6 +25,8 @@ F2				go to next error
 cmd+N			generate
 cmd+[,cmd+]		previous, next cursor history
 cmd+P			parameters
+cmd+B			go to class def			ctrl+B
+ctrl+space		auto-complete
 
 git
 ---
@@ -56,7 +65,6 @@ MonkeyRunner
 $ export PATH=/Users/john/Library/Android/sdk/tools:$PATH
 $ monkeyrunner /Users/john/Documents/monkey.py
 
-
 using google sites
 ------------------
 go to https://sites.google.com/
@@ -64,13 +72,6 @@ if logged into Google as me, will show my sites
 within a site, can hold html web pages - create page, web page
 	or create a folder to hold raw files - create page, file cabinet
 	
-Problems on re-opening Eclipse
-------------------------------
-"Unable to get system library for the project"
-see http://droidarc.blogspot.co.uk/2012/08/unable-to-get-system-library-for-project.html
-remove entry "unable to get..."
-right-click project, android tools, fix project properties
-
 Deleting files on device
 ------------------------
 open DOS window
@@ -292,11 +293,9 @@ Some useful code!
 		}
 	}
 
-Change font size in Eclipse
----------------------------
-window -> preferences -> general -> appearance ->
-	colors and fonts -> Java Editor Text Font -> Edit
-	e.g. Consolas 16
+Change font size in Android Studio
+----------------------------------
+android studio, preferences, editor, colours & fonts, font, size
 
 Layouts for making a form
 -------------------------
@@ -340,5 +339,5 @@ API		NAME			VERSION
 19-20	KitKat			4.4
 21-22	Lollipop		5.0-5.1.1	Toolbar
 23		Marshmallow		6.0-6.0.1
-		N
+24-25	Nougat			7
 
