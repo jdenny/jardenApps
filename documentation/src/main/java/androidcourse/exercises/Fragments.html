@@ -204,6 +204,19 @@ public void onBackPressed() {
 
 <p>Run Explorer. If it works, you have created a half-decent app!</p>
 
+<p>You may want to go the extra mile, and allow the video or audio to
+    survive a screen rotation, i.e. continue to play. One way of doing
+    this is as follows:<ul>
+    <li>in <code>MediaFragment.onPause()</code> save the position of
+    the media, using <code>videoView.getCurrentPosition()</code></li>
+    <li><code>in MediaFragment.onResume()</code> if there is a current
+    file to play, create a MediaController as we did in <code>setFile()
+    </code>above, and fast-forward to the previously saved position
+    using <code>videoView.seekTo(this.position)</code></li>
+</ul>
+
+</p>
+
 <p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
 
 </body>

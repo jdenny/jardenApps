@@ -1,10 +1,3 @@
-ANDROIDCOURSE
-alternative way of passing results back - see app in CourseApp
-(then delete CourseApp!)
-Video to survive screen rotation! Done it in courseApp; transfer code and instructions
-	to AndroidCourse
-Add service component
-
 CARDS
 To Test
 	bluetooth still works - but how is it to be used now?

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ExplorerTools {
-	private static final int MAX_HITS_DEFAULT = 20;
+	private static final int MAX_HITS_DEFAULT = 10;
 	
 	/**
 	 * Convenience method that calls {@link #find(File, String, int)} but

@@ -19,8 +19,10 @@ public class MediaFragment extends Fragment {
 
 	private VideoView videoView;
 	private MediaController mediaController;
+    private int position;
+    private File file;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) {
@@ -59,21 +61,21 @@ public class MediaFragment extends Fragment {
 		if (BuildConfig.DEBUG) {
 			Log.d(ExplorerActivity.TAG, "MediaFragment.onResume()");
 		}
-		if (this.mediaController != null) {
-			this.videoView.setMediaController(mediaController);
-			this.videoView.resume();
-		}
-	}
+        if (this.file != null) playFile();
+    }
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (BuildConfig.DEBUG) {
-			Log.d(ExplorerActivity.TAG, "MediaFragment.onPause()");
-		}
 		if (this.videoView.isPlaying()) {
 			this.videoView.pause();
 		}
+        this.position = videoView.getCurrentPosition();
+        if (BuildConfig.DEBUG) {
+            Log.d(ExplorerActivity.TAG,
+                    "MediaFragment.onPause();" +
+                            " position=" + this.position);
+        }
 	}
 
 	@Override
@@ -95,13 +97,18 @@ public class MediaFragment extends Fragment {
 			mediaController = null;
 		}
 	}
-
 	public void setFile(File file) {
-		this.mediaController = new MediaController(getActivity());
-		this.videoView.setMediaController(mediaController);
-		videoView.setVideoPath(file.getAbsolutePath());
-		videoView.requestFocus();
-		videoView.start();
-	}
+        this.file = file;
+        this.position = 0;
+        playFile();
+    }
+    private void playFile() {
+        this.mediaController = new MediaController(getActivity());
+        this.videoView.setMediaController(mediaController);
+        videoView.setVideoPath(this.file.getAbsolutePath());
+        videoView.requestFocus();
+        videoView.seekTo(this.position);
+        videoView.start();
+    }
 }
 
