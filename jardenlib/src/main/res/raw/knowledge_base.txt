@@ -2,7 +2,7 @@ Course timetable
 ----------------
 Mon: 34, Invoking Activities Exercise
 Tue: 59, Action Bar Exercise
-Wed:
+Wed: 73, Intent Service & Notification Exercise
 Thur: 101, End!
 
 Factory reset of S3 Mini
