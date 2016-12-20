@@ -27,6 +27,7 @@ cmd+[,cmd+]		previous, next cursor history
 cmd+P			parameters
 cmd+B			go to class def			ctrl+B
 ctrl+space		auto-complete
+sout<tab>		System.out.println()
 
 git
 ---
@@ -204,10 +205,10 @@ create john's private key and public certificate:
 		import cert into BEA's CertStore:
 			keytool -import -alias john2 -file johnCertFile.cer -keypass johncertpass
 	
-in eclipse
-	export android application
+in Android Studio
+	Build, Generate Signed APK...
 	use existing keystore:
-		C:\Users\John\java\keystores\johnIdentity2.jks
+		/Users/john/jarden.jks
 		
 open Android developer console:
 	https://play.google.com/apps/publish/
