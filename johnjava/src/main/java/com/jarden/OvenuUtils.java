@@ -11,15 +11,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-// see https://www.tutorialspoint.com/sqlite/sqlite_java.htm
+/*
+SQLite3 datatypes are dynamic (like python); in particular the field
+nextActionDateTime TIMESTAMP, can accept strings in the correct format
+see https://www.sqlite.org/datatype3.html
+for general help with SQLite,
+see https://www.tutorialspoint.com/sqlite/sqlite_java.htm
+  */
 public class OvenuUtils {
     private static final String dbLocation =
             "/Users/john/OvenuCRM/ovenuLite.db";
+    private static final String[] titles = {
+            "Mr", "Mrs", "Miss", "Dr"
+    };
+    private static final String MRNMRS = "Mr & Mrs";
     private static final String[] fieldNames = {
             "id", "fullName", "address1", "address2", "town",
             "postcode", "phone", "mobile", "email", "ovenType",
@@ -42,12 +50,25 @@ public class OvenuUtils {
             "insert into CleanHistory (id, customerId, cleanDescription, cleanDate, " +
                     "cleanPrice, cleaner) " +
                     "values(?, ?, ?, ?, ?, ?)";
-    /*
-    private static final DateFormat dateTimeFormat =
-            new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    private static final DateFormat dateFormat =
-            new SimpleDateFormat("yyyy-MM-dd");
-     */
+    private static final String[] CSVTitles = {
+            "Title", "FirstName", "LastName", "Address Line 1", "Address Line 2",
+            "Address Line 3", "Town/City", "County", "Postcode", "Email", "Phone",
+            "Mobile", "Last Job date DD-MM-YY", "Last Job Value"
+    };
+    private static final String selectForCSV =
+            "select fullName, address1, address2, town, postcode, email, phone, " +
+            "mobile, cleanDate, cleanPrice " +
+            "from Customer, CleanHistory where " +
+            "Customer.id < 10 " + // comment out this line when it's working
+            "and customerId = Customer.id and cleanDate in " +
+            "(select MAX(cleanDate) from CleanHistory " +
+            "where customerId = Customer.id)";
+    private static final String[] testNames = {
+            "Mrs Abbott", "Stavy Antoniou", "Mrs Ingrid Aird",
+            "Mr Andrews", "Alan ", "Kay Allendale Comm Centre",
+            "Mr & Mrs Patterson", "Mrs Jill Webber", "Bill",
+            "Mr & Mrs John Colls"
+    };
 
     public static void main(String[] args) throws IOException, SQLException {
         System.out.println("Hello John");
@@ -62,7 +83,69 @@ public class OvenuUtils {
         }
         */
         // loadHistoryToDB();
-        System.out.println("uncomment what you want to do!");
+        // System.out.println("uncomment what you want to do!");
+        // exportToCSV();
+        testSplitNames();
+    }
+    private static void testSplitNames() {
+        for (String testName: testNames) {
+            System.out.println(testName + "=" + splitFullName(testName));
+        }
+    }
+    static class NameTrio {
+        String title = "";
+        String firstName = "";
+        String lastName = "";
+        public String toString() {
+            return "[" + title + "," + firstName + "," + lastName + "]";
+        }
+    }
+    private static NameTrio splitFullName(String fullName) {
+        NameTrio nameTrio = new NameTrio();
+        int index = fullName.indexOf(" ");
+        if (index == -1) {
+            nameTrio.firstName = fullName;
+        } else {
+            String nameAfterTitle;
+            boolean titled;
+            if (fullName.startsWith(MRNMRS + " ")) {
+                nameTrio.title = MRNMRS;
+                titled = true;
+                nameAfterTitle = fullName.substring(9);
+            } else {
+                String firstToken = fullName.substring(0, index);
+                titled = isTitle(firstToken);
+                if (titled) {
+                    nameTrio.title = firstToken;
+                    nameAfterTitle = fullName.substring(index + 1);
+                } else {
+                    nameAfterTitle = fullName;
+                }
+            }
+            index = nameAfterTitle.indexOf(" ");
+            if (index == -1) {
+                if (titled) {
+                    nameTrio.lastName = nameAfterTitle;
+                } else {
+                    nameTrio.firstName = nameAfterTitle;
+                }
+            } else {
+                nameTrio.firstName = nameAfterTitle.substring(0, index);
+                nameTrio.lastName = nameAfterTitle.substring(index + 1);
+            }
+        }
+        return nameTrio;
+    }
+    private static boolean isTitle(String name) {
+        for (String title: titles) {
+            if (title.equalsIgnoreCase(name)) return true;
+        }
+        return false;
+    }
+    public static void exportToCSV() {
+        // make sure no fields contain tabs; use tabs as field separators;
+        // split fullName into 3 fields
+
     }
     public static void getMetaData() throws SQLException {
         Connection conn = connectToSQLite();
@@ -103,7 +186,6 @@ public class OvenuUtils {
                 customer.howFound = rs.getString("howFound");
                 customer.notes = rs.getString("notes");
                 customer.nextAction = rs.getString("nextAction");
-                // customer.nextActionDateTime = rs.getTimestamp("nextActionDateTime");
                 System.out.println("nextActionDateTime as String: " + rs.getString("nextActionDateTime"));
                 customer.cleanIntervalMonths = rs.getInt("cleanIntervalMonths");
                 System.out.println(customer);
@@ -143,25 +225,6 @@ public class OvenuUtils {
                 customer.nextAction = customerFields[12];
                 String naDate = customerFields[13];
                 String naTime = customerFields[14];
-                /*
-                java.util.Date nextActionDate = null;
-                try {
-                    if (naDate != null && naDate.length() > 0 && !naDate.equals("\\N")) {
-                        if (naTime != null && naTime.length() > 0 && !naTime.equals("\\N")) {
-                            nextActionDate = dateTimeFormat.parse(naDate + " " + naTime);
-                        } else {
-                            nextActionDate = dateFormat.parse(naDate);
-                        }
-                    }
-                } catch (ParseException e) {
-                    System.out.println(
-                        "exception parsing nextActionDateTime; id=" + customer.id +
-                                "naDate=" + naDate + "; naTime=" + naTime);
-                }
-                if (nextActionDate != null) {
-                    customer.nextActionDateTime = new Timestamp(nextActionDate.getTime());
-                }
-                */
                 if (naDate != null && naDate.length() > 0 && !naDate.equals("\\N")) {
                     if (naTime != null && naTime.length() > 0 && !naTime.equals("\\N")) {
                         customer.nextActionDateTime = naDate + " " + naTime;
