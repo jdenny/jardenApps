@@ -2,8 +2,12 @@ package com.jarden;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -24,6 +28,11 @@ see https://www.tutorialspoint.com/sqlite/sqlite_java.htm
 public class OvenuUtils {
     private static final String dbLocation =
             "/Users/john/OvenuCRM/ovenuLite.db";
+    private static final String customerTxtFilesDir = "/Users/john/downloads/ovenUBackup/";
+    private static final String customerTxtFileName = customerTxtFilesDir + "customer.txt";
+    private static final String historyTxtFileName = customerTxtFilesDir + "cleanHistory.txt";
+    private static final String csvFileName = "/Users/john/downloads/ovenu.csv";
+
     private static final String[] titles = {
             "Mr", "Mrs", "Miss", "Dr"
     };
@@ -38,9 +47,6 @@ public class OvenuUtils {
             "id", "cleanDate", "cleanPrice", "cleaner",
             "cleanDescription", "customerId"
     };
-    private static final String customerTxtFilesDir = "/Users/john/downloads/ovenUBackup/";
-    private static final String customerTxtFileName = customerTxtFilesDir + "customer.txt";
-    private static final String historyTxtFileName = customerTxtFilesDir + "cleanHistory.txt";
     private static final String insertCustomer =
             "insert into Customer (id, fullName, address1, address2, town, " +
             "postcode, phone, mobile, email, ovenType, howFound, notes, " +
@@ -50,11 +56,6 @@ public class OvenuUtils {
             "insert into CleanHistory (id, customerId, cleanDescription, cleanDate, " +
                     "cleanPrice, cleaner) " +
                     "values(?, ?, ?, ?, ?, ?)";
-    private static final String[] CSVTitles = {
-            "Title", "FirstName", "LastName", "Address Line 1", "Address Line 2",
-            "Address Line 3", "Town/City", "County", "Postcode", "Email", "Phone",
-            "Mobile", "Last Job date DD-MM-YY", "Last Job Value"
-    };
     private static final String selectForCSV =
             "select fullName, address1, address2, town, postcode, email, phone, " +
             "mobile, cleanDate, cleanPrice " +
@@ -70,27 +71,56 @@ public class OvenuUtils {
             "Mr & Mrs John Colls"
     };
 
+    private enum Action {
+        metaData, readFile, loadDB, readCustTable, readHistTable,
+        loadHistory, exportCSV, test4Tabs, testSplitNames;
+    }
     public static void main(String[] args) throws IOException, SQLException {
         System.out.println("Hello John");
-        // getMetaData();
-        // readCustomerFile();
-        // loadDB();
-        // readCustomerTable();
-        /*
-        List<CleanHistory> historyList = readHistoryFile();
-        for (int i = 0; i < 10; i++) {
-            System.out.println(historyList.get(i));
-        }
-        */
-        // loadHistoryToDB();
-        // System.out.println("uncomment what you want to do!");
-        // exportToCSV();
-        testSplitNames();
+        Action action = Action.exportCSV;
+        if (action == Action.metaData) getMetaData();
+        else if (action == Action.readFile) readCustomerFile();
+        else if (action == Action.loadDB) loadDB();
+        else if (action == Action.readCustTable) readCustomerTable();
+        else if (action == Action.readHistTable) {
+            List<CleanHistory> historyList = readHistoryFile();
+            for (int i = 0; i < 10; i++) {
+                System.out.println(historyList.get(i));
+            }
+        } else if (action == Action.loadHistory) loadHistoryToDB();
+        else if (action == Action.exportCSV) exportToCSV();
+        else if (action == Action.test4Tabs) {
+            testStringForTabs(removeTabsNLs(fileToString(customerTxtFileName)));
+        } else if (action == Action.testSplitNames) testSplitNames();
     }
     private static void testSplitNames() {
         for (String testName: testNames) {
             System.out.println(testName + "=" + splitFullName(testName));
         }
+    }
+    private static void testStringForTabs(String customersTxt) throws IOException {
+        String[] customerStrs = customersTxt.split("\\^");
+        System.out.println("customers.length=" + customerStrs.length);
+        for (int i = 0; i < customerStrs.length; i++) {
+            String customerStr = customerStrs[i];
+            int index = customerStr.indexOf("\t");
+            if (index != -1) {
+                System.out.println("tab found at line " + i +
+                        ", position " + index + "; line is: " + customerStr);
+            }
+        }
+        System.out.println("end of testFileForTabs");
+    }
+    private static String removeTabsNLs(String text) {
+        StringBuilder builder = new StringBuilder(text);
+        int index = 0;
+        while((index = builder.indexOf("\t", index)) >= 0) {
+            builder.replace(index, index+1, " ");
+        }
+        while((index = builder.indexOf("\n", index)) >= 0) {
+            builder.replace(index, index+1, " ");
+        }
+        return builder.toString();
     }
     static class NameTrio {
         String title = "";
@@ -142,30 +172,74 @@ public class OvenuUtils {
         }
         return false;
     }
-    public static void exportToCSV() {
-        // make sure no fields contain tabs; use tabs as field separators;
-        // split fullName into 3 fields
-
-    }
-    public static void getMetaData() throws SQLException {
-        Connection conn = connectToSQLite();
-        DatabaseMetaData metaData = conn.getMetaData();
-        // ResultSet rs = metaData.getTables(null, null, "Customer", null);
-        ResultSet rs = metaData.getColumns(null, null, "Customer", null);
-        while (rs.next()) {
-            String colName = rs.getString("COLUMN_NAME");
-            String colType = rs.getString("TYPE_NAME");
-            System.out.println("name=" + colName + "; colType=" + colType);
-        }
-        rs.close();
-        conn.close();
-        System.out.println("db closed");
-    }
-    public static void readCustomerTable() {
+    public static void exportToCSV() throws SQLException, IOException {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        PrintStream out = null;
         try {
-            Connection conn = connectToSQLite();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(
+            conn = connectToSQLite();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(
+                "select fullName, address1, address2, town, postcode, email, phone, " +
+                    "mobile, cleanDate, cleanPrice " +
+                    "from Customer, CleanHistory where " +
+                    // "Customer.id < 30 and " + // for testing
+                    "customerId = Customer.id and cleanDate in " +
+                    "(select MAX(cleanDate) from CleanHistory " +
+                    "where customerId = Customer.id)");
+            FileOutputStream fos = new FileOutputStream(csvFileName);
+            out = // System.out; // for testing purposes
+                    new PrintStream(fos);
+            out.println(CustomerCSV.getTitles());
+            while (rs.next()) {
+                CustomerCSV customer = new CustomerCSV();
+                String fullName = removeTabsNLs(rs.getString("fullName"));
+                NameTrio nameTrio = splitFullName(fullName);
+                customer.title = nameTrio.title;
+                customer.firstName = nameTrio.firstName;
+                customer.lastName = nameTrio.lastName;
+                customer.address1 = removeTabsNLs(rs.getString("address1"));
+                customer.address2 = removeTabsNLs(rs.getString("address2"));
+                customer.town = removeTabsNLs(rs.getString("town"));
+                customer.postcode = removeTabsNLs(rs.getString("postcode"));
+                customer.phone = removeTabsNLs(rs.getString("phone"));
+                customer.mobile = removeTabsNLs(rs.getString("mobile"));
+                customer.email = removeTabsNLs(rs.getString("email"));
+                customer.lastCleanDate = reformatDate(rs.getString("cleanDate"));
+                customer.lastCleanPrice = rs.getInt("cleanPrice");
+                out.println(customer);
+            }
+        } finally {
+            try {
+                if (out != null) out.close();
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+                System.out.println("db closed");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /*
+    Change date string from YYYY-MM-DD to DD-MM-YY
+     */
+    private static String reformatDate(String dateStr) {
+        String[] tokens = dateStr.split("-");
+        if (tokens.length != 3) {
+            throw new IllegalArgumentException("unexpected dateStr=" + dateStr);
+        }
+        return tokens[2] + "-" + tokens[1] + "-" + tokens[0].substring(2);
+    }
+    public static void readCustomerTable() throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = connectToSQLite();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(
                     "select id, fullName, address1, address2, town, " +
                     "postcode, phone, mobile, email, ovenType, howFound, " +
                     "notes, nextAction, nextActionDateTime, " +
@@ -186,16 +260,19 @@ public class OvenuUtils {
                 customer.howFound = rs.getString("howFound");
                 customer.notes = rs.getString("notes");
                 customer.nextAction = rs.getString("nextAction");
-                System.out.println("nextActionDateTime as String: " + rs.getString("nextActionDateTime"));
+                customer.nextActionDateTime = rs.getString("nextActionDateTime");
                 customer.cleanIntervalMonths = rs.getInt("cleanIntervalMonths");
                 System.out.println(customer);
             }
-            rs.close();
-            stmt.close();
-            conn.close();
-            System.out.println("db closed");
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+                System.out.println("db closed");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
     private static List<Customer> readCustomerFile() throws IOException {
@@ -344,5 +421,19 @@ public class OvenuUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static void getMetaData() throws SQLException {
+        Connection conn = connectToSQLite();
+        DatabaseMetaData metaData = conn.getMetaData();
+        // ResultSet rs = metaData.getTables(null, null, "Customer", null);
+        ResultSet rs = metaData.getColumns(null, null, "Customer", null);
+        while (rs.next()) {
+            String colName = rs.getString("COLUMN_NAME");
+            String colType = rs.getString("TYPE_NAME");
+            System.out.println("name=" + colName + "; colType=" + colType);
+        }
+        rs.close();
+        conn.close();
+        System.out.println("db closed");
     }
 }
