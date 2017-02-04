@@ -1,0 +1,21 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(path: ':jardenjavalib')
+    compile 'junit:junit:4.12'
+}
+sourceSets.main.resources.srcDirs = ["resources/"]
+
+jar {
+    manifest {
+        attributes "Main-Class": "jarden.maze.Main"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

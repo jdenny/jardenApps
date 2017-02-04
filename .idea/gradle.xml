@@ -14,10 +14,12 @@
             <option value="$PROJECT_DIR$/documentation" />
             <option value="$PROJECT_DIR$/explorer" />
             <option value="$PROJECT_DIR$/hotbridge" />
+            <option value="$PROJECT_DIR$/jardenjavalib" />
             <option value="$PROJECT_DIR$/jardenlib" />
             <option value="$PROJECT_DIR$/jardenprovider" />
             <option value="$PROJECT_DIR$/johnjava" />
             <option value="$PROJECT_DIR$/music" />
+            <option value="$PROJECT_DIR$/quizmaze" />
             <option value="$PROJECT_DIR$/spanish" />
           </set>
         </option>

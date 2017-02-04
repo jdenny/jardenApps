@@ -1,0 +1,87 @@
+Notes 31 Jan 2017
+need more detail about how it all works:
+ does a whole chromosome get copied to RNA, or just part of it?
+ does RNA get reused? how long does it last outside nucleus?
+ does DNA have to be unravelled before it can be copied?
+ how does RNA get out of nucleus?
+ do I need to add a backbone to DNA & RNA?
+ this is a big issue: how to construct a protein out of amino acids, where
+  the behaviour of the protein is determined, in programmatic terms, from
+  the properties of the amino acids!
+
+Next target
+-----------
+Polymerase protein transcribes DNA (gene) into RNA, using spare nucleotides
+Ribosome protein translates RNA into a protein, using spare amino acids
+
+We need a protein for creating an amino acid (20 of?), and a protein for creating a nucleotide (5 of?)
+We need a regulator protein for inhibiting the creation of each amino acid
+	this attaches itself to the operator part of the DNA, to stop polymerase
+	if the amino acid is running low, it releases itself from the DNA
+Let's start off with:
+	a protein for creating Adenine: CreateAdenine 
+	@@ make this Uracil, CreateUracil, RegulateUracil
+	@@ CreateUracil requires energy; read book!
+	@@ manually add energy within MasterDesigner
+	@@ then: dunno!
+	a protein for regulating CreateAdenine,
+		by attaching itself to the operator site of CreateAdenine DNA
+
+End of Next target
+------------------		
+
+generic behaviour of a protein
+a) create protein
+	add amino-acid (or component protein!)
+b) do work!
+	for each amino-acid, perform void action();
+some objects we pluck from the cell, floating around
+sometimes the object we want is the next one in the chain
+
+Each time a protein is created, start a thread. The protein looks for work to do, waits if
+there isn't any, is notified when some becomes available, then does it.
+e.g. Polymerase produces rna, then starts again.
+Ribosome waits for rna; when it finds some, it makes it into a protein.
+
+Make existing aminoAcids into proteins (big job!)
+
+When a protein has finished with a molecule (e.g. aminoAcid) it must either destroy it
+or return it to the cell's list.
+
+Develop a user interface; should be able to
+	view list of objects; select each object;
+	view status of each object
+
+Note we have to construct the first cell by hand; thereafter we should be able to
+	create more cells!
+
+for ribosome protein
+	Codon GetCodonFromRNA()
+		AminoAcid getAminoAcidFromCodon(Codon)
+		null addAminoAcidToProtein(AminoAcid)
+for polymerase protein
+	Gene getGeneFromDNA()
+		null getRNAFromGene(Gene)
+
+one type of protein is a ribosome, whose action is to build a protein!
+	obtain dna gene
+	for each set of 3 sequential nucleotides (codon)
+		grab corresponding amino acid (wait until one available?)
+		attach amino acid to end of protein chain
+
+other types of protein
+	myosin, actin - motor (e.g. muscle)
+	enzyme
+
+Ideas for amino acids
+	create ArrayList
+	add object to arraylist;
+
+We are in a classic 'chicken and egg' scenario; we need a ribosome to build a protein;
+but a ribosome is a protein. Okay, we hand build the first one. A protein is made by
+transcribing dna into RNA; this is done by RNA polymerase, which is a protein. Okay,
+so we hand build the first ribosome and the first RNA polymerase, and the first DNA.
+Now we can take the DNA, transcribe it into RNA (using RNA polymerase) and build our
+first protein-built proteins.
+
+

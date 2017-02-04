@@ -1,10 +1,8 @@
-package com.jarden;
+package jarden.ovenu;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -72,23 +70,25 @@ public class OvenuUtils {
     };
 
     private enum Action {
-        metaData, readFile, loadDB, readCustTable, readHistTable,
-        loadHistory, exportCSV, test4Tabs, testSplitNames;
+        metaData, readFile, loadDB, loadCustomers, loadHistory, readCustTable,
+        readHistTable, exportCSV, test4Tabs, testSplitNames;
     }
     public static void main(String[] args) throws IOException, SQLException {
         System.out.println("Hello John");
-        Action action = Action.exportCSV;
-        if (action == Action.metaData) getMetaData();
+        Action action = Action.testSplitNames;
+        if (action == Action.loadDB) { loadCustomerToDB(); loadHistoryToDB(); }
+        else if (action == Action.loadCustomers) loadCustomerToDB();
+        else if (action == Action.loadHistory) loadHistoryToDB();
+        else if (action == Action.exportCSV) exportToCSV();
+        else if (action == Action.metaData) getMetaData();
         else if (action == Action.readFile) readCustomerFile();
-        else if (action == Action.loadDB) loadDB();
         else if (action == Action.readCustTable) readCustomerTable();
         else if (action == Action.readHistTable) {
             List<CleanHistory> historyList = readHistoryFile();
             for (int i = 0; i < 10; i++) {
                 System.out.println(historyList.get(i));
             }
-        } else if (action == Action.loadHistory) loadHistoryToDB();
-        else if (action == Action.exportCSV) exportToCSV();
+        }
         else if (action == Action.test4Tabs) {
             testStringForTabs(removeTabsNLs(fileToString(customerTxtFileName)));
         } else if (action == Action.testSplitNames) testSplitNames();
@@ -365,7 +365,7 @@ public class OvenuUtils {
         System.out.println("Opened database successfully");
         return conn;
     }
-    public static void loadDB() {
+    public static void loadCustomerToDB() {
         try {
             List<Customer> customerList = readCustomerFile();
             Connection conn = connectToSQLite();
