@@ -7,13 +7,6 @@ import java.util.List;
  * Created by john.denny@gmail.com on 02/02/2017.
  */
 
-/*
-next steps:
- 1. pool of amino acids
- 2. grab amino acids according to DNA; add to protein; start protein
- up to here!
- 3. define amino acids to perform step 2
- */
 public class Life3 implements ProcessListener {
     char[] rnaHack = {
             // lysine, arginine, stop:
@@ -30,9 +23,12 @@ public class Life3 implements ProcessListener {
         aminoAcidPool.add(new Lysine());
         aminoAcidPool.add(new Arginine());
         List<Nucleotide> firstRna = new ArrayList<>();
-        for (char c: rnaHack) firstRna.add(new Nucleotide(c));
-        // simulateRibosome(firstRna);
-        // replace above statement with this hand-made protein!
+        for (char c : rnaHack) firstRna.add(new Nucleotide(c));
+        boolean useRibosome = true;
+        if (useRibosome) buildManualRibosome(firstRna);
+        else simulateRibosome(firstRna);
+    }
+    private void buildManualRibosome(List<Nucleotide> firstRna) {
         Protein manualRibosome = new Protein();
         manualRibosome.addElement(johnGetNextCodon);
         manualRibosome.addElement(johnGetAminoAcid);
@@ -48,7 +44,6 @@ public class Life3 implements ProcessListener {
         System.out.println("protein started");
     }
     /*
-    Something like:
       A: get next codon(chain, index)
       if < 3 or stop: break
       link to matching tRNA
@@ -163,16 +158,10 @@ interface ProcessListener {
 }
 
 class Protein extends Chain implements Runnable {
-    //! List<AminoAcid> aminoAcids = new ArrayList<>();
     private Object target;
     private Object element;
     private ProcessListener processListener;
 
-    /*!
-    public void addAminoAcid(AminoAcid aminoAcid) {
-        this.aminoAcids.add(aminoAcid);
-    }
-    */
     public Protein() {
         elements = new ArrayList<AminoAcid>();
     }

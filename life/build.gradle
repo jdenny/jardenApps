@@ -3,6 +3,7 @@ apply plugin: 'java'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
+sourceSets.main.resources.srcDirs = ["resources/"]
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
