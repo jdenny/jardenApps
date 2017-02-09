@@ -10,17 +10,16 @@ import jarden.life.nucleicacid.Uracil;
  * Get some RNA from cell; for each action, get next codon from rna.
  */
 public class GetCodonFromRNA extends AminoAcid {
-	private Cell cell;
 	private RNA rna;
 	private int index;
 	
 	public GetCodonFromRNA(Cell cell) {
-		this.cell = cell;
+        super(cell);
 	}
     @Override
 	public Codon action(Object object) {
 		if (rna == null || index >= rna.size()) {
-			rna = cell.waitForRNA();
+			rna = getCell().waitForRNA();
 			index = 0;
 		}
 		Codon codon = rna.get(index++);
@@ -35,11 +34,6 @@ public class GetCodonFromRNA extends AminoAcid {
 	}
     @Override
 	public boolean matchCodon(Codon codon) {
-        /*!! and do this for rest of aminoAcids!
-		return codon.getFirst().getName().equals("Uracil") &&
-		codon.getSecond().getName().equals("Uracil") &&
-		codon.getThird().getName().equals("Adenine");
-		 */
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Uracil &&
                 codon.getThird() instanceof Adenine;
@@ -50,4 +44,6 @@ public class GetCodonFromRNA extends AminoAcid {
     public boolean hasMore() {
         return rna != null && index < rna.size();
     }
+    @Override
+    public boolean keepRunning() { return true; }
 }

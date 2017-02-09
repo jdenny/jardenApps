@@ -13,4 +13,11 @@ public class DNA extends ArrayList<Nucleotide> {
 		}
 		return buffer.toString();
 	}
+    public String dnaToString() {
+        StringBuilder builder = new StringBuilder();
+        for (Nucleotide nucleotide: this) {
+            builder.append(nucleotide.getCode());
+        }
+        return builder.toString();
+    }
 }

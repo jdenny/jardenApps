@@ -5,6 +5,7 @@ public class Codon {
 	private Nucleotide first;
 	private Nucleotide second;
 	private Nucleotide third;
+    private Boolean isStop;
 	
 	public Codon(Nucleotide first, Nucleotide second, Nucleotide third) {
 		this.first = first;
@@ -20,13 +21,17 @@ public class Codon {
 	public Nucleotide getThird() {
 		return third;
 	}
-	/*
-	 * @todo probably need to separate RNA stop from DNA stop.
-	 * Perhaps this method could be part of GetAminoAcidFromCodon?
-	 */
+
 	public boolean isStop() {
-        // TODO: replace this with
-        // return first instanceof Uracil; // etc
+        if (isStop == null) {
+            // lazy evaluation:
+            isStop = (first instanceof Uracil || first instanceof Thymine) &&
+                         ( (second instanceof Adenine &&
+                         (third instanceof Adenine || third instanceof Guanine)) ||
+                         (second instanceof Guanine && third instanceof Adenine) );
+        }
+        return isStop;
+        /*!!
 		char f = first.getCode();
 		char s = second.getCode();
 		char t = third.getCode();
@@ -34,6 +39,7 @@ public class Codon {
 			(s == 'A' && (t == 'A' || t == 'G'))
 			|| (s == 'G' && t == 'A')
 			);
+		 */
 	}
 	public String toString() {
 		return "(" + first + "," + second + "," + third + ")";

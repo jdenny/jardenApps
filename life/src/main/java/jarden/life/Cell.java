@@ -17,12 +17,14 @@ import jarden.life.nucleicacid.RNA;
 import jarden.life.nucleicacid.Uracil;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Cell {
-	private ArrayList<Protein> proteinList = new ArrayList<>();
-	private ArrayList<AminoAcid> aminoAcidList = new ArrayList<>();
-	private ArrayList<Nucleotide> nucleotideList = new ArrayList<>();
-	private ArrayList<RNA> rnaList = new ArrayList<>();
+	private List<Protein> proteinList = new LinkedList<>();
+	private List<AminoAcid> aminoAcidList = new LinkedList<>();
+	private List<Nucleotide> nucleotideList = new LinkedList<>();
+	private List<RNA> rnaList = new LinkedList<>();
 	private DNA dna;
 	
 	public Cell(DNA dna) {
@@ -130,16 +132,16 @@ public class Cell {
 	private RNA getRNA() {
 		int size = rnaList.size();
 		if (size == 0) return null;
-		RNA rna = rnaList.get(size - 1); // TODO: why getting the last one?
-		rnaList.remove(rna);
+		RNA rna = rnaList.remove(0); // TODO: use linked list?
 		return rna;
 	}
 	public void printNucleotides() {
-		System.out.println("Cell's nucleotides:");
+		System.out.print("Cell's nucleotides:");
 		for (Nucleotide nucleotide: nucleotideList) {
-			System.out.println("   " + nucleotide);
+			System.out.print(" " + nucleotide.getCode());
 		}
-	}
+        System.out.println();
+    }
 	public void printRNA() {
 		System.out.println("Cell's rna:");
 		for (RNA rna: rnaList) {
@@ -204,4 +206,56 @@ public class Cell {
 		MasterDesigner.print("no nucleotide found for " + name);
 		return null;
 	}
+
+    /*
+     temporary POC method to get something working directly; when it works
+     replace with proper life approach
+      */
+    public void bodge() {
+        // stop protein 1; remove proteins 0 & 1; run 2 created proteins
+        Protein ribosome = this.proteinList.get(1);
+        ribosome.stopAction();
+        this.proteinList.remove(0);
+        this.proteinList.remove(0);
+        this.action(null);
+    }
+
+    /**
+     * Create new cell which is identical to this cell.
+     * Create new cell; add copy of own DNA; run polymerase & ribosome to
+     * create copies of all own proteins, and add these to new cell.
+     * @return identical copy of this cell
+     */
+    // TODO: make this asynchronous!
+    public Cell split() {
+        // TODO: use life to copy DNA
+        String dnaStr = this.dna.dnaToString();
+        DNA daughterDNA = GetGeneFromDNA.buildDNAFromString(dnaStr);
+        Cell daughterCell = new Cell(daughterDNA);
+        if (rnaList.size() > 0) {
+            // TODO: wait for ribosome to finish building from rnaList
+            System.out.println("ranList.size()=" + rnaList.size());
+            return null;
+        }
+        // TODO: find polymerase, instead of assuming it's proteinList[0]
+        proteinList.get(0).action(null);
+        // TODO: find ribosome, instead of assuming it's proteinList[1]
+        Protein ribosome = proteinList.get(1);
+        int oldProteinCount = this.proteinList.size();
+        if (!ribosome.isRunning()) {
+            ribosome.action(null);
+        }
+        try {
+            Thread.sleep(500); // give ribosome time to finish its job
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        int newProteinCount = this.proteinList.size();
+        for (int i = oldProteinCount; i < newProteinCount; i++) {
+            Protein protein = proteinList.remove(oldProteinCount);
+            protein.setCell(daughterCell);
+            daughterCell.addProtein(protein);
+        }
+        return daughterCell;
+    }
 }

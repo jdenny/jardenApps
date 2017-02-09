@@ -4,8 +4,10 @@ import java.util.ListIterator;
 
 import jarden.life.Cell;
 import jarden.life.nucleicacid.Codon;
+import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.RNA;
+import jarden.life.nucleicacid.Uracil;
 
 /*
  * This protein is called RNA Polymerase.
@@ -17,14 +19,14 @@ import jarden.life.nucleicacid.RNA;
  * 		terminator: end of operon; simplified here as TAA 
  */
 public class GetRNAFromGene extends AminoAcid {
-	private Cell cell;
-	
+
 	public GetRNAFromGene(Cell cell) {
-		this.cell = cell;
+        super(cell);
 	}
 	public Object action(Object _dna) {
 		ListIterator<Nucleotide> dna = (ListIterator<Nucleotide>)_dna;  
 		RNA rna = new RNA();
+        Cell cell = getCell();
 		while (dna.hasNext()) {
 			String name1 = dna.next().getName();
 			if (name1.equals("Thymine")) name1 = "Uracil";
@@ -46,8 +48,8 @@ public class GetRNAFromGene extends AminoAcid {
 		return "GetRNAFromGene";
 	}
 	public boolean matchCodon(Codon codon) {
-		return codon.getFirst().getName().equals("Uracil") &&
-		codon.getSecond().getName().equals("Cytosine") &&
-		codon.getThird().getName().equals("Uracil");
+        return codon.getFirst() instanceof Uracil &&
+                codon.getSecond() instanceof Cytosine &&
+                codon.getThird() instanceof Uracil;
 	}
 }

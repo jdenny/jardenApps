@@ -1,7 +1,10 @@
 package jarden.life.aminoacid;
 
 import jarden.life.Cell;
+import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
+import jarden.life.nucleicacid.Cytosine;
+import jarden.life.nucleicacid.Uracil;
 
 /*
  * Obtain an amino acid to match the codon (triplet of nucleotides).
@@ -9,22 +12,21 @@ import jarden.life.nucleicacid.Codon;
  * decide where they come from.
  */
 public class GetAminoAcidFromCodon extends AminoAcid {
-	private Cell cell;
-	
+
 	public GetAminoAcidFromCodon(Cell cell) {
-		this.cell = cell;
+		super(cell);
 	}
 	public Object action(Object _codon) {
 		Codon codon = (Codon)_codon;
 		if (codon.isStop()) return codon;
-		return cell.waitForAminoAcid(codon);
+		return getCell().waitForAminoAcid(codon);
 	}
 	public String getName() {
 		return "GetAminoAcidFromCodon";
 	}
 	public boolean matchCodon(Codon codon) {
-		return codon.getFirst().getName().equals("Uracil") &&
-		codon.getSecond().getName().equals("Uracil") &&
-		codon.getThird().getName().equals("Cytosine");
+        return codon.getFirst() instanceof Uracil &&
+                codon.getSecond() instanceof Uracil &&
+                codon.getThird() instanceof Cytosine;
 	}
 }
