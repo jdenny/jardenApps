@@ -31,28 +31,18 @@ public class GetGeneFromDNA extends AminoAcid {
 	}
     @Override
 	public ListIterator<Nucleotide> action(Object o) {
-		//!! for (int i = 0; i < 2; i++) {
-			if (dna == null) {
-				dna = getCell().getDNA();
-				index = 0;
-			}
-            if (getNextPromoterIndex() >= 0) {
-                index += 6;
-                return dna.listIterator(index);
-            }
-            /*!!
-			for (; (index + 6) < dna.size(); index+=3) {
-				if (isPromoter(index)) {
-					index += 6;
-					return dna.listIterator(index);
-				}
-			}
-			*/
-			//!! dna = null;
+        // TODO: should find first promoter index;
+        // then for subsequents, find terminator code, then next promoter code
+        if (dna == null) {
+            dna = getCell().getDNA();
             index = 0;
-            return null;
-		//!! }
-		//!! throw new IllegalStateException("unable to find a promoter in the DNA");
+        }
+        if (getNextPromoterIndex() >= 0) {
+            index += 6;
+            return dna.listIterator(index);
+        }
+        index = 0;
+        return null;
 	}
     private int getNextPromoterIndex() {
         for (; (index + 6) < dna.size(); index+=3) {
@@ -65,13 +55,13 @@ public class GetGeneFromDNA extends AminoAcid {
 	private boolean isPromoter(int index) {
 		for (int j = 0; j < 6; j++) {
 			Nucleotide nucleotide = dna.get(index + j);
-			if (!(nucleotide.getCode() == NucleicAcid.promoterCodes.charAt(j))) {
+			if (!(nucleotide.getCode() == NucleicAcid.promoterCode.charAt(j))) {
 				return false; // i.e. NOT a promoter
 			}
 		}
 		return true;
 	}
-	// Convenience method used for testing.
+	// Convenience method
 	public static DNA buildDNAFromString(String dnaStr) {
 		DNA dna = new DNA();
 		for (int i = 0; i < dnaStr.length(); i++) {

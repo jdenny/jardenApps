@@ -31,15 +31,6 @@ public class Codon {
                          (second instanceof Guanine && third instanceof Adenine) );
         }
         return isStop;
-        /*!!
-		char f = first.getCode();
-		char s = second.getCode();
-		char t = third.getCode();
-		return (f == 'U' || f == 'T') && (
-			(s == 'A' && (t == 'A' || t == 'G'))
-			|| (s == 'G' && t == 'A')
-			);
-		 */
 	}
 	public String toString() {
 		return "(" + first + "," + second + "," + third + ")";

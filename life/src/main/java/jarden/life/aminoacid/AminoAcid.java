@@ -37,6 +37,12 @@ public abstract class AminoAcid {
      */
     public boolean keepRunning() { return false; }
 
+    /**
+     * If true, action the protein when adding to cell.
+     * @return
+     */
+    public boolean activateOnCreate() { return true; }
+
     public void setCell(Cell cell) {
         this.cell = cell;
     }

@@ -1,13 +1,18 @@
 package jarden.life;
 
-import static jarden.life.nucleicacid.NucleicAcid.promoterCodes;
-import static jarden.life.nucleicacid.NucleicAcid.terminatorCodes;
-import static org.junit.Assert.assertEquals;
+import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNameDigest;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNameDivide;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNamePolymerase;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNameRibosome;
+import static jarden.life.nucleicacid.NucleicAcid.proteinTypeDigestion;
+import static jarden.life.nucleicacid.NucleicAcid.proteinTypeDivision;
+import static jarden.life.nucleicacid.NucleicAcid.proteinTypeStem;
+import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 import jarden.life.aminoacid.*;
 import jarden.life.nucleicacid.Adenine;
@@ -27,15 +32,50 @@ public class MasterDesigner {
 	
 	public static void main(String[] args) {
         /*
-        Latest thoughts: proposed structure of gene:
-            promoterCodes, 2 codons for protein type (e.g. "stem", "digestion"),
-            2 codons for protein name (e.g. "polymerase"), terminatorCodes
+        Okay, what prompts a protein into action?
+         ribosome, because some RNA becomes available;
+         digest, because some food (cells) becomes available
+         divide, because levels of cell resources are sufficient
+         polymerase, called as part of divide (split)
+         Note: in future, could activate a protein because a
+            resource has become scarce,
+            e.g. if level < target then wait()
+
+        Cell firstCell = Cell.makeFirstCell(); // cell should now be running!
+        now we just watch it, and feed it!
+
+        so...
+        digest breaks down parts of digest cells to build nucleotides & aminoAcids
+        when sufficient of above, build proteins
+        when sufficient proteins, split cell
+
+        Next steps:
+            move buildDNAFromString, dnaString to Cell
+        static methods:
+         Cell Cell.getSyntheticCell(); // use static DNA; add build proteins
+         Cell Cell.makeFirstCell() {
+             lazy evaluate syntheticCell
+             return cell.split(), i.e. copy DNA; build all proteins;
+                move proteins to new cell; start all proteins if activateOnCreate;
+        cell.proteinAction(String proteinName); // call polymerase to get single gene
+            // unless protein already exists, in which case start its action
+        cell.groupAction(String proteinTypeName);
+        consider running all proteins in their own thread
+        use new gene structure:
+            promoterCode, 2 codons for protein type
+             (e.g. "stem", "digestion", "division"),
+            2 codons for protein name (e.g. "polymerase"), terminatorCode
             all this can be decoded in GetGeneFromDNA?
             now can have protein: turnOn/Off protein(s) by name or type
             cell needs method runProtein(name/type); as described below, all
             proteins run in own thread, but some are chains, so wait, some are
             not so only run once. Cell.runProtein could run protein that activates
             a group of proteins
+        protein(s) to split a cell
+        proteins to digest a cell; user action to 'feed' a cell
+
+        new cell should have proteins polymerase & ribosome
+        plus DNA for all proteins
 
         What do we want to happen?
         Key requirement: need protein that triggers building of a specific
@@ -88,7 +128,7 @@ public class MasterDesigner {
          */
 
 		/*
-		In this pseudo DNA are 3 genes to make the following proteins:
+		In this pseudo DNA are 4 genes to make the following proteins:
 		polymerase:              (RNA codons)
 		   GetGeneFromDNA        (UUG)
 		   GetRNAFromGene        (UCU)
@@ -98,12 +138,25 @@ public class MasterDesigner {
 		   GetAminoAcidFromCodon (UUC)
 		   AddAminoAcidToProtein (UUU)
 		   Stop                  (UAA)
-		newUracil: CreateUracil - not currently used!
+		divide:
+		    DivideCell           (UAC)
+		digest:
+		    DigestCell           (UAG)
 		 */
 		String dnaStr =
-            promoterCodes + "TTGTCT" + terminatorCodes
-			+ promoterCodes + "TTATTCTTT" + terminatorCodes;
-			// + promoterCodes + "TCC" + terminatorCodes;
+            promoterCode + "TTGTCT" + terminatorCode +
+            promoterCode + "TTATTCTTT" + terminatorCode +
+            promoterCode + "TAC" + terminatorCode +
+            promoterCode + "TAG" + terminatorCode;
+        String dnaStr2 =
+                promoterCode + proteinTypeStem + proteinNamePolymerase +
+                        "TTGTCT" + terminatorCode +
+                        promoterCode + proteinTypeStem + proteinNameRibosome +
+                        "TTATTCTTT" + terminatorCode +
+                        promoterCode + proteinTypeDivision + proteinNameDivide +
+                        "TAC" + terminatorCode +
+                        promoterCode + proteinTypeDigestion + proteinNameDigest +
+                        "TAG" + terminatorCode;
 		DNA dna = GetGeneFromDNA.buildDNAFromString(dnaStr);
 		Cell syntheticCell = new Cell(dna);
         Protein rnaPolymerase = new Protein();
@@ -175,10 +228,9 @@ public class MasterDesigner {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			char c;
 			while (true) {
-				System.out.println("b(odge) or c or g or a or u or p(rint) or q(uit) or v(erbose): ");
+				System.out.println("c or g or a or u or p(rint) or q(uit) or v(erbose): ");
 				c = reader.readLine().charAt(0);
 				if (c == 'A') syntheticCell.addNucleotide(new Adenine());
-                else if (c == 'b') syntheticCell.bodge();
                 else if (c == 'c') syntheticCell.addNucleotide(new Cytosine());
 				else if (c == 'g') syntheticCell.addNucleotide(new Guanine());
 				else if (c == 'a') syntheticCell.addNucleotide(new Adenine());

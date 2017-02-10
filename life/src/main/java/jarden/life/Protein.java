@@ -5,10 +5,13 @@ import jarden.life.aminoacid.AminoAcid;
 import java.util.ArrayList;
 
 public class Protein implements Runnable {
+    private String name;
+    private String type;
 	private ArrayList<AminoAcid> aminoAcidList = new ArrayList<>();
     private Object objectPassedToAction;
     private boolean stopping;
     private Thread thread;
+    private int hashCode;
 
     public void stopAction() {
         this.stopping = true;
@@ -66,5 +69,19 @@ public class Protein implements Runnable {
         for (AminoAcid aminoAcid: this.aminoAcidList) {
             aminoAcid.setCell(cell);
         }
+    }
+    @Override
+    public boolean equals(Object any) {
+        if (any instanceof Protein) {
+            return any.toString().equals(this.toString());
+        } else return false;
+    }
+    @Override
+    public int hashCode() {
+        if (this.hashCode == 0) {
+            // lazy evaluation:
+            this.hashCode = this.toString().hashCode();
+        }
+        return this.hashCode;
     }
 }

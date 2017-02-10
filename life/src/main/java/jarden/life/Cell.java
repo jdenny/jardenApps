@@ -26,6 +26,7 @@ public class Cell {
 	private List<Nucleotide> nucleotideList = new LinkedList<>();
 	private List<RNA> rnaList = new LinkedList<>();
 	private DNA dna;
+    private int hashCode = 0;
 	
 	public Cell(DNA dna) {
 		this.dna = dna;
@@ -207,19 +208,6 @@ public class Cell {
 		return null;
 	}
 
-    /*
-     temporary POC method to get something working directly; when it works
-     replace with proper life approach
-      */
-    public void bodge() {
-        // stop protein 1; remove proteins 0 & 1; run 2 created proteins
-        Protein ribosome = this.proteinList.get(1);
-        ribosome.stopAction();
-        this.proteinList.remove(0);
-        this.proteinList.remove(0);
-        this.action(null);
-    }
-
     /**
      * Create new cell which is identical to this cell.
      * Create new cell; add copy of own DNA; run polymerase & ribosome to
@@ -257,5 +245,28 @@ public class Cell {
             daughterCell.addProtein(protein);
         }
         return daughterCell;
+    }
+    @Override
+    public boolean equals(Object any) {
+        if (any instanceof Cell) {
+            Cell that = (Cell) any;
+            if (!that.dna.dnaToString().equals(this.dna.dnaToString())) return false;
+            int proteinListSize = that.proteinList.size();
+            if (that.proteinList.size() != proteinListSize) return false;
+            for (int i = 0; i < proteinListSize; i++) {
+                if (!that.proteinList.get(i).equals(this.proteinList.get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        } else return false;
+    }
+    @Override
+    public int hashCode() {
+        if (this.hashCode == 0) {
+            // lazy evaluation:
+            this.hashCode = this.dna.dnaToString().hashCode();
+        }
+        return this.hashCode;
     }
 }
