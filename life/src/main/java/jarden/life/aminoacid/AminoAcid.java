@@ -35,7 +35,7 @@ public abstract class AminoAcid {
      * available.
      * @return true means run this protein in its own thread.
      */
-    public boolean keepRunning() { return false; }
+    //!! public boolean keepRunning() { return false; }
 
     /**
      * If true, action the protein when adding to cell.
@@ -49,17 +49,4 @@ public abstract class AminoAcid {
     public Cell getCell() {
         return this.cell;
     }
-
-	/*
-	 * Current implementation of codonTable.
-	 * See Nucleotide for real-life codonTable.
-		AddAminoAcidToProtein	// UUU
-		GetAminoAcidFromCodon	// UUC
-		GetCodonFromRNA			// UUA
-		GetGeneFromDNA 			// UUG
-		GetRNAFromGene 			// UCU
-		CreateUracil			// UCC
-		
-		Stop					// UAA
-	 */
 }

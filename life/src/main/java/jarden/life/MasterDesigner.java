@@ -13,6 +13,8 @@ import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import jarden.life.aminoacid.*;
 import jarden.life.nucleicacid.Adenine;
@@ -23,6 +25,7 @@ import jarden.life.nucleicacid.Uracil;
 
 public class MasterDesigner {
 	private static boolean verbose = true;
+    private static List<Cell> cellList = new ArrayList<>();
 	
 	public static void print(String s) {
 		if (verbose) {
@@ -32,11 +35,17 @@ public class MasterDesigner {
 	
 	public static void main(String[] args) {
         /*
+        Next step options:
+            synthetic cell has 4 build proteins, plus resources
+            (DNA, aminoAcids & nucleotides) for 4 more build proteins
+            this should run, now with total of 8 proteins, and split;
+            daughterCell is now first real cell
+            test that granddaughter cell is identical to daughter cell
         Okay, what prompts a protein into action?
          ribosome, because some RNA becomes available;
          digest, because some food (cells) becomes available
-         divide, because levels of cell resources are sufficient
-         polymerase, called as part of divide (split)
+         divide, because enough proteins & nucleicAcid available
+         polymerase, because some nucleicAcid is available
          Note: in future, could activate a protein because a
             resource has become scarce,
             e.g. if level < target then wait()
@@ -65,7 +74,7 @@ public class MasterDesigner {
             promoterCode, 2 codons for protein type
              (e.g. "stem", "digestion", "division"),
             2 codons for protein name (e.g. "polymerase"), terminatorCode
-            all this can be decoded in GetGeneFromDNA?
+            all this can be decoded in FindNextGene?
             now can have protein: turnOn/Off protein(s) by name or type
             cell needs method runProtein(name/type); as described below, all
             proteins run in own thread, but some are chains, so wait, some are
@@ -127,132 +136,31 @@ public class MasterDesigner {
             and add to cell.nucleotides
          */
 
-		/*
-		In this pseudo DNA are 4 genes to make the following proteins:
-		polymerase:              (RNA codons)
-		   GetGeneFromDNA        (UUG)
-		   GetRNAFromGene        (UCU)
-		   Stop                  (UAA)
-		ribosome:
-		   GetCodonFromRNA       (UUA)
-		   GetAminoAcidFromCodon (UUC)
-		   AddAminoAcidToProtein (UUU)
-		   Stop                  (UAA)
-		divide:
-		    DivideCell           (UAC)
-		digest:
-		    DigestCell           (UAG)
-		 */
-		String dnaStr =
-            promoterCode + "TTGTCT" + terminatorCode +
-            promoterCode + "TTATTCTTT" + terminatorCode +
-            promoterCode + "TAC" + terminatorCode +
-            promoterCode + "TAG" + terminatorCode;
-        String dnaStr2 =
-                promoterCode + proteinTypeStem + proteinNamePolymerase +
-                        "TTGTCT" + terminatorCode +
-                        promoterCode + proteinTypeStem + proteinNameRibosome +
-                        "TTATTCTTT" + terminatorCode +
-                        promoterCode + proteinTypeDivision + proteinNameDivide +
-                        "TAC" + terminatorCode +
-                        promoterCode + proteinTypeDigestion + proteinNameDigest +
-                        "TAG" + terminatorCode;
-		DNA dna = GetGeneFromDNA.buildDNAFromString(dnaStr);
-		Cell syntheticCell = new Cell(dna);
-        Protein rnaPolymerase = new Protein();
-        rnaPolymerase.add(new GetGeneFromDNA(syntheticCell));
-        rnaPolymerase.add(new GetRNAFromGene(syntheticCell));
-		Protein ribosome = new Protein();
-		ribosome.add(new GetCodonFromRNA(syntheticCell));
-		ribosome.add(new GetAminoAcidFromCodon(syntheticCell));
-		ribosome.add(new AddAminoAcidToProtein(syntheticCell));
-		syntheticCell.addProtein(rnaPolymerase);
-        syntheticCell.addProtein(ribosome);
-        // so now we have cell with 2 hand-built proteins, which
-        // between them can build proteins from DNA
-        // *** this is the proper test:
-        Cell daughterCell = syntheticCell.split();
-        // test for same DNA & same protons:
-        // assertEquals(syntheticCell, daughterCell);
-        System.out.println("***syntheticCell");
-        syntheticCell.printCell();
-        System.out.println("***daughterCell");
-        daughterCell.printCell();
-        // TODO: replace above 2 lines with assertEquals
-        // final confirmation, but I don't see how this can fail
-        // if the above test succeeds! How wrong could I be!
-        // assertEquals(syntheticCell, daughterCell.split());
-        System.out.println("***grandDaughter");
-        daughterCell.split().printCell();
-
-        // *** end of proper test
-        /*
-        // test cell:
-        assertEquals(dnaStr, syntheticCell.getDNA().toString());
-        List<Protein> proteinList = syntheticCell.getProteins();
-        assertEquals(2, proteinList.size());
-        assertEquals(rnaPolymerase, proteinList.get(0));
-        assertEquals(ribosome, proteinList.get(1));
-        syntheticCell.runProtein("rnaPlymerase"); // TODO: maybe some hashcode?
-        syntheticCell.waitForProtein("ribosome"); // i.e. await completion
-        // TODO: test cell now has correct 4 proteins
-        Cell cell2 = syntheticCell.split();
-        */
-
-        // run both proteins; first protein should add 2 rna objects to cell;
-        // second protein, running in its own thread, should process both these
-        // rna objects to produce 2 new proteins; 2nd thread won't run until
-        // main thread yields, e.g. wait for user typing
-        /*
-        syntheticCell.action(null);
-        Thread.yield(); // allow ribosome to do its job
-        cell.printProteins();
-        */
-        boolean stop = true;
-        if (stop) {
-            System.out.println("stop is true");
-            return;
-        }
-        /*
-        // if this all works, disable 1st 2 proteins, cell.action(null), should be 6
-        // proteins!
-        cell.action(null); // run both proteins, which should add ribosome protein to cell
-        cell.printRNA(); cell.printProteins();
-        cell.action(null);
-        */
-
-        // add new option to tell cell to stop protein[1], delete proteins[0 & 1],
-        // then cell.action()
+        Cell syntheticCell = Cell.getSyntheticCell();
+        cellList.add(syntheticCell);
 
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			char c;
 			while (true) {
-				System.out.println("c or g or a or u or p(rint) or q(uit) or v(erbose): ");
+				System.out.println("p(rint) or q(uit) or v(erbose): ");
 				c = reader.readLine().charAt(0);
-				if (c == 'A') syntheticCell.addNucleotide(new Adenine());
-                else if (c == 'c') syntheticCell.addNucleotide(new Cytosine());
-				else if (c == 'g') syntheticCell.addNucleotide(new Guanine());
-				else if (c == 'a') syntheticCell.addNucleotide(new Adenine());
-				else if (c == 'u') syntheticCell.addNucleotide(new Uracil());
-				else if (c == 'p') syntheticCell.printCell();
+				if (c == 'p') {
+                    for (Cell cell: cellList) cell.printCell();
+                    System.out.println("cellList.size=" + cellList.size());
+                }
 				else if (c == 'q') System.exit(0);
 				else if (c == 'v') verbose = !verbose;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/*
-		for (Object builtObject: objectList) {
-			System.out.println("Object produced " + builtObject);
-			if (builtObject instanceof Protein) {
-				Protein builtProtein = (Protein)builtObject;
-				ArrayList gen2ObjectList = builtProtein.action(rna);
-				for (Object gen2BuiltObject: gen2ObjectList) {
-					System.out.println("2nd generation object produced " + gen2BuiltObject);
-				}
-			}
-		}
-		*/
 	}
+
+    public static void addCell(Cell cell) {
+        cellList.add(cell);
+        System.out.println("test for equality with first cell: " +
+                cell.equals(cellList.get(0)));
+        System.out.println("cellList.size=" + cellList.size());
+    }
 }

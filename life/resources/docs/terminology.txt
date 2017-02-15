@@ -1,6 +1,7 @@
 Codon: triplet of codons
 NucleicAcid: A chain of nucleotides. Chain can be either DNA or RNA.
-Nucleotide: basic building block of RNA & DNA
+Nucleotide: basic building block of RNA & DNA.
+  Can be one of Adenine, Cytosine, Guanine, Thymine (DNA), Uracil (RNA)
 Promoter: region of DNA that initiates transcription of a particular gene
 Terminator Codon: (or stop codon) is a nucleotide triplet within
   messenger RNA that signals a termination of translation into proteins

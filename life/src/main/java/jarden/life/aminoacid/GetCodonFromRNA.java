@@ -44,6 +44,4 @@ public class GetCodonFromRNA extends AminoAcid {
     public boolean hasMore() {
         return rna != null && index < rna.size();
     }
-    @Override
-    public boolean keepRunning() { return true; }
 }

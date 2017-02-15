@@ -10,7 +10,6 @@ import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.NucleicAcid;
 import jarden.life.nucleicacid.Nucleotide;
-import jarden.life.nucleicacid.Thymine;
 import jarden.life.nucleicacid.Uracil;
 
 /*
@@ -22,30 +21,50 @@ import jarden.life.nucleicacid.Uracil;
  * 		operon: group of related genes
  * 		terminator: end of operon; simplified here as UAA 
  */
-public class GetGeneFromDNA extends AminoAcid {
+public class FindNextGene extends AminoAcid {
 	private DNA dna;
 	private int index;
+    private int currentStop = 0;
 	
-	public GetGeneFromDNA(Cell cell) {
+	public FindNextGene(Cell cell) {
         super(cell);
 	}
     @Override
 	public ListIterator<Nucleotide> action(Object o) {
-        // TODO: should find first promoter index;
-        // then for subsequents, find terminator code, then next promoter code
+        /* TODO: fix this!
+        This is silly, as it's duplicating work done in the 2nd amino acid of this
+        protein; current suggestion: aminoAcids belong to a protein, that in turn
+        belongs to a cell; the aminoAcids can then communicate with the protein,
+        so in the case of a chain, the protein can keep a track of the current index
+
+        index = next promoter after stop
+        if no promoter:
+            stop = 0
+            index = next promoter after stop
+            if no promoter: throw exception
+        stop = get stop after index
+        if no stop: throw exception
+        return listIterator(index)
+         */
         if (dna == null) {
             dna = getCell().getDNA();
             index = 0;
         }
-        if (getNextPromoterIndex() >= 0) {
-            index += 6;
-            return dna.listIterator(index);
+        if (getNextPromoterIndex() < 0) {
+            currentStop = 0;
+            if (getNextPromoterIndex() < 0) {
+                throw new IllegalStateException("DNA contains no promoter");
+            }
         }
-        index = 0;
-        return null;
+        index += 6; // i.e. first nucleotide after promoter
+        if (getNextStop() < 0) {
+            throw new IllegalStateException("DNA gene has no terminator");
+        }
+        return dna.listIterator(index);
 	}
     private int getNextPromoterIndex() {
-        for (; (index + 6) < dna.size(); index+=3) {
+        index = currentStop;
+        for (; (index + 6) <= dna.size(); index+=3) {
             if (isPromoter(index)) {
                 return index;
             }
@@ -61,31 +80,24 @@ public class GetGeneFromDNA extends AminoAcid {
 		}
 		return true;
 	}
-	// Convenience method
-	public static DNA buildDNAFromString(String dnaStr) {
-		DNA dna = new DNA();
-		for (int i = 0; i < dnaStr.length(); i++) {
-			char code = dnaStr.charAt(i); 
-			switch (code) {
-			case 'A':
-				dna.add(new Adenine());
-				break;
-			case 'T':
-				dna.add(new Thymine());
-				break;
-			case 'C':
-				dna.add(new Cytosine());
-				break;
-			case 'G':
-				dna.add(new Guanine());
-				break;
-			}
-		}
-		return dna;
-	}
+    private int getNextStop() {
+        currentStop = index;
+        for (; (currentStop + 3) <= dna.size(); currentStop+=3) {
+            if (isStop(currentStop)) {
+                currentStop += 3; // i.e. first nucleotide after stop
+                return currentStop;
+            }
+        }
+        return -1;
+    }
+    private boolean isStop(int stopIndex) {
+        Codon codon = new Codon(dna.get(stopIndex), dna.get(stopIndex + 1),
+                dna.get(stopIndex + 2));
+        return codon.isStop();
+    }
     @Override
 	public String getName() {
-		return "GetGeneFromDNA";
+		return "FindNextGene";
 	}
     @Override
 	public boolean matchCodon(Codon codon) {

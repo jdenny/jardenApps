@@ -2,10 +2,11 @@ package jarden.life;
 
 import jarden.life.aminoacid.AddAminoAcidToProtein;
 import jarden.life.aminoacid.AminoAcid;
-import jarden.life.aminoacid.CreateUracil;
+import jarden.life.aminoacid.DigestCell;
+import jarden.life.aminoacid.DivideCell;
+import jarden.life.aminoacid.FindNextGene;
 import jarden.life.aminoacid.GetAminoAcidFromCodon;
 import jarden.life.aminoacid.GetCodonFromRNA;
-import jarden.life.aminoacid.GetGeneFromDNA;
 import jarden.life.aminoacid.GetRNAFromGene;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -14,64 +15,151 @@ import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.RNA;
+import jarden.life.nucleicacid.Thymine;
 import jarden.life.nucleicacid.Uracil;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNameDigest;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNameDivide;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNamePolymerase;
+import static jarden.life.nucleicacid.NucleicAcid.proteinNameRibosome;
+import static jarden.life.nucleicacid.NucleicAcid.proteinTypeDigestion;
+import static jarden.life.nucleicacid.NucleicAcid.proteinTypeDivision;
+import static jarden.life.nucleicacid.NucleicAcid.proteinTypeStem;
+import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
+
 public class Cell {
-	private List<Protein> proteinList = new LinkedList<>();
+    private static Cell syntheticCell;
+
+	private DNA dna;
+    private List<Protein> proteinList = new LinkedList<>();
 	private List<AminoAcid> aminoAcidList = new LinkedList<>();
 	private List<Nucleotide> nucleotideList = new LinkedList<>();
 	private List<RNA> rnaList = new LinkedList<>();
-	private DNA dna;
     private int hashCode = 0;
-	
-	public Cell(DNA dna) {
-		this.dna = dna;
-		// enough amino acids for 1st 3 proteins:
-		for (int i = 0; i < 2; i++) {
-			aminoAcidList.add(new AddAminoAcidToProtein(this));
-			aminoAcidList.add(new GetAminoAcidFromCodon(this));
-			aminoAcidList.add(new GetCodonFromRNA(this));
-			aminoAcidList.add(new GetGeneFromDNA(this));
-			aminoAcidList.add(new GetRNAFromGene(this));
-			aminoAcidList.add(new CreateUracil(this));
-		}
-		// enough nucleotides for RNA for 1st 3 proteins: UUA UUC UUU UAA; UUG UCU UAA; UCC UAA
-		for (int i = 0; i < 40; i++) {
-			nucleotideList.add(new Uracil());
-		}
-		for (int i = 0; i < 14; i++) {
-			nucleotideList.add(new Adenine());
-		}
-		for (int i = 0; i < 8; i++) {
-			nucleotideList.add(new Cytosine());
-		}
-		for (int i = 0; i < 4; i++) {
-			nucleotideList.add(new Guanine());
-		}
-	}
-    public Object action(Object object) {
-        Object currentObject = object;
-        // create copy, in case proteins are making new proteins and adding
-        // them to proteinList:
-        ArrayList<Protein> proteinListCopy = new ArrayList<>(proteinList);
-        for (Protein protein: proteinListCopy) {
-            currentObject = protein.action(currentObject);
+    private CellReadyToSplitListener splitListener;
+
+    /*
+	Current implementation of codonTable.
+	See Nucleotide for real-life codonTable.
+	    (Promoter               UAUAAU)
+		AddAminoAcidToProtein	UUU
+		GetAminoAcidFromCodon	UUC
+		GetCodonFromRNA			UUA
+		FindNextGene 			UUG
+		GetRNAFromGene 			UCU
+		CreateUracil			UCC
+		Stop					UAA, UAG, UGA
+		DivideCell              UAC
+		DigestCell              UCA
+
+    In this pseudo DNA are 4 genes to make the following proteins:
+    polymerase:              (RNA codons)
+       FindNextGene          (UUG)
+       GetRNAFromGene        (UCU)
+       Stop                  (UAA)
+    ribosome:
+       GetCodonFromRNA       (UUA)
+       GetAminoAcidFromCodon (UUC)
+       AddAminoAcidToProtein (UUU)
+       Stop                  (UAA)
+    digest:
+        DigestCell           (UCA)
+        Stop                 (UAA)
+    divide:
+        DivideCell           (UAC)
+        Stop                 (UAA)
+     */
+    public int getGeneSize() {
+        // TODO: calculate this based on dnaStr:
+        return 4;
+    }
+    private static String dnaStr =
+            promoterCode + "TTGTCT" + terminatorCode +
+                    promoterCode + "TTATTCTTT" + terminatorCode +
+                    promoterCode + "TCA" + terminatorCode +
+                    promoterCode + "TAC" + terminatorCode;
+    /*!!
+    private static String dnaStr2 =
+            promoterCode + proteinTypeStem + proteinNamePolymerase +
+                    "TTGTCT" + terminatorCode +
+                    promoterCode + proteinTypeStem + proteinNameRibosome +
+                    "TTATTCTTT" + terminatorCode +
+                    promoterCode + proteinTypeDivision + proteinNameDivide +
+                    "TAC" + terminatorCode +
+                    promoterCode + proteinTypeDigestion + proteinNameDigest +
+                    "TAG" + terminatorCode;
+     */
+
+    // use static DNA; add build proteins
+    public static Cell getSyntheticCell() {
+        if (syntheticCell == null) {
+            syntheticCell = new Cell();
+            syntheticCell.dna = buildDNAFromString(dnaStr);
+            // create resources for 1 daughter cell of 4 proteins:
+            for (int i = 0; i < 1; i++) {
+                syntheticCell.aminoAcidList.add(new AddAminoAcidToProtein(syntheticCell));
+                syntheticCell.aminoAcidList.add(new GetAminoAcidFromCodon(syntheticCell));
+                syntheticCell.aminoAcidList.add(new GetCodonFromRNA(syntheticCell));
+                syntheticCell.aminoAcidList.add(new FindNextGene(syntheticCell));
+                syntheticCell.aminoAcidList.add(new GetRNAFromGene(syntheticCell));
+                syntheticCell.aminoAcidList.add(new DigestCell(syntheticCell));
+                syntheticCell.aminoAcidList.add(new DivideCell(syntheticCell));
+            }
+            for (int i = 0; i < 17; i++) {
+                syntheticCell.nucleotideList.add(new Uracil());
+            }
+            for (int i = 0; i < 11; i++) {
+                syntheticCell.nucleotideList.add(new Adenine());
+            }
+            for (int i = 0; i < 4; i++) {
+                syntheticCell.nucleotideList.add(new Cytosine());
+            }
+            for (int i = 0; i < 1; i++) {
+                syntheticCell.nucleotideList.add(new Guanine());
+            }
+            Protein rnaPolymerase = new Protein();
+            rnaPolymerase.add(new FindNextGene(syntheticCell));
+            rnaPolymerase.add(new GetRNAFromGene(syntheticCell));
+            Protein ribosome = new Protein();
+            ribosome.add(new GetCodonFromRNA(syntheticCell));
+            ribosome.add(new GetAminoAcidFromCodon(syntheticCell));
+            ribosome.add(new AddAminoAcidToProtein(syntheticCell));
+            Protein proteinDigest = new Protein();
+            proteinDigest.add(new DigestCell(syntheticCell));
+            Protein proteinDivide = new Protein();
+            proteinDivide.add(new DivideCell(syntheticCell));
+            syntheticCell.addProtein(rnaPolymerase);
+            syntheticCell.addProtein(ribosome);
+            syntheticCell.addProtein(proteinDigest);
+            syntheticCell.addProtein(proteinDivide);
         }
-        return currentObject;
+        return syntheticCell;
+    }
+    /*??
+    public static Cell makeFirstCell() {
+        return getSyntheticCell().split();
+    }
+    */
+    public Cell(DNA dna) {
+        this.dna = dna;
+	}
+    public Cell() {
+        
     }
 	public DNA getDNA() {
 		return dna;
 	}
 	public void addProtein(Protein protein) {
 		proteinList.add(protein);
-//		Thread thread = new Thread(protein);
-//		MasterDesigner.print(thread.getName() +
-//				" starting for protein " + protein);
-//		thread.start();
+		Thread thread = new Thread(protein);
+		MasterDesigner.print(thread.getName() +
+				" starting for protein " + protein);
+		thread.start();
 	}
 	public void addAminoAcid(AminoAcid aminoAcid) {
 		synchronized (aminoAcidList) {
@@ -93,9 +181,8 @@ public class Cell {
 	}
 	public Nucleotide waitForNucleotide(String name) {
 		synchronized (nucleotideList) {
-			Nucleotide nucleotide;
 			while (true) {
-				nucleotide = getNucleotideByName(name);
+                Nucleotide nucleotide = getNucleotideByName(name);
 				if (nucleotide != null) return nucleotide;
 				MasterDesigner.print(Thread.currentThread().getName() +
 						" waiting for nucleotide " + name);
@@ -106,9 +193,8 @@ public class Cell {
 	}
 	public RNA waitForRNA() {
 		synchronized (rnaList) {
-			RNA rna;
 			while (true) {
-				rna = getRNA();
+				RNA rna = getRNA();
 				if (rna != null) return rna;
 				MasterDesigner.print(Thread.currentThread().getName() +
 						" waiting for some RNA");
@@ -119,9 +205,8 @@ public class Cell {
 	}
 	public AminoAcid waitForAminoAcid(Codon codon) {
 		synchronized (aminoAcidList) {
-			AminoAcid aminoAcid;
 			while (true) {
-				aminoAcid = getAminoAcidByCodon(codon);
+                AminoAcid aminoAcid = getAminoAcidByCodon(codon);
 				if (aminoAcid != null) return aminoAcid;
 				MasterDesigner.print(Thread.currentThread().getName() +
 						" waiting for amino acid for codon " + codon);
@@ -130,10 +215,37 @@ public class Cell {
 			}
 		}
 	}
+
+    public List<Protein> getProteinList() {
+        return proteinList;
+    }
+
+    public interface CellReadyToSplitListener {
+        void splitCell();
+    }
+    public int waitForEnoughProteins(CellReadyToSplitListener splitListener) {
+        this.splitListener = splitListener;
+        synchronized (proteinList) {
+            while (true) {
+                int geneSize = getGeneSize();
+                int proteinSize = proteinList.size();
+                if (proteinSize >= (geneSize * 2)) {
+                    splitListener.splitCell();
+                    return geneSize;
+                }
+                MasterDesigner.print(Thread.currentThread().getName() +
+                        " cell divide waiting for " +
+                        ((geneSize * 2) - proteinSize) +
+                        " more proteins");
+                try { proteinList.wait(); }
+                catch(InterruptedException e) {}
+            }
+        }
+    }
 	private RNA getRNA() {
 		int size = rnaList.size();
 		if (size == 0) return null;
-		RNA rna = rnaList.remove(0); // TODO: use linked list?
+		RNA rna = rnaList.remove(0);
 		return rna;
 	}
 	public void printNucleotides() {
@@ -173,12 +285,13 @@ public class Cell {
 			}
 		}
 	}
-	public void printCell() {
-		this.printNucleotides();
-		this.printRNA();
-		this.printProteins();
-		this.printThreads();
-	}
+
+    public void printCell() {
+        this.printNucleotides();
+        this.printRNA();
+        this.printProteins();
+        this.printThreads();
+    }
 	/*
 	 * Find aminoAcid with specified name; if found, remove from list.
 	 */
@@ -208,18 +321,13 @@ public class Cell {
 		return null;
 	}
 
-    /**
-     * Create new cell which is identical to this cell.
-     * Create new cell; add copy of own DNA; run polymerase & ribosome to
-     * create copies of all own proteins, and add these to new cell.
-     * @return identical copy of this cell
-     */
-    // TODO: make this asynchronous!
-    public Cell split() {
+    /*!!
+    private Cell splitCell() {
         // TODO: use life to copy DNA
         String dnaStr = this.dna.dnaToString();
-        DNA daughterDNA = GetGeneFromDNA.buildDNAFromString(dnaStr);
-        Cell daughterCell = new Cell(daughterDNA);
+        DNA daughterDNA = buildDNAFromString(dnaStr);
+        Cell daughterCell = new Cell();
+        daughterCell.dna = daughterDNA;
         if (rnaList.size() > 0) {
             // TODO: wait for ribosome to finish building from rnaList
             System.out.println("ranList.size()=" + rnaList.size());
@@ -246,6 +354,29 @@ public class Cell {
         }
         return daughterCell;
     }
+    */
+    // Convenience method
+    public static DNA buildDNAFromString(String dnaStr) {
+        DNA dna = new DNA();
+        for (int i = 0; i < dnaStr.length(); i++) {
+            char code = dnaStr.charAt(i);
+            switch (code) {
+                case 'A':
+                    dna.add(new Adenine());
+                    break;
+                case 'T':
+                    dna.add(new Thymine());
+                    break;
+                case 'C':
+                    dna.add(new Cytosine());
+                    break;
+                case 'G':
+                    dna.add(new Guanine());
+                    break;
+            }
+        }
+        return dna;
+    }
     @Override
     public boolean equals(Object any) {
         if (any instanceof Cell) {
@@ -269,4 +400,5 @@ public class Cell {
         }
         return this.hashCode;
     }
+
 }
