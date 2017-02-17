@@ -1,0 +1,79 @@
+Saving to filestore
+	my.ini in "C:\ProgramData\MySQL\MySQL Server 5.6"
+	secure-file-priv = ""
+	save files in directory specified by secure-file-priv
+	"c:\Program Files\MySQL\MySQL Server 5.0\bin\mysql"
+	SHOW VARIABLES LIKE "secure_file_priv";
+
+Server is started as Windows process
+
+jdbc drivers built in to WLS 11gR1
+	com.mysql.jdbc.Driver
+typical URL: jdbc:mysql://johnsT500:3306/johndb
+
+old message, now superceded I think:
+	currently getting ERROR 1040 (HY000): Too many connections
+	when log in as john; okay as root; need to set privileges for John?
+I can log into client utility as root, but not as anything else; if I create other users,
+they work from WebLogic connection pools; note that the fully qualified name of a table
+is database.schema.table; in mysql, there is no schema, only database; so if the database
+referred to in the connection pool URL is john, table phonebook is implicitly john.phonebook.
+
+Client utility
+--------------
+login
+	cd C:\Program Files\MySQL\MySQL Server 5.1\bin
+	mysql -u root -p [mysql]
+	or: mysql -u john -p [john2010]
+useful commands
+	select user(), version(), current_date, database();
+	show databases; show tables;
+	create user john@johnsT500 identified by 'john2010';
+	grant all privileges on *.* to john@johnsT500;
+	grant all privileges on johndb.* to 'john'@'johnslaptop';
+	drop user john@johnsT500;
+	exit;
+	show [global|session] {variables|status} like '%connect%';
+	
+creating a database
+	create database johndb;
+	use johndb;
+	CREATE TABLE phoneBook (fname VARCHAR(20), surname VARCHAR(20),
+	    -> phone VARCHAR(20), mobile VARCHAR(20), email VARCHAR(20);
+	
+	CREATE TABLE PRODUCTS (
+		PARTNUMBER INT NOT NULL PRIMARY KEY,
+		DESCRIPTION VARCHAR(60) ,
+		PRICE DOUBLE PRECISION NOT NULL,
+		AUTHOR VARCHAR(30)
+	);
+	
+	insert into products (partNumber, description, price)
+		values(1, "Particle Physics - A Very Short Introduction", 19.95);
+	insert into products (partNumber, description, price)
+		values(2, "Spanish for Travellers", 13.45);
+	insert into products (partNumber, description, price, author)
+		values(3, "The War of the World", 19.99, "Ferguson");
+	insert into products (partNumber, description, price)
+		values(4, "Interlinear Translation of the Greek Scriptures", 14.50);
+	insert into products (partNumber, description, price)
+		values(5, "The God Delusion", 18.89);
+	insert into products (partNumber, description, price)
+		values(6, "The Way Life Works", 20.95);
+	insert into products (partNumber, description, price)
+		values(7, "Mankind's Search For God", 14.50);
+	insert into products (partNumber, description, price, author)
+		values(8, "The Edge of Evolution", 25.00, "Behe");
+		
+For WLS 11g Diagnostics and Troubleshooting course
+--------------------------------------------------
+login to client utility as root (see above)
+create user wlsdata@localhost identified by 'Welcome1';
+grant all privileges on *.* to wlsdata@localhost;
+create user wlsdata@johnsT500 identified by 'Welcome1';
+grant all privileges on *.* to wlsdata@johnsT500;
+create database WLSDATA;
+use WLSDATA;
+run john-* scripts to create & populate tables:
+	C:\Courses\D61523GC10-WLS11Diagnostics\D61523GC10_labfiles\labs\Lab01_02\exercise\sql\OracleDB
+modify values in exercice\wlst\1-createDataSource.py & run this wlst script
