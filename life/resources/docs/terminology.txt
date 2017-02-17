@@ -1,3 +1,7 @@
+AMINO ACIDS
+  Alanine, Arginine, Asparagine, Aspartic acid, Cysteine, Glutamic acid, Glutamine,
+  Glycine, Histidine, Isoleucine, Leucine, Lysine, Methionine, Phenylalanine,
+  Proline, Serine, Threonine, Tryptophan, Tyrosine, Valine
 Codon: triplet of codons
 NucleicAcid: A chain of nucleotides. Chain can be either DNA or RNA.
 Nucleotide: basic building block of RNA & DNA.

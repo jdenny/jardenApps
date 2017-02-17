@@ -1,0 +1,161 @@
+Next Steps
+----------
+1. Keep on building life in Scala: DNA -> RNA -> Proteins
+   (like the original Java Life, until proteins can make more proteins)
+   Include all ideas from Java Life. Then start to identify simple
+   building blocks; currently jarden.life.aminoacid classes; need to
+   break these into the required 20 simpler tasks.
+   Java Life as we know it:
+   		build first cell: DNA for 2 proteins:
+		* polymerase: GetGeneFromDNA, GetRNAFromGene
+   		* ribosome: GetRNA, GetAminoAcidFromCodon, AddAminoAcidToProtein
+   		run cell, to produce another cell, as first one but built by proteins
+   		 
+		find gene (RNA for single protein) in DNA; build RNA from gene
+		find RNA; for each codon { add amino acid to protein }
+		
+   Try to include energy and production of amino acids and nucleotides 
+2. How are amino acid and nucleotide made?
+3. what is the role of energy?
+4. Re-read life book, and build up description of basic tasks, e.g.
+	form binding site
+	find binding site and when found bind to it
+	find molecule (e.g. amino acid or nucleotide)
+
+fundamentals
+------------
+
+statically (i.e. when 1st created) cell=DNA and proteins
+when alive, also contains RNA
+everything consists of
+	20 amino acids - programming instructions
+		free standing amino acids, or chained to form a protein
+	DNA - double chain of nucleotides: AT,CG,TA,GC...
+	RNA - chain of nucleotides: A, C, U, G...
+
+no longer held in interpreter as a char[], but rather as
+	collection of String (or char[]!)
+	DNA, RNA or proteins being built are in a collection of StringBuilder
+ultimately, an organism is a collection of cells!
+
+to model 3-dimensional space, create binding sites
+	sequence of AAs (cf external label)
+	address of position in real chain
+i.e. simulating protein, e.g. ribosome, attached to some point on chain
+	:addaa -> e5addaa<address>
+
+addresses aren't real, so do we need to hold them as AAs?
+registers point to addresses; also hold molecules
+
+************is this right as high-level description?********
+transcribe
+	find DNA
+	find start of gene
+	new mRNA
+	for each codon until & including STOP
+		get 3 matching nucleotides and add to end of mRNA
+	finish mRNA
+transfer; 20 different types of transfer protein
+	find and grab correct free-standing amino acid
+	find docking site for correct codon
+	when released from site, repeat
+ribosome
+	define docking site (add_trna)
+	find mRNA
+	new protein
+	for each codon
+		point docking site to codon
+		wait for tRNA to attach
+		get amino acid from tRNA and add to end of protein
+		release tRNA (or removing amino acid might do this?)
+		move to next codon
+	finish new protein
+****************************************************************		
+
+
+
+target protein:
+	find :srtMe and update to 20
+ribosome:
+	find RNA (for target protein)
+	find nucleic acid
+	build protein
+	run protein
+
+nucleic acid: a-y; free floating, i.e. surrounded by blanks (' ')
+DNA: sequence of ABT, CBG, TBA, GBC (B for bond)
+RNA: sequence of A, U, C, G
+
+proteins: chains of nucleic acid, i.e. not surrounded by blanks
+
+all proteins start with label: t<labLen><name>
+standard labels within proteins
+	p5addaa add amino acid here
+
+ribosome:
+	search through cell until find RNA
+	for each codon until STOP
+		expose codon using external label addaa
+		when nucleotide is attached
+			move it to end of protein being built
+
+transferRNAf:
+	search through cell until find addaa
+	if next sequence is UUU or UUC then add f
+transferRNAp:
+	search through cell until find addaa
+	if next sequence is CCx then add p
+
+make length of cell bigger than code, to allow for expansion
+
+Example
+-------
+RNA=AUCG...UAA
+protein=ribsme
+	p6ribsme
+
+r1=0 # address of nucleic acid table
+r2=0 # address of RNA
+r3=0 # address of new protein
+find :na r1
+find :rna r2
+find :new r3
+loop:
+r10=*r2 # codon 0
+r10+=r10 # i.e. r10 *= 2
+r10+=r10 # now r10 *= 4
+r2++
+r11=*r2
+r10+=r11
+r10+=r10
+r10+=r10
+r2++
+r11=*r2
+r10+=r11
+r10+=r10
+r10+=r10 # now r10=c0 * 16 + c1 * 4 + c2
+r11=r1[r10]
+if r11 == '-' goto done
+*r3=r11
+r3++
+r2++
+goto loop
+done:
+return r3
+new:
+
+DNA transcription
+transcription
+	DNA = AT,CG,TA,GC...
+
+r1=find DNA # DNA doesn't have length as such; stops when reach STOP
+r2=new tRNA
+r3=r1
+nextcodon:
+# get next codon
+# if STOP go to stopfound:
+# *r3=codon; incr r3 
+goto nextcodon
+stopfound:
+
+

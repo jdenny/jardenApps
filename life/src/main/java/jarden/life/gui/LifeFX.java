@@ -1,5 +1,9 @@
 package jarden.life.gui;
 
+import java.util.Collections;
+
+import jarden.life.Cell;
+import jarden.life.OnNewCellListener;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,12 +17,32 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+/*!!
+class CellA {
+    static int currentId = 0;
+    int id;
+    int generation;
+    int proteinCt;
+    public CellA(int generation, int proteinCt) {
+        id = ++currentId;
+        this.generation = generation;
+        this.proteinCt = proteinCt;
+    }
+    public String toString() {
+        return "id=" + id + "; generation=" + generation +
+                "; proteinCt=" + proteinCt;
+    }
+}
+*/
 
 /**
  * Created by john.denny@gmail.com on 15/02/2017.
@@ -30,21 +54,25 @@ import javafx.stage.Stage;
  */
 
 public class LifeFX extends Application implements EventHandler<ActionEvent>,
-        ChangeListener<String> {
+        ChangeListener<Cell>, OnNewCellListener {
     private Text statusText;
-    private ObservableList<String> cellList;
+    private ObservableList<Cell> cellList;
     private ObservableList<String> resourceList;
     private ChoiceBox<String> resourceTypeChoiceBox;
     private TextField uracilQtyField;
     private TextField cytosineQtyField;
     private TextField guanineQtyField;
     private TextField adenineQtyField;
+    //!! private Cell firstCell;
 
     private String[] cell1Proteins = {
             "c1 protein A", "c1 protein B"
     };
     private String[] cell2Proteins = {
             "c2 protein C", "c2 protein D", "c2 protein E"
+    };
+    private String[] cell3Proteins = {
+            "c3 protein F", "c3 protein G", "c3 protein H"
     };
     private String[] aminoAcids = {
             "aminoAcid W", "aminoAcid X", "aminoAcid Y", "aminoAcid Z"
@@ -54,16 +82,46 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
     };
 
     public static void main(String[] args) {
-        System.out.println("hello javafx");
+        System.out.println("hello LifeFX");
         launch(args);
+    }
+
+    @Override
+    public void onNewCell(Cell cell) {
+        cellList.add(cell);
+    }
+
+    static class ColorRectCell extends ListCell<Cell> {
+        @Override
+        public void updateItem(Cell item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+                int generation = item.getGeneration();
+                Color colour;
+                if (generation == 1) colour = Color.web("green");
+                else if (generation == 2) colour = Color.web("blue");
+                else colour = Color.web("red");
+                Rectangle rect = new Rectangle(20 * item.getProteinCt(), 20);
+                rect.setFill(colour);
+                setGraphic(rect);
+            }
+        }
     }
     @Override
     public void start(Stage primaryStage) {
 
         cellList = FXCollections.observableArrayList();
-        ListView<String> cellListView = new ListView<>(cellList);
-        cellList.add("cell 1");
-        cellList.add("cell 2");
+        ListView<Cell> cellListView = new ListView<>(cellList);
+        Cell syntheticCell = Cell.getSyntheticCell();
+        syntheticCell.setOnNewCellListener(this);
+        cellList.add(syntheticCell);
+        /*!!
+        firstCell = new Cell(1, 4);
+        cellList.add(firstCell);
+        cellList.add(new Cell(2, 2));
+        cellList.add(new Cell(2, 3));
+        */
+        cellListView.setCellFactory((ListView<Cell> l) -> new ColorRectCell());
         cellListView.getSelectionModel().selectedItemProperty().addListener(this);
 
         resourceTypeChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
@@ -136,14 +194,14 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
 
         grid.add(statusText, 0, 3, 3, 1);
 
-        Scene scene = new Scene(grid, 800, 500);
+        Scene scene = new Scene(grid, 900, 500);
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
     private void resetResourceList(ObservableList<String> list, String[] names) {
         list.clear();
-        for (String name: names) list.add(name);
+        Collections.addAll(list, names);
     }
 
     @Override
@@ -153,15 +211,21 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                 guanineQtyField.getText() + " of Guanine, " +
                 cytosineQtyField.getText() + " of Cytosine, ";
         statusText.setText(message);
+        /*
+        cellList.add(new Cell(3, 3)); // this updates listView
+        firstCell.getproteinCt++; // amazingly, so does this
+        */
     }
 
     @Override
-    public void changed(ObservableValue<? extends String> observable,
-                        String oldValue, String newValue) {
-        if (newValue.equals("cell 1")) {
+    public void changed(ObservableValue<? extends Cell> observable,
+                        Cell oldValue, Cell newValue) {
+        if (newValue.getId() == 1) {
             resetResourceList(resourceList, cell1Proteins);
-        } else if (newValue.equals("cell 2")) {
+        } else if (newValue.getId() == 2) {
             resetResourceList(resourceList, cell2Proteins);
+        } else if (newValue.getId() == 3) {
+            resetResourceList(resourceList, cell3Proteins);
         } else {
             String message = "oldValue=" + oldValue + "; newValue=" +
                     newValue;

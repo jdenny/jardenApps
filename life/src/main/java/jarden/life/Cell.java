@@ -8,6 +8,7 @@ import jarden.life.aminoacid.FindNextGene;
 import jarden.life.aminoacid.GetAminoAcidFromCodon;
 import jarden.life.aminoacid.GetCodonFromRNA;
 import jarden.life.aminoacid.GetRNAFromGene;
+import jarden.life.gui.LifeFX;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
@@ -34,14 +35,18 @@ import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
 
 public class Cell {
     private static Cell syntheticCell;
+    private static int currentId = 0;
 
-	private DNA dna;
+	private int id;
+    private int generation = 1;
+    private DNA dna;
     private List<Protein> proteinList = new LinkedList<>();
 	private List<AminoAcid> aminoAcidList = new LinkedList<>();
 	private List<Nucleotide> nucleotideList = new LinkedList<>();
 	private List<RNA> rnaList = new LinkedList<>();
     private int hashCode = 0;
     private CellReadyToSplitListener splitListener;
+    private OnNewCellListener onNewCellListener;
 
     /*
 	Current implementation of codonTable.
@@ -146,10 +151,20 @@ public class Cell {
     }
     */
     public Cell(DNA dna) {
+        this();
         this.dna = dna;
 	}
     public Cell() {
-        
+        this.id = ++currentId;
+    }
+    public int getId() {
+        return this.id;
+    }
+    public int getGeneration() {
+        return this.generation;
+    }
+    public int getProteinCt() {
+        return this.proteinList.size();
     }
 	public DNA getDNA() {
 		return dna;
@@ -157,7 +172,8 @@ public class Cell {
 	public void addProtein(Protein protein) {
 		proteinList.add(protein);
 		Thread thread = new Thread(protein);
-		MasterDesigner.print(thread.getName() +
+		MasterDesigner.print("cell.id=" + id + "; generation=" + generation +
+                "; " + thread.getName() +
 				" starting for protein " + protein);
 		thread.start();
 	}
@@ -220,9 +236,6 @@ public class Cell {
         return proteinList;
     }
 
-    public interface CellReadyToSplitListener {
-        void splitCell();
-    }
     public int waitForEnoughProteins(CellReadyToSplitListener splitListener) {
         this.splitListener = splitListener;
         synchronized (proteinList) {
@@ -306,7 +319,7 @@ public class Cell {
 		return null;
 	}
 	/*
-	 * Find aminoAcid with specified name; if found, remove from list.
+	 * Find nucleotide with specified name; if found, remove from list.
 	 */
 	private Nucleotide getNucleotideByName(String name) {
 		for (int i = nucleotideList.size() - 1; i >= 0; i--) {
@@ -316,45 +329,10 @@ public class Cell {
 				return nucleotide;
 			}
 		}
-		// throw new IllegalStateException("no nucleotide found for " + name);
 		MasterDesigner.print("no nucleotide found for " + name);
 		return null;
 	}
 
-    /*!!
-    private Cell splitCell() {
-        // TODO: use life to copy DNA
-        String dnaStr = this.dna.dnaToString();
-        DNA daughterDNA = buildDNAFromString(dnaStr);
-        Cell daughterCell = new Cell();
-        daughterCell.dna = daughterDNA;
-        if (rnaList.size() > 0) {
-            // TODO: wait for ribosome to finish building from rnaList
-            System.out.println("ranList.size()=" + rnaList.size());
-            return null;
-        }
-        // TODO: find polymerase, instead of assuming it's proteinList[0]
-        proteinList.get(0).action(null);
-        // TODO: find ribosome, instead of assuming it's proteinList[1]
-        Protein ribosome = proteinList.get(1);
-        int oldProteinCount = this.proteinList.size();
-        if (!ribosome.isRunning()) {
-            ribosome.action(null);
-        }
-        try {
-            Thread.sleep(500); // give ribosome time to finish its job
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        int newProteinCount = this.proteinList.size();
-        for (int i = oldProteinCount; i < newProteinCount; i++) {
-            Protein protein = proteinList.remove(oldProteinCount);
-            protein.setCell(daughterCell);
-            daughterCell.addProtein(protein);
-        }
-        return daughterCell;
-    }
-    */
     // Convenience method
     public static DNA buildDNAFromString(String dnaStr) {
         DNA dna = new DNA();
@@ -382,7 +360,7 @@ public class Cell {
         if (any instanceof Cell) {
             Cell that = (Cell) any;
             if (!that.dna.dnaToString().equals(this.dna.dnaToString())) return false;
-            int proteinListSize = that.proteinList.size();
+            int proteinListSize = proteinList.size();
             if (that.proteinList.size() != proteinListSize) return false;
             for (int i = 0; i < proteinListSize; i++) {
                 if (!that.proteinList.get(i).equals(this.proteinList.get(i))) {
@@ -400,5 +378,14 @@ public class Cell {
         }
         return this.hashCode;
     }
+    public void setGeneration(int generation) {
+        this.generation = generation;
+    }
+    public void setOnNewCellListener(OnNewCellListener onNewCellListener) {
+        this.onNewCellListener = onNewCellListener;
+    }
 
+    public OnNewCellListener getOnNewCellListener() {
+        return onNewCellListener;
+    }
 }

@@ -1,0 +1,258 @@
+20 registers (0-19); 400 memory locations (0-399), 400 literal values (0-399)
+
+Compiler************Interpreter*********************Example*******************
+mem=<lit>					a <lit1> <lit2>			# mem=200
+							r
+							n
+					
+goto <label>				h <add1> <add2>
+return r<num>				k <reg>
+<label>:					-
+
+r<num>++					c <reg>					# r1++
+r<num1>=r<num2>				d <reg1> <reg2>			# r1=r2
+r<num1>+=r<num2>			g <reg1> <reg2>			# r1+=r2
+r<num1>=r<num2>[r<num3>]	m <reg1> <reg2> <reg3>	# r1=r2[r3]
+r<num1>[r<num2>]=r<num3>	f <reg1> <reg2> <reg3>	# r1[r2]=r3
+r<num>+=<lit>				e <reg> <lit1> <lit2>	# r1+=399
+r<num>=<lit>				q <reg> <lit1> <lit2>	# r1=0
+													# r1+=r2[r3]
+													# r1=r2[5]
+													# r1+=r2[5]
+
+if r<num1> '<' r<num2>								# if r1 < r2 goto lab3
+	goto <label>			i <reg1> <reg2> <add1> <add2>
+if r<num1> == r<num2>								# if r1 == r2 goto lab3
+	goto <label>			l <reg1> <reg2> <add1> <add2>
+:<extLab>					p <labLen> <l1> <l2>...	# :srtMe
+if r<num1>[r<num2>] == :<eLabel>					# if r1[r2] == :srtMe goto lab4
+	goto <label>			s <reg1> <reg2> <labLen> <l1> <l2>... <add1> <add2>
+							t
+							w
+							y
+							v
+end of Compiler******************************
+compiler version 2***************************
+aminoAcid=acd... # floating amino acids
+DNA=AT,CG,TA,GC... 
+nucleotides=ACGTU... # floating
+protein/endProtein # delimiting a protein!
+
+# for all finds and gets, pause thread if no result found
+# (use java wait and notify)
+find DNA r<num> # reg points to 1st found DNA
+find mRNA r<num> # reg points to 1st found RNA
+find <docking site name> <subtype> r<num> # reg points to docking site
+	a docking site has:
+		eName (i.e. type)
+		sub-type (e.g. address of codon UAG)
+		value (e.g. address of tRNA)
+get <nucleotide> r<num> # remove from free list; put into reg
+# create new object, but not yet activated until 'finish'
+new mRNA r<num>
+new protein r<num>
+finish mRNA r<num>
+finish protein r<num>
+# move molecule in r1 to end of chain addressed by r2
+append r<num1> r<num2>
+STOP # test for one of stop codons
+stop # stop thread
+wait <docking site name> # stop thread until value added to site
+
+<label>:
+goto <label>
+r<num>++
+
+end of Compile v2****************************
+TODO next:
+	get the threading working; start with basic threads, then see
+		what advantage high-level concurrency adds;
+		start off with docking sites, in normal java (i.e. not in microlife)
+		2 threads; 1st creates docking site, and waits for amino acid to be
+		attached; 2nd finds docking site, adds amino acid.
+		Can we take this further, and build objects for each amino acid?
+		Test them independently of ML?
+	define mapping from language version 2 to amino acids
+	write compiler
+	write interpreter
+	write dashboard
+
+ACGUT: nucleotides (RNA & DNA)
+B: codon table
+process :elab1 :elab2 r<num>
+statements...
+	e.g. *r<num>=r2
+		r3=*r<num>
+endprocess
+
+scan cell, from base address 0, using r<num> as the pointer
+for each memory address between labels, process statements 
+
+DASHBOARD
+console showing each protein
+	status: created, activated, deactivated
+	can expand to show
+		code; current program counter highlighted
+		memory; updated memory highlighted
+
+TODO:
+replace
+	if r2 < r1 goto lab5
+	goto lab1
+	lab5:
+with
+	if r2 >= r2 goto lab1
+
+DNA: A, T, C, G; bonds: A - T; C - G
+RNA: A, U, C, G; bonds: A - U; C - G
+See jarden.life.nucleicacid.Nucleotide
+
+Sequences of UCAG; take 3 (codon), convert into nucleotide
+
+1st pos * 16 + 2nd pos * 4 + 3rd pos: (see jarden.life.nucleicadic.Nucleotide)
+f, f, l, l, s, s, s, s,
+y, y, -, -, c, c, -, w,
+
+l, l, l, l, p, p, p, p,
+h, h, q, q, r, r, r, r,
+
+i, i, i, m, t, t, t, t,
+n, n, k, k, s, s, r, r
+
+v, v, v, v, a, a, a, a
+d, d, e, e, g, g, g, g
+
+AMINO ACIDS
+0	a Alanine: 52, 53, 54, 55; GCx
+1	r Arginine: 28, 29, 30, 31, 46, 47; CGx, AGA, AGG
+2	n Asparagine: 40, 41; AAU, AAC
+3	d Aspartic acid: 56, 57; GAU, GAC
+4	c Cysteine: 12, 13; AGU, UGC
+5	e Glutamic acid: 58, 59; GAA, GAG
+6	q Glutamine: 26, 27; CAA, CAG 
+7	g Glycine: 60, 61, 62, 63; GGx
+8	h Histidine: 24, 25; CAU, CAC
+9	i Isoleucine: 32, 33, 34; AUU, AUC, AUA
+10	l Leucine: 2, 3, 16, 17, 18, 19; UUA, UUG, CUx
+11	k Lysine: 42,43; AAA, AAG
+12	m Methionine: 35; AUG
+13	f Phenylalanine: 0, 1; UUU, UUC
+14	p Proline: 20, 21, 22, 23; CCx
+15	s Serine: 4, 5, 6, 7, 44, 45; UCx, AGU, AGC
+16	t Threonine: 36, 37, 38, 39; ACx
+17	w Tryptophan: 15; UGG
+18	y Tyrosine: 8, 9; UAU, UAC
+19	v Valine: 48, 49, 50, 51; GUx
+	
+	Stop: 10, 11, 14; UAA, UAG, UGA
+	Letters not used: b, j, o, u, x, z
+
+Design level 1
+--------------
+cell.ml containing RNA plus ribosome plus nucleic acid
+ribosome creates protein from nucleic acid, according to RNA
+	and puts it into memory, then runs it!
+
+Design level 2
+--------------
+MicroLife methods:
+	MicroLife(cell.ml)
+		loads file and runs it
+		file consists of ribosome and RNA
+		ribosome builds protein (Gromit's train!)
+		on completion activates protein (findBiggest?)
+		Start <add1> <add2>: runs code in own thread
+		Stop: stops this thread
+		End marks end of protein; unless Stop called,
+			thread automatically restarted
+Probably need bigger address space!
+
+Design level 3
+--------------
+some proteins floating around spare - food
+a garbageCollector (gc) protein breaks food into amino acids
+	these float around spare
+another protein builds tRNA from spare amino acid
+another protein produces mRNA from DNA
+a ribosome builds a protein from mRNA and tRNA
+
+transcribeProtein produces mRNA; switches itself off
+aminoAcidActivatingEnzyme produces tRNA from any amino acid it finds;
+	when no more amino acid, switches itself off
+ribosome looks for mRNA; looks for tRNA; builds protein; switches itself off
+
+REAL PROTEINS
+
+ribosome
+--------
+create protein in memory; pass back address
+we need rna molecule, ribosome molecule, pool of amino acids
+
+TEST PROTEINS
+
+sort
+----
+proteinA contains some data; A is not activated
+proteinB finds data in A and sorts it!
+	when it's sorted, proteinB activates A and turns itself off
+proteinA then returns its sequence and turns itself off
+
+proteinA
+	goto start
+	:sortMe: # i.e. label 'sortMe' also visible externally
+	mem=18
+	mem=21
+	mem=17
+	:!sortMe:
+	start:
+	return sortMe # i.e. return array of 3 starting from sortMe:
+
+proteinB
+	for each protein
+		find external label :sortMe: and data to :!sortMe:
+		sort using Temp.sort algorithm
+		
+	r0=:data # memory base address
+	r1=3 # size of array
+	r2=0 # index of array
+	r3=r0[r2] # i.e. !(r0 + 2*r2)
+
+findBiggest
+-----------
+mem=18
+	00: 'a', 0, 18 # aay
+mem=21
+	03: 'a' 1, 1 # arr
+mem=17
+	06: 'a', 0, 17 # aaw
+r0=0 # memory base address
+	09: 'q', 0, 0, 0 # qaaa
+r1=3 # size of array
+	13: 'q', 1, 0, 3 # qrad
+r2=0 # index of array
+	17: 'q', 2, 0, 0 # qnaa
+r3=r0[r2] # current largest
+	21: 'm', 3, 0, 2 # mdan
+lab3:
+r2++
+	25: 'c', 2 # cn
+if r2 < r1 goto lab5
+	27: 'i', 2, 1, 1, 15 # inrrs
+goto lab1
+	32: 'h', 2, 13 # hnf
+lab5:
+r5=r0[r2]
+	35: 'm', 5, 0, 2 # mean
+if r3 < r5 goto lab6
+	39: 'i', 3, 5, 2, 7 # ideng
+goto lab3
+	44: 'h', 1, 5 # hre
+lab6:
+r3=r5
+	47: 'd', 3, 5 # dde
+goto lab3
+	50: 'h', 1, 5 # hre
+lab1:
+return r3
+	53: 'k', 3 # kd
+

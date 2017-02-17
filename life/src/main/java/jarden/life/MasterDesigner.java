@@ -23,7 +23,7 @@ import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
-public class MasterDesigner {
+public class MasterDesigner implements OnNewCellListener {
 	private static boolean verbose = true;
     private static List<Cell> cellList = new ArrayList<>();
 	
@@ -34,6 +34,41 @@ public class MasterDesigner {
 	}
 	
 	public static void main(String[] args) {
+        new MasterDesigner();
+    }
+    public MasterDesigner() {
+
+        Cell syntheticCell = Cell.getSyntheticCell();
+        syntheticCell.setOnNewCellListener(this);
+        cellList.add(syntheticCell);
+
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			char c;
+			while (true) {
+				System.out.println("p(rint) or q(uit) or v(erbose): ");
+				c = reader.readLine().charAt(0);
+				if (c == 'p') {
+                    for (Cell cell: cellList) cell.printCell();
+                    System.out.println("cellList.size=" + cellList.size());
+                }
+				else if (c == 'q') System.exit(0);
+				else if (c == 'v') verbose = !verbose;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+    @Override
+    public void onNewCell(Cell cell) {
+        cellList.add(cell);
+        System.out.println("test for equality with first cell: " +
+                cell.equals(cellList.get(0)));
+        System.out.println("cellList.size=" + cellList.size());
+    }
+}
+
         /*
         Next step options:
             synthetic cell has 4 build proteins, plus resources
@@ -69,7 +104,6 @@ public class MasterDesigner {
         cell.proteinAction(String proteinName); // call polymerase to get single gene
             // unless protein already exists, in which case start its action
         cell.groupAction(String proteinTypeName);
-        consider running all proteins in their own thread
         use new gene structure:
             promoterCode, 2 codons for protein type
              (e.g. "stem", "digestion", "division"),
@@ -126,7 +160,6 @@ public class MasterDesigner {
 
         start splitting aminoAcids into smaller units, e.g. isChain(), hasMore() could
         be replaced by aminoAcid that simply sets a property on the protein: boolean isChain
-        perhaps all proteins could run in their own thread? (cf keepRunning)
 
 
         something must tell the cell which proteins to build; look in book
@@ -136,31 +169,3 @@ public class MasterDesigner {
             and add to cell.nucleotides
          */
 
-        Cell syntheticCell = Cell.getSyntheticCell();
-        cellList.add(syntheticCell);
-
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			char c;
-			while (true) {
-				System.out.println("p(rint) or q(uit) or v(erbose): ");
-				c = reader.readLine().charAt(0);
-				if (c == 'p') {
-                    for (Cell cell: cellList) cell.printCell();
-                    System.out.println("cellList.size=" + cellList.size());
-                }
-				else if (c == 'q') System.exit(0);
-				else if (c == 'v') verbose = !verbose;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-    public static void addCell(Cell cell) {
-        cellList.add(cell);
-        System.out.println("test for equality with first cell: " +
-                cell.equals(cellList.get(0)));
-        System.out.println("cellList.size=" + cellList.size());
-    }
-}
