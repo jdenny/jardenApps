@@ -3,9 +3,7 @@ package jarden.life.aminoacid;
 import java.util.ListIterator;
 
 import jarden.life.Cell;
-import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
-import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.NucleicAcid;

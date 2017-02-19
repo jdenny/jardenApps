@@ -2,12 +2,11 @@ package jarden.life.aminoacid;
 
 import jarden.life.Cell;
 import jarden.life.Protein;
-import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Uracil;
 
 public class AddAminoAcidToProtein extends AminoAcid {
-	private Protein protein;
+	private Protein newProtein;
 
 	public AddAminoAcidToProtein(Cell cell) {
 		super(cell);
@@ -16,20 +15,20 @@ public class AddAminoAcidToProtein extends AminoAcid {
 		if (_aminoAcidOrCodon instanceof Codon) {
 			Codon codon = (Codon)_aminoAcidOrCodon;
 			if (codon.isStop()) {
-				getCell().addProtein(protein);
-				protein = null;
+				getCell().addProtein(newProtein);
+				newProtein = null;
 			} else {
 				throw new IllegalArgumentException("unexpected codon passed: " + codon);
 			}
 		}
 		else {
-			if (protein == null) {
-				protein = new Protein();
+			if (newProtein == null) {
+				newProtein = new Protein(getCell());
 			}
 			AminoAcid aminoAcid = (AminoAcid)_aminoAcidOrCodon;
-			protein.add(aminoAcid);
+			newProtein.add(aminoAcid);
 		}
-		return protein;
+		return newProtein;
 	}
 	public String getName() {
 		return "AddAminoAcidToProtein";

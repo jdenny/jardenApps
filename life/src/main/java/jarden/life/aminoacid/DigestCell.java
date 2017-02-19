@@ -1,6 +1,7 @@
 package jarden.life.aminoacid;
 
 import jarden.life.Cell;
+import jarden.life.MasterDesigner;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
@@ -18,7 +19,12 @@ public class DigestCell extends AminoAcid {
         System.out.println("DigestCell.action(" + object + "); does nothing, yet!");
         synchronized (this) { // temporary bodge
             try { wait(); }
-            catch(InterruptedException e) {}
+            catch(InterruptedException e) {
+                MasterDesigner.print(Thread.currentThread().getName() +
+                        " DigestCell interrupted while doing nothing");
+                Thread.currentThread().interrupt();
+                return null;
+            }
             return null;
         }
     }

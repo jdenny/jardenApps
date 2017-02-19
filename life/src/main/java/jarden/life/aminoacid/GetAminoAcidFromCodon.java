@@ -1,7 +1,6 @@
 package jarden.life.aminoacid;
 
 import jarden.life.Cell;
-import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Uracil;
@@ -14,7 +13,7 @@ import jarden.life.nucleicacid.Uracil;
 public class GetAminoAcidFromCodon extends AminoAcid {
 
 	public GetAminoAcidFromCodon(Cell cell) {
-		super(cell);
+        super(cell);
 	}
 	public Object action(Object _codon) {
 		Codon codon = (Codon)_codon;
