@@ -26,10 +26,16 @@ public class TestCell {
     }
 
     @Test
-    public void splitShouldCreateIdenticalCopy() {
-//        Cell daughterCell = syntheticCell.split();
-//        assertEquals(syntheticCell, daughterCell);
-//        Cell grandDaughterCell = daughterCell.split();
-//        assertEquals(syntheticCell, grandDaughterCell);
+    public void firstCellShouldEqualSyntheticCell() {
+        Cell.makeFirstCell(daughterCell -> {
+            System.out.println("firstCell==daughterCell:" + syntheticCell.equals(daughterCell));
+            assertEquals(syntheticCell, daughterCell);
+            System.out.println("Assert successful!");
+        });
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

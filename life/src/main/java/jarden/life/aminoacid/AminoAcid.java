@@ -19,6 +19,7 @@ public abstract class AminoAcid {
     public abstract Object action(Object o); // process next object
     public abstract boolean matchCodon(Codon codon);
     public abstract String getName();
+    public String toString() { return getName(); }
 
     /**
      * Applies to the first aminoAcid of a protein, in programming terms

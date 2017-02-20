@@ -1,0 +1,32 @@
+aminoAcid, when first created, belongs to cell; when added
+to protein, it then belongs to that protein, which in turn belongs
+to the cell; AminoAcid.getCell() now gets it from the protein.
+
+Protein manages its own thread; has methods start() & stop();
+currently start creates a new thread; stop() does thread.interrupt(),
+but later it may set a stop flag or something.
+
+Don't start DivideCell if one already running in this cell.
+
+In the future, we may need to activate and deactive proteins by
+name or group (type); use new gene structure:
+    promoterCode, 2 codons for protein type
+     (e.g. "stem", "digestion", "division"),
+    2 codons for protein name (e.g. "polymerase"), terminatorCode
+    all this can be decoded in FindNextGene?
+    now can have protein: turnOn/Off protein(s) by name or type
+    cell needs method runProtein(name/type); as described below, all
+    proteins run in own thread, but some are chains, so wait, some are
+    not so only run once. Cell.runProtein could run protein that activates
+    a group of proteins
+
+    private static String dnaStr =
+            promoterCode + proteinTypeStem + proteinNamePolymerase +
+                    "TTGTCT" + terminatorCode +
+                    promoterCode + proteinTypeStem + proteinNameRibosome +
+                    "TTATTCTTT" + terminatorCode +
+                    promoterCode + proteinTypeDivision + proteinNameDivide +
+                    "TAC" + terminatorCode +
+                    promoterCode + proteinTypeDigestion + proteinNameDigest +
+                    "TAG" + terminatorCode;
+

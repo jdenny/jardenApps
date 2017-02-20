@@ -99,4 +99,8 @@ public class Protein implements Runnable {
         return "running=" + (thread != null && thread.isAlive()) +
                 "; state=" + state;
     }
+
+    public ArrayList<AminoAcid> getAminoAcidList() {
+        return aminoAcidList;
+    }
 }

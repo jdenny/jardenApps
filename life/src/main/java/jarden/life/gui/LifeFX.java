@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import jarden.life.Cell;
+import jarden.life.Food;
 import jarden.life.OnNewCellListener;
 import jarden.life.Protein;
 import jarden.life.aminoacid.AddAminoAcidToProtein;
 import jarden.life.aminoacid.AminoAcid;
-import jarden.life.aminoacid.DigestCell;
+import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.FindNextGene;
 import jarden.life.aminoacid.GetAminoAcidFromCodon;
@@ -19,6 +20,7 @@ import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Nucleotide;
+import jarden.life.nucleicacid.Thymine;
 import jarden.life.nucleicacid.Uracil;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -63,39 +65,49 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
     private TextField guanineQtyField;
     private TextField adenineQtyField;
     private TextField aminoAcidSetQtyField;
+    private TextField cellQtyField;
     private List resourceList;
-
 
     private String[] aminoAcidNames = {
             "AddAminoAcidToProtein",
-            "DigestCell", "DivideCell",
+            "DigestFood", "DivideCell",
             "FindNextGene", "GetAminoAcidFromCodon",
             "GetCodonFromRNA", "GetRNAFromGene"
     };
     private String[] nucleotides = {
             "Uracil", "Adenine", "Cytosine", "Guanine"
     };
+    private static Color[] generationColours = {
+            Color.web("blue"),
+            Color.web("green"),
+            Color.web("yellow"),
+            Color.web("orange"),
+            Color.web("red")
+    };
 
     public static void main(String[] args) {
         System.out.println("hello LifeFX");
         launch(args);
     }
-
     @Override
     public void onNewCell(Cell cell) {
         Platform.runLater(() -> cellObservableList.add(cell));
     }
-
     static class ColorRectCell extends ListCell<Cell> {
         @Override
         public void updateItem(Cell item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
                 int generation = item.getGeneration();
-                Color colour;
+                if (generation > generationColours.length) {
+                    generation = generationColours.length;
+                }
+                Color colour = generationColours[generation - 1];
+                /*!!
                 if (generation == 1) colour = Color.web("green");
                 else if (generation == 2) colour = Color.web("blue");
                 else colour = Color.web("red");
+                */
                 Rectangle rect = new Rectangle(20 * item.getProteinCt(), 20);
                 rect.setFill(colour);
                 setGraphic(rect);
@@ -104,7 +116,6 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
     }
     @Override
     public void start(Stage primaryStage) {
-
         cellObservableList = FXCollections.observableArrayList();
         cellListView = new ListView<>(cellObservableList);
         cellListView.setCellFactory((ListView<Cell> l) -> new ColorRectCell());
@@ -135,6 +146,7 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
         guanineQtyField = new TextField();
         adenineQtyField = new TextField();
         aminoAcidSetQtyField = new TextField();
+        cellQtyField = new TextField();
         Button feedButton = new Button("Feed");
         feedButton.setOnAction(this);
 
@@ -160,7 +172,9 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
         feederGrid.add(adenineQtyField, 1, 3);
         feederGrid.add(new Label("Amino Acid Set"), 0, 4);
         feederGrid.add(aminoAcidSetQtyField, 1, 4);
-        feederGrid.add(feedButton, 1, 5);
+        feederGrid.add(new Label("Cells"), 0, 5);
+        feederGrid.add(cellQtyField, 1, 5);
+        feederGrid.add(feedButton, 1, 6);
 
         grid.add(new Label("Cells"), 0, 0);
         grid.add(cellListView, 0, 1);
@@ -176,7 +190,7 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.show();
-        Cell syntheticCell = Cell.getSyntheticCell();
+        Cell syntheticCell = Cell.makeSyntheticCell(true);
         syntheticCell.setOnNewCellListener(this);
         cellObservableList.add(syntheticCell);
     }
@@ -187,11 +201,9 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
         if (resourceType.equals("Proteins")) {
             Protein protein = (Protein) resourceList.get(resourceIndex);
             statusText.setText("status of protein: " + protein.getStatus());
-        } else if (resourceType.equals("AminoAcids")) {
-        } else if (resourceType.equals("Nucleotides")) {
+        } else {
+            statusText.setText("resource waiting to be used to build proteins");
         }
-
-
     }
 
     private void resetResourceList() {
@@ -201,21 +213,50 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
         if (cell != null && resourceType != null) {
             if (resourceType.equals("Proteins")) {
                 resourceList = cell.getProteinList();
+                resourceNames = resourcesToNames();
             } else if (resourceType.equals("AminoAcids")) {
                 resourceList = cell.getAminoAcidList();
+                resourceNames = resourcesToNames();
             } else if (resourceType.equals("Nucleotides")) {
-                resourceList = cell.getNucleotideList();
+                List<Nucleotide> nucleotides = cell.getNucleotideList();
+                // counts for Adenine, Cytosine, Guanine, Thymine, Uracil:
+                int[] nucleotideCounts = new int[5];
+                for (Nucleotide nucleotide: nucleotides) {
+                    if (nucleotide instanceof Adenine) ++nucleotideCounts[0];
+                    else if (nucleotide instanceof Cytosine) ++nucleotideCounts[1];
+                    else if (nucleotide instanceof Guanine) ++nucleotideCounts[2];
+                    else if (nucleotide instanceof Thymine) ++nucleotideCounts[3];
+                    else if (nucleotide instanceof Uracil) ++nucleotideCounts[4];
+                    else throw new IllegalStateException("unrecognised nucleotide: " +
+                                nucleotide);
+                }
+                resourceNames = new String[] {
+                        nucleotideCounts[0] + " Adenine",
+                        nucleotideCounts[1] + " Cytosine",
+                        nucleotideCounts[2] + " Guanine",
+                        nucleotideCounts[3] + " Thymine",
+                        nucleotideCounts[4] + " Uracil",
+                };
             } else {
                 throw new IllegalStateException(
                         "unrecognised resourceType: " + resourceType);
             }
+            /*!!
             resourceNames = new String[resourceList.size()];
             for (int i = 0; i < resourceList.size(); i++) {
                 resourceNames[i] = resourceList.get(i).toString();
             }
+            */
             resourceObservableList.clear();
             Collections.addAll(resourceObservableList, resourceNames);
         }
+    }
+    private String[] resourcesToNames() {
+        String[] names = new String[resourceList.size()];
+        for (int i = 0; i < resourceList.size(); i++) {
+            names[i] = resourceList.get(i).toString();
+        }
+        return names;
     }
 
     @Override
@@ -270,7 +311,7 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                     int aminoAcidSetQty = Integer.parseInt(aminoAcidSetQtyStr);
                     for (int i = 0; i < aminoAcidSetQty; i++) {
                         aminoAcids.add(new AddAminoAcidToProtein(cell));
-                        aminoAcids.add(new DigestCell(cell));
+                        aminoAcids.add(new DigestFood(cell));
                         aminoAcids.add(new DivideCell(cell));
                         aminoAcids.add(new FindNextGene(cell));
                         aminoAcids.add(new GetAminoAcidFromCodon(cell));
@@ -279,9 +320,21 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                     }
                     cell.addAminoAcids(aminoAcids);
                 }
-                if (nucleotides.size() == 0 && aminoAcids.size() == 0) {
-                    statusText.setText("select some quantities first");
+                // now for the main course: cells
+                String cellQtyStr = cellQtyField.getText().trim();
+                List<Food> foodList = new ArrayList<>();
+                if (cellQtyStr.length() > 0) {
+                    int cellQty = Integer.parseInt(cellQtyStr);
+                    for (int i = 0; i < cellQty; i++) {
+                        // active=false, so cell doesn't use all its resources creating another cell
+                        foodList.add(Cell.makeSyntheticCell(false));
+                    }
+                    cell.addFood(foodList);
                 }
+                statusText.setText("added to cell " + cell + ": " +
+                        nucleotides.size() + " nucleotides; " +
+                        aminoAcids.size() + " aminoAcids; " +
+                        foodList.size() + " cells" );
             } catch (NumberFormatException nfe) {
                 statusText.setText("supply integers only");
             }

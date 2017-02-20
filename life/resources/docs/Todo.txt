@@ -1,0 +1,17 @@
+investigate warnings in code
+improve protein status
+make sure TestCell and MasterDesigner still work
+
+Split amino acids into target 20!
+  e.g. isChain(), hasMore() could be replaced by aminoAcid that
+  simply sets a property on the protein: boolean isChain;
+  isChain could then occur anywhere in the sequence, so not
+  making a special 'control amino acid' from the first
+
+need a protein to turn on/off a gene:
+  find specified gene; change promoter code from "TATAAT" to "UATAAT" for off
+  or vice versa for on; while we're waiting for this protein, do it manually!
+
+Create nucleicAcid and aminoAcid from more basic raw materials,
+instead of from existing cells
+
