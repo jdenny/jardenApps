@@ -26,10 +26,6 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class DivideCell extends AminoAcid {
 
-    public DivideCell(Cell cell) {
-        super(cell);
-    }
-
     /**
      * Only allow one instance of DivideCell to run for each cell.
      *

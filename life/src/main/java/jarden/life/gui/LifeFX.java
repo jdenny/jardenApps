@@ -103,11 +103,6 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                     generation = generationColours.length;
                 }
                 Color colour = generationColours[generation - 1];
-                /*!!
-                if (generation == 1) colour = Color.web("green");
-                else if (generation == 2) colour = Color.web("blue");
-                else colour = Color.web("red");
-                */
                 Rectangle rect = new Rectangle(20 * item.getProteinCt(), 20);
                 rect.setFill(colour);
                 setGraphic(rect);
@@ -241,12 +236,6 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                 throw new IllegalStateException(
                         "unrecognised resourceType: " + resourceType);
             }
-            /*!!
-            resourceNames = new String[resourceList.size()];
-            for (int i = 0; i < resourceList.size(); i++) {
-                resourceNames[i] = resourceList.get(i).toString();
-            }
-            */
             resourceObservableList.clear();
             Collections.addAll(resourceObservableList, resourceNames);
         }
@@ -310,13 +299,13 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                 if (aminoAcidSetQtyStr.length() > 0) {
                     int aminoAcidSetQty = Integer.parseInt(aminoAcidSetQtyStr);
                     for (int i = 0; i < aminoAcidSetQty; i++) {
-                        aminoAcids.add(new AddAminoAcidToProtein(cell));
-                        aminoAcids.add(new DigestFood(cell));
-                        aminoAcids.add(new DivideCell(cell));
-                        aminoAcids.add(new FindNextGene(cell));
-                        aminoAcids.add(new GetAminoAcidFromCodon(cell));
-                        aminoAcids.add(new GetCodonFromRNA(cell));
-                        aminoAcids.add(new GetRNAFromGene(cell));
+                        aminoAcids.add(new AddAminoAcidToProtein());
+                        aminoAcids.add(new DigestFood());
+                        aminoAcids.add(new DivideCell());
+                        aminoAcids.add(new FindNextGene());
+                        aminoAcids.add(new GetAminoAcidFromCodon());
+                        aminoAcids.add(new GetCodonFromRNA());
+                        aminoAcids.add(new GetRNAFromGene());
                     }
                     cell.addAminoAcids(aminoAcids);
                 }

@@ -24,9 +24,6 @@ public class FindNextGene extends AminoAcid {
 	private int index;
     private int currentStop = 0;
 	
-	public FindNextGene(Cell cell) {
-        super(cell);
-	}
     @Override
 	public ListIterator<Nucleotide> action(Object o) {
         /* TODO: fix this!
@@ -103,8 +100,6 @@ public class FindNextGene extends AminoAcid {
                 codon.getSecond() instanceof Uracil &&
                 codon.getThird() instanceof Guanine;
     }
-    @Override
-    public boolean isChain() { return true; }
     @Override
     public boolean hasMore() {
         return getNextPromoterIndex() >= 0;

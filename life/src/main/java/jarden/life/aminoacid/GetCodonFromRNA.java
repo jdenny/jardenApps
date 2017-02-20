@@ -1,6 +1,5 @@
 package jarden.life.aminoacid;
 
-import jarden.life.Cell;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.RNA;
@@ -13,9 +12,6 @@ public class GetCodonFromRNA extends AminoAcid {
 	private RNA rna;
 	private int index;
 	
-	public GetCodonFromRNA(Cell cell) {
-        super(cell);
-	}
     @Override
 	public Codon action(Object object) {
 		if (rna == null || index >= rna.size()) {
@@ -42,8 +38,6 @@ public class GetCodonFromRNA extends AminoAcid {
                 codon.getSecond() instanceof Uracil &&
                 codon.getThird() instanceof Adenine;
 	}
-    @Override
-    public boolean isChain() { return true; }
     @Override
     public boolean hasMore() {
         return rna != null && index < rna.size();

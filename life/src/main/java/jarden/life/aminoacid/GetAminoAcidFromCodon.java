@@ -12,9 +12,6 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class GetAminoAcidFromCodon extends AminoAcid {
 
-	public GetAminoAcidFromCodon(Cell cell) {
-        super(cell);
-	}
 	public Object action(Object _codon) {
 		Codon codon = (Codon)_codon;
 		if (codon.isStop()) return codon;

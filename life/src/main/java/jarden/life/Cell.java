@@ -107,15 +107,15 @@ public class Cell implements Food {
         synCell.dna = buildDNAFromString(dnaStr);
         // create resources for 1 daughter cell of 4 proteins:
         for (int i = 0; i < 1; i++) {
-            synCell.aminoAcidList.add(new AddAminoAcidToProtein(synCell));
-            synCell.aminoAcidList.add(new GetAminoAcidFromCodon(synCell));
-            synCell.aminoAcidList.add(new GetCodonFromRNA(synCell));
-            synCell.aminoAcidList.add(new FindNextGene(synCell));
-            synCell.aminoAcidList.add(new GetRNAFromGene(synCell));
-            synCell.aminoAcidList.add(new DigestFood(synCell));
-            synCell.aminoAcidList.add(new DivideCell(synCell));
-            synCell.aminoAcidList.add(new AddAminoAcidToProtein(synCell));
-            synCell.aminoAcidList.add(new GetAminoAcidFromCodon(synCell));
+            synCell.aminoAcidList.add(new AddAminoAcidToProtein());
+            synCell.aminoAcidList.add(new GetAminoAcidFromCodon());
+            synCell.aminoAcidList.add(new GetCodonFromRNA());
+            synCell.aminoAcidList.add(new FindNextGene());
+            synCell.aminoAcidList.add(new GetRNAFromGene());
+            synCell.aminoAcidList.add(new DigestFood());
+            synCell.aminoAcidList.add(new DivideCell());
+            synCell.aminoAcidList.add(new AddAminoAcidToProtein());
+            synCell.aminoAcidList.add(new GetAminoAcidFromCodon());
         }
         for (int i = 0; i < 20; i++) { // minimum is 17
             synCell.nucleotideList.add(new Uracil());
@@ -130,16 +130,16 @@ public class Cell implements Food {
             synCell.nucleotideList.add(new Guanine());
         }
         Protein rnaPolymerase = new Protein(synCell);
-        rnaPolymerase.add(new FindNextGene(synCell));
-        rnaPolymerase.add(new GetRNAFromGene(synCell));
+        rnaPolymerase.add(new FindNextGene());
+        rnaPolymerase.add(new GetRNAFromGene());
         Protein ribosome = new Protein(synCell);
-        ribosome.add(new GetCodonFromRNA(synCell));
-        ribosome.add(new GetAminoAcidFromCodon(synCell));
-        ribosome.add(new AddAminoAcidToProtein(synCell));
+        ribosome.add(new GetCodonFromRNA());
+        ribosome.add(new GetAminoAcidFromCodon());
+        ribosome.add(new AddAminoAcidToProtein());
         Protein proteinDigest = new Protein(synCell);
-        proteinDigest.add(new DigestFood(synCell));
+        proteinDigest.add(new DigestFood());
         Protein proteinDivide = new Protein(synCell);
-        proteinDivide.add(new DivideCell(synCell));
+        proteinDivide.add(new DivideCell());
         synCell.addProtein(rnaPolymerase);
         synCell.addProtein(ribosome);
         synCell.addProtein(proteinDigest);

@@ -46,7 +46,6 @@ public class Protein implements Runnable {
     public Object action(Object object) {
         // if firstObject is a chain, then repeat until end of chain
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
-        boolean isChain = firstAminoAcid.isChain();
         Object currentObject = object;
         do {
             for (AminoAcid aminoAcid: aminoAcidList) {
@@ -57,7 +56,7 @@ public class Protein implements Runnable {
                 }
                 currentObject = aminoAcid.action(currentObject);
             }
-        } while (isChain && firstAminoAcid.hasMore());
+        } while (firstAminoAcid.hasMore());
         return currentObject;
     }
 

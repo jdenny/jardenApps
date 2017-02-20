@@ -20,10 +20,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class GetRNAFromGene extends AminoAcid {
 
-	public GetRNAFromGene(Cell cell) {
-        super(cell);
-	}
-	public Object action(Object _dna) {
+    public Object action(Object _dna) {
 		ListIterator<Nucleotide> dna = (ListIterator<Nucleotide>)_dna;  
 		RNA rna = new RNA();
         Cell cell = getCell();

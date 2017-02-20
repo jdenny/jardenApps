@@ -8,9 +8,6 @@ import jarden.life.nucleicacid.Uracil;
 public class AddAminoAcidToProtein extends AminoAcid {
 	private Protein newProtein;
 
-	public AddAminoAcidToProtein(Cell cell) {
-		super(cell);
-	}
 	public Object action(Object _aminoAcidOrCodon) {
 		if (_aminoAcidOrCodon instanceof Codon) {
 			Codon codon = (Codon)_aminoAcidOrCodon;

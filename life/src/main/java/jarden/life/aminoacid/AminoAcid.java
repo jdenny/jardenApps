@@ -11,11 +11,8 @@ import jarden.life.nucleicacid.Codon;
  */
 public abstract class AminoAcid {
     // if amino acid not yet part of a protein, it belongs to the cell
-    private Cell cell;
     private Protein protein; // protein this amino acid is part of
 
-	public AminoAcid(Cell cell) { this.cell = cell; }
-    public AminoAcid(Protein protein) { this.protein = protein; }
     public abstract Object action(Object o); // process next object
     public abstract boolean matchCodon(Codon codon);
     public abstract String getName();
@@ -24,45 +21,31 @@ public abstract class AminoAcid {
     /**
      * Applies to the first aminoAcid of a protein, in programming terms
      * the control object.
-     * @return true means repeat this protein to process the next element
-     * in the chain, if there is one.
-     * @see #hasMore()
-     */
-    public boolean isChain() { return false; }
-    /**
-     * Applies to the first aminoAcid of a protein, in programming terms
-     * the control object.
      * @return true means start the protein when added to the cell.
      */
     public boolean activateOnCreate() { return true; }
 
     /**
-     * Only used if isChain() returns true.
-     * @return true means there are more elements in the chain.
+     * Applies to the first aminoAcid of a protein, in programming terms
+     * the control object.
+     * @return true means repeat this protein to process the next element
+     * in the chain.
      */
     public boolean hasMore() { return false; }
 
-    /*!!
-    public boolean keepRunning() { return false; }
-    public void setCell(Cell cell) {
-        this.cell = cell;
-    }
-    */
-
     /**
-     *
+     * Get the protein this aminoAcid belongs to.
      * @return null if this aminoAcid is not yet part of a protein
      */
     public Protein getProtein() {
         return protein;
     }
+
     public Cell getCell() {
-        if (this.protein != null) return this.protein.getCell();
-        else return cell;
+        return this.protein.getCell();
     }
 
     public void setProtein(Protein protein) {
         this.protein = protein;
-        this.cell = null;
     }
 }
