@@ -13,26 +13,29 @@ import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Uracil;
 
 /**
- * Created by john.denny@gmail.com on 13/02/2017.
+ * When enough proteins, create a new cell, using copy of DNA, plus half
+ * of the proteins.
  *
- * Create new cell which is identical to this cell.
- * Create new cell; add copy of own DNA; run polymerase & ribosome to
- * create copies of all own proteins, and add these to new cell.
- * @return identical copy of this cell
+ * Wait for proteinList to double in size;
+ * create new daughterCell;
+ * get all proteins over geneSize (i.e. number of proteins the cell had
+ * when it was first created), and for each:
+ *    stop, remove from current cell, add to new cell.
+ *
+ * Created by john.denny@gmail.com on 13/02/2017.
  */
+public class DivideCell extends AminoAcid {
 
-public class DivideCell extends AminoAcid /*!!implements CellReadyToSplitListener*/ {
-
-    /*
-    Proposed design:
-    when there are enough proteins to divide, stop all proteins in this cell
-    (apart from DivideCell!), wait for them all to stop, then run code
-    currently in splitCell(); what really happens?
-     */
     public DivideCell(Cell cell) {
         super(cell);
     }
 
+    /**
+     * Only allow one instance of DivideCell to run for each cell.
+     *
+     * @return false if another instance of DivideCell is running,
+     * otherwise return true.
+     */
     public boolean activateOnCreate() {
         Cell cell = getCell();
         if (cell.isDivideCellRunning()) return false;
@@ -79,7 +82,6 @@ public class DivideCell extends AminoAcid /*!!implements CellReadyToSplitListene
                         } else {
                             MasterDesigner.print(Thread.currentThread().getName() +
                                     " divideCell detected no thread for protein " + protein);
-
                         }
                         protein.setCell(daughterCell);
                         daughterCell.addProtein(protein); // this should start the thread
@@ -89,12 +91,14 @@ public class DivideCell extends AminoAcid /*!!implements CellReadyToSplitListene
                         daughterCell.setOnNewCellListener(onNewCellListener);
                         onNewCellListener.onNewCell(daughterCell);
                     }
-                    return null;
+                    return daughterCell;
                 }
-                MasterDesigner.print(Thread.currentThread().getName() +
+                String state = Thread.currentThread().getName() +
                         " cell divide waiting for " +
                         ((geneSize * 2) - proteinSize) +
-                        " more proteins");
+                        " more proteins";
+                MasterDesigner.print(state);
+                getProtein().setState(state);
                 try { proteinList.wait(); }
                 catch(InterruptedException e) {
                     MasterDesigner.print(Thread.currentThread().getName() +

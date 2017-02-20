@@ -35,8 +35,20 @@ public class GetRNAFromGene extends AminoAcid {
 			String name3 = dna.next().getName();
 			if (name3.equals("Thymine")) name3 = "Uracil";
 			Nucleotide first = cell.waitForNucleotide(name1);
+            if (Thread.interrupted()) {
+                Thread.currentThread().interrupt();
+                return null;
+            }
 			Nucleotide second = cell.waitForNucleotide(name2);
+            if (Thread.interrupted()) {
+                Thread.currentThread().interrupt();
+                return null;
+            }
 			Nucleotide third = cell.waitForNucleotide(name3);
+            if (Thread.interrupted()) {
+                Thread.currentThread().interrupt();
+                return null;
+            }
 			Codon codon = new Codon(first, second, third);
 			rna.add(codon);
 			if (codon.isStop()) break;

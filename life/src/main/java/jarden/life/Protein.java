@@ -9,10 +9,9 @@ public class Protein implements Runnable {
     private String name;
     private String type;
 	private ArrayList<AminoAcid> aminoAcidList = new ArrayList<>();
-    //!! private Object objectPassedToAction;
-    private boolean stopping;
     private Thread thread;
     private int hashCode;
+    private String state;
 
     public Protein(Cell cell) {
         this.cell = cell;
@@ -20,11 +19,11 @@ public class Protein implements Runnable {
     public Cell getCell() {
         return this.cell;
     }
+    public void setState(String state) { this.state = state; }
     public void start() {
         // call method on 1st aminoAcid to see if it wants to start;
         // nearly always will say yes, but for example DivideCell will
         // say no if there is another DivideCell already running
-        this.stopping = false;
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
         if (firstAminoAcid.activateOnCreate()) {
             this.thread = new Thread(this);
@@ -37,15 +36,9 @@ public class Protein implements Runnable {
         }
     }
     public void stop() {
-        this.stopping = true;
         thread.interrupt();
     }
 
-    /*
-    public boolean isRunning() {
-        return thread != null && thread.isAlive();
-    }
-    */
 	public void run() {
 		while (!Thread.interrupted()) action(null);
 	}
@@ -81,11 +74,6 @@ public class Protein implements Runnable {
 	}
 
     public void setCell(Cell cell) {
-        /*!!
-        for (AminoAcid aminoAcid: this.aminoAcidList) {
-            aminoAcid.setCell(cell);
-        }
-        */
         this.cell = cell;
     }
     @Override
@@ -105,5 +93,10 @@ public class Protein implements Runnable {
 
     public Thread getThread() {
         return thread;
+    }
+
+    public String getStatus() {
+        return "running=" + (thread != null && thread.isAlive()) +
+                "; state=" + state;
     }
 }

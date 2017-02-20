@@ -175,9 +175,9 @@ public class Cell {
         MasterDesigner.print(toString() + "; proteinCt=" + proteinList.size());
         protein.start();
 	}
-	public void addAminoAcid(AminoAcid aminoAcid) {
+	public void addAminoAcids(List<AminoAcid> aminoAcids) {
 		synchronized (aminoAcidList) {
-			aminoAcidList.add(aminoAcid);
+			aminoAcidList.addAll(aminoAcids);
 			aminoAcidList.notifyAll();
 		}
 	}
@@ -195,7 +195,7 @@ public class Cell {
 	}
 	public Nucleotide waitForNucleotide(String name) {
 		synchronized (nucleotideList) {
-			while (true) {
+            while (true) {
                 Nucleotide nucleotide = getNucleotideByName(name);
 				if (nucleotide != null) return nucleotide;
 				MasterDesigner.print(Thread.currentThread().getName() +
@@ -212,7 +212,7 @@ public class Cell {
 	}
 	public RNA waitForRNA() {
 		synchronized (rnaList) {
-			while (true) {
+            while (true) {
 				RNA rna = getRNA();
 				if (rna != null) return rna;
 				MasterDesigner.print(Thread.currentThread().getName() +
@@ -229,7 +229,7 @@ public class Cell {
 	}
 	public AminoAcid waitForAminoAcid(Codon codon) {
 		synchronized (aminoAcidList) {
-			while (true) {
+            while (true) {
                 AminoAcid aminoAcid = getAminoAcidByCodon(codon);
 				if (aminoAcid != null) return aminoAcid;
 				MasterDesigner.print(Thread.currentThread().getName() +

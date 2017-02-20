@@ -20,6 +20,10 @@ public class GetCodonFromRNA extends AminoAcid {
 	public Codon action(Object object) {
 		if (rna == null || index >= rna.size()) {
 			rna = getCell().waitForRNA();
+            if (Thread.interrupted()) {
+                Thread.currentThread().interrupt();
+                return null;
+            }
 			index = 0;
 		}
 		Codon codon = rna.get(index++);
