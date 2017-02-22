@@ -14,7 +14,8 @@ Next target
 Polymerase protein transcribes DNA (gene) into RNA, using spare nucleotides
 Ribosome protein translates RNA into a protein, using spare amino acids
 
-We need a protein for creating an amino acid (20 of?), and a protein for creating a nucleotide (5 of?)
+We need a protein for creating an amino acid (20 of?), and a protein for creating a
+ nucleotide (5 of?)
 We need a regulator protein for inhibiting the creation of each amino acid
 	this attaches itself to the operator part of the DNA, to stop polymerase
 	if the amino acid is running low, it releases itself from the DNA

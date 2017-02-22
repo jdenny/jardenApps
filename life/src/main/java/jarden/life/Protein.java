@@ -4,7 +4,7 @@ import jarden.life.aminoacid.AminoAcid;
 
 import java.util.ArrayList;
 
-public class Protein implements Runnable {
+public class Protein implements Runnable, Resource {
     private Cell cell; // the cell this protein belongs to
     private String name;
     private String type;
@@ -64,10 +64,13 @@ public class Protein implements Runnable {
 		aminoAcidList.add(aminoAcid);
         aminoAcid.setProtein(this);
 	}
+    public String getName() {
+        return toString();
+    }
 	public String toString() {
-		StringBuffer buffer = new StringBuffer("Protein:");
+		StringBuffer buffer = new StringBuffer();
 		for (AminoAcid aminoAcid: aminoAcidList) {
-			buffer.append(" " + aminoAcid.getName());
+			buffer.append(aminoAcid.getName() + " ");
 		}
 		return buffer.toString();
 	}

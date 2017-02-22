@@ -25,6 +25,11 @@ import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
 import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
 
 public class Cell implements Food {
+    public static int uracilFor1Cell = 17;
+    public static int cytosineFor1Cell = 4;
+    public static int guanineFor1Cell = 1;
+    public static int adenineFor1Cell = 11;
+
     private static Cell syntheticCell;
     private static int currentId = 0;
     private boolean active = true; // true means run threads on create
@@ -117,16 +122,16 @@ public class Cell implements Food {
             synCell.aminoAcidList.add(new AddAminoAcidToProtein());
             synCell.aminoAcidList.add(new GetAminoAcidFromCodon());
         }
-        for (int i = 0; i < 20; i++) { // minimum is 17
+        for (int i = 0; i < uracilFor1Cell; i++) {
             synCell.nucleotideList.add(new Uracil());
         }
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < adenineFor1Cell; i++) {
             synCell.nucleotideList.add(new Adenine());
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < cytosineFor1Cell; i++) {
             synCell.nucleotideList.add(new Cytosine());
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < guanineFor1Cell; i++) {
             synCell.nucleotideList.add(new Guanine());
         }
         Protein rnaPolymerase = new Protein(synCell);
@@ -188,11 +193,16 @@ public class Cell implements Food {
         return nucleotideList;
     }
     @Override
+    public List<RNA> getRNAList() {
+        return rnaList;
+    }
+    @Override
     public DNA getDNA() {
 		return dna;
 	}
 	public void addProtein(Protein protein) {
         synchronized (proteinList) {
+            // TODO: could proteinList become
             proteinList.add(protein);
             proteinList.notifyAll();
         }
@@ -336,7 +346,6 @@ public class Cell implements Food {
 			}
 		}
 	}
-
     public void printCell() {
         this.printNucleotides();
         this.printRNA();
@@ -435,7 +444,6 @@ public class Cell implements Food {
     public void setDivideCellRunning(boolean divideCellRunning) {
         this.divideCellRunning = divideCellRunning;
     }
-
     public void setActive(boolean active) {
         this.active = active;
     }

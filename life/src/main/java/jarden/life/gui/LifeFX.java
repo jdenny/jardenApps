@@ -2,7 +2,9 @@ package jarden.life.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import jarden.life.Cell;
 import jarden.life.Food;
@@ -20,7 +22,6 @@ import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Nucleotide;
-import jarden.life.nucleicacid.Thymine;
 import jarden.life.nucleicacid.Uracil;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -36,6 +37,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -68,15 +70,6 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
     private TextField cellQtyField;
     private List resourceList;
 
-    private String[] aminoAcidNames = {
-            "AddAminoAcidToProtein",
-            "DigestFood", "DivideCell",
-            "FindNextGene", "GetAminoAcidFromCodon",
-            "GetCodonFromRNA", "GetRNAFromGene"
-    };
-    private String[] nucleotides = {
-            "Uracil", "Adenine", "Cytosine", "Guanine"
-    };
     private static Color[] generationColours = {
             Color.web("blue"),
             Color.web("green"),
@@ -93,6 +86,7 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
     public void onNewCell(Cell cell) {
         Platform.runLater(() -> cellObservableList.add(cell));
     }
+
     static class ColorRectCell extends ListCell<Cell> {
         @Override
         public void updateItem(Cell item, boolean empty) {
@@ -120,7 +114,7 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                         resetResourceList());
 
         resourceTypeChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
-                "Proteins", "AminoAcids", "Nucleotides")
+                "Proteins", "AminoAcids", "RNA", "Nucleotides")
         );
         resourceTypeChoiceBox.getSelectionModel()
                 .selectedItemProperty()
@@ -136,11 +130,11 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
         statusText = new Text();
         statusText.setFill(Color.FIREBRICK);
 
-        uracilQtyField = new TextField();
-        cytosineQtyField = new TextField();
-        guanineQtyField = new TextField();
-        adenineQtyField = new TextField();
-        aminoAcidSetQtyField = new TextField();
+        uracilQtyField = new TextField("" + Cell.uracilFor1Cell);
+        cytosineQtyField = new TextField("" + Cell.cytosineFor1Cell);
+        guanineQtyField = new TextField("" + Cell.guanineFor1Cell);
+        adenineQtyField = new TextField("" + Cell.adenineFor1Cell);
+        aminoAcidSetQtyField = new TextField("1");
         cellQtyField = new TextField();
         Button feedButton = new Button("Feed");
         feedButton.setOnAction(this);
@@ -192,62 +186,52 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
 
     private void showResourceStatus() {
         int resourceIndex = this.resourceListView.getSelectionModel().getSelectedIndex();
-        String resourceType = this.resourceTypeChoiceBox.getValue();
-        if (resourceType.equals("Proteins")) {
-            Protein protein = (Protein) resourceList.get(resourceIndex);
-            statusText.setText("status of protein: " + protein.getStatus());
-        } else {
-            statusText.setText("resource waiting to be used to build proteins");
+        if (resourceIndex >= 0) {
+            String resourceType = this.resourceTypeChoiceBox.getValue();
+            if (resourceType.equals("Proteins")) {
+                Protein protein = (Protein) resourceList.get(resourceIndex);
+                statusText.setText("status of protein: " + protein.getStatus());
+            } else {
+                statusText.setText("resource waiting to be used to build proteins");
+            }
         }
     }
-
     private void resetResourceList() {
         Cell cell = this.cellListView.getSelectionModel().getSelectedItem();
         String resourceType = this.resourceTypeChoiceBox.getValue();
         String[] resourceNames;
+        // TODO: could all resources (Protein, RNA, DNA, AminoAcid, NucleicAcid)
+        // implement Resource?
         if (cell != null && resourceType != null) {
             if (resourceType.equals("Proteins")) {
                 resourceList = cell.getProteinList();
-                resourceNames = resourcesToNames();
             } else if (resourceType.equals("AminoAcids")) {
                 resourceList = cell.getAminoAcidList();
-                resourceNames = resourcesToNames();
+            } else if (resourceType.equals("RNA")) {
+                resourceList = cell.getRNAList();
             } else if (resourceType.equals("Nucleotides")) {
-                List<Nucleotide> nucleotides = cell.getNucleotideList();
-                // counts for Adenine, Cytosine, Guanine, Thymine, Uracil:
-                int[] nucleotideCounts = new int[5];
-                for (Nucleotide nucleotide: nucleotides) {
-                    if (nucleotide instanceof Adenine) ++nucleotideCounts[0];
-                    else if (nucleotide instanceof Cytosine) ++nucleotideCounts[1];
-                    else if (nucleotide instanceof Guanine) ++nucleotideCounts[2];
-                    else if (nucleotide instanceof Thymine) ++nucleotideCounts[3];
-                    else if (nucleotide instanceof Uracil) ++nucleotideCounts[4];
-                    else throw new IllegalStateException("unrecognised nucleotide: " +
-                                nucleotide);
-                }
-                resourceNames = new String[] {
-                        nucleotideCounts[0] + " Adenine",
-                        nucleotideCounts[1] + " Cytosine",
-                        nucleotideCounts[2] + " Guanine",
-                        nucleotideCounts[3] + " Thymine",
-                        nucleotideCounts[4] + " Uracil",
-                };
+                resourceList = cell.getNucleotideList();
             } else {
                 throw new IllegalStateException(
                         "unrecognised resourceType: " + resourceType);
+            }
+            HashMap<String, Integer> nameCountMap = new HashMap<>();
+            for (Object resource: resourceList) {
+                String name = resource.toString();
+                Integer ct = nameCountMap.get(name);
+                ct = (ct==null)?1:(ct+1);
+                nameCountMap.put(name, ct);
+            }
+            resourceNames = new String[nameCountMap.size()];
+            Set<String> keys = nameCountMap.keySet();
+            int i = 0;
+            for (String key: keys) {
+                resourceNames[i++] = nameCountMap.get(key) + " " + key;
             }
             resourceObservableList.clear();
             Collections.addAll(resourceObservableList, resourceNames);
         }
     }
-    private String[] resourcesToNames() {
-        String[] names = new String[resourceList.size()];
-        for (int i = 0; i < resourceList.size(); i++) {
-            names[i] = resourceList.get(i).toString();
-        }
-        return names;
-    }
-
     @Override
     public void handle(ActionEvent event) {
         String message = uracilQtyField.getText() + " of Uracil, " +
@@ -324,6 +308,14 @@ public class LifeFX extends Application implements EventHandler<ActionEvent>,
                         nucleotides.size() + " nucleotides; " +
                         aminoAcids.size() + " aminoAcids; " +
                         foodList.size() + " cells" );
+                Platform.runLater(() -> {
+                    resetResourceList();
+                    MultipleSelectionModel<Cell> selectionModel =
+                            this.cellListView.getSelectionModel();
+                    int selectedIndex = selectionModel.getSelectedIndex();
+                    cellObservableList.remove(selectedIndex);
+                    cellObservableList.add(selectedIndex, cell);
+                });
             } catch (NumberFormatException nfe) {
                 statusText.setText("supply integers only");
             }

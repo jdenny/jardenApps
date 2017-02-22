@@ -4,7 +4,6 @@ import java.util.List;
 
 import jarden.life.Cell;
 import jarden.life.Food;
-import jarden.life.MasterDesigner;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
