@@ -12,11 +12,6 @@ package jarden.life.nucleicacid;
  *    bonds: A - U; C - G
  */
 public interface Nucleotide {
-    /*!!
-    String[] nucleotideNames = {
-            "Adenine", "Cytosine", "Guanine", "Thymine", "Uracil",
-    };
-    */
 	char getCode(); // first letter of name
 	String getName();
 }

@@ -1,15 +1,32 @@
-package jarden.life.nucleicacid;
+package jarden.life.aminoacid;
 
 /**
  * Created by john.denny@gmail.com on 10/02/2017.
  */
 
 public enum AminoAcidEnum {
-    Lysine, Arginine, Histidine, AsparticAcid, GlutamicAcid,
-    Asparagine, Glutamine, Serine, Threonine, Tyrosine,
-    Glycine, Alanine, Valine, Leucine, Isoleucine,
-    Proline, Phenylalanine, Methionine, Tryptophan, Cysteine,
-    Stop;
+    Alanine,       // A, Ala, {GCU, GCC, GCA, GCG}
+    Cysteine,      // C, Cys, {UGU, UGC}
+    AsparticAcid,  // D, Asp, {GAU, GAC}
+    GlutamicAcid,  // E, Glu, {GAA, GAG}
+    Phenylalanine, // F, Phe, {UUU, UUC}
+    Glycine,       // G, Gly, {GGU, GGC, GGA, GGG}
+    Histidine,     // H, His, {CAU, CAC}
+    Isoleucine,    // I, Ile, {AUU, AUC, AUA}
+    Lysine,        // K, Lys, {AAA, AAG}
+    Leucine,       // L, Leu, {UUA, UUG, CUU, CUC, CUA, CUG}
+    Methionine,    // M, Met, {AUG}
+    Asparagine,    // N, Asn, {AAU, AAC}
+    Proline,       // P, Pro, {CCU, CCC, CCA, CCG}
+    Glutamine,     // Q, Gln, {CAA, CAG}
+    Arginine,      // R, Arg, {CGU, CGC, CGA, CGG, AGA, AGG}
+    Serine,        // S, Ser, {UCU, UCC, UCA, UCG, AGU, AGC}
+    Threonine,     // T, Thr, {ACU, ACC, ACA, ACG}
+    Valine,        // V, Val, {GUU, GUC, GUA, GUG}
+    Tryptophan,    // W, Trp, {UGG}
+    Tyrosine,      // Y, Tyr, {UAU, UAC}
+
+    Stop;          //         {UAA, UAG, UGA}
 
     static AminoAcidEnum[] codonTable = {
             Phenylalanine, Phenylalanine, Leucine,       Leucine,	 // UUU, UUC, UUA, UUG

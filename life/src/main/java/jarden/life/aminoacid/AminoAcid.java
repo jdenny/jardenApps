@@ -10,15 +10,6 @@ import jarden.life.nucleicacid.Codon;
  * This means that one of cell and protein is null
  */
 public abstract class AminoAcid {
-    /*!!
-    public static String[] aminoAcidNames = {
-            "AddAminoAcidToProtein",
-            "DigestFood", "DivideCell",
-            "FindNextGene", "GetAminoAcidFromCodon",
-            "GetCodonFromRNA", "GetRNAFromGene"
-    };
-    */
-
     // if amino acid not yet part of a protein, it belongs to the cell
     private Protein protein; // protein this amino acid is part of
 

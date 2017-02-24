@@ -1,29 +1,12 @@
 package jarden.life;
 
-import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
-import static jarden.life.nucleicacid.NucleicAcid.proteinNameDigest;
-import static jarden.life.nucleicacid.NucleicAcid.proteinNameDivide;
-import static jarden.life.nucleicacid.NucleicAcid.proteinNamePolymerase;
-import static jarden.life.nucleicacid.NucleicAcid.proteinNameRibosome;
-import static jarden.life.nucleicacid.NucleicAcid.proteinTypeDigestion;
-import static jarden.life.nucleicacid.NucleicAcid.proteinTypeDivision;
-import static jarden.life.nucleicacid.NucleicAcid.proteinTypeStem;
-import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import jarden.life.aminoacid.*;
-import jarden.life.nucleicacid.Adenine;
-import jarden.life.nucleicacid.Cytosine;
-import jarden.life.nucleicacid.DNA;
-import jarden.life.nucleicacid.Guanine;
-import jarden.life.nucleicacid.Uracil;
-
-public class MasterDesigner implements OnNewCellListener {
+public class MasterDesigner implements CellListener {
 	private static boolean verbose = true;
     private static List<Cell> cellList = new ArrayList<>();
 	
@@ -39,7 +22,7 @@ public class MasterDesigner implements OnNewCellListener {
     public MasterDesigner() {
 
         Cell syntheticCell = Cell.getSyntheticCell();
-        syntheticCell.setOnNewCellListener(this);
+        syntheticCell.setCellListener(this);
         cellList.add(syntheticCell);
 
 		try {
@@ -66,5 +49,16 @@ public class MasterDesigner implements OnNewCellListener {
         System.out.println("test for equality with first cell: " +
                 cell.equals(cellList.get(0)));
         System.out.println("cellList.size=" + cellList.size());
+    }
+
+    @Override
+    public void onCellUpdated(CellData cellData) {
+        System.out.println("MasterDesigner.onCellUpdated: " + cellData);
+    }
+
+    @Override
+    public void onProteinStatusUpdated(int proteinId, String status) {
+        System.out.println("MasterDesigner.onProteinStatusUpdated(" +
+                proteinId + ", " + status + ")");
     }
 }

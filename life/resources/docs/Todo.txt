@@ -6,7 +6,7 @@ then LifeFX tries to iterate through the resources to display them, this
 we need to wait till the cell threads have finished; but...
 what if cell threads are running indefinitely, which they could
   be if there was lots of food?
-how about each time a cell is updated: the facts are passed via a
+how about each time a cell is updated: the facts are passed via
   callbacks to LifeFX:
     onNewCell(cell.id, generation);
     onCellUpdated(cellData); CellData is: cell.id, array of protein.name & ct,

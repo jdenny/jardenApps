@@ -7,13 +7,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import jarden.life.Cell;
+import jarden.life.CellData;
+import jarden.life.CellListener;
 
 
 /**
  * Created by john.denny@gmail.com on 08/02/2017.
  */
 
-public class TestCell {
+public class TestCell implements CellListener {
     private Cell syntheticCell;
 
     @Before
@@ -27,15 +29,29 @@ public class TestCell {
 
     @Test
     public void firstCellShouldEqualSyntheticCell() {
-        Cell.makeFirstCell(daughterCell -> {
-            System.out.println("firstCell==daughterCell:" + syntheticCell.equals(daughterCell));
-            assertEquals(syntheticCell, daughterCell);
-            System.out.println("Assert successful!");
-        });
+        Cell.makeFirstCell(this);
         try {
             Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onNewCell(Cell daughterCell) {
+        System.out.println("firstCell==daughterCell:" + syntheticCell.equals(daughterCell));
+        assertEquals(syntheticCell, daughterCell);
+        System.out.println("Assert successful!");
+
+    }
+
+    @Override
+    public void onCellUpdated(CellData cellData) {
+
+    }
+
+    @Override
+    public void onProteinStatusUpdated(int proteinId, String status) {
+
     }
 }

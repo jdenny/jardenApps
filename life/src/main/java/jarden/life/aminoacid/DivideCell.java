@@ -4,7 +4,7 @@ import java.util.List;
 
 import jarden.life.Cell;
 import jarden.life.MasterDesigner;
-import jarden.life.OnNewCellListener;
+import jarden.life.CellListener;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -82,10 +82,10 @@ public class DivideCell extends AminoAcid {
                         protein.setCell(daughterCell);
                         daughterCell.addProtein(protein); // this should start the thread
                     }
-                    OnNewCellListener onNewCellListener = cell.getOnNewCellListener();
-                    if (onNewCellListener != null) {
-                        daughterCell.setOnNewCellListener(onNewCellListener);
-                        onNewCellListener.onNewCell(daughterCell);
+                    CellListener cellListener = cell.getCellListener();
+                    if (cellListener != null) {
+                        daughterCell.setCellListener(cellListener);
+                        cellListener.onNewCell(daughterCell);
                     }
                     return daughterCell;
                 }
