@@ -9,12 +9,16 @@ import jarden.life.aminoacid.AminoAcidEnum;
 public class CellData {
 
     // Count for each protein type
-    public class ProteinNameCt {
-        String proteinName;
-        int proteinCt; // how many of these proteins contained in cell
+    public static class ProteinNameCount {
+        public String name;
+        public int count; // how many of these proteins contained in cell
+        public ProteinNameCount(String name, int count) {
+            this.name = name;
+            this.count = count;
+        }
     }
     int cellId;
-    ProteinNameCt[] proteinNameCts;
+    public ProteinNameCount[] proteinNameCts;
     public static String[] aminoAcidNames = {
             "AddAminoAcidToProtein",
             "DigestFood", "DivideCell",

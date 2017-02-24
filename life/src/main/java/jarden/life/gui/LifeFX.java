@@ -43,6 +43,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -62,25 +64,16 @@ import static jarden.life.CellData.nucleotideNames;
 public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>,*/
         CellListener {
     private Text statusText;
-    private ListView<Cell/*!!KeyFields*/> cellListView;
-    private ObservableList<Cell/*!!KeyFields*/> cellObservableList;
-    private ListView<String> proteinListView; //!! resourceListView;
-    private ObservableList<String> proteinObservableList; //!! resourceObservableList;
-    /*!!
-    private ChoiceBox<String> resourceTypeChoiceBox;
-    private TextField adenineQtyField;
-    private TextField cytosineQtyField;
-    private TextField guanineQtyField;
-    private TextField thymineQtyField;
-    private TextField uracilQtyField;
-      */
+    private ListView<Cell> cellListView;
+    private ObservableList<Cell> cellObservableList;
+    private ListView<String> proteinListView;
+    private ObservableList<String> proteinObservableList;
     private Text[] aminoAcidQtyTexts;
     private TextField[] aminoAcidQtyFields;
     private Text[] nucleotideQtyTexts;
     private TextField[] nucleotideQtyFields;
-    //!! private TextField aminoAcidSetQtyField;
-    //!! private TextField cellQtyField;
     private List resourceList;
+    private CellData cellData;
 
     // TODO: sliding scale from blue to green?
     private static Color[] generationColours = {
@@ -159,6 +152,7 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         23 ...             ...                <name> <ct> <addCt>
            ...             ...                ...
         27                                                [Feed]
+        28 status
 
         (Fill button inserts quantities for 1 cell)
          */
@@ -168,36 +162,17 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         cellListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) ->
-                        cellSelected());
+                        cellSelected(newValue));
 
-        /*!!
-        resourceTypeChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
-                "Proteins", "AminoAcids", "RNA", "Nucleotides")
-        );
-        resourceTypeChoiceBox.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) ->
-                        resetResourceList());
-        resourceTypeChoiceBox.getSelectionModel().selectFirst();
-        */
-        /*!!resource*/proteinObservableList = FXCollections.observableArrayList();
-        /*!!resource*/proteinListView = new ListView<>(/*!!resource*/proteinObservableList);
-        /*!!resource*/proteinListView.getSelectionModel()
+        proteinObservableList = FXCollections.observableArrayList();
+        proteinListView = new ListView<>(proteinObservableList);
+        proteinListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> showProteinStatus());
 
         statusText = new Text();
         statusText.setFill(Color.FIREBRICK);
 
-        /*!!
-        uracilQtyField = new TextField("" + Cell.uracilFor1Cell);
-        cytosineQtyField = new TextField("" + Cell.cytosineFor1Cell);
-        guanineQtyField = new TextField("" + Cell.guanineFor1Cell);
-        adenineQtyField = new TextField();
-        thymineQtyField = new TextField();
-        aminoAcidSetQtyField = new TextField("1");
-        cellQtyField = new TextField();
-        */
         Button fillButton = new Button("Fill");
         fillButton.setOnAction(event -> {
             for (TextField aminoAcidQtyField: aminoAcidQtyFields) {
@@ -213,70 +188,56 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
-        grid.setVgap(10);
+        grid.setVgap(6);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        /*!!
-        GridPane feederGrid = new GridPane();
-        feederGrid.setAlignment(Pos.CENTER);
-        feederGrid.setHgap(10);
-        feederGrid.setVgap(10);
-        feederGrid.setPadding(new Insets(25, 25, 25, 25));
-        */
-
-        grid.add(new Label("Cells"), 0, 0);
-        grid.add(cellListView, 0, 1);
-
-        grid.add(new Label("Proteins"), 1, 0);
-        grid.add(proteinListView, 1, 1);
-
         int aminoAcidCt = aminoAcidNames.length;
+        int nucleotideCt = nucleotideNames.length;
+        Label cellLabel = new Label("Cells");
+        Font font = cellLabel.getFont();
+        Font labelFont = Font.font(font.getFamily(), FontWeight.EXTRA_BOLD, font.getSize() + 4);
+        cellLabel.setFont(labelFont);
+        grid.add(cellLabel, 0, 0);
+        grid.add(cellListView, 0, 1, 1, aminoAcidCt + nucleotideCt + 1);
+
+        Label proteinLabel = new Label("Proteins");
+        proteinLabel.setFont(labelFont);
+        grid.add(proteinLabel, 1, 0);
+        grid.add(proteinListView, 1, 1, 1, aminoAcidCt + nucleotideCt + 1);
+
+        Label aminoAcidLabel = new Label("Amino Acids");
+        aminoAcidLabel.setFont(labelFont);
+        grid.add(aminoAcidLabel, 2, 0);
+        grid.add(fillButton, 4, 0);
         aminoAcidQtyTexts = new Text[aminoAcidCt];
         aminoAcidQtyFields = new TextField[aminoAcidCt];
         for (int i = 0; i < aminoAcidCt; i++) {
             grid.add(new Label(aminoAcidNames[i]), 2, 1 + i);
-            aminoAcidQtyTexts[i] = new Text();
+            aminoAcidQtyTexts[i] = new Text("0");
             grid.add(aminoAcidQtyTexts[i], 3, 1 + i);
             aminoAcidQtyFields[i] = new TextField();
+            aminoAcidQtyFields[i].setPrefWidth(50);
             grid.add(aminoAcidQtyFields[i], 4, 1 + i);
         }
 
-        int nucleotideCt = nucleotideNames.length; // should be 5
         nucleotideQtyTexts = new Text[nucleotideCt];
         nucleotideQtyFields = new TextField[nucleotideCt];
-        grid.add(new Label("Nucleotides"), 2, 22);
+        Label nucleotideLabel = new Label("Nucleotides");
+        nucleotideLabel.setFont(labelFont);
+        grid.add(nucleotideLabel, 2, aminoAcidCt + 2);
         for (int i = 0; i < nucleotideCt; i++) {
-            grid.add(new Label(nucleotideNames[i]), 2, 23 + i);
-            nucleotideQtyTexts[i] = new Text();
-            grid.add(nucleotideQtyTexts[i], 3, 23 + i);
+            grid.add(new Label(nucleotideNames[i]), 2, aminoAcidCt + 3 + i);
+            nucleotideQtyTexts[i] = new Text("0");
+            grid.add(nucleotideQtyTexts[i], 3, aminoAcidCt + 3 + i);
             nucleotideQtyFields[i] = new TextField();
-            grid.add(nucleotideQtyFields[i], 4, 23 + i);
+            nucleotideQtyFields[i].setPrefWidth(20);
+            grid.add(nucleotideQtyFields[i], 4, aminoAcidCt + 3 + i);
         }
+        grid.add(feedButton, 4, aminoAcidCt + nucleotideCt + 3);
 
-        /*!!
-        grid.add(new Label("Uracil"), 0, 0);
-        grid.add(uracilQtyField, 1, 0);
-        grid.add(new Label("Cytosine"), 0, 1);
-        grid.add(cytosineQtyField, 1, 1);
-        grid.add(new Label("Guanine"), 0, 2);
-        grid.add(guanineQtyField, 1, 2);
-        grid.add(new Label("Adenine"), 0, 3);
-        grid.add(adenineQtyField, 1, 3);
-        grid.add(new Label("Amino Acid Set"), 0, 4);
-        grid.add(aminoAcidSetQtyField, 1, 4);
-        grid.add(new Label("Cells"), 0, 5);
-        grid.add(cellQtyField, 1, 5);
-        grid.add(feedButton, 1, 6);
+        grid.add(statusText, 0, aminoAcidCt + nucleotideCt + 4, 5, 1);
 
-        grid.add(resourceTypeChoiceBox, 1, 0);
-        grid.add(resourceListView, 1, 1);
-
-        grid.add(feederGrid, 2, 0, 1, 2);
-        */
-
-        grid.add(statusText, 0, 28, 5, 1);
-
-        Scene scene = new Scene(grid, 900, 500);
+        Scene scene = new Scene(grid, 800, 700);
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -288,8 +249,20 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         cellObservableList.add(cell /*!!new CellKeyFields(cell.getId(),
                 cell.getGeneration(), cell.getProteinCt())*/);
     }
-    private void cellSelected() {
-        System.out.println("cellSelected() not yet implemented!");
+    private void cellSelected(Cell cell) {
+        /*
+        Note: cellData is static snapshot of data in cell, and so is not being
+        changed in the cell's threads
+         */
+        cellData = cell.getCellData(this);
+        int proteinCt = cellData.proteinNameCts.length;
+        String[] proteinData = new String[proteinCt];
+        for (int i = 0; i < proteinCt; i++) {
+            CellData.ProteinNameCount proteinNameCount = cellData.proteinNameCts[i];
+            proteinData[i] = proteinNameCount.count + " " + proteinNameCount.name;
+        }
+        proteinObservableList.clear();
+        Collections.addAll(proteinObservableList, proteinData);
     }
 
     private void showProteinStatus() {

@@ -2,7 +2,6 @@ package jarden.life;
 
 import jarden.life.aminoacid.AddAminoAcidToProtein;
 import jarden.life.aminoacid.AminoAcid;
-import jarden.life.aminoacid.AminoAcidEnum;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.FindNextGene;
@@ -29,11 +28,11 @@ import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
 import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
 
 public class Cell implements Food {
-    public static int adenineFor1Cell = 11;
-    public static int cytosineFor1Cell = 4;
-    public static int guanineFor1Cell = 1;
-    public static int thymineFor1Cell = 29;
-    public static int uracilFor1Cell = 17;
+    private static int adenineFor1Cell = 11;
+    private static int cytosineFor1Cell = 4;
+    private static int guanineFor1Cell = 1;
+    private static int thymineFor1Cell = 29;
+    private static int uracilFor1Cell = 17;
     public static String[] nucleotidesFor1Cell = {
             String.valueOf(adenineFor1Cell),
             String.valueOf(cytosineFor1Cell),
@@ -41,11 +40,10 @@ public class Cell implements Food {
             String.valueOf(thymineFor1Cell),
             String.valueOf(uracilFor1Cell)
     };
-
     private static Cell syntheticCell;
     private static int currentId = 0;
-    private boolean active = true; // true means run threads on create
 
+    private boolean active = true; // true means run threads on create
     private int id;
     private int generation = 1;
     private DNA dna;
@@ -193,13 +191,12 @@ public class Cell implements Food {
     }
 
     /**
-     * Get UI data for specified cell. If cellListener not null, notify
+     * Get UI data for this cell. If cellListener not null, notify
      * listener when specified cell data is updated.
-     * @param cellId get data for cell with this id
      * @param cellListener notify if changes to data of this cell
      * @return
      */
-    public CellData getCellData(int cellId, CellListener cellListener) {
+    public CellData getCellData(CellListener cellListener) {
         this.cellListener = cellListener;
         CellData cellData = new CellData();
         cellData.cellId = this.id;
@@ -211,13 +208,14 @@ public class Cell implements Food {
             ct = (ct==null)?1:(ct+1);
             proteinNameCountMap.put(name, ct);
         }
-        cellData.proteinNameCts = new CellData.ProteinNameCt[proteinNameCountMap.size()];
+        cellData.proteinNameCts = new CellData.ProteinNameCount[proteinNameCountMap.size()];
         Set<String> keys = proteinNameCountMap.keySet();
         int j = 0;
         for (String key: keys) {
-            cellData.proteinNameCts[j].proteinName = key;
-            cellData.proteinNameCts[j].proteinCt = proteinNameCountMap.get(key);
-        }
+            cellData.proteinNameCts[j] = new CellData.ProteinNameCount(key,
+                    proteinNameCountMap.get(key));
+            ++j;
+        };
         // Amino Acids:
         int aminoAcidNamesLength = CellData.aminoAcidNames.length;
         cellData.aminoAcidCts = new int[aminoAcidNamesLength];
@@ -265,7 +263,6 @@ public class Cell implements Food {
 	}
 	public void addProtein(Protein protein) {
         synchronized (proteinList) {
-            // TODO: could proteinList become
             proteinList.add(protein);
             proteinList.notifyAll();
         }
