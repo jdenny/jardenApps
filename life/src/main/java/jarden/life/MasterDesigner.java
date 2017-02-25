@@ -46,8 +46,8 @@ public class MasterDesigner implements CellListener {
     @Override
     public void onNewCell(Cell cell) {
         cellList.add(cell);
-        System.out.println("test for equality with first cell: " +
-                cell.equals(cellList.get(0)));
+        System.out.println("test if perfect copy of first cell: " +
+                cell.isCopy(cellList.get(0)));
         System.out.println("cellList.size=" + cellList.size());
     }
 

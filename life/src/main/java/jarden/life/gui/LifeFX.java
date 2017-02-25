@@ -61,8 +61,7 @@ import static jarden.life.CellData.nucleotideNames;
  * /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
  */
 
-public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>,*/
-        CellListener {
+public class LifeFX extends Application implements CellListener {
     private Text statusText;
     private ListView<Cell> cellListView;
     private ObservableList<Cell> cellObservableList;
@@ -72,7 +71,6 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
     private TextField[] aminoAcidQtyFields;
     private Text[] nucleotideQtyTexts;
     private TextField[] nucleotideQtyFields;
-    private List resourceList;
     private CellData cellData;
 
     // TODO: sliding scale from blue to green?
@@ -95,13 +93,15 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
     @Override
     public void onCellUpdated(CellData cellData) {
         Platform.runLater(() -> {
-            /*??
             MultipleSelectionModel<Cell> selectionModel =
                     this.cellListView.getSelectionModel();
             int selectedIndex = selectionModel.getSelectedIndex();
-            cellObservableList.remove(selectedIndex);
-            cellObservableList.add(selectedIndex, cell);
-            */
+            Cell cell = selectionModel.getSelectedItem();
+            if (cell != null && cellData.cellId == cell.getId()) {
+                cellObservableList.remove(selectedIndex);
+                cellObservableList.add(selectedIndex, cell);
+                showCellData(cellData);
+            }
 
         });
         System.out.println("LifeFX.onCellUpdated: " + cellData);
@@ -111,9 +111,9 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         System.out.println("LifeFX.onProteinStatusUpdated(" +
                 proteinId + ", " + status + ")");
     }
-    private static class ColorRectCell extends ListCell<Cell/*!!KeyFields*/> {
+    private static class ColorRectCell extends ListCell<Cell> {
         @Override
-        public void updateItem(Cell/*!!KeyFields*/ item, boolean empty) {
+        public void updateItem(Cell item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
                 int generation = item.getGeneration();
@@ -127,42 +127,28 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
             }
         }
     }
-    /*!!
-    static class CellKeyFields {
-        int id;
-        int generation;
-        int proteinCt;
-
-        CellKeyFields(int id, int generation, int proteinCt) {
-            this.id = id;
-            this.generation = generation;
-            this.proteinCt = proteinCt;
-        }
-    }
-    */
     @Override
     public void start(Stage primaryStage) {
         /*
-        0                  1                  2      3    4
-        0  Cells           Proteins           AminoAcids  [Fill]
-        1  <cellListView>  <proteinListView>  <name> <ct> <addCt>
+        0                  1                  2           3      4
+        0  Cells           Proteins           AminoAcids  [Fill] [Clear]
+        1  <cellListView>  <proteinListView>  <name>      <ct>   <addCt>
            ...             ...                ...
 
         22 ...             ...                Nucleotides
-        23 ...             ...                <name> <ct> <addCt>
+        23 ...             ...                <name>      <ct>   <addCt>
            ...             ...                ...
-        27                                                [Feed]
+        27                                                       [Feed]
         28 status
 
         (Fill button inserts quantities for 1 cell)
          */
         cellObservableList = FXCollections.observableArrayList();
         cellListView = new ListView<>(cellObservableList);
-        cellListView.setCellFactory((/*!!ListView<Cell> */l) -> new ColorRectCell());
+        cellListView.setCellFactory( (listView) -> new ColorRectCell());
         cellListView.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) ->
-                        cellSelected(newValue));
+                .addListener((observable, oldValue, newValue) -> cellSelected(oldValue, newValue));
 
         proteinObservableList = FXCollections.observableArrayList();
         proteinListView = new ListView<>(proteinObservableList);
@@ -180,6 +166,15 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
             }
             for (int i = 0; i < nucleotideQtyFields.length; i++) {
                 nucleotideQtyFields[i].setText(nucleotidesFor1Cell[i]);
+            }
+        });
+        Button clearButton = new Button("Clear");
+        clearButton.setOnAction(event -> {
+            for (TextField aminoAcidQtyField: aminoAcidQtyFields) {
+                aminoAcidQtyField.setText("");
+            }
+            for (TextField nucleotideQtyField: nucleotideQtyFields) {
+                nucleotideQtyField.setText("");
             }
         });
         Button feedButton = new Button("Feed");
@@ -208,7 +203,8 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         Label aminoAcidLabel = new Label("Amino Acids");
         aminoAcidLabel.setFont(labelFont);
         grid.add(aminoAcidLabel, 2, 0);
-        grid.add(fillButton, 4, 0);
+        grid.add(fillButton, 3, 0);
+        grid.add(clearButton, 4, 0);
         aminoAcidQtyTexts = new Text[aminoAcidCt];
         aminoAcidQtyFields = new TextField[aminoAcidCt];
         for (int i = 0; i < aminoAcidCt; i++) {
@@ -237,7 +233,7 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
 
         grid.add(statusText, 0, aminoAcidCt + nucleotideCt + 4, 5, 1);
 
-        Scene scene = new Scene(grid, 800, 700);
+        Scene scene = new Scene(grid, 850, 700);
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -246,15 +242,33 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         addCell(syntheticCell);
     }
     private void addCell(Cell cell) {
-        cellObservableList.add(cell /*!!new CellKeyFields(cell.getId(),
-                cell.getGeneration(), cell.getProteinCt())*/);
+        cellObservableList.add(cell);
     }
-    private void cellSelected(Cell cell) {
+    private void cellSelected(Cell oldValue, Cell cell) {
+        System.out.println("cellSelected(" + cell + ")");
         /*
         Note: cellData is static snapshot of data in cell, and so is not being
         changed in the cell's threads
          */
+        /*
+        TODO: we always want to be informed of new cells, but
+        do we want to monitor changes to every cell?
+        If so, we need to ensure we only act on changes for currently
+        selected row; if not we need two separate interfaces for
+        OnNewCellListener & OnChangedCellListener
+        if (oldValue != null) {
+            oldValue.setCellListener(null); // stop listening for changes
+        }
+        This is my proposal: monitor changes on every cell; if currently
+        selected cell changes, then change all relevant fields on UI; if
+        not currently selected, just change the size of the cell in cellListView
+        this means that we don't need to keep passing the listener to
+        getCellData().
+         */
         cellData = cell.getCellData(this);
+        showCellData(cellData);
+    }
+    private void showCellData(CellData cellData) {
         int proteinCt = cellData.proteinNameCts.length;
         String[] proteinData = new String[proteinCt];
         for (int i = 0; i < proteinCt; i++) {
@@ -263,142 +277,28 @@ public class LifeFX extends Application implements /*!!EventHandler<ActionEvent>
         }
         proteinObservableList.clear();
         Collections.addAll(proteinObservableList, proteinData);
+
+        int aminoAcidCt = cellData.aminoAcidCts.length;
+        for (int i = 0; i < aminoAcidCt; i++) {
+            aminoAcidQtyTexts[i].setText(String.valueOf(cellData.aminoAcidCts[i]));
+        }
+
+        int nucleotideCt = cellData.nucleotideCts.length;
+        for (int i = 0; i < nucleotideCt; i++) {
+            nucleotideQtyTexts[i].setText(String.valueOf(cellData.nucleotideCts[i]));
+        }
     }
 
     private void showProteinStatus() {
+        System.out.println("not yet implemented!");
+        /*?? TODO: fix this
         int proteinIndex = this.proteinListView.getSelectionModel().getSelectedIndex();
         if (proteinIndex >= 0) {
-            Protein protein = (Protein) resourceList.get(proteinIndex);
+            Protein protein = (Protein) proteinObservableList.get(proteinIndex);
             statusText.setText("status of protein: " + protein.getStatus());
         }
+        */
     }
-    /*!!
-    private void resetResourceList() {
-        CellKeyFields cellKF = this.cellListView.getSelectionModel().getSelectedItem();
-        String resourceType = this.resourceTypeChoiceBox.getValue();
-        String[] resourceNames;
-        // TODO: could all resources (Protein, RNA, DNA, AminoAcid, NucleicAcid)
-        // implement Resource?
-        if (cell != null && resourceType != null) {
-            if (resourceType.equals("Proteins")) {
-                resourceList = cell.getProteinList();
-            } else if (resourceType.equals("AminoAcids")) {
-                resourceList = cell.getAminoAcidList();
-            } else if (resourceType.equals("RNA")) {
-                resourceList = cell.getRNAList();
-            } else if (resourceType.equals("Nucleotides")) {
-                resourceList = cell.getNucleotideList();
-            } else {
-                throw new IllegalStateException(
-                        "unrecognised resourceType: " + resourceType);
-            }
-            HashMap<String, Integer> nameCountMap = new HashMap<>();
-            for (Object resource: resourceList) {
-                String name = resource.toString();
-                Integer ct = nameCountMap.get(name);
-                ct = (ct==null)?1:(ct+1);
-                nameCountMap.put(name, ct);
-            }
-            resourceNames = new String[nameCountMap.size()];
-            Set<String> keys = nameCountMap.keySet();
-            int i = 0;
-            for (String key: keys) {
-                resourceNames[i++] = nameCountMap.get(key) + " " + key;
-            }
-            resourceObservableList.clear();
-            Collections.addAll(resourceObservableList, resourceNames);
-        }
-    }
-    @Override
-    public void handle(ActionEvent event) {
-        String message = uracilQtyField.getText() + " of Uracil, " +
-                adenineQtyField.getText() + " of Adenine, " +
-                guanineQtyField.getText() + " of Guanine, " +
-                cytosineQtyField.getText() + " of Cytosine, ";
-        statusText.setText(message);
-        CellKeyFields cell = this.cellListView.getSelectionModel().getSelectedItem();
-        if (cell == null) {
-            statusText.setText("select cell first");
-        } else {
-            List<Nucleotide> nucleotides = new ArrayList<>();
-            try {
-                String uracilQtyStr = uracilQtyField.getText().trim();
-                if (uracilQtyStr.length() > 0) {
-                    int uracilQty = Integer.parseInt(uracilQtyStr);
-                    for (int i = 0; i < uracilQty; i++) {
-                        nucleotides.add(new Uracil());
-                    }
-                }
-                String adenineQtyStr = adenineQtyField.getText().trim();
-                if (adenineQtyStr.length() > 0) {
-                    int adenineQty = Integer.parseInt(adenineQtyStr);
-                    for (int i = 0; i < adenineQty; i++) {
-                        nucleotides.add(new Adenine());
-                    }
-                }
-                String guanineQtyStr = guanineQtyField.getText().trim();
-                if (guanineQtyStr.length() > 0) {
-                    int guanineQty = Integer.parseInt(guanineQtyStr);
-                    for (int i = 0; i < guanineQty; i++) {
-                        nucleotides.add(new Guanine());
-                    }
-                }
-                String cytosineQtyStr = cytosineQtyField.getText().trim();
-                if (cytosineQtyStr.length() > 0) {
-                    int cytosineQty = Integer.parseInt(cytosineQtyStr);
-                    for (int i = 0; i < cytosineQty; i++) {
-                        nucleotides.add(new Cytosine());
-                    }
-                }
-                if (nucleotides.size() > 0) {
-                    cell.addNucleotides(nucleotides);
-                }
-                // now for amino acids:
-                List<AminoAcid> aminoAcids = new ArrayList<>();
-                String aminoAcidSetQtyStr =
-                        aminoAcidSetQtyField.getText().trim();
-                if (aminoAcidSetQtyStr.length() > 0) {
-                    int aminoAcidSetQty = Integer.parseInt(aminoAcidSetQtyStr);
-                    for (int i = 0; i < aminoAcidSetQty; i++) {
-                        aminoAcids.add(new AddAminoAcidToProtein());
-                        aminoAcids.add(new DigestFood());
-                        aminoAcids.add(new DivideCell());
-                        aminoAcids.add(new FindNextGene());
-                        aminoAcids.add(new GetAminoAcidFromCodon());
-                        aminoAcids.add(new GetCodonFromRNA());
-                        aminoAcids.add(new GetRNAFromGene());
-                    }
-                    cell.addAminoAcids(aminoAcids);
-                }
-                // now for the main course: cells
-                String cellQtyStr = cellQtyField.getText().trim();
-                List<Food> foodList = new ArrayList<>();
-                if (cellQtyStr.length() > 0) {
-                    int cellQty = Integer.parseInt(cellQtyStr);
-                    for (int i = 0; i < cellQty; i++) {
-                        // active=false, so cell doesn't use all its resources creating another cell
-                        foodList.add(Cell.makeSyntheticCell(false));
-                    }
-                    cell.addFood(foodList);
-                }
-                statusText.setText("added to cell " + cell + ": " +
-                        nucleotides.size() + " nucleotides; " +
-                        aminoAcids.size() + " aminoAcids; " +
-                        foodList.size() + " cells" );
-                Platform.runLater(() -> {
-                    resetResourceList();
-                    MultipleSelectionModel<Cell> selectionModel =
-                            this.cellListView.getSelectionModel();
-                    int selectedIndex = selectionModel.getSelectedIndex();
-                    cellObservableList.remove(selectedIndex);
-                    cellObservableList.add(selectedIndex, cell);
-                });
-            } catch (NumberFormatException nfe) {
-                statusText.setText("supply integers only");
-            }
-        }
-    }
-    */
     private void feedCell() {
         StringBuilder messageBuilder = new StringBuilder();
         Cell cell = this.cellListView.getSelectionModel().getSelectedItem();

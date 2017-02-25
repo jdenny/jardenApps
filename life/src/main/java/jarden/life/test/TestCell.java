@@ -39,8 +39,10 @@ public class TestCell implements CellListener {
 
     @Override
     public void onNewCell(Cell daughterCell) {
-        System.out.println("firstCell==daughterCell:" + syntheticCell.equals(daughterCell));
-        assertEquals(syntheticCell, daughterCell);
+        System.out.println("firstCell.isCopy(daughterCell):" +
+                syntheticCell.isCopy(daughterCell));
+        assertTrue(daughterCell.isCopy(syntheticCell));
+        assertTrue(syntheticCell.isCopy(daughterCell));
         System.out.println("Assert successful!");
 
     }

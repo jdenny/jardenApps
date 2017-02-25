@@ -17,7 +17,7 @@ public class CellData {
             this.count = count;
         }
     }
-    int cellId;
+    public int cellId;
     public ProteinNameCount[] proteinNameCts;
     public static String[] aminoAcidNames = {
             "AddAminoAcidToProtein",
@@ -30,7 +30,7 @@ public class CellData {
     How many of each aminoAcid in cell; array in same order
     as aminoAcidNames;
       */
-    int[] aminoAcidCts;
+    public int[] aminoAcidCts;
     public static String[] nucleotideNames = {
             "Adenine", "Cytosine", "Guanine", "Thymine", "Uracil",
     };
@@ -38,5 +38,5 @@ public class CellData {
     how many of each nucleotide in cell; order of array
     is same as nucleotideNames above
       */
-    int[] nucleotideCts;
+    public int[] nucleotideCts;
 }

@@ -198,15 +198,20 @@ public class Cell implements Food {
      */
     public CellData getCellData(CellListener cellListener) {
         this.cellListener = cellListener;
+        return getCellData();
+    }
+    private CellData getCellData() {
         CellData cellData = new CellData();
         cellData.cellId = this.id;
         // Proteins:
         HashMap<String, Integer> proteinNameCountMap = new HashMap<>();
-        for (Protein protein: proteinList) {
-            String name = protein.toString();
-            Integer ct = proteinNameCountMap.get(name);
-            ct = (ct==null)?1:(ct+1);
-            proteinNameCountMap.put(name, ct);
+        synchronized (proteinList) {
+            for (Protein protein : proteinList) {
+                String name = protein.toString();
+                Integer ct = proteinNameCountMap.get(name);
+                ct = (ct == null) ? 1 : (ct + 1);
+                proteinNameCountMap.put(name, ct);
+            }
         }
         cellData.proteinNameCts = new CellData.ProteinNameCount[proteinNameCountMap.size()];
         Set<String> keys = proteinNameCountMap.keySet();
@@ -219,28 +224,36 @@ public class Cell implements Food {
         // Amino Acids:
         int aminoAcidNamesLength = CellData.aminoAcidNames.length;
         cellData.aminoAcidCts = new int[aminoAcidNamesLength];
-        for (AminoAcid aminoAcid: aminoAcidList) {
-            String aminoAcidName = aminoAcid.getName();
-            for (int i = 0; i < aminoAcidNamesLength; i++) {
-                if (aminoAcidName.equals(CellData.aminoAcidNames[i])) {
-                    ++cellData.aminoAcidCts[i];
-                    break;
+        synchronized (aminoAcidList) {
+            for (AminoAcid aminoAcid : aminoAcidList) {
+                String aminoAcidName = aminoAcid.getName();
+                for (int i = 0; i < aminoAcidNamesLength; i++) {
+                    if (aminoAcidName.equals(CellData.aminoAcidNames[i])) {
+                        ++cellData.aminoAcidCts[i];
+                        break;
+                    }
                 }
             }
         }
         // Nucleotides:
         cellData.nucleotideCts = new int[nucleotideNames.length];
-        for (Nucleotide nucleotide: nucleotideList) {
-            if (nucleotide instanceof Adenine) ++cellData.nucleotideCts[0];
-            else if (nucleotide instanceof Cytosine) ++cellData.nucleotideCts[1];
-            else if (nucleotide instanceof Guanine) ++cellData.nucleotideCts[2];
-            else if (nucleotide instanceof Thymine) ++cellData.nucleotideCts[3];
-            else if (nucleotide instanceof Uracil) ++cellData.nucleotideCts[4];
-            else throw new IllegalStateException("unknown nucleotide: " + nucleotide);
+        synchronized (nucleotideList) {
+            for (Nucleotide nucleotide : nucleotideList) {
+                if (nucleotide instanceof Adenine) ++cellData.nucleotideCts[0];
+                else if (nucleotide instanceof Cytosine) ++cellData.nucleotideCts[1];
+                else if (nucleotide instanceof Guanine) ++cellData.nucleotideCts[2];
+                else if (nucleotide instanceof Thymine) ++cellData.nucleotideCts[3];
+                else if (nucleotide instanceof Uracil) ++cellData.nucleotideCts[4];
+                else throw new IllegalStateException("unknown nucleotide: " + nucleotide);
+            }
         }
         return cellData;
     }
-
+    private void cellChanged() {
+        if (cellListener != null) {
+            cellListener.onCellUpdated(getCellData());
+        }
+    }
     @Override
     public List<Protein> getProteinList() {
         return proteinList;
@@ -268,6 +281,7 @@ public class Cell implements Food {
         }
         MasterDesigner.print(toString() + "; proteinCt=" + proteinList.size());
         if (this.active) protein.start();
+        cellChanged();
 	}
 	public void addAminoAcids(List<AminoAcid> aminoAcids) {
 		synchronized (aminoAcidList) {
@@ -363,12 +377,16 @@ public class Cell implements Food {
             }
         }
     }
+    /*
+    Not thread-safe, so only call from synchronized method
+     */
 	private RNA getRNA() {
 		int size = rnaList.size();
 		if (size == 0) return null;
 		RNA rna = rnaList.remove(0);
 		return rna;
 	}
+    // not thread-safe, so only call from synchronized method
 	public void printNucleotides() {
 		System.out.print("Cell's nucleotides:");
 		for (Nucleotide nucleotide: nucleotideList) {
@@ -376,12 +394,16 @@ public class Cell implements Food {
 		}
         System.out.println();
     }
+    // not thread-safe, so only call from synchronized method
 	public void printRNA() {
 		System.out.println("Cell's rna:");
 		for (RNA rna: rnaList) {
 			System.out.println("   " + rna);
 		}
 	}
+    /*
+    Not thread-safe, so only call from synchronized method
+     */
 	public void printProteins() {
 		System.out.println("Cells proteins:");
 		for (Protein protein: proteinList) {
@@ -406,7 +428,7 @@ public class Cell implements Food {
 			}
 		}
 	}
-    public void printCell() {
+    public synchronized void printCell() {
         this.printNucleotides();
         this.printRNA();
         this.printProteins();
@@ -414,19 +436,21 @@ public class Cell implements Food {
     }
 	/*
 	 * Find aminoAcid with specified name; if found, remove from list.
+	 * Not thread-safe, so only call from synchronized method
 	 */
 	private AminoAcid getAminoAcidByCodon(Codon codon) {
-		for (AminoAcid aminoAcid: aminoAcidList) {
-			if (aminoAcid.matchCodon(codon)) {
-				aminoAcidList.remove(aminoAcid);
-				return aminoAcid;
-			}
-		}
+        for (AminoAcid aminoAcid : aminoAcidList) {
+            if (aminoAcid.matchCodon(codon)) {
+                aminoAcidList.remove(aminoAcid);
+                return aminoAcid;
+            }
+        }
 		System.out.println("no amino acid found for " + codon);
 		return null;
 	}
 	/*
 	 * Find nucleotide with specified name; if found, remove from list.
+	 * Not thread-safe, so only call from synchronized method
 	 */
 	private Nucleotide getNucleotideByName(String name) {
 		for (int i = nucleotideList.size() - 1; i >= 0; i--) {
@@ -468,6 +492,17 @@ public class Cell implements Food {
     }
     @Override
     public boolean equals(Object any) {
+        if (any instanceof Cell) {
+            return id == ((Cell) any).id;
+        } else return false;
+    }
+
+    /**
+     * Is 'any' a perfect copy of 'this'.
+     * @param any other object
+     * @return true if 'any' has the same dna and proteins as 'this'
+     */
+    public boolean isCopy(Object any) {
         if (any instanceof Cell) {
             Cell that = (Cell) any;
             if (!that.dna.dnaToString().equals(this.dna.dnaToString())) return false;
