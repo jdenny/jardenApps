@@ -27,12 +27,10 @@ public class Protein implements Runnable, Resource {
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
         if (firstAminoAcid.activateOnCreate()) {
             this.thread = new Thread(this);
-            MasterDesigner.print(cell + "; " + thread.getName() +
-                    " starting thread for protein " + this);
+            Cell.log("starting thread for protein " + this);
             thread.start();
         } else {
-            MasterDesigner.print(cell + "; " +
-                    " not starting thread for protein " + this);
+            Cell.log("not starting thread for protein " + this);
         }
     }
     public void stop() {

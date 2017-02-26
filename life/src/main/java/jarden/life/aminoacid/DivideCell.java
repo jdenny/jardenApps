@@ -61,26 +61,26 @@ public class DivideCell extends AminoAcid {
                     for (int i = geneSize; i < newProteinCount; i++) {
                         Protein protein = proteinList.remove(geneSize);
                         Thread proteinThread = protein.getThread();
-                        if (proteinThread != null) {
+                        if (proteinThread != null && proteinThread.isAlive()) {
                             protein.stop();
-                            MasterDesigner.print(Thread.currentThread().getName() +
-                                    " divideCell requested stop to protein " + protein);
+                            Cell.log("divideCell requested stop to protein " + protein);
                             try {
-                                proteinThread.join();
-                                MasterDesigner.print(Thread.currentThread().getName() +
-                                        " divideCell protein stopped: " + protein);
+                                proteinThread.join(300);
+                                if (proteinThread.isAlive()) {
+                                    Cell.log(proteinThread + " didn't die; moving it anyway");
+                                } else {
+                                    Cell.log("divideCell protein stopped: " + protein);
+                                }
                             } catch (InterruptedException e) {
-                                MasterDesigner.print(Thread.currentThread().getName() +
-                                    " divideCell interrupted while waiting for protein to stop ");
+                                Cell.log("divideCell interrupted while waiting for protein to stop ");
                                 Thread.currentThread().interrupt();
                                 return null;
                             }
                         } else {
-                            MasterDesigner.print(Thread.currentThread().getName() +
-                                    " divideCell detected no thread for protein " + protein);
+                            Cell.log("divideCell detected no thread for protein " + protein);
                         }
                         protein.setCell(daughterCell);
-                        daughterCell.addProtein(protein); // this should start the thread
+                        daughterCell.addProtein(protein);
                     }
                     CellListener cellListener = cell.getCellListener();
                     if (cellListener != null) {
@@ -89,16 +89,14 @@ public class DivideCell extends AminoAcid {
                     }
                     return daughterCell;
                 }
-                String state = Thread.currentThread().getName() +
-                        " cell divide waiting for " +
+                String state = "DivideCell waiting for " +
                         ((geneSize * 2) - proteinSize) +
                         " more proteins";
-                MasterDesigner.print(state);
+                Cell.log(state);
                 getProtein().setState(state);
                 try { proteinList.wait(); }
                 catch(InterruptedException e) {
-                    MasterDesigner.print(Thread.currentThread().getName() +
-                            " interrupted while waiting for proteins");
+                    Cell.log("interrupted while waiting for proteins");
                     Thread.currentThread().interrupt();
                     return null;
                 }

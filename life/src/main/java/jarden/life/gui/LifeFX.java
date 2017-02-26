@@ -2,35 +2,18 @@ package jarden.life.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import jarden.life.Cell;
 import jarden.life.CellData;
 import jarden.life.CellFood;
-import jarden.life.Food;
 import jarden.life.CellListener;
-import jarden.life.Protein;
-import jarden.life.aminoacid.AddAminoAcidToProtein;
 import jarden.life.aminoacid.AminoAcid;
-import jarden.life.aminoacid.DigestFood;
-import jarden.life.aminoacid.DivideCell;
-import jarden.life.aminoacid.FindNextGene;
-import jarden.life.aminoacid.GetAminoAcidFromCodon;
-import jarden.life.aminoacid.GetCodonFromRNA;
-import jarden.life.aminoacid.GetRNAFromGene;
-import jarden.life.nucleicacid.Adenine;
-import jarden.life.nucleicacid.Cytosine;
-import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Nucleotide;
-import jarden.life.nucleicacid.Uracil;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -91,15 +74,16 @@ public class LifeFX extends Application implements CellListener {
         Platform.runLater(() -> addCell(cell));
     }
     @Override
-    public void onCellUpdated(CellData cellData) {
+    public void onCellUpdated(int cellId) {
         Platform.runLater(() -> {
             MultipleSelectionModel<Cell> selectionModel =
                     this.cellListView.getSelectionModel();
             int selectedIndex = selectionModel.getSelectedIndex();
             Cell cell = selectionModel.getSelectedItem();
-            if (cell != null && cellData.cellId == cell.getId()) {
+            if (cell != null && cellId == cell.getId()) {
                 cellObservableList.remove(selectedIndex);
                 cellObservableList.add(selectedIndex, cell);
+                cellData = cell.getCellData();
                 showCellData(cellData);
             }
 
@@ -265,7 +249,7 @@ public class LifeFX extends Application implements CellListener {
         this means that we don't need to keep passing the listener to
         getCellData().
          */
-        cellData = cell.getCellData(this);
+        cellData = cell.getCellData();
         showCellData(cellData);
     }
     private void showCellData(CellData cellData) {

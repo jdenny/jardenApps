@@ -6,6 +6,6 @@ package jarden.life;
 
 public interface CellListener {
     void onNewCell(Cell cell);
-    void onCellUpdated(CellData cellData);
+    void onCellUpdated(int cellId);
     void onProteinStatusUpdated(int proteinId, String status);
 }

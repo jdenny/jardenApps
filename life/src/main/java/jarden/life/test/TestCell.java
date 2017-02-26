@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import jarden.life.Cell;
-import jarden.life.CellData;
 import jarden.life.CellListener;
 
 
@@ -48,7 +47,7 @@ public class TestCell implements CellListener {
     }
 
     @Override
-    public void onCellUpdated(CellData cellData) {
+    public void onCellUpdated(int cellId) {
 
     }
 

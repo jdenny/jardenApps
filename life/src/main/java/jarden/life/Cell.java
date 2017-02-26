@@ -28,6 +28,7 @@ import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
 import static jarden.life.nucleicacid.NucleicAcid.terminatorCode;
 
 public class Cell implements Food {
+    private static boolean verbose = true;
     private static int adenineFor1Cell = 11;
     private static int cytosineFor1Cell = 4;
     private static int guanineFor1Cell = 1;
@@ -100,6 +101,11 @@ public class Cell implements Food {
         -  divideCell     ->  15
 
      */
+    public static void log(String s) {
+        if (verbose) {
+            System.out.println(Thread.currentThread().getName() + " " + s);
+        }
+    }
     public int getGeneSize() {
         // TODO: calculate this based on dnaStr:
         return 4;
@@ -191,16 +197,10 @@ public class Cell implements Food {
     }
 
     /**
-     * Get UI data for this cell. If cellListener not null, notify
-     * listener when specified cell data is updated.
-     * @param cellListener notify if changes to data of this cell
-     * @return
+     * Get UI data for this cell.
+     * @return UI data for this cell.
      */
-    public CellData getCellData(CellListener cellListener) {
-        this.cellListener = cellListener;
-        return getCellData();
-    }
-    private CellData getCellData() {
+    public CellData getCellData() {
         CellData cellData = new CellData();
         cellData.cellId = this.id;
         // Proteins:
@@ -251,7 +251,7 @@ public class Cell implements Food {
     }
     private void cellChanged() {
         if (cellListener != null) {
-            cellListener.onCellUpdated(getCellData());
+            cellListener.onCellUpdated(id);
         }
     }
     @Override
@@ -279,8 +279,11 @@ public class Cell implements Food {
             proteinList.add(protein);
             proteinList.notifyAll();
         }
-        MasterDesigner.print(toString() + "; proteinCt=" + proteinList.size());
-        if (this.active) protein.start();
+        log(toString() + "; proteinCt=" + proteinList.size());
+        Thread proteinThread = protein.getThread();
+        if (this.active && (proteinThread == null || !proteinThread.isAlive())) {
+            protein.start();
+        }
         cellChanged();
 	}
 	public void addAminoAcids(List<AminoAcid> aminoAcids) {
@@ -312,12 +315,10 @@ public class Cell implements Food {
             while (true) {
                 Nucleotide nucleotide = getNucleotideByName(name);
 				if (nucleotide != null) return nucleotide;
-				MasterDesigner.print(Thread.currentThread().getName() +
-						" waiting for nucleotide " + name);
+				log("waiting for nucleotide " + name);
 				try { nucleotideList.wait(); }
 				catch(InterruptedException e) {
-                    MasterDesigner.print(Thread.currentThread().getName() +
-                            " interrupted while waiting for nucleotide " + name);
+                    log("interrupted while waiting for nucleotide " + name);
                     Thread.currentThread().interrupt();
                     return null;
                 }
@@ -329,12 +330,10 @@ public class Cell implements Food {
             while (true) {
 				RNA rna = getRNA();
 				if (rna != null) return rna;
-				MasterDesigner.print(Thread.currentThread().getName() +
-						" waiting for some RNA");
+				log("waiting for some RNA");
 				try { rnaList.wait(); }
                 catch(InterruptedException e) {
-                    MasterDesigner.print(Thread.currentThread().getName() +
-                            " interrupted while waiting for some RNA");
+                    log("interrupted while waiting for some RNA");
                     Thread.currentThread().interrupt();
                     return null;
                 }
@@ -346,12 +345,10 @@ public class Cell implements Food {
             while (true) {
                 AminoAcid aminoAcid = getAminoAcidByCodon(codon);
 				if (aminoAcid != null) return aminoAcid;
-				MasterDesigner.print(Thread.currentThread().getName() +
-						" waiting for amino acid for codon " + codon);
+				log("waiting for amino acid for codon " + codon);
 				try { aminoAcidList.wait(); }
 				catch(InterruptedException e) {
-                    MasterDesigner.print(Thread.currentThread().getName() +
-                        " interrupted while waiting for amino acid for codon " +
+                    log("interrupted while waiting for amino acid for codon " +
                             codon);
                     Thread.currentThread().interrupt();
                     return null;
@@ -365,12 +362,10 @@ public class Cell implements Food {
                 if (foodList.size() > 0) {
                     return foodList.remove(0);
                 }
-                MasterDesigner.print(Thread.currentThread().getName() +
-                        " waiting for food ");
+                log("waiting for food ");
                 try { foodList.wait(); }
                 catch(InterruptedException e) {
-                    MasterDesigner.print(Thread.currentThread().getName() +
-                            " interrupted while waiting for food");
+                    log("interrupted while waiting for food");
                     Thread.currentThread().interrupt();
                     return null;
                 }
@@ -460,7 +455,7 @@ public class Cell implements Food {
 				return nucleotide;
 			}
 		}
-		MasterDesigner.print("no nucleotide found for " + name);
+		log("no nucleotide found for " + name);
 		return null;
 	}
 
@@ -488,7 +483,7 @@ public class Cell implements Food {
     }
     @Override
     public String toString() {
-        return "cell.id=" + id + "; generation=" + generation;
+        return "cell" + id + "; gen" + generation;
     }
     @Override
     public boolean equals(Object any) {

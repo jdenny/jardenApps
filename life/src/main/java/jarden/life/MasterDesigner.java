@@ -7,14 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MasterDesigner implements CellListener {
-	private static boolean verbose = true;
     private static List<Cell> cellList = new ArrayList<>();
-	
-	public static void print(String s) {
-		if (verbose) {
-			System.out.println(s);
-		}
-	}
 	
 	public static void main(String[] args) {
         new MasterDesigner();
@@ -29,14 +22,13 @@ public class MasterDesigner implements CellListener {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			char c;
 			while (true) {
-				System.out.println("p(rint) or q(uit) or v(erbose): ");
+				System.out.println("p(rint) or q(uit): ");
 				c = reader.readLine().charAt(0);
 				if (c == 'p') {
                     for (Cell cell: cellList) cell.printCell();
                     System.out.println("cellList.size=" + cellList.size());
                 }
 				else if (c == 'q') System.exit(0);
-				else if (c == 'v') verbose = !verbose;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -52,8 +44,8 @@ public class MasterDesigner implements CellListener {
     }
 
     @Override
-    public void onCellUpdated(CellData cellData) {
-        System.out.println("MasterDesigner.onCellUpdated: " + cellData);
+    public void onCellUpdated(int cellId) {
+        System.out.println("MasterDesigner.onCellUpdated: " + cellId);
     }
 
     @Override

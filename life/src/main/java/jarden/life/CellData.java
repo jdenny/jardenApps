@@ -39,4 +39,8 @@ public class CellData {
     is same as nucleotideNames above
       */
     public int[] nucleotideCts;
+
+    public String toString() {
+        return "cellData; id=" + cellId;
+    }
 }
