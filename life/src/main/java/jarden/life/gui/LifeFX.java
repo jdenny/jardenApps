@@ -75,6 +75,7 @@ public class LifeFX extends Application implements CellListener {
     }
     @Override
     public void onCellUpdated(int cellId) {
+        System.out.println("LifeFX.onCellUpdated(" + cellId + ")");
         Platform.runLater(() -> {
             MultipleSelectionModel<Cell> selectionModel =
                     this.cellListView.getSelectionModel();
@@ -88,7 +89,6 @@ public class LifeFX extends Application implements CellListener {
             }
 
         });
-        System.out.println("LifeFX.onCellUpdated: " + cellData);
     }
     @Override
     public void onProteinStatusUpdated(int proteinId, String status) {

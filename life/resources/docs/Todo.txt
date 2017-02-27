@@ -1,3 +1,13 @@
+Next Steps
+	use concurrency classes more!
+	use protein to copy DNA
+	sliding scale of delays, so we can watch what is happening
+	common pool of food that all cells can feed off
+	optionally make colours sliding scale
+	http://stackoverflow.com/questions/340209/generate-colors-between-red-and-green-for-a-power-meter
+	now for the 20 amino acids!
+
+
 java.util.ConcurrentModificationException - why this is happening
 
 LifeFX feed button awakens cell threads to update resources

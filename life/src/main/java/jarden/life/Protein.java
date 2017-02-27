@@ -34,6 +34,7 @@ public class Protein implements Runnable, Resource {
         }
     }
     public void stop() {
+        Cell.log("Protein.stop(); thread=" + thread + " state=" + thread.getState());
         thread.interrupt();
     }
 

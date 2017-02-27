@@ -24,7 +24,7 @@ import jarden.life.nucleicacid.Uracil;
 
 public class DigestFood extends AminoAcid {
     public Object action(Object object) {
-        Food food = getCell().waitForFood(null);
+        Food food = getCell().waitForFood();
         if (Thread.interrupted()) {
             Thread.currentThread().interrupt();
             return null;

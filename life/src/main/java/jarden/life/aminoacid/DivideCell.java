@@ -1,9 +1,9 @@
 package jarden.life.aminoacid;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
-import jarden.life.MasterDesigner;
 import jarden.life.CellListener;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
@@ -44,8 +44,10 @@ public class DivideCell extends AminoAcid {
     public Object action(Object object) {
         Cell cell = getCell();
         List<Protein> proteinList = cell.getProteinList();
+        Lock proteinListLock = cell.getProteinListLock();
         int geneSize = cell.getGeneSize();
-        synchronized (proteinList) {
+        try {
+            proteinListLock.lockInterruptibly();
             while (true) {
                 int proteinSize = proteinList.size();
                 if (proteinSize >= (geneSize * 2)) {
@@ -67,7 +69,8 @@ public class DivideCell extends AminoAcid {
                             try {
                                 proteinThread.join(300);
                                 if (proteinThread.isAlive()) {
-                                    Cell.log(proteinThread + " didn't die; moving it anyway");
+                                    Cell.log(proteinThread + " didn't die; state=" +
+                                            proteinThread.getState() + "; moving it anyway");
                                 } else {
                                     Cell.log("divideCell protein stopped: " + protein);
                                 }
@@ -94,14 +97,16 @@ public class DivideCell extends AminoAcid {
                         " more proteins";
                 Cell.log(state);
                 getProtein().setState(state);
-                try { proteinList.wait(); }
-                catch(InterruptedException e) {
-                    Cell.log("interrupted while waiting for proteins");
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
+                cell.getCellReadyToDivide().await();
             }
+        } catch (InterruptedException e) {
+            Cell.log("interrupted while waiting for proteins");
+            Thread.currentThread().interrupt();
+            return null;
+        } finally {
+            proteinListLock.unlock();
         }
+
     }
     public String getName() {
         return "DivideCell";

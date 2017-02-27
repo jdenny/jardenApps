@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static jarden.life.CellData.nucleotideNames;
 import static jarden.life.nucleicacid.NucleicAcid.promoterCode;
@@ -43,6 +46,17 @@ public class Cell implements Food {
     };
     private static Cell syntheticCell;
     private static int currentId = 0;
+
+    final private Lock proteinListLock = new ReentrantLock();
+    final private Condition cellReadyToDivide = proteinListLock.newCondition();
+    final private Lock aminoAcidListLock = new ReentrantLock();
+    final private Condition aminoAcidAvailable = aminoAcidListLock.newCondition();
+    final private Lock foodListLock = new ReentrantLock();
+    final private Condition foodAvailable = foodListLock.newCondition();
+    final private Lock nucleotideListLock = new ReentrantLock();
+    final private Condition nucleotideAvailable = nucleotideListLock.newCondition();
+    final private Lock rnaListLock = new ReentrantLock();
+    final private Condition rnaAvailable = rnaListLock.newCondition();
 
     private boolean active = true; // true means run threads on create
     private int id;
@@ -205,13 +219,16 @@ public class Cell implements Food {
         cellData.cellId = this.id;
         // Proteins:
         HashMap<String, Integer> proteinNameCountMap = new HashMap<>();
-        synchronized (proteinList) {
+        try {
+            proteinListLock.lock();
             for (Protein protein : proteinList) {
                 String name = protein.toString();
                 Integer ct = proteinNameCountMap.get(name);
                 ct = (ct == null) ? 1 : (ct + 1);
                 proteinNameCountMap.put(name, ct);
             }
+        } finally {
+            proteinListLock.unlock();
         }
         cellData.proteinNameCts = new CellData.ProteinNameCount[proteinNameCountMap.size()];
         Set<String> keys = proteinNameCountMap.keySet();
@@ -275,11 +292,19 @@ public class Cell implements Food {
 		return dna;
 	}
 	public void addProtein(Protein protein) {
-        synchronized (proteinList) {
+        try {
+            proteinListLock.lockInterruptibly();
             proteinList.add(protein);
-            proteinList.notifyAll();
+            if (proteinList.size() >= (getGeneSize() * 2)) {
+                cellReadyToDivide.signalAll();
+            }
+        } catch (InterruptedException e) {
+            log("Cell.addProtein(" + protein + ") interrupted");
+            Thread.currentThread().interrupt();
+        } finally {
+            proteinListLock.unlock();
         }
-        log(toString() + "; proteinCt=" + proteinList.size());
+        log(this.toString() + "; addProtein(); proteinCt=" + proteinList.size());
         Thread proteinThread = protein.getThread();
         if (this.active && (proteinThread == null || !proteinThread.isAlive())) {
             protein.start();
@@ -287,89 +312,121 @@ public class Cell implements Food {
         cellChanged();
 	}
 	public void addAminoAcids(List<AminoAcid> aminoAcids) {
-		synchronized (aminoAcidList) {
-			aminoAcidList.addAll(aminoAcids);
-			aminoAcidList.notifyAll();
-		}
+        try {
+            aminoAcidListLock.lockInterruptibly();
+            aminoAcidList.addAll(aminoAcids);
+            aminoAcidAvailable.signalAll();
+        } catch (InterruptedException e) {
+            log("Cell.addAminoAcids(...) interrupted");
+            Thread.currentThread().interrupt();
+        } finally {
+            aminoAcidListLock.unlock();
+        }
 	}
 	public void addNucleotides(List<Nucleotide> nucleotides) {
-		synchronized (nucleotideList) {
-			nucleotideList.addAll(nucleotides);
-			nucleotideList.notifyAll();
-		}
+        try {
+            nucleotideListLock.lockInterruptibly();
+            nucleotideList.addAll(nucleotides);
+            nucleotideAvailable.signalAll();
+        } catch (InterruptedException e) {
+            log("Cell.addNucleotides(...) interrupted");
+            Thread.currentThread().interrupt();
+        } finally {
+            nucleotideListLock.unlock();
+        }
 	}
 	public void addRNA(RNA rna) {
-		synchronized(rnaList) {
-			rnaList.add(rna);
-			rnaList.notifyAll();
-		}
+        try {
+            rnaListLock.lockInterruptibly();
+            rnaList.add(rna);
+            rnaAvailable.signalAll();
+        } catch (InterruptedException e) {
+            log("Cell.addRNA(" + rna + ") interrupted");
+            Thread.currentThread().interrupt();
+        } finally {
+            rnaListLock.unlock();
+        }
 	}
     public void addFood(List<Food> foods) {
-        synchronized (foodList) {
+        try {
+            foodListLock.lockInterruptibly();
             foodList.addAll(foods);
-            foodList.notifyAll();
+            foodAvailable.signalAll();
+        } catch (InterruptedException e) {
+            log("Cell.addFood(...) interrupted");
+            Thread.currentThread().interrupt();
+        } finally {
+            foodListLock.unlock();
         }
     }
 	public Nucleotide waitForNucleotide(String name) {
-		synchronized (nucleotideList) {
+        try {
+            nucleotideListLock.lockInterruptibly();
             while (true) {
                 Nucleotide nucleotide = getNucleotideByName(name);
-				if (nucleotide != null) return nucleotide;
-				log("waiting for nucleotide " + name);
-				try { nucleotideList.wait(); }
-				catch(InterruptedException e) {
-                    log("interrupted while waiting for nucleotide " + name);
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-			}
-		}
+                if (nucleotide != null) return nucleotide;
+                log("waiting for nucleotide " + name);
+                nucleotideAvailable.await();
+            }
+        } catch (InterruptedException e) {
+            log("waitForNucleotide(" + name + ") interrupted");
+            Thread.currentThread().interrupt();
+            return null;
+        } finally {
+            nucleotideListLock.unlock();
+        }
 	}
 	public RNA waitForRNA() {
-		synchronized (rnaList) {
+        try {
+            rnaListLock.lockInterruptibly();
             while (true) {
-				RNA rna = getRNA();
-				if (rna != null) return rna;
-				log("waiting for some RNA");
-				try { rnaList.wait(); }
-                catch(InterruptedException e) {
-                    log("interrupted while waiting for some RNA");
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-			}
-		}
+                RNA rna = getRNA();
+                if (rna != null) return rna;
+                log("waiting for some RNA");
+                rnaAvailable.await();
+            }
+        } catch (InterruptedException e) {
+            log("waitForRNA() interrupted");
+            Thread.currentThread().interrupt();
+            return null;
+        } finally {
+            rnaListLock.unlock();
+        }
 	}
 	public AminoAcid waitForAminoAcid(Codon codon) {
-		synchronized (aminoAcidList) {
+        try {
+            aminoAcidListLock.lockInterruptibly();
             while (true) {
                 AminoAcid aminoAcid = getAminoAcidByCodon(codon);
-				if (aminoAcid != null) return aminoAcid;
-				log("waiting for amino acid for codon " + codon);
-				try { aminoAcidList.wait(); }
-				catch(InterruptedException e) {
-                    log("interrupted while waiting for amino acid for codon " +
-                            codon);
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-			}
-		}
+                if (aminoAcid != null) return aminoAcid;
+                log("waiting for amino acid for codon " + codon);
+                aminoAcidAvailable.await();
+            }
+        } catch (InterruptedException e) {
+            log("interrupted while waiting for amino acid for codon " +
+                    codon);
+            Thread.currentThread().interrupt();
+            return null;
+        } finally {
+            aminoAcidListLock.unlock();
+        }
 	}
-    public Food waitForFood(Object object) {
-        synchronized (foodList) {
+    public Food waitForFood() {
+        try {
+            foodListLock.lockInterruptibly();
             while (true) {
                 if (foodList.size() > 0) {
                     return foodList.remove(0);
                 }
                 log("waiting for food ");
-                try { foodList.wait(); }
-                catch(InterruptedException e) {
-                    log("interrupted while waiting for food");
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
+                foodAvailable.await();
             }
+        } catch (InterruptedException e) {
+            log("waitForFood() interrupted");
+            Thread.currentThread().interrupt();
+            return null;
+        } finally {
+            foodListLock.unlock();
         }
     }
     /*
@@ -536,5 +593,11 @@ public class Cell implements Food {
     }
     public void setActive(boolean active) {
         this.active = active;
+    }
+    public Lock getProteinListLock() {
+        return proteinListLock;
+    }
+    public Condition getCellReadyToDivide() {
+        return cellReadyToDivide;
     }
 }

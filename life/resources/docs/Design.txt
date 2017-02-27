@@ -1,3 +1,12 @@
+Note the following potential problem situation:
+divideCell locks Cell.proteinList, so it can move some proteins to the new cell;
+polymerase protein is running, and tries to get a lock on proteinList, so it
+can add a new protein, but it is blocked on the synchronized clause;
+polymerase will not respond when divideCell tries to interrupt it, because whereas
+you can interrupt a thread in WAIT state, you can't interrupt a thread in MONITOR
+state, i.e. when it's trying to aquire a lock; this is why we use the classes in
+the java.util.concurrent.locks package.
+
 aminoAcid, when first created, belongs to cell; when added
 to protein, it then belongs to that protein, which in turn belongs
 to the cell; AminoAcid.getCell() now gets it from the protein.
