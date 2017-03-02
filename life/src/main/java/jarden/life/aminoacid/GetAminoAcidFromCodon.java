@@ -12,7 +12,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class GetAminoAcidFromCodon extends AminoAcid {
 
-	public Object action(Object _codon) {
+	public Object action(Object _codon) throws InterruptedException {
 		Codon codon = (Codon)_codon;
 		if (codon.isStop()) return codon;
 		return getCell().waitForAminoAcid(codon);

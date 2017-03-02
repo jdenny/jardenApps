@@ -1,6 +1,7 @@
 package jarden.life.aminoacid;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Codon;
 
@@ -9,11 +10,11 @@ import jarden.life.nucleicacid.Codon;
  * a cell; or it is free-standing, and is directly part of a cell.
  * This means that one of cell and protein is null
  */
-public abstract class AminoAcid {
+public abstract class AminoAcid implements CellResource {
     // if amino acid not yet part of a protein, it belongs to the cell
     private Protein protein; // protein this amino acid is part of
 
-    public abstract Object action(Object o); // process next object
+    public abstract Object action(Object o) throws InterruptedException; // process next object
     public abstract boolean matchCodon(Codon codon);
     public abstract String getName();
     public String toString() { return getName(); }
@@ -48,4 +49,6 @@ public abstract class AminoAcid {
     public void setProtein(Protein protein) {
         this.protein = protein;
     }
+
+    public void reset() {}
 }

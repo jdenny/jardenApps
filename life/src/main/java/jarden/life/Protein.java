@@ -4,7 +4,7 @@ import jarden.life.aminoacid.AminoAcid;
 
 import java.util.ArrayList;
 
-public class Protein implements Runnable, Resource {
+public class Protein implements Runnable, CellResource {
     private Cell cell; // the cell this protein belongs to
     private String name;
     private String type;
@@ -27,22 +27,26 @@ public class Protein implements Runnable, Resource {
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
         if (firstAminoAcid.activateOnCreate()) {
             this.thread = new Thread(this);
-            Cell.log("starting thread for protein " + this);
+            cell.logId("starting thread for protein " + this);
             thread.start();
         } else {
-            Cell.log("not starting thread for protein " + this);
+            cell.logId("not starting thread for protein " + this);
         }
     }
     public void stop() {
-        Cell.log("Protein.stop(); thread=" + thread + " state=" + thread.getState());
+        cell.logId("Protein.stop(); thread=" + thread + " state=" + thread.getState());
         thread.interrupt();
     }
 
 	public void run() {
-		while (!Thread.interrupted()) action(null);
+		while (!Thread.interrupted()) try {
+            action(null);
+        } catch (InterruptedException e) {
+            cell.logId("protein.run() interrupted");
+        }
 	}
     // TODO: remove parameter to this method?
-    public Object action(Object object) {
+    private Object action(Object object) throws InterruptedException {
         // if firstObject is a chain, then repeat until end of chain
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
         Object currentObject = object;
@@ -73,9 +77,14 @@ public class Protein implements Runnable, Resource {
 		}
 		return buffer.toString();
 	}
-
+    /**
+     * Should be called when protein is not running, to reset each aminoAcid
+     */
     public void setCell(Cell cell) {
         this.cell = cell;
+        for (AminoAcid aminoAcid: aminoAcidList) {
+            aminoAcid.reset();
+        }
     }
     @Override
     public boolean equals(Object any) {
@@ -91,17 +100,15 @@ public class Protein implements Runnable, Resource {
         }
         return this.hashCode;
     }
-
     public Thread getThread() {
         return thread;
     }
-
     public String getStatus() {
         return "running=" + (thread != null && thread.isAlive()) +
                 "; state=" + state;
     }
-
     public ArrayList<AminoAcid> getAminoAcidList() {
         return aminoAcidList;
     }
+
 }

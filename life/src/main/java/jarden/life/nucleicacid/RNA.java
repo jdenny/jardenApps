@@ -3,7 +3,9 @@ package jarden.life.nucleicacid;
 
 import java.util.ArrayList;
 
-public class RNA extends ArrayList<Codon> {
+import jarden.life.CellResource;
+
+public class RNA extends ArrayList<Codon> implements CellResource {
 	private static final long serialVersionUID = 1L;
 
 	public String toString() {
@@ -13,6 +15,7 @@ public class RNA extends ArrayList<Codon> {
 		}
 		return buffer.toString();
 	}
-
-
+    public String getName() {
+        return this.toString();
+    }
 }

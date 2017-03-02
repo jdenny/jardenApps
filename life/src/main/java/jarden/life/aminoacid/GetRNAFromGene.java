@@ -9,39 +9,32 @@ import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.RNA;
 import jarden.life.nucleicacid.Uracil;
 
-/*
- * This protein is called RNA Polymerase.
- * Sequence of DNA:
- * 		regulator gene: builds regulator protein for this operon
- * 		promoter: where polymerase docks; simplified here as TATAAT
- * 		operator: where regulator protein docks
- * 		operon: group of related genes
- * 		terminator: end of operon; simplified here as TAA 
- */
 public class GetRNAFromGene extends AminoAcid {
 
-    public Object action(Object _dna) {
+    public Object action(Object _dna) throws InterruptedException {
 		ListIterator<Nucleotide> dna = (ListIterator<Nucleotide>)_dna;  
 		RNA rna = new RNA();
         Cell cell = getCell();
 		while (dna.hasNext()) {
+            /*!!
 			String name1 = dna.next().getName();
 			if (name1.equals("Thymine")) name1 = "Uracil";
 			String name2 = dna.next().getName();
 			if (name2.equals("Thymine")) name2 = "Uracil";
 			String name3 = dna.next().getName();
 			if (name3.equals("Thymine")) name3 = "Uracil";
-			Nucleotide first = cell.waitForNucleotide(name1);
+			*/
+			Nucleotide first = cell.waitForNucleotide(dna.next(), false);
             if (Thread.interrupted()) {
                 Thread.currentThread().interrupt();
                 return null;
             }
-			Nucleotide second = cell.waitForNucleotide(name2);
+            Nucleotide second = cell.waitForNucleotide(dna.next(), false);
             if (Thread.interrupted()) {
                 Thread.currentThread().interrupt();
                 return null;
             }
-			Nucleotide third = cell.waitForNucleotide(name3);
+			Nucleotide third = cell.waitForNucleotide(dna.next(), false);
             if (Thread.interrupted()) {
                 Thread.currentThread().interrupt();
                 return null;

@@ -1,3 +1,115 @@
+Doodles
+How to detect we have enough RNA? how about, if at start of RNA, there are already
+geneSize rna strands, it waits? scenarios:
+1st polymerase starts; no RNA; makes 4
+after making 1st one (polymerase) ribosome makes 2nd polymerase, which starts,
+ as there are < 4 RNAs; so now we have made 8 RNAs, 2 for each protein
+The key issue is this: DivideCell should start when we have at lease one copy
+ of each protein, whereas we might end up building none of some proteins, and
+ more than one of others. What if polymerase shared DNA index, so although there
+ might be 2 proteins of polymerase running, they will always produce RNA in the
+ correct sequence? This may fit in with real life, as you can't have 2 polymerases
+ working on the same bit of DNA at the same time. Similarly, in ribosome always
+ takes off the first RNA in the list, it will always produce proteins in the
+ correct sequence.
+End of doodles**********************************************
+
+Feedback loop; one of:
+produce resources on demand
+	Ribosome asks for specific RNA or aminoAcid; not available; triggers
+	production of RNA (Polymerase); Polymerase asks for specific nucleotide;
+	not available; triggers 'go get one boy'.
+or: limits, so that digest only adds enough resources to limits, then
+discards the rest; we need getRNA to pause as there will be no Uracil
+
+Current proposal******************************************************
+The problem is this: copyDNA wants A, C, G, T; getRNA wants A, C, G, U;
+copyDNA only runs when the cell is ready to split, but getRNA runs without
+letup. We want getRNA to stop when there is enough RNA:
+	ribosome pauses when >= 8 proteins
+	polymerase pauses when each gene has an RNA (i.e. 4 RNAs)
+	feed (i.e. get nucleotides and aminoAcids) pauses when
+		enough nucleotides for 1 set of genes (RNAs) and copy DNA, and
+		enough aminoAcids for all genes
+Scenario: syntheticCell created with 4 proteins, aminoAcids for 4 more,
+ nucleotides for 1 DNA copy & 8 RNAs
+1. Polymerase converts nucleotides into 4 RNAs, and pauses (reached target)
+2. Ribosome converts RNAs & aminoAcids to 4 new proteins; Ribosome pauses
+3. Polymerase restarts, converts nucleotides into 4 more RNAs, pauses
+4. DivideCell waits for other proteins to pause; splits cell, reducing
+   parent cell to 4 proteins
+5. Ribosome restarts; go to step 2
+									Status at end of step
+	AmAcids	Nukes	Prots	RNA		Poly	Ribo	Feed
+	4		8R,1D	4		-		run 	pause	run (but maybe no food!)
+1	4		4R,1D	4		4		pause	run		pause
+2	-		4R,1D	8		-		run		pause	run
+3	-		1D		8		4		pause	pause	run
+4	-		-		4		4		pause	run		run
+
+End of current proposal***********************************************
+
+What is the target?
+cells grow and divide; if cell doesn't get any food for a specified time
+it dies. If food is supplied at a certain rate, cell population should
+stabilise, as some cells will get food and grow, but some cells will die.
+If we adjust the food rate, population size should similarly adjust.
+
+Then introduce random mutations; if cell dies, then note how many times
+it divided successfully; report its DNA if it divides ok at all! We can
+control the frequency of mutations. Mutated cells will grow in number if
+they can reproduce faster.
+
+Notes: if protein dies, make another; i.e. protein that scans for dead
+proteins, removes it from the cell (which should awaken protein production)
+and re-uses the resources.
+
+We could have two types of synthetic cells: one already with enough resources
+to create a new cell: amino acids, nucleotides for the RNA, nucleotides
+for the DNA; and one with no resources, so it can't grow - at least until
+we start feeding it. In reality we don't feed an individual cell, we feed a
+population. Which tells us that we need a class CellPopulation, to take the
+management away from the front-end.
+
+Problem: the cell has grown sufficiently to split (in this case, 8 proteins)
+so next it starts to divide. At some point, it tries to duplicate the DNA,
+but the polymerase keeps gobbling it up to make RNA!
+
+Proposal:
+	GetFood: (from the environment)
+	Digest:
+		digestFood
+	Divide:
+		waitForEnoughProteins
+		stopAllOtherProteins (apart from Divide)
+		copyDNA
+		divideCell
+
+alternatively:
+	when there is enough of a resource (e.g. RNA), stop producing it!
+
+In summary:
+	cell has targets: 8 proteins, aminoAcids for proteins (currently 1 of each),
+	 nucleotides for proteins and DNA copy; calculate these targets in method
+	 Cell(DNA dna);
+	when proteinCt >= proteinTargetCt (8): cellNeedsMoreProteins.await() -
+	 which will be triggered when divideCell moves proteins; i.e. ribosomes
+	 stop while divideCell doing its business;
+	when rnaCt >= rnaTargetCt: cellNeedsMoreRNA.await()
+	ditto: nucleotideCt & aminoAcidCt; rather than individual nucleotides
+	 and aminoAcids, get them in sets; another protein detects buildup of
+	 specific ones, and discards excess
+
+	Divide now continues to consume nucleotides to produce copy DNA
+	(all other proteins are in the WAIT state)
+	then stops 4 extra proteins, and moves them to the new cell
+	this should re-awaken the ribosome, which hopefully in turn
+	will re-awaken the others
+
+Meanwhile, give synthetic cell all amino acids, plus enough nucleotides for:
+  copy of DNA; enough RNA for 2 new cells
+
+Good stuff **********************************************
 Note the following potential problem situation:
 divideCell locks Cell.proteinList, so it can move some proteins to the new cell;
 polymerase protein is running, and tries to get a lock on proteinList, so it
@@ -28,14 +140,4 @@ name or group (type); use new gene structure:
     proteins run in own thread, but some are chains, so wait, some are
     not so only run once. Cell.runProtein could run protein that activates
     a group of proteins
-
-    private static String dnaStr =
-            promoterCode + proteinTypeStem + proteinNamePolymerase +
-                    "TTGTCT" + terminatorCode +
-                    promoterCode + proteinTypeStem + proteinNameRibosome +
-                    "TTATTCTTT" + terminatorCode +
-                    promoterCode + proteinTypeDivision + proteinNameDivide +
-                    "TAC" + terminatorCode +
-                    promoterCode + proteinTypeDigestion + proteinNameDigest +
-                    "TAG" + terminatorCode;
 

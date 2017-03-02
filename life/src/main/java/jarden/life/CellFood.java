@@ -1,15 +1,19 @@
 package jarden.life;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import jarden.life.aminoacid.AddAminoAcidToProtein;
 import jarden.life.aminoacid.AminoAcid;
+import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
+import jarden.life.aminoacid.EatFood;
 import jarden.life.aminoacid.FindNextGene;
 import jarden.life.aminoacid.GetAminoAcidFromCodon;
 import jarden.life.aminoacid.GetCodonFromRNA;
 import jarden.life.aminoacid.GetRNAFromGene;
+import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.DNA;
@@ -24,10 +28,10 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class CellFood implements Food {
-    private List<Protein> proteinList;
-    private List<AminoAcid> aminoAcidList;
-    private List<RNA> rnaList;
-    private List<Nucleotide> nucleotideList;
+    private List<Protein> proteinList = new LinkedList<>();
+    private List<AminoAcid> aminoAcidList = new LinkedList<>();
+    private List<RNA> rnaList = new LinkedList<>();
+    private List<Nucleotide> nucleotideList = new LinkedList<>();
 
     /**
      * Food factory - until we work out how to make real food.
@@ -61,26 +65,53 @@ public class CellFood implements Food {
         else throw new IllegalArgumentException("unknown nucleotide name: " + name);
         return nucleotide;
     }
-
-
     @Override
     public DNA getDNA() {
         return null;
     }
     @Override
     public List<Protein> getProteinList() {
-        return null;
+        return proteinList;
     }
     @Override
     public List<AminoAcid> getAminoAcidList() {
-        return null;
+        return aminoAcidList;
     }
     @Override
     public List<RNA> getRNAList() {
-        return null;
+        return rnaList;
     }
     @Override
     public List<Nucleotide> getNucleotideList() {
-        return null;
+        return nucleotideList;
+    }
+
+    @Override
+    public String getName() {
+        return "Cell Food";
+    }
+
+    public void addAllAminoAcids(int aminoAcidFeedCt) {
+        for (int i = 0; i < aminoAcidFeedCt; i++) {
+            aminoAcidList.add(new AddAminoAcidToProtein());
+            aminoAcidList.add(new CopyDNA());
+            aminoAcidList.add(new DigestFood());
+            aminoAcidList.add(new DivideCell());
+            aminoAcidList.add(new EatFood());
+            aminoAcidList.add(new FindNextGene());
+            aminoAcidList.add(new GetAminoAcidFromCodon());
+            aminoAcidList.add(new GetCodonFromRNA());
+            aminoAcidList.add(new GetRNAFromGene());
+            aminoAcidList.add(new WaitForEnoughProteins());
+        }
+    }
+    public void addAllNucleotides(int nucleotideFeedCt) {
+        for (int i = 0; i < nucleotideFeedCt; i++) {
+            nucleotideList.add(new Adenine());
+            nucleotideList.add(new Cytosine());
+            nucleotideList.add(new Guanine());
+            nucleotideList.add(new Thymine());
+            nucleotideList.add(new Uracil());
+        }
     }
 }

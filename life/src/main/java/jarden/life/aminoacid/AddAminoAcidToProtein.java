@@ -8,8 +8,14 @@ import jarden.life.nucleicacid.Uracil;
 public class AddAminoAcidToProtein extends AminoAcid {
 	private Protein newProtein;
 
-	public Object action(Object _aminoAcidOrCodon) {
+    @Override
+	public Object action(Object _aminoAcidOrCodon) throws InterruptedException {
 		if (_aminoAcidOrCodon instanceof Codon) {
+            if (newProtein == null) {
+                Cell.log("AddAminoAcidToProtein.action(); newProtein is null" +
+                        " so ignoring action");
+                return null;
+            }
 			Codon codon = (Codon)_aminoAcidOrCodon;
 			if (codon.isStop()) {
 				getCell().addProtein(newProtein);
@@ -27,12 +33,19 @@ public class AddAminoAcidToProtein extends AminoAcid {
 		}
 		return newProtein;
 	}
+    @Override
 	public String getName() {
 		return "AddAminoAcidToProtein";
 	}
+    @Override
 	public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Uracil &&
                 codon.getThird() instanceof Uracil;
     }
+    @Override
+    public void reset() {
+        newProtein = null;
+    }
+
 }

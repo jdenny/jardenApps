@@ -9,10 +9,10 @@ import java.util.List;
 public class MasterDesigner implements CellListener {
     private static List<Cell> cellList = new ArrayList<>();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
         new MasterDesigner();
     }
-    public MasterDesigner() {
+    public MasterDesigner() throws InterruptedException {
 
         Cell syntheticCell = Cell.getSyntheticCell();
         syntheticCell.setCellListener(this);

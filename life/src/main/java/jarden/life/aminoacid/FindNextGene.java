@@ -2,11 +2,9 @@ package jarden.life.aminoacid;
 
 import java.util.ListIterator;
 
-import jarden.life.Cell;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
-import jarden.life.nucleicacid.NucleicAcid;
 import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.Uracil;
 
@@ -26,7 +24,21 @@ public class FindNextGene extends AminoAcid {
 	
     @Override
 	public ListIterator<Nucleotide> action(Object o) {
-        /* TODO: fix this!
+        /*
+        Keep dnaIndex in cell, along with dna;
+        action()
+            put lock on dnaIndex;
+            get dna & dnaIndex from cell;
+            index = next promoter >= index
+            if no promoter:
+                index = 0
+                index = next promoter >= index
+                if no promoter: throw exception
+            find next stop
+            set dnaIndex to position after stop
+            release lock on dnaIndex
+            start building RNA!
+
         This is silly, as it's duplicating work done in the 2nd amino acid of this
         protein; current suggestion: aminoAcids belong to a protein, that in turn
         belongs to a cell; the aminoAcids can then communicate with the protein,
@@ -44,6 +56,7 @@ public class FindNextGene extends AminoAcid {
         if (dna == null) {
             dna = getCell().getDNA();
             index = 0;
+            currentStop = 0;
         }
         if (getNextPromoterIndex() < 0) {
             currentStop = 0;
@@ -69,7 +82,7 @@ public class FindNextGene extends AminoAcid {
 	private boolean isPromoter(int index) {
 		for (int j = 0; j < 6; j++) {
 			Nucleotide nucleotide = dna.get(index + j);
-			if (!(nucleotide.getCode() == NucleicAcid.promoterCode.charAt(j))) {
+			if (!(nucleotide.getCode() == Nucleotide.promoterCode.charAt(j))) {
 				return false; // i.e. NOT a promoter
 			}
 		}
@@ -103,5 +116,9 @@ public class FindNextGene extends AminoAcid {
     @Override
     public boolean hasMore() {
         return getNextPromoterIndex() >= 0;
+    }
+    @Override
+    public void reset() {
+        this.dna = null;
     }
 }

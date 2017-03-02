@@ -11,7 +11,7 @@ import jarden.life.nucleicacid.RNA;
  * Created by john.denny@gmail.com on 20/02/2017.
  */
 
-public interface Food {
+public interface Food extends CellResource {
     DNA getDNA();
     List<Protein> getProteinList();
     List<AminoAcid> getAminoAcidList();

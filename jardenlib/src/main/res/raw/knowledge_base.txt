@@ -1,3 +1,19 @@
+Java
+----
+Thread interrupt flag is cleared by:
+	throw new InterruptedException();
+	Thread.interrupted();
+interrupt flag not cleared by:
+	Thread.currentThread().isInterrupted();
+
+What does thread.interrupt() do?
+if thread was waiting (sleep, wait, join, etc):
+ it will get an InterruptException, with isInterrupted() = false;
+otherwise: isInterrupted() = true;
+
+modifiers order:
+	Annotation public protected private abstract static final strictfp
+
 Course timetable
 ----------------
 Mon: 34, Invoking Activities Exercise

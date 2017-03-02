@@ -26,83 +26,43 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class DivideCell extends AminoAcid {
 
-    /**
-     * Only allow one instance of DivideCell to run for each cell.
-     *
-     * @return false if another instance of DivideCell is running,
-     * otherwise return true.
-     */
-    public boolean activateOnCreate() {
-        Cell cell = getCell();
-        if (cell.isDivideCellRunning()) return false;
-        else {
-            cell.setDivideCellRunning(true);
-            return true;
-        }
-    }
-
-    public Object action(Object object) {
+    public Object action(Object object) throws InterruptedException {
+        DNA daughterDNA = (DNA) object;
         Cell cell = getCell();
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
         int geneSize = cell.getGeneSize();
         try {
             proteinListLock.lockInterruptibly();
-            while (true) {
-                int proteinSize = proteinList.size();
-                if (proteinSize >= (geneSize * 2)) {
-                    // for all proteins in proteinList > geneSize:
-                    //    stop protein
-                    //    when stopped, move protein new new cell
-                    // TODO: use life to copy DNA
-                    String dnaStr = cell.getDNA().dnaToString();
-                    DNA daughterDNA = cell.buildDNAFromString(dnaStr);
-                    Cell daughterCell = new Cell(daughterDNA);
-                    daughterCell.setGeneration(cell.getGeneration() + 1);
-                    int newProteinCount = proteinList.size();
-                    for (int i = geneSize; i < newProteinCount; i++) {
-                        Protein protein = proteinList.remove(geneSize);
-                        Thread proteinThread = protein.getThread();
-                        if (proteinThread != null && proteinThread.isAlive()) {
-                            protein.stop();
-                            Cell.log("divideCell requested stop to protein " + protein);
-                            try {
-                                proteinThread.join(300);
-                                if (proteinThread.isAlive()) {
-                                    Cell.log(proteinThread + " didn't die; state=" +
-                                            proteinThread.getState() + "; moving it anyway");
-                                } else {
-                                    Cell.log("divideCell protein stopped: " + protein);
-                                }
-                            } catch (InterruptedException e) {
-                                Cell.log("divideCell interrupted while waiting for protein to stop ");
-                                Thread.currentThread().interrupt();
-                                return null;
-                            }
-                        } else {
-                            Cell.log("divideCell detected no thread for protein " + protein);
-                        }
-                        protein.setCell(daughterCell);
-                        daughterCell.addProtein(protein);
+            Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());
+            daughterCell.setGeneration(cell.getGeneration() + 1);
+            int newProteinCount = proteinList.size();
+            for (int i = geneSize; i < newProteinCount; i++) {
+                Protein protein = proteinList.remove(geneSize);
+                Thread proteinThread = protein.getThread();
+                if (proteinThread != null && proteinThread.isAlive()) {
+                    protein.stop();
+                    Cell.log("divideCell requested stop to protein " + protein);
+                    proteinThread.join(300);
+                    if (proteinThread.isAlive()) {
+                        Cell.log(proteinThread + " didn't die; state=" +
+                                proteinThread.getState() +
+                                "; moving it anyway**************");
+                    } else {
+                        Cell.log("divideCell protein stopped: " + protein);
                     }
-                    CellListener cellListener = cell.getCellListener();
-                    if (cellListener != null) {
-                        daughterCell.setCellListener(cellListener);
-                        cellListener.onNewCell(daughterCell);
-                    }
-                    return daughterCell;
+                } else {
+                    Cell.log("divideCell detected no thread for protein " + protein);
                 }
-                String state = "DivideCell waiting for " +
-                        ((geneSize * 2) - proteinSize) +
-                        " more proteins";
-                Cell.log(state);
-                getProtein().setState(state);
-                cell.getCellReadyToDivide().await();
+                protein.setCell(daughterCell);
+                daughterCell.addProtein(protein);
             }
-        } catch (InterruptedException e) {
-            Cell.log("interrupted while waiting for proteins");
-            Thread.currentThread().interrupt();
-            return null;
+            CellListener cellListener = cell.getCellListener();
+            if (cellListener != null) {
+                daughterCell.setCellListener(cellListener);
+                cellListener.onNewCell(daughterCell);
+            }
+            return daughterCell;
         } finally {
             proteinListLock.unlock();
         }

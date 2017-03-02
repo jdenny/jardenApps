@@ -1,12 +1,26 @@
+Current actions
+replace FindNextGene, GetRNAFromGene with Polymerase
+
+in DivideCell, notify needMoreProteins if ct < 2 * geneCt
+
+similarly if rnaCt < geneCt, notify needMoreRna
+
+static calculation of counts for proteins, aminoAcids
+and RNA and nucleotides need to be non-static, as each
+cell could have different DNA!
+
+see comment in Cell.needsMoreResources()
+
 Next Steps
-	use concurrency classes more!
-	use protein to copy DNA
+	use protein to copy DNA - done, but not yet working!
+	new class CellPopulation
+	new Protein EatFood, which gets the food from the environment;
+	  LifeFX now adds food to the environment, rather than individual cells
 	sliding scale of delays, so we can watch what is happening
 	common pool of food that all cells can feed off
 	optionally make colours sliding scale
 	http://stackoverflow.com/questions/340209/generate-colors-between-red-and-green-for-a-power-meter
 	now for the 20 amino acids!
-
 
 java.util.ConcurrentModificationException - why this is happening
 

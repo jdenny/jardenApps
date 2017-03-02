@@ -3,7 +3,9 @@ package jarden.life.nucleicacid;
 
 import java.util.ArrayList;
 
-public class DNA extends ArrayList<Nucleotide> {
+import jarden.life.CellResource;
+
+public class DNA extends ArrayList<Nucleotide> implements CellResource {
 	private static final long serialVersionUID = 1L;
 
 	public String toString() {
@@ -19,5 +21,9 @@ public class DNA extends ArrayList<Nucleotide> {
             builder.append(nucleotide.getCode());
         }
         return builder.toString();
+    }
+    @Override
+    public String getName() {
+        return this.toString();
     }
 }

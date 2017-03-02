@@ -162,7 +162,13 @@ public class LifeFX extends Application implements CellListener {
             }
         });
         Button feedButton = new Button("Feed");
-        feedButton.setOnAction(event -> feedCell() );
+        feedButton.setOnAction(event -> {
+            try {
+                feedCell();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -221,7 +227,12 @@ public class LifeFX extends Application implements CellListener {
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.show();
-        Cell syntheticCell = Cell.makeSyntheticCell(true);
+        Cell syntheticCell = null;
+        try {
+            syntheticCell = Cell.makeSyntheticCell(true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         syntheticCell.setCellListener(this);
         addCell(syntheticCell);
     }
@@ -249,8 +260,10 @@ public class LifeFX extends Application implements CellListener {
         this means that we don't need to keep passing the listener to
         getCellData().
          */
-        cellData = cell.getCellData();
-        showCellData(cellData);
+        if (cell != null) {
+            cellData = cell.getCellData();
+            showCellData(cellData);
+        }
     }
     private void showCellData(CellData cellData) {
         int proteinCt = cellData.proteinNameCts.length;
@@ -283,7 +296,8 @@ public class LifeFX extends Application implements CellListener {
         }
         */
     }
-    private void feedCell() {
+    // TODO: replace this with CellEnvironment.setFeederRate()
+    private void feedCell() throws InterruptedException {
         StringBuilder messageBuilder = new StringBuilder();
         Cell cell = this.cellListView.getSelectionModel().getSelectedItem();
         if (cell == null) {

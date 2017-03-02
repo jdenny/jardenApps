@@ -21,7 +21,7 @@ public class CellData {
     public ProteinNameCount[] proteinNameCts;
     public static String[] aminoAcidNames = {
             "AddAminoAcidToProtein",
-            "DigestFood", "DivideCell",
+            "DigestFood", "DivideCell", "EatCell",
             "FindNextGene", "GetAminoAcidFromCodon",
             "GetCodonFromRNA", "GetRNAFromGene"
     };
