@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import jarden.life.Cell;
+import jarden.life.CellEnvironment;
 import jarden.life.CellListener;
 
 
@@ -16,6 +17,7 @@ import jarden.life.CellListener;
 
 public class TestCell implements CellListener {
     private Cell syntheticCell;
+    private boolean daughterCellCreated;
 
     @Before
     public void setUp() throws Exception {
@@ -62,16 +64,37 @@ public class TestCell implements CellListener {
         add food to environment; both should live longer,
          to produce more cells, then all die
          */
+        CellEnvironment cellEnvironment = new CellEnvironment();
+        try {
+            Cell cell = Cell.makeSyntheticCell(true);
+            cell.setCellListener(this);
+            Thread.sleep(1000);
+            assert(daughterCellCreated);
+            assertEquals(cellEnvironment.getCellCount(), 2);
+            Thread.sleep(1000); // give cells time to die for lack of food
+            assertEquals(cellEnvironment.getCellCount(), 0);
+            cell.setCellListener(this);
+            Thread.sleep(1000);
+            Cell cell2 = Cell.makeSyntheticCell(true);
+            cellEnvironment.addFood();
+            Thread.sleep(2000); // give cells time to die
+            assertEquals(cellEnvironment.getCellCount(), 2); // should both be still alive
+            Thread.sleep(1000);
+            assertEquals(cellEnvironment.getCellCount(), 0);
+            System.out.println("TestCell.consumeResources(); end of test");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onNewCell(Cell daughterCell) {
         System.out.println("firstCell.isCopy(daughterCell):" +
                 syntheticCell.isCopy(daughterCell));
+        daughterCellCreated = true;
         assertTrue(daughterCell.isCopy(syntheticCell));
         assertTrue(syntheticCell.isCopy(daughterCell));
         System.out.println("Assert successful!");
-
     }
 
     @Override

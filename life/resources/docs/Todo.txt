@@ -1,15 +1,42 @@
 Current actions
-replace FindNextGene, GetRNAFromGene with Polymerase
+replace FindNextGene, GetRNAFromGene with Polymerase - DONE
 
-in DivideCell, notify needMoreProteins if ct < 2 * geneCt
+remove all synchronized - DONE
 
-similarly if rnaCt < geneCt, notify needMoreRna
+in DivideCell, signal needMoreProteins if ct < 2 * geneCt - DONE
 
-static calculation of counts for proteins, aminoAcids
-and RNA and nucleotides need to be non-static, as each
-cell could have different DNA!
+similarly if rnaCt < geneCt, notify needMoreRna - DONE
+
+follow pattern in javadoc of interface java.util.concurrent.locks.Condition
+
+similarly signal needMoreFood
+
+static counts for proteins, aminoAcids and RNA and nucleotides need to be
+non-static, as each cell could have different DNA! - DONE
+
+pass on targets in DivideCell
+
+have a protein that adjusts the targets: each time we run out
+of a resource, increase the target for that resource
 
 see comment in Cell.needsMoreResources()
+
+is there an inconsistency, in that Cell applies the locks & conditions for
+get<resource>, but the amino acids do it for put<resource>?
+
+remove onCellChanged(Cell cell);
+
+everything goes through CellEnvironment; LifeFX doesn't even see a cell,
+only cellData; LifeFX is listener on environent, rather than Cell; or
+even have no cell listener, as everything is done by pull instead of
+push?
+
+could the protein name be replaced by its RNA gene, without the stop,
+ as a string?
+
+remove Cell.active
+
+End of current actions *****************************************
 
 Next Steps
 	use protein to copy DNA - done, but not yet working!

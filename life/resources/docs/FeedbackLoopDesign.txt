@@ -1,0 +1,104 @@
+If proteins continued to consume all the available resources, Polymerase
+would convert the nucleotides to RNA, and leave none for CopyDNA. With a
+feedback loop, Polymerase would stop when there is enough RNA.
+
+Feedback loop could be designed in one of two ways:
+	Produce resources on demand:
+	Ribosome asks for specific RNA or aminoAcid; not available; triggers
+	 production of RNA (Polymerase)
+	Polymerase asks for specific nucleotide; not available; triggers
+	 EatFood and DigestFood.
+	This doesn't seem to match real life, as some proteins would have to
+	wait while we go and feed, but the proteins might well be the ones
+	that give us the energy to feed!
+or:
+	Targets, so that protein stops when the target for that resource has
+	been reached; e.g. digest only adds enough resources to targets, then
+	discards the rest, and stops digesting until some of the resources are
+	consumed. We'll go with this one!
+
+ProteinList
+	// when size >= proteinSizeForDivide: stop ribosome & start divide
+	ribosome
+	  while size >= proteinSizeForDivide: needMoreProteins.await()
+	  (produceProtein)
+	  cell.addProtein(newProtein)
+	  	if size >= proteinSizeForDivide: cellReadyToDivide.signalAll()
+	divideCell
+	  while size < proteinSizeForDivide: cellReadyToDivide.await()
+	  (move some proteins to new cell)
+	  cell.removeProtein()
+	    if size < proteinSizeForDivide: needMoreProteins.signalAll()
+
+RNAList
+	// when size >= proteinSizeForDivide: stop polymerase
+	// when size == 0: stop ribosome
+	ribosome
+	  cell.waitForRNA()
+	    while no RNA: rnaAvailable.await()
+	    (get RNA from list)
+		if size < geneSize: needMoreRNA.signalAll()
+	polymerase
+	  while rnaList.size() >= geneSize: needMoreRNA.await()
+	  (produceRNA)
+	  cell.addRNA(newRNA)
+	  	rnaAvailable.signalAll()
+
+AminoAcidList
+	// when size == 0: stop ribosome
+	// when enough amino acids for 1 of each protein: stop digesting
+	//   aminoAcids
+	ribosome
+	  cell.waitForAminoAcid()
+	    while no AminoAcid: aminoAcidAvailable.await()
+		if size < geneSize: needMoreAminoAcid.signalAll()
+	digestFood
+	  while {enough amino acids for 1 of each protein}
+	  	needMoreAminoAcid.await()
+	  cell.addAminoAcid(aminoAcid)
+	  	aminoAcidAvailable.signalAll()
+
+NucleotideList
+	// when size == 0: stop polymerase & copyDNA
+	// when enough nucleotides for 1 of each protein & 1 DNA:
+	//	 stop digesting nucleotides
+	copyDNA
+	  for each nucleotide
+		cell.waitForNucleotide(nucleotide)
+		  while no matching nucleotide: nucleotideAvailable.await()
+		  if size < target for this nucleotide:
+		    needMoreNucleotide.signalAll()
+		(add to new DNA)
+	polymerase
+	  (as for copyDNA)
+	digestFood
+	  while {enough nucleotides for 1 cell}
+	  	needMoreAminoAcid.await()
+	  cell.addNucleotide(nucleotide)
+	  	nucleotideAvailable.signalAll()
+
+FoodList (outline design)
+	// digest all the available food, but discard any excess
+	digestFood
+	  cell.waitForFood()
+	    while no Food: foodAvailable.await()
+	  get AminoAcids from Food
+	  for each type:
+		if none in AminoAcidList: add 1
+		discard the rest
+	  if any added:
+		aminoAcidAvailable.signalAll()
+
+	  get Nucleotides from Food
+	  for each type:
+		add up to target for that type, e.g. Cell.adenineFor1Cell
+		discard the rest
+	  if any added:
+		nucleotideAvailable.signalAll()
+	  if no food left, and {need aminoAcids or nucleotides}:
+		needMoreFood.signalAll()
+	eatFood
+	  while !{need aminoAcids or nucleotides}
+		needMoreFood.await()
+	  (getFood from environment)
+	  foodAvailable.signalAll()

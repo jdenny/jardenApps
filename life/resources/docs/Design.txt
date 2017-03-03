@@ -1,4 +1,13 @@
 Doodles
+How to set the targets? obviously not critical
+proteins
+either we analyse the DNA, or we set an arbitrary figure? but what if
+we leave it as it was, with statics? or what about monitor the use of
+each resource? with a protein! we set an initial target, and every time
+we run out, we increase the target? targets are passed on the the
+daughter cell
+
+
 How to detect we have enough RNA? how about, if at start of RNA, there are already
 geneSize rna strands, it waits? scenarios:
 1st polymerase starts; no RNA; makes 4
@@ -14,13 +23,6 @@ The key issue is this: DivideCell should start when we have at lease one copy
  correct sequence.
 End of doodles**********************************************
 
-Feedback loop; one of:
-produce resources on demand
-	Ribosome asks for specific RNA or aminoAcid; not available; triggers
-	production of RNA (Polymerase); Polymerase asks for specific nucleotide;
-	not available; triggers 'go get one boy'.
-or: limits, so that digest only adds enough resources to limits, then
-discards the rest; we need getRNA to pause as there will be no Uracil
 
 Current proposal******************************************************
 The problem is this: copyDNA wants A, C, G, T; getRNA wants A, C, G, U;

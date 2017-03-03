@@ -31,17 +31,13 @@ public class WaitForEnoughProteins extends AminoAcid {
         Cell cell = getCell();
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
-        int geneSize = cell.getGeneSize();
+        int divideSize = cell.getProteinSizeForDivide();
+        int proteinSize;
+        proteinListLock.lockInterruptibly();
         try {
-            proteinListLock.lockInterruptibly();
-            while (true) {
-                int proteinSize = proteinList.size();
-                if (proteinSize >= (geneSize * 2)) {
-                    return null; // there are enough proteins to divide!
-                }
+            while ((proteinSize = proteinList.size()) < divideSize) {
                 String state = "DivideCell waiting for " +
-                        ((geneSize * 2) - proteinSize) +
-                        " more proteins";
+                        (divideSize - proteinSize) + " more proteins";
                 Cell.log(state);
                 getProtein().setState(state);
                 boolean timedOut = !cell.getCellReadyToDivide().await(5, TimeUnit.SECONDS);
@@ -73,6 +69,7 @@ public class WaitForEnoughProteins extends AminoAcid {
                     thisProtein.stop(); // finally, stop itself
                 }
             }
+            return null; // return now that there are enough proteins to divide
         } finally {
             proteinListLock.unlock();
         }

@@ -32,8 +32,8 @@ public class DivideCell extends AminoAcid {
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
         int geneSize = cell.getGeneSize();
+        proteinListLock.lockInterruptibly();
         try {
-            proteinListLock.lockInterruptibly();
             Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());
             daughterCell.setGeneration(cell.getGeneration() + 1);
             int newProteinCount = proteinList.size();
@@ -61,6 +61,9 @@ public class DivideCell extends AminoAcid {
             if (cellListener != null) {
                 daughterCell.setCellListener(cellListener);
                 cellListener.onNewCell(daughterCell);
+            }
+            if (proteinList.size() < cell.getProteinSizeForDivide()) {
+                cell.getNeedMoreProteins().signalAll();
             }
             return daughterCell;
         } finally {

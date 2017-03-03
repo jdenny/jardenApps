@@ -1,18 +1,14 @@
 package jarden.life.aminoacid;
 
-import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
 import jarden.life.CellEnvironment;
 import jarden.life.Food;
-import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
-import jarden.life.nucleicacid.DNA;
-import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.Uracil;
 
 /**
@@ -29,7 +25,7 @@ public class EatFood extends AminoAcid {
         Lock foodListLock = cell.getFoodListLock();
         foodListLock.lockInterruptibly();
         try {
-            while (cell.needsMoreResources()) {
+            while (cell.needMoreResources()) {
                 cell.logId("waiting for needMoreFood");
                 needMoreFood.await();
             }

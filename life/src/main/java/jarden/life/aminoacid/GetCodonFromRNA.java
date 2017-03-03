@@ -24,7 +24,6 @@ public class GetCodonFromRNA extends AminoAcid {
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
         Condition needMoreProteins = cell.getNeedMoreProteins();
-        int geneSize = cell.getGeneSize();
         // get the RNA first, as if successful, we will release the lock on
         // rnaList and then put a lock on proteinList; otherwise we
         // would be increasing the risk of deadlock.
@@ -32,22 +31,19 @@ public class GetCodonFromRNA extends AminoAcid {
             rna = getCell().waitForRNA();
             index = 0;
         }
+        int proteinCtForDivide = cell.getProteinSizeForDivide();
+        proteinListLock.lockInterruptibly();
         try {
-            proteinListLock.lockInterruptibly();
-            while (true) {
-                int proteinSize = proteinList.size();
-                if (proteinSize < (geneSize * 2)) {
-                    // we can make more proteins
-                    Codon codon = rna.get(index++);
-                    if (codon.isStop()) {
-                        rna = null;
-                    }
-                    return codon; // even if it is a stop()!
-                } else {
-                    cell.logId("waiting for needMoreProteins");
-                    needMoreProteins.await();
-                }
+            while (proteinList.size() >= proteinCtForDivide) {
+                cell.logId("waiting for needMoreProteins");
+                needMoreProteins.await();
             }
+            // we can make more proteins
+            Codon codon = rna.get(index++);
+            if (codon.isStop()) {
+                rna = null;
+            }
+            return codon; // even if it is a stop()!
         } finally {
             proteinListLock.unlock();
         }

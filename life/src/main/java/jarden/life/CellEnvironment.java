@@ -40,7 +40,7 @@ public class CellEnvironment implements TimerListener {
     public void stopFeeding() {
         timer.stop();
     }
-    private void addFood() {
+    public void addFood() {
         CellFood cellFood = new CellFood();
         cellFood.addAllAminoAcids(aminoAcidFeedCt);
         cellFood.addAllNucleotides(nucleotideFeedCt);
@@ -67,5 +67,9 @@ public class CellEnvironment implements TimerListener {
     }
     public void removeCell(Cell cell) {
         cellList.remove(cell);
+    }
+
+    public int getCellCount() {
+        return cellList.size();
     }
 }

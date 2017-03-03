@@ -25,7 +25,10 @@ public class MasterDesigner implements CellListener {
 				System.out.println("p(rint) or q(uit): ");
 				c = reader.readLine().charAt(0);
 				if (c == 'p') {
-                    for (Cell cell: cellList) cell.printCell();
+                    for (Cell cell: cellList) {
+                        CellData cellData = cell.getCellData();
+                        System.out.println(cellData);
+                    }
                     System.out.println("cellList.size=" + cellList.size());
                 }
 				else if (c == 'q') System.exit(0);

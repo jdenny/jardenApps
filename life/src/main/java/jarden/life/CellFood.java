@@ -9,10 +9,9 @@ import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
-import jarden.life.aminoacid.FindNextGene;
 import jarden.life.aminoacid.GetAminoAcidFromCodon;
 import jarden.life.aminoacid.GetCodonFromRNA;
-import jarden.life.aminoacid.GetRNAFromGene;
+import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Cytosine;
@@ -41,12 +40,15 @@ public class CellFood implements Food {
     public static AminoAcid makeAminoAcid(String name) {
         AminoAcid aminoAcid;
         if (name.equals("AddAminoAcidToProtein")) aminoAcid = new AddAminoAcidToProtein();
+        else if (name.equals("AddAminoAcidToProtein")) aminoAcid = new AddAminoAcidToProtein();
+        else if (name.equals("CopyDNA")) aminoAcid = new CopyDNA();
         else if (name.equals("DigestFood")) aminoAcid = new DigestFood();
         else if (name.equals("DivideCell")) aminoAcid = new DivideCell();
-        else if (name.equals("FindNextGene")) aminoAcid = new FindNextGene();
+        else if (name.equals("EatFood")) aminoAcid = new EatFood();
         else if (name.equals("GetAminoAcidFromCodon")) aminoAcid = new GetAminoAcidFromCodon();
         else if (name.equals("GetCodonFromRNA")) aminoAcid = new GetCodonFromRNA();
-        else if (name.equals("GetRNAFromGene")) aminoAcid = new GetRNAFromGene();
+        else if (name.equals("Polymerase")) aminoAcid = new Polymerase();
+        else if (name.equals("WaitForEnoughProteins")) aminoAcid = new WaitForEnoughProteins();
         else throw new IllegalArgumentException("unknown Amino Acid name: " + name);
         return aminoAcid;
     }
@@ -98,10 +100,9 @@ public class CellFood implements Food {
             aminoAcidList.add(new DigestFood());
             aminoAcidList.add(new DivideCell());
             aminoAcidList.add(new EatFood());
-            aminoAcidList.add(new FindNextGene());
             aminoAcidList.add(new GetAminoAcidFromCodon());
             aminoAcidList.add(new GetCodonFromRNA());
-            aminoAcidList.add(new GetRNAFromGene());
+            aminoAcidList.add(new Polymerase());
             aminoAcidList.add(new WaitForEnoughProteins());
         }
     }
