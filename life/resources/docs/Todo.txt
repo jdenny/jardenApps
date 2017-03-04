@@ -1,4 +1,4 @@
-Current actions
+Current actions *************************************************
 replace FindNextGene, GetRNAFromGene with Polymerase - DONE
 
 remove all synchronized - DONE
@@ -7,34 +7,65 @@ in DivideCell, signal needMoreProteins if ct < 2 * geneCt - DONE
 
 similarly if rnaCt < geneCt, notify needMoreRna - DONE
 
-follow pattern in javadoc of interface java.util.concurrent.locks.Condition
+follow pattern in javadoc of interface
+ java.util.concurrent.locks.Condition - DONE
 
-similarly signal needMoreFood
+similarly signal needMoreFood - DONE
 
 static counts for proteins, aminoAcids and RNA and nucleotides need to be
 non-static, as each cell could have different DNA! - DONE
 
-pass on targets in DivideCell
-
-have a protein that adjusts the targets: each time we run out
-of a resource, increase the target for that resource
-
-see comment in Cell.needsMoreResources()
+pass on targets in DivideCell - DONE
 
 is there an inconsistency, in that Cell applies the locks & conditions for
-get<resource>, but the amino acids do it for put<resource>?
+get<resource>, but the amino acids do it for put<resource>? - NO
 
-remove onCellChanged(Cell cell);
+remove onCellChanged(Cell cell); - DONE
 
-everything goes through CellEnvironment; LifeFX doesn't even see a cell,
-only cellData; LifeFX is listener on environent, rather than Cell; or
-even have no cell listener, as everything is done by pull instead of
-push?
+remove cell listener - DONE
+
+clients get all data using pull from CellEnvironment instead of push;
+ideally clients get cellData, rather than cells
+
+remove Cell.active - DONE
+
+for each Condition, have corresponding boolean method, e.g. - DONE
+	private Condition cellReadyToDivide;
+	public boolean isCellReadyToDivide() {
+		return proteinList.size() > (geneSize * 2);
+	}
+
+replace AminoAcid method: Object action(Object object)
+with: CellResource action(CellResource resource)     - DONE
+
+currently: (try to keep resource exactly at target)
+	when resource met target, stop digesting;
+	when resource < target, start feeding
+replace with: (keep resource from 0 to target)
+	when resource met target, stop digesting;
+	when resource empty, start feeding and increment target
+or: (keep resource from target to 2 * target)
+	when resource met target * 2, stop digesting;
+	when resource < target, start feeding
+	when resource empty, increment target
+
+add aminoAcidActuals, similar to nucleotideActuals
 
 could the protein name be replaced by its RNA gene, without the stop,
  as a string?
 
-remove Cell.active
+when we've converted all our amino acids into the 20 proper names,
+then we can have a definitive list of aminoAcids, as we already have
+a definitive list of nucleotides (5); so we can hold the resource
+targets like this:
+	int[] aminoAcidTargets; // in same sequence as aminoAcid list
+	int[] nucleotideTargets; // in same sequence as nucleotide list
+	int proteinSizeForDivide;
+if we ever want to have a target per protein type, then the last
+one above could be replaced by:
+	int[] proteinTargets;
+maybe one day, the calculation of the resource targets could itself
+be a protein!
 
 End of current actions *****************************************
 

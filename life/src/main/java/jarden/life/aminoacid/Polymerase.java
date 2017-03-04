@@ -5,6 +5,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
@@ -24,7 +25,7 @@ import jarden.life.nucleicacid.Uracil;
 public class Polymerase extends AminoAcid {
 
     @Override
-	public ListIterator<Nucleotide> action(Object object) throws InterruptedException {
+	public CellResource action(CellResource notUsed) throws InterruptedException {
         /*
         Keep dnaIndex in cell, along with dna;
         action()
@@ -78,39 +79,23 @@ public class Polymerase extends AminoAcid {
         RNA rna = new RNA();
         for (int i = index; i < nextStopIndex; i+=3) {
             Nucleotide first = cell.waitForNucleotide(dna.get(i), false);
+            // TODO: do we need this? I've lost track!
             if (Thread.interrupted()) {
-                Thread.currentThread().interrupt();
-                return null;
+                throw new InterruptedException();
             }
             Nucleotide second = cell.waitForNucleotide(dna.get(i+1), false);
             if (Thread.interrupted()) {
-                Thread.currentThread().interrupt();
-                return null;
+                throw new InterruptedException();
             }
             Nucleotide third = cell.waitForNucleotide(dna.get(i+2), false);
             if (Thread.interrupted()) {
-                Thread.currentThread().interrupt();
-                return null;
+                throw new InterruptedException();
             }
             Codon codon = new Codon(first, second, third);
             rna.add(codon);
         }
         cell.addRNA(rna);
         return null;
-
-        /*!!
-        if (getNextPromoterIndex() < 0) {
-            currentStop = 0;
-            if (getNextPromoterIndex() < 0) {
-                throw new IllegalStateException("DNA contains no promoter");
-            }
-        }
-        index += 6; // i.e. first nucleotide after promoter
-        if (getNextStop() < 0) {
-            throw new IllegalStateException("DNA gene has no terminator");
-        }
-        return dna.listIterator(index);
-        */
 	}
     private static int getNextPromoterIndex(DNA dna, int index) {
         for (int i = index; (i + Nucleotide.promoterLength) <= dna.size(); i+=3) {

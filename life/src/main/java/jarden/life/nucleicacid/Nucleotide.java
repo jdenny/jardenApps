@@ -42,6 +42,7 @@ public interface Nucleotide {
 
     char getCode(); // first letter of name
 	String getName();
+    int getIndex(); // index to array
 }
 
 

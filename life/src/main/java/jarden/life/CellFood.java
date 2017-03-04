@@ -27,9 +27,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class CellFood implements Food {
-    private List<Protein> proteinList = new LinkedList<>();
     private List<AminoAcid> aminoAcidList = new LinkedList<>();
-    private List<RNA> rnaList = new LinkedList<>();
     private List<Nucleotide> nucleotideList = new LinkedList<>();
 
     /**
@@ -40,7 +38,6 @@ public class CellFood implements Food {
     public static AminoAcid makeAminoAcid(String name) {
         AminoAcid aminoAcid;
         if (name.equals("AddAminoAcidToProtein")) aminoAcid = new AddAminoAcidToProtein();
-        else if (name.equals("AddAminoAcidToProtein")) aminoAcid = new AddAminoAcidToProtein();
         else if (name.equals("CopyDNA")) aminoAcid = new CopyDNA();
         else if (name.equals("DigestFood")) aminoAcid = new DigestFood();
         else if (name.equals("DivideCell")) aminoAcid = new DivideCell();
@@ -68,20 +65,8 @@ public class CellFood implements Food {
         return nucleotide;
     }
     @Override
-    public DNA getDNA() {
-        return null;
-    }
-    @Override
-    public List<Protein> getProteinList() {
-        return proteinList;
-    }
-    @Override
     public List<AminoAcid> getAminoAcidList() {
         return aminoAcidList;
-    }
-    @Override
-    public List<RNA> getRNAList() {
-        return rnaList;
     }
     @Override
     public List<Nucleotide> getNucleotideList() {

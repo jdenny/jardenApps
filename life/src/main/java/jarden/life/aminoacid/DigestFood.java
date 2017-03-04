@@ -3,6 +3,7 @@ package jarden.life.aminoacid;
 import java.util.List;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.Food;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
@@ -23,30 +24,16 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class DigestFood extends AminoAcid {
-    public Object action(Object object) throws InterruptedException {
-        Food food = getCell().waitForFood();
-        if (Thread.interrupted()) {
-            Thread.currentThread().interrupt();
-            return null;
-        }
+    public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
+        Food food = cell.waitForFood();
         List<Nucleotide> nucleotides = food.getNucleotideList();
         if (nucleotides != null && nucleotides.size() > 0) {
             cell.addNucleotides(nucleotides);
         }
-        DNA dna = food.getDNA();
-        if (dna != null && dna.size() > 0) {
-            cell.addNucleotides(dna);
-        }
         List<AminoAcid> aminoAcids = food.getAminoAcidList();
         if (aminoAcids != null && aminoAcids.size() > 0) {
             cell.addAminoAcids(aminoAcids);
-        }
-        List<Protein> proteins = food.getProteinList();
-        if (proteins != null) {
-            for (Protein protein: proteins) {
-                cell.addAminoAcids(protein.getAminoAcidList());
-            }
         }
         return null;
     }

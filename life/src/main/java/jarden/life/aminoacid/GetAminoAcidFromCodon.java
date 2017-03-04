@@ -1,6 +1,7 @@
 package jarden.life.aminoacid;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Uracil;
@@ -12,7 +13,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class GetAminoAcidFromCodon extends AminoAcid {
 
-	public Object action(Object _codon) throws InterruptedException {
+	public CellResource action(CellResource _codon) throws InterruptedException {
 		Codon codon = (Codon)_codon;
 		if (codon.isStop()) return codon;
 		return getCell().waitForAminoAcid(codon);

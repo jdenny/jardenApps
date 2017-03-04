@@ -1,7 +1,9 @@
 package jarden.life.nucleicacid;
 
 
-public class Codon {
+import jarden.life.CellResource;
+
+public class Codon implements CellResource {
 	private Nucleotide first;
 	private Nucleotide second;
 	private Nucleotide third;
@@ -35,4 +37,13 @@ public class Codon {
 	public String toString() {
 		return "(" + first + "," + second + "," + third + ")";
 	}
+
+    @Override
+    public String getName() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(first.getCode());
+        stringBuilder.append(second.getCode());
+        stringBuilder.append(third.getCode());
+        return stringBuilder.toString();
+    }
 }

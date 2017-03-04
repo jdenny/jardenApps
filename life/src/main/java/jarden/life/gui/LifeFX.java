@@ -6,12 +6,12 @@ import java.util.List;
 
 import jarden.life.Cell;
 import jarden.life.CellData;
+import jarden.life.CellEnvironment;
 import jarden.life.CellFood;
-import jarden.life.CellListener;
+import jarden.life.NameCount;
 import jarden.life.aminoacid.AminoAcid;
 import jarden.life.nucleicacid.Nucleotide;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -21,7 +21,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -31,7 +30,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static jarden.life.Cell.nucleotidesFor1Cell;
 import static jarden.life.CellData.aminoAcidNames;
 import static jarden.life.CellData.nucleotideNames;
 
@@ -44,7 +42,7 @@ import static jarden.life.CellData.nucleotideNames;
  * /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
  */
 
-public class LifeFX extends Application implements CellListener {
+public class LifeFX extends Application {
     private Text statusText;
     private ListView<Cell> cellListView;
     private ObservableList<Cell> cellObservableList;
@@ -55,6 +53,7 @@ public class LifeFX extends Application implements CellListener {
     private Text[] nucleotideQtyTexts;
     private TextField[] nucleotideQtyFields;
     private CellData cellData;
+    private CellEnvironment cellEnvironment;
 
     // TODO: sliding scale from blue to green?
     private static Color[] generationColours = {
@@ -68,32 +67,6 @@ public class LifeFX extends Application implements CellListener {
     public static void main(String[] args) {
         System.out.println("hello LifeFX");
         launch(args);
-    }
-    @Override
-    public void onNewCell(Cell cell) {
-        Platform.runLater(() -> addCell(cell));
-    }
-    @Override
-    public void onCellUpdated(int cellId) {
-        System.out.println("LifeFX.onCellUpdated(" + cellId + ")");
-        Platform.runLater(() -> {
-            MultipleSelectionModel<Cell> selectionModel =
-                    this.cellListView.getSelectionModel();
-            int selectedIndex = selectionModel.getSelectedIndex();
-            Cell cell = selectionModel.getSelectedItem();
-            if (cell != null && cellId == cell.getId()) {
-                cellObservableList.remove(selectedIndex);
-                cellObservableList.add(selectedIndex, cell);
-                cellData = cell.getCellData();
-                showCellData(cellData);
-            }
-
-        });
-    }
-    @Override
-    public void onProteinStatusUpdated(int proteinId, String status) {
-        System.out.println("LifeFX.onProteinStatusUpdated(" +
-                proteinId + ", " + status + ")");
     }
     private static class ColorRectCell extends ListCell<Cell> {
         @Override
@@ -149,7 +122,7 @@ public class LifeFX extends Application implements CellListener {
                 aminoAcidQtyField.setText("1");
             }
             for (int i = 0; i < nucleotideQtyFields.length; i++) {
-                nucleotideQtyFields[i].setText(nucleotidesFor1Cell[i]);
+                nucleotideQtyFields[i].setText("2");
             }
         });
         Button clearButton = new Button("Clear");
@@ -228,13 +201,12 @@ public class LifeFX extends Application implements CellListener {
         primaryStage.setScene(scene);
         primaryStage.show();
         Cell syntheticCell = null;
+        cellEnvironment = new CellEnvironment();
         try {
-            syntheticCell = Cell.makeSyntheticCell(true);
+            syntheticCell = Cell.makeSyntheticCell(cellEnvironment);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        syntheticCell.setCellListener(this);
-        addCell(syntheticCell);
     }
     private void addCell(Cell cell) {
         cellObservableList.add(cell);
@@ -269,7 +241,7 @@ public class LifeFX extends Application implements CellListener {
         int proteinCt = cellData.proteinNameCts.length;
         String[] proteinData = new String[proteinCt];
         for (int i = 0; i < proteinCt; i++) {
-            CellData.ProteinNameCount proteinNameCount = cellData.proteinNameCts[i];
+            NameCount proteinNameCount = cellData.proteinNameCts[i];
             proteinData[i] = proteinNameCount.count + " " + proteinNameCount.name;
         }
         proteinObservableList.clear();

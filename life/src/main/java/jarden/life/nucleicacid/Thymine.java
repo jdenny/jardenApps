@@ -9,13 +9,20 @@ public class Thymine implements Nucleotide {
     public boolean rnaMatch(Nucleotide nucleotide) {
         return false; // Thymine not used in RNA
     }
-	public char getCode() {
+    @Override
+    public char getCode() {
 		return 'T';
 	}
+    @Override
 	public String toString() {
 		return "Thymine";
 	}
+    @Override
 	public String getName() {
 		return "Thymine";
 	}
+    @Override
+    public int getIndex() {
+        return 3;
+    }
 }

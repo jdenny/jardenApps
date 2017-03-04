@@ -6,17 +6,16 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MasterDesigner implements CellListener {
-    private static List<Cell> cellList = new ArrayList<>();
+public class MasterDesigner {
+    private static List<Cell> cellList;
 	
 	public static void main(String[] args) throws InterruptedException {
         new MasterDesigner();
     }
     public MasterDesigner() throws InterruptedException {
-
-        Cell syntheticCell = Cell.getSyntheticCell();
-        syntheticCell.setCellListener(this);
-        cellList.add(syntheticCell);
+        CellEnvironment cellEnvironment = new CellEnvironment();
+        Cell syntheticCell = Cell.getSyntheticCell(cellEnvironment);
+        cellList = cellEnvironment.getCellList();
 
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -38,6 +37,7 @@ public class MasterDesigner implements CellListener {
 		}
 	}
 
+    /*!!
     @Override
     public void onNewCell(Cell cell) {
         cellList.add(cell);
@@ -56,4 +56,5 @@ public class MasterDesigner implements CellListener {
         System.out.println("MasterDesigner.onProteinStatusUpdated(" +
                 proteinId + ", " + status + ")");
     }
+    */
 }

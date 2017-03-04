@@ -12,9 +12,11 @@ import jarden.life.nucleicacid.RNA;
  */
 
 public interface Food extends CellResource {
-    DNA getDNA();
-    List<Protein> getProteinList();
+    // TODO: could have partial digestion, that breaks down
+    // proteins into aminoAcids, DNA & RNA into nucleotides
+    //!! DNA getDNA();
+    //!! List<Protein> getProteinList();
     List<AminoAcid> getAminoAcidList();
-    List<RNA> getRNAList();
+    //!! List<RNA> getRNAList();
     List<Nucleotide> getNucleotideList();
 }

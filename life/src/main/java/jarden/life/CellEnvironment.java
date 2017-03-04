@@ -21,9 +21,6 @@ public class CellEnvironment implements TimerListener {
     private int feederRate = 5;
     private int nucleotideFeedCt = 5; // i.e. 5 of each
     private int aminoAcidFeedCt = 1; // i.e. 1 of each
-    private int dnaFeedCt = 1;
-    private int rnaFeedCt = 1; // i.e. 1 of each gene
-    private int proteinFeedCt = 1; // i.e. 1 of each
     private Timer timer;
 
     /**
@@ -71,5 +68,9 @@ public class CellEnvironment implements TimerListener {
 
     public int getCellCount() {
         return cellList.size();
+    }
+
+    public List<Cell> getCellList() {
+        return cellList;
     }
 }

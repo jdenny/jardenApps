@@ -1,6 +1,7 @@
 package jarden.life.aminoacid;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Uracil;
@@ -9,17 +10,17 @@ public class AddAminoAcidToProtein extends AminoAcid {
 	private Protein newProtein;
 
     @Override
-	public Object action(Object _aminoAcidOrCodon) throws InterruptedException {
+	public CellResource action(CellResource _aminoAcidOrCodon) throws InterruptedException {
 		if (_aminoAcidOrCodon instanceof Codon) {
             if (newProtein == null) {
                 Cell.log("AddAminoAcidToProtein.action(); newProtein is null" +
                         " so ignoring action");
                 return null;
             }
-			Codon codon = (Codon)_aminoAcidOrCodon;
+			Codon codon = (Codon) _aminoAcidOrCodon;
 			if (codon.isStop()) {
 				getCell().addProtein(newProtein);
-				newProtein = null;
+				reset();
 			} else {
 				throw new IllegalArgumentException("unexpected codon passed: " + codon);
 			}
@@ -28,10 +29,10 @@ public class AddAminoAcidToProtein extends AminoAcid {
 			if (newProtein == null) {
 				newProtein = new Protein(getCell());
 			}
-			AminoAcid aminoAcid = (AminoAcid)_aminoAcidOrCodon;
+			AminoAcid aminoAcid = (AminoAcid) _aminoAcidOrCodon;
 			newProtein.add(aminoAcid);
 		}
-		return newProtein;
+		return null;
 	}
     @Override
 	public String getName() {

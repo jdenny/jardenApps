@@ -20,6 +20,7 @@ import jarden.life.nucleicacid.RNA;
 import jarden.life.nucleicacid.Thymine;
 import jarden.life.nucleicacid.Uracil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,36 +48,27 @@ public class Cell implements Food {
     };
     private static String dnaStr = getDnaStr();
 
-    private int adenineFor1Cell;
-    private int cytosineFor1Cell;
-    private int guanineFor1Cell;
-    private int thymineFor1Cell;
-    private int uracilFor1Cell;
-    public String[] nucleotidesFor1Cell = {
-            String.valueOf(adenineFor1Cell),
-            String.valueOf(cytosineFor1Cell),
-            String.valueOf(guanineFor1Cell),
-            String.valueOf(thymineFor1Cell),
-            String.valueOf(uracilFor1Cell)
-    };
-
     private final Lock proteinListLock = new ReentrantLock();
     private final Condition cellReadyToDivide = proteinListLock.newCondition();
     private final Condition needMoreProteins = proteinListLock.newCondition();
+
     private final Lock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailable = aminoAcidListLock.newCondition();
+
     private final Lock foodListLock = new ReentrantLock();
     private final Condition foodAvailable = foodListLock.newCondition();
     private final Condition needMoreFood = foodListLock.newCondition();
+
     private final Lock nucleotideListLock = new ReentrantLock();
     private final Condition nucleotideAvailable = nucleotideListLock.newCondition();
+
     private final Lock rnaListLock = new ReentrantLock();
     private final Condition rnaAvailable = rnaListLock.newCondition();
     private final Condition needMoreRNA = rnaListLock.newCondition();
+
     private final Lock dnaIndexLock = new ReentrantLock();
 
     private final CellEnvironment cellEnvironment;
-    private boolean active = true; // true means run threads on create
     private int id;
     private int generation = 1;
     private DNA dna;
@@ -87,11 +79,14 @@ public class Cell implements Food {
 	private final List<RNA> rnaList = new LinkedList<>();
     private final List<Food> foodList = new LinkedList<>();
     private int hashCode = 0;
-    private CellListener cellListener;
     private boolean divideCellRunning;
     private int geneSize;
-    private int proteinSizeForDivide;
-
+    // TODO: when proper aminoAcids, replace length with 20
+    // in same sequence as aminoAcid list
+    private int[] aminoAcidTargets = new int[CellData.aminoAcidNames.length];
+    // indexed by nucleotide.getIndex(); 5 is number of nucleotide types
+    private int[] nucleotideTargets = new int[5];
+    private int[] nucleotideActuals = new int[5];
     /*
     Common thread numbers:
         Cell 1                Cell 2
@@ -129,6 +124,14 @@ public class Cell implements Food {
         }
         return syntheticCell;
     }
+
+    /**
+     * This is the God cell. Cells are able to reproduce, by dividing, but how is the
+     * first cell made? Here we form it "out of dust from the ground" - Genesis 2:7.
+     * @param cellEnvironment
+     * @return
+     * @throws InterruptedException
+     */
     public static Cell makeSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
         Cell synCell = new Cell(buildDNAFromString(dnaStr), cellEnvironment);
         synCell.analyseDNA(); // set targets
@@ -144,18 +147,23 @@ public class Cell implements Food {
             synCell.aminoAcidList.add(new Polymerase());
             synCell.aminoAcidList.add(new WaitForEnoughProteins());
         }
-        for (int i = 0; i < synCell.uracilFor1Cell; i++) {
-            synCell.nucleotideList.add(new Uracil());
+        List<Nucleotide> newNucleotides = new ArrayList<>();
+        for (int i = 0; i < synCell.nucleotideTargets[0]; i++) {
+            newNucleotides.add(new Adenine());
         }
-        for (int i = 0; i < synCell.adenineFor1Cell; i++) {
-            synCell.nucleotideList.add(new Adenine());
+        for (int i = 0; i < synCell.nucleotideTargets[1]; i++) {
+            newNucleotides.add(new Cytosine());
         }
-        for (int i = 0; i < synCell.cytosineFor1Cell; i++) {
-            synCell.nucleotideList.add(new Cytosine());
+        for (int i = 0; i < synCell.nucleotideTargets[2]; i++) {
+            newNucleotides.add(new Guanine());
         }
-        for (int i = 0; i < synCell.guanineFor1Cell; i++) {
-            synCell.nucleotideList.add(new Guanine());
+        for (int i = 0; i < synCell.nucleotideTargets[3]; i++) {
+            newNucleotides.add(new Thymine());
         }
+        for (int i = 0; i < synCell.nucleotideTargets[4]; i++) {
+            newNucleotides.add(new Uracil());
+        }
+        synCell.addNucleotides(newNucleotides);
         Protein rnaPolymerase = new Protein(synCell);
         rnaPolymerase.add(new Polymerase());
         Protein ribosome = new Protein(synCell);
@@ -177,10 +185,14 @@ public class Cell implements Food {
         synCell.addProtein(proteinDivide);
         return synCell;
     }
-    public Cell(DNA dna, CellEnvironment cellEnvironment) {
+    private Cell(DNA dna, CellEnvironment cellEnvironment) {
         this.id = ++currentId;
         this.dna = dna;
         this.cellEnvironment = cellEnvironment;
+    }
+    public Cell(DNA dna, Cell parentCell) {
+        this(dna, parentCell.getCellEnvironment());
+        nucleotideTargets = parentCell.nucleotideTargets;
     }
     private static String getDnaStr() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -193,23 +205,19 @@ public class Cell implements Food {
     }
     private void analyseDNA() {
         geneSize = geneStrs.length;
-        proteinSizeForDivide = 2 * geneSize;
-
-
         for (int i = 0; i < dnaStr.length(); i++) {
             if (dnaStr.charAt(i) == 'T') {
-                ++thymineFor1Cell; // for DNA
-                ++uracilFor1Cell; // for RNA
+                ++nucleotideTargets[3]; // for DNA
+                ++nucleotideTargets[4]; // for RNA
             }
-            else if (dnaStr.charAt(i) == 'C') cytosineFor1Cell += 2; // 1 for DNA, 1 for RNA
-            else if (dnaStr.charAt(i) == 'A') adenineFor1Cell += 2;
-            else if (dnaStr.charAt(i) == 'G') guanineFor1Cell += 2;
+            else if (dnaStr.charAt(i) == 'C') nucleotideTargets[1] += 2; // 1 for DNA, 1 for RNA
+            else if (dnaStr.charAt(i) == 'A') nucleotideTargets[0] += 2;
+            else if (dnaStr.charAt(i) == 'G') nucleotideTargets[2] += 2;
         }
         // promoters part of DNA, but not part of RNA, but above loop has already added them
         // for RNA
-        uracilFor1Cell -= (geneSize * promoterThymineCt);
-        adenineFor1Cell -= (geneSize * promoterAdenineCt);
-
+        nucleotideTargets[4] -= (geneSize * promoterThymineCt);
+        nucleotideTargets[0] -= (geneSize * promoterAdenineCt);
     }
     /**
      * General purpose log method, static so can be called from anywhere.
@@ -244,6 +252,21 @@ public class Cell implements Food {
     }
 
     /**
+     * Return true if the cell has enough amino acids.
+     * Current algorithm is: enough for 1 of each protein.
+     * @return
+     */
+    public boolean enoughAminoAcids() {
+
+//        // analyse proteins in cell as originally built
+//        for (int i = 0; i < geneSize; i++) {
+//            Protein protein = proteinList.get(i);
+//        }
+        return true;
+
+    }
+
+    /**
      * Get UI data for this cell.
      * @return UI data for this cell.
      */
@@ -263,11 +286,11 @@ public class Cell implements Food {
         } finally {
             proteinListLock.unlock();
         }
-        cellData.proteinNameCts = new CellData.ProteinNameCount[proteinNameCountMap.size()];
+        cellData.proteinNameCts = new NameCount[proteinNameCountMap.size()];
         Set<String> keys = proteinNameCountMap.keySet();
         int j = 0;
         for (String key: keys) {
-            cellData.proteinNameCts[j] = new CellData.ProteinNameCount(key,
+            cellData.proteinNameCts[j] = new NameCount(key,
                     proteinNameCountMap.get(key));
             ++j;
         };
@@ -305,16 +328,11 @@ public class Cell implements Food {
         }
         return cellData;
     }
-    private void cellChanged() {
-        if (cellListener != null) {
-            cellListener.onCellUpdated(id);
-        }
-    }
 	public void addProtein(Protein protein) throws InterruptedException {
         proteinListLock.lockInterruptibly();
         try {
             proteinList.add(protein);
-            if (proteinList.size() >= proteinSizeForDivide) {
+            if (cellReadyToDivide()) {
                 cellReadyToDivide.signalAll();
             }
         } finally {
@@ -322,10 +340,9 @@ public class Cell implements Food {
         }
         logId("addProtein(); proteinCt=" + proteinList.size());
         Thread proteinThread = protein.getThread();
-        if (this.active && (proteinThread == null || !proteinThread.isAlive())) {
+        if (proteinThread == null || !proteinThread.isAlive()) {
             protein.start();
         }
-        cellChanged();
 	}
 	public void addAminoAcids(List<AminoAcid> aminoAcids) throws InterruptedException {
         aminoAcidListLock.lockInterruptibly();
@@ -339,7 +356,10 @@ public class Cell implements Food {
 	public void addNucleotides(List<Nucleotide> nucleotides) throws InterruptedException {
         nucleotideListLock.lockInterruptibly();
         try {
-            nucleotideList.addAll(nucleotides);
+            for (Nucleotide nucleotide: nucleotides) {
+                nucleotideList.add(nucleotide);
+                ++nucleotideTargets[nucleotide.getIndex()];
+            }
             nucleotideAvailable.signalAll();
         } finally {
             nucleotideListLock.unlock();
@@ -365,15 +385,30 @@ public class Cell implements Food {
     }
 
     /**
-     * Wait for a nucleotide suitable to make a base-pair with passed
+     * Wait for a nucleotide suitable to make a base-pair with supplied
      * nucleotide.
      * @param nucleotide
      * @param dna if true, look for dna base-pair, else rna base-pair.
-     * @return
+     * @return nucleotide that can form a base pair with supplied
+     * nucleotide.
      * @throws InterruptedException
      */
     public Nucleotide waitForNucleotide(Nucleotide nucleotide, boolean dna)
             throws InterruptedException {
+        int index = nucleotide.getIndex();
+        if (nucleotideActuals[index] < nucleotideTargets[index]) {
+            foodListLock.lockInterruptibly();
+            try {
+                // better than needMoreResources.signalAll(), as that
+                // would only activate Digest, which can't start until
+                // there is food available; perhaps the required nucleotide
+                // is being digested this very moment, but it's better to
+                // be overfed than underfed
+                needMoreFood.signalAll();
+            } finally {
+                foodListLock.unlock();
+            }
+        }
         Nucleotide bondingNucleotide;
         nucleotideListLock.lockInterruptibly();
         try {
@@ -381,7 +416,6 @@ public class Cell implements Food {
                 log("waiting for nucleotide to bond with " + nucleotide);
                 nucleotideAvailable.await();
             }
-            if (needMoreNucleotides) needMoreNucleotides.signalAll();
             return bondingNucleotide;
         } finally {
             nucleotideListLock.unlock();
@@ -402,6 +436,15 @@ public class Cell implements Food {
         }
 	}
 	public AminoAcid waitForAminoAcid(Codon codon) throws InterruptedException {
+        if (aminoAcidList.size() < geneSize) {
+            foodListLock.lockInterruptibly();
+            try {
+                // see comment in waitForNucleotide()
+                needMoreFood.signalAll();
+            } finally {
+                foodListLock.unlock();
+            }
+        }
         AminoAcid aminoAcid;
         aminoAcidListLock.lockInterruptibly();
         try {
@@ -409,7 +452,6 @@ public class Cell implements Food {
                 log("waiting for amino acid for codon " + codon);
                 aminoAcidAvailable.await();
             }
-            if (aminoAcidList.size() < geneSize) needMoreRNA.signalAll();
             return aminoAcid;
         } finally {
             aminoAcidListLock.unlock();
@@ -427,6 +469,10 @@ public class Cell implements Food {
             foodListLock.unlock();
         }
     }
+    public boolean cellReadyToDivide() {
+        return proteinList.size() >= (geneSize * 2);
+    }
+
     /*
     Not thread-safe, so only call if rnaList is locked
      */
@@ -479,6 +525,7 @@ public class Cell implements Food {
             if (dna && freeNucleotide.dnaMatch(nucleotide) ||
                     freeNucleotide.rnaMatch((nucleotide))) {
                 nucleotideList.remove(freeNucleotide);
+                --nucleotideActuals[freeNucleotide.getIndex()];
                 return freeNucleotide;
             }
 		}
@@ -545,7 +592,6 @@ public class Cell implements Food {
         }
         return this.hashCode;
     }
-    @Override
     public List<Protein> getProteinList() {
         return proteinList;
     }
@@ -557,31 +603,20 @@ public class Cell implements Food {
     public List<Nucleotide> getNucleotideList() {
         return nucleotideList;
     }
-    @Override
     public List<RNA> getRNAList() {
         return rnaList;
     }
-    @Override
     public DNA getDNA() {
         return dna;
     }
     public void setGeneration(int generation) {
         this.generation = generation;
     }
-    public void setCellListener(CellListener cellListener) {
-        this.cellListener = cellListener;
-    }
-    public CellListener getCellListener() {
-        return cellListener;
-    }
     public boolean isDivideCellRunning() {
         return this.divideCellRunning;
     }
     public void setDivideCellRunning(boolean divideCellRunning) {
         this.divideCellRunning = divideCellRunning;
-    }
-    public void setActive(boolean active) {
-        this.active = active;
     }
     public Lock getProteinListLock() {
         return proteinListLock;
@@ -617,27 +652,24 @@ public class Cell implements Food {
     public Lock getFoodListLock() {
         return foodListLock;
     }
-    public int getProteinSizeForDivide() {
-        return proteinSizeForDivide;
-    }
     public int getGeneSize() {
         return geneSize;
     }
+
     /**
-     * Enough nucleotides for 1 set of geneStrs (RNAs) and copy DNA, and
-     * enough aminoAcids for all geneStrs.
+     * See if any of the cell's resources - nucleotides & aminoAcids -
+     * are below their target levels.
+     * @return true if any individual nucleotide or aminoAcid is
+     * below its target level.
      */
     public boolean needMoreResources() {
-        // TODO: refine this to count individual nucleotides;
-        // even better, whenever we are waiting for some resource,
-        // add to appropriate count; and when we add a resource,
-        // decrement that count!
-        return rnaList.size() < geneSize ||
-                aminoAcidList.size() < geneSize ||
-                nucleotideList.size() < (adenineFor1Cell +
-                        cytosineFor1Cell +
-                        guanineFor1Cell +
-                        thymineFor1Cell +
-                        uracilFor1Cell);
+        if (aminoAcidList.size() < geneSize) return true;
+        for (int i = 0; i < nucleotideTargets.length; i++) {
+            if (nucleotideActuals[i] < nucleotideTargets[i]) return true;
+        }
+        return false;
+    }
+    public boolean needMoreFood() {
+        return foodList.size() == 0 && needMoreResources();
     }
 }

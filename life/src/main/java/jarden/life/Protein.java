@@ -46,10 +46,10 @@ public class Protein implements Runnable, CellResource {
         }
 	}
     // TODO: remove parameter to this method?
-    private Object action(Object object) throws InterruptedException {
+    private CellResource action(CellResource resource) throws InterruptedException {
         // if firstObject is a chain, then repeat until end of chain
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
-        Object currentObject = object;
+        CellResource currentResource = resource;
         do {
             for (AminoAcid aminoAcid: aminoAcidList) {
                 if (Thread.interrupted()) {
@@ -57,10 +57,10 @@ public class Protein implements Runnable, CellResource {
                     Thread.currentThread().interrupt();
                     return null;
                 }
-                currentObject = aminoAcid.action(currentObject);
+                currentResource = aminoAcid.action(currentResource);
             }
         } while (firstAminoAcid.hasMore());
-        return currentObject;
+        return currentResource;
     }
 
 	public void add(AminoAcid aminoAcid) {

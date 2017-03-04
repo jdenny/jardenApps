@@ -5,6 +5,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -19,9 +20,8 @@ public class GetCodonFromRNA extends AminoAcid {
 	private int index;
 	
     @Override
-	public Codon action(Object object) throws InterruptedException {
+	public Codon action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
-        List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
         Condition needMoreProteins = cell.getNeedMoreProteins();
         // get the RNA first, as if successful, we will release the lock on
@@ -31,10 +31,9 @@ public class GetCodonFromRNA extends AminoAcid {
             rna = getCell().waitForRNA();
             index = 0;
         }
-        int proteinCtForDivide = cell.getProteinSizeForDivide();
         proteinListLock.lockInterruptibly();
         try {
-            while (proteinList.size() >= proteinCtForDivide) {
+            while (cell.cellReadyToDivide()) {
                 cell.logId("waiting for needMoreProteins");
                 needMoreProteins.await();
             }

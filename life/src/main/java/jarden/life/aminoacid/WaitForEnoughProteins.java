@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
+import jarden.life.CellResource;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
@@ -27,17 +28,14 @@ public class WaitForEnoughProteins extends AminoAcid {
         }
     }
     @Override
-	public Object action(Object o) throws InterruptedException {
+	public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
-        int divideSize = cell.getProteinSizeForDivide();
-        int proteinSize;
         proteinListLock.lockInterruptibly();
         try {
-            while ((proteinSize = proteinList.size()) < divideSize) {
-                String state = "DivideCell waiting for " +
-                        (divideSize - proteinSize) + " more proteins";
+            while (!cell.cellReadyToDivide()) {
+                String state = "DivideCell waiting for more proteins";
                 Cell.log(state);
                 getProtein().setState(state);
                 boolean timedOut = !cell.getCellReadyToDivide().await(5, TimeUnit.SECONDS);

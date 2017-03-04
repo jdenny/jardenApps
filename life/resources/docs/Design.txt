@@ -1,4 +1,4 @@
-Doodles
+Doodles ****************************************
 How to set the targets? obviously not critical
 proteins
 either we analyse the DNA, or we set an arbitrary figure? but what if
@@ -6,6 +6,18 @@ we leave it as it was, with statics? or what about monitor the use of
 each resource? with a protein! we set an initial target, and every time
 we run out, we increase the target? targets are passed on the the
 daughter cell
+
+int[] aminoAcidTargets;
+
+addAminoAcids(aminoAcids)
+	get actual counts for aminoAcidList
+
+	for each aminoAcid:
+		typeId = aminoAcid.typeId
+		if actualCt[typeId] < aminoAcidTargets[typeId]:
+			add aminoAcid;
+			aminoAcidAdded = true;
+
 
 
 How to detect we have enough RNA? how about, if at start of RNA, there are already

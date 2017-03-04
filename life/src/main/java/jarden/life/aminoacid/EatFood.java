@@ -5,6 +5,7 @@ import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
 import jarden.life.CellEnvironment;
+import jarden.life.CellResource;
 import jarden.life.Food;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -19,13 +20,13 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class EatFood extends AminoAcid {
-    public Object action(Object object) throws InterruptedException {
+    public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
-        Condition needMoreFood = cell.getNeedMoreFood();
         Lock foodListLock = cell.getFoodListLock();
+        Condition needMoreFood = cell.getNeedMoreFood();
         foodListLock.lockInterruptibly();
         try {
-            while (cell.needMoreResources()) {
+            while (!cell.needMoreFood()) {
                 cell.logId("waiting for needMoreFood");
                 needMoreFood.await();
             }

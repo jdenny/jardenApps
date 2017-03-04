@@ -8,35 +8,26 @@ import org.junit.Test;
 
 import jarden.life.Cell;
 import jarden.life.CellEnvironment;
-import jarden.life.CellListener;
 
 
 /**
  * Created by john.denny@gmail.com on 08/02/2017.
  */
 
-public class TestCell implements CellListener {
+public class TestCell {
     private Cell syntheticCell;
-    private boolean daughterCellCreated;
+    private CellEnvironment cellEnvironment;
 
     @Before
     public void setUp() throws Exception {
-        this.syntheticCell = Cell.getSyntheticCell();
+        cellEnvironment = new CellEnvironment();
+        this.syntheticCell = Cell.getSyntheticCell(cellEnvironment);
     }
 
     @After
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void firstCellShouldEqualSyntheticCell() {
-        try {
-            Cell.makeFirstCell(this);
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
     @Test
     public void consumeResources() {
         /*
@@ -64,18 +55,13 @@ public class TestCell implements CellListener {
         add food to environment; both should live longer,
          to produce more cells, then all die
          */
-        CellEnvironment cellEnvironment = new CellEnvironment();
         try {
-            Cell cell = Cell.makeSyntheticCell(true);
-            cell.setCellListener(this);
             Thread.sleep(1000);
-            assert(daughterCellCreated);
             assertEquals(cellEnvironment.getCellCount(), 2);
             Thread.sleep(1000); // give cells time to die for lack of food
             assertEquals(cellEnvironment.getCellCount(), 0);
-            cell.setCellListener(this);
             Thread.sleep(1000);
-            Cell cell2 = Cell.makeSyntheticCell(true);
+            Cell cell2 = Cell.makeSyntheticCell(cellEnvironment);
             cellEnvironment.addFood();
             Thread.sleep(2000); // give cells time to die
             assertEquals(cellEnvironment.getCellCount(), 2); // should both be still alive
@@ -87,23 +73,4 @@ public class TestCell implements CellListener {
         }
     }
 
-    @Override
-    public void onNewCell(Cell daughterCell) {
-        System.out.println("firstCell.isCopy(daughterCell):" +
-                syntheticCell.isCopy(daughterCell));
-        daughterCellCreated = true;
-        assertTrue(daughterCell.isCopy(syntheticCell));
-        assertTrue(syntheticCell.isCopy(daughterCell));
-        System.out.println("Assert successful!");
-    }
-
-    @Override
-    public void onCellUpdated(int cellId) {
-
-    }
-
-    @Override
-    public void onProteinStatusUpdated(int proteinId, String status) {
-
-    }
 }

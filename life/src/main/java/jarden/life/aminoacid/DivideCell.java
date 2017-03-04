@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
-import jarden.life.CellListener;
+import jarden.life.CellResource;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -26,15 +26,15 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class DivideCell extends AminoAcid {
 
-    public Object action(Object object) throws InterruptedException {
-        DNA daughterDNA = (DNA) object;
+    public CellResource action(CellResource _dna) throws InterruptedException {
+        DNA daughterDNA = (DNA) _dna;
         Cell cell = getCell();
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
         int geneSize = cell.getGeneSize();
         proteinListLock.lockInterruptibly();
         try {
-            Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());
+            Cell daughterCell = new Cell(daughterDNA, cell);
             daughterCell.setGeneration(cell.getGeneration() + 1);
             int newProteinCount = proteinList.size();
             for (int i = geneSize; i < newProteinCount; i++) {
@@ -57,12 +57,7 @@ public class DivideCell extends AminoAcid {
                 protein.setCell(daughterCell);
                 daughterCell.addProtein(protein);
             }
-            CellListener cellListener = cell.getCellListener();
-            if (cellListener != null) {
-                daughterCell.setCellListener(cellListener);
-                cellListener.onNewCell(daughterCell);
-            }
-            if (proteinList.size() < cell.getProteinSizeForDivide()) {
+            if (!cell.cellReadyToDivide()) {
                 cell.getNeedMoreProteins().signalAll();
             }
             return daughterCell;

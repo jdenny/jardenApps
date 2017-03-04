@@ -9,13 +9,20 @@ public class Cytosine implements Nucleotide {
     public boolean rnaMatch(Nucleotide otherNucleotide) {
         return otherNucleotide instanceof Guanine;
     }
+    @Override
 	public char getCode() {
 		return 'C';
 	}
+    @Override
 	public String toString() {
 		return "Cytosine";
 	}
+    @Override
 	public String getName() {
 		return "Cytosine";
 	}
+    @Override
+    public int getIndex() {
+        return 1;
+    }
 }
