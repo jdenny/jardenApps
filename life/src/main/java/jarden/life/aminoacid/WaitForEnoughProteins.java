@@ -36,7 +36,7 @@ public class WaitForEnoughProteins extends AminoAcid {
         try {
             while (!cell.cellReadyToDivide()) {
                 String state = "DivideCell waiting for more proteins";
-                Cell.log(state);
+                cell.logId(state);
                 getProtein().setState(state);
                 boolean timedOut = !cell.getCellReadyToDivide().await(5, TimeUnit.SECONDS);
                 if (timedOut) {
@@ -49,18 +49,18 @@ public class WaitForEnoughProteins extends AminoAcid {
                         Thread proteinThread = protein.getThread();
                         if (proteinThread != null && proteinThread.isAlive()) {
                             protein.stop();
-                            Cell.log("killCell requested stop to protein " + protein);
+                            cell.logId("killCell requested stop to protein " + protein);
                             proteinThread.join(300);
                             if (proteinThread.isAlive()) {
-                                Cell.log(proteinThread + " didn't die; state=" +
+                                cell.logId(proteinThread + " didn't die; state=" +
                                         proteinThread.getState() +
                                         "; using forced stop**************");
                                 proteinThread.stop();
                             } else {
-                                Cell.log("killCell protein stopped: " + protein);
+                                cell.logId("killCell protein stopped: " + protein);
                             }
                         } else {
-                            Cell.log("divideCell detected no thread for protein " + protein);
+                            cell.logId("divideCell detected no thread for protein " + protein);
                         }
                     }
                     cell.getCellEnvironment().removeCell(cell); // TODO: or mark as dead?

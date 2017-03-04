@@ -13,7 +13,7 @@ public class AddAminoAcidToProtein extends AminoAcid {
 	public CellResource action(CellResource _aminoAcidOrCodon) throws InterruptedException {
 		if (_aminoAcidOrCodon instanceof Codon) {
             if (newProtein == null) {
-                Cell.log("AddAminoAcidToProtein.action(); newProtein is null" +
+                getCell().logId("AddAminoAcidToProtein.action(); newProtein is null" +
                         " so ignoring action");
                 return null;
             }

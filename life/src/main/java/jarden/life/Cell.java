@@ -72,7 +72,7 @@ public class Cell implements Food {
     private int id;
     private int generation = 1;
     private DNA dna;
-    private Integer dnaIndex;
+    private int dnaIndex = 0;
     private final List<Protein> proteinList = new LinkedList<>();
 	private final List<AminoAcid> aminoAcidList = new LinkedList<>();
 	private final List<Nucleotide> nucleotideList = new LinkedList<>();
@@ -92,13 +92,15 @@ public class Cell implements Food {
         Cell 1                Cell 2
         5  polymerase
         6  ribsome
-        7  digestFood
-        8  divideCell
+        7  eatFood
+        8  digestFood
+        9  divideCell
 
-        9  polymerase     ->  12
-        10 ribsome        ->  13
-        11 digestFood     ->  14
-        -  divideCell     ->  15
+        10 polymerase     ->  14
+        11 ribsome        ->  15
+        12 eatFood        ->  16
+        13 digestFood     ->  17
+        -  divideCell     ->  18
 
 	Current implementation of codonTable.
 	See Nucleotide for real-life codonTable.
@@ -413,7 +415,7 @@ public class Cell implements Food {
         nucleotideListLock.lockInterruptibly();
         try {
             while ((bondingNucleotide = getNucleotide(nucleotide, dna)) == null) {
-                log("waiting for nucleotide to bond with " + nucleotide);
+                logId("waiting for nucleotide to bond with " + nucleotide);
                 nucleotideAvailable.await();
             }
             return bondingNucleotide;
@@ -426,7 +428,7 @@ public class Cell implements Food {
         rnaListLock.lockInterruptibly();
         try {
             while ((rna = getRNA()) == null) {
-                log("waiting for some RNA");
+                logId("waiting for some RNA");
                 rnaAvailable.await();
             }
             if (rnaList.size() < geneSize) needMoreRNA.signalAll();
@@ -449,7 +451,7 @@ public class Cell implements Food {
         aminoAcidListLock.lockInterruptibly();
         try {
             while ((aminoAcid = getAminoAcidByCodon(codon)) == null) {
-                log("waiting for amino acid for codon " + codon);
+                logId("waiting for amino acid for codon " + codon);
                 aminoAcidAvailable.await();
             }
             return aminoAcid;
@@ -461,7 +463,7 @@ public class Cell implements Food {
         foodListLock.lockInterruptibly();
         try {
             while (foodList.size() == 0) {
-                log("waiting for food ");
+                logId("waiting for food ");
                 foodAvailable.await();
             }
             return foodList.remove(0);
@@ -529,7 +531,7 @@ public class Cell implements Food {
                 return freeNucleotide;
             }
 		}
-		log("no bonding nucleotide found for " + nucleotide);
+		logId("no bonding nucleotide found for " + nucleotide);
 		return null;
 	}
 
@@ -631,7 +633,7 @@ public class Cell implements Food {
     public String getName() {
         return "Cell";
     }
-    public Integer getDnaIndex() {
+    public int getDnaIndex() {
         return dnaIndex;
     }
     public Lock getDnaIndexLock() {

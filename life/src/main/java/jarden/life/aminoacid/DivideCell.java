@@ -42,17 +42,17 @@ public class DivideCell extends AminoAcid {
                 Thread proteinThread = protein.getThread();
                 if (proteinThread != null && proteinThread.isAlive()) {
                     protein.stop();
-                    Cell.log("divideCell requested stop to protein " + protein);
+                    cell.logId("divideCell requested stop to protein " + protein);
                     proteinThread.join(300);
                     if (proteinThread.isAlive()) {
-                        Cell.log(proteinThread + " didn't die; state=" +
+                        cell.logId(proteinThread + " didn't die; state=" +
                                 proteinThread.getState() +
                                 "; moving it anyway**************");
                     } else {
-                        Cell.log("divideCell protein stopped: " + protein);
+                        cell.logId("divideCell protein stopped: " + protein);
                     }
                 } else {
-                    Cell.log("divideCell detected no thread for protein " + protein);
+                    cell.logId("divideCell detected no thread for protein " + protein);
                 }
                 protein.setCell(daughterCell);
                 daughterCell.addProtein(protein);

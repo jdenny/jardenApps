@@ -39,8 +39,8 @@ public class Protein implements Runnable, CellResource {
     }
 
 	public void run() {
-		while (true) try {
-            action(null);
+		try {
+            while (true) action(null);
         } catch (InterruptedException e) {
             cell.logId("protein.run() interrupted");
         }
