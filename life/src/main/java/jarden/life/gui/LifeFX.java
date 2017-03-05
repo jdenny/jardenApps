@@ -1,16 +1,12 @@
 package jarden.life.gui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import jarden.life.Cell;
 import jarden.life.CellData;
 import jarden.life.CellEnvironment;
-import jarden.life.CellFood;
+import jarden.life.CellShortData;
 import jarden.life.NameCount;
-import jarden.life.aminoacid.AminoAcid;
-import jarden.life.nucleicacid.Nucleotide;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +18,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -43,18 +42,6 @@ import static jarden.life.CellData.nucleotideNames;
  */
 
 public class LifeFX extends Application {
-    private Text statusText;
-    private ListView<Cell> cellListView;
-    private ObservableList<Cell> cellObservableList;
-    private ListView<String> proteinListView;
-    private ObservableList<String> proteinObservableList;
-    private Text[] aminoAcidQtyTexts;
-    private TextField[] aminoAcidQtyFields;
-    private Text[] nucleotideQtyTexts;
-    private TextField[] nucleotideQtyFields;
-    private CellData cellData;
-    private CellEnvironment cellEnvironment;
-
     // TODO: sliding scale from blue to green?
     private static Color[] generationColours = {
             Color.web("blue"),
@@ -64,39 +51,65 @@ public class LifeFX extends Application {
             Color.web("red")
     };
 
+    private Text statusText;
+    private ListView<CellShortData> cellListView;
+    private ObservableList<CellShortData> cellObservableList;
+    private ListView<String> proteinListView;
+    private ObservableList<String> proteinObservableList;
+    private TextField feederRateField;
+    private TextField nucleotideFeedField;
+    private TextField aminoAcidFeedField;
+    private Text[] aminoAcidQtyTexts;
+    private Text[] nucleotideQtyTexts;
+    private CellData cellData;
+    private CellEnvironment cellEnvironment;
+    private Text liveCellCt;
+    private Text deadCellCt;
+
     public static void main(String[] args) {
         System.out.println("hello LifeFX");
         launch(args);
     }
-    private static class ColorRectCell extends ListCell<Cell> {
+    private static class ColorRectCell extends ListCell<CellShortData> {
         @Override
-        public void updateItem(Cell item, boolean empty) {
+        public void updateItem(CellShortData item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                int generation = item.getGeneration();
+                int generation = item.generation;
                 if (generation > generationColours.length) {
                     generation = generationColours.length;
                 }
                 Color colour = generationColours[generation - 1];
-                Rectangle rect = new Rectangle(20 * item.getProteinCt(), 20);
+                Rectangle rect = new Rectangle(20 * item.proteinCt, 20);
                 rect.setFill(colour);
                 setGraphic(rect);
             }
         }
     }
+    /*
+    What do we want to see?
+        count of all live cells; count of dead cells
+        list of most recent 20 live cells; show id, generation, proteinCt
+        refresh button for above
+        setFeederRate(); setNucleotideFeedCt(); setAminoAcidFeedCt()
+        select cell gets cell data
+     */
     @Override
     public void start(Stage primaryStage) {
         /*
-        0                  1                  2           3      4
-        0  Cells           Proteins           AminoAcids  [Fill] [Clear]
-        1  <cellListView>  <proteinListView>  <name>      <ct>   <addCt>
+        feeder rate: <ct> aminoAcids: <ct> nucleotides: <ct> [set] [start] [stop]
+        live cells: <ct> dead cells: <ct> [refresh]
+
+        0                  1                  2           3
+        0  Cells           Proteins           AminoAcids
+        1  <cellListView>  <proteinListView>  <name>      <ct>
            ...             ...                ...
 
         22 ...             ...                Nucleotides
-        23 ...             ...                <name>      <ct>   <addCt>
+        23 ...             ...                <name>      <ct>
            ...             ...                ...
-        27                                                       [Feed]
-        28 status
+        28
+        29 status
 
         (Fill button inserts quantities for 1 cell)
          */
@@ -105,7 +118,8 @@ public class LifeFX extends Application {
         cellListView.setCellFactory( (listView) -> new ColorRectCell());
         cellListView.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> cellSelected(oldValue, newValue));
+                .addListener((observable, oldValue, newValue) ->
+                        cellSelected(oldValue, newValue));
 
         proteinObservableList = FXCollections.observableArrayList();
         proteinListView = new ListView<>(proteinObservableList);
@@ -115,33 +129,52 @@ public class LifeFX extends Application {
 
         statusText = new Text();
         statusText.setFill(Color.FIREBRICK);
+        feederRateField = new TextField();
+        feederRateField.setPrefWidth(20);
+        nucleotideFeedField = new TextField();
+        nucleotideFeedField.setPrefWidth(20);
+        aminoAcidFeedField = new TextField();
+        aminoAcidFeedField.setPrefWidth(20);
+        liveCellCt = new Text();
+        deadCellCt = new Text();
 
-        Button fillButton = new Button("Fill");
-        fillButton.setOnAction(event -> {
-            for (TextField aminoAcidQtyField: aminoAcidQtyFields) {
-                aminoAcidQtyField.setText("1");
-            }
-            for (int i = 0; i < nucleotideQtyFields.length; i++) {
-                nucleotideQtyFields[i].setText("2");
-            }
-        });
-        Button clearButton = new Button("Clear");
-        clearButton.setOnAction(event -> {
-            for (TextField aminoAcidQtyField: aminoAcidQtyFields) {
-                aminoAcidQtyField.setText("");
-            }
-            for (TextField nucleotideQtyField: nucleotideQtyFields) {
-                nucleotideQtyField.setText("");
-            }
-        });
-        Button feedButton = new Button("Feed");
-        feedButton.setOnAction(event -> {
-            try {
-                feedCell();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+        Button setButton = new Button("Set");
+        setButton.setOnAction(event -> setFeederRates());
+        Button startButton = new Button("Start");
+        startButton.setOnAction(event -> cellEnvironment.startFeeding());
+        Button stopButton = new Button("Stop");
+        stopButton.setOnAction(event -> cellEnvironment.stopFeeding());
+        Button refreshButton = new Button("Refresh");
+        refreshButton.setOnAction(event -> refresh());
+
+        BorderPane borderPane = new BorderPane();
+        VBox controlVBox = new VBox();
+        HBox feedRateHBox = new HBox();
+        feedRateHBox.setPadding(new Insets(15, 12, 15, 12));
+        feedRateHBox.setSpacing(10);
+        HBox cellCtsHBox = new HBox();
+        cellCtsHBox.setPadding(new Insets(15, 12, 15, 12));
+        cellCtsHBox.setSpacing(10);
+
+        feedRateHBox.getChildren().addAll(
+                new Label("Feeder Rate:"),
+                feederRateField,
+                new Label("Amino Acids:"),
+                aminoAcidFeedField,
+                new Label("Nucleotides:"),
+                nucleotideFeedField,
+                setButton,
+                startButton,
+                stopButton);
+        cellCtsHBox.getChildren().addAll(
+                new Label("Live cells:"),
+                liveCellCt,
+                new Label("Dead cells:"),
+                deadCellCt,
+                refreshButton);
+        controlVBox.getChildren().addAll(feedRateHBox, cellCtsHBox);
+        borderPane.setTop(controlVBox);
+
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -166,21 +199,14 @@ public class LifeFX extends Application {
         Label aminoAcidLabel = new Label("Amino Acids");
         aminoAcidLabel.setFont(labelFont);
         grid.add(aminoAcidLabel, 2, 0);
-        grid.add(fillButton, 3, 0);
-        grid.add(clearButton, 4, 0);
         aminoAcidQtyTexts = new Text[aminoAcidCt];
-        aminoAcidQtyFields = new TextField[aminoAcidCt];
         for (int i = 0; i < aminoAcidCt; i++) {
             grid.add(new Label(aminoAcidNames[i]), 2, 1 + i);
             aminoAcidQtyTexts[i] = new Text("0");
             grid.add(aminoAcidQtyTexts[i], 3, 1 + i);
-            aminoAcidQtyFields[i] = new TextField();
-            aminoAcidQtyFields[i].setPrefWidth(50);
-            grid.add(aminoAcidQtyFields[i], 4, 1 + i);
         }
 
         nucleotideQtyTexts = new Text[nucleotideCt];
-        nucleotideQtyFields = new TextField[nucleotideCt];
         Label nucleotideLabel = new Label("Nucleotides");
         nucleotideLabel.setFont(labelFont);
         grid.add(nucleotideLabel, 2, aminoAcidCt + 2);
@@ -188,52 +214,39 @@ public class LifeFX extends Application {
             grid.add(new Label(nucleotideNames[i]), 2, aminoAcidCt + 3 + i);
             nucleotideQtyTexts[i] = new Text("0");
             grid.add(nucleotideQtyTexts[i], 3, aminoAcidCt + 3 + i);
-            nucleotideQtyFields[i] = new TextField();
-            nucleotideQtyFields[i].setPrefWidth(20);
-            grid.add(nucleotideQtyFields[i], 4, aminoAcidCt + 3 + i);
         }
-        grid.add(feedButton, 4, aminoAcidCt + nucleotideCt + 3);
 
         grid.add(statusText, 0, aminoAcidCt + nucleotideCt + 4, 5, 1);
+        borderPane.setCenter(grid);
 
-        Scene scene = new Scene(grid, 850, 700);
+        Scene scene = new Scene(borderPane, 850, 700);
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.show();
-        Cell syntheticCell = null;
-        cellEnvironment = new CellEnvironment();
+        boolean startLife = true;
         try {
-            syntheticCell = Cell.makeSyntheticCell(cellEnvironment);
+            cellEnvironment = new CellEnvironment(startLife);
+            initialiseFeederRates();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-    private void addCell(Cell cell) {
-        cellObservableList.add(cell);
+    private void refresh() {
+        liveCellCt.setText(String.valueOf(cellEnvironment.getCellCount()));
+        deadCellCt.setText(
+                String.valueOf(cellEnvironment.getDeadCellCt()));
+        List<CellShortData> cellShortDataList = cellEnvironment.getCellShortDataList();
+        cellObservableList.clear();
+        cellObservableList.addAll(cellShortDataList);
     }
-    private void cellSelected(Cell oldValue, Cell cell) {
-        System.out.println("cellSelected(" + cell + ")");
+    private void cellSelected(CellShortData oldValue, CellShortData cellShortData) {
+        System.out.println("cellSelected(" + cellShortData.id + ")");
         /*
-        Note: cellData is static snapshot of data in cell, and so is not being
+        Note: cellShortData is static snapshot of data in cell, and so is not being
         changed in the cell's threads
          */
-        /*
-        TODO: we always want to be informed of new cells, but
-        do we want to monitor changes to every cell?
-        If so, we need to ensure we only act on changes for currently
-        selected row; if not we need two separate interfaces for
-        OnNewCellListener & OnChangedCellListener
-        if (oldValue != null) {
-            oldValue.setCellListener(null); // stop listening for changes
-        }
-        This is my proposal: monitor changes on every cell; if currently
-        selected cell changes, then change all relevant fields on UI; if
-        not currently selected, just change the size of the cell in cellListView
-        this means that we don't need to keep passing the listener to
-        getCellData().
-         */
-        if (cell != null) {
-            cellData = cell.getCellData();
+        if (cellShortData != null) {
+            cellData = cellEnvironment.getCellData(cellShortData.id);
             showCellData(cellData);
         }
     }
@@ -268,56 +281,21 @@ public class LifeFX extends Application {
         }
         */
     }
-    // TODO: replace this with CellEnvironment.setFeederRate()
-    private void feedCell() throws InterruptedException {
-        StringBuilder messageBuilder = new StringBuilder();
-        Cell cell = this.cellListView.getSelectionModel().getSelectedItem();
-        if (cell == null) {
-            statusText.setText("select cell first");
-        } else {
-            List<Nucleotide> nucleotides = new ArrayList<>();
-            List<AminoAcid> aminoAcids = new ArrayList<>();
-            try {
-                // nucleotides:
-                int nucleotideCt = nucleotideNames.length;
-                for (int i = 0; i < nucleotideCt; i++) {
-                    String nucleotideQtyStr = nucleotideQtyFields[i].getText().trim();
-                    if (nucleotideQtyStr.length() > 0) {
-                        int nucleotideQty = Integer.parseInt(nucleotideQtyStr);
-                        for (int j = 0; j < nucleotideQty; j++) {
-                            nucleotides.add(CellFood.makeNucleotide(nucleotideNames[i]));
-                        }
-                        messageBuilder.append(nucleotideQtyStr + " of " +
-                                nucleotideNames[i] + ", ");
-                    }
-                }
-                if (nucleotides.size() > 0) {
-                    cell.addNucleotides(nucleotides);
-                }
-                // now for amino acids:
-                int aminoAcidCt = aminoAcidNames.length;
-                for (int i = 0; i < aminoAcidCt; i++) {
-                    String aminoAcidQtyStr = aminoAcidQtyFields[i].getText().trim();
-                    if (aminoAcidQtyStr.length() > 0) {
-                        int aminoAcidQty = Integer.parseInt(aminoAcidQtyStr);
-                        for (int j = 0; j < aminoAcidQty; j++) {
-                            aminoAcids.add(CellFood.makeAminoAcid(aminoAcidNames[i]));
-                        }
-                        messageBuilder.append(aminoAcidQtyStr + " of " +
-                                aminoAcidNames[i] + ", ");
-                    }
-                }
-                if (aminoAcids.size() > 0) {
-                    cell.addAminoAcids(aminoAcids);
-                }
-                System.out.println(messageBuilder.toString());
-
-                statusText.setText("added to cell " + cell + ": " +
-                        nucleotides.size() + " nucleotides; " +
-                        aminoAcids.size() + " aminoAcids");
-            } catch (NumberFormatException nfe) {
-                statusText.setText("supply integers only");
-            }
+    private void initialiseFeederRates() {
+        feederRateField.setText(String.valueOf(cellEnvironment.getFeederRate()));
+        nucleotideFeedField.setText(String.valueOf(cellEnvironment.getNucleotideFeedCt()));
+        aminoAcidFeedField.setText(String.valueOf(cellEnvironment.getAminoAcidFeedCt()));
+    }
+    private void setFeederRates() {
+        try {
+            int feederRate = Integer.parseInt(feederRateField.getText());
+            int nucleotideFeedCt = Integer.parseInt(nucleotideFeedField.getText());
+            int aminoAcidFeedCt = Integer.parseInt(aminoAcidFeedField.getText());
+            cellEnvironment.setFeederRate(feederRate);
+            cellEnvironment.setAminoAcidFeedCt(aminoAcidFeedCt);
+            cellEnvironment.setNucleotideFeedCt(nucleotideFeedCt);
+        } catch (NumberFormatException nfe) {
+            statusText.setText("supply integers only");
         }
     }
 }

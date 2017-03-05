@@ -60,7 +60,8 @@ public class DivideCell extends AminoAcid {
             if (!cell.cellReadyToDivide()) {
                 cell.getNeedMoreProteins().signalAll();
             }
-            return daughterCell;
+            cell.getCellEnvironment().addCell(daughterCell);
+            return daughterCell; // TODO: most probably not used, so return null
         } finally {
             proteinListLock.unlock();
         }

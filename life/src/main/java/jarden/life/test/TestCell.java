@@ -15,13 +15,11 @@ import jarden.life.CellEnvironment;
  */
 
 public class TestCell {
-    private Cell syntheticCell;
     private CellEnvironment cellEnvironment;
 
     @Before
     public void setUp() throws Exception {
-        cellEnvironment = new CellEnvironment();
-        this.syntheticCell = Cell.getSyntheticCell(cellEnvironment);
+        cellEnvironment = new CellEnvironment(true);
     }
 
     @After

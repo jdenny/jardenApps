@@ -13,8 +13,7 @@ public class MasterDesigner {
         new MasterDesigner();
     }
     public MasterDesigner() throws InterruptedException {
-        CellEnvironment cellEnvironment = new CellEnvironment();
-        Cell syntheticCell = Cell.getSyntheticCell(cellEnvironment);
+        CellEnvironment cellEnvironment = new CellEnvironment(true);
         cellList = cellEnvironment.getCellList();
 
 		try {

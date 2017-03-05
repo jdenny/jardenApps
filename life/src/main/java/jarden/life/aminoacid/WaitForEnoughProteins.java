@@ -38,7 +38,7 @@ public class WaitForEnoughProteins extends AminoAcid {
                 String state = "DivideCell waiting for more proteins";
                 cell.logId(state);
                 getProtein().setState(state);
-                boolean timedOut = !cell.getCellReadyToDivide().await(5, TimeUnit.SECONDS);
+                boolean timedOut = !cell.getCellReadyToDivide().await(10, TimeUnit.SECONDS);
                 if (timedOut) {
                     cell.logId("WaitForEnoughProteins timed out; ready to die!");
                     // TODO: put this in its own protein KillCell

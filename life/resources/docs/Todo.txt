@@ -38,6 +38,10 @@ for each Condition, have corresponding boolean method, e.g. - DONE
 replace AminoAcid method: Object action(Object object)
 with: CellResource action(CellResource resource)     - DONE
 
+add boolean startLife to CellEnvironment; if true add syntheticCell - DONE
+
+factor out our first reusable aminoAcid: GetResource
+
 currently: (try to keep resource exactly at target)
 	when resource met target, stop digesting;
 	when resource < target, start feeding

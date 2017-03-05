@@ -674,4 +674,8 @@ public class Cell implements Food {
     public boolean needMoreFood() {
         return foodList.size() == 0 && needMoreResources();
     }
+
+    public CellShortData getCellShortData() {
+        return new CellShortData(id, generation, proteinList.size());
+    }
 }
