@@ -6,12 +6,11 @@ import java.util.ArrayList;
 
 public class Protein implements Runnable, CellResource {
     private Cell cell; // the cell this protein belongs to
-    private String name;
-    private String type;
 	private ArrayList<AminoAcid> aminoAcidList = new ArrayList<>();
     private Thread thread;
     private int hashCode;
     private String state;
+    public boolean activate = true; // set false for debugging!
 
     public Protein(Cell cell) {
         this.cell = cell;

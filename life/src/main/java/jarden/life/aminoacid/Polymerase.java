@@ -55,7 +55,7 @@ public class Polymerase extends AminoAcid {
         }
         DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
         Lock dnaIndexLock = cell.getDnaIndexLock();
-        int index, nextStopIndex;
+        int index, nextGeneIndex;
         dnaIndexLock.lockInterruptibly();
         try {
             index = cell.getDnaIndex(); // get it each time, in case changed by another protein
@@ -67,17 +67,16 @@ public class Polymerase extends AminoAcid {
                 }
             }
             index += Nucleotide.promoterLength; // i.e. first nucleotide after promoter
-            nextStopIndex = getNextStop(dna, index);
-            if (nextStopIndex < 0) {
+            nextGeneIndex = getNextGeneIndex(dna, index);
+            if (nextGeneIndex < 0) {
                 throw new IllegalStateException("DNA gene has no terminator");
             }
-            nextStopIndex += 3; // RNA includes stop codon
-            cell.setDnaIndex(nextStopIndex);
+            cell.setDnaIndex(nextGeneIndex);
         } finally {
             dnaIndexLock.unlock();
         }
         RNA rna = new RNA();
-        for (int i = index; i < nextStopIndex; i+=3) {
+        for (int i = index; i < nextGeneIndex; i += 3) {
             Nucleotide first = cell.waitForNucleotide(dna.get(i), false);
             // TODO: do we need this? I've lost track!
             if (Thread.interrupted()) {
@@ -114,11 +113,10 @@ public class Polymerase extends AminoAcid {
         }
         return true;
     }
-    private static int getNextStop(DNA dna, int index) {
+    private static int getNextGeneIndex(DNA dna, int index) {
         for (int i = index; (i + 3) <= dna.size(); i+=3) {
             if (isStop(dna, i)) {
-                i += 3; // i.e. first nucleotide after stop
-                return i;
+                return i + 3; // i.e. position after stopCodon
             }
         }
         return -1;
@@ -128,59 +126,14 @@ public class Polymerase extends AminoAcid {
                 dna.get(stopIndex + 2));
         return codon.isStop();
     }
-    /*!!
-    private int getNextPromoterIndex() {
-        index = currentStop;
-        for (; (index + 6) <= dna.size(); index+=3) {
-            if (isPromoter(index)) {
-                return index;
-            }
-        }
-        return -1;
-    }
-	private boolean isPromoter(int index) {
-		for (int j = 0; j < 6; j++) {
-			Nucleotide nucleotide = dna.get(index + j);
-			if (!(nucleotide.getCode() == Nucleotide.promoterCode.charAt(j))) {
-				return false; // i.e. NOT a promoter
-			}
-		}
-		return true;
-	}
-    private int getNextStop() {
-        currentStop = index;
-        for (; (currentStop + 3) <= dna.size(); currentStop+=3) {
-            if (isStop(currentStop)) {
-                currentStop += 3; // i.e. first nucleotide after stop
-                return currentStop;
-            }
-        }
-        return -1;
-    }
-    private boolean isStop(int stopIndex) {
-        Codon codon = new Codon(dna.get(stopIndex), dna.get(stopIndex + 1),
-                dna.get(stopIndex + 2));
-        return codon.isStop();
-    }
-    */
     @Override
 	public String getName() {
-		return "FindNextGene";
+		return "Polymerase";
 	}
     @Override
 	public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
-                codon.getSecond() instanceof Uracil &&
+                codon.getSecond() instanceof Guanine &&
                 codon.getThird() instanceof Guanine;
     }
-    /*!!
-    @Override
-    public boolean hasMore() {
-        return getNextPromoterIndex() >= 0;
-    }
-    @Override
-    public void reset() {
-        this.dna = null;
-    }
-    */
 }

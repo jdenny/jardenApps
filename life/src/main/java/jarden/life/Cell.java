@@ -42,7 +42,7 @@ public class Cell implements Food {
     private static String[] geneStrs = {
             "TGG",       // polymerase: Polymerase // was: TTGTCT - FindNextGene, GetRNAFromGene
             "TTATTCTTT", // ribosome: GetCodonFromRNA, GetAminoAcidFromCodon, AddAminoAcidToProtein
-            "UGC",       // eatFood: EatFood
+            "TGC",       // eatFood: EatFood
             "TCA",       // digest: DigestFood
             "TCGTGTTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
@@ -180,6 +180,13 @@ public class Cell implements Food {
         proteinDivide.add(new WaitForEnoughProteins());
         proteinDivide.add(new CopyDNA());
         proteinDivide.add(new DivideCell());
+        boolean startAllProteins = true;
+        if (!startAllProteins) {
+            ribosome.activate = false;
+            proteinDigest.activate = false;
+            eatFood.activate = false;
+            proteinDivide.activate = false;
+        }
         synCell.addProtein(rnaPolymerase);
         synCell.addProtein(ribosome);
         synCell.addProtein(eatFood);
@@ -342,7 +349,7 @@ public class Cell implements Food {
         }
         logId("addProtein(); proteinCt=" + proteinList.size());
         Thread proteinThread = protein.getThread();
-        if (proteinThread == null || !proteinThread.isAlive()) {
+        if (protein.activate && (proteinThread == null || !proteinThread.isAlive())) {
             protein.start();
         }
 	}

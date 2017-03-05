@@ -40,6 +40,10 @@ with: CellResource action(CellResource resource)     - DONE
 
 add boolean startLife to CellEnvironment; if true add syntheticCell - DONE
 
+make DNA double strand: template for RNA and complementing strand
+
+check-out if we need Thread.isInterrupted()
+
 factor out our first reusable aminoAcid: GetResource
 
 currently: (try to keep resource exactly at target)
@@ -70,6 +74,8 @@ one above could be replaced by:
 	int[] proteinTargets;
 maybe one day, the calculation of the resource targets could itself
 be a protein!
+
+use Thread pool
 
 End of current actions *****************************************
 

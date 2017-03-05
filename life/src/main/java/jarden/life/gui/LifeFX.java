@@ -130,11 +130,11 @@ public class LifeFX extends Application {
         statusText = new Text();
         statusText.setFill(Color.FIREBRICK);
         feederRateField = new TextField();
-        feederRateField.setPrefWidth(20);
+        feederRateField.setPrefWidth(50);
         nucleotideFeedField = new TextField();
-        nucleotideFeedField.setPrefWidth(20);
+        nucleotideFeedField.setPrefWidth(50);
         aminoAcidFeedField = new TextField();
-        aminoAcidFeedField.setPrefWidth(20);
+        aminoAcidFeedField.setPrefWidth(50);
         liveCellCt = new Text();
         deadCellCt = new Text();
 

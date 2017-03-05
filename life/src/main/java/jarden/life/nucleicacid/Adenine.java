@@ -3,11 +3,11 @@ package jarden.life.nucleicacid;
 public class Adenine implements Nucleotide {
     @Override
     public boolean dnaMatch(Nucleotide otherNucleotide) {
-        return otherNucleotide instanceof Thymine;
+        return otherNucleotide instanceof Adenine; // Thymine;
     }
     @Override
     public boolean rnaMatch(Nucleotide otherNucleotide) {
-        return otherNucleotide instanceof Uracil;
+        return otherNucleotide instanceof Adenine; // Uracil;
     }
     @Override
     public char getCode() {
