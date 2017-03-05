@@ -240,7 +240,7 @@ public class LifeFX extends Application {
         cellObservableList.addAll(cellShortDataList);
     }
     private void cellSelected(CellShortData oldValue, CellShortData cellShortData) {
-        System.out.println("cellSelected(" + cellShortData.id + ")");
+        System.out.println("cellSelected(" + cellShortData + ")");
         /*
         Note: cellShortData is static snapshot of data in cell, and so is not being
         changed in the cell's threads

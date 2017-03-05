@@ -10,6 +10,7 @@ import jarden.life.Food;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
+import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
 /**
@@ -39,11 +40,11 @@ public class EatFood extends AminoAcid {
         return null;
     }
     public String getName() {
-        return "DigestFood";
+        return "EatFood";
     }
     public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
-                codon.getSecond() instanceof Cytosine &&
-                codon.getThird() instanceof Adenine;
+                codon.getSecond() instanceof Guanine &&
+                codon.getThird() instanceof Cytosine;
     }
 }

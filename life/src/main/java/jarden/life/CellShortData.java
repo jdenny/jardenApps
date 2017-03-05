@@ -13,4 +13,8 @@ public class CellShortData {
         this.generation = generation;
         this.proteinCt = proteinCt;
     }
+    public String toString() {
+        return "id=" + id + ", gen=" + generation +
+                ", proteinCt=" + proteinCt;
+    }
 }

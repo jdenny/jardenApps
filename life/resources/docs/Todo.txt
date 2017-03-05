@@ -40,6 +40,11 @@ with: CellResource action(CellResource resource)     - DONE
 
 add boolean startLife to CellEnvironment; if true add syntheticCell - DONE
 
+check-out why cell-1 has 2 of each protein, > 120 each of amino acids,
+	0 Adenine, 52 Uracil, and > 400 of the other nucleotides
+	meanwhile the other cells seem okay; perhaps the target for Adenine
+	has been corrupted?
+
 make DNA double strand: template for RNA and complementing strand
 
 check-out if we need Thread.isInterrupted()
