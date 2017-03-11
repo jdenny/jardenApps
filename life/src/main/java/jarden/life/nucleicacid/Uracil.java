@@ -7,7 +7,7 @@ public class Uracil implements Nucleotide {
     }
     @Override
     public boolean rnaMatch(Nucleotide otherNucleotide) {
-        return otherNucleotide instanceof Thymine; // Adenine;
+        return otherNucleotide instanceof Adenine;
     }
     @Override
 	public char getCode() {

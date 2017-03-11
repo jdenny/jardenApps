@@ -1,6 +1,5 @@
 package jarden.life.aminoacid;
 
-import java.util.ListIterator;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
@@ -59,17 +58,17 @@ public class Polymerase extends AminoAcid {
         dnaIndexLock.lockInterruptibly();
         try {
             index = cell.getDnaIndex(); // get it each time, in case changed by another protein
-            index = getNextPromoterIndex(dna, index);
+            index = getNextStartIndex(dna, index);
             if (index < 0) {
-                index = getNextPromoterIndex(dna, 0);
+                index = getNextStartIndex(dna, 0);
                 if (index < 0) {
-                    throw new IllegalStateException("DNA contains no promoter");
+                    throw new IllegalStateException("DNA contains no start-gene");
                 }
             }
-            index += Nucleotide.promoterLength; // i.e. first nucleotide after promoter
+            index += Nucleotide.startLength; // i.e. first nucleotide after promoter
             nextGeneIndex = getNextGeneIndex(dna, index);
             if (nextGeneIndex < 0) {
-                throw new IllegalStateException("DNA gene has no terminator");
+                throw new IllegalStateException("DNA gene has no stop-gene");
             }
             cell.setDnaIndex(nextGeneIndex);
         } finally {
@@ -77,16 +76,16 @@ public class Polymerase extends AminoAcid {
         }
         RNA rna = new RNA();
         for (int i = index; i < nextGeneIndex; i += 3) {
-            Nucleotide first = cell.waitForNucleotide(dna.get(i), false);
+            Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false);
             // TODO: do we need this? I've lost track!
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
-            Nucleotide second = cell.waitForNucleotide(dna.get(i+1), false);
+            Nucleotide second = cell.waitForNucleotide(dna.getFromTemplate(i+1), false);
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
-            Nucleotide third = cell.waitForNucleotide(dna.get(i+2), false);
+            Nucleotide third = cell.waitForNucleotide(dna.getFromTemplate(i+2), false);
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
@@ -96,34 +95,32 @@ public class Polymerase extends AminoAcid {
         cell.addRNA(rna);
         return null;
 	}
-    private static int getNextPromoterIndex(DNA dna, int index) {
-        for (int i = index; (i + Nucleotide.promoterLength) <= dna.size(); i+=3) {
-            if (isPromoter(dna, index)) {
+    private static int getNextStartIndex(DNA dna, int index) {
+        for (int i = index; (i + Nucleotide.startLength) <= dna.size(); i+=3) {
+            if (isGeneStart(dna, index)) {
                 return index;
             }
         }
         return -1;
     }
-    private static boolean isPromoter(DNA dna, int index) {
-        for (int j = 0; j < Nucleotide.promoterLength; j++) {
-            Nucleotide nucleotide = dna.get(index + j);
-            if (!(nucleotide.getCode() == Nucleotide.promoterCode.charAt(j))) {
-                return false; // i.e. NOT a promoter
-            }
-        }
-        return true;
+    private static boolean isGeneStart(DNA dna, int startIndex) {
+        Codon codon = new Codon(dna.getFromMaster(startIndex),
+                dna.getFromMaster(startIndex + 1),
+                dna.getFromMaster(startIndex + 2));
+        return codon.isStart();
     }
     private static int getNextGeneIndex(DNA dna, int index) {
         for (int i = index; (i + 3) <= dna.size(); i+=3) {
-            if (isStop(dna, i)) {
+            if (isGeneStop(dna, i)) {
                 return i + 3; // i.e. position after stopCodon
             }
         }
         return -1;
     }
-    private static boolean isStop(DNA dna, int stopIndex) {
-        Codon codon = new Codon(dna.get(stopIndex), dna.get(stopIndex + 1),
-                dna.get(stopIndex + 2));
+    private static boolean isGeneStop(DNA dna, int stopIndex) {
+        Codon codon = new Codon(dna.getFromMaster(stopIndex),
+                dna.getFromMaster(stopIndex + 1),
+                dna.getFromMaster(stopIndex + 2));
         return codon.isStop();
     }
     @Override

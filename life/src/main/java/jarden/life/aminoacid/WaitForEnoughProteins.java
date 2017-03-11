@@ -45,7 +45,10 @@ public class WaitForEnoughProteins extends AminoAcid {
                     // stopThreads should be method in Cell
                     Protein thisProtein = getProtein();
                     for (Protein protein: proteinList) {
-                        if (protein == thisProtein) continue; // don't stop itself!
+                        if (protein != thisProtein) { // don't stop itself!
+                            protein.stop();
+                        }
+                        /*!!
                         Thread proteinThread = protein.getThread();
                         if (proteinThread != null && proteinThread.isAlive()) {
                             protein.stop();
@@ -62,6 +65,7 @@ public class WaitForEnoughProteins extends AminoAcid {
                         } else {
                             cell.logId("divideCell detected no thread for protein " + protein);
                         }
+                    */
                     }
                     cell.getCellEnvironment().removeCell(cell); // TODO: or mark as dead?
                     thisProtein.stop(); // finally, stop itself

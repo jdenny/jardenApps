@@ -12,12 +12,14 @@ package jarden.life.nucleicacid;
  *    bonds: A - U; C - G
  */
 public interface Nucleotide {
-    String promoterCode = "TATAAT"; // if this changes,
-    int promoterLength = promoterCode.length();
+    String stopCode = "TAA";
+    String startCode = "TGA"; // if this changes,
+    int startLength = startCode.length();
     // also change counts below
-    String terminatorCode = "TAA";
-    int promoterThymineCt = 3;
-    int promoterAdenineCt = 4;
+    int startAdenineCt = 1;
+    int startCytosineCt = 0;
+    int startGuanineCt = 1;
+    int startThymineCt = 1;
 
     /**
      * Tests if this nucleotide is suitable to form a DNA base-pair

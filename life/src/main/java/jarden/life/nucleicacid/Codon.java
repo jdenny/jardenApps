@@ -3,10 +3,19 @@ package jarden.life.nucleicacid;
 
 import jarden.life.CellResource;
 
+/**
+ * In our simplified view of life, a start codon (promoter) is only 3 base-pairs
+ * (1 codon), and we are hijacking one of the triplets that in real life is used
+ * as a stop. Also note that start and stop codons can appear in DNA and RNA.
+ * In summary:       RNA    DNA
+ *      start codon: UGA    TGA
+ *      stop codon:  UAA    TAA
+ */
 public class Codon implements CellResource {
 	private Nucleotide first;
 	private Nucleotide second;
 	private Nucleotide third;
+    private Boolean isStart;
     private Boolean isStop;
 	
 	public Codon(Nucleotide first, Nucleotide second, Nucleotide third) {
@@ -24,13 +33,19 @@ public class Codon implements CellResource {
 		return third;
 	}
 
+    public boolean isStart() {
+        if (isStart == null) {
+            // lazy evaluation:
+            isStart = (first instanceof Uracil || first instanceof Thymine) &&
+                    second instanceof Guanine && third instanceof Adenine;
+        }
+        return isStart;
+    }
 	public boolean isStop() {
         if (isStop == null) {
             // lazy evaluation:
             isStop = (first instanceof Uracil || first instanceof Thymine) &&
-                         ( (second instanceof Adenine &&
-                         (third instanceof Adenine || third instanceof Guanine)) ||
-                         (second instanceof Guanine && third instanceof Adenine) );
+                         second instanceof Adenine && third instanceof Adenine;
         }
         return isStop;
 	}

@@ -3,6 +3,9 @@ package jarden.life;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,7 +24,9 @@ public class CellEnvironment implements TimerListener {
 
     private List<Cell> cellList = new LinkedList<>();
     private List<Food> foodList = new LinkedList<>();
-    private int feederRate = 5;
+    private ThreadPoolExecutor threadPoolExecutor =
+            (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    private int feedInterval = 5; // tenths of a second
     private int nucleotideFeedCt = 5; // i.e. 5 of each
     private int aminoAcidFeedCt = 1; // i.e. 1 of each
     private Timer timer;
@@ -35,10 +40,9 @@ public class CellEnvironment implements TimerListener {
     /**
      * Interval, in tenths of a second, between adding
      * food to foodList.
-     * @param rate
      */
-    public void setFeederRate(int rate) {
-        this.feederRate = rate;
+    public void setFeedInterval(int interval) {
+        this.feedInterval = interval;
     }
     public void setNucleotideFeedCt(int nucleotideFeedCt) {
         this.nucleotideFeedCt = nucleotideFeedCt;
@@ -47,7 +51,7 @@ public class CellEnvironment implements TimerListener {
         this.aminoAcidFeedCt = aminoAcidFeedCt;
     }
     public void startFeeding() {
-        timer = new Timer(this, feederRate);
+        timer = new Timer(this, feedInterval);
     }
     public void stopFeeding() {
         timer.stop();
@@ -63,6 +67,9 @@ public class CellEnvironment implements TimerListener {
         } finally {
             foodListLock.unlock();
         }
+    }
+    public ThreadPoolExecutor getThreadPoolExecutor() {
+        return threadPoolExecutor;
     }
     @Override
     public void onTimerEvent() {
@@ -111,8 +118,8 @@ public class CellEnvironment implements TimerListener {
             cellListLock.unlock();
         }
     }
-    public int getFeederRate() {
-        return feederRate;
+    public int getFeedInterval() {
+        return feedInterval;
     }
     public int getNucleotideFeedCt() {
         return nucleotideFeedCt;
@@ -136,5 +143,15 @@ public class CellEnvironment implements TimerListener {
             cellShortDataList.add(cell.getCellShortData());
         }
         return cellShortDataList;
+    }
+    public void exit() {
+        System.out.println("CellEnvironment.exit()");
+        threadPoolExecutor.shutdownNow();
+        try {
+            threadPoolExecutor.awaitTermination(5, TimeUnit.SECONDS);
+            System.out.println("awaitTermination complete");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

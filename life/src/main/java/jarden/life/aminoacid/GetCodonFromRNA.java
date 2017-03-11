@@ -38,6 +38,13 @@ public class GetCodonFromRNA extends AminoAcid {
                 needMoreProteins.await();
             }
             // we can make more proteins
+            if (rna == null) {
+                if (Thread.interrupted()) {
+                    System.out.println("rna is null, and Thread.interrupted()");
+                    throw new InterruptedException();
+                }
+                System.out.println("rna is null!! Help!");
+            }
             Codon codon = rna.get(index++);
             if (codon.isStop()) {
                 rna = null;
@@ -63,6 +70,7 @@ public class GetCodonFromRNA extends AminoAcid {
     }
     @Override
     public void reset() {
+        System.out.println("GetCodonFromRNA.reset()");
         this.rna = null;
     }
 }

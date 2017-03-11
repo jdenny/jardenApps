@@ -1,44 +1,6 @@
 Current actions *************************************************
-replace FindNextGene, GetRNAFromGene with Polymerase - DONE
-
-remove all synchronized - DONE
-
-in DivideCell, signal needMoreProteins if ct < 2 * geneCt - DONE
-
-similarly if rnaCt < geneCt, notify needMoreRna - DONE
-
-follow pattern in javadoc of interface
- java.util.concurrent.locks.Condition - DONE
-
-similarly signal needMoreFood - DONE
-
-static counts for proteins, aminoAcids and RNA and nucleotides need to be
-non-static, as each cell could have different DNA! - DONE
-
-pass on targets in DivideCell - DONE
-
-is there an inconsistency, in that Cell applies the locks & conditions for
-get<resource>, but the amino acids do it for put<resource>? - NO
-
-remove onCellChanged(Cell cell); - DONE
-
-remove cell listener - DONE
-
 clients get all data using pull from CellEnvironment instead of push;
 ideally clients get cellData, rather than cells
-
-remove Cell.active - DONE
-
-for each Condition, have corresponding boolean method, e.g. - DONE
-	private Condition cellReadyToDivide;
-	public boolean isCellReadyToDivide() {
-		return proteinList.size() > (geneSize * 2);
-	}
-
-replace AminoAcid method: Object action(Object object)
-with: CellResource action(CellResource resource)     - DONE
-
-add boolean startLife to CellEnvironment; if true add syntheticCell - DONE
 
 check-out why cell-1 has 2 of each protein, > 120 each of amino acids,
 	0 Adenine, 52 Uracil, and > 400 of the other nucleotides
@@ -67,6 +29,8 @@ add aminoAcidActuals, similar to nucleotideActuals
 could the protein name be replaced by its RNA gene, without the stop,
  as a string?
 
+convert killCell to protein; cell maintain list of cells to be killed
+
 when we've converted all our amino acids into the 20 proper names,
 then we can have a definitive list of aminoAcids, as we already have
 a definitive list of nucleotides (5); so we can hold the resource
@@ -80,8 +44,6 @@ one above could be replaced by:
 maybe one day, the calculation of the resource targets could itself
 be a protein!
 
-use Thread pool
-
 End of current actions *****************************************
 
 Next Steps
@@ -90,7 +52,6 @@ Next Steps
 	new Protein EatFood, which gets the food from the environment;
 	  LifeFX now adds food to the environment, rather than individual cells
 	sliding scale of delays, so we can watch what is happening
-	common pool of food that all cells can feed off
 	optionally make colours sliding scale
 	http://stackoverflow.com/questions/340209/generate-colors-between-red-and-green-for-a-power-meter
 	now for the 20 amino acids!
@@ -209,3 +170,43 @@ move to next element in chain
 
 add created resource (e.g. protein) to cell
 
+Complete Actions *************************************
+replace FindNextGene, GetRNAFromGene with Polymerase - DONE
+
+remove all synchronized - DONE
+
+in DivideCell, signal needMoreProteins if ct < 2 * geneCt - DONE
+
+similarly if rnaCt < geneCt, notify needMoreRna - DONE
+
+follow pattern in javadoc of interface
+ java.util.concurrent.locks.Condition - DONE
+
+similarly signal needMoreFood - DONE
+
+static counts for proteins, aminoAcids and RNA and nucleotides need to be
+non-static, as each cell could have different DNA! - DONE
+
+pass on targets in DivideCell - DONE
+
+is there an inconsistency, in that Cell applies the locks & conditions for
+get<resource>, but the amino acids do it for put<resource>? - NO
+
+remove onCellChanged(Cell cell); - DONE
+
+remove cell listener - DONE
+
+remove Cell.active - DONE
+
+for each Condition, have corresponding boolean method, e.g. - DONE
+	private Condition cellReadyToDivide;
+	public boolean isCellReadyToDivide() {
+		return proteinList.size() > (geneSize * 2);
+	}
+
+replace AminoAcid method: Object action(Object object)
+with: CellResource action(CellResource resource)     - DONE
+
+add boolean startLife to CellEnvironment; if true add syntheticCell - DONE
+
+use Thread pool - DONE

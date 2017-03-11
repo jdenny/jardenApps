@@ -8,6 +8,7 @@ import jarden.life.CellEnvironment;
 import jarden.life.CellShortData;
 import jarden.life.NameCount;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -56,7 +57,7 @@ public class LifeFX extends Application {
     private ObservableList<CellShortData> cellObservableList;
     private ListView<String> proteinListView;
     private ObservableList<String> proteinObservableList;
-    private TextField feederRateField;
+    private TextField feedIntervalField;
     private TextField nucleotideFeedField;
     private TextField aminoAcidFeedField;
     private Text[] aminoAcidQtyTexts;
@@ -91,13 +92,13 @@ public class LifeFX extends Application {
         count of all live cells; count of dead cells
         list of most recent 20 live cells; show id, generation, proteinCt
         refresh button for above
-        setFeederRate(); setNucleotideFeedCt(); setAminoAcidFeedCt()
+        setFeederInterval(); setNucleotideFeedCt(); setAminoAcidFeedCt()
         select cell gets cell data
      */
     @Override
     public void start(Stage primaryStage) {
         /*
-        feeder rate: <ct> aminoAcids: <ct> nucleotides: <ct> [set] [start] [stop]
+        feed interval (sec/10): <ct> aminoAcids: <ct> nucleotides: <ct> [set] [start] [stop]
         live cells: <ct> dead cells: <ct> [refresh]
 
         0                  1                  2           3
@@ -129,8 +130,8 @@ public class LifeFX extends Application {
 
         statusText = new Text();
         statusText.setFill(Color.FIREBRICK);
-        feederRateField = new TextField();
-        feederRateField.setPrefWidth(50);
+        feedIntervalField = new TextField();
+        feedIntervalField.setPrefWidth(50);
         nucleotideFeedField = new TextField();
         nucleotideFeedField.setPrefWidth(50);
         aminoAcidFeedField = new TextField();
@@ -139,7 +140,7 @@ public class LifeFX extends Application {
         deadCellCt = new Text();
 
         Button setButton = new Button("Set");
-        setButton.setOnAction(event -> setFeederRates());
+        setButton.setOnAction(event -> setFeedInterval());
         Button startButton = new Button("Start");
         startButton.setOnAction(event -> cellEnvironment.startFeeding());
         Button stopButton = new Button("Stop");
@@ -149,16 +150,16 @@ public class LifeFX extends Application {
 
         BorderPane borderPane = new BorderPane();
         VBox controlVBox = new VBox();
-        HBox feedRateHBox = new HBox();
-        feedRateHBox.setPadding(new Insets(15, 12, 15, 12));
-        feedRateHBox.setSpacing(10);
+        HBox feedIntervalHBox = new HBox();
+        feedIntervalHBox.setPadding(new Insets(15, 12, 15, 12));
+        feedIntervalHBox.setSpacing(10);
         HBox cellCtsHBox = new HBox();
         cellCtsHBox.setPadding(new Insets(15, 12, 15, 12));
         cellCtsHBox.setSpacing(10);
 
-        feedRateHBox.getChildren().addAll(
-                new Label("Feeder Rate:"),
-                feederRateField,
+        feedIntervalHBox.getChildren().addAll(
+                new Label("Feed Interval (sec/10):"),
+                feedIntervalField,
                 new Label("Amino Acids:"),
                 aminoAcidFeedField,
                 new Label("Nucleotides:"),
@@ -172,7 +173,7 @@ public class LifeFX extends Application {
                 new Label("Dead cells:"),
                 deadCellCt,
                 refreshButton);
-        controlVBox.getChildren().addAll(feedRateHBox, cellCtsHBox);
+        controlVBox.getChildren().addAll(feedIntervalHBox, cellCtsHBox);
         borderPane.setTop(controlVBox);
 
 
@@ -222,11 +223,15 @@ public class LifeFX extends Application {
         Scene scene = new Scene(borderPane, 850, 700);
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(e -> {
+            cellEnvironment.exit();
+            Platform.exit();
+        });
         primaryStage.show();
         boolean startLife = true;
         try {
             cellEnvironment = new CellEnvironment(startLife);
-            initialiseFeederRates();
+            initialiseFeedFields();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -281,17 +286,17 @@ public class LifeFX extends Application {
         }
         */
     }
-    private void initialiseFeederRates() {
-        feederRateField.setText(String.valueOf(cellEnvironment.getFeederRate()));
+    private void initialiseFeedFields() {
+        feedIntervalField.setText(String.valueOf(cellEnvironment.getFeedInterval()));
         nucleotideFeedField.setText(String.valueOf(cellEnvironment.getNucleotideFeedCt()));
         aminoAcidFeedField.setText(String.valueOf(cellEnvironment.getAminoAcidFeedCt()));
     }
-    private void setFeederRates() {
+    private void setFeedInterval() {
         try {
-            int feederRate = Integer.parseInt(feederRateField.getText());
+            int feedInterval = Integer.parseInt(feedIntervalField.getText());
             int nucleotideFeedCt = Integer.parseInt(nucleotideFeedField.getText());
             int aminoAcidFeedCt = Integer.parseInt(aminoAcidFeedField.getText());
-            cellEnvironment.setFeederRate(feederRate);
+            cellEnvironment.setFeedInterval(feedInterval);
             cellEnvironment.setAminoAcidFeedCt(aminoAcidFeedCt);
             cellEnvironment.setNucleotideFeedCt(nucleotideFeedCt);
         } catch (NumberFormatException nfe) {

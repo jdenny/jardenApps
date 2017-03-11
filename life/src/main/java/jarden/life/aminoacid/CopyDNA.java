@@ -15,10 +15,16 @@ public class CopyDNA extends AminoAcid {
         Cell cell = getCell();
         DNA dna = cell.getDNA();
         DNA dnaCopy = new DNA();
-        for (Nucleotide nucleotide: dna) {
+        for (Nucleotide nucleotide: dna.getStrand1()) {
             Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true);
-            dnaCopy.add(nucleotideCopy);
+            dnaCopy.addToStrand2(nucleotideCopy);
         }
+        cell.logId("dna strand1 copied okay");
+        for (Nucleotide nucleotide: dna.getStrand2()) {
+            Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true);
+            dnaCopy.addToStrand1(nucleotideCopy);
+        }
+        cell.logId("dna copied okay");
         return dnaCopy;
 	}
     @Override
