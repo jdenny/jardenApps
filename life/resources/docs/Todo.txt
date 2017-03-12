@@ -1,6 +1,19 @@
 Current actions *************************************************
-clients get all data using pull from CellEnvironment instead of push;
-ideally clients get cellData, rather than cells
+feedbackLoop is allowing multiples of one DNA and none of another; ditto proteins
+
+a class (that later should become a protein!) that keeps track of each gene:
+	int dnaIndex; // dna never changes within a cell, only producing new cell
+	int targetCt; // target number of proteins to be built
+	int actualCt;
+during protein creation, increment actualCt; during split, decrement actualCt;
+polymerase waits for needDNA
+this supercedes the current DNA feedback loop
+
+calculate geneSize from DNA (which may change) rather than from
+ static geneStrs.length (which doesn't, and isn't even calculated for
+ daughter cells!)
+
+in LifeFX, show list of RNA strands
 
 check-out why cell-1 has 2 of each protein, > 120 each of amino acids,
 	0 Adenine, 52 Uracil, and > 400 of the other nucleotides
@@ -210,3 +223,10 @@ with: CellResource action(CellResource resource)     - DONE
 add boolean startLife to CellEnvironment; if true add syntheticCell - DONE
 
 use Thread pool - DONE
+
+CellListener: notification that there are new or newly dead cells; LifeFX then
+pulls the list back if it wants - DONE
+
+clients get all data using pull from CellEnvironment instead of push;
+ideally clients get cellData, rather than cells - DONE
+

@@ -5,6 +5,7 @@ import java.util.List;
 
 import jarden.life.CellData;
 import jarden.life.CellEnvironment;
+import jarden.life.CellListener;
 import jarden.life.CellShortData;
 import jarden.life.NameCount;
 import javafx.application.Application;
@@ -42,7 +43,7 @@ import static jarden.life.CellData.nucleotideNames;
  * /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
  */
 
-public class LifeFX extends Application {
+public class LifeFX extends Application implements CellListener {
     // TODO: sliding scale from blue to green?
     private static Color[] generationColours = {
             Color.web("blue"),
@@ -64,8 +65,8 @@ public class LifeFX extends Application {
     private Text[] nucleotideQtyTexts;
     private CellData cellData;
     private CellEnvironment cellEnvironment;
-    private Text liveCellCt;
-    private Text deadCellCt;
+    private Text liveCellCtText;
+    private Text deadCellCtText;
 
     public static void main(String[] args) {
         System.out.println("hello LifeFX");
@@ -99,7 +100,7 @@ public class LifeFX extends Application {
     public void start(Stage primaryStage) {
         /*
         feed interval (sec/10): <ct> aminoAcids: <ct> nucleotides: <ct> [set] [start] [stop]
-        live cells: <ct> dead cells: <ct> [refresh]
+        live cells: <ct> dead cells: <ct> [refresh] [restart life]
 
         0                  1                  2           3
         0  Cells           Proteins           AminoAcids
@@ -116,7 +117,7 @@ public class LifeFX extends Application {
          */
         cellObservableList = FXCollections.observableArrayList();
         cellListView = new ListView<>(cellObservableList);
-        cellListView.setCellFactory( (listView) -> new ColorRectCell());
+        cellListView.setCellFactory((listView) -> new ColorRectCell());
         cellListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) ->
@@ -136,8 +137,8 @@ public class LifeFX extends Application {
         nucleotideFeedField.setPrefWidth(50);
         aminoAcidFeedField = new TextField();
         aminoAcidFeedField.setPrefWidth(50);
-        liveCellCt = new Text();
-        deadCellCt = new Text();
+        liveCellCtText = new Text();
+        deadCellCtText = new Text();
 
         Button setButton = new Button("Set");
         setButton.setOnAction(event -> setFeedInterval());
@@ -147,6 +148,8 @@ public class LifeFX extends Application {
         stopButton.setOnAction(event -> cellEnvironment.stopFeeding());
         Button refreshButton = new Button("Refresh");
         refreshButton.setOnAction(event -> refresh());
+        Button restartLifeButton = new Button("Restart Life");
+        restartLifeButton.setOnAction(event -> restart());
 
         BorderPane borderPane = new BorderPane();
         VBox controlVBox = new VBox();
@@ -169,10 +172,11 @@ public class LifeFX extends Application {
                 stopButton);
         cellCtsHBox.getChildren().addAll(
                 new Label("Live cells:"),
-                liveCellCt,
+                liveCellCtText,
                 new Label("Dead cells:"),
-                deadCellCt,
-                refreshButton);
+                deadCellCtText,
+                refreshButton,
+                restartLifeButton);
         controlVBox.getChildren().addAll(feedIntervalHBox, cellCtsHBox);
         borderPane.setTop(controlVBox);
 
@@ -224,22 +228,33 @@ public class LifeFX extends Application {
         primaryStage.setTitle("Life is complicated!");
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(e -> {
-            cellEnvironment.exit();
+            if (cellEnvironment != null) cellEnvironment.exit();
             Platform.exit();
         });
         primaryStage.show();
+        restart();
+    }
+    @Override
+    public void onCellCountChanged(int liveCellCt, int deadCellCt) {
+        refresh(liveCellCt, deadCellCt);
+    }
+
+    private void restart() {
         boolean startLife = true;
         try {
             cellEnvironment = new CellEnvironment(startLife);
+            cellEnvironment.setCellListener(this);
             initialiseFeedFields();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
     private void refresh() {
-        liveCellCt.setText(String.valueOf(cellEnvironment.getCellCount()));
-        deadCellCt.setText(
-                String.valueOf(cellEnvironment.getDeadCellCt()));
+        refresh(cellEnvironment.getCellCount(), cellEnvironment.getDeadCellCt());
+    }
+    private void refresh(int liveCellCt, int deadCellCt) {
+        liveCellCtText.setText(String.valueOf(liveCellCt));
+        deadCellCtText.setText(String.valueOf(deadCellCt));
         List<CellShortData> cellShortDataList = cellEnvironment.getCellShortDataList();
         cellObservableList.clear();
         cellObservableList.addAll(cellShortDataList);

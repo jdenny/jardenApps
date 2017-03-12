@@ -21,6 +21,7 @@ public class CellEnvironment implements TimerListener {
     private final Lock foodListLock = new ReentrantLock();
     private final Condition foodAvailable = foodListLock.newCondition();
     private final Lock cellListLock = new ReentrantLock();
+    private CellListener cellListener;
 
     private List<Cell> cellList = new LinkedList<>();
     private List<Food> foodList = new LinkedList<>();
@@ -32,10 +33,14 @@ public class CellEnvironment implements TimerListener {
     private Timer timer;
     private int deadCellCt;
 
-    public CellEnvironment(boolean startLife) throws InterruptedException {
+    public CellEnvironment(boolean startLife)
+            throws InterruptedException {
         if (startLife) {
             addCell(Cell.getSyntheticCell(this));
         }
+    }
+    public void setCellListener(CellListener cellListener) {
+        this.cellListener = cellListener;
     }
     /**
      * Interval, in tenths of a second, between adding
@@ -100,6 +105,12 @@ public class CellEnvironment implements TimerListener {
         } finally {
             cellListLock.unlock();
         }
+        notifyCellListener();
+    }
+    private void notifyCellListener() {
+        if (cellListener != null) {
+            cellListener.onCellCountChanged(cellList.size(), deadCellCt);
+        }
     }
     public int getCellCount() {
         return cellList.size();
@@ -117,6 +128,7 @@ public class CellEnvironment implements TimerListener {
         } finally {
             cellListLock.unlock();
         }
+        notifyCellListener();
     }
     public int getFeedInterval() {
         return feedInterval;

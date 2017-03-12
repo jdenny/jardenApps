@@ -84,7 +84,7 @@ public class Cell implements Food {
     private final List<Food> foodList = new LinkedList<>();
     private int hashCode = 0;
     private boolean divideCellRunning;
-    private int geneSize;
+    private int geneSize = 5;
     // TODO: when proper aminoAcids, replace length with 20
     // in same sequence as aminoAcid list
     private int[] aminoAcidTargets = new int[CellData.aminoAcidNames.length];

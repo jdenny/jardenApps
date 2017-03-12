@@ -4,6 +4,34 @@ feedback loop, Polymerase would stop when there is enough RNA.
 More generally, cell could eat and digest food faster than it's being
 converted to resources.
 
+New design***********************************
+Cell.analyseDNA
+  for each start point:
+    new Regulator(); add to regulatorList
+
+protein
+  add int regulatorIndex; use to decrement actualCt
+  the resource that is passed through the amino acids
+  could be {protein & codon}, {protein & aminoAcid}
+
+polymerase
+  getDNA
+  get regulatorList
+  for each regulator:
+    while regulator.isRNARequired:
+      build RNA
+      regulator.actualCt++
+   needMoreRNA.await
+
+divideCell
+  use regulatorList to determine if ready to divide:
+    for each regulator:
+      if actualCt < targetCt:
+        return false
+  when moving protein to daughterCell, decrement regulator.actualCt
+  at end: needMoreRNA.signalAll
+End of new design****************************
+
 consumeResources
 	polymerase: nucleotides to RNA
 	ribosome: aminoAcids to proteins
