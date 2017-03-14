@@ -6,10 +6,8 @@ package jarden.life;
 
 public class CellData {
     public static String[] aminoAcidNames = {
-            "AddAminoAcidToProtein", "CopyDNA",
-            "DigestFood", "DivideCell", "EatFood",
-            "GetAminoAcidFromCodon", "GetCodonFromRNA",
-            "Polymerase", "WaitForEnoughProteins"
+            "CopyDNA", "DigestFood", "DivideCell", "EatFood",
+            "Polymerase", "Ribosome", "WaitForEnoughProteins"
     };
     public static String[] nucleotideNames = {
             "Adenine", "Cytosine", "Guanine", "Thymine", "Uracil",

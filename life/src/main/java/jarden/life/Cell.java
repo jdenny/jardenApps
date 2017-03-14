@@ -1,14 +1,12 @@
 package jarden.life;
 
-import jarden.life.aminoacid.AddAminoAcidToProtein;
 import jarden.life.aminoacid.AminoAcid;
 import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
-import jarden.life.aminoacid.GetAminoAcidFromCodon;
-import jarden.life.aminoacid.GetCodonFromRNA;
 import jarden.life.aminoacid.Polymerase;
+import jarden.life.aminoacid.Ribosome;
 import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -96,18 +94,18 @@ public class Cell implements Food {
         4 24
          ---
          156
-    Common thread numbers:
+    Common pool-thread numbers:
         Cell 1                Cell 2
-        5  polymerase
-        6  ribsome
-        7  eatFood
-        8  digestFood
-        9  divideCell
+        1  polymerase
+        2  ribsome
+        3  eatFood
+        4  digestFood
+        5  divideCell
 
-        10 polymerase     ->  14 or 15
-        11 ribsome        ->  15    16
-        12 eatFood        ->  16    17
-        13 digestFood     ->  17    18
+        6  polymerase     ->  12
+        7  ribsome        ->  15    16
+        8  eatFood        ->  16    17
+        9  digestFood     ->  17    18
         -  divideCell     ->  18    19
         (thread 14 used by Timer)
 
@@ -148,13 +146,11 @@ public class Cell implements Food {
         Cell synCell = new Cell(buildDNAFromString(getDnaStr()), cellEnvironment);
         // create resources for 1 daughter cell of 5 proteins:
         for (int i = 0; i < 1; i++) {
-            synCell.aminoAcidList.add(new AddAminoAcidToProtein());
             synCell.aminoAcidList.add(new CopyDNA());
             synCell.aminoAcidList.add(new DigestFood());
             synCell.aminoAcidList.add(new DivideCell());
             synCell.aminoAcidList.add(new EatFood());
-            synCell.aminoAcidList.add(new GetAminoAcidFromCodon());
-            synCell.aminoAcidList.add(new GetCodonFromRNA());
+            synCell.aminoAcidList.add(new Ribosome());
             synCell.aminoAcidList.add(new Polymerase());
             synCell.aminoAcidList.add(new WaitForEnoughProteins());
         }
@@ -183,9 +179,7 @@ public class Cell implements Food {
         Protein rnaPolymerase = new Protein(synCell);
         rnaPolymerase.add(new Polymerase());
         Protein ribosome = new Protein(synCell);
-        ribosome.add(new GetCodonFromRNA());
-        ribosome.add(new GetAminoAcidFromCodon());
-        ribosome.add(new AddAminoAcidToProtein());
+        ribosome.add(new Ribosome());
         Protein proteinDigest = new Protein(synCell);
         proteinDigest.add(new DigestFood());
         Protein eatFood = new Protein(synCell);
@@ -194,7 +188,7 @@ public class Cell implements Food {
         proteinDivide.add(new WaitForEnoughProteins());
         proteinDivide.add(new CopyDNA());
         proteinDivide.add(new DivideCell());
-        boolean startAllProteins = false;
+        boolean startAllProteins = true;
         if (!startAllProteins) {
             ribosome.activate = false;
             proteinDigest.activate = false;
@@ -394,15 +388,19 @@ public class Cell implements Food {
         proteinListLock.lockInterruptibly();
         try {
             proteinList.add(protein);
+        } finally {
+            proteinListLock.unlock();
+        }
+        regulatorListLock.lockInterruptibly();
+        try {
             protein.getRegulator().incrementProteinCt();
             if (cellReadyToDivide()) {
                 cellReadyToDivideCondition.signalAll();
             }
         } finally {
-            proteinListLock.unlock();
+            regulatorListLock.unlock();
         }
         logId("addProtein(); proteinCt=" + proteinList.size());
-        Future future = protein.getFuture();
         if (protein.activate) {
             protein.start(cellEnvironment.getThreadPoolExecutor());
         }
@@ -538,11 +536,20 @@ public class Cell implements Food {
                 logId("waiting for some RNA");
                 rnaAvailableCondition.await();
             }
-            if (rnaList.size() < geneSize) rnaBelowTargetCondition.signalAll();
             return rna;
         } finally {
             rnaListLock.unlock();
         }
+        /*!!
+        regulatorListLock.lockInterruptibly();
+        try {
+            if (getRegulatorBelowTarget() != null) {
+                rnaBelowTargetCondition.signalAll();
+            }
+        } finally {
+            regulatorListLock.unlock();
+        }
+        */
 	}
 	public AminoAcid waitForAminoAcid(Codon codon) throws InterruptedException {
         if (aminoAcidList.size() < geneSize) {

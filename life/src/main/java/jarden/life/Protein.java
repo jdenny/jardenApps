@@ -36,10 +36,8 @@ public class Protein implements Runnable, CellResource {
         // say no if there is another DivideCell already running
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
         if (firstAminoAcid.activateOnCreate()) {
-            //!! this.thread = new Thread(this);
             cell.logId("starting thread for protein " + this);
             future = threadPoolExecutor.submit(this);
-            //!! thread.start();
         } else {
             cell.logId("not starting thread for protein " + this);
         }
