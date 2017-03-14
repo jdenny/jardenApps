@@ -1,5 +1,6 @@
 package jarden.life.aminoacid;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -49,14 +50,35 @@ public class DivideCell extends AminoAcid {
             after split:
             parent: p1, p1, p2, p3
             child: p2, p3
+
+            To fix:
+                int[] dnaIndices = new int[geneSize];
+                for each protein in proteinList
+                  get dnaIndex
+                  if already in list, move to new cell
+                  simple!
              */
-            int proteinListSize = proteinList.size();
-            for (int i = geneSize; i < proteinListSize; i++) {
-                Protein protein = proteinList.remove(geneSize);
-                protein.stop();
-                protein.getRegulator().decrementCounts();
-                protein.setCell(daughterCell);
-                daughterCell.addProtein(protein);
+            // find duplicate proteins and move them
+            // to daughter cell:
+            int[] dnaIndices = new int[geneSize];
+            int indicesAdded = 0;
+            int dnaIndex;
+            Protein protein;
+            Iterator<Protein> proteinListIterator = proteinList.iterator();
+            while (proteinListIterator.hasNext()) {
+                protein = proteinListIterator.next();
+                dnaIndex = protein.getRegulator().getDnaIndex();
+                if (isInArray(dnaIndex, dnaIndices, indicesAdded)) {
+                    // protein of this type already found,
+                    // so move this one to the new cell
+                    proteinListIterator.remove();
+                    protein.stop();
+                    protein.getRegulator().decrementCounts();
+                    protein.setCell(daughterCell);
+                    daughterCell.addProtein(protein);
+                } else {
+                    dnaIndices[indicesAdded++] = dnaIndex;
+                }
             }
             cell.getCellEnvironment().addCell(daughterCell);
         } finally {
@@ -70,6 +92,20 @@ public class DivideCell extends AminoAcid {
         } finally {
             regulatorListLock.unlock();
         }
+    }
+
+    /**
+     * Find if number is in the first numbersAdded elements of array.
+     * @param number to try to find in array
+     * @param array of numbers
+     * @param numbersAdded is how many numbers in the array we look through
+     * @return true if number is in the first numbersAdded elements of array
+     */
+    private static boolean isInArray(int number, int[] array, int numbersAdded) {
+        for (int i = 0; i < numbersAdded; i++) {
+            if (number == array[i]) return true;
+        }
+        return false;
     }
     public String getName() {
         return "DivideCell";
