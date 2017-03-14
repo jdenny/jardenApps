@@ -18,26 +18,10 @@ Protein
   regulator
 
 Cell
-  rnaListLock: add and remove rna
-    rnaAvailableCondition
-      awaited by ribosome
-      signalled by polymerase
-  proteinListLock: add and remove protein
   aminoAcidListLock: add and remove aminoAcid
     aminoAcidAvailableCondition
       awaited by cell.awaitAminoAcid (ribosome)
       signalled by digestFood
-  nucleotideListLock: add and remove nucleotide
-    nucleotideAvailableCondition
-      awaited by cell.awaitNucleotide (ribosome & divideCell)
-      signalled by digestFood
-  regulatorListLock
-    rnaBelowTargetCondition: rnaCt < targetCt
-      awaited by polymerase
-      signalled by divideCell
-    cellReadyToDivideCondition: proteinCt >= targetCt
-      awaited by divideCell
-      signalled by ribosome
   foodListLock: add and remove food
     foodAvailableCondition
       awaited by digestFood
@@ -45,6 +29,22 @@ Cell
     needMoreFoodCondition
       awaited by eatFood
       signalled by waitForAminoAcid & waitForNucleotide
+  nucleotideListLock: add and remove nucleotide
+    nucleotideAvailableCondition
+      awaited by cell.awaitNucleotide (ribosome & divideCell)
+      signalled by digestFood
+  proteinListLock: add and remove protein
+  regulatorListLock
+    cellReadyToDivideCondition: proteinCt >= targetCt
+      awaited by divideCell
+      signalled by ribosome
+    rnaBelowTargetCondition: rnaCt < targetCt
+      awaited by polymerase
+      signalled by divideCell
+  rnaListLock: add and remove rna
+    rnaAvailableCondition
+      awaited by ribosome
+      signalled by polymerase
 
 Cell.analyseDNA
   for each gene start point:
@@ -54,28 +54,24 @@ Cell.addProtein
   ++regulator.proteinCt
 
 polymerase
-  regulator = cell.awaitRnaBelowTarget()
+  regulator = cell.waitForRnaBelowTarget()
     increment rnaCt // while regulatorList is locked
-  add new protein to regulator
   build RNA
-    protein = new Protein()
-    protein.regulator = regulator
-    rna.protein = protein
+  protein = new Protein()
+  protein.regulator = regulator
+  rna.protein = protein
   cell.addRna(rna)
     add rna to rnaList
     rnaAvailable.signalAll
 
 ribosome
-  notes: remove cell.getNeedMoreProteins
-    if there is rna, we need to build a protein!
-    remove cell.needMoreRNA; replaced by awaitRnaBelowTarget
   rna = cell.awaitRNA()
     remove rna while rnaList locked
   getNextCodon from rna
   get matching amino acid
   add amino acid to protein
   cell.addProtein // while proteinList locked
-  if now ready to divide: readyToDivide.signalAll()
+    if now ready to divide: readyToDivide.signalAll()
 
 divideCell
   await readyToDivide
@@ -87,8 +83,8 @@ divideCell
       parentCell.regulator: --proteinCt, --rnaCt
   rnaBelowTarget.signalAll()
 
-remove from cell: dnaIndex, dnaIndexLock
-remove Cell.geneSize? in any case, it's supercede by regulatorList.size()
+notes:
+remove from cell: dnaIndex, dnaIndexLock, needMoreProteins
 check any other double locking, i.e. lockA.lock() then lockBCondition.await();
 
 End of new design****************************

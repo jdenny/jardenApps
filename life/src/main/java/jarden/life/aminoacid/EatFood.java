@@ -7,7 +7,6 @@ import jarden.life.Cell;
 import jarden.life.CellEnvironment;
 import jarden.life.CellResource;
 import jarden.life.Food;
-import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Guanine;
@@ -24,7 +23,7 @@ public class EatFood extends AminoAcid {
     public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
         Lock foodListLock = cell.getFoodListLock();
-        Condition needMoreFood = cell.getNeedMoreFood();
+        Condition needMoreFood = cell.getNeedMoreFoodCondition();
         foodListLock.lockInterruptibly();
         try {
             while (!cell.needMoreFood()) {

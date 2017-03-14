@@ -26,7 +26,7 @@ public class Ribosome extends AminoAcid {
         Codon codon;
         AminoAcid aminoAcid;
         while (true) {
-            codon = rna.get(index++);
+            codon = rna.getCodon(index++);
             if (codon.isStop()) {
                 break;
             }
@@ -42,8 +42,8 @@ public class Ribosome extends AminoAcid {
     }
     @Override
     public boolean matchCodon(Codon codon) {
-        return codon.getFirst() instanceof ?? &&
-                codon.getSecond() instanceof Uracil &&
-                codon.getThird() instanceof Adenine;
+        return codon.getFirst() instanceof Uracil &&
+                codon.getSecond() instanceof Adenine &&
+                codon.getThird() instanceof Uracil;
     }
 }

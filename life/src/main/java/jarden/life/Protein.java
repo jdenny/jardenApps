@@ -3,6 +3,7 @@ package jarden.life;
 import jarden.life.aminoacid.AminoAcid;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -12,10 +13,10 @@ import java.util.concurrent.TimeoutException;
 
 public class Protein implements Runnable, CellResource {
     private Cell cell; // the cell this protein belongs to
-	private ArrayList<AminoAcid> aminoAcidList = new ArrayList<>();
-    //!! private Thread thread;
+	private List<AminoAcid> aminoAcidList = new ArrayList<>();
+    private Regulator regulator;
     private int hashCode;
-    private String state;
+    private String state; // for monitoring; put in LifeFX
     public boolean activate = true; // set false for debugging!
     private Future future;
 
@@ -24,6 +25,9 @@ public class Protein implements Runnable, CellResource {
     }
     public Cell getCell() {
         return this.cell;
+    }
+    public String getState() {
+        return state;
     }
     public void setState(String state) { this.state = state; }
     public void start(ThreadPoolExecutor threadPoolExecutor) {
@@ -118,20 +122,19 @@ public class Protein implements Runnable, CellResource {
         }
         return this.hashCode;
     }
-    /*!!
-    public Thread getThread() {
-        return thread;
-    }
-    public String getStatus() {
-        return "running=" + (thread != null && thread.isAlive()) +
-                "; state=" + state;
-    }
-    */
-    public ArrayList<AminoAcid> getAminoAcidList() {
+    public List<AminoAcid> getAminoAcidList() {
         return aminoAcidList;
     }
 
     public Future getFuture() {
         return future;
+    }
+
+    public Regulator getRegulator() {
+        return regulator;
+    }
+
+    public void setRegulator(Regulator regulator) {
+        this.regulator = regulator;
     }
 }

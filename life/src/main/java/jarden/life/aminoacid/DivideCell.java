@@ -1,6 +1,7 @@
 package jarden.life.aminoacid;
 
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
@@ -29,47 +30,46 @@ public class DivideCell extends AminoAcid {
     public CellResource action(CellResource _dna) throws InterruptedException {
         DNA daughterDNA = (DNA) _dna;
         Cell cell = getCell();
+        Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());
+        daughterCell.setGeneration(cell.getGeneration() + 1);
         List<Protein> proteinList = cell.getProteinList();
         Lock proteinListLock = cell.getProteinListLock();
         int geneSize = cell.getGeneSize();
         proteinListLock.lockInterruptibly();
         try {
-            Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());
-            daughterCell.setGeneration(cell.getGeneration() + 1);
-            int newProteinCount = proteinList.size();
-            for (int i = geneSize; i < newProteinCount; i++) {
+            /* TODO: answer this question
+            is it possible that either cell could end up with the
+            wrong number of proteins? E.g. before split:
+            parentCell: p1, p2, p3, p1, p1, p2, p3
+            after split:
+            parent: p1, p2, p3 (geneSize=3)
+            child: p1, p1, p2, p3 (geneSize=4)
+            then when child is ready to split:
+            p1, p1, p2, p3, p2, p3
+            after split:
+            parent: p1, p1, p2, p3
+            child: p2, p3
+             */
+            int proteinListSize = proteinList.size();
+            for (int i = geneSize; i < proteinListSize; i++) {
                 Protein protein = proteinList.remove(geneSize);
                 protein.stop();
                 protein.getRegulator().decrementCounts();
-                /*!!
-                Thread proteinThread = protein.getThread();
-                if (proteinThread != null && proteinThread.isAlive()) {
-                    protein.stop();
-                    cell.logId("divideCell requested stop to protein " + protein);
-                    proteinThread.join(600);
-                    if (proteinThread.isAlive()) {
-                        cell.logId(proteinThread + " didn't die; state=" +
-                                proteinThread.getState() +
-                                "; moving it anyway**************");
-                    } else {
-                        cell.logId("divideCell protein stopped: " + protein);
-                    }
-                } else {
-                    cell.logId("divideCell detected no thread for protein " + protein);
-                }
-                */
                 protein.setCell(daughterCell);
                 daughterCell.addProtein(protein);
             }
-            if (!cell.cellReadyToDivide()) {
-                cell.getNeedMoreProteins().signalAll();
-            }
             cell.getCellEnvironment().addCell(daughterCell);
-            return daughterCell; // TODO: most probably not used, so return null
         } finally {
             proteinListLock.unlock();
         }
-
+        Lock regulatorListLock = cell.getRegulatorListLock();
+        regulatorListLock.lockInterruptibly();
+        try {
+            cell.getRnaBelowTargetCondition().signalAll();
+            return daughterCell;
+        } finally {
+            regulatorListLock.unlock();
+        }
     }
     public String getName() {
         return "DivideCell";

@@ -6,6 +6,7 @@ import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
 import jarden.life.CellResource;
+import jarden.life.Protein;
 import jarden.life.Regulator;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.DNA;
@@ -27,25 +28,10 @@ public class Polymerase extends AminoAcid {
 
     @Override
 	public CellResource action(CellResource notUsed) throws InterruptedException {
-        /*
-        Keep dnaIndex in cell, along with dna;
-        action()
-            put lock on dnaIndex;
-            get dna & dnaIndex from cell;
-            index = next promoter >= index
-            if no promoter:
-                index = 0
-                index = next promoter >= index
-                if no promoter: throw exception
-            find next stop
-            set dnaIndex to position after stop
-            release lock on dnaIndex
-            start building RNA!
-         */
         Cell cell = getCell();
         DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
-        // new bits:
-        int index = cell.waitForNeededGeneIndex();
+        Regulator regulator = cell.waitForRnaBelowTarget();
+        int index = regulator.getDnaIndex();
         int nextGeneIndex = getNextGeneIndex(dna, index);
         if (nextGeneIndex < 0) {
             throw new IllegalStateException("DNA gene has no stop-gene");
@@ -65,14 +51,16 @@ public class Polymerase extends AminoAcid {
                 throw new InterruptedException();
             }
             Codon codon = new Codon(first, second, third);
-            rna.add(codon);
+            rna.addCodon(codon);
         }
+        Protein newProtein = new Protein(cell);
+        newProtein.setRegulator(regulator);
+        rna.setNewProtein(newProtein);
         cell.addRNA(rna);
         return null;
-        // end of new bits
 
         /*!!
-        Condition needMoreRNA = cell.getNeedMoreRNA();
+        Condition needMoreRNA = cell.getRnaBelowTargetCondition();
         rnaListLock.lockInterruptibly();
         try {
             while (cell.getRNAList().size() >= cell.getGeneSize()) {

@@ -2,6 +2,7 @@ package jarden.life.aminoacid;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
@@ -30,50 +31,42 @@ public class WaitForEnoughProteins extends AminoAcid {
     @Override
 	public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
-        List<Protein> proteinList = cell.getProteinList();
+        Lock regulatorListLock = cell.getRegulatorListLock();
         Lock proteinListLock = cell.getProteinListLock();
-        proteinListLock.lockInterruptibly();
+        Condition cellReadyToDivideCondition =
+                cell.getCellReadyToDivideCondition();
+        boolean regulatorListLocked = false;
+        boolean proteinListLocked = false;
+        regulatorListLock.lockInterruptibly();
         try {
+            regulatorListLocked = true;
+            String state;
             while (!cell.cellReadyToDivide()) {
-                String state = "DivideCell waiting for more proteins";
+                state = "waiting for cellReadyToDivideCondition";
                 cell.logId(state);
                 getProtein().setState(state);
-                boolean timedOut = !cell.getCellReadyToDivide().await(10, TimeUnit.SECONDS);
+                boolean timedOut = !cellReadyToDivideCondition.await(10, TimeUnit.SECONDS);
                 if (timedOut) {
                     cell.logId("WaitForEnoughProteins timed out; ready to die!");
                     // TODO: put this in its own protein KillCell
                     // stopThreads should be method in Cell
                     Protein thisProtein = getProtein();
+                    proteinListLock.lockInterruptibly();
+                    proteinListLocked = true;
+                    List<Protein> proteinList = cell.getProteinList();
                     for (Protein protein: proteinList) {
                         if (protein != thisProtein) { // don't stop itself!
                             protein.stop();
                         }
-                        /*!!
-                        Thread proteinThread = protein.getThread();
-                        if (proteinThread != null && proteinThread.isAlive()) {
-                            protein.stop();
-                            cell.logId("killCell requested stop to protein " + protein);
-                            proteinThread.join(300);
-                            if (proteinThread.isAlive()) {
-                                cell.logId(proteinThread + " didn't die; state=" +
-                                        proteinThread.getState() +
-                                        "; using forced stop**************");
-                                proteinThread.stop();
-                            } else {
-                                cell.logId("killCell protein stopped: " + protein);
-                            }
-                        } else {
-                            cell.logId("divideCell detected no thread for protein " + protein);
-                        }
-                    */
                     }
-                    cell.getCellEnvironment().removeCell(cell); // TODO: or mark as dead?
+                    cell.getCellEnvironment().removeCell(cell);
                     thisProtein.stop(); // finally, stop itself
                 }
             }
-            return null; // return now that there are enough proteins to divide
+            return null;
         } finally {
-            proteinListLock.unlock();
+            if (regulatorListLocked) regulatorListLock.unlock();
+            if (proteinListLocked) proteinListLock.unlock();
         }
 	}
 

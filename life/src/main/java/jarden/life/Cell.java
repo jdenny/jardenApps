@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -44,33 +43,30 @@ public class Cell implements Food {
     private static Cell syntheticCell;
     private static int currentId = 0;
     private static String[] geneStrs = {
-            "TGG",       // polymerase: Polymerase // was: TTGTCT - FindNextGene, GetRNAFromGene
-            "TTATTCTTT", // ribosome: GetCodonFromRNA, GetAminoAcidFromCodon, AddAminoAcidToProtein
+            "TGG",       // polymerase: Polymerase; was: TTGTCT - FindNextGene, GetRNAFromGene
+            "TAT",       // ribosome: Ribosome; was TTATTCTTT - GetCodonFromRNA, GetAminoAcidFromCodon, AddAminoAcidToProtein
             "TGC",       // eatFood: EatFood
             "TCA",       // digest: DigestFood
             "TCGTGTTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
-    //!! private static String dnaStr = getDnaStr();
-    private Lock regulatorListLock = new ReentrantLock();
-    private final Condition needMoreRNA = regulatorListLock.newCondition();
-
-    private final Lock proteinListLock = new ReentrantLock();
-    private final Condition cellReadyToDivide = proteinListLock.newCondition();
-    private final Condition needMoreProteins = proteinListLock.newCondition();
-
     private final Lock aminoAcidListLock = new ReentrantLock();
-    private final Condition aminoAcidAvailable = aminoAcidListLock.newCondition();
+    private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
 
     private final Lock foodListLock = new ReentrantLock();
-    private final Condition foodAvailable = foodListLock.newCondition();
-    private final Condition needMoreFood = foodListLock.newCondition();
+    private final Condition foodAvailableCondition = foodListLock.newCondition();
+    private final Condition needMoreFoodCondition = foodListLock.newCondition();
 
     private final Lock nucleotideListLock = new ReentrantLock();
-    private final Condition nucleotideAvailable = nucleotideListLock.newCondition();
+    private final Condition nucleotideAvailableCondition = nucleotideListLock.newCondition();
+
+    private final Lock proteinListLock = new ReentrantLock();
+
+    private Lock regulatorListLock = new ReentrantLock();
+    private final Condition cellReadyToDivideCondition = regulatorListLock.newCondition();
+    private final Condition rnaBelowTargetCondition = regulatorListLock.newCondition();
 
     private final Lock rnaListLock = new ReentrantLock();
-    private final Condition rnaAvailable = rnaListLock.newCondition();
-    //!! private final Condition needMoreRNA = rnaListLock.newCondition();
+    private final Condition rnaAvailableCondition = rnaListLock.newCondition();
 
     private final CellEnvironment cellEnvironment;
     private int id;
@@ -117,20 +113,21 @@ public class Cell implements Food {
 
 	Current implementation of codonTable.
 	See Nucleotide for real-life codonTable.
-	    (Promoter               UAUAAU)
-		AddAminoAcidToProtein	UUU
-		GetAminoAcidFromCodon	UUC
-		GetCodonFromRNA			UUA
+		                    	UUU
+		                    	UUC
+		            			UUA
 		             			UUG
 		             			UCU
 		            			UCC
-		Stop					UAA, UAG, UGA
+		Stop					UAA
+		Start                   UGA
 		WaitForEnoughProteins   UCG
 		CopyDNA                 UGU
 		DivideCell              UAC
 		DigestFood              UCA
 		EatFood                 UGC
 		Polymerase              UGG
+		Ribosome                UAU
      */
 
     public static Cell getSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
@@ -204,6 +201,15 @@ public class Cell implements Food {
             eatFood.activate = false;
             proteinDivide.activate = false;
         }
+        /*
+        This is a bit flakey! The index values on the 'get' must match
+        the order of the gene in the DNA - see geneStrs
+         */
+        rnaPolymerase.setRegulator(synCell.regulatorList.get(0));
+        ribosome.setRegulator(synCell.regulatorList.get(1));
+        eatFood.setRegulator(synCell.regulatorList.get(2));
+        proteinDigest.setRegulator(synCell.regulatorList.get(3));
+        proteinDivide.setRegulator(synCell.regulatorList.get(4));
         synCell.addProtein(rnaPolymerase);
         synCell.addProtein(ribosome);
         synCell.addProtein(eatFood);
@@ -390,15 +396,14 @@ public class Cell implements Food {
             proteinList.add(protein);
             protein.getRegulator().incrementProteinCt();
             if (cellReadyToDivide()) {
-                cellReadyToDivide.signalAll();
+                cellReadyToDivideCondition.signalAll();
             }
         } finally {
             proteinListLock.unlock();
         }
         logId("addProtein(); proteinCt=" + proteinList.size());
-        //!! Thread proteinThread = protein.getThread();
         Future future = protein.getFuture();
-        if (protein.activate /*!!&& (proteinThread == null || !proteinThread.isAlive())*/) {
+        if (protein.activate) {
             protein.start(cellEnvironment.getThreadPoolExecutor());
         }
 	}
@@ -406,7 +411,7 @@ public class Cell implements Food {
         aminoAcidListLock.lockInterruptibly();
         try {
             aminoAcidList.addAll(aminoAcids);
-            aminoAcidAvailable.signalAll();
+            aminoAcidAvailableCondition.signalAll();
         } finally {
             aminoAcidListLock.unlock();
         }
@@ -418,7 +423,7 @@ public class Cell implements Food {
                 nucleotideList.add(nucleotide);
                 ++nucleotideActuals[nucleotide.getIndex()];
             }
-            nucleotideAvailable.signalAll();
+            nucleotideAvailableCondition.signalAll();
         } finally {
             nucleotideListLock.unlock();
         }
@@ -427,7 +432,7 @@ public class Cell implements Food {
         rnaListLock.lockInterruptibly();
         try {
             rnaList.add(rna);
-            rnaAvailable.signalAll();
+            rnaAvailableCondition.signalAll();
         } finally {
             rnaListLock.unlock();
         }
@@ -436,42 +441,41 @@ public class Cell implements Food {
         foodListLock.lockInterruptibly();
         try {
             foodList.add(food);
-            foodAvailable.signalAll();
+            foodAvailableCondition.signalAll();
         } finally {
             foodListLock.unlock();
         }
     }
 
     /**
-     * Get the DNA index of a gene that needs to be used to
+     * Get Regulator for gene that needs to be used to
      * build a protein, i.e. not enough proteins for this
      * gene have been built or are currently being built.
-     * @return DNA index of the start of the gene.
+     * @return regulator for gene to be used to build a protein
      * @throws InterruptedException
      */
-    public int waitForNeededGeneIndex() throws InterruptedException {
-        int index;
+    public Regulator waitForRnaBelowTarget() throws InterruptedException {
+        Regulator regulator;
         regulatorListLock.lockInterruptibly();
         try {
-            while ((index = getNeededGeneIndex()) < 0) {
-                logId("waiting for needMoreRNA");
-                needMoreRNA.await();
+            while ((regulator = getRegulatorBelowTarget()) == null) {
+                logId("waiting for rnaBelowTargetCondition");
+                rnaBelowTargetCondition.await();
             }
-            return index;
+            regulator.incrementRnaCt();
+            return regulator;
         } finally {
             regulatorListLock.unlock();
         }
     }
     // TODO: maintain an index into the regulatorList itself,
-    // to save always starting from the beginning
-    // return dna index of gene that should be used to create
-    // a protein, or -1 if all gene have produced the target
-    // number of proteins
-    private int getNeededGeneIndex() {
-        Regulator regulator = getRegulatorBelowTarget();
-        if (regulator == null) return -1;
-        else return regulator.getDnaIndex();
-    }
+    // to save always starting from the beginning - maybe?
+    /**
+     * Return regulator of gene that should be used to create
+     * a protein, or null if all genes have produced the target
+     * number of proteins. Not thread safe, so call with
+     * regulatorList locked.
+     */
     private Regulator getRegulatorBelowTarget() {
         for (Regulator regulator: regulatorList) {
             if (regulator.rnaBelowTarget()) {
@@ -480,7 +484,14 @@ public class Cell implements Food {
         }
         return null;
     }
-
+    public boolean cellReadyToDivide() throws InterruptedException {
+        regulatorListLock.lockInterruptibly();
+        try {
+            return getRegulatorBelowTarget() == null;
+        } finally {
+            regulatorListLock.unlock();
+        }
+    }
     /**
      * Wait for a nucleotide suitable to make a base-pair with supplied
      * nucleotide.
@@ -501,7 +512,7 @@ public class Cell implements Food {
                 // there is food available; perhaps the required nucleotide
                 // is being digested this very moment, but it's better to
                 // be overfed than underfed
-                needMoreFood.signalAll();
+                needMoreFoodCondition.signalAll();
             } finally {
                 foodListLock.unlock();
             }
@@ -512,7 +523,7 @@ public class Cell implements Food {
             while ((bondingNucleotide = getNucleotide(nucleotide, isForDna)) == null) {
                 logId("waiting for " + (isForDna?"DNA":"RNA") +
                         " nucleotide to bond with " + nucleotide);
-                nucleotideAvailable.await();
+                nucleotideAvailableCondition.await();
             }
             return bondingNucleotide;
         } finally {
@@ -525,9 +536,9 @@ public class Cell implements Food {
         try {
             while ((rna = getRNA()) == null) {
                 logId("waiting for some RNA");
-                rnaAvailable.await();
+                rnaAvailableCondition.await();
             }
-            if (rnaList.size() < geneSize) needMoreRNA.signalAll();
+            if (rnaList.size() < geneSize) rnaBelowTargetCondition.signalAll();
             return rna;
         } finally {
             rnaListLock.unlock();
@@ -538,7 +549,7 @@ public class Cell implements Food {
             foodListLock.lockInterruptibly();
             try {
                 // see comment in waitForNucleotide()
-                needMoreFood.signalAll();
+                needMoreFoodCondition.signalAll();
             } finally {
                 foodListLock.unlock();
             }
@@ -548,7 +559,7 @@ public class Cell implements Food {
         try {
             while ((aminoAcid = getAminoAcidByCodon(codon)) == null) {
                 logId("waiting for amino acid for codon " + codon);
-                aminoAcidAvailable.await();
+                aminoAcidAvailableCondition.await();
             }
             return aminoAcid;
         } finally {
@@ -560,24 +571,13 @@ public class Cell implements Food {
         try {
             while (foodList.size() == 0) {
                 logId("waiting for food ");
-                foodAvailable.await();
+                foodAvailableCondition.await();
             }
             return foodList.remove(0);
         } finally {
             foodListLock.unlock();
         }
     }
-    public boolean cellReadyToDivide() throws InterruptedException {
-        //!! return proteinList.size() >= (geneSize * 2);
-        regulatorListLock.lockInterruptibly();
-        try {
-            return getNeededGeneIndex() < 0;
-        } finally {
-            regulatorListLock.unlock();
-        }
-
-    }
-
     /*
     Not thread-safe, so only call if rnaList is locked
      */
@@ -726,11 +726,8 @@ public class Cell implements Food {
     public Lock getProteinListLock() {
         return proteinListLock;
     }
-    public Condition getCellReadyToDivide() {
-        return cellReadyToDivide;
-    }
-    public Condition getNeedMoreProteins() {
-        return needMoreProteins;
+    public Condition getCellReadyToDivideCondition() {
+        return cellReadyToDivideCondition;
     }
     @Override
     public String getName() {
@@ -739,11 +736,11 @@ public class Cell implements Food {
     public Lock getRnaListLock() {
         return rnaListLock;
     }
-    public Condition getNeedMoreRNA() {
-        return needMoreRNA;
+    public Condition getRnaBelowTargetCondition() {
+        return rnaBelowTargetCondition;
     }
-    public Condition getNeedMoreFood() {
-        return needMoreFood;
+    public Condition getNeedMoreFoodCondition() {
+        return needMoreFoodCondition;
     }
     public Lock getFoodListLock() {
         return foodListLock;

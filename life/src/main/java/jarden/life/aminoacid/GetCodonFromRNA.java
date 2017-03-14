@@ -21,6 +21,7 @@ public class GetCodonFromRNA extends AminoAcid {
 	
     @Override
 	public Codon action(CellResource notUsed) throws InterruptedException {
+        /*!!
         Cell cell = getCell();
         Lock proteinListLock = cell.getProteinListLock();
         Condition needMoreProteins = cell.getNeedMoreProteins();
@@ -53,6 +54,8 @@ public class GetCodonFromRNA extends AminoAcid {
         } finally {
             proteinListLock.unlock();
         }
+        */
+        return null;
 	}
     @Override
 	public String getName() {
@@ -64,10 +67,12 @@ public class GetCodonFromRNA extends AminoAcid {
                 codon.getSecond() instanceof Uracil &&
                 codon.getThird() instanceof Adenine;
 	}
+	/*!!
     @Override
     public boolean hasMore() {
         return rna != null && index < rna.size();
     }
+    */
     @Override
     public void reset() {
         System.out.println("GetCodonFromRNA.reset()");

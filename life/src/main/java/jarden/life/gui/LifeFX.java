@@ -8,6 +8,7 @@ import jarden.life.CellEnvironment;
 import jarden.life.CellListener;
 import jarden.life.CellShortData;
 import jarden.life.NameCount;
+import jarden.life.Protein;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -302,11 +303,12 @@ public class LifeFX extends Application implements CellListener {
 
     private void showProteinStatus() {
         System.out.println("not yet implemented!");
-        /*?? TODO: fix this
+        /* TODO: proteinObservableList is type String, so cannot cast to protein
+           perhaps pass state of all proteins in cellData?
         int proteinIndex = this.proteinListView.getSelectionModel().getSelectedIndex();
         if (proteinIndex >= 0) {
             Protein protein = (Protein) proteinObservableList.get(proteinIndex);
-            statusText.setText("status of protein: " + protein.getStatus());
+            statusText.setText("status of protein: " + protein.getState());
         }
         */
     }
