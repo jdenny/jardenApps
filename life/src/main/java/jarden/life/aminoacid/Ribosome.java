@@ -1,0 +1,49 @@
+package jarden.life.aminoacid;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+
+import jarden.life.Cell;
+import jarden.life.CellResource;
+import jarden.life.Protein;
+import jarden.life.nucleicacid.Adenine;
+import jarden.life.nucleicacid.Codon;
+import jarden.life.nucleicacid.RNA;
+import jarden.life.nucleicacid.Uracil;
+
+/**
+ * Created by john.denny@gmail.com on 14/03/2017.
+ */
+
+public class Ribosome extends AminoAcid {
+
+    @Override
+    public CellResource action(CellResource notUsed) throws InterruptedException {
+        Cell cell = getCell();
+        RNA rna = cell.waitForRNA();
+        Protein newProtein = rna.getNewProtein();
+        int index = 0;
+        Codon codon;
+        AminoAcid aminoAcid;
+        while (true) {
+            codon = rna.get(index++);
+            if (codon.isStop()) {
+                break;
+            }
+            aminoAcid = cell.waitForAminoAcid(codon);
+            newProtein.add(aminoAcid);
+        }
+        cell.addProtein(newProtein);
+        return null;
+    }
+    @Override
+    public String getName() {
+        return "Ribosome";
+    }
+    @Override
+    public boolean matchCodon(Codon codon) {
+        return codon.getFirst() instanceof ?? &&
+                codon.getSecond() instanceof Uracil &&
+                codon.getThird() instanceof Adenine;
+    }
+}

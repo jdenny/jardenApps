@@ -63,6 +63,7 @@ public class LifeFX extends Application implements CellListener {
     private TextField aminoAcidFeedField;
     private Text[] aminoAcidQtyTexts;
     private Text[] nucleotideQtyTexts;
+    private Text rnaCtText;
     private CellData cellData;
     private CellEnvironment cellEnvironment;
     private Text liveCellCtText;
@@ -110,8 +111,9 @@ public class LifeFX extends Application implements CellListener {
         22 ...             ...                Nucleotides
         23 ...             ...                <name>      <ct>
            ...             ...                ...
-        28
-        29 status
+        28                                    RNA         <ct>
+        29
+        30 status
 
         (Fill button inserts quantities for 1 cell)
          */
@@ -137,6 +139,7 @@ public class LifeFX extends Application implements CellListener {
         nucleotideFeedField.setPrefWidth(50);
         aminoAcidFeedField = new TextField();
         aminoAcidFeedField.setPrefWidth(50);
+        rnaCtText = new Text();
         liveCellCtText = new Text();
         deadCellCtText = new Text();
 
@@ -194,12 +197,13 @@ public class LifeFX extends Application implements CellListener {
         Font labelFont = Font.font(font.getFamily(), FontWeight.EXTRA_BOLD, font.getSize() + 4);
         cellLabel.setFont(labelFont);
         grid.add(cellLabel, 0, 0);
-        grid.add(cellListView, 0, 1, 1, aminoAcidCt + nucleotideCt + 1);
+        int cellListHeight = aminoAcidCt + nucleotideCt + 4;
+        grid.add(cellListView, 0, 1, 1, cellListHeight);
 
         Label proteinLabel = new Label("Proteins");
         proteinLabel.setFont(labelFont);
         grid.add(proteinLabel, 1, 0);
-        grid.add(proteinListView, 1, 1, 1, aminoAcidCt + nucleotideCt + 1);
+        grid.add(proteinListView, 1, 1, 1, cellListHeight);
 
         Label aminoAcidLabel = new Label("Amino Acids");
         aminoAcidLabel.setFont(labelFont);
@@ -220,6 +224,10 @@ public class LifeFX extends Application implements CellListener {
             nucleotideQtyTexts[i] = new Text("0");
             grid.add(nucleotideQtyTexts[i], 3, aminoAcidCt + 3 + i);
         }
+        Label rnaLabel = new Label("RNA");
+        rnaLabel.setFont(labelFont);
+        grid.add(rnaLabel, 2, aminoAcidCt + nucleotideCt + 4);
+        grid.add(rnaCtText, 3, aminoAcidCt + nucleotideCt + 4);
 
         grid.add(statusText, 0, aminoAcidCt + nucleotideCt + 4, 5, 1);
         borderPane.setCenter(grid);
@@ -289,6 +297,7 @@ public class LifeFX extends Application implements CellListener {
         for (int i = 0; i < nucleotideCt; i++) {
             nucleotideQtyTexts[i].setText(String.valueOf(cellData.nucleotideCts[i]));
         }
+        rnaCtText.setText(String.valueOf(cellData.rnaCt));
     }
 
     private void showProteinStatus() {

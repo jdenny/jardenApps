@@ -16,6 +16,7 @@ public class CellData {
     };
 
     public int cellId;
+    public int rnaCt; // number of rna strands
     public NameCount[] proteinNameCts;
     /*
     How many of each aminoAcid in cell; array in same order

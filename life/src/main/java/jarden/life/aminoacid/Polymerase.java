@@ -1,10 +1,12 @@
 package jarden.life.aminoacid;
 
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import jarden.life.Cell;
 import jarden.life.CellResource;
+import jarden.life.Regulator;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Guanine;
@@ -41,7 +43,35 @@ public class Polymerase extends AminoAcid {
             start building RNA!
          */
         Cell cell = getCell();
-        Lock rnaListLock = cell.getRnaListLock();
+        DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
+        // new bits:
+        int index = cell.waitForNeededGeneIndex();
+        int nextGeneIndex = getNextGeneIndex(dna, index);
+        if (nextGeneIndex < 0) {
+            throw new IllegalStateException("DNA gene has no stop-gene");
+        }
+        RNA rna = new RNA();
+        for (int i = index; i < nextGeneIndex; i += 3) {
+            Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false);
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+            Nucleotide second = cell.waitForNucleotide(dna.getFromTemplate(i+1), false);
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+            Nucleotide third = cell.waitForNucleotide(dna.getFromTemplate(i+2), false);
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+            Codon codon = new Codon(first, second, third);
+            rna.add(codon);
+        }
+        cell.addRNA(rna);
+        return null;
+        // end of new bits
+
+        /*!!
         Condition needMoreRNA = cell.getNeedMoreRNA();
         rnaListLock.lockInterruptibly();
         try {
@@ -77,7 +107,6 @@ public class Polymerase extends AminoAcid {
         RNA rna = new RNA();
         for (int i = index; i < nextGeneIndex; i += 3) {
             Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false);
-            // TODO: do we need this? I've lost track!
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
@@ -94,11 +123,12 @@ public class Polymerase extends AminoAcid {
         }
         cell.addRNA(rna);
         return null;
+        */
 	}
-    private static int getNextStartIndex(DNA dna, int index) {
+    public static int getNextStartIndex(DNA dna, int index) {
         for (int i = index; (i + Nucleotide.startLength) <= dna.size(); i+=3) {
-            if (isGeneStart(dna, index)) {
-                return index;
+            if (isGeneStart(dna, i)) {
+                return i;
             }
         }
         return -1;

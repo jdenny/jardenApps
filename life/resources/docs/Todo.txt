@@ -15,12 +15,12 @@ calculate geneSize from DNA (which may change) rather than from
 
 in LifeFX, show list of RNA strands
 
+remove interface Food?
+
 check-out why cell-1 has 2 of each protein, > 120 each of amino acids,
 	0 Adenine, 52 Uracil, and > 400 of the other nucleotides
 	meanwhile the other cells seem okay; perhaps the target for Adenine
 	has been corrupted?
-
-make DNA double strand: template for RNA and complementing strand
 
 check-out if we need Thread.isInterrupted()
 
@@ -32,9 +32,9 @@ currently: (try to keep resource exactly at target)
 replace with: (keep resource from 0 to target)
 	when resource met target, stop digesting;
 	when resource empty, start feeding and increment target
-or: (keep resource from target to 2 * target)
-	when resource met target * 2, stop digesting;
-	when resource < target, start feeding
+or: (keep resource from target to 2 * target, i.e. upperTarget)
+	when resource met upperTarget, stop digesting;
+	when resource < lowerTarget, start feeding
 	when resource empty, increment target
 
 add aminoAcidActuals, similar to nucleotideActuals
@@ -229,4 +229,7 @@ pulls the list back if it wants - DONE
 
 clients get all data using pull from CellEnvironment instead of push;
 ideally clients get cellData, rather than cells - DONE
+
+make DNA double strand: template for RNA and complementing strand - DONE
+
 

@@ -50,7 +50,9 @@ public class Cell implements Food {
             "TCA",       // digest: DigestFood
             "TCGTGTTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
-    private static String dnaStr = getDnaStr();
+    //!! private static String dnaStr = getDnaStr();
+    private Lock regulatorListLock = new ReentrantLock();
+    private final Condition needMoreRNA = regulatorListLock.newCondition();
 
     private final Lock proteinListLock = new ReentrantLock();
     private final Condition cellReadyToDivide = proteinListLock.newCondition();
@@ -68,15 +70,13 @@ public class Cell implements Food {
 
     private final Lock rnaListLock = new ReentrantLock();
     private final Condition rnaAvailable = rnaListLock.newCondition();
-    private final Condition needMoreRNA = rnaListLock.newCondition();
-
-    private final Lock dnaIndexLock = new ReentrantLock();
+    //!! private final Condition needMoreRNA = rnaListLock.newCondition();
 
     private final CellEnvironment cellEnvironment;
     private int id;
     private int generation = 1;
     private DNA dna;
-    private int dnaIndex = 0;
+    private final List<Regulator> regulatorList = new ArrayList<>();
     private final List<Protein> proteinList = new LinkedList<>();
 	private final List<AminoAcid> aminoAcidList = new LinkedList<>();
 	private final List<Nucleotide> nucleotideList = new LinkedList<>();
@@ -148,8 +148,7 @@ public class Cell implements Food {
      * @throws InterruptedException
      */
     public static Cell makeSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
-        Cell synCell = new Cell(buildDNAFromString(dnaStr), cellEnvironment);
-        synCell.analyseDNA(); // set targets
+        Cell synCell = new Cell(buildDNAFromString(getDnaStr()), cellEnvironment);
         // create resources for 1 daughter cell of 5 proteins:
         for (int i = 0; i < 1; i++) {
             synCell.aminoAcidList.add(new AddAminoAcidToProtein());
@@ -198,7 +197,7 @@ public class Cell implements Food {
         proteinDivide.add(new WaitForEnoughProteins());
         proteinDivide.add(new CopyDNA());
         proteinDivide.add(new DivideCell());
-        boolean startAllProteins = true;
+        boolean startAllProteins = false;
         if (!startAllProteins) {
             ribosome.activate = false;
             proteinDigest.activate = false;
@@ -212,14 +211,17 @@ public class Cell implements Food {
         synCell.addProtein(proteinDivide);
         return synCell;
     }
-    private Cell(DNA dna, CellEnvironment cellEnvironment) {
+
+    /**
+     *
+     * @param dna DeoxyriboNucleic Acid
+     * @param cellEnvironment where the cell gets its food from
+     */
+    public Cell(DNA dna, CellEnvironment cellEnvironment) {
         this.id = ++currentId;
         this.dna = dna;
         this.cellEnvironment = cellEnvironment;
-    }
-    public Cell(DNA dna, Cell parentCell) {
-        this(dna, parentCell.getCellEnvironment());
-        nucleotideTargets = parentCell.nucleotideTargets;
+        analyseDNA();
     }
     private static String getDnaStr() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -230,8 +232,22 @@ public class Cell implements Food {
         }
         return stringBuilder.toString();
     }
+    // set targets & regulators. Note: no proteins running yet in this cell,
+    // so no worries with threads or locks
     private void analyseDNA() {
-        geneSize = geneStrs.length;
+        // new bits:
+        String dnaStr = dna.dnaToString();
+        int index = 0;
+        while ((index = Polymerase.getNextStartIndex(dna, index)) >= 0) {
+            index += 3; // move past start-codon
+            regulatorList.add(new Regulator(index));
+        }
+        geneSize = regulatorList.size();
+        if (geneSize == 0) {
+            throw new IllegalStateException("DNA contains no start-gene");
+        }
+        // end of new bits
+        //!! geneSize = geneStrs.length;
         for (int i = 0; i < dnaStr.length(); i++) {
             if (dnaStr.charAt(i) == 'T') {
                 ++nucleotideTargets[3]; // for DNA strand1
@@ -312,6 +328,7 @@ public class Cell implements Food {
     public CellData getCellData() {
         CellData cellData = new CellData();
         cellData.cellId = this.id;
+        cellData.rnaCt = rnaList.size();
         // Proteins:
         HashMap<String, Integer> proteinNameCountMap = new HashMap<>();
         proteinListLock.lock();
@@ -371,6 +388,7 @@ public class Cell implements Food {
         proteinListLock.lockInterruptibly();
         try {
             proteinList.add(protein);
+            protein.getRegulator().incrementProteinCt();
             if (cellReadyToDivide()) {
                 cellReadyToDivide.signalAll();
             }
@@ -422,6 +440,45 @@ public class Cell implements Food {
         } finally {
             foodListLock.unlock();
         }
+    }
+
+    /**
+     * Get the DNA index of a gene that needs to be used to
+     * build a protein, i.e. not enough proteins for this
+     * gene have been built or are currently being built.
+     * @return DNA index of the start of the gene.
+     * @throws InterruptedException
+     */
+    public int waitForNeededGeneIndex() throws InterruptedException {
+        int index;
+        regulatorListLock.lockInterruptibly();
+        try {
+            while ((index = getNeededGeneIndex()) < 0) {
+                logId("waiting for needMoreRNA");
+                needMoreRNA.await();
+            }
+            return index;
+        } finally {
+            regulatorListLock.unlock();
+        }
+    }
+    // TODO: maintain an index into the regulatorList itself,
+    // to save always starting from the beginning
+    // return dna index of gene that should be used to create
+    // a protein, or -1 if all gene have produced the target
+    // number of proteins
+    private int getNeededGeneIndex() {
+        Regulator regulator = getRegulatorBelowTarget();
+        if (regulator == null) return -1;
+        else return regulator.getDnaIndex();
+    }
+    private Regulator getRegulatorBelowTarget() {
+        for (Regulator regulator: regulatorList) {
+            if (regulator.rnaBelowTarget()) {
+                return regulator;
+            }
+        }
+        return null;
     }
 
     /**
@@ -510,8 +567,15 @@ public class Cell implements Food {
             foodListLock.unlock();
         }
     }
-    public boolean cellReadyToDivide() {
-        return proteinList.size() >= (geneSize * 2);
+    public boolean cellReadyToDivide() throws InterruptedException {
+        //!! return proteinList.size() >= (geneSize * 2);
+        regulatorListLock.lockInterruptibly();
+        try {
+            return getNeededGeneIndex() < 0;
+        } finally {
+            regulatorListLock.unlock();
+        }
+
     }
 
     /*
@@ -672,15 +736,6 @@ public class Cell implements Food {
     public String getName() {
         return "Cell";
     }
-    public int getDnaIndex() {
-        return dnaIndex;
-    }
-    public Lock getDnaIndexLock() {
-        return dnaIndexLock;
-    }
-    public void setDnaIndex(int dnaIndex) {
-        this.dnaIndex = dnaIndex;
-    }
     public Lock getRnaListLock() {
         return rnaListLock;
     }
@@ -716,5 +771,11 @@ public class Cell implements Food {
 
     public CellShortData getCellShortData() {
         return new CellShortData(id, generation, proteinList.size());
+    }
+    public List<Regulator> getRegulatorList() {
+        return regulatorList;
+    }
+    public Lock getRegulatorListLock() {
+        return regulatorListLock;
     }
 }

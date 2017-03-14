@@ -5,31 +5,92 @@ More generally, cell could eat and digest food faster than it's being
 converted to resources.
 
 New design***********************************
-Cell.analyseDNA
-  for each start point:
-    new Regulator(); add to regulatorList
+Regulator; controls production of specific protein
+  dnaIndex; position of start of gene for this protein
+  targetCt; target number of this protein
+  rnaCt; incremented when we give the go-ahead to build RNA
+  proteinCt; incremented when protein added
+RNA
+  codonList
+  newProtein
+Protein
+  aminoAcidList
+  regulator
 
-protein
-  add int regulatorIndex; use to decrement actualCt
-  the resource that is passed through the amino acids
-  could be {protein & codon}, {protein & aminoAcid}
+Cell
+  rnaListLock: add and remove rna
+    rnaAvailableCondition
+      awaited by ribosome
+      signalled by polymerase
+  proteinListLock: add and remove protein
+  aminoAcidListLock: add and remove aminoAcid
+    aminoAcidAvailableCondition
+      awaited by cell.awaitAminoAcid (ribosome)
+      signalled by digestFood
+  nucleotideListLock: add and remove nucleotide
+    nucleotideAvailableCondition
+      awaited by cell.awaitNucleotide (ribosome & divideCell)
+      signalled by digestFood
+  regulatorListLock
+    rnaBelowTargetCondition: rnaCt < targetCt
+      awaited by polymerase
+      signalled by divideCell
+    cellReadyToDivideCondition: proteinCt >= targetCt
+      awaited by divideCell
+      signalled by ribosome
+  foodListLock: add and remove food
+    foodAvailableCondition
+      awaited by digestFood
+      signalled by eatFood
+    needMoreFoodCondition
+      awaited by eatFood
+      signalled by waitForAminoAcid & waitForNucleotide
+
+Cell.analyseDNA
+  for each gene start point:
+    new Regulator, where proteinCt=0, rnaCt=1 (as protein added without RNA)
+    add to regulatorList
+Cell.addProtein
+  ++regulator.proteinCt
 
 polymerase
-  getDNA
-  get regulatorList
-  for each regulator:
-    while regulator.isRNARequired:
-      build RNA
-      regulator.actualCt++
-   needMoreRNA.await
+  regulator = cell.awaitRnaBelowTarget()
+    increment rnaCt // while regulatorList is locked
+  add new protein to regulator
+  build RNA
+    protein = new Protein()
+    protein.regulator = regulator
+    rna.protein = protein
+  cell.addRna(rna)
+    add rna to rnaList
+    rnaAvailable.signalAll
+
+ribosome
+  notes: remove cell.getNeedMoreProteins
+    if there is rna, we need to build a protein!
+    remove cell.needMoreRNA; replaced by awaitRnaBelowTarget
+  rna = cell.awaitRNA()
+    remove rna while rnaList locked
+  getNextCodon from rna
+  get matching amino acid
+  add amino acid to protein
+  cell.addProtein // while proteinList locked
+  if now ready to divide: readyToDivide.signalAll()
 
 divideCell
-  use regulatorList to determine if ready to divide:
-    for each regulator:
-      if actualCt < targetCt:
-        return false
-  when moving protein to daughterCell, decrement regulator.actualCt
-  at end: needMoreRNA.signalAll
+  await readyToDivide
+    lock regulatorList
+    for each regulator: check proteinCt >= targetCt
+  split cell
+  set regulator counts
+    for each protein moved
+      parentCell.regulator: --proteinCt, --rnaCt
+  rnaBelowTarget.signalAll()
+
+remove from cell: dnaIndex, dnaIndexLock
+remove Cell.geneSize? in any case, it's supercede by regulatorList.size()
+check any other double locking, i.e. lockA.lock() then lockBCondition.await();
+
 End of new design****************************
 
 consumeResources
