@@ -32,14 +32,10 @@ public class WaitForEnoughProteins extends AminoAcid {
 	public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
         Lock regulatorListLock = cell.getRegulatorListLock();
-        Lock proteinListLock = cell.getProteinListLock();
         Condition cellReadyToDivideCondition =
                 cell.getCellReadyToDivideCondition();
-        boolean regulatorListLocked = false;
-        boolean proteinListLocked = false;
         regulatorListLock.lockInterruptibly();
         try {
-            regulatorListLocked = true;
             String state;
             while (!cell.cellReadyToDivide()) {
                 state = "waiting for cellReadyToDivideCondition";
@@ -51,8 +47,6 @@ public class WaitForEnoughProteins extends AminoAcid {
                     // TODO: put this in its own protein KillCell
                     // stopThreads should be method in Cell
                     Protein thisProtein = getProtein();
-                    proteinListLock.lockInterruptibly();
-                    proteinListLocked = true;
                     List<Protein> proteinList = cell.getProteinList();
                     for (Protein protein: proteinList) {
                         if (protein != thisProtein) { // don't stop itself!
@@ -65,8 +59,7 @@ public class WaitForEnoughProteins extends AminoAcid {
             }
             return null;
         } finally {
-            if (regulatorListLocked) regulatorListLock.unlock();
-            if (proteinListLocked) proteinListLock.unlock();
+            regulatorListLock.unlock();
         }
 	}
 

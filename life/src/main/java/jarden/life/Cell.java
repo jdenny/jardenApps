@@ -37,6 +37,27 @@ import static jarden.life.nucleicacid.Nucleotide.startThymineCt;
 import static jarden.life.nucleicacid.Nucleotide.stopCode;
 
 public class Cell implements Food {
+    private final CellEnvironment cellEnvironment;
+    private boolean divideCellRunning;
+    private DNA dna;
+    private int generation = 1;
+    private int geneSize;
+    private int hashCode = 0;
+    private int id;
+    private final List<AminoAcid> aminoAcidList = new LinkedList<>();
+    private final List<Food> foodList = new LinkedList<>();
+    private final List<Nucleotide> nucleotideList = new LinkedList<>();
+    private final List<Protein> proteinList = new LinkedList<>();
+    private final List<Regulator> regulatorList = new ArrayList<>();
+    private final List<RNA> rnaList = new LinkedList<>();
+    // TODO: when proper aminoAcids, replace length with 20
+    // in same sequence as aminoAcid list
+    private int[] aminoAcidTargets = new int[CellData.aminoAcidNames.length];
+    // indexed by nucleotide.getIndex(); 5 is number of nucleotide types
+    private int[] nucleotideActuals = new int[5];
+    private int[] nucleotideTargets = new int[5];
+    public static int[] nucleotideFeedCounts = new int[5];
+
     private static boolean verbose = true;
     private static Cell syntheticCell;
     private static int currentId = 0;
@@ -57,8 +78,6 @@ public class Cell implements Food {
     private final Lock nucleotideListLock = new ReentrantLock();
     private final Condition nucleotideAvailableCondition = nucleotideListLock.newCondition();
 
-    private final Lock proteinListLock = new ReentrantLock();
-
     private Lock regulatorListLock = new ReentrantLock();
     private final Condition cellReadyToDivideCondition = regulatorListLock.newCondition();
     private final Condition rnaBelowTargetCondition = regulatorListLock.newCondition();
@@ -66,32 +85,13 @@ public class Cell implements Food {
     private final Lock rnaListLock = new ReentrantLock();
     private final Condition rnaAvailableCondition = rnaListLock.newCondition();
 
-    private final CellEnvironment cellEnvironment;
-    private int id;
-    private int generation = 1;
-    private DNA dna;
-    private final List<Regulator> regulatorList = new ArrayList<>();
-    private final List<Protein> proteinList = new LinkedList<>();
-	private final List<AminoAcid> aminoAcidList = new LinkedList<>();
-	private final List<Nucleotide> nucleotideList = new LinkedList<>();
-	private final List<RNA> rnaList = new LinkedList<>();
-    private final List<Food> foodList = new LinkedList<>();
-    private int hashCode = 0;
-    private boolean divideCellRunning;
-    private int geneSize = 5;
-    // TODO: when proper aminoAcids, replace length with 20
-    // in same sequence as aminoAcid list
-    private int[] aminoAcidTargets = new int[CellData.aminoAcidNames.length];
-    // indexed by nucleotide.getIndex(); 5 is number of nucleotide types
-    private int[] nucleotideTargets = new int[5];
-    private int[] nucleotideActuals = new int[5];
     /*
     Current values of nucleotideTargets:
-        0 55
-        1 20
-        2 20
+        0 50
+        1 18
+        2 19
         3 37
-        4 24
+        4 14
          ---
          156
     Common pool-thread numbers:
@@ -144,6 +144,9 @@ public class Cell implements Food {
      */
     public static Cell makeSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
         Cell synCell = new Cell(buildDNAFromString(getDnaStr()), cellEnvironment);
+        for (int i = 0; i < 5; i++) {
+            nucleotideFeedCounts[i] = synCell.nucleotideTargets[i];
+        }
         // create resources for 1 daughter cell of 5 proteins:
         for (int i = 0; i < 1; i++) {
             synCell.aminoAcidList.add(new CopyDNA());
@@ -235,19 +238,16 @@ public class Cell implements Food {
     // set targets & regulators. Note: no proteins running yet in this cell,
     // so no worries with threads or locks
     private void analyseDNA() {
-        // new bits:
         String dnaStr = dna.dnaToString();
         int index = 0;
         while ((index = Polymerase.getNextStartIndex(dna, index)) >= 0) {
             index += 3; // move past start-codon
-            regulatorList.add(new Regulator(index));
+            regulatorList.add(new Regulator(index, regulatorList.size()));
         }
         geneSize = regulatorList.size();
         if (geneSize == 0) {
             throw new IllegalStateException("DNA contains no start-gene");
         }
-        // end of new bits
-        //!! geneSize = geneStrs.length;
         for (int i = 0; i < dnaStr.length(); i++) {
             if (dnaStr.charAt(i) == 'T') {
                 ++nucleotideTargets[3]; // for DNA strand1
@@ -331,7 +331,7 @@ public class Cell implements Food {
         cellData.rnaCt = rnaList.size();
         // Proteins:
         HashMap<String, Integer> proteinNameCountMap = new HashMap<>();
-        proteinListLock.lock();
+        regulatorListLock.lock();
         try {
             for (Protein protein : proteinList) {
                 String name = protein.toString();
@@ -340,7 +340,7 @@ public class Cell implements Food {
                 proteinNameCountMap.put(name, ct);
             }
         } finally {
-            proteinListLock.unlock();
+            regulatorListLock.unlock();
         }
         cellData.proteinNameCts = new NameCount[proteinNameCountMap.size()];
         Set<String> keys = proteinNameCountMap.keySet();
@@ -385,14 +385,10 @@ public class Cell implements Food {
         return cellData;
     }
 	public void addProtein(Protein protein) throws InterruptedException {
-        proteinListLock.lockInterruptibly();
-        try {
-            proteinList.add(protein);
-        } finally {
-            proteinListLock.unlock();
-        }
         regulatorListLock.lockInterruptibly();
         try {
+            proteinList.add(protein);
+            logId("addProtein(); proteinCt=" + proteinList.size());
             protein.getRegulator().incrementProteinCt();
             if (cellReadyToDivide()) {
                 cellReadyToDivideCondition.signalAll();
@@ -400,7 +396,6 @@ public class Cell implements Food {
         } finally {
             regulatorListLock.unlock();
         }
-        logId("addProtein(); proteinCt=" + proteinList.size());
         if (protein.activate) {
             protein.start(cellEnvironment.getThreadPoolExecutor());
         }
@@ -456,7 +451,7 @@ public class Cell implements Food {
         Regulator regulator;
         regulatorListLock.lockInterruptibly();
         try {
-            while ((regulator = getRegulatorBelowTarget()) == null) {
+            while ((regulator = getRegulatorOfRnaBelowTarget()) == null) {
                 logId("waiting for rnaBelowTargetCondition");
                 rnaBelowTargetCondition.await();
             }
@@ -474,7 +469,7 @@ public class Cell implements Food {
      * number of proteins. Not thread safe, so call with
      * regulatorList locked.
      */
-    private Regulator getRegulatorBelowTarget() {
+    private Regulator getRegulatorOfRnaBelowTarget() {
         for (Regulator regulator: regulatorList) {
             if (regulator.rnaBelowTarget()) {
                 return regulator;
@@ -485,7 +480,12 @@ public class Cell implements Food {
     public boolean cellReadyToDivide() throws InterruptedException {
         regulatorListLock.lockInterruptibly();
         try {
-            return getRegulatorBelowTarget() == null;
+            for (Regulator regulator: regulatorList) {
+                if (regulator.proteinsBelowTarget()) {
+                    return false;
+                }
+            }
+            return true;
         } finally {
             regulatorListLock.unlock();
         }
@@ -540,16 +540,6 @@ public class Cell implements Food {
         } finally {
             rnaListLock.unlock();
         }
-        /*!!
-        regulatorListLock.lockInterruptibly();
-        try {
-            if (getRegulatorBelowTarget() != null) {
-                rnaBelowTargetCondition.signalAll();
-            }
-        } finally {
-            regulatorListLock.unlock();
-        }
-        */
 	}
 	public AminoAcid waitForAminoAcid(Codon codon) throws InterruptedException {
         if (aminoAcidList.size() < geneSize) {
@@ -729,9 +719,6 @@ public class Cell implements Food {
     }
     public void setDivideCellRunning(boolean divideCellRunning) {
         this.divideCellRunning = divideCellRunning;
-    }
-    public Lock getProteinListLock() {
-        return proteinListLock;
     }
     public Condition getCellReadyToDivideCondition() {
         return cellReadyToDivideCondition;

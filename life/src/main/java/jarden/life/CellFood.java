@@ -26,21 +26,6 @@ public class CellFood implements Food {
     private List<AminoAcid> aminoAcidList = new LinkedList<>();
     private List<Nucleotide> nucleotideList = new LinkedList<>();
 
-    /**
-     * Food factory - until we work out how to make real food.
-     * @param name of amino acid
-     * @return object of specified amino acid
-     */
-    public static Nucleotide makeNucleotide(String name) {
-        Nucleotide nucleotide;
-        if (name.equals("Adenine")) nucleotide = new Adenine();
-        else if (name.equals("Cytosine")) nucleotide = new Cytosine();
-        else if (name.equals("Guanine")) nucleotide = new Guanine();
-        else if (name.equals("Thymine")) nucleotide = new Thymine();
-        else if (name.equals("Uracil")) nucleotide = new Uracil();
-        else throw new IllegalArgumentException("unknown nucleotide name: " + name);
-        return nucleotide;
-    }
     @Override
     public List<AminoAcid> getAminoAcidList() {
         return aminoAcidList;
@@ -55,24 +40,45 @@ public class CellFood implements Food {
         return "Cell Food";
     }
 
-    public void addAllAminoAcids(int aminoAcidFeedCt) {
-        for (int i = 0; i < aminoAcidFeedCt; i++) {
-            aminoAcidList.add(new CopyDNA());
-            aminoAcidList.add(new DigestFood());
-            aminoAcidList.add(new DivideCell());
-            aminoAcidList.add(new EatFood());
-            aminoAcidList.add(new Ribosome());
-            aminoAcidList.add(new Polymerase());
-            aminoAcidList.add(new WaitForEnoughProteins());
-        }
+    public void addAminoAcids() {
+        aminoAcidList.add(new CopyDNA());
+        aminoAcidList.add(new DigestFood());
+        aminoAcidList.add(new DivideCell());
+        aminoAcidList.add(new EatFood());
+        aminoAcidList.add(new Ribosome());
+        aminoAcidList.add(new Polymerase());
+        aminoAcidList.add(new WaitForEnoughProteins());
     }
-    public void addAllNucleotides(int nucleotideFeedCt) {
-        for (int i = 0; i < nucleotideFeedCt; i++) {
+    public void addNucleotides() {
+        for (int i = 0; i < Cell.nucleotideFeedCounts[0]; i++) {
             nucleotideList.add(new Adenine());
+        }
+        for (int i = 0; i < Cell.nucleotideFeedCounts[1]; i++) {
             nucleotideList.add(new Cytosine());
+        }
+        for (int i = 0; i < Cell.nucleotideFeedCounts[2]; i++) {
             nucleotideList.add(new Guanine());
+        }
+        for (int i = 0; i < Cell.nucleotideFeedCounts[3]; i++) {
             nucleotideList.add(new Thymine());
+        }
+        for (int i = 0; i < Cell.nucleotideFeedCounts[4]; i++) {
             nucleotideList.add(new Uracil());
         }
+    }
+    /**
+     * Food factory - until we work out how to make real food.
+     * @param name of amino acid
+     * @return object of specified amino acid
+     */
+    public static Nucleotide makeNucleotide(String name) {
+        Nucleotide nucleotide;
+        if (name.equals("Adenine")) nucleotide = new Adenine();
+        else if (name.equals("Cytosine")) nucleotide = new Cytosine();
+        else if (name.equals("Guanine")) nucleotide = new Guanine();
+        else if (name.equals("Thymine")) nucleotide = new Thymine();
+        else if (name.equals("Uracil")) nucleotide = new Uracil();
+        else throw new IllegalArgumentException("unknown nucleotide name: " + name);
+        return nucleotide;
     }
 }

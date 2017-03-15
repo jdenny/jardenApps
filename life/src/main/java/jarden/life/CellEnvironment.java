@@ -18,18 +18,20 @@ import jarden.timer.TimerListener;
  */
 
 public class CellEnvironment implements TimerListener {
+    public interface FoodListener {
+        void onUpdateFood(int foodCount);
+    }
     private final Lock foodListLock = new ReentrantLock();
     private final Condition foodAvailable = foodListLock.newCondition();
     private final Lock cellListLock = new ReentrantLock();
     private CellListener cellListener;
+    private FoodListener foodListener;
 
     private List<Cell> cellList = new LinkedList<>();
     private List<Food> foodList = new LinkedList<>();
     private ThreadPoolExecutor threadPoolExecutor =
             (ThreadPoolExecutor) Executors.newCachedThreadPool();
     private int feedInterval = 5; // tenths of a second
-    private int nucleotideFeedCt = 5; // i.e. 5 of each
-    private int aminoAcidFeedCt = 1; // i.e. 1 of each
     private Timer timer;
     private int deadCellCt;
 
@@ -42,35 +44,39 @@ public class CellEnvironment implements TimerListener {
     public void setCellListener(CellListener cellListener) {
         this.cellListener = cellListener;
     }
+    public void setFoodListener(FoodListener foodListener) {
+        this.foodListener = foodListener;
+    }
     /**
      * Interval, in tenths of a second, between adding
      * food to foodList.
      */
     public void setFeedInterval(int interval) {
         this.feedInterval = interval;
-    }
-    public void setNucleotideFeedCt(int nucleotideFeedCt) {
-        this.nucleotideFeedCt = nucleotideFeedCt;
-    }
-    public void setAminoAcidFeedCt(int aminoAcidFeedCt) {
-        this.aminoAcidFeedCt = aminoAcidFeedCt;
+        if (timer != null) timer.setInterval(feedInterval);
     }
     public void startFeeding() {
         timer = new Timer(this, feedInterval);
     }
     public void stopFeeding() {
-        timer.stop();
+        if (timer != null) timer.stop();
     }
     public void addFood() throws InterruptedException {
         CellFood cellFood = new CellFood();
-        cellFood.addAllAminoAcids(aminoAcidFeedCt);
-        cellFood.addAllNucleotides(nucleotideFeedCt);
+        cellFood.addAminoAcids();
+        cellFood.addNucleotides();
         foodListLock.lockInterruptibly();
         try {
             foodList.add(cellFood);
             foodAvailable.signal();
+            notifyFoodListener();
         } finally {
             foodListLock.unlock();
+        }
+    }
+    private void notifyFoodListener() {
+        if (foodListener != null) {
+            foodListener.onUpdateFood(foodList.size());
         }
     }
     public ThreadPoolExecutor getThreadPoolExecutor() {
@@ -92,7 +98,9 @@ public class CellEnvironment implements TimerListener {
                 Cell.log("CellEnvironment waiting for food ");
                 foodAvailable.await();
             }
-            return foodList.remove(0);
+            Food food = foodList.remove(0);
+            notifyFoodListener();
+            return food;
         } finally {
             foodListLock.unlock();
         }
@@ -132,12 +140,6 @@ public class CellEnvironment implements TimerListener {
     }
     public int getFeedInterval() {
         return feedInterval;
-    }
-    public int getNucleotideFeedCt() {
-        return nucleotideFeedCt;
-    }
-    public int getAminoAcidFeedCt() {
-        return aminoAcidFeedCt;
     }
 
     public CellData getCellData(int id) {

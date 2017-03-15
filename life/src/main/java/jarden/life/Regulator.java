@@ -14,13 +14,16 @@ package jarden.life;
  */
 
 public class Regulator {
+    private int regulatorListIndex; // index to this regulator's position within
+            // Cell.regulatorList
     private int dnaIndex; // note: dna never changes within
             // a cell; can only change producing new cell
     private int targetCt = 2; // target number of proteins to be built
     private int rnaCt = 1; // number of RNA strands built or being built for protein
     private int proteinCt = 0; // number of this protein built and added to cell
 
-    public Regulator(int dnaIndex) {
+    public Regulator(int dnaIndex, int regulatorListIndex) {
+        this.regulatorListIndex = regulatorListIndex;
         this.dnaIndex = dnaIndex;
     }
     public boolean rnaBelowTarget() {
@@ -36,6 +39,9 @@ public class Regulator {
      */
     public int getDnaIndex() {
         return dnaIndex;
+    }
+    public int getRegulatorListIndex() {
+        return regulatorListIndex;
     }
     /**
      * Add 1 to rnaCt - number of RNA strands built or being built for protein.

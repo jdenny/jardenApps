@@ -100,8 +100,9 @@ public class Protein implements Runnable, CellResource {
     /**
      * Should be called when protein is not running, to reset each aminoAcid
      */
-    public void setCell(Cell cell) {
+    public void setCell(Cell cell, Regulator regulator) {
         this.cell = cell;
+        this.regulator = regulator;
         for (AminoAcid aminoAcid: aminoAcidList) {
             aminoAcid.reset();
         }

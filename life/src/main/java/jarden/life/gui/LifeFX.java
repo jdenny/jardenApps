@@ -43,7 +43,7 @@ import static jarden.life.CellData.nucleotideNames;
  * /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
  */
 
-public class LifeFX extends Application implements CellListener {
+public class LifeFX extends Application implements CellListener, CellEnvironment.FoodListener {
     // TODO: sliding scale from blue to green?
     private static Color[] generationColours = {
             Color.web("blue"),
@@ -59,8 +59,7 @@ public class LifeFX extends Application implements CellListener {
     private ListView<String> proteinListView;
     private ObservableList<String> proteinObservableList;
     private TextField feedIntervalField;
-    private TextField nucleotideFeedField;
-    private TextField aminoAcidFeedField;
+    private Text foodCtText;
     private Text[] aminoAcidQtyTexts;
     private Text[] nucleotideQtyTexts;
     private Text rnaCtText;
@@ -90,18 +89,10 @@ public class LifeFX extends Application implements CellListener {
             }
         }
     }
-    /*
-    What do we want to see?
-        count of all live cells; count of dead cells
-        list of most recent 20 live cells; show id, generation, proteinCt
-        refresh button for above
-        setFeederInterval(); setNucleotideFeedCt(); setAminoAcidFeedCt()
-        select cell gets cell data
-     */
     @Override
     public void start(Stage primaryStage) {
         /*
-        feed interval (sec/10): <ct> aminoAcids: <ct> nucleotides: <ct> [set] [start] [stop]
+        feed interval (sec/10): <ct> [set] [start] [stop] Food store: <ct>
         live cells: <ct> dead cells: <ct> [refresh] [restart life]
 
         0                  1                  2           3
@@ -115,8 +106,6 @@ public class LifeFX extends Application implements CellListener {
         28                                    RNA         <ct>
         29
         30 status
-
-        (Fill button inserts quantities for 1 cell)
          */
         cellObservableList = FXCollections.observableArrayList();
         cellListView = new ListView<>(cellObservableList);
@@ -133,13 +122,10 @@ public class LifeFX extends Application implements CellListener {
                 .addListener((observable, oldValue, newValue) -> showProteinStatus());
 
         statusText = new Text();
+        foodCtText = new Text();
         statusText.setFill(Color.FIREBRICK);
         feedIntervalField = new TextField();
         feedIntervalField.setPrefWidth(50);
-        nucleotideFeedField = new TextField();
-        nucleotideFeedField.setPrefWidth(50);
-        aminoAcidFeedField = new TextField();
-        aminoAcidFeedField.setPrefWidth(50);
         rnaCtText = new Text();
         liveCellCtText = new Text();
         deadCellCtText = new Text();
@@ -167,13 +153,11 @@ public class LifeFX extends Application implements CellListener {
         feedIntervalHBox.getChildren().addAll(
                 new Label("Feed Interval (sec/10):"),
                 feedIntervalField,
-                new Label("Amino Acids:"),
-                aminoAcidFeedField,
-                new Label("Nucleotides:"),
-                nucleotideFeedField,
                 setButton,
                 startButton,
-                stopButton);
+                stopButton,
+                new Label("Food Store:"),
+                foodCtText);
         cellCtsHBox.getChildren().addAll(
                 new Label("Live cells:"),
                 liveCellCtText,
@@ -183,7 +167,6 @@ public class LifeFX extends Application implements CellListener {
                 restartLifeButton);
         controlVBox.getChildren().addAll(feedIntervalHBox, cellCtsHBox);
         borderPane.setTop(controlVBox);
-
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -247,12 +230,16 @@ public class LifeFX extends Application implements CellListener {
     public void onCellCountChanged(int liveCellCt, int deadCellCt) {
         Platform.runLater(() -> refresh(liveCellCt, deadCellCt));
     }
-
+    @Override
+    public void onUpdateFood(int foodCount) {
+        Platform.runLater(() -> foodCtText.setText(String.valueOf(foodCount)));
+    }
     private void restart() {
         boolean startLife = true;
         try {
             cellEnvironment = new CellEnvironment(startLife);
             cellEnvironment.setCellListener(this);
+            cellEnvironment.setFoodListener(this);
             initialiseFeedFields();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -314,17 +301,11 @@ public class LifeFX extends Application implements CellListener {
     }
     private void initialiseFeedFields() {
         feedIntervalField.setText(String.valueOf(cellEnvironment.getFeedInterval()));
-        nucleotideFeedField.setText(String.valueOf(cellEnvironment.getNucleotideFeedCt()));
-        aminoAcidFeedField.setText(String.valueOf(cellEnvironment.getAminoAcidFeedCt()));
     }
     private void setFeedInterval() {
         try {
             int feedInterval = Integer.parseInt(feedIntervalField.getText());
-            int nucleotideFeedCt = Integer.parseInt(nucleotideFeedField.getText());
-            int aminoAcidFeedCt = Integer.parseInt(aminoAcidFeedField.getText());
             cellEnvironment.setFeedInterval(feedInterval);
-            cellEnvironment.setAminoAcidFeedCt(aminoAcidFeedCt);
-            cellEnvironment.setNucleotideFeedCt(nucleotideFeedCt);
         } catch (NumberFormatException nfe) {
             statusText.setText("supply integers only");
         }

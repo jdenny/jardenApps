@@ -58,61 +58,7 @@ public class Polymerase extends AminoAcid {
         rna.setNewProtein(newProtein);
         cell.addRNA(rna);
         return null;
-
-        /*!!
-        Condition needMoreRNA = cell.getRnaBelowTargetCondition();
-        rnaListLock.lockInterruptibly();
-        try {
-            while (cell.getRNAList().size() >= cell.getGeneSize()) {
-                cell.logId("waiting for needMoreRNA");
-                needMoreRNA.await();
-            }
-        } finally {
-            rnaListLock.unlock();
-        }
-        DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
-        Lock dnaIndexLock = cell.getDnaIndexLock();
-        int index, nextGeneIndex;
-        dnaIndexLock.lockInterruptibly();
-        try {
-            index = cell.getDnaIndex(); // get it each time, in case changed by another protein
-            index = getNextStartIndex(dna, index);
-            if (index < 0) {
-                index = getNextStartIndex(dna, 0);
-                if (index < 0) {
-                    throw new IllegalStateException("DNA contains no start-gene");
-                }
-            }
-            index += Nucleotide.startLength; // i.e. first nucleotide after promoter
-            nextGeneIndex = getNextGeneIndex(dna, index);
-            if (nextGeneIndex < 0) {
-                throw new IllegalStateException("DNA gene has no stop-gene");
-            }
-            cell.setDnaIndex(nextGeneIndex);
-        } finally {
-            dnaIndexLock.unlock();
-        }
-        RNA rna = new RNA();
-        for (int i = index; i < nextGeneIndex; i += 3) {
-            Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false);
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
-            Nucleotide second = cell.waitForNucleotide(dna.getFromTemplate(i+1), false);
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
-            Nucleotide third = cell.waitForNucleotide(dna.getFromTemplate(i+2), false);
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
-            Codon codon = new Codon(first, second, third);
-            rna.add(codon);
-        }
-        cell.addRNA(rna);
-        return null;
-        */
-	}
+    }
     public static int getNextStartIndex(DNA dna, int index) {
         for (int i = index; (i + Nucleotide.startLength) <= dna.size(); i+=3) {
             if (isGeneStart(dna, i)) {

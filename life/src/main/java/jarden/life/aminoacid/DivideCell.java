@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Lock;
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Protein;
+import jarden.life.Regulator;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
@@ -34,36 +35,26 @@ public class DivideCell extends AminoAcid {
         Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());
         daughterCell.setGeneration(cell.getGeneration() + 1);
         List<Protein> proteinList = cell.getProteinList();
-        Lock proteinListLock = cell.getProteinListLock();
+        Lock regulatorListLock = cell.getRegulatorListLock();
+        Lock daughterRegulatorListLock = daughterCell.getRegulatorListLock();
+        List<Regulator> daughterRegulatorList = daughterCell.getRegulatorList();
         int geneSize = cell.getGeneSize();
-        proteinListLock.lockInterruptibly();
+        int proteinListSize = proteinList.size();
+        if (proteinListSize < geneSize * 2) {
+            System.out.println("DivideCell.proteinListSize=" + proteinListSize);
+        }
+        // dis should stoppem floppen:
+        daughterRegulatorListLock.lockInterruptibly();
+        regulatorListLock.lockInterruptibly();
         try {
-            /* TODO: answer this question
-            is it possible that either cell could end up with the
-            wrong number of proteins? E.g. before split:
-            parentCell: p1, p2, p3, p1, p1, p2, p3
-            after split:
-            parent: p1, p2, p3 (geneSize=3)
-            child: p1, p1, p2, p3 (geneSize=4)
-            then when child is ready to split:
-            p1, p1, p2, p3, p2, p3
-            after split:
-            parent: p1, p1, p2, p3
-            child: p2, p3
-
-            To fix:
-                int[] dnaIndices = new int[geneSize];
-                for each protein in proteinList
-                  get dnaIndex
-                  if already in list, move to new cell
-                  simple!
-             */
             // find duplicate proteins and move them
             // to daughter cell:
             int[] dnaIndices = new int[geneSize];
             int indicesAdded = 0;
             int dnaIndex;
             Protein protein;
+            Regulator regulator;
+            Regulator daughterRegulator;
             Iterator<Protein> proteinListIterator = proteinList.iterator();
             while (proteinListIterator.hasNext()) {
                 protein = proteinListIterator.next();
@@ -73,24 +64,22 @@ public class DivideCell extends AminoAcid {
                     // so move this one to the new cell
                     proteinListIterator.remove();
                     protein.stop();
-                    protein.getRegulator().decrementCounts();
-                    protein.setCell(daughterCell);
+                    regulator = protein.getRegulator();
+                    regulator.decrementCounts();
+                    daughterRegulator =
+                            daughterRegulatorList.get(regulator.getRegulatorListIndex());
+                    protein.setCell(daughterCell, daughterRegulator);
                     daughterCell.addProtein(protein);
                 } else {
                     dnaIndices[indicesAdded++] = dnaIndex;
                 }
             }
             cell.getCellEnvironment().addCell(daughterCell);
-        } finally {
-            proteinListLock.unlock();
-        }
-        Lock regulatorListLock = cell.getRegulatorListLock();
-        regulatorListLock.lockInterruptibly();
-        try {
             cell.getRnaBelowTargetCondition().signalAll();
             return daughterCell;
         } finally {
             regulatorListLock.unlock();
+            daughterRegulatorListLock.unlock();
         }
     }
 
