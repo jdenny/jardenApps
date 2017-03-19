@@ -22,9 +22,9 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class DigestFood extends AminoAcid {
-    public CellResource action(int aminoAcidIndex, CellResource notUsed) throws InterruptedException {
+    public CellResource action(CellResource _food) throws InterruptedException {
+        Food food = (Food) _food;
         Cell cell = getCell();
-        Food food = cell.waitForFood();
         List<Nucleotide> nucleotides = food.getNucleotideList();
         if (nucleotides != null && nucleotides.size() > 0) {
             cell.addNucleotides(nucleotides);

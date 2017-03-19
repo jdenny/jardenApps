@@ -4,6 +4,75 @@ package jarden.life.aminoacid;
  * Created by john.denny@gmail.com on 10/02/2017.
  */
 
+/*
+	Current implementation of codonTable.
+	See Nucleotide for real-life codonTable.
+		Phenylalanine          	UUU  // data: Food
+		Polymerase             	UUC
+		Leucine        			UUA
+		CopyDNA        			UUG
+		Serine        			UCU
+		Ribosome       			UCC
+		DigestFood              UCA
+		WaitForEnoughProteins   UCG
+		Tyrosine                UAU
+		DivideCell              UAC
+		Stop					UAA
+		                        UAG
+		Cysteine                UGU  // turn on code mode
+		EatFood                 UGC
+		Start                   UGA  // in real life: Stop
+		Tryptophan              UGG  // wait for resource
+		                        CUU
+		                        CUC
+		                        CUA
+		                        CUG
+		Proline                 CCU  // data: Regulator (rna < target)
+		                        CCC
+		                        CCA
+		                        CCG
+		Histidine               CAU
+		                        CAC
+		Glutamine               CAA
+		                        CAG
+		Arginine                CGU  // data: RNA
+		                        CGC
+		                        CGA
+		                        CGG
+		Isoleucine              AUU
+		                        AUC
+		                        AUA
+		Methionine              AUG
+		Threonine               ACU
+		                        ACC
+		                        ACA
+		                        ACG
+		Asparagine              AAU
+		                        AAC
+		Lysine                  AAA
+		                        AAG
+		                        AGU
+		                        AGC
+		                        AGA
+		                        AGG
+		Valine                  GUU
+		                        GUC
+		                        GUA
+		                        GUG
+		Alanine                 GCU
+		                        GCC
+		                        GCA
+		                        GCG
+		AsparticAcid            GAU  // turn on data mode
+		                        GAC
+		GlutamicAcid            GAA
+		                        GAG
+		Glycine                 GGU
+		                        GGC
+		                        GGA
+		                        GGG
+ */
+
 public enum AminoAcidEnum {
     Alanine,       // A, Ala, {GCU, GCC, GCA, GCG}
     Cysteine,      // C, Cys, {UGU, UGC}

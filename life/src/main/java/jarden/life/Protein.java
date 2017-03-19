@@ -83,17 +83,14 @@ public class Protein implements Runnable, CellResource {
                 if (aminoAcid.isData()) dataMode = true;
                 else if (aminoAcid.isCode()) dataMode = false;
                 else if (!dataMode) {
-                    currentResource = aminoAcid.action(aminoAcidIndex, currentResource);
+                    currentResource = aminoAcid.action(currentResource);
                 }
             }
         } while (firstAminoAcid.hasMore());
         return currentResource;
     }
-    public AminoAcid getAminoAcidMinus1() {
-        return aminoAcidList.get(aminoAcidIndex - 1);
-    }
-    public AminoAcid getAminoAcidMinus2() {
-        return aminoAcidList.get(aminoAcidIndex - 2);
+    public AminoAcid getAminoAcid(int relativeIndex) {
+        return aminoAcidList.get(aminoAcidIndex + relativeIndex);
     }
 	public void add(AminoAcid aminoAcid) {
 		aminoAcidList.add(aminoAcid);

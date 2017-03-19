@@ -13,7 +13,7 @@ package jarden.life;
  * Created by john.denny@gmail.com on 12/03/2017.
  */
 
-public class Regulator {
+public class Regulator implements CellResource {
     private int regulatorListIndex; // index to this regulator's position within
             // Cell.regulatorList
     private int dnaIndex; // note: dna never changes within
@@ -62,5 +62,10 @@ public class Regulator {
     public void decrementCounts() {
         --rnaCt;
         --proteinCt;
+    }
+
+    @Override
+    public String getName() {
+        return "Regulator";
     }
 }

@@ -35,25 +35,4 @@ public class MasterDesigner {
 			e.printStackTrace();
 		}
 	}
-
-    /*!!
-    @Override
-    public void onNewCell(Cell cell) {
-        cellList.add(cell);
-        System.out.println("test if perfect copy of first cell: " +
-                cell.isCopy(cellList.get(0)));
-        System.out.println("cellList.size=" + cellList.size());
-    }
-
-    @Override
-    public void onCellUpdated(int cellId) {
-        System.out.println("MasterDesigner.onCellUpdated: " + cellId);
-    }
-
-    @Override
-    public void onProteinStatusUpdated(int proteinId, String status) {
-        System.out.println("MasterDesigner.onProteinStatusUpdated(" +
-                proteinId + ", " + status + ")");
-    }
-    */
 }

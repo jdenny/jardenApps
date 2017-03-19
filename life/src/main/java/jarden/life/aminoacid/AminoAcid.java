@@ -14,7 +14,7 @@ public abstract class AminoAcid implements CellResource {
     // if amino acid not yet part of a protein, it belongs to the cell
     private Protein protein; // protein this amino acid is part of
 
-    public abstract CellResource action(int aminoAcidIndex, CellResource resource)
+    public abstract CellResource action(CellResource resource)
             throws InterruptedException; // process next object
     public abstract boolean matchCodon(Codon codon);
     public abstract String getName();

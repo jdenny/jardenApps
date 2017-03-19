@@ -8,23 +8,26 @@ r,Arginine,RNA
 d,Aspartic Acid,DNA
 a,Alanine,AminoAcid
 n,Asparagine,Nucleotide
+Proline,Regulator (RNA < target)
 examples:
 	Ribosome
 		RNA rna = cell.waitForRNA()                - DONE
 		AminoAcid = cell.waitForAminoAcid(codon)
 	Polymerase
-		Regulator regulator = cell.waitForRnaBelowTarget()
+		Regulator regulator = cell.waitForRnaBelowTarget()  -DONE
 		Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
 	WaitForEnoughProteins
 		[potentially: boolean readyToDivide = cell.waitForCellReadyToDivide()
 	CopyDNA
 		Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true)
 	DigestFood
-		Food food = cell.waitForFood()
+		Food food = cell.waitForFood()      - DONE
 	EatFood
 		Food food = cellEnvironment.waitForFood()
 
 Current actions *************************************************
+make synthetic cell out of DNA - is this possible? Very interesting!
+
 tidy up documentation so far, and write report on work so far
 
 check locks & conditions and Thread.isInterrupted()

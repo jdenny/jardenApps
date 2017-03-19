@@ -7,7 +7,6 @@ import jarden.life.Regulator;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.DNA;
-import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.RNA;
 import jarden.life.nucleicacid.Uracil;
@@ -24,10 +23,10 @@ import jarden.life.nucleicacid.Uracil;
 public class Polymerase extends AminoAcid {
 
     @Override
-	public CellResource action(int aminoAcidIndex, CellResource notUsed) throws InterruptedException {
+	public CellResource action(CellResource _regulator) throws InterruptedException {
+        Regulator regulator = (Regulator) _regulator;
         Cell cell = getCell();
         DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
-        Regulator regulator = cell.waitForRnaBelowTarget();
         int index = regulator.getDnaIndex();
         int nextGeneIndex = getNextGeneIndex(dna, index);
         if (nextGeneIndex < 0) {

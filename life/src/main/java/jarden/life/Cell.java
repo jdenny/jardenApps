@@ -8,7 +8,9 @@ import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
+import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
+import jarden.life.aminoacid.Proline;
 import jarden.life.aminoacid.Ribosome;
 import jarden.life.aminoacid.Tryptophan;
 import jarden.life.aminoacid.WaitForEnoughProteins;
@@ -66,12 +68,14 @@ public class Cell implements Food {
     private static Cell syntheticCell;
     private static int currentId = 0;
     private static String[] geneStrs = {
-            "TTC",       // polymerase: Polymerase; was: TTGTCT - FindNextGene, GetRNAFromGene
-            "GATCGTTGTTGGTAT", // ribosome: AsparticAcid (data), Arginine (RNA), Cysteine (code),
+            "GATCCTTGTTGGTTC", // polymerase: AsparticAcid (data), Proline (regulator),
+                // Cysteine (code), Tryptophan (awaitResource), Polymerase
+            "GATCGTTGTTGGTCC", // ribosome: AsparticAcid (data), Arginine (RNA), Cysteine (code),
                 // Tryptophan (awaitResource), Ribosome
             "TGC",       // eatFood: EatFood
-            "TCA",       // digest: DigestFood
-            "TCGTTTTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
+            "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
+                // Cysteine (code), Tryptophan (awaitResource), DigestFood
+            "TCGTTGTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
     private final Lock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
@@ -114,25 +118,6 @@ public class Cell implements Food {
         -  divideCell     ->  18    19
         (thread 14 used by Timer)
 
-	Current implementation of codonTable.
-	See Nucleotide for real-life codonTable.
-		CopyDNA                	UUU
-		Polymerase             	UUC
-		            			UUA
-		             			UUG
-		             			UCU
-		            			UCC
-		Stop					UAA
-		Start                   UGA
-		WaitForEnoughProteins   UCG
-		Cysteine                UGU  // turn on code mode
-		DivideCell              UAC
-		DigestFood              UCA
-		EatFood                 UGC
-		Tryptophan              UGG  // wait for resource
-		Ribosome                UAU
-		Arginine                CGU  // data: RNA
-		AsparticAcid            GAU  // turn on data mode
      */
 
     public static Cell getSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
@@ -160,15 +145,23 @@ public class Cell implements Food {
             CellFood.addNucleotides(synCell.nucleotideList);
         }
         Protein rnaPolymerase = new Protein(synCell);
+        rnaPolymerase.add(new AsparticAcid()); // data
+        rnaPolymerase.add(new Proline()); // resourceType=Regulator
+        rnaPolymerase.add(new Cysteine()); // code
+        rnaPolymerase.add(new Tryptophan()); // waitForResource
         rnaPolymerase.add(new Polymerase());
         Protein ribosome = new Protein(synCell);
-        ribosome.add(new AsparticAcid());
-        ribosome.add(new Arginine());
-        ribosome.add(new Cysteine());
-        ribosome.add(new Tryptophan());
+        ribosome.add(new AsparticAcid()); // data
+        ribosome.add(new Arginine()); // resourceType=RNA
+        ribosome.add(new Cysteine()); // code
+        ribosome.add(new Tryptophan()); // waitForResource
         ribosome.add(new Ribosome());
         Protein proteinDigest = new Protein(synCell);
         proteinDigest.add(new DigestFood());
+        proteinDigest.add(new AsparticAcid());
+        proteinDigest.add(new Phenylalanine());
+        proteinDigest.add(new Cysteine());
+        proteinDigest.add(new Tryptophan());
         Protein eatFood = new Protein(synCell);
         eatFood.add(new EatFood());
         Protein proteinDivide = new Protein(synCell);
@@ -177,10 +170,10 @@ public class Cell implements Food {
         proteinDivide.add(new DivideCell());
         boolean startAllProteins = true;
         if (!startAllProteins) {
-            rnaPolymerase.activate = true;
-            ribosome.activate = true;
-            proteinDigest.activate = false;
-            eatFood.activate = false;
+            rnaPolymerase.activate = false;
+            ribosome.activate = false;
+            proteinDigest.activate = true;
+            eatFood.activate = true;
             proteinDivide.activate = false;
         }
         /*

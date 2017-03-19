@@ -12,7 +12,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class AsparticAcid extends AminoAcid {
     @Override
-    public CellResource action(int aminoAcidIndex, CellResource resource) throws InterruptedException {
+    public CellResource action(CellResource resource) throws InterruptedException {
         return null;
     }
     @Override

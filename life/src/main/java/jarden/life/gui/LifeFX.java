@@ -78,7 +78,6 @@ public class LifeFX extends Application implements CellListener, CellEnvironment
             super.updateItem(item, empty);
             if (item != null) {
                 int generation = item.generation;
-                if (generation > 3) System.out.println("**********ColorRectCell; generation=" + generation);
                 if (generation > generationColours.length) {
                     generation = generationColours.length;
                 }

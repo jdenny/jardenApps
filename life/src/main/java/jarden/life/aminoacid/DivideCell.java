@@ -28,7 +28,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 public class DivideCell extends AminoAcid {
 
-    public CellResource action(int aminoAcidIndex, CellResource _dna) throws InterruptedException {
+    public CellResource action(CellResource _dna) throws InterruptedException {
         DNA daughterDNA = (DNA) _dna;
         Cell cell = getCell();
         Cell daughterCell = new Cell(daughterDNA, cell.getCellEnvironment());

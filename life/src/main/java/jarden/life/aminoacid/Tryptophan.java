@@ -13,16 +13,20 @@ import jarden.life.nucleicacid.Uracil;
 
 public class Tryptophan extends AminoAcid {
     @Override
-    public CellResource action(int aminoAcidIndex, CellResource resource)
+    public CellResource action(CellResource resource)
             throws InterruptedException {
         Protein protein = getProtein();
         Cell cell = getCell();
-        AminoAcid aminoAcid = protein.getAminoAcidMinus2();
+        AminoAcid aminoAcid = protein.getAminoAcid(-2);
         if (aminoAcid instanceof Arginine) {
             // resourceType is RNA
             return cell.waitForRNA();
+        } else if (aminoAcid instanceof Phenylalanine) {
+            return cell.waitForFood();
+        } else if (aminoAcid instanceof Proline) {
+            return cell.waitForRnaBelowTarget();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("unrecognised resource type: " + aminoAcid);
         }
     }
     @Override
