@@ -1,12 +1,16 @@
 package jarden.life;
 
 import jarden.life.aminoacid.AminoAcid;
+import jarden.life.aminoacid.Arginine;
+import jarden.life.aminoacid.AsparticAcid;
 import jarden.life.aminoacid.CopyDNA;
+import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Ribosome;
+import jarden.life.aminoacid.Tryptophan;
 import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -62,11 +66,12 @@ public class Cell implements Food {
     private static Cell syntheticCell;
     private static int currentId = 0;
     private static String[] geneStrs = {
-            "TGG",       // polymerase: Polymerase; was: TTGTCT - FindNextGene, GetRNAFromGene
-            "TAT",       // ribosome: Ribosome; was TTATTCTTT - GetCodonFromRNA, GetAminoAcidFromCodon, AddAminoAcidToProtein
+            "TTC",       // polymerase: Polymerase; was: TTGTCT - FindNextGene, GetRNAFromGene
+            "GATCGTTGTTGGTAT", // ribosome: AsparticAcid (data), Arginine (RNA), Cysteine (code),
+                // Tryptophan (awaitResource), Ribosome
             "TGC",       // eatFood: EatFood
             "TCA",       // digest: DigestFood
-            "TCGTGTTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
+            "TCGTTTTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
     private final Lock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
@@ -111,8 +116,8 @@ public class Cell implements Food {
 
 	Current implementation of codonTable.
 	See Nucleotide for real-life codonTable.
-		                    	UUU
-		                    	UUC
+		CopyDNA                	UUU
+		Polymerase             	UUC
 		            			UUA
 		             			UUG
 		             			UCU
@@ -120,12 +125,14 @@ public class Cell implements Food {
 		Stop					UAA
 		Start                   UGA
 		WaitForEnoughProteins   UCG
-		CopyDNA                 UGU
+		Cysteine                UGU  // turn on code mode
 		DivideCell              UAC
 		DigestFood              UCA
 		EatFood                 UGC
-		Polymerase              UGG
+		Tryptophan              UGG  // wait for resource
 		Ribosome                UAU
+		Arginine                CGU  // data: RNA
+		AsparticAcid            GAU  // turn on data mode
      */
 
     public static Cell getSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
@@ -148,40 +155,17 @@ public class Cell implements Food {
             nucleotideFeedCounts[i] = synCell.nucleotideTargets[i];
         }
         // create resources for 1 daughter cell of 5 proteins:
-        for (int i = 0; i < 1; i++) {
-            synCell.aminoAcidList.add(new CopyDNA());
-            synCell.aminoAcidList.add(new DigestFood());
-            synCell.aminoAcidList.add(new DivideCell());
-            synCell.aminoAcidList.add(new EatFood());
-            synCell.aminoAcidList.add(new Ribosome());
-            synCell.aminoAcidList.add(new Polymerase());
-            synCell.aminoAcidList.add(new WaitForEnoughProteins());
+        CellFood.addAminoAcids(synCell.aminoAcidList);
+        for (int i = 0; i < 2; i++) {
+            CellFood.addNucleotides(synCell.nucleotideList);
         }
-        List<Nucleotide> newNucleotides = new ArrayList<>();
-        int adenineFor2Cells = synCell.nucleotideTargets[0] * 2;
-        for (int i = 0; i < adenineFor2Cells; i++) {
-            newNucleotides.add(new Adenine());
-        }
-        int cytosineFor2Cells = synCell.nucleotideTargets[1];
-        for (int i = 0; i < cytosineFor2Cells; i++) {
-            newNucleotides.add(new Cytosine());
-        }
-        int guanineFor2Cells = synCell.nucleotideTargets[2];
-        for (int i = 0; i < guanineFor2Cells; i++) {
-            newNucleotides.add(new Guanine());
-        }
-        int thymineFor2Cells = synCell.nucleotideTargets[3];
-        for (int i = 0; i < thymineFor2Cells; i++) {
-            newNucleotides.add(new Thymine());
-        }
-        int uracilFor2Cells = synCell.nucleotideTargets[4];
-        for (int i = 0; i < uracilFor2Cells; i++) {
-            newNucleotides.add(new Uracil());
-        }
-        synCell.addNucleotides(newNucleotides);
         Protein rnaPolymerase = new Protein(synCell);
         rnaPolymerase.add(new Polymerase());
         Protein ribosome = new Protein(synCell);
+        ribosome.add(new AsparticAcid());
+        ribosome.add(new Arginine());
+        ribosome.add(new Cysteine());
+        ribosome.add(new Tryptophan());
         ribosome.add(new Ribosome());
         Protein proteinDigest = new Protein(synCell);
         proteinDigest.add(new DigestFood());
@@ -193,7 +177,8 @@ public class Cell implements Food {
         proteinDivide.add(new DivideCell());
         boolean startAllProteins = true;
         if (!startAllProteins) {
-            ribosome.activate = false;
+            rnaPolymerase.activate = true;
+            ribosome.activate = true;
             proteinDigest.activate = false;
             eatFood.activate = false;
             proteinDivide.activate = false;

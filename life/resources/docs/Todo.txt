@@ -1,14 +1,35 @@
+Outline for 20 aminoAcids***********************************
+getResource: DNA, RNA, aminoAcid, nucleotide
+getNextResourceNode: DNA or RNA
+
+resource = waitForResource(type)
+w,Typtophan,waitForResource
+r,Arginine,RNA
+d,Aspartic Acid,DNA
+a,Alanine,AminoAcid
+n,Asparagine,Nucleotide
+examples:
+	Ribosome
+		RNA rna = cell.waitForRNA()                - DONE
+		AminoAcid = cell.waitForAminoAcid(codon)
+	Polymerase
+		Regulator regulator = cell.waitForRnaBelowTarget()
+		Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
+	WaitForEnoughProteins
+		[potentially: boolean readyToDivide = cell.waitForCellReadyToDivide()
+	CopyDNA
+		Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true)
+	DigestFood
+		Food food = cell.waitForFood()
+	EatFood
+		Food food = cellEnvironment.waitForFood()
+
 Current actions *************************************************
-remove proteinListLock; use regulatorListLock instead
+tidy up documentation so far, and write report on work so far
+
+check locks & conditions and Thread.isInterrupted()
 
 remove interface Food?
-
-check-out why cell-1 has 2 of each protein, > 120 each of amino acids,
-	0 Adenine, 52 Uracil, and > 400 of the other nucleotides
-	meanwhile the other cells seem okay; perhaps the target for Adenine
-	has been corrupted?
-
-check-out if we need Thread.isInterrupted()
 
 factor out our first reusable aminoAcid: GetResource
 
@@ -19,9 +40,10 @@ replace with: (keep resource from 0 to target)
 	when resource met target, stop digesting;
 	when resource empty, start feeding and increment target
 or: (keep resource from target to 2 * target, i.e. upperTarget)
-	when resource met upperTarget, stop digesting;
+	when resource met upperTarget, stop digesting, i.e. discard surplus
 	when resource < lowerTarget, start feeding
 	when resource empty, increment target
+	*** go with this one ***
 
 add aminoAcidActuals, similar to nucleotideActuals
 
@@ -36,51 +58,18 @@ a definitive list of nucleotides (5); so we can hold the resource
 targets like this:
 	int[] aminoAcidTargets; // in same sequence as aminoAcid list
 	int[] nucleotideTargets; // in same sequence as nucleotide list
-	int proteinSizeForDivide;
-if we ever want to have a target per protein type, then the last
-one above could be replaced by:
-	int[] proteinTargets;
 maybe one day, the calculation of the resource targets could itself
 be a protein!
 
 End of current actions *****************************************
 
 Next Steps
-	use protein to copy DNA - done, but not yet working!
-	new class CellPopulation
-	new Protein EatFood, which gets the food from the environment;
-	  LifeFX now adds food to the environment, rather than individual cells
-	sliding scale of delays, so we can watch what is happening
 	optionally make colours sliding scale
 	http://stackoverflow.com/questions/340209/generate-colors-between-red-and-green-for-a-power-meter
-	now for the 20 amino acids!
-
-java.util.ConcurrentModificationException - why this is happening
-
-LifeFX feed button awakens cell threads to update resources
-then LifeFX tries to iterate through the resources to display them, this
-  in the UI thread
-we need to wait till the cell threads have finished; but...
-what if cell threads are running indefinitely, which they could
-  be if there was lots of food?
-how about each time a cell is updated: the facts are passed via
-  callbacks to LifeFX:
-    onNewCell(cell.id, generation);
-    onCellUpdated(cellData); CellData is: cell.id, array of protein.name & ct,
-      array of aminoAcid.name & ct, array of nucleicAcid.name & ct)
-  normalMethod in Cell:
-    CellData getCellData(cell.id); // save cell.id; notify via callback
-      if this cell changes
-  see penciled diagram! Note: only need to notify if selected cell has changed
-  or new one added.
 
 investigate warnings in code
 improve protein status
 make sure TestCell and MasterDesigner still work
-
-need a protein to turn on/off a gene:
-  find specified gene; change promoter code from "TATAAT" to "UATAAT" for off
-  or vice versa for on; while we're waiting for this protein, do it manually!
 
 Create nucleicAcid and aminoAcid from more basic raw materials,
 instead of from existing cells
@@ -232,3 +221,7 @@ calculate geneSize from DNA (which may change) rather than from - DONE
  daughter cells!)
 
 in LifeFX, show list of RNA strands - DONE
+
+remove proteinListLock; use regulatorListLock instead - DONE
+
+check-out if we need Thread.isInterrupted() - YES

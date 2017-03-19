@@ -15,6 +15,7 @@ public class Protein implements Runnable, CellResource {
     private Cell cell; // the cell this protein belongs to
 	private List<AminoAcid> aminoAcidList = new ArrayList<>();
     private Regulator regulator;
+    private int aminoAcidIndex;
     private int hashCode;
     private String state; // for monitoring; put in LifeFX
     public boolean activate = true; // set false for debugging!
@@ -70,19 +71,30 @@ public class Protein implements Runnable, CellResource {
         // if firstObject is a chain, then repeat until end of chain
         AminoAcid firstAminoAcid = aminoAcidList.get(0);
         CellResource currentResource = resource;
+        boolean dataMode = false;
+        int aaSize = aminoAcidList.size();
         do {
-            for (AminoAcid aminoAcid: aminoAcidList) {
+            for (aminoAcidIndex = 0; aminoAcidIndex < aaSize; aminoAcidIndex++) {
                 if (Thread.interrupted()) {
-                    // reset interrupt flag, so run() will exit
-                    Thread.currentThread().interrupt();
-                    return null;
+                    throw new InterruptedException(
+                            "Thread.interrupted detected in Protein.action()");
                 }
-                currentResource = aminoAcid.action(currentResource);
+                AminoAcid aminoAcid = aminoAcidList.get(aminoAcidIndex);
+                if (aminoAcid.isData()) dataMode = true;
+                else if (aminoAcid.isCode()) dataMode = false;
+                else if (!dataMode) {
+                    currentResource = aminoAcid.action(aminoAcidIndex, currentResource);
+                }
             }
         } while (firstAminoAcid.hasMore());
         return currentResource;
     }
-
+    public AminoAcid getAminoAcidMinus1() {
+        return aminoAcidList.get(aminoAcidIndex - 1);
+    }
+    public AminoAcid getAminoAcidMinus2() {
+        return aminoAcidList.get(aminoAcidIndex - 2);
+    }
 	public void add(AminoAcid aminoAcid) {
 		aminoAcidList.add(aminoAcid);
         aminoAcid.setProtein(this);

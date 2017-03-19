@@ -1,8 +1,5 @@
 package jarden.life.aminoacid;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Protein;
@@ -18,9 +15,10 @@ import jarden.life.nucleicacid.Uracil;
 public class Ribosome extends AminoAcid {
 
     @Override
-    public CellResource action(CellResource notUsed) throws InterruptedException {
+    public CellResource action(int aminoAcidIndex, CellResource _rna) throws InterruptedException {
+        RNA rna = (RNA) _rna;
         Cell cell = getCell();
-        RNA rna = cell.waitForRNA();
+        //!! RNA rna = cell.waitForRNA();
         Protein newProtein = rna.getNewProtein();
         int index = 0;
         Codon codon;

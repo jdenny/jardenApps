@@ -29,7 +29,7 @@ public class WaitForEnoughProteins extends AminoAcid {
         }
     }
     @Override
-	public CellResource action(CellResource notUsed) throws InterruptedException {
+	public CellResource action(int aminoAcidIndex, CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
         Lock regulatorListLock = cell.getRegulatorListLock();
         Condition cellReadyToDivideCondition =

@@ -5,11 +5,9 @@ import java.util.List;
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Food;
-import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
-import jarden.life.nucleicacid.DNA;
 import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.Uracil;
 
@@ -24,7 +22,7 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class DigestFood extends AminoAcid {
-    public CellResource action(CellResource notUsed) throws InterruptedException {
+    public CellResource action(int aminoAcidIndex, CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
         Food food = cell.waitForFood();
         List<Nucleotide> nucleotides = food.getNucleotideList();

@@ -4,12 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jarden.life.aminoacid.AminoAcid;
+import jarden.life.aminoacid.Arginine;
+import jarden.life.aminoacid.AsparticAcid;
 import jarden.life.aminoacid.CopyDNA;
+import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Ribosome;
+import jarden.life.aminoacid.Tryptophan;
 import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Cytosine;
@@ -41,15 +45,25 @@ public class CellFood implements Food {
     }
 
     public void addAminoAcids() {
+        addAminoAcids(aminoAcidList);
+    }
+    public static void addAminoAcids(List<AminoAcid> aminoAcidList) {
+        aminoAcidList.add(new Arginine());
+        aminoAcidList.add(new AsparticAcid());
         aminoAcidList.add(new CopyDNA());
+        aminoAcidList.add(new Cysteine());
         aminoAcidList.add(new DigestFood());
         aminoAcidList.add(new DivideCell());
         aminoAcidList.add(new EatFood());
         aminoAcidList.add(new Ribosome());
         aminoAcidList.add(new Polymerase());
+        aminoAcidList.add(new Tryptophan());
         aminoAcidList.add(new WaitForEnoughProteins());
     }
     public void addNucleotides() {
+        addNucleotides(nucleotideList);
+    }
+    public static void addNucleotides(List<Nucleotide> nucleotideList) {
         for (int i = 0; i < Cell.nucleotideFeedCounts[0]; i++) {
             nucleotideList.add(new Adenine());
         }
@@ -65,20 +79,5 @@ public class CellFood implements Food {
         for (int i = 0; i < Cell.nucleotideFeedCounts[4]; i++) {
             nucleotideList.add(new Uracil());
         }
-    }
-    /**
-     * Food factory - until we work out how to make real food.
-     * @param name of amino acid
-     * @return object of specified amino acid
-     */
-    public static Nucleotide makeNucleotide(String name) {
-        Nucleotide nucleotide;
-        if (name.equals("Adenine")) nucleotide = new Adenine();
-        else if (name.equals("Cytosine")) nucleotide = new Cytosine();
-        else if (name.equals("Guanine")) nucleotide = new Guanine();
-        else if (name.equals("Thymine")) nucleotide = new Thymine();
-        else if (name.equals("Uracil")) nucleotide = new Uracil();
-        else throw new IllegalArgumentException("unknown nucleotide name: " + name);
-        return nucleotide;
     }
 }
