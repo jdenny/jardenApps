@@ -12,6 +12,7 @@ import jarden.life.nucleicacid.Cytosine;
 public class Glutamine extends AminoAcid {
     @Override
     public CellResource action(CellResource resource) throws InterruptedException {
+        System.out.println("******Glutamine*****");
         return null;
     }
     @Override

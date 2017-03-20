@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jardenconsulting.cardapp"
-    android:versionCode="6"
-    android:versionName="2.3"
     android:installLocation="preferExternal" >
 
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="23" />
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     

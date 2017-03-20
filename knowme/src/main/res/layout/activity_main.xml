@@ -1,0 +1,59 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/lightGrey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jardenconsulting.knowme.MainActivity"
+    tools:ignore="MergeRootFrame" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightGrey"
+        android:orientation="vertical" >
+
+        <fragment
+            android:id="@+id/introFragment"
+            android:name="com.jardenconsulting.knowme.IntroFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_intro" />
+
+        <!-- Note: all the other fragments are always used, but in
+             single-device mode BluetoothFragment is not used -->
+        <FrameLayout
+            android:id="@+id/bluetoothFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/btfragment_layout" />
+
+        <fragment
+            android:id="@+id/knowMeFragment"
+            android:name="com.jardenconsulting.knowme.KnowMeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_knowme" />
+
+        <fragment
+            android:id="@+id/answerFragment"
+            android:name="com.jardenconsulting.knowme.AnswerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_answer" />
+
+        <fragment
+            android:id="@+id/summaryFragment"
+            android:name="com.jardenconsulting.knowme.SummaryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_summary" />
+
+        <TextView
+            android:id="@+id/statusText"
+            style="@style/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</ScrollView>

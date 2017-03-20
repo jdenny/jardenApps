@@ -1,0 +1,165 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGrey"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/hisQuestionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp" />
+        <!-- android:text="What would John grab in a fire?" -->
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+		
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	    <RadioGroup
+	        android:id="@+id/hisRadioGroup"
+	        android:layout_width="0dp"
+	        android:layout_weight="5"
+	        android:layout_height="wrap_content"
+		    android:layout_gravity="center_horizontal"
+	        android:orientation="vertical" >
+	    
+	        <RadioButton
+	            android:id="@+id/hisRadioButton1"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+	            android:background="@drawable/blue_button"
+	            android:button="@android:color/transparent"
+	            android:gravity="center" />
+	           <!-- android:text="Laptop" -->
+	        
+			<RadioButton
+			    android:id="@+id/hisRadioButton2"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+			    android:background="@drawable/blue_button"
+			    android:button="@android:color/transparent"
+	            android:gravity="center" />
+			    <!-- android:text="Photographs" -->
+			
+		    <RadioButton
+		        android:id="@+id/hisRadioButton3"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+		        android:button="@android:color/transparent"
+		        android:background="@drawable/blue_button"
+	            android:gravity="center" />
+		        <!-- android:text="Wallet / Purse" -->
+	
+			<RadioButton
+		        android:id="@+id/hisRadioButton4"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+		        android:button="@android:color/transparent"
+		        android:background="@drawable/blue_button"
+	            android:gravity="center" />
+		        <!-- android:text="Mobile Phone" -->
+		    	    
+		</RadioGroup>
+				
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>        
+	</LinearLayout>
+    
+
+    <TextView
+        android:id="@+id/myQuestionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp" />
+        <!-- android:text="What would you grab in a fire?" -->
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+		
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+		
+	    <RadioGroup
+	        android:id="@+id/myRadioGroup"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="5"
+	        android:orientation="vertical" >
+	    
+		    <RadioButton
+		        android:id="@+id/myRadioButton1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+		        android:button="@android:color/transparent"
+		        android:background="@drawable/pink_button"
+	            android:gravity="center" />
+		        <!-- android:text="Laptop" -->
+	
+			<RadioButton
+			    android:id="@+id/myRadioButton2"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+			    android:background="@drawable/pink_button"
+			    android:button="@android:color/transparent"
+	            android:gravity="center" />
+			    <!-- android:text="Photographs" -->
+			
+		    <RadioButton
+		        android:id="@+id/myRadioButton3"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+		        android:button="@android:color/transparent"
+		        android:background="@drawable/pink_button"
+	            android:gravity="center" />
+		        <!-- android:text="Wallet / Purse" -->
+	
+			<RadioButton
+		        android:id="@+id/myRadioButton4"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+		        android:button="@android:color/transparent"
+		        android:background="@drawable/pink_button"
+	            android:gravity="center" />
+		        <!-- android:text="Mobile Phone" -->
+		</RadioGroup>
+				
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>        
+	</LinearLayout>
+
+    <Button
+        android:id="@+id/goButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+	    android:layout_gravity="center_horizontal"
+        android:text="@string/goStr" />
+	
+</LinearLayout>

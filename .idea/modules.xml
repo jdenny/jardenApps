@@ -12,6 +12,7 @@
       <module fileurl="file://$PROJECT_DIR$/jardenlib/jardenlib.iml" filepath="$PROJECT_DIR$/jardenlib/jardenlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenprovider/jardenprovider.iml" filepath="$PROJECT_DIR$/jardenprovider/jardenprovider.iml" />
       <module fileurl="file://$PROJECT_DIR$/johnjava/johnjava.iml" filepath="$PROJECT_DIR$/johnjava/johnjava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/knowme/knowme.iml" filepath="$PROJECT_DIR$/knowme/knowme.iml" />
       <module fileurl="file://$PROJECT_DIR$/life/life.iml" filepath="$PROJECT_DIR$/life/life.iml" />
       <module fileurl="file://$PROJECT_DIR$/music/music.iml" filepath="$PROJECT_DIR$/music/music.iml" />
       <module fileurl="file://$PROJECT_DIR$/quizmaze/quizmaze.iml" filepath="$PROJECT_DIR$/quizmaze/quizmaze.iml" />

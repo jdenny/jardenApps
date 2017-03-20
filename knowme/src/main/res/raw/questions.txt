@@ -1,0 +1,402 @@
+Q: What are you most scared of?
+q: What is {} most scared of?
+A: spiders, snakes or mice
+A: doing something foolish in public
+A: bills
+A: heights
+X:
+
+Q: Would you choose to own a pet?
+q: Would {} choose to own a pet?
+A: A dog
+A: A cat
+A: Both
+A: Neither
+X:
+
+Q: How do you prefer to travel for leisure?
+q: How does {} prefer to travel for leisure?
+A: Train
+A: Boat
+A: Car
+A: Plane
+X:
+
+Q: What would be your preferred profession?
+q: What would be {}'s preferred profession?
+A: lawyer or doctor
+A: sports person
+A: musician or actor
+A: person of leisure
+X:
+
+Q: If you could be an animal, what would you be?
+q: If {} could be an animal, what would it be?
+A: eagle
+A: lion
+A: dolphin
+A: cat
+X:
+
+Q: What is your preferred pet?
+q: What is {}'s preferred pet?
+A: dog
+A: cat
+A: something else
+A: no pet
+X:
+
+Q: What would be your ideal holiday?
+q: What would be {}'s ideal holiday?
+A: lazing on a beautiful beach
+A: sporting holiday (e.g. skiing, walking)
+A: exploring places of culture
+A: a cruise
+X:
+
+Q: What colour are your eyes?
+q: What colour are {}'s eyes?
+A: blue
+A: green
+A: brown
+A: other
+X:
+
+Q: How would you spend a day off?
+q: How would {} spend a day off?
+A: Go to a Spa
+A: Go shopping
+A: Catch up on housework
+A: Go for a long walk
+X:
+
+Q: What is your height?
+q: What is {}'s height?
+A: less than 5 feet
+A: 5 feet or more but less than 5 feet 6 inches
+A: 5 feet 6 inches or more but less than 6 feet
+A: 6 feet or more
+X:
+
+Q: What is the best time of day for you?
+q: What is the best time of day for {}?
+A: early morning
+A: after lunch
+A: evening
+A: late at night
+X:
+
+Q: How do you keep up with the news?
+q: How does {} keep up with the news?
+A: internet
+A: tv
+A: newspapers
+A: don't keep up with the news
+X:
+
+Q: What would you grab in a fire?
+q: What would {} grab in a fire?
+A: photographs
+A: laptop
+A: mobile phone
+A: purse/wallet
+X:
+
+Q: Where would you most like to go?
+q: Where would {} most like to go?
+A: USA
+A: South America
+A: Far East
+A: Africa
+X:
+
+Q: Are you a tidy person?
+q: Is {} a tidy person?
+A: always
+A: no
+A: yes, if expecting visitors
+A: yes, if reminded
+X:
+
+Q: What do you do if restaurant food is cold?
+q: What does {} do if restaurant food is cold?
+A: eat it anyway
+A: demand a refund and leave
+A: ask them to heat it
+A: ask for a different meal
+X:
+
+Q: Where would you go for a day off?
+q: Where would {} go for a day off?
+A: the countryside
+A: the city
+A: the beach
+A: stay at home
+X:
+	
+Q: What is {}'s worst habit?
+q: What does {} think is your worst habit?
+A: Talking instead of listening
+A: Spending too much money
+A: Working too hard
+A: Idleness
+X:
+
+Q: What would you do on finding 100 pounds?
+q: What would {} do on finding 100 pounds in the street?
+A: ignore it
+A: keep it
+A: hand it in
+X:
+
+Q: What would you do if you saw someone stealing in a shop?
+q: What would {} do on seeing someone stealing in a shop?
+A: Ignore it
+A: Report it to the shop
+A: Tell the thief to replace the goods otherwise you will report
+X:
+
+Q: What do you do if a film has too much swearing, sex and violence?
+q: What does {} do if a film has too much swearing, sex and violence?
+A: walk out
+A: close your eyes during the bad bits
+A: it has never happened
+X:
+
+Q: What is your favourite colour?
+q: What is {}'s favourite colour?
+A: red
+A: green
+A: blue
+A: other
+X:
+
+Q: What do you prefer for breakfast?
+q: What does {} prefer for breakfast?
+A: full English cooked
+A: cereal
+A: toast
+A: just a drink
+X:
+
+Q: What is your favourite food?
+q: What is {}'s favourite food?
+A: Indian
+A: Chinese
+A: roast
+A: fish and chips
+X:
+
+Q: How often do you play sport?
+q: How often does {} play sport?
+A: most days
+A: once or twice a week
+A: once or twice a month
+A: rarely
+X:
+
+Q: What is your favourite type of film?
+q: What is {}'s favourite type of film?
+A: romance
+A: thriller
+A: historical drama
+A: fantasy
+X:
+
+Q: What is your favourite sport to play?
+q: What is {}'s favourite sport to play?
+A: football
+A: a raquet sport
+A: netball or volleyball or basketball
+A: winter sports
+X:
+
+Q: What is your favourite sport to watch?
+q: What is {}'s favourite sport to watch?
+A: football
+A: a raquet sport
+A: netball or volleyball or basketball
+A: winter sports
+X:
+ 
+Q: What is your favourite type of music?
+q: What is {}'s favourite type of music?
+A: rock
+A: pop
+A: classical
+A: dance
+X:
+
+Q: Which of these would be worst for you?
+q: Which of these would be worst for {}?
+A: jumping into very cold water
+A: eating sheep's eyes
+A: singing a song in front of strangers
+X:
+
+Q: Which would you find most embarrassing?
+q: Which would {} find most embarrassing?
+A: falling over in public
+A: breaking wind in a meeting
+A: having to make a speech
+A: gossiping about someone and realising they are listening
+X:
+
+Q: What would do if you inherited a house in Spain?
+q: What would {} do if s/he inherited a house in Spain?
+A: Move to Spain to live in the house
+A: Sell the house and buy one somewhere else
+A: Let out the house
+A: Sell the house and spend the money
+X:
+
+Q: What kind of bicycle would you like?
+q: what kind of bicycle would {} like?
+A: racing
+A: mountain
+A: road
+A: no bike thank you
+X:
+
+Q: What's your preferred indoor game?
+q: What's {}'s preferred indoor game?
+A: Board (e.g. Monopoly)
+A: Cards
+A: Creative (e.g. mime)
+A: Quiz (e.g. Trivial Pursuit)
+X:
+
+Q: What makes you most angry with {}?
+q: What makes {} most angry with you?
+A: untidiness
+A: over-spending
+A: lateness
+A: bad driving
+X:
+
+Q: Which superpower would you like to have?
+q: Which superpower would {} like to have?
+A: fly
+A: become invisible
+A: read thoughts
+A: travel through time
+X:
+
+Q: What makes you most happy?
+q: What makes {} most happy?
+A: money
+A: spirituality
+A: fame
+A: physical pleasures
+X:
+
+Q: How many children do you want?
+q: How many children does {} want?
+A: None
+A: One
+A: Two
+A: More than 2
+X:
+
+Q: What are you like after too much alcohol?
+q: What is {} like after too much alcohol?
+A: Aggressive
+A: Funny
+A: Quiet
+A: Never have too much
+X:
+
+Q: What were you wearing when you first met?
+q: What was {} wearing when you first met?
+A: smart clothes
+A: casual clothes
+A: scruff
+A: bathing costume
+X:
+
+Q: Are you...
+q: Is {}...
+A: an optimist
+A: a pessimist
+A: a realist
+X:
+
+Q: How do you stack cutlery in the dishwasher?
+q: How does {} stack cutlery in the dishwasher?
+A: handles upwards
+A: handles in first
+A: no preference
+A: never load the dishwasher
+X:
+
+Q: What is your view of camping?
+q: What does {} think of camping?
+A: great adventure
+A: okay in warm, dry, pretty places
+A: pure misery
+X:
+
+W: Who is the most untidy?
+W: Who stares at the mirror the most?
+W: Who has a better sense of style?
+W: Who has the most hair products? 
+W: Who takes the longest when getting ready? 
+W: Who is the most impatient? 
+W: Who wears the trousers?
+W: Who is the cleverest?
+W: Who is the breadwinner? 
+W: Who is the funniest? 
+W: Who would be booed off stage at Karaoke?
+W: Who is most likely to cry at a sad film? 
+W: Who would run a half-marathon?
+W: Who is ill the most?
+W: Who is most pathetic when ill?
+W: Who is the most impulsive?
+W: Who is the most creative?
+W: Who is the most competitive?
+W: Who has the most common sense?
+W: Who is the most romantic?
+W: Who is the biggest gossip?
+W: Who has the best singing voice?
+W: Who does most cooking in the house?
+W: Who is most in charge of the TV remote control?
+W: Who talks about themselves the most?
+W: Who stays more calm in a crisis?
+W: Who is most likely to give the 'silent treatment'?
+W: Who is the better driver?
+W: Who has the better sense of humour? 
+W: Who is better at planning outings/surprises? 
+W: Who chooses where to go on holiday? 
+W: Who is better at financial matters? 
+W: Who is more likely to deal with a spider? 
+W: Who is more likely to solve a crossword puzzle? 
+W: Who's the one always losing things? 
+W: Who is more concerned about weight/healthy eating?
+W: Who does the washing up? 
+
+#Y: Do you remember your anniversary?
+#y: Does {} remember your anniversary?
+
+Y: Have you made a will?
+y: Has {} made a will?
+
+Y: Do you know {}'s mother's maiden name?
+y: Does {} know your mother's maiden name?
+
+Y: Do you like to sleep with the window open?
+y: Does {} like to sleep with the window open?
+
+#Y(C): Do you remember where you went for your first date?
+#y: Does {} remember?
+
+Y: Do you leave the cap off the toothpaste?
+y: Does {} leave the cap off the toothpaste?
+
+Y: Do you have a middle name?
+y: Does {} have a middle name?
+
+Y: Do you need an alarm on work days?
+y: Does {} need an alarm on work days?
+
+Y: Do you like to have a TV in the bedroom?
+y: Does {} like to have a TV in the bedroom?

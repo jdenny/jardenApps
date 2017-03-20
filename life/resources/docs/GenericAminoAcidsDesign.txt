@@ -1,0 +1,62 @@
+RIBOSOME
+1. chainResource = waitForResource (RNA)
+2. newResource = createNewResource (Protein)
+3. while (chainResource.hasNext())
+	node = chainResource.next()
+	if (node.isStop()) break
+	transformedNode = waitForResource(node)
+	newResource.add(transformedNode)
+4. cell.addResource(newResource)
+
+POLYMERASE
+1. chainResource = waitForResource (Regulator)
+1a getDNA
+2. newResource = createNewResource (RNA)
+3. while (chainResource.hasNext())
+	node = chainResource.next()
+	if (node.isStop()) break
+	transformedNode = waitForResource(node)
+	newResource.add(transformedNode)
+4. cell.addResource(newResource)
+
+GENERIC
+initialise, i.e. run some amino acids
+chainResource = waitForResource()
+newResource = createNewResource()
+while chainResource.hasNext():
+   node = chainResource.next()
+   if (node.isStop()) break
+   node2 = processNode(node)
+   newResource.add(node2)
+cell.addResource(newResource)
+
+aminoAcids:
+  start
+  data
+  resourceType - save data in protein;
+	protein.getData()
+  resourceName
+  code
+  getResource(data) - tryptophan
+  data
+  resourceType
+  code
+  newResource(data)
+  body
+    aminoAcids to run within chain loop
+	save body in protein;
+	body = protein.getBody()
+  code
+  processChain:
+    for each node in chain: node2 = body(node)
+  addResource - generic
+
+start
+data (AsparticAcid)
+code (Cysteine)
+body (Leucine)
+stop
+getResource (Tryptophan)
+newResource
+addResourceToCell
+loop (Serine)

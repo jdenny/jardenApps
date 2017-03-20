@@ -1,18 +1,32 @@
 package jarden.life;
 
+import jarden.life.aminoacid.Alanine;
 import jarden.life.aminoacid.AminoAcid;
 import jarden.life.aminoacid.Arginine;
+import jarden.life.aminoacid.Asparagine;
 import jarden.life.aminoacid.AsparticAcid;
 import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
+import jarden.life.aminoacid.GlutamicAcid;
+import jarden.life.aminoacid.Glutamine;
+import jarden.life.aminoacid.Glycine;
+import jarden.life.aminoacid.Histidine;
+import jarden.life.aminoacid.Isoleucine;
+import jarden.life.aminoacid.Leucine;
+import jarden.life.aminoacid.Lysine;
+import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
 import jarden.life.aminoacid.Ribosome;
+import jarden.life.aminoacid.Serine;
+import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;
+import jarden.life.aminoacid.Tyrosine;
+import jarden.life.aminoacid.Valine;
 import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -75,7 +89,10 @@ public class Cell implements Food {
             "TGC",       // eatFood: EatFood
             "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
                 // Cysteine (code), Tryptophan (awaitResource), DigestFood
-            "TCGTTGTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
+            "TCGTTGTAC",  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
+            "GATCGTTGTTGGTTACATCAATGTTCT" // experiment: AsparticAcid (data), Arginine (RNA),
+                // Cysteine (code), Tryptophan (awaitResource),
+                // Leucine (body), Histidine, Glutamine, Cysteine (code), Serine (loop)
     };
     private final Lock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
@@ -131,7 +148,7 @@ public class Cell implements Food {
      * This is the God cell. Cells are able to reproduce, by dividing, but how is the
      * first cell made? Here we form it "out of dust from the ground" - Genesis 2:7.
      * @param cellEnvironment
-     * @return
+     * @return synthetic cell
      * @throws InterruptedException
      */
     public static Cell makeSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
@@ -144,53 +161,65 @@ public class Cell implements Food {
         for (int i = 0; i < 2; i++) {
             CellFood.addNucleotides(synCell.nucleotideList);
         }
-        Protein rnaPolymerase = new Protein(synCell);
-        rnaPolymerase.add(new AsparticAcid()); // data
-        rnaPolymerase.add(new Proline()); // resourceType=Regulator
-        rnaPolymerase.add(new Cysteine()); // code
-        rnaPolymerase.add(new Tryptophan()); // waitForResource
-        rnaPolymerase.add(new Polymerase());
-        Protein ribosome = new Protein(synCell);
-        ribosome.add(new AsparticAcid()); // data
-        ribosome.add(new Arginine()); // resourceType=RNA
-        ribosome.add(new Cysteine()); // code
-        ribosome.add(new Tryptophan()); // waitForResource
-        ribosome.add(new Ribosome());
-        Protein proteinDigest = new Protein(synCell);
-        proteinDigest.add(new DigestFood());
-        proteinDigest.add(new AsparticAcid());
-        proteinDigest.add(new Phenylalanine());
-        proteinDigest.add(new Cysteine());
-        proteinDigest.add(new Tryptophan());
-        Protein eatFood = new Protein(synCell);
-        eatFood.add(new EatFood());
-        Protein proteinDivide = new Protein(synCell);
-        proteinDivide.add(new WaitForEnoughProteins());
-        proteinDivide.add(new CopyDNA());
-        proteinDivide.add(new DivideCell());
-        boolean startAllProteins = true;
-        if (!startAllProteins) {
-            rnaPolymerase.activate = false;
-            ribosome.activate = false;
-            proteinDigest.activate = true;
-            eatFood.activate = true;
-            proteinDivide.activate = false;
+        Protein protein;
+        // so we can test a cell without all the proteins pulling the rug from
+        // beneath our feet!
+        boolean startAllProteins = false;
+        boolean[] startProteins = {
+                true, // rnaPolymerase
+                false, // ribosome
+                false, // proteinDigest
+                false, // eatFood
+                false, // proteinDivide
+                true   // experiment
+        };
+        for (int i = 0; i < geneStrs.length; i++) {
+            String geneStr = geneStrs[i];
+            protein = new Protein(synCell);
+            for (int j = 0; (j+3) <= geneStr.length(); j+=3) {
+                protein.add(makeAminoAcid(geneStr.substring(j, j+3)));
+            }
+            protein.setRegulator(synCell.regulatorList.get(i));
+            if (!startAllProteins && !startProteins[i]) {
+                protein.activate = false;
+            }
+            synCell.addProtein(protein);
         }
-        /*
-        This is a bit flakey! The index values on the 'get' must match
-        the order of the gene in the DNA - see geneStrs
-         */
-        rnaPolymerase.setRegulator(synCell.regulatorList.get(0));
-        ribosome.setRegulator(synCell.regulatorList.get(1));
-        eatFood.setRegulator(synCell.regulatorList.get(2));
-        proteinDigest.setRegulator(synCell.regulatorList.get(3));
-        proteinDivide.setRegulator(synCell.regulatorList.get(4));
-        synCell.addProtein(rnaPolymerase);
-        synCell.addProtein(ribosome);
-        synCell.addProtein(eatFood);
-        synCell.addProtein(proteinDigest);
-        synCell.addProtein(proteinDivide);
         return synCell;
+    }
+    /*
+    Used by makeSyntheticCell to build proteins according to the DNA
+     */
+    private static AminoAcid makeAminoAcid(String codonStr) {
+        if (codonStr.equals("TTT")) return new Phenylalanine();
+        else if (codonStr.equals("TTC")) return new Polymerase();
+        else if (codonStr.equals("TTA")) return new Leucine();
+        else if (codonStr.equals("TTG")) return new CopyDNA();
+        else if (codonStr.equals("TCT")) return new Serine();
+        else if (codonStr.equals("TCC")) return new Ribosome();
+        else if (codonStr.equals("TCA")) return new DigestFood();
+        else if (codonStr.equals("TCG")) return new WaitForEnoughProteins();
+        else if (codonStr.equals("TAT")) return new Tyrosine();
+        else if (codonStr.equals("TAC")) return new DivideCell();
+        else if (codonStr.equals("TGT")) return new Cysteine();
+        else if (codonStr.equals("TGC")) return new EatFood();
+        else if (codonStr.equals("TGG")) return new Tryptophan();
+        else if (codonStr.equals("CCT")) return new Proline();
+        else if (codonStr.equals("CAT")) return new Histidine();
+        else if (codonStr.equals("CAA")) return new Glutamine();
+        else if (codonStr.equals("CGT")) return new Arginine();
+        else if (codonStr.equals("ATT")) return new Isoleucine();
+        else if (codonStr.equals("ATG")) return new Methionine();
+        else if (codonStr.equals("ACT")) return new Threonine();
+        else if (codonStr.equals("AAT")) return new Asparagine();
+        else if (codonStr.equals("AAA")) return new Lysine();
+        else if (codonStr.equals("GTT")) return new Valine();
+        else if (codonStr.equals("GCT")) return new Alanine();
+        else if (codonStr.equals("GAT")) return new AsparticAcid();
+        else if (codonStr.equals("GAA")) return new GlutamicAcid();
+        else if (codonStr.equals("GGT")) return new Glycine();
+        else throw new IllegalArgumentException("unrecoginised codonStr: " +
+                codonStr);
     }
 
     /**

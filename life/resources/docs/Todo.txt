@@ -2,6 +2,10 @@ Outline for 20 aminoAcids***********************************
 Build new protein to test out ideas; doesn't do anything to cell,
 but produces messages to show what is happening
 
+See GenericAminoAcidsDesign.txt
+
+Get Ribosome working first, using generic amino acids
+
 getResource: DNA, RNA, aminoAcid, nucleotide
 getNextResourceNode: DNA or RNA
 
@@ -17,7 +21,7 @@ examples:
 		RNA rna = cell.waitForRNA()                - DONE
 		AminoAcid = cell.waitForAminoAcid(codon)
 	Polymerase
-		Regulator regulator = cell.waitForRnaBelowTarget()  -DONE
+		Regulator regulator = cell.waitForRnaBelowTarget()  - DONE
 		Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
 	WaitForEnoughProteins
 		[potentially: boolean readyToDivide = cell.waitForCellReadyToDivide()
@@ -29,15 +33,11 @@ examples:
 		Food food = cellEnvironment.waitForFood()
 
 Current actions *************************************************
-make synthetic cell out of DNA - is this possible? Very interesting!
-
 tidy up documentation so far, and write report on work so far
 
 check locks & conditions and Thread.isInterrupted()
 
 remove interface Food?
-
-factor out our first reusable aminoAcid: GetResource
 
 currently: (try to keep resource exactly at target)
 	when resource met target, stop digesting;
@@ -231,3 +231,7 @@ in LifeFX, show list of RNA strands - DONE
 remove proteinListLock; use regulatorListLock instead - DONE
 
 check-out if we need Thread.isInterrupted() - YES
+
+factor out our first reusable aminoAcid: GetResource - DONE
+
+make synthetic cell out of DNA - DONE

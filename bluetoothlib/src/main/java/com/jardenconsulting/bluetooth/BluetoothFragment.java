@@ -90,7 +90,9 @@ public class BluetoothFragment extends Fragment
 	 * @return
 	 */
 	public static String[] getPlayerNameEmail(Activity activity) {
-		String name, email;
+		String name;
+        String email = "Unknown";
+		/*!! Commented out, as PlayStore now requires a privacy certificate
 		AccountManager am = AccountManager.get(activity);
 		Account[] accounts = am.getAccounts();
 		// or could use am.getAccountsByType("com.google");
@@ -99,8 +101,10 @@ public class BluetoothFragment extends Fragment
 		} else {
 			email = accounts[0].name;
 		}
+		*/
 		SharedPreferences preferences = activity.getPreferences(Activity.MODE_PRIVATE);
-		name = preferences.getString(PLAYER_NAME, null);
+		name = preferences.getString(PLAYER_NAME, "Unknown");
+        /*!!
 		if (name == null) {
 			name = email;
 			int end = name.indexOf('@');
@@ -115,6 +119,7 @@ public class BluetoothFragment extends Fragment
 				name = name.substring(0, 7);
 			}
 		}
+		*/
 		return new String[] { name, email };
 	}
 

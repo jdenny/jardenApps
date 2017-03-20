@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="titleTemplate">{0}, how well do you know {1}?</string>
+
+</resources>

@@ -1,0 +1,200 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGrey"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/hisQuestionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp" />
+        <!-- android:text="What would John grab in a fire?" -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal" >
+
+	    <ImageView
+	        android:id="@+id/myBallRight"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@string/happyFaceStr"
+	        android:src="@drawable/right_ball" />
+	    
+        <ImageView
+	        android:id="@+id/myBallWrong"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@string/sadFaceStr"
+	        android:src="@drawable/wrong_ball" />
+	    
+	    <TextView
+	        android:id="@+id/myHimResult1View"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="20dp"
+	        android:layout_gravity="center_vertical" />
+	        <!-- android:text="You were wrong! You thought John would choose:" -->
+	</LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	    <TextView
+	        android:id="@+id/myHimView"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="5"
+		    android:gravity="center"
+	        android:background="@drawable/checked_blue_button" />
+	        <!-- android:text="1. Laptop" -->
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	</LinearLayout>
+    	
+    <TextView
+        android:id="@+id/myHimResult2View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal" />
+        <!-- android:text="But John chose:" -->
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	    <TextView
+	        android:id="@+id/hisHimView"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="5"
+		    android:gravity="center"
+	        android:background="@drawable/checked_blue_button" />
+	        <!-- android:text="2. Photographs" -->
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	</LinearLayout>
+    
+    <TextView
+        android:id="@+id/myQuestionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp" />
+        <!-- android:text="What would you grab in a fire?" -->
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+	        android:id="@+id/hisBallWrong"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@string/sadFaceStr"
+	        android:src="@drawable/wrong_ball" />
+
+        <ImageView
+	        android:id="@+id/hisBallRight"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@string/happyFaceStr"
+	        android:src="@drawable/right_ball" />
+        	    
+	    <TextView
+	        android:id="@+id/hisMeResult1View"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="20dp"
+	        android:layout_gravity="center_vertical" />
+	        <!-- android:text="John was wrong! He thought you'd chose:" -->
+	</LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	    <TextView
+        	android:id="@+id/hisMeView"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="5"
+		    android:gravity="center"
+	        android:background="@drawable/checked_pink_button" />
+	        <!-- android:text="1. Laptop" -->
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	</LinearLayout>
+    
+    <TextView
+        android:id="@+id/hisMeResult2View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal" />
+        <!-- android:text="But you chose:" -->
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	    <TextView
+	        android:id="@+id/myMeView"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="5"
+		    android:gravity="center"
+	        android:background="@drawable/checked_pink_button" />
+	        <!-- android:text="3. Wallet / Purse" -->
+		<View
+	        android:layout_width="0dp"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:visibility="invisible"/>
+	</LinearLayout>
+
+    <Button
+        android:id="@+id/nextQuestionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/marginTop"
+	    android:layout_gravity="center_horizontal"
+        android:background="@drawable/grey_button"
+        android:text="@string/nextStr" />
+    
+</LinearLayout>

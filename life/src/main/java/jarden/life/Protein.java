@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 public class Protein implements Runnable, CellResource {
     private Cell cell; // the cell this protein belongs to
 	private List<AminoAcid> aminoAcidList = new ArrayList<>();
+    private List<AminoAcid> aminoAcidBodyList = new ArrayList<>();
     private Regulator regulator;
     private int aminoAcidIndex;
     private int hashCode;
@@ -66,12 +67,13 @@ public class Protein implements Runnable, CellResource {
             cell.logId("protein.run() interrupted");
         }
 	}
-	private enum rnaMode {
+	private enum RnaMode {
         data, code, body;
     }
     private CellResource action(CellResource resource) throws InterruptedException {
         CellResource currentResource = resource;
-        boolean dataMode = false;
+        //!! boolean dataMode = false;
+        RnaMode rnaMode = RnaMode.code;
         int aaSize = aminoAcidList.size();
         for (aminoAcidIndex = 0; aminoAcidIndex < aaSize; aminoAcidIndex++) {
             if (Thread.interrupted()) {
@@ -79,10 +81,15 @@ public class Protein implements Runnable, CellResource {
                         "Thread.interrupted detected in Protein.action()");
             }
             AminoAcid aminoAcid = aminoAcidList.get(aminoAcidIndex);
-            if (aminoAcid.isData()) dataMode = true;
-            else if (aminoAcid.isCode()) dataMode = false;
-            else if (!dataMode) {
+            if (aminoAcid.isData()) rnaMode = RnaMode.data;
+            else if (aminoAcid.isCode()) rnaMode = RnaMode.code;
+            else if (aminoAcid.isBody()) {
+                rnaMode = RnaMode.body;
+                aminoAcidBodyList.clear();
+            } else if (rnaMode == RnaMode.code) {
                 currentResource = aminoAcid.action(currentResource);
+            } else if (rnaMode == RnaMode.body) {
+                aminoAcidBodyList.add(aminoAcid);
             }
         }
         return currentResource;
@@ -145,6 +152,6 @@ public class Protein implements Runnable, CellResource {
     }
 
     public List<AminoAcid> getBody() {
-        return null;
+        return aminoAcidBodyList;
     }
 }

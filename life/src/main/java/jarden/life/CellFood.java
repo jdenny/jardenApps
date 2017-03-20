@@ -11,10 +11,15 @@ import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.EatFood;
+import jarden.life.aminoacid.Glutamine;
+import jarden.life.aminoacid.Histidine;
+import jarden.life.aminoacid.Leucine;
+import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
 import jarden.life.aminoacid.Ribosome;
+import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Tryptophan;
 import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
@@ -55,12 +60,18 @@ public class CellFood implements Food {
         aminoAcidList.add(new DigestFood());
         aminoAcidList.add(new DivideCell());
         aminoAcidList.add(new EatFood());
+        aminoAcidList.add(new Glutamine());
+        aminoAcidList.add(new Histidine());
+        aminoAcidList.add(new Leucine());
+        aminoAcidList.add(new Leucine());
+        aminoAcidList.add(new Methionine());
         aminoAcidList.add(new Phenylalanine());
         aminoAcidList.add(new Polymerase());
         aminoAcidList.add(new Proline());
         aminoAcidList.add(new Ribosome());
+        aminoAcidList.add(new Serine());
         aminoAcidList.add(new WaitForEnoughProteins());
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             aminoAcidList.add(new AsparticAcid());
             aminoAcidList.add(new Cysteine());
             aminoAcidList.add(new Tryptophan());

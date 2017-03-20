@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jarden.life.CellResource;
+import jarden.life.ChainResource;
 import jarden.life.Protein;
 
-public class RNA implements CellResource {
+public class RNA implements ChainResource {
     private List<Codon> codonList = new ArrayList<>();
     private Protein newProtein;
+    private int index = 0;
 
     public Protein getNewProtein() {
         return newProtein;
@@ -33,5 +35,13 @@ public class RNA implements CellResource {
     }
     public void addCodon(Codon codon) {
         codonList.add(codon);
+    }
+    @Override
+    public boolean hasNext() {
+        return index < codonList.size();
+    }
+    @Override
+    public CellResource next() {
+        return codonList.get(index++);
     }
 }

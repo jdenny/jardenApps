@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="percentages">
+        <item>80</item>
+        <item>60</item>
+        <item>40</item>
+    </integer-array>
+</resources>

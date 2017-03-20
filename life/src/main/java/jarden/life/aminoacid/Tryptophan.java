@@ -3,6 +3,7 @@ package jarden.life.aminoacid;
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Protein;
+import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
@@ -25,6 +26,9 @@ public class Tryptophan extends AminoAcid {
             return cell.waitForFood();
         } else if (aminoAcid instanceof Proline) {
             return cell.waitForRnaBelowTarget();
+        } else if (aminoAcid instanceof Alanine) {
+            Codon methionineCodon = new Codon(new Adenine(), new Uracil(), new Guanine()); // hack!!
+            return cell.waitForAminoAcid(methionineCodon);
         } else {
             throw new IllegalStateException("unrecognised resource type: " + aminoAcid);
         }

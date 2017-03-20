@@ -42,7 +42,7 @@ package jarden.life.aminoacid;
 		Isoleucine              AUU
 		                        AUC
 		                        AUA
-		Methionine              AUG
+		Methionine              AUG  // temporarily used by experiment
 		Threonine               ACU
 		                        ACC
 		                        ACA
@@ -59,7 +59,7 @@ package jarden.life.aminoacid;
 		                        GUC
 		                        GUA
 		                        GUG
-		Alanine                 GCU
+		Alanine                 GCU  // data: AminoAcid
 		                        GCC
 		                        GCA
 		                        GCG

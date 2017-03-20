@@ -1,0 +1,288 @@
+what does he love most about you?
+what did you do on your first date?
+where were you when you first kissed
+favourite ice cream
+shoe size
+what 1 to take to desert island
+most annoying habit
+most likely to argue about
+favourite film
+favourite singer
+most embarrassing moment
+what most likely to grab in a fire
+nickname
+who deals with spiders
+her claim to fame
+naughtiest thing he's done
+favourite snack
+
+1. Does the toilet paper go over or under the roll?
+
+3. Can you eat breakfast for dinner?
+
+4. Cold pizza: yes or no?
+
+5. Is it acceptable to open presents as they arrive or do you have to wait for the actual birthday or holiday?
+
+7. Is it acceptable to leave dishes in the sink to "soak" overnight, or do they need to be cleaned before bed?
+
+9. Again on the toothpaste: roll it from the bottom or just squeeze really hard?
+
+10. Are towels a one-time use item or do you use the same towel until laundry day?
+
+11. How about washcloths?
+
+13. What's the right thread count for sheets?
+
+14. What brand of toilet paper?
+
+15. Mayo or Miracle Whip?
+
+16. Pepsi or Coke?
+
+17. Can you eat the holiday candy out in the display bowl or must it be left there for display?
+
+19. Turn the thermostat down when you go out or leave it alone?
+
+20. At what point is a garbage bag too full to stuff more trash in it?
+
+21. How many times is it acceptable to hit the snooze button?
+
+22. Thrift store shopping: great deals or gross?
+
+23. How far in advance is it OK to plan a vacation?
+
+24. Restaurant reservations: necessary or too restrictive?
+
+25. Roller coasters: love 'em or hate 'em?
+
+26. More chocolate chips, less cookie or more cookie, less chips?
+
+27. How much orange juice must be left in the container for it to be returned to the fridge?
+
+28. Chip clips or just roll the bag up?
+
+29. Call the doctor or just take some medicine at home?
+
+31. Is it OK to have a TV in the bedroom?
+
+32. Should folded clothes be put away, or is it OK to just pull as needed from the basket of clean laundry?
+
+33. Do you need to write a grocery list or just wait until you're walking around the store to figure out what you need?
+
+34. Making the bed: must-do or waste of time because you're just going to get back in it?
+
+35. Is it OK to shave/clip toenails in the living room?
+
+for each pair, select new, random 10 questions
+remove any got right; at end, reset
+
+A: all (default) friends, courting, engaged, married, family
+C: couple (courting, engaged or married)
+F: family
+Randomly generate question set each time
+keep history of ones wrong (cf quizMaze) and repeat until correct
+	but only for current session
+
+What kind of animal was his first pet?
+What was its name?
+What is his favourite music group?
+Favourite meal she has cooked for you?
+Worst meal she has cooked for you?
+How old were you when you had your first kiss?
+Exact words used when proposed
+Favourite part of her body
+What is her favourite part of your body
+What is her best attribute
+What will she say your best attribute is
+If you had to marry one of her friends who would it be?
+If she could throw away a piece of clothing from your wardrobe what would it be
+What is your most annoying habit
+What is her most annoying habit
+What is your favourite past time to do together?
+
+2. What’s his favourite DVD?
+3. What collar size are his shirts?
+4. How often does he change his under-pants?
+5. According to him, what is her worst habit?
+6. Name his favourite cocktail?
+7. What female movie star does he most fancy?
+9. What position does he play? That is on the field ladies?
+10. What was his favourite childhood pet called?
+11. Which one of his relations does she like the least?
+12. Which one of her relations does he like the least?
+13. Name his favourite book?
+14. Who was her first boyfriend?
+15. How old was he when he had his first kiss?
+16. What is her bra size?
+17. Name her favourite alcoholic drink?
+18. What famous actor does ‘he’ think he is most like? Keep it real!
+19. Name his favourite underwear of hers?
+20. Name the person he thinks will be most hung over after the Big Day
+
+What were the exact words your H2B used to ask you to marry him?
+
+Which of your guests does your H2B think is most likely to embarrass themselves at your wedding?
+
+What us your H2B most looking forward to about married life?
+
+What does your H2B say is your worst habit?
+
+If your H2B had to pick the one thing he loves most about you, what would it be?
+
+- how did you and xxx meet?
+
+- what is your fave song?
+
+- what is xxx's fave song?
+
+- what are you most scared of?
+
+- what are your bad habits?
+
+- what are xxx's bad habits?
+
+- what does xxx think your best feature is?
+
+- what is xxx's best feature?
+
+- what nicknames do you have for each other?
+
+- what are you most looking forward to about the wedding?
+
+- what is xxx most looking forward to about the wedding?
+
+- what would you eat as your last meal on earth?
+
+- what would she eat as her last meal on earth?
+
+- what are you most looking forward to about married life?
+
+- what is she most looking forward to about married life?
+
+ Where was your partner born? 
+- Is your partner a tidy person? 
+- Does he/she like cooking? 
+- Does he/she like sport? 
+- What is their favourite TV programme? 
+- What was your partner's first job? 
+- What newspaper does he/she read? 
+- What is his/her favourite place? 
+- What will your partner avoid like the plague? 
+- Does your partner like children? 
+- How does your partner vote? 
+- How does he/she like to rest? 
+- What is your partner's greatest fear? 
+- What do you wish you knew about your partner? 
+- What is your partner's best feature? 
+- If your partner could be anyone famous, who would they be? 
+- What is your partner's speciality in the kitchen? 
+- Where would your partner most like to go in the world? 
+- What's the most embarrassing thing your partner has ever done?
+
+What is ‘HIS’ confirmation name?
+What shirt collar size does ‘HE’ wear?
+What kind of animal was his first pet?
+What was the name of his favourite childhood pet?
+What is his favourite music group?
+What was his first album/cd he brought?
+What was his first album/cd he brought?
+What was the first movie they saw together?
+What is his favourite meal that the bride has made?
+What Female movie/TV star does ‘HE’ fancy?
+How old was he when he had his first kiss?
+What bra size does she take? (no peeking)
+What day did he say is their anniversary?
+What were his exact words when he proposed?
+What is his favourite Ruby/Soccer Team?
+What is his favourite car?
+What famous movie/TV star does ‘HE’ think he is most like?
+What is his favourite lingerie of hers?
+Who will be the most hung over after the wedding?
+What does he like best about his “bride to be”
+
+1. How many times a week does your partner empty the dishwasher?
+A. Once
+B. 2 – 5 Times
+C. Every Day
+D. Never!!!
+2. Who from the following list of women would your partner take on a date?
+A. Catherine Zeta Jones
+B. Cameron Diaz
+C. Katy Price
+D. Fearne Cotton
+3. What is your partner’s favourite choice of curry?
+_____________________
+4. How does your partner like his coffee?
+A. Black
+B. Cappuccino
+C. Latte
+D. White
+5. Who slices the turkey at Christmas?
+1. Has your partner ever been to a palm reader?
+_____________________
+2. What is your partner’s preferred sleeping position?
+A. On Her Side
+B. On Her Back
+C. On Her Front
+D. Doesn’t Have One
+
+3. What type of shoes has your partner got the most of?
+A. Boots
+B. Sandals
+C. High Heeled Shoes
+D. Trainers
+4. Name her favourite animal?
+_____________________
+5. How would your partner keep her hair dry in wet weather?
+A. Wear A Hat
+B. Put Her Hood Up
+C. Umbrella
+D. Leave It To Get Wet
+
+1. Where was your partner born?
+3. Is your partner a tidy person?
+4. Does he/she like cooking?
+5. Does he/she like sport?
+6. What is their favourite TV programme?
+7. What was your partner's first job?
+8. How much does your partner earn now?
+9. What newspaper does he/she read?
+10. What is his/her favourite place?
+11. What will your partner avoid like the plague?
+12. Did he/she have a happy childhood?
+13. How many children does he/she want?
+14. Does your partner like children?
+15. How does your partner vote?
+17. What time of day is your partner at his/her best?
+18. Hoe does he/she like to rest?
+19. What is your partner's greatest fear?
+20. What do you wish you knew about your partner?
+21. What is your partner's best feature?
+22. If your partner could be anyone famous, who would they be?
+23. What is your partner's speciality in the kitchen?
+24. Where would your partner most like to go in the world?
+25. What's the most embarrassing thing your partner has ever done?
+
+Q: Did you have a childhood nick-name?
+What is her nick name for him?
+What does he think her bra size is  
+What was his first job?
+What animal was her first pet & what was it’s name?
+Who is more likely to deal with a spider?
+On his stag night would she rather he went to a strip club or got arrested?
+What is her claim to fame?
+Who will be the most hung over after the wedding?
+On her hen do would he rather she ran around town with her knickers on her head, or fell asleep on the dance floor
+What is her best joke or impression
+Which Celebrity does he have a crush on?
+What is she most scared of?
+What was the naughtiest thing he ever did at school?
+
+What’s your favorite flavour of ice cream?
+What’s your shoe size?
+If you could take one thing to a desert island what would be?
+What was your first job?
+If you were on ‘Who Wants to be a Millionaire’, who would your phone a friend be?
+What is X’s most annoying habit?
+What is the most embarrassing thing X has ever done?

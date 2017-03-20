@@ -1,0 +1,67 @@
+Notes on projects:
+	KnowMeApp: version using Web Application to run KnowMeService
+	KnowMeApp3: using bluetooth classes modified from BluetoothChat sample project
+	KnowMeApp4: new graphics, designed by Sam	
+
+TODO:
+Show features of each release version, in this document.
+need more screen shots before can edit version published on playstore
+put POJOS in JardenAppLib?
+move tests from AppClassTest to JUnitTests
+
+Short introduction for PlayStore site:
+How well do you know me? You think you know me well? Okay my friend, prove it!
+
+Provide a simple user-interface whereby users can create and modify QA text files,
+to be maintained on local device. Provide a template QA file. Should pass Joe's
+Big Red Button test, and should be usable by Julie; usable by Susie might take
+a little longer.
+There seem to be a couple of issues with Bluetooth!
+	BluetoothService lines 437 & 438 look a bit suspect!
+	The write() seems to run in the main thread - that can't be right!
+Joe's big red button idea
+---------------------
+is this feasible? open KnowMe
+bluetooth: start server; get list of paired devices; send IAmHere message
+to each one; status: "discover mode"
+
+if receive IAmHere, send back message determining which will be the
+server (e.g. highest ID); client stops his server?
+
+option to pair devices
+
+Get the UDP version working using concurrency thread pools and
+DatagramChannel
+
+Then try datagram channel for knowme et al.
+DatagramChannel: multicast IAMHere message; if receive IAMHere,
+link 2 devices, and start talking!
+
+So KnowMe could (ultimately):
+	try datagram channel
+	if that fails, try bluetooth
+	if that fails, try HTTPConnection
+
+categories of questions, according to relationship
+download files from website, as in AmazeQuiz - then easy to
+update questions without need for new version of app. For both, 
+have some files pre-loaded, in case game starts without internet
+connection.
+
+see: "Coping with configuration changes" in AppClassTest/docs/Knowledgebase.txt
+summaryFragment: show statistics for each person plus combined
+backup unanswered questions on this device, so that even after a restart
+	will not re-use same question until all been used
+for each pairing:
+	define relationship
+	choose appropriate questions
+	keep track of questions
+more questions
+
+if change name, does that get resent to other player? No, but it should!
+if get exception, turn off bluetooth and tell user to try again
+	or reset bluetooth adapter; see
+	http://stackoverflow.com/questions/3031796/disconnect-a-bluetooth-socket-in-android
+add to menu option: number of questions in quiz
+change com.jardenconsulting.bluetooth.DeviceListActivity into a Fragment?
+

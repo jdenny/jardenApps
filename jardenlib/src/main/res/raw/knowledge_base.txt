@@ -210,22 +210,24 @@ Note: java's keystore: C:\Program Files\Java\jdk1.7.0_51\jre\lib\security\cacert
 	default password: changeit; new password: <insecure>
 	
 create john's private key and public certificate:
-	keytool -genkey -alias john2 -keypass <insecure> [-keysize 512] -keyalg RSA \
-		-keystore c:/users/john/java/keystores/johnIdentity2.jks -storepass <insecure>
+	keytool -genkey -alias jarden -keypass <insecure> [-keysize 512] -keyalg RSA \
+		-keystore /Users/john/jarden.jks -storepass <insecure>
 		Owner: CN=john, OU=Android, O=John Denny Limited, L=Bournemouth, ST=Dorset, C=UK
 	Notes: WebLogic requires RSA
 		list keys in keystore
 			keytool -list -v
 		export public cert
-			keytool -export -alias john2 -file johnCertFile.cer
+			keytool -export -alias jarden -file jardenCertFile.cer
 		import cert into BEA's CertStore:
-			keytool -import -alias john2 -file johnCertFile.cer -keypass johncertpass
+			keytool -import -alias jarden -file jardenCertFile.cer -keypass jardencertpass
 	
 in Android Studio
 	Build, Generate Signed APK...
-	use existing keystore:
-		/Users/john/jarden.jks
-		
+	for Spanish:
+	    keystore: /Users/john/jarden.jks, alias jarden
+	for HotBridge:
+	    keystore: /Users/john/Documents/johnIdentity2.jks, alias john2, p/w = old insecure
+
 open Android developer console:
 	https://play.google.com/apps/publish/
 	upload <app>.apk to alpha testing

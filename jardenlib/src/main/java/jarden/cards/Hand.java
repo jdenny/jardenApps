@@ -3,7 +3,6 @@ package jarden.cards;
 import jarden.cards.CardPack.AuctionType;
 import jarden.cards.CardPack.BidEnum;
 import jarden.cards.CardPack.CardEnum;
-import jarden.cards.CardPack;
 import static jarden.cards.CardPack.BidEnum.*;
 
 import java.util.ArrayList;

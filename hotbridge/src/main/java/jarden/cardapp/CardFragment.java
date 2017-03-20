@@ -153,7 +153,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
 	        childFragmentManager.setAccessible(true);
 	        childFragmentManager.set(this, null);
-	    } catch (NoSuchFieldException | IllegalAccessException e) {
+	    } catch (Exception e) {
 	        throw new RuntimeException(e);
 	    }
 	}

@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGrey"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/howWellKnowMeStr" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:text="@string/aboutKnowMe" />
+    
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/marginTopBig"
+        android:text="@string/playStr" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/marginTop"
+        android:text="@string/aboutSingleDevice" />
+
+    <EditText
+        android:id="@+id/yourNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/yourNameStr" />
+
+    <EditText
+        android:id="@+id/otherNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/otherPlayerNameStr" />
+
+    <Button
+        android:id="@+id/playOneDeviceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/marginTopBig"
+        android:text="@string/playOneDeviceStr" />
+    
+</LinearLayout>

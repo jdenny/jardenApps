@@ -1,0 +1,31 @@
+In bluetooth, in close() method, use interrupt() to interrupt a thread
+I the preferred way to stop a runnable object to call close(), which in turn sets a flag which the while-loop examines (used to be this way)? Or is it to set the interrupt flag outside, and in runnable to do while(!isInterrupted())
+
+NOTE: not sure if I've already done the following; need to check
+create a simple app with 1 activity and 2 fragments
+menu options to show each fragment
+find out what happens when: rotate; run a new app and return
+
+onCreate()
+	if savedInstanceState:
+		set currentFragmentId to saved state
+		set currentFragment to ? // see above!
+	else:
+		set currentFragmentId to clock
+		set currentFragment to null
+
+onResume()
+	showFragment()
+
+showFragment()
+	get fragment from currentFragmentId
+	if currentFragment == fragment: return
+	currentFragment.stop();
+	currentFragment.hide();
+	currentFragment = fragment;
+	if currentFragment == bluetoothFragment:
+		add to fragmentContainer
+	else:
+		currentFragment.show();
+	currentFragment.start();
+	

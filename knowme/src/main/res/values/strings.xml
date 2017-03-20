@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Know Me</string>
+    <string name="action_settings">Settings</string>
+    <string name="summaryHeader">End of Quiz</string>
+    <string name="nextQuizStr">Next Quiz</string>
+    <string name="aboutKnowMe">The game (and it is only a game!) is to see how well you
+        and a friend know each other. You each need to be running this game on your
+        own Android device. You will be asked a series of questions, with
+        multi-choice answers. Guess what your friend will say, then give your own answer
+        - the one you think is the best description of you. When you have both answered,
+        the game will tell you if you guessed correctly.</string>
+    <string name="aboutSingleDevice">Alternatively, it is possible to play KnowMe on a
+        single device. Supply your name and the name of the other player below, then
+        click "Play On One Device". When you are both playing on a single device,
+        supply your answer, then hand the device to the other player: the title-bar
+        should indicate who needs to supply an answer.</string>
+    <string name="goStr">Go</string>
+    <string name="nextStr">Next</string>
+    <string name="playStr">Play</string>
+    <string name="happyFaceStr">Happy Face</string>
+    <string name="sadFaceStr">Sad Face</string>
+    <string name="titleTemplate">{0}, do you know {1}?</string>
+    <string name="meRightTemplate">You were right! {} chose:</string>
+    <string name="meWrongTemplate">You were wrong! You thought {} would choose:</string>
+    <string name="meWrong2Template">But {} chose:</string>
+    <string name="himRightTemplate">{} was right! {} thought you\'d chose:</string>
+    <string name="himWrongTemplate">{} was wrong! {} thought you\'d choose:</string>
+    <string name="himWrong2Str">But you chose:</string>
+    <string name="waitingTemplate">Waiting for {} to answer</string>
+    <string name="resultsTemplate">Your combined score was {0}%. {1}.
+        	If you want to play again, click on \'Next Quiz\'</string>
+    <string-array name="howDoneStrings">
+        <item>Well done! You both know each other amazingly well</item>
+        <item>Good! You both know each other very well</item>
+        <item>Not bad! You\'re getting to know each other</item>
+        <item>You\'ve still got a some catching up to do</item>
+    </string-array>
+    <string name="opt1">A</string>
+    <string name="opt2">B</string>
+    <string name="opt3">C</string>
+    <string name="opt4">D</string>
+    <string name="howWellStr">How well</string>
+    <string name="doYouKnowMeStr">do you know me?</string>
+    <string name="howWellKnowMeStr">How well do you know me?</string>
+    <string name="yourNameStr">Your name</string>
+    <string name="otherPlayerNameStr">name of other player</string>
+    <string name="playOneDeviceStr">Play on one device</string>
+    <string name="knowMeIconStr">KnowMe Icon</string>
+    
+</resources>

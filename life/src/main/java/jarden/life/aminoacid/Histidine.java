@@ -13,6 +13,7 @@ import jarden.life.nucleicacid.Uracil;
 public class Histidine extends AminoAcid {
     @Override
     public CellResource action(CellResource resource) throws InterruptedException {
+        System.out.println("******Histidine*****");
         return null;
     }
     @Override
