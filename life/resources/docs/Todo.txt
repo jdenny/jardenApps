@@ -1,4 +1,7 @@
 Outline for 20 aminoAcids***********************************
+Build new protein to test out ideas; doesn't do anything to cell,
+but produces messages to show what is happening
+
 getResource: DNA, RNA, aminoAcid, nucleotide
 getNextResourceNode: DNA or RNA
 

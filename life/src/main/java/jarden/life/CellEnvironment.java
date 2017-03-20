@@ -31,7 +31,7 @@ public class CellEnvironment implements TimerListener {
     private List<Food> foodList = new LinkedList<>();
     private ThreadPoolExecutor threadPoolExecutor =
             (ThreadPoolExecutor) Executors.newCachedThreadPool();
-    private int feedInterval = 5; // tenths of a second
+    private int feedInterval = 20; // tenths of a second
     private Timer timer;
     private int deadCellCt;
 

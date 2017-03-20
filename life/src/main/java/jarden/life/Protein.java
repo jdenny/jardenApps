@@ -66,27 +66,25 @@ public class Protein implements Runnable, CellResource {
             cell.logId("protein.run() interrupted");
         }
 	}
-    // TODO: remove parameter to this method?
+	private enum rnaMode {
+        data, code, body;
+    }
     private CellResource action(CellResource resource) throws InterruptedException {
-        // if firstObject is a chain, then repeat until end of chain
-        AminoAcid firstAminoAcid = aminoAcidList.get(0);
         CellResource currentResource = resource;
         boolean dataMode = false;
         int aaSize = aminoAcidList.size();
-        do {
-            for (aminoAcidIndex = 0; aminoAcidIndex < aaSize; aminoAcidIndex++) {
-                if (Thread.interrupted()) {
-                    throw new InterruptedException(
-                            "Thread.interrupted detected in Protein.action()");
-                }
-                AminoAcid aminoAcid = aminoAcidList.get(aminoAcidIndex);
-                if (aminoAcid.isData()) dataMode = true;
-                else if (aminoAcid.isCode()) dataMode = false;
-                else if (!dataMode) {
-                    currentResource = aminoAcid.action(currentResource);
-                }
+        for (aminoAcidIndex = 0; aminoAcidIndex < aaSize; aminoAcidIndex++) {
+            if (Thread.interrupted()) {
+                throw new InterruptedException(
+                        "Thread.interrupted detected in Protein.action()");
             }
-        } while (firstAminoAcid.hasMore());
+            AminoAcid aminoAcid = aminoAcidList.get(aminoAcidIndex);
+            if (aminoAcid.isData()) dataMode = true;
+            else if (aminoAcid.isCode()) dataMode = false;
+            else if (!dataMode) {
+                currentResource = aminoAcid.action(currentResource);
+            }
+        }
         return currentResource;
     }
     public AminoAcid getAminoAcid(int relativeIndex) {
@@ -144,5 +142,9 @@ public class Protein implements Runnable, CellResource {
 
     public void setRegulator(Regulator regulator) {
         this.regulator = regulator;
+    }
+
+    public List<AminoAcid> getBody() {
+        return null;
     }
 }

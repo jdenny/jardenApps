@@ -9,9 +9,9 @@ package jarden.life.aminoacid;
 	See Nucleotide for real-life codonTable.
 		Phenylalanine          	UUU  // data: Food
 		Polymerase             	UUC
-		Leucine        			UUA
+		Leucine        			UUA  // body
 		CopyDNA        			UUG
-		Serine        			UCU
+		Serine        			UCU  // loop
 		Ribosome       			UCC
 		DigestFood              UCA
 		WaitForEnoughProteins   UCG

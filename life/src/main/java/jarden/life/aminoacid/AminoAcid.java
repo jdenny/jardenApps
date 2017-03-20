@@ -21,6 +21,7 @@ public abstract class AminoAcid implements CellResource {
     public String toString() { return getName(); }
     public boolean isData() { return false; }
     public boolean isCode() { return false; }
+    public boolean isBody() { return false; }
 
     /**
      * Applies to the first aminoAcid of a protein, in programming terms
@@ -35,7 +36,7 @@ public abstract class AminoAcid implements CellResource {
      * @return true means repeat this protein to process the next element
      * in the chain.
      */
-    public boolean hasMore() { return false; }
+    //!! public boolean hasMore() { return false; }
 
     /**
      * Get the protein this aminoAcid belongs to.

@@ -24,4 +24,8 @@ public class Leucine extends AminoAcid {
     public String getName() {
         return "Leucine";
     }
+    @Override
+    public boolean isBody() {
+        return true;
+    }
 }
