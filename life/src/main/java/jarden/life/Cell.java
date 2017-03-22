@@ -16,12 +16,11 @@ import jarden.life.aminoacid.Glycine;
 import jarden.life.aminoacid.Histidine;
 import jarden.life.aminoacid.Isoleucine;
 import jarden.life.aminoacid.Leucine;
-import jarden.life.aminoacid.Lysine;
 import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
-import jarden.life.aminoacid.Ribosome;
+import jarden.life.obsolete.Ribosome;
 import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;
@@ -85,13 +84,13 @@ public class Cell implements Food {
     private static String[] geneStrs = {
             "GATCCTTGTTGGTTC", // polymerase: AsparticAcid (data), Proline (regulator),
                 // Cysteine (code), Tryptophan (awaitResource), Polymerase
-            // "GATCGTTGTTGGTCC", // ribosome: AsparticAcid (data), Arginine (RNA), Cysteine (code),
-                // Tryptophan (awaitResource), Ribosome
             // ribosome:
+            /*!!
             "GAT" +         // GAU, AsparticAcid, turn on data mode
                     "AAT" + // AAU, Asparagine, data: Protein
                     "TGT" + // UGU, Cysteine, turn on code mode
                     "AAT" + // AAU, Asparagine, set target resource
+             */
                     "TTA" + // UUA, Leucine, turn on body mode
                     "TGG" + // UGG, Tryptophan, wait for resource
                     "GAT" + // GAU, AsparticAcid, turn on data mode
@@ -416,8 +415,11 @@ public class Cell implements Food {
         nucleotideListLock.lockInterruptibly();
         try {
             for (Nucleotide nucleotide: nucleotides) {
-                nucleotideList.add(nucleotide);
-                ++nucleotideActuals[nucleotide.getIndex()];
+                int nIndex = nucleotide.getIndex();
+                if (nucleotideActuals[nIndex] < nucleotideTargets[nIndex] * 2) {
+                    nucleotideList.add(nucleotide);
+                    ++nucleotideActuals[nIndex];
+                } // else pass nucleotide back to environment as waste
             }
             nucleotideAvailableCondition.signalAll();
         } finally {

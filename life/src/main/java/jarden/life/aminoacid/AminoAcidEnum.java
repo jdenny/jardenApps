@@ -5,37 +5,36 @@ package jarden.life.aminoacid;
  */
 
 /*
-	Current implementation of codonTable.
+	Current implementation of codonTable. Left column is index.
 	See Nucleotide for real-life codonTable.
-		Alanine                 GCU  // data: AminoAcid
-		Arginine                CGU  // data: RNA
-		Asparagine              AAU  // new resource; data: Protein
-		AsparticAcid            GAU  // turn on data mode
-		CopyDNA        			UUG
-		Cysteine                UGU  // turn on code mode
-		DigestFood              UCA
-		DivideCell              UAC
-		EatFood                 UGC
-		GlutamicAcid            GAA  // addAminoAcid resource to cell
-		Glutamine               CAA
-		Glycine                 GGU
-		Histidine               CAU
-		Isoleucine              AUU
-		Leucine        			UUA  // turn on body mode
-		Lysine                  AAA
-		Methionine              AUG  // temporarily used by experiment
-		Phenylalanine          	UUU  // data: Food
-		Polymerase             	UUC
-		Proline                 CCU  // data: Regulator (rna < target)
-		Ribosome       			UCC
-		Serine        			UCU  // loop
-		Start                   UGA  // in real life: Stop
-		Stop					UAA
-		Threonine               ACU
-		Tryptophan              UGG  // wait for resource
-		Tyrosine                UAU
-		Valine                  GUU
-		WaitForEnoughProteins   UCG
+	0	Alanine                 GCU  // data: AminoAcid
+	1	Arginine                CGU  // data: RNA
+	2	Asparagine              AAU  // new resource; data: Protein
+	3	AsparticAcid            GAU  // turn on data mode
+	20	CopyDNA        			UUG
+	4	Cysteine                UGU  // turn on code mode
+	21	DigestFood              UCA
+	22	DivideCell              UAC
+	23	EatFood                 UGC
+	5	GlutamicAcid            GAA  // addAminoAcid resource to cell
+	6	Glutamine               CAA
+	7	Glycine                 GGU
+	8	Histidine               CAU
+	9	Isoleucine              AUU
+	10	Leucine        			UUA  // turn on body mode
+	11	Lysine                  AAA
+	12	Methionine              AUG  // temporarily used by experiment
+	13	Phenylalanine          	UUU  // data: Food
+	24	Polymerase             	UUC
+	14	Proline                 CCU  // data: Regulator (rna < target)
+	15	Serine        			UCU  // loop
+	25	Start                   UGA  // in real life: Stop
+	26	Stop					UAA
+	16	Threonine               ACU
+	17	Tryptophan              UGG  // wait for resource
+	18	Tyrosine                UAU
+	19	Valine                  GUU
+	27	WaitForEnoughProteins   UCG
 		                        UAG
 		                        CUU
 		                        CUC

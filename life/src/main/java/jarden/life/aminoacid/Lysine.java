@@ -20,7 +20,15 @@ public class Lysine extends AminoAcid {
                 codon.getThird() instanceof Adenine;
     }
     @Override
+    public int getIndex() {
+        return 11;
+    }
+    @Override
     public String getName() {
         return "Lysine";
+    }
+    @Override
+    public String getShortName() {
+        return "Lys";
     }
 }

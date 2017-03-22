@@ -23,7 +23,15 @@ public class Histidine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 8;
+    }
+    @Override
     public String getName() {
         return "Histidine";
+    }
+    @Override
+    public String getShortName() {
+        return "His";
     }
 }

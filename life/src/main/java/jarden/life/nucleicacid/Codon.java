@@ -6,7 +6,8 @@ import jarden.life.CellResource;
 /**
  * In our simplified view of life, a start codon (promoter) is only 3 base-pairs
  * (1 codon), and we are hijacking one of the triplets that in real life is used
- * as a stop. Also note that start and stop codons can appear in DNA and RNA.
+ * as a stop. Also note that in real life, start and stop codons can appear in
+ * DNA and RNA; in our version RNA doesn't currently include the stop codon.
  * In summary:       RNA    DNA
  *      start codon: UGA    TGA
  *      stop codon:  UAA    TAA

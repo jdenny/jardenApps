@@ -21,7 +21,15 @@ public class Valine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 19;
+    }
+    @Override
     public String getName() {
         return "Valine";
+    }
+    @Override
+    public String getShortName() {
+        return "Val";
     }
 }

@@ -24,7 +24,7 @@ import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
-import jarden.life.aminoacid.Ribosome;
+import jarden.life.obsolete.Ribosome;
 import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;

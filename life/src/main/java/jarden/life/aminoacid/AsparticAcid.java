@@ -22,11 +22,19 @@ public class AsparticAcid extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public boolean isData() {
+        return true;
+    }
+    @Override
+    public int getIndex() {
+        return 3;
+    }
+    @Override
     public String getName() {
         return "AsparticAcid";
     }
     @Override
-    public boolean isData() {
-        return true;
+    public String getShortName() {
+        return "Asp";
     }
 }

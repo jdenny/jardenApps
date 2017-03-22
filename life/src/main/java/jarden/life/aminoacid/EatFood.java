@@ -22,9 +22,6 @@ import jarden.life.nucleicacid.Uracil;
 public class EatFood extends AminoAcid {
     public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
-        if (cell.getId() == 2) {
-            cell.logId("EatFood.action()");
-        }
         Lock foodListLock = cell.getFoodListLock();
         Condition needMoreFood = cell.getNeedMoreFoodCondition();
         foodListLock.lockInterruptibly();
@@ -38,15 +35,28 @@ public class EatFood extends AminoAcid {
         }
         CellEnvironment cellEnvironment = cell.getCellEnvironment();
         Food food = cellEnvironment.waitForFood();
+        if (food instanceof Cell) {
+            cell.logId("EatFood eating dead cell");
+        }
         cell.addFood(food);
         return null;
     }
-    public String getName() {
-        return "EatFood";
-    }
+    @Override
     public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Guanine &&
                 codon.getThird() instanceof Cytosine;
+    }
+    @Override
+    public int getIndex() {
+        return 23;
+    }
+    @Override
+    public String getName() {
+        return "EatFood";
+    }
+    @Override
+    public String getShortName() {
+        return "Eat";
     }
 }

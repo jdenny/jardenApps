@@ -7,6 +7,7 @@ import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
 /**
+ * As data: Amino Acid.
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
@@ -22,7 +23,15 @@ public class Alanine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 0;
+    }
+    @Override
     public String getName() {
         return "Alanine";
+    }
+    @Override
+    public String getShortName() {
+        return "Ala";
     }
 }

@@ -20,7 +20,15 @@ public class Phenylalanine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 13;
+    }
+    @Override
     public String getName() {
         return "Phenylalanine";
+    }
+    @Override
+    public String getShortName() {
+        return "Phe";
     }
 }

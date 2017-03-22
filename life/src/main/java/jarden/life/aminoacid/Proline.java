@@ -21,7 +21,15 @@ public class Proline extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 14;
+    }
+    @Override
     public String getName() {
         return "Proline";
+    }
+    @Override
+    public String getShortName() {
+        return "Pro";
     }
 }

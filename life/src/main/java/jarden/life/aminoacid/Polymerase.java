@@ -84,13 +84,21 @@ public class Polymerase extends AminoAcid {
         return codon.isStop();
     }
     @Override
+    public boolean matchCodon(Codon codon) {
+        return codon.getFirst() instanceof Uracil &&
+                codon.getSecond() instanceof Uracil &&
+                codon.getThird() instanceof Cytosine;
+    }
+    @Override
+    public int getIndex() {
+        return 24;
+    }
+    @Override
 	public String getName() {
 		return "Polymerase";
 	}
     @Override
-	public boolean matchCodon(Codon codon) {
-        return codon.getFirst() instanceof Uracil &&
-                codon.getSecond() instanceof Uracil &&
-                codon.getThird() instanceof Cytosine;
+    public String getShortName() {
+        return "Polymerase";
     }
 }

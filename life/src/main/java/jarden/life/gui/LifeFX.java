@@ -94,17 +94,17 @@ public class LifeFX extends Application implements CellListener, CellEnvironment
         feed interval (sec/10): <ct> [set] [start] [stop] Food store: <ct>
         live cells: <ct> dead cells: <ct> [refresh] [restart life]
 
-        0                  1                  2           3
-        0  Cells           Proteins           AminoAcids
-        1  <cellListView>  <proteinListView>  <name>      <ct>
+        0                  1                  2           3     4          5
+        0  Cells           Proteins           AminoAcids        AminoAcids
+        1  <cellListView>  <proteinListView>  <name>      <ct>  <name>     <ct>
            ...             ...                ...
-
-        22 ...             ...                Nucleotides
-        23 ...             ...                <name>      <ct>
+        11
+        12 ...             ...                Nucleotides
+        13 ...             ...                <name>      <ct>
            ...             ...                ...
-        28                                    RNA         <ct>
-        29
-        30 status
+        19                                    RNA         <ct>
+        20
+        21 status
          */
         cellObservableList = FXCollections.observableArrayList();
         cellListView = new ListView<>(cellObservableList);
@@ -193,27 +193,33 @@ public class LifeFX extends Application implements CellListener, CellEnvironment
         aminoAcidLabel.setFont(labelFont);
         grid.add(aminoAcidLabel, 2, 0);
         aminoAcidQtyTexts = new Text[aminoAcidCt];
-        for (int i = 0; i < aminoAcidCt; i++) {
+        int firstAAsCt = aminoAcidCt / 2;
+        int secondAAsCt = aminoAcidCt - firstAAsCt;
+        for (int i = 0; i < firstAAsCt; i++) {
             grid.add(new Label(aminoAcidNames[i]), 2, 1 + i);
             aminoAcidQtyTexts[i] = new Text("0");
             grid.add(aminoAcidQtyTexts[i], 3, 1 + i);
         }
-
+        for (int i = 0; i < secondAAsCt; i++) {
+            grid.add(new Label(aminoAcidNames[firstAAsCt + i]), 4, 1 + i);
+            aminoAcidQtyTexts[firstAAsCt + i] = new Text("0");
+            grid.add(aminoAcidQtyTexts[firstAAsCt + i], 5, 1 + i);
+        }
         nucleotideQtyTexts = new Text[nucleotideCt];
         Label nucleotideLabel = new Label("Nucleotides");
         nucleotideLabel.setFont(labelFont);
-        grid.add(nucleotideLabel, 2, aminoAcidCt + 2);
+        grid.add(nucleotideLabel, 2, firstAAsCt + 2);
         for (int i = 0; i < nucleotideCt; i++) {
-            grid.add(new Label(nucleotideNames[i]), 2, aminoAcidCt + 3 + i);
+            grid.add(new Label(nucleotideNames[i]), 2, firstAAsCt + 3 + i);
             nucleotideQtyTexts[i] = new Text("0");
-            grid.add(nucleotideQtyTexts[i], 3, aminoAcidCt + 3 + i);
+            grid.add(nucleotideQtyTexts[i], 3, firstAAsCt + 3 + i);
         }
         Label rnaLabel = new Label("RNA");
         rnaLabel.setFont(labelFont);
-        grid.add(rnaLabel, 2, aminoAcidCt + nucleotideCt + 4);
-        grid.add(rnaCtText, 3, aminoAcidCt + nucleotideCt + 4);
+        grid.add(rnaLabel, 2, firstAAsCt + nucleotideCt + 4);
+        grid.add(rnaCtText, 3, firstAAsCt + nucleotideCt + 4);
 
-        grid.add(statusText, 0, aminoAcidCt + nucleotideCt + 4, 5, 1);
+        grid.add(statusText, 0, firstAAsCt + nucleotideCt + 4, 5, 1);
         borderPane.setCenter(grid);
 
         Scene scene = new Scene(borderPane, 850, 700);

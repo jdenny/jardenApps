@@ -22,7 +22,15 @@ public class Methionine extends AminoAcid {
                 codon.getThird() instanceof Guanine;
     }
     @Override
+    public int getIndex() {
+        return 12;
+    }
+    @Override
     public String getName() {
         return "Methionine";
+    }
+    @Override
+    public String getShortName() {
+        return "Met";
     }
 }

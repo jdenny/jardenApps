@@ -125,7 +125,7 @@ public class Protein implements Runnable, CellResource, TargetResource {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		for (AminoAcid aminoAcid: aminoAcidList) {
-			buffer.append(aminoAcid.getName() + " ");
+			buffer.append(aminoAcid.getShortName() + " ");
 		}
 		return buffer.toString();
 	}

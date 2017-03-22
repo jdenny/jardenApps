@@ -7,6 +7,7 @@ import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
 /**
+ * As data: RNA
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
@@ -22,7 +23,15 @@ public class Arginine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 1;
+    }
+    @Override
     public String getName() {
         return "Arginine";
+    }
+    @Override
+    public String getShortName() {
+        return "Arg";
     }
 }

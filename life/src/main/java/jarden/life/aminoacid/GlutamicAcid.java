@@ -34,7 +34,15 @@ public class GlutamicAcid extends AminoAcid {
                 codon.getThird() instanceof Adenine;
     }
     @Override
+    public int getIndex() {
+        return 5;
+    }
+    @Override
     public String getName() {
         return "GlutamicAcid";
+    }
+    @Override
+    public String getShortName() {
+        return "Glu";
     }
 }

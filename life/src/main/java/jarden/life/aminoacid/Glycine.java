@@ -21,7 +21,15 @@ public class Glycine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 7;
+    }
+    @Override
     public String getName() {
         return "Glycine";
+    }
+    @Override
+    public String getShortName() {
+        return "Gly";
     }
 }

@@ -10,8 +10,8 @@ public class CellData {
             "Cysteine",  "DigestFood", "DivideCell",    "EatFood",      "GlutamicAcid",
             "Glutamine", "Glycine",    "Histidine",     "Isoleucine",   "Leucine",
             "Lysine",    "Methionine", "Phenylalanine", "Polymerase",   "Proline",
-            "Ribosome",  "Serine",     "Threonine",     "Tryptophan",   "Tyrosine",
-            "Valine",    "WaitForEnoughProteins"
+            "Serine",    "Threonine",  "Tryptophan",    "Tyrosine",     "Valine",
+            "WaitForEnoughProteins"
     };
     public static String[] nucleotideNames = {
             "Adenine", "Cytosine", "Guanine", "Thymine", "Uracil",

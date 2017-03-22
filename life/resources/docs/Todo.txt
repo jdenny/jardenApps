@@ -36,25 +36,20 @@ examples:
 		Food food = cellEnvironment.waitForFood()
 
 Current actions *************************************************
+aminoAcidFeed targets, done like nucleotides
+
+change DNA to use Codons instead of Nucleotides directly
+
 tidy up documentation so far, and write report on work so far
 
 check locks & conditions and Thread.isInterrupted()
 
-remove interface Food?
-
-currently: (try to keep resource exactly at target)
-	when resource met target, stop digesting; should be this, but isn't!
-		doesn't stop eating, even when it's full!
+adding resources to cell:
+	when resource met target * 2, stop digesting
 	when resource < target, start feeding
-replace with: (keep resource from 0 to target)
-	when resource met target, stop digesting;
-	when resource empty, start feeding and increment target
-or: (keep resource from target to 2 * target, i.e. upperTarget)
-	when resource met upperTarget, stop digesting, i.e. discard surplus
-	when resource < lowerTarget, start feeding
-	when resource empty, increment target
-	*** go with this one *** All nucleotides share same target; ditto
-		amino acids
+
+perhaps instead of discarding waste, should send remains back to
+environment, to be reprocessed by another cell type!
 
 add aminoAcidActuals, similar to nucleotideActuals
 
@@ -240,3 +235,5 @@ check-out if we need Thread.isInterrupted() - YES
 factor out our first reusable aminoAcid: GetResource - DONE
 
 make synthetic cell out of DNA - DONE
+
+CellEnvironment: add dead cells to foodList - DONE

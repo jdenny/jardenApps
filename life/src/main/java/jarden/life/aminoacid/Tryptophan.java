@@ -48,7 +48,15 @@ public class Tryptophan extends AminoAcid {
                 codon.getThird() instanceof Guanine;
     }
     @Override
+    public int getIndex() {
+        return 17;
+    }
+    @Override
     public String getName() {
         return "Tryptophan";
+    }
+    @Override
+    public String getShortName() {
+        return "Trp";
     }
 }

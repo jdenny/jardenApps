@@ -155,3 +155,10 @@ name or group (type); use new gene structure:
     not so only run once. Cell.runProtein could run protein that activates
     a group of proteins
 
+DNA patterns ************************************************
+// ribosome:
+"GAT" + // AsparticAcid (data)
+"CGT" + // Arginine (RNA)
+"TGT" + // Cysteine (code)
+"TGG" + // Tryptophan (awaitResource)
+"TCC"   // Ribosome

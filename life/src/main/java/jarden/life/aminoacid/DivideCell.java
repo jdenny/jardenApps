@@ -95,12 +95,22 @@ public class DivideCell extends AminoAcid {
         }
         return false;
     }
-    public String getName() {
-        return "DivideCell";
-    }
+    @Override
     public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Adenine &&
                 codon.getThird() instanceof Cytosine;
+    }
+    @Override
+    public int getIndex() {
+        return 22;
+    }
+    @Override
+    public String getName() {
+        return "DivideCell";
+    }
+    @Override
+    public String getShortName() {
+        return "Divide";
     }
 }

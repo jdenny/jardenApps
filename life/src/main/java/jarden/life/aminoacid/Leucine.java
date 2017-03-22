@@ -21,11 +21,19 @@ public class Leucine extends AminoAcid {
                 codon.getThird() instanceof Adenine;
     }
     @Override
+    public boolean isBody() {
+        return true;
+    }
+    @Override
+    public int getIndex() {
+        return 10;
+    }
+    @Override
     public String getName() {
         return "Leucine";
     }
     @Override
-    public boolean isBody() {
-        return true;
+    public String getShortName() {
+        return "Leu";
     }
 }

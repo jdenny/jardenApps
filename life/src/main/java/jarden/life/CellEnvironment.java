@@ -105,13 +105,30 @@ public class CellEnvironment implements TimerListener {
             foodListLock.unlock();
         }
     }
+
+    /**
+     * Remove Cell from cellList, increment deadCellCt, add dead cell
+     * to foodList, and notify cellListener that cell count has changed.
+     * @param cell
+     * @throws InterruptedException
+     */
     public void removeCell(Cell cell) throws InterruptedException {
+        Food food = null;
         cellListLock.lockInterruptibly();
         try {
-            cellList.remove(cell);
+            int index = cellList.indexOf(cell);
+            if (index > -1) food = cellList.remove(index);
             ++deadCellCt;
         } finally {
             cellListLock.unlock();
+        }
+        if (food != null) {
+            foodListLock.lockInterruptibly();
+            try {
+                foodList.add(food);
+            } finally {
+                foodListLock.unlock();
+            }
         }
         notifyCellListener();
     }

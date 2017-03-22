@@ -21,9 +21,13 @@ public class Serine extends AminoAcid {
     public CellResource action(CellResource resource) throws InterruptedException {
         ChainResource chainResource = (ChainResource) resource;
         Protein protein = getProtein();
-        TargetResource targetResource = protein.getTargetResource();
-        // temporary hack to get it to work!
-        targetResource = ((RNA) resource).getNewProtein();
+        TargetResource targetResource;
+        // temporary (or not!) hack to get it to work!
+        if (resource instanceof RNA) {
+            targetResource = ((RNA) resource).getNewProtein();
+        } else {
+            targetResource = protein.getTargetResource();
+        }
         CellResource node;
         List<AminoAcid> body = protein.getBody();
         while (chainResource.hasNext()) {
@@ -46,7 +50,15 @@ public class Serine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 15;
+    }
+    @Override
     public String getName() {
         return "Serine";
+    }
+    @Override
+    public String getShortName() {
+        return "Ser";
     }
 }

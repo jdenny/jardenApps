@@ -22,7 +22,15 @@ public class Threonine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 16;
+    }
+    @Override
     public String getName() {
         return "Threonine";
+    }
+    @Override
+    public String getShortName() {
+        return "Thr";
     }
 }

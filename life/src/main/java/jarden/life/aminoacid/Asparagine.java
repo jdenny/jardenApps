@@ -39,7 +39,15 @@ public class Asparagine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 2;
+    }
+    @Override
     public String getName() {
         return "Asparagine";
+    }
+    @Override
+    public String getShortName() {
+        return "Asn";
     }
 }

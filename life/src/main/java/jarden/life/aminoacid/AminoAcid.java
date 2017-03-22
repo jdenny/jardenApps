@@ -17,7 +17,9 @@ public abstract class AminoAcid implements CellResource {
     public abstract CellResource action(CellResource resource)
             throws InterruptedException; // process next object
     public abstract boolean matchCodon(Codon codon);
+    public abstract int getIndex();
     public abstract String getName();
+    public abstract String getShortName();
     public String toString() { return getName(); }
     public boolean isData() { return false; }
     public boolean isCode() { return false; }

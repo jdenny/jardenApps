@@ -21,7 +21,15 @@ public class Isoleucine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public int getIndex() {
+        return 9;
+    }
+    @Override
     public String getName() {
         return "Isoleucine";
+    }
+    @Override
+    public String getShortName() {
+        return "Ile";
     }
 }

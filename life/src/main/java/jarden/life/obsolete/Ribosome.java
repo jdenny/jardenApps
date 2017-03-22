@@ -1,8 +1,9 @@
-package jarden.life.aminoacid;
+package jarden.life.obsolete;
 
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Protein;
+import jarden.life.aminoacid.AminoAcid;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.RNA;
@@ -30,13 +31,21 @@ public class Ribosome extends AminoAcid {
         return null;
     }
     @Override
-    public String getName() {
-        return "Ribosome";
-    }
-    @Override
     public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Cytosine &&
                 codon.getThird() instanceof Cytosine;
+    }
+    @Override
+    public int getIndex() {
+        return -1;
+    }
+    @Override
+    public String getName() {
+        return "Ribosome";
+    }
+    @Override
+    public String getShortName() {
+        return "Ribosome";
     }
 }

@@ -28,13 +28,21 @@ public class CopyDNA extends AminoAcid {
         return dnaCopy;
 	}
     @Override
-	public String getName() {
-		return "CopyDNA";
-	}
-    @Override
 	public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Uracil &&
                 codon.getThird() instanceof Guanine;
+    }
+    @Override
+    public int getIndex() {
+        return 20;
+    }
+    @Override
+    public String getName() {
+        return "CopyDNA";
+    }
+    @Override
+    public String getShortName() {
+        return "CopyDNA";
     }
 }

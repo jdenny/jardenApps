@@ -35,12 +35,22 @@ public class DigestFood extends AminoAcid {
         }
         return null;
     }
-    public String getName() {
-        return "DigestFood";
-    }
+    @Override
     public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Cytosine &&
                 codon.getThird() instanceof Adenine;
+    }
+    @Override
+    public int getIndex() {
+        return 21;
+    }
+    @Override
+    public String getName() {
+        return "DigestFood";
+    }
+    @Override
+    public String getShortName() {
+        return "Digest";
     }
 }

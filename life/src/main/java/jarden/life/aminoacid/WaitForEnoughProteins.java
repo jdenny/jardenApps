@@ -37,7 +37,7 @@ public class WaitForEnoughProteins extends AminoAcid {
         regulatorListLock.lockInterruptibly();
         try {
             String state;
-            boolean killIfTimedOut = false; // normal state is true
+            boolean killIfTimedOut = true; // normal state is true
             while (!cell.cellReadyToDivide()) {
                 state = "waiting for cellReadyToDivideCondition";
                 cell.logId(state);
@@ -67,15 +67,22 @@ public class WaitForEnoughProteins extends AminoAcid {
             regulatorListLock.unlock();
         }
 	}
-
-    @Override
-	public String getName() {
-		return "WaitForEnoughProteins";
-	}
     @Override
 	public boolean matchCodon(Codon codon) {
         return codon.getFirst() instanceof Uracil &&
                 codon.getSecond() instanceof Cytosine &&
                 codon.getThird() instanceof Guanine;
+    }
+    @Override
+    public int getIndex() {
+        return 27;
+    }
+    @Override
+    public String getName() {
+        return "WaitForEnoughProteins";
+    }
+    @Override
+    public String getShortName() {
+        return "Wait4Prots";
     }
 }

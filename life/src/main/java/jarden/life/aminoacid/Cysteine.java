@@ -21,11 +21,19 @@ public class Cysteine extends AminoAcid {
                 codon.getThird() instanceof Uracil;
     }
     @Override
+    public boolean isCode() {
+        return true;
+    }
+    @Override
+    public int getIndex() {
+        return 4;
+    }
+    @Override
     public String getName() {
         return "Cysteine";
     }
     @Override
-    public boolean isCode() {
-        return true;
+    public String getShortName() {
+        return "Cys";
     }
 }

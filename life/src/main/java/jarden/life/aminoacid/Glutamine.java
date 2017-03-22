@@ -22,7 +22,15 @@ public class Glutamine extends AminoAcid {
                 codon.getThird() instanceof Adenine;
     }
     @Override
+    public int getIndex() {
+        return 6;
+    }
+    @Override
     public String getName() {
         return "Glutamine";
+    }
+    @Override
+    public String getShortName() {
+        return "Gln";
     }
 }
