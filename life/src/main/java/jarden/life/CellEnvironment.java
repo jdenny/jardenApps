@@ -68,7 +68,7 @@ public class CellEnvironment implements TimerListener {
         foodListLock.lockInterruptibly();
         try {
             foodList.add(cellFood);
-            foodAvailable.signal();
+            foodAvailable.signalAll();
             notifyFoodListener();
         } finally {
             foodListLock.unlock();

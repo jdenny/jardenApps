@@ -7,67 +7,67 @@ package jarden.life.aminoacid;
 /*
 	Current implementation of codonTable.
 	See Nucleotide for real-life codonTable.
+		Alanine                 GCU  // data: AminoAcid
+		Arginine                CGU  // data: RNA
+		Asparagine              AAU  // new resource; data: Protein
+		AsparticAcid            GAU  // turn on data mode
+		CopyDNA        			UUG
+		Cysteine                UGU  // turn on code mode
+		DigestFood              UCA
+		DivideCell              UAC
+		EatFood                 UGC
+		GlutamicAcid            GAA  // addAminoAcid resource to cell
+		Glutamine               CAA
+		Glycine                 GGU
+		Histidine               CAU
+		Isoleucine              AUU
+		Leucine        			UUA  // turn on body mode
+		Lysine                  AAA
+		Methionine              AUG  // temporarily used by experiment
 		Phenylalanine          	UUU  // data: Food
 		Polymerase             	UUC
-		Leucine        			UUA  // body
-		CopyDNA        			UUG
-		Serine        			UCU  // loop
+		Proline                 CCU  // data: Regulator (rna < target)
 		Ribosome       			UCC
-		DigestFood              UCA
-		WaitForEnoughProteins   UCG
-		Tyrosine                UAU
-		DivideCell              UAC
-		Stop					UAA
-		                        UAG
-		Cysteine                UGU  // turn on code mode
-		EatFood                 UGC
+		Serine        			UCU  // loop
 		Start                   UGA  // in real life: Stop
+		Stop					UAA
+		Threonine               ACU
 		Tryptophan              UGG  // wait for resource
+		Tyrosine                UAU
+		Valine                  GUU
+		WaitForEnoughProteins   UCG
+		                        UAG
 		                        CUU
 		                        CUC
 		                        CUA
 		                        CUG
-		Proline                 CCU  // data: Regulator (rna < target)
 		                        CCC
 		                        CCA
 		                        CCG
-		Histidine               CAU
 		                        CAC
-		Glutamine               CAA
 		                        CAG
-		Arginine                CGU  // data: RNA
 		                        CGC
 		                        CGA
 		                        CGG
-		Isoleucine              AUU
 		                        AUC
 		                        AUA
-		Methionine              AUG  // temporarily used by experiment
-		Threonine               ACU
 		                        ACC
 		                        ACA
 		                        ACG
-		Asparagine              AAU
 		                        AAC
-		Lysine                  AAA
 		                        AAG
 		                        AGU
 		                        AGC
 		                        AGA
 		                        AGG
-		Valine                  GUU
 		                        GUC
 		                        GUA
 		                        GUG
-		Alanine                 GCU  // data: AminoAcid
 		                        GCC
 		                        GCA
 		                        GCG
-		AsparticAcid            GAU  // turn on data mode
 		                        GAC
-		GlutamicAcid            GAA
 		                        GAG
-		Glycine                 GGU
 		                        GGC
 		                        GGA
 		                        GGG

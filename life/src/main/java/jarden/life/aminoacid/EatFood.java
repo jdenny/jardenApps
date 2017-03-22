@@ -22,6 +22,9 @@ import jarden.life.nucleicacid.Uracil;
 public class EatFood extends AminoAcid {
     public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
+        if (cell.getId() == 2) {
+            cell.logId("EatFood.action()");
+        }
         Lock foodListLock = cell.getFoodListLock();
         Condition needMoreFood = cell.getNeedMoreFoodCondition();
         foodListLock.lockInterruptibly();

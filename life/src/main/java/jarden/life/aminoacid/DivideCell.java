@@ -22,7 +22,7 @@ import jarden.life.nucleicacid.Uracil;
  * create new daughterCell;
  * get all proteins over geneSize (i.e. number of proteins the cell had
  * when it was first created), and for each:
- *    stop, remove from current cell, add to new cell.
+ *    stop, remove from current cell, addAminoAcid to new cell.
  *
  * Created by john.denny@gmail.com on 13/02/2017.
  */

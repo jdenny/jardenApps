@@ -41,7 +41,7 @@ public class TestCell {
             environment, and adds it to the cell's own foodList
         4. waitForEnoughProteins has a time limit; if limit
            exceeded, the cell dies
-        5. add targets to production of resources
+        5. addAminoAcid targets to production of resources
            see Design.txt, Current proposal
 
         Test:
@@ -50,7 +50,7 @@ public class TestCell {
         both should die for lack of food after certain time
         get another synthetic cell
         check produces daughter cell
-        add food to environment; both should live longer,
+        addAminoAcid food to environment; both should live longer,
          to produce more cells, then all die
          */
         try {

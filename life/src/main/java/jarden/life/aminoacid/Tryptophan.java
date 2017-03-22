@@ -9,15 +9,23 @@ import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
 /**
+ * Generic - wait for resource.
  * Created by john.denny@gmail.com on 18/03/2017.
  */
-
 public class Tryptophan extends AminoAcid {
     @Override
     public CellResource action(CellResource resource)
             throws InterruptedException {
         Protein protein = getProtein();
         Cell cell = getCell();
+        if (resource != null) {
+            if (resource instanceof Codon) {
+                return cell.waitForAminoAcid((Codon) resource);
+            } else {
+                throw new IllegalArgumentException(
+                        "unrecognised resource: " + resource);
+            }
+        }
         AminoAcid aminoAcid = protein.getAminoAcid(-2);
         if (aminoAcid instanceof Arginine) {
             // resourceType is RNA

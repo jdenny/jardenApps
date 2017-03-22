@@ -5,11 +5,14 @@ import java.util.List;
 import jarden.life.CellResource;
 import jarden.life.ChainResource;
 import jarden.life.Protein;
+import jarden.life.TargetResource;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
+import jarden.life.nucleicacid.RNA;
 import jarden.life.nucleicacid.Uracil;
 
 /**
+ * Generic loop.
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
@@ -18,11 +21,13 @@ public class Serine extends AminoAcid {
     public CellResource action(CellResource resource) throws InterruptedException {
         ChainResource chainResource = (ChainResource) resource;
         Protein protein = getProtein();
-        CellResource node = null;
+        TargetResource targetResource = protein.getTargetResource();
+        // temporary hack to get it to work!
+        targetResource = ((RNA) resource).getNewProtein();
+        CellResource node;
         List<AminoAcid> body = protein.getBody();
         while (chainResource.hasNext()) {
             node = chainResource.next();
-            //?? if (node.isStop()) break;
             for (AminoAcid aminoAcid: body) {
                 if (Thread.interrupted()) {
                     throw new InterruptedException(
@@ -30,8 +35,9 @@ public class Serine extends AminoAcid {
                 }
                 node = aminoAcid.action(node);
             }
+            targetResource.add(node);
         }
-        return node;
+        return targetResource;
     }
     @Override
     public boolean matchCodon(Codon codon) {

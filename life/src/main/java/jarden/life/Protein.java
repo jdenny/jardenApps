@@ -2,6 +2,7 @@ package jarden.life;
 
 import jarden.life.aminoacid.AminoAcid;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -11,7 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class Protein implements Runnable, CellResource {
+public class Protein implements Runnable, CellResource, TargetResource {
     private Cell cell; // the cell this protein belongs to
 	private List<AminoAcid> aminoAcidList = new ArrayList<>();
     private List<AminoAcid> aminoAcidBodyList = new ArrayList<>();
@@ -19,8 +20,13 @@ public class Protein implements Runnable, CellResource {
     private int aminoAcidIndex;
     private int hashCode;
     private String state; // for monitoring; put in LifeFX
-    public boolean activate = true; // set false for debugging!
+    /**
+     * Used for debugging; set false if this protein should
+     * not run; used in Cell.addProtein().
+     */
+    public boolean activate = true;
     private Future future;
+    private TargetResource targetResource;
 
     public Protein(Cell cell) {
         this.cell = cell;
@@ -67,12 +73,21 @@ public class Protein implements Runnable, CellResource {
             cell.logId("protein.run() interrupted");
         }
 	}
-	private enum RnaMode {
+    public void setTargetResource(TargetResource targetResource) {
+        this.targetResource = targetResource;
+    }
+    public TargetResource getTargetResource() {
+        return targetResource;
+    }
+    @Override
+    public void add(CellResource resource) {
+        addAminoAcid((AminoAcid) resource);
+    }
+    private enum RnaMode {
         data, code, body;
     }
     private CellResource action(CellResource resource) throws InterruptedException {
         CellResource currentResource = resource;
-        //!! boolean dataMode = false;
         RnaMode rnaMode = RnaMode.code;
         int aaSize = aminoAcidList.size();
         for (aminoAcidIndex = 0; aminoAcidIndex < aaSize; aminoAcidIndex++) {
@@ -81,9 +96,12 @@ public class Protein implements Runnable, CellResource {
                         "Thread.interrupted detected in Protein.action()");
             }
             AminoAcid aminoAcid = aminoAcidList.get(aminoAcidIndex);
-            if (aminoAcid.isData()) rnaMode = RnaMode.data;
-            else if (aminoAcid.isCode()) rnaMode = RnaMode.code;
-            else if (aminoAcid.isBody()) {
+            if (aminoAcid.isData()) {
+                rnaMode = RnaMode.data;
+                currentResource = null;
+            } else if (aminoAcid.isCode()) {
+                rnaMode = RnaMode.code;
+            } else if (aminoAcid.isBody()) {
                 rnaMode = RnaMode.body;
                 aminoAcidBodyList.clear();
             } else if (rnaMode == RnaMode.code) {
@@ -97,7 +115,7 @@ public class Protein implements Runnable, CellResource {
     public AminoAcid getAminoAcid(int relativeIndex) {
         return aminoAcidList.get(aminoAcidIndex + relativeIndex);
     }
-	public void add(AminoAcid aminoAcid) {
+    public void addAminoAcid(AminoAcid aminoAcid) {
 		aminoAcidList.add(aminoAcid);
         aminoAcid.setProtein(this);
 	}

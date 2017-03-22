@@ -15,7 +15,7 @@ public class DNA implements CellResource {
             strand1.add(n1);
             strand2.add(n2);
         } else {
-            throw new IllegalArgumentException("DNA.add(" + n1 + ", " + n2 + ") - no match");
+            throw new IllegalArgumentException("DNA.addAminoAcid(" + n1 + ", " + n2 + ") - no match");
         }
     }
     public Nucleotide getFromTemplate(int index) {

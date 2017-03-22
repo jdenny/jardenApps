@@ -19,16 +19,12 @@ public class Ribosome extends AminoAcid {
         RNA rna = (RNA) _rna;
         Cell cell = getCell();
         Protein newProtein = rna.getNewProtein();
-        int index = 0;
         Codon codon;
         AminoAcid aminoAcid;
-        while (true) {
-            codon = rna.getCodon(index++);
-            if (codon.isStop()) {
-                break;
-            }
+        while (rna.hasNext()) {
+            codon = rna.next();
             aminoAcid = cell.waitForAminoAcid(codon);
-            newProtein.add(aminoAcid);
+            newProtein.addAminoAcid(aminoAcid);
         }
         cell.addProtein(newProtein);
         return null;

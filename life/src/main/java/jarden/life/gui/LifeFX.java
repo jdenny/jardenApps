@@ -143,10 +143,11 @@ public class LifeFX extends Application implements CellListener, CellEnvironment
         BorderPane borderPane = new BorderPane();
         VBox controlVBox = new VBox();
         HBox feedIntervalHBox = new HBox();
-        feedIntervalHBox.setPadding(new Insets(15, 12, 15, 12));
-        feedIntervalHBox.setSpacing(10);
+        // padding means gap between nodes and edges of box:
+        feedIntervalHBox.setPadding(new Insets(10, 10, 10, 10));
+        feedIntervalHBox.setSpacing(10); // gap between nodes
         HBox cellCtsHBox = new HBox();
-        cellCtsHBox.setPadding(new Insets(15, 12, 15, 12));
+        cellCtsHBox.setPadding(new Insets(10, 10, 10, 10));
         cellCtsHBox.setSpacing(10);
 
         feedIntervalHBox.getChildren().addAll(
@@ -171,7 +172,7 @@ public class LifeFX extends Application implements CellListener, CellEnvironment
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(6);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.setPadding(new Insets(10, 10, 10, 10));
 
         int aminoAcidCt = aminoAcidNames.length;
         int nucleotideCt = nucleotideNames.length;

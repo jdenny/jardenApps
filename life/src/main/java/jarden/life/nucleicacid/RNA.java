@@ -7,8 +7,9 @@ import java.util.List;
 import jarden.life.CellResource;
 import jarden.life.ChainResource;
 import jarden.life.Protein;
+import jarden.life.TargetResource;
 
-public class RNA implements ChainResource {
+public class RNA implements ChainResource, TargetResource {
     private List<Codon> codonList = new ArrayList<>();
     private Protein newProtein;
     private int index = 0;
@@ -41,7 +42,12 @@ public class RNA implements ChainResource {
         return index < codonList.size();
     }
     @Override
-    public CellResource next() {
+    public Codon next() {
         return codonList.get(index++);
+    }
+
+    @Override
+    public void add(CellResource resource) {
+        addCodon((Codon) resource);
     }
 }

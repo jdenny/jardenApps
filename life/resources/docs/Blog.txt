@@ -1,0 +1,16 @@
+Paper to be published
+---------------------
+Much easier to build a template cell, rather than instructions to build;
+cf knitting - pattern, few stitches, needles, can make anything - jumper,
+socks, hat, toy; template for making a t-shirt - easier and quicker, but
+can only make a t-shirt. Hence almost infinite variety built-in to the way
+life has been designed. Could write a software program to make a copy of
+itself - in Java a few [how many?] lines; but something driven by
+instructions took many [how many?] lines.
+
+Many times we had to redesign our approach - even doing our best to copy
+the design of living cells - to make it work. Couldn't evolve towards it;
+had to go back - dismantle some of the code - before we could go forward.
+
+As design evolved, much obsolete code that we removed; any obsolete
+machinery (proteins) or data (DNA) in cells?

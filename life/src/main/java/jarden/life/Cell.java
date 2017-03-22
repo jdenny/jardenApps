@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -71,28 +70,40 @@ public class Cell implements Food {
     private final List<Regulator> regulatorList = new ArrayList<>();
     private final List<RNA> rnaList = new LinkedList<>();
     // TODO: when proper aminoAcids, replace length with 20
-    // in same sequence as aminoAcid list
+    // in same sequence as CellData.aminoAcidNames
     private int[] aminoAcidTargets = new int[CellData.aminoAcidNames.length];
+    public static int[] aminoAcidFeedCounts = new int[CellData.aminoAcidNames.length];
     // indexed by nucleotide.getIndex(); 5 is number of nucleotide types
     private int[] nucleotideActuals = new int[5];
     private int[] nucleotideTargets = new int[5];
     public static int[] nucleotideFeedCounts = new int[5];
 
     private static boolean verbose = true;
-    private static Cell syntheticCell;
     private static int currentId = 0;
+    private static Cell syntheticCell;
+    // used for building synthetic cell:
     private static String[] geneStrs = {
             "GATCCTTGTTGGTTC", // polymerase: AsparticAcid (data), Proline (regulator),
                 // Cysteine (code), Tryptophan (awaitResource), Polymerase
-            "GATCGTTGTTGGTCC", // ribosome: AsparticAcid (data), Arginine (RNA), Cysteine (code),
+            // "GATCGTTGTTGGTCC", // ribosome: AsparticAcid (data), Arginine (RNA), Cysteine (code),
                 // Tryptophan (awaitResource), Ribosome
+            // ribosome:
+            "GAT" +         // GAU, AsparticAcid, turn on data mode
+                    "AAT" + // AAU, Asparagine, data: Protein
+                    "TGT" + // UGU, Cysteine, turn on code mode
+                    "AAT" + // AAU, Asparagine, set target resource
+                    "TTA" + // UUA, Leucine, turn on body mode
+                    "TGG" + // UGG, Tryptophan, wait for resource
+                    "GAT" + // GAU, AsparticAcid, turn on data mode
+                    "CGT" + // CGU, Arginine, data: RNA
+                    "TGT" + // UGU, Cysteine, turn on code mode
+                    "TGG" + // UGG, Tryptophan, wait for resource
+                    "TCT" + // UCU, Serine, loop
+                    "GAA",  // GAA, GlutamicAcid, addAminoAcid resource to cell
             "TGC",       // eatFood: EatFood
             "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
                 // Cysteine (code), Tryptophan (awaitResource), DigestFood
-            "TCGTTGTAC",  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
-            "GATCGTTGTTGGTTACATCAATGTTCT" // experiment: AsparticAcid (data), Arginine (RNA),
-                // Cysteine (code), Tryptophan (awaitResource),
-                // Leucine (body), Histidine, Glutamine, Cysteine (code), Serine (loop)
+            "TCGTTGTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
     private final Lock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
@@ -157,27 +168,28 @@ public class Cell implements Food {
             nucleotideFeedCounts[i] = synCell.nucleotideTargets[i];
         }
         // create resources for 1 daughter cell of 5 proteins:
-        CellFood.addAminoAcids(synCell.aminoAcidList);
+        //!! CellFood.addAminoAcids(synCell.aminoAcidList);
         for (int i = 0; i < 2; i++) {
             CellFood.addNucleotides(synCell.nucleotideList);
         }
         Protein protein;
         // so we can test a cell without all the proteins pulling the rug from
         // beneath our feet!
-        boolean startAllProteins = false;
+        boolean startAllProteins = true;
         boolean[] startProteins = {
                 true, // rnaPolymerase
-                false, // ribosome
+                true, // genericRibosome
                 false, // proteinDigest
                 false, // eatFood
-                false, // proteinDivide
-                true   // experiment
+                false  // proteinDivide
         };
         for (int i = 0; i < geneStrs.length; i++) {
             String geneStr = geneStrs[i];
             protein = new Protein(synCell);
             for (int j = 0; (j+3) <= geneStr.length(); j+=3) {
-                protein.add(makeAminoAcid(geneStr.substring(j, j+3)));
+                String codonStr = geneStr.substring(j, j+3);
+                protein.addAminoAcid(makeAminoAcid(codonStr));
+                synCell.aminoAcidList.add(makeAminoAcid(codonStr));
             }
             protein.setRegulator(synCell.regulatorList.get(i));
             if (!startAllProteins && !startProteins[i]) {
@@ -191,39 +203,38 @@ public class Cell implements Food {
     Used by makeSyntheticCell to build proteins according to the DNA
      */
     private static AminoAcid makeAminoAcid(String codonStr) {
-        if (codonStr.equals("TTT")) return new Phenylalanine();
-        else if (codonStr.equals("TTC")) return new Polymerase();
-        else if (codonStr.equals("TTA")) return new Leucine();
-        else if (codonStr.equals("TTG")) return new CopyDNA();
-        else if (codonStr.equals("TCT")) return new Serine();
-        else if (codonStr.equals("TCC")) return new Ribosome();
-        else if (codonStr.equals("TCA")) return new DigestFood();
-        else if (codonStr.equals("TCG")) return new WaitForEnoughProteins();
-        else if (codonStr.equals("TAT")) return new Tyrosine();
-        else if (codonStr.equals("TAC")) return new DivideCell();
-        else if (codonStr.equals("TGT")) return new Cysteine();
-        else if (codonStr.equals("TGC")) return new EatFood();
-        else if (codonStr.equals("TGG")) return new Tryptophan();
-        else if (codonStr.equals("CCT")) return new Proline();
-        else if (codonStr.equals("CAT")) return new Histidine();
-        else if (codonStr.equals("CAA")) return new Glutamine();
+        if      (codonStr.equals("GCT")) return new Alanine();
         else if (codonStr.equals("CGT")) return new Arginine();
-        else if (codonStr.equals("ATT")) return new Isoleucine();
-        else if (codonStr.equals("ATG")) return new Methionine();
-        else if (codonStr.equals("ACT")) return new Threonine();
         else if (codonStr.equals("AAT")) return new Asparagine();
-        else if (codonStr.equals("AAA")) return new Lysine();
-        else if (codonStr.equals("GTT")) return new Valine();
-        else if (codonStr.equals("GCT")) return new Alanine();
         else if (codonStr.equals("GAT")) return new AsparticAcid();
+        else if (codonStr.equals("TTG")) return new CopyDNA();
+        else if (codonStr.equals("TGT")) return new Cysteine();
+        else if (codonStr.equals("TCA")) return new DigestFood();
+        else if (codonStr.equals("TAC")) return new DivideCell();
+        else if (codonStr.equals("TGC")) return new EatFood();
         else if (codonStr.equals("GAA")) return new GlutamicAcid();
+        else if (codonStr.equals("CAA")) return new Glutamine();
         else if (codonStr.equals("GGT")) return new Glycine();
+        else if (codonStr.equals("CAT")) return new Histidine();
+        else if (codonStr.equals("ATT")) return new Isoleucine();
+        else if (codonStr.equals("TTA")) return new Leucine();
+        else if (codonStr.equals("ATG")) return new Methionine();
+        else if (codonStr.equals("TTT")) return new Phenylalanine();
+        else if (codonStr.equals("TTC")) return new Polymerase();
+        else if (codonStr.equals("CCT")) return new Proline();
+        else if (codonStr.equals("TCC")) return new Ribosome();
+        else if (codonStr.equals("TCT")) return new Serine();
+        else if (codonStr.equals("ACT")) return new Threonine();
+        else if (codonStr.equals("TGG")) return new Tryptophan();
+        else if (codonStr.equals("TAT")) return new Tyrosine();
+        else if (codonStr.equals("GTT")) return new Valine();
+        else if (codonStr.equals("TCG")) return new WaitForEnoughProteins();
         else throw new IllegalArgumentException("unrecoginised codonStr: " +
                 codonStr);
     }
 
     /**
-     *
+     * Construct new Cell, from DNA. Proteins are added separately.
      * @param dna DeoxyriboNucleic Acid
      * @param cellEnvironment where the cell gets its food from
      */
@@ -311,21 +322,6 @@ public class Cell implements Food {
     }
     public CellEnvironment getCellEnvironment() {
         return cellEnvironment;
-    }
-
-    /**
-     * Return true if the cell has enough amino acids.
-     * Current algorithm is: enough for 1 of each protein.
-     * @return
-     */
-    public boolean enoughAminoAcids() {
-
-//        // analyse proteins in cell as originally built
-//        for (int i = 0; i < geneSize; i++) {
-//            Protein protein = proteinList.get(i);
-//        }
-        return true;
-
     }
 
     /**
@@ -528,6 +524,9 @@ public class Cell implements Food {
             while ((bondingNucleotide = getNucleotide(nucleotide, isForDna)) == null) {
                 logId("waiting for " + (isForDna?"DNA":"RNA") +
                         " nucleotide to bond with " + nucleotide);
+                if (id == 2) {
+                    logId("debug here!");
+                }
                 nucleotideAvailableCondition.await();
             }
             return bondingNucleotide;
@@ -632,7 +631,7 @@ public class Cell implements Food {
 		for (int i = nucleotideList.size() - 1; i >= 0; i--) {
 			Nucleotide freeNucleotide = nucleotideList.get(i);
             if (isForDna && freeNucleotide.dnaMatch(nucleotide) ||
-                    freeNucleotide.rnaMatch((nucleotide))) {
+                    (!isForDna) && freeNucleotide.rnaMatch((nucleotide))) {
                 nucleotideList.remove(freeNucleotide);
                 --nucleotideActuals[freeNucleotide.getIndex()];
                 return freeNucleotide;

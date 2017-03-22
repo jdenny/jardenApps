@@ -1,3 +1,6 @@
+Current issues with genericRibosome
+	creating new Protein, instead of getting it from the DNA
+
 Outline for 20 aminoAcids***********************************
 Build new protein to test out ideas; doesn't do anything to cell,
 but produces messages to show what is happening
@@ -40,7 +43,8 @@ check locks & conditions and Thread.isInterrupted()
 remove interface Food?
 
 currently: (try to keep resource exactly at target)
-	when resource met target, stop digesting;
+	when resource met target, stop digesting; should be this, but isn't!
+		doesn't stop eating, even when it's full!
 	when resource < target, start feeding
 replace with: (keep resource from 0 to target)
 	when resource met target, stop digesting;
@@ -49,7 +53,8 @@ or: (keep resource from target to 2 * target, i.e. upperTarget)
 	when resource met upperTarget, stop digesting, i.e. discard surplus
 	when resource < lowerTarget, start feeding
 	when resource empty, increment target
-	*** go with this one ***
+	*** go with this one *** All nucleotides share same target; ditto
+		amino acids
 
 add aminoAcidActuals, similar to nucleotideActuals
 

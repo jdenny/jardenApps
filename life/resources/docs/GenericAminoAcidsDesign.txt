@@ -1,12 +1,25 @@
-RIBOSOME
-1. chainResource = waitForResource (RNA)
-2. newResource = createNewResource (Protein)
+RIBOSOME - now
+1. chainResource = waitForResource // RNA
+2. newResource = createNewResource // Protein
 3. while (chainResource.hasNext())
 	node = chainResource.next()
 	if (node.isStop()) break
 	transformedNode = waitForResource(node)
 	newResource.add(transformedNode)
 4. cell.addResource(newResource)
+
+RIBOSOME - generic
+data, Protein, code, newResource
+	protein.setNewResource(new Protein)
+body, waitForResource -> aminoAcid
+data, RNA, code, waitForResource -> RNA
+code, loop,
+	newResource = protein.getNewResource()
+	for each RNA codon:
+		body(codon) -> aminoAcid
+		newResource.add(aminoAcid)
+	cell.addResource(protein)
+[still code] addResourceToCell
 
 POLYMERASE
 1. chainResource = waitForResource (Regulator)
@@ -31,7 +44,6 @@ while chainResource.hasNext():
 cell.addResource(newResource)
 
 aminoAcids:
-  start
   data
   resourceType - save data in protein;
 	protein.getData()
@@ -50,13 +62,3 @@ aminoAcids:
   processChain:
     for each node in chain: node2 = body(node)
   addResource - generic
-
-start
-data (AsparticAcid)
-code (Cysteine)
-body (Leucine)
-stop
-getResource (Tryptophan)
-newResource
-addResourceToCell
-loop (Serine)

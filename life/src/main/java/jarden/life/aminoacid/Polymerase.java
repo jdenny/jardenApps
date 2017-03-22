@@ -28,12 +28,12 @@ public class Polymerase extends AminoAcid {
         Cell cell = getCell();
         DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
         int index = regulator.getDnaIndex();
-        int nextGeneIndex = getNextGeneIndex(dna, index);
-        if (nextGeneIndex < 0) {
+        int nextStopIndex = getNextStopIndex(dna, index);
+        if (nextStopIndex < 0) {
             throw new IllegalStateException("DNA gene has no stop-gene");
         }
         RNA rna = new RNA();
-        for (int i = index; i < nextGeneIndex; i += 3) {
+        for (int i = index; i < nextStopIndex; i += 3) {
             Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false);
             if (Thread.interrupted()) {
                 throw new InterruptedException();
@@ -69,10 +69,10 @@ public class Polymerase extends AminoAcid {
                 dna.getFromMaster(startIndex + 2));
         return codon.isStart();
     }
-    private static int getNextGeneIndex(DNA dna, int index) {
+    private static int getNextStopIndex(DNA dna, int index) {
         for (int i = index; (i + 3) <= dna.size(); i+=3) {
             if (isGeneStop(dna, i)) {
-                return i + 3; // i.e. position after stopCodon
+                return i;
             }
         }
         return -1;

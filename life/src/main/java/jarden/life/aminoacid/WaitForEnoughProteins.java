@@ -37,24 +37,29 @@ public class WaitForEnoughProteins extends AminoAcid {
         regulatorListLock.lockInterruptibly();
         try {
             String state;
+            boolean killIfTimedOut = false; // normal state is true
             while (!cell.cellReadyToDivide()) {
                 state = "waiting for cellReadyToDivideCondition";
                 cell.logId(state);
                 getProtein().setState(state);
-                boolean timedOut = !cellReadyToDivideCondition.await(10, TimeUnit.SECONDS);
-                if (timedOut) {
-                    cell.logId("WaitForEnoughProteins timed out; ready to die!");
-                    // TODO: put this in its own protein KillCell
-                    // stopThreads should be method in Cell
-                    Protein thisProtein = getProtein();
-                    List<Protein> proteinList = cell.getProteinList();
-                    for (Protein protein: proteinList) {
-                        if (protein != thisProtein) { // don't stop itself!
-                            protein.stop();
+                if (killIfTimedOut) {
+                    boolean timedOut = !cellReadyToDivideCondition.await(10, TimeUnit.SECONDS);
+                    if (timedOut) {
+                        cell.logId("WaitForEnoughProteins timed out; ready to die!");
+                        // TODO: put this in its own protein KillCell
+                        // stopThreads should be method in Cell
+                        Protein thisProtein = getProtein();
+                        List<Protein> proteinList = cell.getProteinList();
+                        for (Protein protein: proteinList) {
+                            if (protein != thisProtein) { // don't stop itself!
+                                protein.stop();
+                            }
                         }
+                        cell.getCellEnvironment().removeCell(cell);
+                        thisProtein.stop(); // finally, stop itself
                     }
-                    cell.getCellEnvironment().removeCell(cell);
-                    thisProtein.stop(); // finally, stop itself
+                } else {
+                    cellReadyToDivideCondition.await();
                 }
             }
             return null;
