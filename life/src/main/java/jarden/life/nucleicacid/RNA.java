@@ -14,7 +14,8 @@ public class RNA implements ChainResource, TargetResource {
     private Protein newProtein;
     private int index = 0;
 
-    public Protein getNewProtein() {
+    @Override
+    public TargetResource getTargetResource() {
         return newProtein;
     }
     public void setNewProtein(Protein newProtein) {

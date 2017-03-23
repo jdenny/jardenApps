@@ -2,7 +2,6 @@ package jarden.life;
 
 import jarden.life.aminoacid.AminoAcid;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -26,7 +25,6 @@ public class Protein implements Runnable, CellResource, TargetResource {
      */
     public boolean activate = true;
     private Future future;
-    private TargetResource targetResource;
 
     public Protein(Cell cell) {
         this.cell = cell;
@@ -73,12 +71,6 @@ public class Protein implements Runnable, CellResource, TargetResource {
             cell.logId("protein.run() interrupted");
         }
 	}
-    public void setTargetResource(TargetResource targetResource) {
-        this.targetResource = targetResource;
-    }
-    public TargetResource getTargetResource() {
-        return targetResource;
-    }
     @Override
     public void add(CellResource resource) {
         addAminoAcid((AminoAcid) resource);

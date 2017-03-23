@@ -21,13 +21,7 @@ public class Serine extends AminoAcid {
     public CellResource action(CellResource resource) throws InterruptedException {
         ChainResource chainResource = (ChainResource) resource;
         Protein protein = getProtein();
-        TargetResource targetResource;
-        // temporary (or not!) hack to get it to work!
-        if (resource instanceof RNA) {
-            targetResource = ((RNA) resource).getNewProtein();
-        } else {
-            targetResource = protein.getTargetResource();
-        }
+        TargetResource targetResource = chainResource.getTargetResource();
         CellResource node;
         List<AminoAcid> body = protein.getBody();
         while (chainResource.hasNext()) {

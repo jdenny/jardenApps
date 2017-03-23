@@ -7,7 +7,6 @@ import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
 /**
- * As data: Amino Acid.
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 

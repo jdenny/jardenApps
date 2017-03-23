@@ -17,6 +17,7 @@ import jarden.life.nucleicacid.Uracil;
 public class Asparagine extends AminoAcid {
     @Override
     public CellResource action(CellResource notUsed) throws InterruptedException {
+        /*!!
         Cell cell = getCell();
         Protein protein = getProtein();
         AminoAcid aminoAcidAsData = protein.getAminoAcid(-2);
@@ -31,6 +32,8 @@ public class Asparagine extends AminoAcid {
         }
         protein.setTargetResource(targetResource);
         return targetResource;
+        */
+        return null;
     }
     @Override
     public boolean matchCodon(Codon codon) {

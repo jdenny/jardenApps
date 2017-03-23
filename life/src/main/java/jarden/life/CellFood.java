@@ -24,7 +24,6 @@ import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
-import jarden.life.obsolete.Ribosome;
 import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;
@@ -60,6 +59,7 @@ public class CellFood implements Food {
         return "Cell Food";
     }
 
+    /*!!
     public void addAminoAcids() {
         addAminoAcids(aminoAcidList);
     }
@@ -85,7 +85,6 @@ public class CellFood implements Food {
         aminoAcidList.add(new Phenylalanine());
         aminoAcidList.add(new Polymerase());
         aminoAcidList.add(new Proline());
-        aminoAcidList.add(new Ribosome());
         aminoAcidList.add(new Serine());
         aminoAcidList.add(new Threonine());
         aminoAcidList.add(new Tryptophan());
@@ -98,10 +97,13 @@ public class CellFood implements Food {
             aminoAcidList.add(new Tryptophan());
         }
     }
+    */
     public void addNucleotides() {
         addNucleotides(nucleotideList);
     }
     public static void addNucleotides(List<Nucleotide> nucleotideList) {
+        // add extra Adenine, so they don't all get used up for the
+        // daughter cell, and thus we can see it's being fed
         for (int i = 0; i < Cell.nucleotideFeedCounts[0] + 1; i++) {
             nucleotideList.add(new Adenine());
         }
@@ -116,6 +118,89 @@ public class CellFood implements Food {
         }
         for (int i = 0; i < Cell.nucleotideFeedCounts[4]; i++) {
             nucleotideList.add(new Uracil());
+        }
+    }
+    public void addAminoAcids() {
+        addAminoAcids(aminoAcidList);
+    }
+    public static void addAminoAcids(List<AminoAcid> aminoAcidList) {
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[0]; i++) {
+            aminoAcidList.add(new Alanine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[1]; i++) {
+            aminoAcidList.add(new Arginine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[2]; i++) {
+            aminoAcidList.add(new Asparagine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[3]; i++) {
+            aminoAcidList.add(new AsparticAcid());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[20]; i++) {
+            aminoAcidList.add(new CopyDNA());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[4]; i++) {
+            aminoAcidList.add(new Cysteine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[21]; i++) {
+            aminoAcidList.add(new DigestFood());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[22]; i++) {
+            aminoAcidList.add(new DivideCell());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[23]; i++) {
+            aminoAcidList.add(new EatFood());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[5]; i++) {
+            aminoAcidList.add(new GlutamicAcid());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[6]; i++) {
+            aminoAcidList.add(new Glutamine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[7]; i++) {
+            aminoAcidList.add(new Glycine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[8]; i++) {
+            aminoAcidList.add(new Histidine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[9]; i++) {
+            aminoAcidList.add(new Isoleucine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[10]; i++) {
+            aminoAcidList.add(new Leucine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[11]; i++) {
+            aminoAcidList.add(new Lysine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[12]; i++) {
+            aminoAcidList.add(new Methionine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[13]; i++) {
+            aminoAcidList.add(new Phenylalanine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[24]; i++) {
+            aminoAcidList.add(new Polymerase());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[14]; i++) {
+            aminoAcidList.add(new Proline());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[15]; i++) {
+            aminoAcidList.add(new Serine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[16]; i++) {
+            aminoAcidList.add(new Threonine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[17]; i++) {
+            aminoAcidList.add(new Tryptophan());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[18]; i++) {
+            aminoAcidList.add(new Tyrosine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[19]; i++) {
+            aminoAcidList.add(new Valine());
+        }
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[25]; i++) {
+            aminoAcidList.add(new WaitForEnoughProteins());
         }
     }
 }

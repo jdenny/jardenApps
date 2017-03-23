@@ -155,6 +155,26 @@ name or group (type); use new gene structure:
     not so only run once. Cell.runProtein could run protein that activates
     a group of proteins
 
+Feeding Design***************
+when creating synthetic cell, we get aminoAcids to make this cell plus
+daughter cell, using makeAminoAcid(String codonStr)
+also initialises static aminoAcidFeedCounts, as guide for food production;
+
+makeCell constructor initialises aminoAcidTargets, which determine when
+the cell needs to eat & digest
+
+each cell should one day have different DNA (that's the whole point!)
+but will it differ wildly from the initial DNA? If not, maybe we don't
+need to bother creating different target counts for each cell? When a
+cell runs out of a resource, it will feed, and the food will only be
+an approximation of the cell's required resources.
+
+In view of the above, we've decided to simplify things greatly:
+  feed whenever a resource is not available; stop feeding after one feed
+  don't keep targets per resource; simply have feedCounts for each
+     aminoAcid and nucleotide, based on the initial DNA; use these
+     when supplying food
+
 DNA patterns ************************************************
 // ribosome:
 "GAT" + // AsparticAcid (data)

@@ -16,11 +16,11 @@ import jarden.life.aminoacid.Glycine;
 import jarden.life.aminoacid.Histidine;
 import jarden.life.aminoacid.Isoleucine;
 import jarden.life.aminoacid.Leucine;
+import jarden.life.aminoacid.Lysine;
 import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
 import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
-import jarden.life.obsolete.Ribosome;
 import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;
@@ -70,11 +70,8 @@ public class Cell implements Food {
     private final List<RNA> rnaList = new LinkedList<>();
     // TODO: when proper aminoAcids, replace length with 20
     // in same sequence as CellData.aminoAcidNames
-    private int[] aminoAcidTargets = new int[CellData.aminoAcidNames.length];
     public static int[] aminoAcidFeedCounts = new int[CellData.aminoAcidNames.length];
     // indexed by nucleotide.getIndex(); 5 is number of nucleotide types
-    private int[] nucleotideActuals = new int[5];
-    private int[] nucleotideTargets = new int[5];
     public static int[] nucleotideFeedCounts = new int[5];
 
     private static boolean verbose = true;
@@ -85,13 +82,7 @@ public class Cell implements Food {
             "GATCCTTGTTGGTTC", // polymerase: AsparticAcid (data), Proline (regulator),
                 // Cysteine (code), Tryptophan (awaitResource), Polymerase
             // ribosome:
-            /*!!
-            "GAT" +         // GAU, AsparticAcid, turn on data mode
-                    "AAT" + // AAU, Asparagine, data: Protein
-                    "TGT" + // UGU, Cysteine, turn on code mode
-                    "AAT" + // AAU, Asparagine, set target resource
-             */
-                    "TTA" + // UUA, Leucine, turn on body mode
+            "TTA" +         // UUA, Leucine, turn on body mode
                     "TGG" + // UGG, Tryptophan, wait for resource
                     "GAT" + // GAU, AsparticAcid, turn on data mode
                     "CGT" + // CGU, Arginine, data: RNA
@@ -104,14 +95,14 @@ public class Cell implements Food {
                 // Cysteine (code), Tryptophan (awaitResource), DigestFood
             "TCGTTGTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
     };
-    private final Lock aminoAcidListLock = new ReentrantLock();
+    private final ReentrantLock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
 
     private final Lock foodListLock = new ReentrantLock();
     private final Condition foodAvailableCondition = foodListLock.newCondition();
     private final Condition needMoreFoodCondition = foodListLock.newCondition();
 
-    private final Lock nucleotideListLock = new ReentrantLock();
+    private final ReentrantLock nucleotideListLock = new ReentrantLock();
     private final Condition nucleotideAvailableCondition = nucleotideListLock.newCondition();
 
     private Lock regulatorListLock = new ReentrantLock();
@@ -120,6 +111,7 @@ public class Cell implements Food {
 
     private final Lock rnaListLock = new ReentrantLock();
     private final Condition rnaAvailableCondition = rnaListLock.newCondition();
+    private boolean isNeedMoreFood = false;
 
     /*
     Current values of nucleotideTargets:
@@ -146,14 +138,12 @@ public class Cell implements Food {
         (thread 14 used by Timer)
 
      */
-
     public static Cell getSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
         if (syntheticCell == null) {
             syntheticCell = makeSyntheticCell(cellEnvironment);
         }
         return syntheticCell;
     }
-
     /**
      * This is the God cell. Cells are able to reproduce, by dividing, but how is the
      * first cell made? Here we form it "out of dust from the ground" - Genesis 2:7.
@@ -162,12 +152,35 @@ public class Cell implements Food {
      * @throws InterruptedException
      */
     public static Cell makeSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
-        Cell synCell = new Cell(buildDNAFromString(getDnaStr()), cellEnvironment);
-        for (int i = 0; i < 5; i++) {
-            nucleotideFeedCounts[i] = synCell.nucleotideTargets[i];
+        String dnaStr = getDnaStr();
+        for (int i = 0; i < dnaStr.length(); i++) {
+            if (dnaStr.charAt(i) == 'T') {
+                ++nucleotideFeedCounts[3]; // for DNA strand1
+                ++nucleotideFeedCounts[0]; // for DNA strand2
+                ++nucleotideFeedCounts[4]; // for RNA
+            }
+            else if (dnaStr.charAt(i) == 'C') {
+                nucleotideFeedCounts[1] += 2; // 1 for DNA strand1, 1 for RNA
+                ++nucleotideFeedCounts[2]; // for DNA strand2
+            }
+            else if (dnaStr.charAt(i) == 'A') {
+                nucleotideFeedCounts[0] += 2; // 1 for DNA strand1, 1 for RNA
+                ++nucleotideFeedCounts[3]; // for DNA strand2
+            }
+            else if (dnaStr.charAt(i) == 'G') {
+                nucleotideFeedCounts[2] += 2; // 1 for DNA strand1, 1 for RNA
+                ++nucleotideFeedCounts[1]; // for DNA strand2
+            }
         }
-        // create resources for 1 daughter cell of 5 proteins:
-        //!! CellFood.addAminoAcids(synCell.aminoAcidList);
+        // start-codon part of DNA, but not part of RNA, but above loop has already
+        // added them for RNA, so make suitable adjustments:
+        int geneSize = geneStrs.length;
+        nucleotideFeedCounts[0] -= (geneSize * startAdenineCt);
+        nucleotideFeedCounts[1] -= (geneSize * startCytosineCt);
+        nucleotideFeedCounts[2] -= (geneSize * startGuanineCt);
+        nucleotideFeedCounts[4] -= (geneSize * startThymineCt); // thymine becomes uracil in RNA
+        Cell synCell = new Cell(buildDNAFromString(dnaStr), cellEnvironment);
+        // create resources for 1 daughter cell:
         for (int i = 0; i < 2; i++) {
             CellFood.addNucleotides(synCell.nucleotideList);
         }
@@ -188,7 +201,9 @@ public class Cell implements Food {
             for (int j = 0; (j+3) <= geneStr.length(); j+=3) {
                 String codonStr = geneStr.substring(j, j+3);
                 protein.addAminoAcid(makeAminoAcid(codonStr));
-                synCell.aminoAcidList.add(makeAminoAcid(codonStr));
+                AminoAcid aminoAcid = makeAminoAcid(codonStr);
+                synCell.aminoAcidList.add(aminoAcid);
+                ++aminoAcidFeedCounts[aminoAcid.getIndex()];
             }
             protein.setRegulator(synCell.regulatorList.get(i));
             if (!startAllProteins && !startProteins[i]) {
@@ -196,6 +211,9 @@ public class Cell implements Food {
             }
             synCell.addProtein(protein);
         }
+        // we're adding an extra Alanine; this can be used to show
+        // how many times a cell has eaten & digested
+        ++aminoAcidFeedCounts[0];
         return synCell;
     }
     /*
@@ -217,18 +235,18 @@ public class Cell implements Food {
         else if (codonStr.equals("CAT")) return new Histidine();
         else if (codonStr.equals("ATT")) return new Isoleucine();
         else if (codonStr.equals("TTA")) return new Leucine();
+        else if (codonStr.equals("AAA")) return new Lysine();
         else if (codonStr.equals("ATG")) return new Methionine();
         else if (codonStr.equals("TTT")) return new Phenylalanine();
         else if (codonStr.equals("TTC")) return new Polymerase();
         else if (codonStr.equals("CCT")) return new Proline();
-        else if (codonStr.equals("TCC")) return new Ribosome();
         else if (codonStr.equals("TCT")) return new Serine();
         else if (codonStr.equals("ACT")) return new Threonine();
         else if (codonStr.equals("TGG")) return new Tryptophan();
         else if (codonStr.equals("TAT")) return new Tyrosine();
         else if (codonStr.equals("GTT")) return new Valine();
         else if (codonStr.equals("TCG")) return new WaitForEnoughProteins();
-        else throw new IllegalArgumentException("unrecoginised codonStr: " +
+        else throw new IllegalArgumentException("unrecognised codonStr: " +
                 codonStr);
     }
 
@@ -252,10 +270,9 @@ public class Cell implements Food {
         }
         return stringBuilder.toString();
     }
-    // set targets & regulators. Note: no proteins running yet in this cell,
+    // set regulators. Note: no proteins running yet in this cell,
     // so no worries with threads or locks
     private void analyseDNA() {
-        String dnaStr = dna.dnaToString();
         int index = 0;
         while ((index = Polymerase.getNextStartIndex(dna, index)) >= 0) {
             index += 3; // move past start-codon
@@ -265,31 +282,6 @@ public class Cell implements Food {
         if (geneSize == 0) {
             throw new IllegalStateException("DNA contains no start-gene");
         }
-        for (int i = 0; i < dnaStr.length(); i++) {
-            if (dnaStr.charAt(i) == 'T') {
-                ++nucleotideTargets[3]; // for DNA strand1
-                ++nucleotideTargets[0]; // for DNA strand2
-                ++nucleotideTargets[4]; // for RNA
-            }
-            else if (dnaStr.charAt(i) == 'C') {
-                nucleotideTargets[1] += 2; // 1 for DNA strand1, 1 for RNA
-                ++nucleotideTargets[2]; // for DNA strand2
-            }
-            else if (dnaStr.charAt(i) == 'A') {
-                nucleotideTargets[0] += 2; // 1 for DNA strand1, 1 for RNA
-                ++nucleotideTargets[3]; // for DNA strand2
-            }
-            else if (dnaStr.charAt(i) == 'G') {
-                nucleotideTargets[2] += 2; // 1 for DNA strand1, 1 for RNA
-                ++nucleotideTargets[1]; // for DNA strand2
-            }
-        }
-        // promoters part of DNA, but not part of RNA, but above loop has already added them
-        // for RNA
-        nucleotideTargets[0] -= (geneSize * startAdenineCt);
-        nucleotideTargets[1] -= (geneSize * startCytosineCt);
-        nucleotideTargets[2] -= (geneSize * startGuanineCt);
-        nucleotideTargets[4] -= (geneSize * startThymineCt); // thymine becomes uracil in RNA
     }
     /**
      * General purpose log method, static so can be called from anywhere.
@@ -415,11 +407,7 @@ public class Cell implements Food {
         nucleotideListLock.lockInterruptibly();
         try {
             for (Nucleotide nucleotide: nucleotides) {
-                int nIndex = nucleotide.getIndex();
-                if (nucleotideActuals[nIndex] < nucleotideTargets[nIndex] * 2) {
-                    nucleotideList.add(nucleotide);
-                    ++nucleotideActuals[nIndex];
-                } // else pass nucleotide back to environment as waste
+                nucleotideList.add(nucleotide);
             }
             nucleotideAvailableCondition.signalAll();
         } finally {
@@ -439,6 +427,7 @@ public class Cell implements Food {
         foodListLock.lockInterruptibly();
         try {
             foodList.add(food);
+            isNeedMoreFood = false;
             foodAvailableCondition.signalAll();
         } finally {
             foodListLock.unlock();
@@ -506,36 +495,30 @@ public class Cell implements Food {
      */
     public Nucleotide waitForNucleotide(Nucleotide nucleotide, boolean isForDna)
             throws InterruptedException {
-        int index = nucleotide.getIndex();
-        if (nucleotideActuals[index] < nucleotideTargets[index]) {
-            foodListLock.lockInterruptibly();
-            try {
-                // better than needMoreResources.signalAll(), as that
-                // would only activate Digest, which can't start until
-                // there is food available; perhaps the required nucleotide
-                // is being digested this very moment, but it's better to
-                // be overfed than underfed
-                needMoreFoodCondition.signalAll();
-            } finally {
-                foodListLock.unlock();
-            }
-        }
         Nucleotide bondingNucleotide;
         nucleotideListLock.lockInterruptibly();
         try {
             while ((bondingNucleotide = getNucleotide(nucleotide, isForDna)) == null) {
+                nucleotideListLock.unlock();
+                foodListLock.lockInterruptibly();
+                try {
+                    isNeedMoreFood = true;
+                    needMoreFoodCondition.signalAll();
+                } finally {
+                    foodListLock.unlock();
+                }
+                nucleotideListLock.lockInterruptibly();
                 logId("waiting for " + (isForDna?"DNA":"RNA") +
                         " nucleotide to bond with " + nucleotide);
-                if (id == 2) {
-                    logId("debug here!");
-                }
                 nucleotideAvailableCondition.await();
             }
             return bondingNucleotide;
         } finally {
-            nucleotideListLock.unlock();
+            while (nucleotideListLock.isHeldByCurrentThread()) {
+                nucleotideListLock.unlock();
+            }
         }
-	}
+    }
 	public RNA waitForRNA() throws InterruptedException {
         RNA rna;
         rnaListLock.lockInterruptibly();
@@ -549,7 +532,31 @@ public class Cell implements Food {
             rnaListLock.unlock();
         }
 	}
-	public AminoAcid waitForAminoAcid(Codon codon) throws InterruptedException {
+    public AminoAcid waitForAminoAcid(Codon codon) throws InterruptedException {
+        AminoAcid aminoAcid;
+        aminoAcidListLock.lockInterruptibly();
+        try {
+            while ((aminoAcid = getAminoAcidByCodon(codon)) == null) {
+                aminoAcidListLock.unlock();
+                foodListLock.lockInterruptibly();
+                try {
+                    isNeedMoreFood = true;
+                    needMoreFoodCondition.signalAll();
+                } finally {
+                    foodListLock.unlock();
+                }
+                aminoAcidListLock.lockInterruptibly();
+                logId("waiting for amino acid for codon " + codon);
+                aminoAcidAvailableCondition.await();
+            }
+            return aminoAcid;
+        } finally {
+            while (aminoAcidListLock.isHeldByCurrentThread()) {
+                aminoAcidListLock.unlock();
+            }
+        }
+    }
+	public AminoAcid waitForAminoAcidOld(Codon codon) throws InterruptedException {
         if (aminoAcidList.size() < geneSize) {
             foodListLock.lockInterruptibly();
             try {
@@ -630,15 +637,13 @@ public class Cell implements Food {
 	 * Not thread-safe, so only call if nucleotideList is locked
 	 */
 	private Nucleotide getNucleotide(Nucleotide nucleotide, boolean isForDna) {
-		for (int i = nucleotideList.size() - 1; i >= 0; i--) {
-			Nucleotide freeNucleotide = nucleotideList.get(i);
+        for (Nucleotide freeNucleotide: nucleotideList) {
             if (isForDna && freeNucleotide.dnaMatch(nucleotide) ||
                     (!isForDna) && freeNucleotide.rnaMatch((nucleotide))) {
                 nucleotideList.remove(freeNucleotide);
-                --nucleotideActuals[freeNucleotide.getIndex()];
                 return freeNucleotide;
             }
-		}
+        }
 		logId("no bonding nucleotide found for " + nucleotide);
 		return null;
 	}
@@ -751,21 +756,8 @@ public class Cell implements Food {
         return geneSize;
     }
 
-    /**
-     * See if any of the cell's resources - nucleotides & aminoAcids -
-     * are below their target levels.
-     * @return true if any individual nucleotide or aminoAcid is
-     * below its target level.
-     */
-    public boolean needMoreResources() {
-        if (aminoAcidList.size() < geneSize) return true;
-        for (int i = 0; i < nucleotideTargets.length; i++) {
-            if (nucleotideActuals[i] < nucleotideTargets[i]) return true;
-        }
-        return false;
-    }
     public boolean needMoreFood() {
-        return foodList.size() == 0 && needMoreResources();
+        return foodList.size() == 0 && isNeedMoreFood;
     }
 
     public CellShortData getCellShortData() {

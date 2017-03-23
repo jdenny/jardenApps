@@ -33,14 +33,6 @@ public abstract class AminoAcid implements CellResource {
     public boolean activateOnCreate() { return true; }
 
     /**
-     * Applies to the first aminoAcid of a protein, in programming terms
-     * the control object.
-     * @return true means repeat this protein to process the next element
-     * in the chain.
-     */
-    //!! public boolean hasMore() { return false; }
-
-    /**
      * Get the protein this aminoAcid belongs to.
      * @return null if this aminoAcid is not yet part of a protein
      */

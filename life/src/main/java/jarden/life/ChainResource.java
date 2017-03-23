@@ -7,4 +7,5 @@ package jarden.life;
 public interface ChainResource extends CellResource {
     boolean hasNext();
     CellResource next();
+    TargetResource getTargetResource();
 }

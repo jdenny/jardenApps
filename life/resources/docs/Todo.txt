@@ -1,17 +1,4 @@
-Current issues with genericRibosome
-	creating new Protein, instead of getting it from the DNA
-
 Outline for 20 aminoAcids***********************************
-Build new protein to test out ideas; doesn't do anything to cell,
-but produces messages to show what is happening
-
-See GenericAminoAcidsDesign.txt
-
-Get Ribosome working first, using generic amino acids
-
-getResource: DNA, RNA, aminoAcid, nucleotide
-getNextResourceNode: DNA or RNA
-
 resource = waitForResource(type)
 w,Typtophan,waitForResource
 r,Arginine,RNA
@@ -21,8 +8,8 @@ n,Asparagine,Nucleotide
 Proline,Regulator (RNA < target)
 examples:
 	Ribosome
-		RNA rna = cell.waitForRNA()                - DONE
-		AminoAcid = cell.waitForAminoAcid(codon)
+		RNA rna = cell.waitForRNA()              - DONE
+		AminoAcid = cell.waitForAminoAcid(codon) - DONE
 	Polymerase
 		Regulator regulator = cell.waitForRnaBelowTarget()  - DONE
 		Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
@@ -36,36 +23,20 @@ examples:
 		Food food = cellEnvironment.waitForFood()
 
 Current actions *************************************************
-aminoAcidFeed targets, done like nucleotides
+rewrite polymerase using re-usable amino acids
 
-change DNA to use Codons instead of Nucleotides directly
+change DNA to use Codons instead of Nucleotides directly; write test
+for methods used by copy DNA; not sure if this is a good idea; we'll
+know when we've done polymerase
+
+once we've removed pseudo amino acids, extend matchCodon to include
+ alternative mappings
 
 tidy up documentation so far, and write report on work so far
 
 check locks & conditions and Thread.isInterrupted()
 
-adding resources to cell:
-	when resource met target * 2, stop digesting
-	when resource < target, start feeding
-
-perhaps instead of discarding waste, should send remains back to
-environment, to be reprocessed by another cell type!
-
-add aminoAcidActuals, similar to nucleotideActuals
-
-could the protein name be replaced by its RNA gene, without the stop,
- as a string?
-
 convert killCell to protein; cell maintain list of cells to be killed
-
-when we've converted all our amino acids into the 20 proper names,
-then we can have a definitive list of aminoAcids, as we already have
-a definitive list of nucleotides (5); so we can hold the resource
-targets like this:
-	int[] aminoAcidTargets; // in same sequence as aminoAcid list
-	int[] nucleotideTargets; // in same sequence as nucleotide list
-maybe one day, the calculation of the resource targets could itself
-be a protein!
 
 End of current actions *****************************************
 
@@ -154,8 +125,6 @@ divideCell
 			stop protein
 			move to new cell
 
-
-
 20 aminoAcids **********************
 attach to matching resource; perhaps use some
 aminoAcids to identify resourceType
@@ -237,3 +206,10 @@ factor out our first reusable aminoAcid: GetResource - DONE
 make synthetic cell out of DNA - DONE
 
 CellEnvironment: add dead cells to foodList - DONE
+
+could the protein name be replaced by its RNA gene, without the stop,
+ as a string? - DONE
+
+aminoAcidFeed targets, done like nucleotides       - DONE
+add aminoAcidActuals, similar to nucleotideActuals
+decided to simplify the whole thing; see Feeding in design.txt

@@ -19,7 +19,7 @@ public class Ribosome extends AminoAcid {
     public CellResource action(CellResource _rna) throws InterruptedException {
         RNA rna = (RNA) _rna;
         Cell cell = getCell();
-        Protein newProtein = rna.getNewProtein();
+        Protein newProtein = (Protein) rna.getTargetResource();
         Codon codon;
         AminoAcid aminoAcid;
         while (rna.hasNext()) {

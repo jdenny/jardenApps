@@ -7,7 +7,7 @@ package jarden.life.aminoacid;
 /*
 	Current implementation of codonTable. Left column is index.
 	See Nucleotide for real-life codonTable.
-	0	Alanine                 GCU  // data: AminoAcid
+	0	Alanine                 GCU
 	1	Arginine                CGU  // data: RNA
 	2	Asparagine              AAU  // new resource; data: Protein
 	3	AsparticAcid            GAU  // turn on data mode
@@ -28,13 +28,13 @@ package jarden.life.aminoacid;
 	24	Polymerase             	UUC
 	14	Proline                 CCU  // data: Regulator (rna < target)
 	15	Serine        			UCU  // loop
-	25	Start                   UGA  // in real life: Stop
-	26	Stop					UAA
+		Start                   UGA  // in real life: Stop
+		Stop					UAA
 	16	Threonine               ACU
 	17	Tryptophan              UGG  // wait for resource
 	18	Tyrosine                UAU
 	19	Valine                  GUU
-	27	WaitForEnoughProteins   UCG
+	25	WaitForEnoughProteins   UCG
 		                        UAG
 		                        CUU
 		                        CUC

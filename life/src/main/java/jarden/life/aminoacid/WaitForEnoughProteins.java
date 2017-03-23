@@ -75,7 +75,7 @@ public class WaitForEnoughProteins extends AminoAcid {
     }
     @Override
     public int getIndex() {
-        return 27;
+        return 25;
     }
     @Override
     public String getName() {
