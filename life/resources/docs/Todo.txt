@@ -24,7 +24,57 @@ examples:
 
 Current actions *************************************************
 rewrite polymerase using re-usable amino acids
+outline design:
+	"TTA" + // Leucine, turn on body mode
+	"GCT" + // Alanine, convert DNA codon to RNA codon
+	"GAT" + // AsparticAcid (data)
+	"CCT" + // Proline (regulator)
+	"TGT" + // Cysteine (code)
+	"TGG" + // Tryptophan (awaitResource: regulator)
+	"TCT" + // Serine - see below
+	"GAA", // GlutamicAcid (add resource - RNA - to cell)
 
+Serine
+  get chainResource // regulator (DNA)
+  get targetResource // new RNA
+  get body
+  while chainResource.hasNext:
+    node = chainResource.next // next codon
+    for each step in body:
+        process node // convert DNA codon to RNA codon
+    targetResource.add(processedNode) // add codon to RNA
+  return targetResource
+GlutamicAcid
+  add RNA to cell
+
+	could 2 threads be accessing the same regulator?!
+
+	ribosome, builds a protein (chain of amino acids)
+    from RNA (chain of nucleotides)
+
+    RNA (chainResource)
+      codonChain
+      newProtein (targetResource)
+      index - current place within codonChain
+
+    Regulator (chainResource; can only be accessed by
+    	   one thread at a time, otherwise geneIndex will
+    	   be corrupted)
+      final Cell
+      final startIndex
+      final stopIndex
+      newRNA (targetResource)
+      geneIndex (current position within gene)
+	  getTargetResource(): return new RNA,
+		which already has new protein attached
+		and the new protein is linked to the regulator
+	  hasNext(): any more codons in DNA
+	  next(): next codon from DNA
+
+         srcChain       resource    targetChain
+    poly Regulator(DNA) nucleotides RNA
+    ribo RNA            aminoAcids  protein
+******************************************
 change DNA to use Codons instead of Nucleotides directly; write test
 for methods used by copy DNA; not sure if this is a good idea; we'll
 know when we've done polymerase

@@ -19,7 +19,6 @@ import jarden.life.aminoacid.Leucine;
 import jarden.life.aminoacid.Lysine;
 import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
-import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
 import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Threonine;
@@ -79,8 +78,15 @@ public class Cell implements Food {
     private static Cell syntheticCell;
     // used for building synthetic cell:
     private static String[] geneStrs = {
-            "GATCCTTGTTGGTTC", // polymerase: AsparticAcid (data), Proline (regulator),
-                // Cysteine (code), Tryptophan (awaitResource), Polymerase
+            // polymerase:
+            "TTA" +         // Leucine, turn on body mode
+                    "GCT" + // Alanine, convert DNA codon to RNA codon
+                    "GAT" + // AsparticAcid (data)
+                    "CCT" + // Proline (regulator)
+                    "TGT" + // Cysteine (code)
+                    "TGG" + // Tryptophan (awaitResource: regulator)
+                    "TCT" + // Serine - see below
+                    "GAA",  // GlutamicAcid (add resource - RNA - to cell)
             // ribosome:
             "TTA" +         // UUA, Leucine, turn on body mode
                     "TGG" + // UGG, Tryptophan, wait for resource
@@ -190,7 +196,7 @@ public class Cell implements Food {
         boolean startAllProteins = true;
         boolean[] startProteins = {
                 true, // rnaPolymerase
-                true, // genericRibosome
+                false, // genericRibosome
                 false, // proteinDigest
                 false, // eatFood
                 false  // proteinDivide
@@ -238,7 +244,6 @@ public class Cell implements Food {
         else if (codonStr.equals("AAA")) return new Lysine();
         else if (codonStr.equals("ATG")) return new Methionine();
         else if (codonStr.equals("TTT")) return new Phenylalanine();
-        else if (codonStr.equals("TTC")) return new Polymerase();
         else if (codonStr.equals("CCT")) return new Proline();
         else if (codonStr.equals("TCT")) return new Serine();
         else if (codonStr.equals("ACT")) return new Threonine();
@@ -273,15 +278,43 @@ public class Cell implements Food {
     // set regulators. Note: no proteins running yet in this cell,
     // so no worries with threads or locks
     private void analyseDNA() {
-        int index = 0;
-        while ((index = Polymerase.getNextStartIndex(dna, index)) >= 0) {
-            index += 3; // move past start-codon
-            regulatorList.add(new Regulator(index, regulatorList.size()));
+        int startIndex = 0;
+        int stopIndex;
+        while ((startIndex = getNextStartIndex(dna, startIndex)) >= 0) {
+            startIndex += 3; // move past start-codon
+            stopIndex = getNextStopIndex(dna, startIndex);
+            if (stopIndex < 0) {
+                throw new IllegalStateException("DNA gene has no stop-gene");
+            }
+            regulatorList.add(new Regulator(this, startIndex, stopIndex,
+                    regulatorList.size()));
         }
         geneSize = regulatorList.size();
         if (geneSize == 0) {
             throw new IllegalStateException("DNA contains no start-gene");
         }
+    }
+    private int getNextStartIndex(DNA dna, int index) {
+        for (int i = index; (i + Nucleotide.startLength) <= dna.size(); i+=3) {
+            if (isGeneStart(dna, i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    private static boolean isGeneStart(DNA dna, int startIndex) {
+        Codon codon = new Codon(dna.getFromMaster(startIndex),
+                dna.getFromMaster(startIndex + 1),
+                dna.getFromMaster(startIndex + 2));
+        return codon.isStart();
+    }
+    private static int getNextStopIndex(DNA dna, int index) {
+        for (int i = index; (i + 3) <= dna.size(); i+=3) {
+            if (isGeneStop(dna, i)) {
+                return i;
+            }
+        }
+        return -1;
     }
     /**
      * General purpose log method, static so can be called from anywhere.
@@ -647,6 +680,12 @@ public class Cell implements Food {
 		logId("no bonding nucleotide found for " + nucleotide);
 		return null;
 	}
+    private static boolean isGeneStop(DNA dna, int stopIndex) {
+        Codon codon = new Codon(dna.getFromMaster(stopIndex),
+                dna.getFromMaster(stopIndex + 1),
+                dna.getFromMaster(stopIndex + 2));
+        return codon.isStop();
+    }
 
     // Convenience method
     public static DNA buildDNAFromString(String dnaStr) {

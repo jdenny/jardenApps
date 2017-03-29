@@ -28,7 +28,6 @@ public class Tryptophan extends AminoAcid {
         }
         AminoAcid aminoAcid = protein.getAminoAcid(-2);
         if (aminoAcid instanceof Arginine) {
-            // resourceType is RNA
             return cell.waitForRNA();
         } else if (aminoAcid instanceof Phenylalanine) {
             return cell.waitForFood();

@@ -57,7 +57,7 @@ public class DivideCell extends AminoAcid {
             Iterator<Protein> proteinListIterator = proteinList.iterator();
             while (proteinListIterator.hasNext()) {
                 protein = proteinListIterator.next();
-                dnaIndex = protein.getRegulator().getDnaIndex();
+                dnaIndex = protein.getRegulator().getGeneStartIndex();
                 if (isInArray(dnaIndex, dnaIndices, indicesAdded)) {
                     // protein of this type already found,
                     // so move this one to the new cell

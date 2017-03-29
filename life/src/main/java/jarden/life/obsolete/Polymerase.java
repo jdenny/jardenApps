@@ -1,9 +1,14 @@
-package jarden.life.aminoacid;
+package jarden.life.obsolete;
+
+/**
+ * Created by john.denny@gmail.com on 29/03/2017.
+ */
 
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Protein;
 import jarden.life.Regulator;
+import jarden.life.aminoacid.AminoAcid;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.DNA;
@@ -18,16 +23,16 @@ import jarden.life.nucleicacid.Uracil;
  * 		promoter: where polymerase docks; simplified here as TATAAT
  * 		operator: where regulator protein docks
  * 		operon: group of related genes
- * 		terminator: end of operon; simplified here as UAA 
+ * 		terminator: end of operon; simplified here as UAA
  */
 public class Polymerase extends AminoAcid {
 
     @Override
-	public CellResource action(CellResource _regulator) throws InterruptedException {
+    public CellResource action(CellResource _regulator) throws InterruptedException {
         Regulator regulator = (Regulator) _regulator;
         Cell cell = getCell();
         DNA dna = cell.getDNA(); // get it each time, in case it's become corrupted!
-        int index = regulator.getDnaIndex();
+        int index = regulator.getGeneStartIndex();
         int nextStopIndex = getNextStopIndex(dna, index);
         if (nextStopIndex < 0) {
             throw new IllegalStateException("DNA gene has no stop-gene");
@@ -63,13 +68,15 @@ public class Polymerase extends AminoAcid {
         }
         return -1;
     }
+    // TODO: move these 4 methods into Cell; no longer public, static
+    // and no need to pass dna as parameter.
     private static boolean isGeneStart(DNA dna, int startIndex) {
         Codon codon = new Codon(dna.getFromMaster(startIndex),
                 dna.getFromMaster(startIndex + 1),
                 dna.getFromMaster(startIndex + 2));
         return codon.isStart();
     }
-    private static int getNextStopIndex(DNA dna, int index) {
+    public static int getNextStopIndex(DNA dna, int index) {
         for (int i = index; (i + 3) <= dna.size(); i+=3) {
             if (isGeneStop(dna, i)) {
                 return i;
@@ -94,9 +101,9 @@ public class Polymerase extends AminoAcid {
         return 24;
     }
     @Override
-	public String getName() {
-		return "Polymerase";
-	}
+    public String getName() {
+        return "Polymerase";
+    }
     @Override
     public String getShortName() {
         return "Polymerase";

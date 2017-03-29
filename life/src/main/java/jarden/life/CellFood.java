@@ -22,7 +22,6 @@ import jarden.life.aminoacid.Leucine;
 import jarden.life.aminoacid.Lysine;
 import jarden.life.aminoacid.Methionine;
 import jarden.life.aminoacid.Phenylalanine;
-import jarden.life.aminoacid.Polymerase;
 import jarden.life.aminoacid.Proline;
 import jarden.life.aminoacid.Serine;
 import jarden.life.aminoacid.Threonine;
@@ -59,45 +58,6 @@ public class CellFood implements Food {
         return "Cell Food";
     }
 
-    /*!!
-    public void addAminoAcids() {
-        addAminoAcids(aminoAcidList);
-    }
-    public static void addAminoAcids(List<AminoAcid> aminoAcidList) {
-        aminoAcidList.add(new Alanine());
-        aminoAcidList.add(new Arginine());
-        aminoAcidList.add(new Asparagine());
-        aminoAcidList.add(new Asparagine());
-        aminoAcidList.add(new AsparticAcid());
-        aminoAcidList.add(new CopyDNA());
-        aminoAcidList.add(new Cysteine());
-        aminoAcidList.add(new DigestFood());
-        aminoAcidList.add(new DivideCell());
-        aminoAcidList.add(new EatFood());
-        aminoAcidList.add(new GlutamicAcid());
-        aminoAcidList.add(new Glutamine());
-        aminoAcidList.add(new Glycine());
-        aminoAcidList.add(new Histidine());
-        aminoAcidList.add(new Isoleucine());
-        aminoAcidList.add(new Leucine());
-        aminoAcidList.add(new Lysine());
-        aminoAcidList.add(new Methionine());
-        aminoAcidList.add(new Phenylalanine());
-        aminoAcidList.add(new Polymerase());
-        aminoAcidList.add(new Proline());
-        aminoAcidList.add(new Serine());
-        aminoAcidList.add(new Threonine());
-        aminoAcidList.add(new Tryptophan());
-        aminoAcidList.add(new Tyrosine());
-        aminoAcidList.add(new Valine());
-        aminoAcidList.add(new WaitForEnoughProteins());
-        for (int i = 0; i < 4; i++) {
-            aminoAcidList.add(new AsparticAcid());
-            aminoAcidList.add(new Cysteine());
-            aminoAcidList.add(new Tryptophan());
-        }
-    }
-    */
     public void addNucleotides() {
         addNucleotides(nucleotideList);
     }
@@ -178,9 +138,6 @@ public class CellFood implements Food {
         for (int i = 0; i < Cell.aminoAcidFeedCounts[13]; i++) {
             aminoAcidList.add(new Phenylalanine());
         }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[24]; i++) {
-            aminoAcidList.add(new Polymerase());
-        }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[14]; i++) {
             aminoAcidList.add(new Proline());
         }
@@ -199,7 +156,7 @@ public class CellFood implements Food {
         for (int i = 0; i < Cell.aminoAcidFeedCounts[19]; i++) {
             aminoAcidList.add(new Valine());
         }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[25]; i++) {
+        for (int i = 0; i < Cell.aminoAcidFeedCounts[24]; i++) {
             aminoAcidList.add(new WaitForEnoughProteins());
         }
     }
