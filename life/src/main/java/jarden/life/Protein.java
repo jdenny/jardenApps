@@ -18,6 +18,7 @@ public class Protein implements Runnable, CellResource, TargetResource {
     private Regulator regulator;
     private int aminoAcidIndex;
     private int hashCode;
+    private Thread thread = null;
     private String state; // for monitoring; put in LifeFX
     /**
      * Used for debugging; set false if this protein should
@@ -37,12 +38,9 @@ public class Protein implements Runnable, CellResource, TargetResource {
     }
     public void setState(String state) { this.state = state; }
     public void start(ThreadPoolExecutor threadPoolExecutor) {
-        // call method on 1st aminoAcid to see if it wants to start;
-        // nearly always will say yes, but for example DivideCell will
-        // say no if there is another DivideCell already running
-        AminoAcid firstAminoAcid = aminoAcidList.get(0);
-        if (firstAminoAcid.activateOnCreate()) {
+        if (regulator.runBelowTarget()) {
             cell.logId("starting thread for protein " + this);
+            regulator.incrementRunCt();
             future = threadPoolExecutor.submit(this);
         } else {
             cell.logId("not starting thread for protein " + this);
@@ -52,6 +50,7 @@ public class Protein implements Runnable, CellResource, TargetResource {
         cell.logId("Protein.stop(); future=" + future);
         if (future != null) {
             future.cancel(true);
+            regulator.decrementRunCt();
             try {
                 future.get(600, TimeUnit.MILLISECONDS);
                 cell.logId("Protein " + this + " finished");
@@ -65,12 +64,16 @@ public class Protein implements Runnable, CellResource, TargetResource {
         }
     }
 	public void run() {
+        this.thread = Thread.currentThread();
 		try {
             while (true) action(null);
         } catch (InterruptedException e) {
             cell.logId("protein.run() interrupted");
         }
 	}
+	public Thread getThread() {
+        return thread;
+    }
     @Override
     public void add(CellResource resource) {
         addAminoAcid((AminoAcid) resource);

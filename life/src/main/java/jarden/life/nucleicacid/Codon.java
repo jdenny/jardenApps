@@ -1,7 +1,12 @@
 package jarden.life.nucleicacid;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jarden.life.CellResource;
+import jarden.life.ChainResource;
+import jarden.life.TargetResource;
 
 /**
  * In our simplified view of life, a start codon (promoter) is only 3 base-pairs
@@ -12,18 +17,24 @@ import jarden.life.CellResource;
  *      start codon: UGA    TGA
  *      stop codon:  UAA    TAA
  */
-public class Codon implements CellResource {
+public class Codon implements ChainResource, TargetResource {
+    // TODO: when we've worked out how to have loop
+    // within a loop, replace first, second, third with triplet,
+    // so we can convert a dnaCodon into an rnaCodon.
+    private List<Nucleotide> triplet = new ArrayList<>(3);
 	private Nucleotide first;
 	private Nucleotide second;
 	private Nucleotide third;
     private Boolean isStart;
     private Boolean isStop;
+    private int index = 0;
 	
 	public Codon(Nucleotide first, Nucleotide second, Nucleotide third) {
 		this.first = first;
 		this.second = second;
 		this.third = third;
 	}
+	public Codon() {}
 	public Nucleotide getFirst() {
 		return first;
 	}
@@ -61,5 +72,24 @@ public class Codon implements CellResource {
         stringBuilder.append(second.getCode());
         stringBuilder.append(third.getCode());
         return stringBuilder.toString();
+    }
+    @Override
+    public boolean hasNext() {
+        if (index >= 3) {
+            index = 0;
+            return false;
+        } else return true;
+    }
+    @Override
+    public CellResource next() {
+        return index == 0 ? first : index == 1 ? second : third;
+    }
+    @Override
+    public TargetResource getTargetResource() {
+        return new Codon();
+    }
+    @Override
+    public void add(CellResource resource) {
+        triplet.add((Nucleotide) resource);
     }
 }

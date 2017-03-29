@@ -17,8 +17,7 @@ import jarden.life.nucleicacid.RNA;
  * Created by john.denny@gmail.com on 12/03/2017.
  */
 
-public class Regulator implements /*!!CellResource*/ ChainResource {
-    //!! private final DNA dna;
+public class Regulator implements ChainResource {
     private final Cell cell;
     // index to this regulator's position within
     // Cell.regulatorList
@@ -35,6 +34,8 @@ public class Regulator implements /*!!CellResource*/ ChainResource {
     // first built an RNA strand
     private int rnaCt = 1;
     private int proteinCt = 0; // number of this protein built and added to cell
+    private int runCt = 0; // number of this protein running
+    private int targetRunCt = 2; // target number of proteins to run
     private int geneIndex; // used while building RNA from this
 
     public Regulator(Cell cell, int geneStartIndex, int geneStopIndex,
@@ -51,6 +52,15 @@ public class Regulator implements /*!!CellResource*/ ChainResource {
     public boolean proteinsBelowTarget() {
         return proteinCt < targetCt;
     }
+    public boolean runBelowTarget() { return runCt < targetRunCt; }
+    public void setTargetRunCt(int targetRunCt) {
+        this.targetRunCt = targetRunCt;
+    }
+    public void incrementRunCt() {
+        ++runCt;
+    }
+    public void decrementRunCt() { --runCt; }
+    public void setRunCt(int runCt) { this.runCt = runCt; }
     /**
      * Get the index within DNA to start of this gene,
      * ignoring the start-codon.

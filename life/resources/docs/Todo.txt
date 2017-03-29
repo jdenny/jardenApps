@@ -23,16 +23,38 @@ examples:
 		Food food = cellEnvironment.waitForFood()
 
 Current actions *************************************************
-rewrite polymerase using re-usable amino acids
-outline design:
-	"TTA" + // Leucine, turn on body mode
-	"GCT" + // Alanine, convert DNA codon to RNA codon
-	"GAT" + // AsparticAcid (data)
-	"CCT" + // Proline (regulator)
-	"TGT" + // Cysteine (code)
-	"TGG" + // Tryptophan (awaitResource: regulator)
-	"TCT" + // Serine - see below
-	"GAA", // GlutamicAcid (add resource - RNA - to cell)
+try to find out why exceptions aren't showing up; something to do with
+catching interrupted exceptions and thread pools; see:
+http://stackoverflow.com/questions/2248131/handling-exceptions-from-java-executorservice-tasks
+
+As part of the DNA, specify how many instances of a protein need to run
+remove Cell.isDivideCellRunning and AminoAcid.activateOnCreate()
+
+Loop within a loop; not yet fully designed!
+body mode
+waitForResource (nucleotide)
+data
+codon
+code
+serine
+  get chainResource // dnaCodon
+  get targetResource // rnaCodon
+  get body
+  while chainResource.hasNext:
+    node = chainResource.next // next nucleotide
+    for each step in body:
+    	node = waitForNucleotide(node)
+    targetResource.add(processedNode) // add nucl. to rnaCodon
+  return targetResource (rnaCodon)
+
+"TTA" + // Leucine, turn on body mode
+"GCT" + // Alanine, convert DNA codon to RNA codon
+"GAT" + // AsparticAcid (data)
+"CCT" + // Proline (regulator)
+"TGT" + // Cysteine (code)
+"TGG" + // Tryptophan (awaitResource: regulator)
+"TCT" + // Serine, loop
+"GAA",  // GlutamicAcid (add resource - RNA - to cell)
 
 Serine
   get chainResource // regulator (DNA)
@@ -41,6 +63,7 @@ Serine
   while chainResource.hasNext:
     node = chainResource.next // next codon
     for each step in body:
+    	getNext()
         process node // convert DNA codon to RNA codon
     targetResource.add(processedNode) // add codon to RNA
   return targetResource

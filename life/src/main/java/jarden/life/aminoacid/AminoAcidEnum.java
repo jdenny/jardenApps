@@ -9,7 +9,7 @@ package jarden.life.aminoacid;
 	See Nucleotide for real-life codonTable.
 	0	Alanine                 GCU  // convert DNA codon to RNA codon
 	1	Arginine                CGU  // data: RNA
-	2	Asparagine              AAU  // new resource; data: Protein
+	2	Asparagine              AAU
 	3	AsparticAcid            GAU  // turn on data mode
 	20	CopyDNA        			UUG
 	4	Cysteine                UGU  // turn on code mode
@@ -17,8 +17,8 @@ package jarden.life.aminoacid;
 	22	DivideCell              UAC
 	23	EatFood                 UGC
 	5	GlutamicAcid            GAA  // addAminoAcid resource to cell
-	6	Glutamine               CAA
-	7	Glycine                 GGU
+	6	Glutamine               CAA  // data: readyToDivide
+	7	Glycine                 GGU  // run only one of these proteins
 	8	Histidine               CAU
 	9	Isoleucine              AUU
 	10	Leucine        			UUA  // turn on body mode
@@ -33,7 +33,7 @@ package jarden.life.aminoacid;
 	17	Tryptophan              UGG  // wait for resource
 	18	Tyrosine                UAU
 	19	Valine                  GUU
-	24	WaitForEnoughProteins   UCG
+	                            UCG
 		                        UAG
 		                        CUU
 		                        CUC

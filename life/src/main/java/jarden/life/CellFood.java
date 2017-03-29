@@ -28,7 +28,6 @@ import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;
 import jarden.life.aminoacid.Tyrosine;
 import jarden.life.aminoacid.Valine;
-import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Cytosine;
 import jarden.life.nucleicacid.Guanine;
@@ -155,9 +154,6 @@ public class CellFood implements Food {
         }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[19]; i++) {
             aminoAcidList.add(new Valine());
-        }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[24]; i++) {
-            aminoAcidList.add(new WaitForEnoughProteins());
         }
     }
 }

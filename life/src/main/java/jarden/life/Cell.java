@@ -25,7 +25,6 @@ import jarden.life.aminoacid.Threonine;
 import jarden.life.aminoacid.Tryptophan;
 import jarden.life.aminoacid.Tyrosine;
 import jarden.life.aminoacid.Valine;
-import jarden.life.aminoacid.WaitForEnoughProteins;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
@@ -41,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -55,7 +55,6 @@ import static jarden.life.nucleicacid.Nucleotide.stopCode;
 
 public class Cell implements Food {
     private final CellEnvironment cellEnvironment;
-    private boolean divideCellRunning;
     private DNA dna;
     private int generation = 1;
     private int geneSize;
@@ -85,7 +84,7 @@ public class Cell implements Food {
                     "CCT" + // Proline (regulator)
                     "TGT" + // Cysteine (code)
                     "TGG" + // Tryptophan (awaitResource: regulator)
-                    "TCT" + // Serine - see below
+                    "TCT" + // Serine, loop
                     "GAA",  // GlutamicAcid (add resource - RNA - to cell)
             // ribosome:
             "TTA" +         // UUA, Leucine, turn on body mode
@@ -99,7 +98,13 @@ public class Cell implements Food {
             "TGC",       // eatFood: EatFood
             "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
                 // Cysteine (code), Tryptophan (awaitResource), DigestFood
-            "TCGTTGTAC"  // divide: WaitForEnoughProteins, CopyDNA, DivideCell
+            "GGT" + // divideCell: GGU, Glycine, run only one of these proteins
+                    "GAT" + // AsparticAcid (data)
+                    "CAA" + // CAA, Glutamine, readyToDivide
+                    "TGT" + // Cysteine (code)
+                    "TGG" + // UGG, Tryptophan, wait for resource
+                    "TTG" + // UUG, CopyDNA
+                    "TAC"   // DivideCell
     };
     private final ReentrantLock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
@@ -250,7 +255,6 @@ public class Cell implements Food {
         else if (codonStr.equals("TGG")) return new Tryptophan();
         else if (codonStr.equals("TAT")) return new Tyrosine();
         else if (codonStr.equals("GTT")) return new Valine();
-        else if (codonStr.equals("TCG")) return new WaitForEnoughProteins();
         else throw new IllegalArgumentException("unrecognised codonStr: " +
                 codonStr);
     }
@@ -284,14 +288,18 @@ public class Cell implements Food {
             startIndex += 3; // move past start-codon
             stopIndex = getNextStopIndex(dna, startIndex);
             if (stopIndex < 0) {
-                throw new IllegalStateException("DNA gene has no stop-gene");
+                String error = "***DNA gene has no stop-gene";
+                logId(error);
+                throw new IllegalStateException(error);
             }
             regulatorList.add(new Regulator(this, startIndex, stopIndex,
                     regulatorList.size()));
         }
         geneSize = regulatorList.size();
         if (geneSize == 0) {
-            throw new IllegalStateException("DNA contains no start-gene");
+            String error = "***DNA contains no start-gene";
+            logId(error);
+            throw new IllegalStateException(error);
         }
     }
     private int getNextStartIndex(DNA dna, int index) {
@@ -404,7 +412,11 @@ public class Cell implements Food {
                 else if (nucleotide instanceof Guanine) ++cellData.nucleotideCts[2];
                 else if (nucleotide instanceof Thymine) ++cellData.nucleotideCts[3];
                 else if (nucleotide instanceof Uracil) ++cellData.nucleotideCts[4];
-                else throw new IllegalStateException("unknown nucleotide: " + nucleotide);
+                else {
+                    String error = "unknown nucleotide: " + nucleotide;
+                    logId(error);
+                    throw new IllegalStateException(error);
+                }
             }
         } finally {
             nucleotideListLock.unlock();
@@ -464,6 +476,42 @@ public class Cell implements Food {
             foodAvailableCondition.signalAll();
         } finally {
             foodListLock.unlock();
+        }
+    }
+    public void waitForCellReadyToDivide() throws InterruptedException {
+        regulatorListLock.lockInterruptibly();
+        try {
+            String state;
+            boolean killIfTimedOut = true; // normal state is true
+            while (!cellReadyToDivide()) {
+                state = "waiting for cellReadyToDivideCondition";
+                logId(state);
+                if (killIfTimedOut) {
+                    boolean timedOut = !cellReadyToDivideCondition.await(10, TimeUnit.SECONDS);
+                    if (timedOut) {
+                        logId("cellReadyToDivide timed out; ready to die!");
+                        // TODO: put this in its own protein KillCell
+                        // stopThreads should be method in Cell
+                        Thread currentThread = Thread.currentThread();
+                        List<Protein> proteinList = getProteinList();
+                        for (Protein protein: proteinList) {
+                            if (protein.getThread() == currentThread) {
+                                logId("waitForCellReadyToDivide not stopping current thread: " +
+                                        currentThread); // don't stop itself!
+                            } else {
+                                protein.stop();
+                            }
+                        }
+                        getCellEnvironment().removeCell(this);
+                        logId("waitForCellReadyToDivide now stopping current thread");
+                        currentThread.interrupt(); // finally, stop itself
+                    }
+                } else {
+                    cellReadyToDivideCondition.await();
+                }
+            }
+        } finally {
+            regulatorListLock.unlock();
         }
     }
 
@@ -757,30 +805,15 @@ public class Cell implements Food {
     public List<Nucleotide> getNucleotideList() {
         return nucleotideList;
     }
-    public List<RNA> getRNAList() {
-        return rnaList;
-    }
     public DNA getDNA() {
         return dna;
     }
     public void setGeneration(int generation) {
         this.generation = generation;
     }
-    public boolean isDivideCellRunning() {
-        return this.divideCellRunning;
-    }
-    public void setDivideCellRunning(boolean divideCellRunning) {
-        this.divideCellRunning = divideCellRunning;
-    }
-    public Condition getCellReadyToDivideCondition() {
-        return cellReadyToDivideCondition;
-    }
     @Override
     public String getName() {
         return "Cell";
-    }
-    public Lock getRnaListLock() {
-        return rnaListLock;
     }
     public Condition getRnaBelowTargetCondition() {
         return rnaBelowTargetCondition;

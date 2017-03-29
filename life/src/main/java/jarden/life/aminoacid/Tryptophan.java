@@ -29,12 +29,17 @@ public class Tryptophan extends AminoAcid {
         AminoAcid aminoAcid = protein.getAminoAcid(-2);
         if (aminoAcid instanceof Arginine) {
             return cell.waitForRNA();
+        } else if (aminoAcid instanceof Glutamine) {
+            cell.waitForCellReadyToDivide();
+            return null;
         } else if (aminoAcid instanceof Phenylalanine) {
             return cell.waitForFood();
         } else if (aminoAcid instanceof Proline) {
             return cell.waitForRnaBelowTarget();
         } else {
-            throw new IllegalStateException("unrecognised resource type: " + aminoAcid);
+            String error = "***unrecognised resource type: " + aminoAcid;
+            cell.logId(error);
+            throw new IllegalStateException(error);
         }
     }
     @Override

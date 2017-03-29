@@ -10,7 +10,7 @@ import jarden.life.nucleicacid.Uracil;
 
 /**
  * Convert DNA codon to RNA codon. May be too specific!
- *
+ * TODO: work out if this can be generalised
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 

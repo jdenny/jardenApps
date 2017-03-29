@@ -1,5 +1,7 @@
 package jarden.life.nucleicacid;
 
+import jarden.life.CellResource;
+
 /**
  * Nucleotide: basic unit of information in life.
  * DNA nucleotides: 4 types, made of
@@ -11,7 +13,7 @@ package jarden.life.nucleicacid;
  *    a ribose sugar, and a phosphate
  *    bonds: A - U; C - G
  */
-public interface Nucleotide {
+public interface Nucleotide extends CellResource {
     String stopCode = "TAA";
     String startCode = "TGA"; // if this changes,
     int startLength = startCode.length();

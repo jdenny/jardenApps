@@ -6,13 +6,13 @@ import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
 
 /**
+ * Data: readyToDivide.
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
 public class Glutamine extends AminoAcid {
     @Override
     public CellResource action(CellResource resource) throws InterruptedException {
-        System.out.println("******Glutamine*****");
         return null;
     }
     @Override
