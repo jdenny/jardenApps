@@ -24,9 +24,13 @@ public class Serine extends AminoAcid {
         TargetResource targetResource = chainResource.getTargetResource();
         CellResource node;
         List<AminoAcid> body = protein.getBody();
+        if (body.size() == 0) {
+            // body defaults to awaitResource:
+            body.add(new Tryptophan());
+        }
         while (chainResource.hasNext()) {
             node = chainResource.next();
-            for (AminoAcid aminoAcid: body) {
+            for (AminoAcid aminoAcid : body) {
                 if (Thread.interrupted()) {
                     throw new InterruptedException(
                             "Thread.interrupted detected in Serine.action()");

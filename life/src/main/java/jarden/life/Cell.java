@@ -80,29 +80,29 @@ public class Cell implements Food {
             // polymerase:
             "TTA" +         // Leucine, turn on body mode
                     "GCT" + // Alanine, convert DNA codon to RNA codon
-                    "GAT" + // AsparticAcid (data)
-                    "CCT" + // Proline (regulator)
-                    "TGT" + // Cysteine (code)
-                    "TGG" + // Tryptophan (awaitResource: regulator)
+                    "GAT" + // AsparticAcid, data
+                    "CCT" + // Proline, regulator
+                    "TGT" + // Cysteine, code
+                    "TGG" + // Tryptophan, awaitResource: regulator
                     "TCT" + // Serine, loop
-                    "GAA",  // GlutamicAcid (add resource - RNA - to cell)
+                    "GAA",  // GlutamicAcid, add RNA resource to cell
             // ribosome:
             "TTA" +         // UUA, Leucine, turn on body mode
-                    "TGG" + // UGG, Tryptophan, wait for resource
+                    "TGG" + // UGG, Tryptophan, awaitResource: Codon
                     "GAT" + // GAU, AsparticAcid, turn on data mode
                     "CGT" + // CGU, Arginine, data: RNA
                     "TGT" + // UGU, Cysteine, turn on code mode
-                    "TGG" + // UGG, Tryptophan, wait for resource
+                    "TGG" + // UGG, Tryptophan, awaitResource: RNA
                     "TCT" + // UCU, Serine, loop
                     "GAA",  // GAA, GlutamicAcid, addAminoAcid resource to cell
             "TGC",       // eatFood: EatFood
             "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
                 // Cysteine (code), Tryptophan (awaitResource), DigestFood
             "GGT" + // divideCell: GGU, Glycine, run only one of these proteins
-                    "GAT" + // AsparticAcid (data)
+                    "GAT" + // AsparticAcid, data
                     "CAA" + // CAA, Glutamine, readyToDivide
                     "TGT" + // Cysteine (code)
-                    "TGG" + // UGG, Tryptophan, wait for resource
+                    "TGG" + // UGG, Tryptophan, awaitResource: readyToDivide
                     "TTG" + // UUG, CopyDNA
                     "TAC"   // DivideCell
     };
@@ -255,8 +255,11 @@ public class Cell implements Food {
         else if (codonStr.equals("TGG")) return new Tryptophan();
         else if (codonStr.equals("TAT")) return new Tyrosine();
         else if (codonStr.equals("GTT")) return new Valine();
-        else throw new IllegalArgumentException("unrecognised codonStr: " +
-                codonStr);
+        else {
+            throwError2("unrecognised codonStr: " +
+                    codonStr);
+            return null;
+        }
     }
 
     /**
@@ -288,18 +291,14 @@ public class Cell implements Food {
             startIndex += 3; // move past start-codon
             stopIndex = getNextStopIndex(dna, startIndex);
             if (stopIndex < 0) {
-                String error = "***DNA gene has no stop-gene";
-                logId(error);
-                throw new IllegalStateException(error);
+                throwError("DNA gene has no stop-gene");
             }
             regulatorList.add(new Regulator(this, startIndex, stopIndex,
                     regulatorList.size()));
         }
         geneSize = regulatorList.size();
         if (geneSize == 0) {
-            String error = "***DNA contains no start-gene";
-            logId(error);
-            throw new IllegalStateException(error);
+            throwError("DNA contains no start-gene");
         }
     }
     private int getNextStartIndex(DNA dna, int index) {
@@ -342,6 +341,18 @@ public class Cell implements Food {
             System.out.println("Cell-" + id + " " +
                     Thread.currentThread().getName() + " " + s);
         }
+    }
+    public void throwError(String error) {
+        String message = "Cell-" + id + " " +
+                Thread.currentThread().getName() + " ***** " + error;
+        System.out.println(message);
+        throw new IllegalStateException(message);
+    }
+    public static void throwError2(String error) {
+        String message = Thread.currentThread().getName() +
+                " ***** " + error;
+        System.out.println(message);
+        throw new IllegalStateException(message);
     }
     public int getId() {
         return this.id;
@@ -413,9 +424,7 @@ public class Cell implements Food {
                 else if (nucleotide instanceof Thymine) ++cellData.nucleotideCts[3];
                 else if (nucleotide instanceof Uracil) ++cellData.nucleotideCts[4];
                 else {
-                    String error = "unknown nucleotide: " + nucleotide;
-                    logId(error);
-                    throw new IllegalStateException(error);
+                    throwError("unknown nucleotide: " + nucleotide);
                 }
             }
         } finally {

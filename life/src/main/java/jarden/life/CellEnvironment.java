@@ -165,7 +165,8 @@ public class CellEnvironment implements TimerListener {
                 return cell.getCellData();
             }
         }
-        throw new IllegalArgumentException("no cell found for id " + id);
+        Cell.throwError2("no cell found for id " + id);
+        return null;
     }
     public List<CellShortData> getCellShortDataList() {
         List<CellShortData> cellShortDataList = new ArrayList<>();

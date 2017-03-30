@@ -22,8 +22,7 @@ public class GlutamicAcid extends AminoAcid {
         } else if (resource instanceof RNA) {
             cell.addRNA((RNA) resource);
         } else {
-            throw new IllegalArgumentException(
-                "unrecognised resource: " + resource);
+            cell.throwError("unrecognised resource: " + resource);
         }
         return null;
     }

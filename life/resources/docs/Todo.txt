@@ -1,19 +1,11 @@
 Outline for 20 aminoAcids***********************************
-resource = waitForResource(type)
-w,Typtophan,waitForResource
-r,Arginine,RNA
-d,Aspartic Acid,DNA
-a,Alanine,AminoAcid
-n,Asparagine,Nucleotide
-Proline,Regulator (RNA < target)
-examples:
 	Ribosome
 		RNA rna = cell.waitForRNA()              - DONE
 		AminoAcid = cell.waitForAminoAcid(codon) - DONE
 	Polymerase
 		Regulator regulator = cell.waitForRnaBelowTarget()  - DONE
 		Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
-	WaitForEnoughProteins
+	WaitForEnoughProteins - DONE
 		[potentially: boolean readyToDivide = cell.waitForCellReadyToDivide()
 	CopyDNA
 		Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true)
@@ -23,14 +15,54 @@ examples:
 		Food food = cellEnvironment.waitForFood()
 
 Current actions *************************************************
-try to find out why exceptions aren't showing up; something to do with
-catching interrupted exceptions and thread pools; see:
-http://stackoverflow.com/questions/2248131/handling-exceptions-from-java-executorservice-tasks
-
-As part of the DNA, specify how many instances of a protein need to run
-remove Cell.isDivideCellRunning and AminoAcid.activateOnCreate()
 
 Loop within a loop; not yet fully designed!
+Serine:
+  if no body, assume awaitResource (Tryptophan)
+Tryptophan:
+  is resource is not null, and is recognised:
+    use resource instead of data
+
+whichever way we look at it, we need 2 body lists!
+
+logic of polymerase:
+  for each codon in DNA:
+    rnaCodon = getTargetResource()
+    for each nucleotide in codon:
+      rnaNucleotide = awaitResource(nucleotide, false)
+      rnaCodon.add(rnaNucleotide)
+    rna.add(rnaCodon)
+  cell.add(rna)
+
+split into 2:
+  Serine1
+  -------
+  chainResource = regulator
+  targetResource = rna
+  body = serine2
+  for each codon in DNA:
+    dnaCodon = next()
+    rnaCodon = serine2(dnaCodon)
+    rna.add(rnaCodon)
+  return rna
+  GlutamicAcid
+  ------------
+  cell.add(rna)
+
+  Serine2
+  -------
+  chainResource = codon (dna)
+  targetResource = codon (rna)
+  body = <empty>
+  for each nucleotide in codon:
+    dnaNucleotide = next()
+    // default for empty body:
+    rnaNucleotide = awaitResource(dnaNucleotide, false)
+    rnaCodon.add(rnaNucleotide)
+  return rnaCodon
+
+Previous notes
+--------------
 body mode
 waitForResource (nucleotide)
 data
@@ -277,6 +309,9 @@ check-out if we need Thread.isInterrupted() - YES
 factor out our first reusable aminoAcid: GetResource - DONE
 
 make synthetic cell out of DNA - DONE
+
+As part of the DNA, specify how many instances of a protein need to run - DONE
+remove Cell.isDivideCellRunning and AminoAcid.activateOnCreate()
 
 CellEnvironment: add dead cells to foodList - DONE
 

@@ -35,7 +35,8 @@ public class Polymerase extends AminoAcid {
         int index = regulator.getGeneStartIndex();
         int nextStopIndex = getNextStopIndex(dna, index);
         if (nextStopIndex < 0) {
-            throw new IllegalStateException("DNA gene has no stop-gene");
+            cell.throwError("DNA gene has no stop-gene");
+            return null;
         }
         RNA rna = new RNA();
         for (int i = index; i < nextStopIndex; i += 3) {

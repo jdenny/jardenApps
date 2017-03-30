@@ -6,6 +6,7 @@ import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Guanine;
+import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.Uracil;
 
 /**
@@ -21,9 +22,11 @@ public class Tryptophan extends AminoAcid {
         if (resource != null) {
             if (resource instanceof Codon) {
                 return cell.waitForAminoAcid((Codon) resource);
+            } else if (resource instanceof Nucleotide) {
+                return cell.waitForNucleotide((Nucleotide) resource, false);
             } else {
-                throw new IllegalArgumentException(
-                        "unrecognised resource: " + resource);
+                cell.throwError("unrecognised resource: " + resource);
+                return null;
             }
         }
         AminoAcid aminoAcid = protein.getAminoAcid(-2);
@@ -37,9 +40,8 @@ public class Tryptophan extends AminoAcid {
         } else if (aminoAcid instanceof Proline) {
             return cell.waitForRnaBelowTarget();
         } else {
-            String error = "***unrecognised resource type: " + aminoAcid;
-            cell.logId(error);
-            throw new IllegalStateException(error);
+            cell.throwError("unrecognised resource type: " + aminoAcid);
+            return null;
         }
     }
     @Override
