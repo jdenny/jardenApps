@@ -22,24 +22,12 @@ import jarden.life.nucleicacid.Uracil;
 public class EatFood extends AminoAcid {
     public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();
-        Lock foodListLock = cell.getFoodListLock();
-        Condition needMoreFood = cell.getNeedMoreFoodCondition();
-        foodListLock.lockInterruptibly();
-        try {
-            while (!cell.needMoreFood()) {
-                cell.logId("waiting for needMoreFood");
-                needMoreFood.await();
-            }
-        } finally {
-            foodListLock.unlock();
-        }
         CellEnvironment cellEnvironment = cell.getCellEnvironment();
         Food food = cellEnvironment.waitForFood();
         if (food instanceof Cell) {
             cell.logId("EatFood eating dead cell");
         }
-        cell.addFood(food);
-        return null;
+        return food;
     }
     @Override
     public boolean matchCodon(Codon codon) {

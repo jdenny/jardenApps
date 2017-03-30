@@ -5,6 +5,8 @@ import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Uracil;
 
 /**
+ * Data: food.
+ *
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 

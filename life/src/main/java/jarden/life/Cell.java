@@ -79,13 +79,13 @@ public class Cell implements Food {
     private static String[] geneStrs = {
             // polymerase:
             "TTA" +         // Leucine, turn on body mode
-                    "GCT" + // Alanine, convert DNA codon to RNA codon
-                    "GAT" + // AsparticAcid, data
-                    "CCT" + // Proline, regulator
-                    "TGT" + // Cysteine, code
-                    "TGG" + // Tryptophan, awaitResource: regulator
-                    "TCT" + // Serine, loop
-                    "GAA",  // GlutamicAcid, add RNA resource to cell
+                    "GCT" + // GCU, Alanine, convert DNA codon to RNA codon
+                    "GAT" + // GAU, AsparticAcid, data
+                    "CCT" + // CCU, Proline, regulator
+                    "TGT" + // UGU, Cysteine, code
+                    "TGG" + // UGG, Tryptophan, awaitResource: regulator
+                    "TCT" + // UCU, Serine, loop
+                    "GAA",  // GAA, GlutamicAcid, add resource (RNA) to cell
             // ribosome:
             "TTA" +         // UUA, Leucine, turn on body mode
                     "TGG" + // UGG, Tryptophan, awaitResource: Codon
@@ -94,8 +94,14 @@ public class Cell implements Food {
                     "TGT" + // UGU, Cysteine, turn on code mode
                     "TGG" + // UGG, Tryptophan, awaitResource: RNA
                     "TCT" + // UCU, Serine, loop
-                    "GAA",  // GAA, GlutamicAcid, addAminoAcid resource to cell
-            "TGC",       // eatFood: EatFood
+                    "GAA",  // GAA, GlutamicAcid, add resource (protein) to cell
+            // eat food:
+            "GAT" +         // GAU, AsparticAcid, data
+                    "AAT" + // AAU, Asparagine, needMoreFood
+                    "TGT" + // UGU, Cysteine, code
+                    "TGG" + // UGG, Tryptophan, awaitResource: needFood
+                    "TGC" + // UGC, EatFood
+                    "GAA",  // GAA, GlutamicAcid, add resource (food) to cell
             "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
                 // Cysteine (code), Tryptophan (awaitResource), DigestFood
             "GGT" + // divideCell: GGU, Glycine, run only one of these proteins
@@ -543,6 +549,17 @@ public class Cell implements Food {
             return regulator;
         } finally {
             regulatorListLock.unlock();
+        }
+    }
+    public void waitForCellNeedsFood() throws InterruptedException {
+        foodListLock.lockInterruptibly();
+        try {
+            while (!needMoreFood()) {
+                logId("waiting for needMoreFood");
+                needMoreFoodCondition.await();
+            }
+        } finally {
+            foodListLock.unlock();
         }
     }
     // TODO: maintain an index into the regulatorList itself,

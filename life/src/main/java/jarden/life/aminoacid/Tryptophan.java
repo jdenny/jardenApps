@@ -39,6 +39,9 @@ public class Tryptophan extends AminoAcid {
             return cell.waitForFood();
         } else if (aminoAcid instanceof Proline) {
             return cell.waitForRnaBelowTarget();
+        } else if (aminoAcid instanceof Asparagine) {
+            cell.waitForCellNeedsFood();
+            return null;
         } else {
             cell.throwError("unrecognised resource type: " + aminoAcid);
             return null;

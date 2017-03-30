@@ -2,6 +2,7 @@ package jarden.life.aminoacid;
 
 import jarden.life.Cell;
 import jarden.life.CellResource;
+import jarden.life.Food;
 import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
@@ -21,6 +22,8 @@ public class GlutamicAcid extends AminoAcid {
             cell.addProtein((Protein) resource);
         } else if (resource instanceof RNA) {
             cell.addRNA((RNA) resource);
+        } else if (resource instanceof Food) {
+            cell.addFood((Food) resource);
         } else {
             cell.throwError("unrecognised resource: " + resource);
         }
