@@ -12,7 +12,6 @@ import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
-import jarden.life.aminoacid.EatFood;
 import jarden.life.aminoacid.GlutamicAcid;
 import jarden.life.aminoacid.Glutamine;
 import jarden.life.aminoacid.Glycine;
@@ -106,9 +105,6 @@ public class CellFood implements Food {
         }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[22]; i++) {
             aminoAcidList.add(new DivideCell());
-        }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[23]; i++) {
-            aminoAcidList.add(new EatFood());
         }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[5]; i++) {
             aminoAcidList.add(new GlutamicAcid());

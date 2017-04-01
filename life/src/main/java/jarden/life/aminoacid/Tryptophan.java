@@ -3,7 +3,6 @@ package jarden.life.aminoacid;
 import jarden.life.Cell;
 import jarden.life.CellResource;
 import jarden.life.Protein;
-import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Nucleotide;
@@ -36,7 +35,9 @@ public class Tryptophan extends AminoAcid {
             cell.waitForCellReadyToDivide();
             return null;
         } else if (aminoAcid instanceof Phenylalanine) {
-            return cell.waitForFood();
+            return cell.waitForFoodFromCell();
+        } else if (aminoAcid instanceof Histidine) {
+            return cell.waitForFoodFromEnvironment();
         } else if (aminoAcid instanceof Proline) {
             return cell.waitForRnaBelowTarget();
         } else if (aminoAcid instanceof Asparagine) {

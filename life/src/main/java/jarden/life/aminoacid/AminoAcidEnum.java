@@ -7,32 +7,31 @@ package jarden.life.aminoacid;
 /*
 	Current implementation of codonTable. Left column is index.
 	See Nucleotide for real-life codonTable.
-	0	Alanine                 GCU  // convert DNA codon to RNA codon
-	1	Arginine                CGU  // data: RNA
-	2	Asparagine              AAU  // data: needMoreFood
-	3	AsparticAcid            GAU  // turn on data mode
-	20	CopyDNA        			UUG
-	4	Cysteine                UGU  // turn on code mode
-	21	DigestFood              UCA
-	22	DivideCell              UAC
-	23	EatFood                 UGC
-	5	GlutamicAcid            GAA  // add resource to cell
-	6	Glutamine               CAA  // data: readyToDivide
-	7	Glycine                 GGU  // run only one of these proteins
-	8	Histidine               CAU
-	9	Isoleucine              AUU
-	10	Leucine        			UUA  // turn on body mode
-	11	Lysine                  AAA
-	12	Methionine              AUG  // temporarily used by experiment
-	13	Phenylalanine          	UUU  // data: Food
-	14	Proline                 CCU  // data: Regulator (rna < target)
-	15	Serine        			UCU  // loop
-		Start                   UGA  // in real life: Stop
-		Stop					UAA
-	16	Threonine               ACU
-	17	Tryptophan              UGG  // wait for resource
-	18	Tyrosine                UAU
-	19	Valine                  GUU
+	0	"GCT" + // GCU, Alanine, convert DNA codon to RNA codon
+	1	"CGT" + // CGU, Arginine, data: RNA
+	2	"AAT" + // AAU, Asparagine, data: needMoreFood
+	3	"GAT" + // GAU, AsparticAcid, turn on data mode
+	20	"TTG" + // UUG, CopyDNA
+	4	"TGT" + // UGU, Cysteine, turn on code mode
+	21	"TCA" + // UCA, DigestFood
+	22	"TAC" + // UAC, DivideCell
+	5	"GAA" + // GAA, GlutamicAcid, add resource to cell
+	6	"CAA" + // CAA, Glutamine, data: readyToDivide
+	7	"GGT" + // GGU, Glycine, run only one of these proteins
+	8	"CAT" + // CAU, Histidine, data: food from environment
+	9	"ATT" + // AUU, Isoleucine
+	10	"TTA" + // UUA, Leucine, turn on body mode
+	11	"AAA" + // AAA, Lysine
+	12	"ATG" + // AUG, Methionine
+	13	"TTT" + // UUU, Phenylalanine, data: Food
+	14	"CCT" + // CCU, Proline, data: Regulator (rna < target)
+	15	"TCT" + // UCU, Serine, loop
+		"TGA" + // UGA, Start (in real life: Stop!)
+		"TAA" + // UAA, Stop
+	16	"ACT" + // ACU, Threonine
+	17	"TGG" + // UGG, Tryptophan, wait for resource
+	18	"TAT" + // UAU, Tyrosine
+	19	"GTT" + // GUU, Valine
 	                            UCG
 		                        UAG
 		                        CUU

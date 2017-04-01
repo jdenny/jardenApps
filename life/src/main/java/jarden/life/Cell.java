@@ -9,7 +9,6 @@ import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
 import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
-import jarden.life.aminoacid.EatFood;
 import jarden.life.aminoacid.GlutamicAcid;
 import jarden.life.aminoacid.Glutamine;
 import jarden.life.aminoacid.Glycine;
@@ -100,11 +99,19 @@ public class Cell implements Food {
                     "AAT" + // AAU, Asparagine, needMoreFood
                     "TGT" + // UGU, Cysteine, code
                     "TGG" + // UGG, Tryptophan, awaitResource: needFood
-                    "TGC" + // UGC, EatFood
+                    "GAT" + // GAU, AsparticAcid, data
+                    "CAT" + // CAU, Histidine, food from environment
+                    "TGT" + // UGU, Cysteine, code
+                    "TGG" + // UGG, Tryptophan, awaitResource: food from environment
                     "GAA",  // GAA, GlutamicAcid, add resource (food) to cell
-            "GATTTTTGTTGGTCA", // digest: AsparticAcid (data), Phenylalanine (food),
-                // Cysteine (code), Tryptophan (awaitResource), DigestFood
-            "GGT" + // divideCell: GGU, Glycine, run only one of these proteins
+            // digest:
+            "GAT" +         // GAU, AsparticAcid, data mode
+                    "TTT" + // UUU, Phenylalanine, food
+                    "TGT" + // UGU, Cysteine, code
+                    "TGG" + // UGG, Tryptophan, awaitResource: food
+                    "TCA",  // UCA, DigestFood
+            // divide cell:
+            "GGT" +         // GGU, Glycine, run only one of these proteins
                     "GAT" + // AsparticAcid, data
                     "CAA" + // CAA, Glutamine, readyToDivide
                     "TGT" + // Cysteine (code)
@@ -245,7 +252,6 @@ public class Cell implements Food {
         else if (codonStr.equals("TGT")) return new Cysteine();
         else if (codonStr.equals("TCA")) return new DigestFood();
         else if (codonStr.equals("TAC")) return new DivideCell();
-        else if (codonStr.equals("TGC")) return new EatFood();
         else if (codonStr.equals("GAA")) return new GlutamicAcid();
         else if (codonStr.equals("CAA")) return new Glutamine();
         else if (codonStr.equals("GGT")) return new Glycine();
@@ -267,7 +273,6 @@ public class Cell implements Food {
             return null;
         }
     }
-
     /**
      * Construct new Cell, from DNA. Proteins are added separately.
      * @param dna DeoxyriboNucleic Acid
@@ -685,7 +690,7 @@ public class Cell implements Food {
             aminoAcidListLock.unlock();
         }
 	}
-    public Food waitForFood() throws InterruptedException {
+    public Food waitForFoodFromCell() throws InterruptedException {
         foodListLock.lockInterruptibly();
         try {
             while (foodList.size() == 0) {
@@ -696,6 +701,13 @@ public class Cell implements Food {
         } finally {
             foodListLock.unlock();
         }
+    }
+    public Food waitForFoodFromEnvironment() throws InterruptedException {
+        Food food = cellEnvironment.waitForFood();
+        if (food instanceof Cell) {
+            logId("EatFood eating dead cell");
+        }
+        return food;
     }
     /*
     Not thread-safe, so only call if rnaList is locked
