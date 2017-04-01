@@ -22,7 +22,8 @@ public class Tryptophan extends AminoAcid {
             if (resource instanceof Codon) {
                 return cell.waitForAminoAcid((Codon) resource);
             } else if (resource instanceof Nucleotide) {
-                return cell.waitForNucleotide((Nucleotide) resource, false);
+                return cell.waitForNucleotide((Nucleotide) resource,
+                        protein.isForDna());
             } else {
                 cell.throwError("unrecognised resource: " + resource);
                 return null;

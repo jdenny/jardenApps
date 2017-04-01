@@ -14,12 +14,15 @@ import java.util.concurrent.TimeoutException;
 public class Protein implements Runnable, CellResource, TargetResource {
     private Cell cell; // the cell this protein belongs to
 	private List<AminoAcid> aminoAcidList = new ArrayList<>();
-    private List<AminoAcid> aminoAcidBodyList = new ArrayList<>();
     private Regulator regulator;
     private int aminoAcidIndex;
     private int hashCode;
     private Thread thread = null;
     private String state; // for monitoring; put in LifeFX
+    private ArrayList<AminoAcid> aminoAcidBodyList;
+    private List<ArrayList<AminoAcid>> listOfBodies = new ArrayList<>();
+    private boolean isForDna;
+
     /**
      * Used for debugging; set false if this protein should
      * not run; used in Cell.addProtein().
@@ -78,6 +81,14 @@ public class Protein implements Runnable, CellResource, TargetResource {
     public void add(CellResource resource) {
         addAminoAcid((AminoAcid) resource);
     }
+
+    public void setIsForDna(boolean isForDna) {
+        this.isForDna = isForDna;
+    }
+    public boolean isForDna() {
+        return isForDna;
+    }
+
     private enum RnaMode {
         data, code, body;
     }
@@ -98,7 +109,8 @@ public class Protein implements Runnable, CellResource, TargetResource {
                 rnaMode = RnaMode.code;
             } else if (aminoAcid.isBody()) {
                 rnaMode = RnaMode.body;
-                aminoAcidBodyList.clear();
+                aminoAcidBodyList = new ArrayList<>();
+                listOfBodies.add(aminoAcidBodyList);
             } else if (rnaMode == RnaMode.code) {
                 currentResource = aminoAcid.action(currentResource);
             } else if (rnaMode == RnaMode.body) {
@@ -165,6 +177,8 @@ public class Protein implements Runnable, CellResource, TargetResource {
     }
 
     public List<AminoAcid> getBody() {
-        return aminoAcidBodyList;
+        int bodiesSize = listOfBodies.size();
+        if (bodiesSize == 0) return null;
+        return listOfBodies.remove(bodiesSize - 1);
     }
 }

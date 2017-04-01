@@ -7,13 +7,14 @@ import jarden.life.nucleicacid.Guanine;
 import jarden.life.nucleicacid.Uracil;
 
 /**
- * As data: RNA
+ * As code: set nucleotide style to RNA; as data: RNA
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
 public class Arginine extends AminoAcid {
     @Override
     public CellResource action(CellResource resource) throws InterruptedException {
+        getProtein().setIsForDna(false);
         return null;
     }
     @Override

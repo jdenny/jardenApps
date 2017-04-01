@@ -1,3 +1,24 @@
+Design of nested loop
+---------------------
+
+protein
+	action(): build list of bodies;
+	getBody(): remove top of list
+
+body2: convert DNA codon to RNA codon
+loop: inner
+	for each nucleotide in colon: body1
+
+data
+regulator
+code
+awaitResource: regulator
+loop: outer
+	for each codon in DNA: body2
+add resource (RNA) to cell
+
+
+
 Notes 31 Jan 2017
 need more detail about how it all works:
  does a whole chromosome get copied to RNA, or just part of it?

@@ -5,10 +5,10 @@ package jarden.life.aminoacid;
  */
 
 /*
-	Current implementation of codonTable. Left column is index.
+	Current implementation of codonTable. * means free to use; next column is index.
 	See Nucleotide for real-life codonTable.
-	0	"GCT" + // GCU, Alanine, convert DNA codon to RNA codon
-	1	"CGT" + // CGU, Arginine, data: RNA
+F	0	"GCT" + // GCU, Alanine
+F	1	"CGT" + // CGU, Arginine, set nucleotide type to RNA; data: RNA
 	2	"AAT" + // AAU, Asparagine, data: needMoreFood
 	3	"GAT" + // GAU, AsparticAcid, turn on data mode
 	20	"TTG" + // UUG, CopyDNA
@@ -16,22 +16,22 @@ package jarden.life.aminoacid;
 	21	"TCA" + // UCA, DigestFood
 	22	"TAC" + // UAC, DivideCell
 	5	"GAA" + // GAA, GlutamicAcid, add resource to cell
-	6	"CAA" + // CAA, Glutamine, data: readyToDivide
+F	6	"CAA" + // CAA, Glutamine, data: readyToDivide
 	7	"GGT" + // GGU, Glycine, run only one of these proteins
-	8	"CAT" + // CAU, Histidine, data: food from environment
-	9	"ATT" + // AUU, Isoleucine
+F	8	"CAT" + // CAU, Histidine, data: food from environment
+F	9	"ATT" + // AUU, Isoleucine, set nucleotide type to DNA; data: DNA
 	10	"TTA" + // UUA, Leucine, turn on body mode
-	11	"AAA" + // AAA, Lysine
-	12	"ATG" + // AUG, Methionine
+F	11	"AAA" + // AAA, Lysine
+F	12	"ATG" + // AUG, Methionine
 	13	"TTT" + // UUU, Phenylalanine, data: Food
-	14	"CCT" + // CCU, Proline, data: Regulator (rna < target)
+F	14	"CCT" + // CCU, Proline, data: Regulator (rna < target)
 	15	"TCT" + // UCU, Serine, loop
 		"TGA" + // UGA, Start (in real life: Stop!)
 		"TAA" + // UAA, Stop
-	16	"ACT" + // ACU, Threonine
+F	16	"ACT" + // ACU, Threonine
 	17	"TGG" + // UGG, Tryptophan, wait for resource
-	18	"TAT" + // UAU, Tyrosine
-	19	"GTT" + // GUU, Valine
+F	18	"TAT" + // UAU, Tyrosine
+F	19	"GTT" + // GUU, Valine
 	                            UCG
 		                        UAG
 		                        CUU

@@ -9,29 +9,13 @@ import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.Uracil;
 
 /**
- * Convert DNA codon to RNA codon. May be too specific!
- * TODO: work out if this can be generalised
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
 public class Alanine extends AminoAcid {
     @Override
-    public CellResource action(CellResource _codon) throws InterruptedException {
-        Codon codon = (Codon) _codon;
-        Cell cell = getCell();
-        Nucleotide first = cell.waitForNucleotide(codon.getFirst(), false);
-        if (Thread.interrupted()) {
-            throw new InterruptedException();
-        }
-        Nucleotide second = cell.waitForNucleotide(codon.getSecond(), false);
-        if (Thread.interrupted()) {
-            throw new InterruptedException();
-        }
-        Nucleotide third = cell.waitForNucleotide(codon.getThird(), false);
-        if (Thread.interrupted()) {
-            throw new InterruptedException();
-        }
-        return new Codon(first, second, third);
+    public CellResource action(CellResource cellResource) throws InterruptedException {
+        return null;
     }
     @Override
     public boolean matchCodon(Codon codon) {

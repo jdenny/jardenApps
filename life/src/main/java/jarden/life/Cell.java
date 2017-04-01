@@ -77,8 +77,11 @@ public class Cell implements Food {
     // used for building synthetic cell:
     private static String[] geneStrs = {
             // polymerase:
-            "TTA" +         // Leucine, turn on body mode
-                    "GCT" + // GCU, Alanine, convert DNA codon to RNA codon
+            "CGT" +         // CGU, Arginine, set RNA mode
+                    "TTA" + // UUA, Leucine, body mode
+                    "TGG" + // UGG, Tryptophan, awaitResource (rna nucleotide)
+                    "TTA" + // UUA, Leucine, body mode
+                    "TCT" + // UCU, Serine, loop
                     "GAT" + // GAU, AsparticAcid, data
                     "CCT" + // CCU, Proline, regulator
                     "TGT" + // UGU, Cysteine, code

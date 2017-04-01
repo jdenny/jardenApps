@@ -175,10 +175,44 @@ In view of the above, we've decided to simplify things greatly:
      aminoAcid and nucleotide, based on the initial DNA; use these
      when supplying food
 
-DNA patterns ************************************************
-// ribosome:
-"GAT" + // AsparticAcid (data)
-"CGT" + // Arginine (RNA)
-"TGT" + // Cysteine (code)
-"TGG" + // Tryptophan (awaitResource)
-"TCC"   // Ribosome
+Nested Loop Design*****************
+polymerase & ribosome overview:
+         srcChain       resource    targetChain
+    poly Regulator(DNA) nucleotides RNA
+    ribo RNA            aminoAcids  protein
+
+logic of polymerase:
+  for each codon in DNA:
+    rnaCodon = getTargetResource()
+    for each nucleotide in codon:
+      rnaNucleotide = awaitResource(nucleotide, false)
+      rnaCodon.add(rnaNucleotide)
+    rna.add(rnaCodon)
+  cell.add(rna)
+
+split into 2:
+  Serine1 (outer)
+  -------
+  chainResource = regulator
+  targetResource = rna
+  body = serine2
+  for each codon in DNA:
+    dnaCodon = next()
+    rnaCodon = serine2(dnaCodon)
+    rna.add(rnaCodon)
+  return rna
+  GlutamicAcid
+  ------------
+  cell.add(rna)
+
+  Serine2 (inner)
+  -------
+  chainResource = codon (dna)
+  targetResource = codon (rna)
+  body = <empty>
+  for each nucleotide in codon:
+    dnaNucleotide = next()
+    // default for empty body:
+    rnaNucleotide = awaitResource(dnaNucleotide, false)
+    rnaCodon.add(rnaNucleotide)
+  return rnaCodon

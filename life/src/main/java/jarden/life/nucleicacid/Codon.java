@@ -18,60 +18,63 @@ import jarden.life.TargetResource;
  *      stop codon:  UAA    TAA
  */
 public class Codon implements ChainResource, TargetResource {
-    // TODO: when we've worked out how to have loop
-    // within a loop, replace first, second, third with triplet,
-    // so we can convert a dnaCodon into an rnaCodon.
-    private List<Nucleotide> triplet = new ArrayList<>(3);
-	private Nucleotide first;
-	private Nucleotide second;
-	private Nucleotide third;
+    private final List<Nucleotide> triplet = new ArrayList<>(3);
     private Boolean isStart;
     private Boolean isStop;
     private int index = 0;
 	
 	public Codon(Nucleotide first, Nucleotide second, Nucleotide third) {
-		this.first = first;
-		this.second = second;
-		this.third = third;
+        triplet.add(first);
+        triplet.add(second);
+        triplet.add(third);
 	}
 	public Codon() {}
 	public Nucleotide getFirst() {
-		return first;
+        return (triplet.size() == 3) ? triplet.get(0) : null;
 	}
 	public Nucleotide getSecond() {
-		return second;
+        return (triplet.size() == 3) ? triplet.get(1) : null;
 	}
 	public Nucleotide getThird() {
-		return third;
+        return (triplet.size() == 3) ? triplet.get(2) : null;
 	}
-
     public boolean isStart() {
-        if (isStart == null) {
+        if (isStart == null && triplet.size() == 3) {
             // lazy evaluation:
+            Nucleotide first = getFirst();
             isStart = (first instanceof Uracil || first instanceof Thymine) &&
-                    second instanceof Guanine && third instanceof Adenine;
+                    getSecond() instanceof Guanine &&
+                    getThird() instanceof Adenine;
         }
-        return isStart;
+        return isStart == null ? false : isStart.booleanValue();
     }
 	public boolean isStop() {
-        if (isStop == null) {
+        if (isStop == null && triplet.size() == 3) {
             // lazy evaluation:
+            Nucleotide first = getFirst();
             isStop = (first instanceof Uracil || first instanceof Thymine) &&
-                         second instanceof Adenine && third instanceof Adenine;
+                    getSecond() instanceof Adenine &&
+                    getThird() instanceof Adenine;
         }
-        return isStop;
+        return isStop == null ? false : isStop.booleanValue();
 	}
 	public String toString() {
-		return "(" + first + "," + second + "," + third + ")";
+        StringBuilder builder = new StringBuilder('(');
+        for (Nucleotide nucleotide: triplet) {
+            builder.append(nucleotide);
+            builder.append(",");
+        }
+        builder.append(')');
+		return builder.toString();
 	}
 
     @Override
     public String getName() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(first.getCode());
-        stringBuilder.append(second.getCode());
-        stringBuilder.append(third.getCode());
-        return stringBuilder.toString();
+        StringBuilder builder = new StringBuilder();
+        for (Nucleotide nucleotide: triplet) {
+            builder.append(nucleotide.getCode());
+        }
+        return builder.toString();
     }
     @Override
     public boolean hasNext() {
@@ -82,7 +85,7 @@ public class Codon implements ChainResource, TargetResource {
     }
     @Override
     public CellResource next() {
-        return index == 0 ? first : index == 1 ? second : third;
+        return triplet.get(index++);
     }
     @Override
     public TargetResource getTargetResource() {

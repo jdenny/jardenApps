@@ -6,12 +6,14 @@ import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Uracil;
 
 /**
+ * As code: set nucleotide style to DNA; as data: DNA
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 
 public class Isoleucine extends AminoAcid {
     @Override
     public CellResource action(CellResource resource) throws InterruptedException {
+        getProtein().setIsForDna(true);
         return null;
     }
     @Override

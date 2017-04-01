@@ -1,134 +1,19 @@
-Outline for 20 aminoAcids***********************************
-	Ribosome
-		RNA rna = cell.waitForRNA()              - DONE
-		AminoAcid = cell.waitForAminoAcid(codon) - DONE
-	Polymerase
-		Regulator regulator = cell.waitForRnaBelowTarget()  - DONE
-		Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
-	WaitForEnoughProteins - DONE
-		[potentially: boolean readyToDivide = cell.waitForCellReadyToDivide()
-	CopyDNA
-		Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true)
-	DigestFood
-		Food food = cell.waitForFood()      - DONE
-	EatFood
-		Food food = cellEnvironment.waitForFood()
+Notes on resource counts************************
+CellFood creates an extra Adenine, to show how many
+times a cell has been fed.
+But Cell does same thing will Alenine, and the numbers are different!
+Where do the extra Uracils come from?
 
 Current actions *************************************************
+make food into a chainResource? does this fit with the spirit of the design?
+seeing as food is inert, can it have methods?
 
-Loop within a loop; not yet fully designed!
-Serine:
-  if no body, assume awaitResource (Tryptophan)
-Tryptophan:
-  is resource is not null, and is recognised:
-    use resource instead of data
+could 2 threads be accessing the same regulator? if so this will cause a
+problem as geneIndex will be corrupted!
 
-whichever way we look at it, we need 2 body lists!
+catch exceptions thrown in thread pools; will need this, not just for
+debugging, but also to see how well fare cells with different DNA
 
-logic of polymerase:
-  for each codon in DNA:
-    rnaCodon = getTargetResource()
-    for each nucleotide in codon:
-      rnaNucleotide = awaitResource(nucleotide, false)
-      rnaCodon.add(rnaNucleotide)
-    rna.add(rnaCodon)
-  cell.add(rna)
-
-split into 2:
-  Serine1
-  -------
-  chainResource = regulator
-  targetResource = rna
-  body = serine2
-  for each codon in DNA:
-    dnaCodon = next()
-    rnaCodon = serine2(dnaCodon)
-    rna.add(rnaCodon)
-  return rna
-  GlutamicAcid
-  ------------
-  cell.add(rna)
-
-  Serine2
-  -------
-  chainResource = codon (dna)
-  targetResource = codon (rna)
-  body = <empty>
-  for each nucleotide in codon:
-    dnaNucleotide = next()
-    // default for empty body:
-    rnaNucleotide = awaitResource(dnaNucleotide, false)
-    rnaCodon.add(rnaNucleotide)
-  return rnaCodon
-
-Previous notes
---------------
-body mode
-waitForResource (nucleotide)
-data
-codon
-code
-serine
-  get chainResource // dnaCodon
-  get targetResource // rnaCodon
-  get body
-  while chainResource.hasNext:
-    node = chainResource.next // next nucleotide
-    for each step in body:
-    	node = waitForNucleotide(node)
-    targetResource.add(processedNode) // add nucl. to rnaCodon
-  return targetResource (rnaCodon)
-
-"TTA" + // Leucine, turn on body mode
-"GCT" + // Alanine, convert DNA codon to RNA codon
-"GAT" + // AsparticAcid (data)
-"CCT" + // Proline (regulator)
-"TGT" + // Cysteine (code)
-"TGG" + // Tryptophan (awaitResource: regulator)
-"TCT" + // Serine, loop
-"GAA",  // GlutamicAcid (add resource - RNA - to cell)
-
-Serine
-  get chainResource // regulator (DNA)
-  get targetResource // new RNA
-  get body
-  while chainResource.hasNext:
-    node = chainResource.next // next codon
-    for each step in body:
-    	getNext()
-        process node // convert DNA codon to RNA codon
-    targetResource.add(processedNode) // add codon to RNA
-  return targetResource
-GlutamicAcid
-  add RNA to cell
-
-	could 2 threads be accessing the same regulator?!
-
-	ribosome, builds a protein (chain of amino acids)
-    from RNA (chain of nucleotides)
-
-    RNA (chainResource)
-      codonChain
-      newProtein (targetResource)
-      index - current place within codonChain
-
-    Regulator (chainResource; can only be accessed by
-    	   one thread at a time, otherwise geneIndex will
-    	   be corrupted)
-      final Cell
-      final startIndex
-      final stopIndex
-      newRNA (targetResource)
-      geneIndex (current position within gene)
-	  getTargetResource(): return new RNA,
-		which already has new protein attached
-		and the new protein is linked to the regulator
-	  hasNext(): any more codons in DNA
-	  next(): next codon from DNA
-
-         srcChain       resource    targetChain
-    poly Regulator(DNA) nucleotides RNA
-    ribo RNA            aminoAcids  protein
 ******************************************
 change DNA to use Codons instead of Nucleotides directly; write test
 for methods used by copy DNA; not sure if this is a good idea; we'll
@@ -154,30 +39,8 @@ improve protein status
 make sure TestCell and MasterDesigner still work
 
 Create nucleicAcid and aminoAcid from more basic raw materials,
-instead of from existing cells
-
-Split amino acids into target 20! *****************************
-  e.g. isChain(), hasMore() could be replaced by aminoAcid that
-  simply sets a property on the protein: boolean isChain;
-  isChain could then occur anywhere in the sequence, so not
-  making a special 'control amino acid' from the first
-
-Single molecules
-	nucleicAcid
-	aminoAcid
-
-chain = findChain(type) // type=DNA, RNA, Protein; may wait
-element = findResource(type, name) // name=<aminoAcidName>, <nucleotideName>
-chain.moveToStart()
-element = chain.getNext() // or null for end
-element = chain.removeCurrent()
-chain.add(element) // also removes it from chain or free list
-
-removeAminoAcid()
-attachAminoAcid - to protein
-detatch object from chain
-findDNAChain()
-moveToNext
+instead of from existing cells; in programming terms, an aminoAcid
+is a bit of code! where does that come from?
 
 Current aminoAcids******************
 polymerase
@@ -321,3 +184,18 @@ could the protein name be replaced by its RNA gene, without the stop,
 aminoAcidFeed targets, done like nucleotides       - DONE
 add aminoAcidActuals, similar to nucleotideActuals
 decided to simplify the whole thing; see Feeding in design.txt
+
+Ribosome
+	RNA rna = cell.waitForRNA()              - DONE
+	AminoAcid = cell.waitForAminoAcid(codon) - DONE
+Polymerase
+	Regulator regulator = cell.waitForRnaBelowTarget()  - DONE
+	Nucleotide first = cell.waitForNucleotide(dna.getFromTemplate(i), false)
+WaitForEnoughProteins - DONE
+	[potentially: boolean readyToDivide = cell.waitForCellReadyToDivide()
+CopyDNA
+	Nucleotide nucleotideCopy = cell.waitForNucleotide(nucleotide, true)
+DigestFood
+	Food food = cell.waitForFood()      - DONE
+EatFood
+	Food food = cellEnvironment.waitForFood() - DONE

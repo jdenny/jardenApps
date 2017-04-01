@@ -17,17 +17,14 @@ import jarden.life.nucleicacid.Uracil;
  */
 
 public class Serine extends AminoAcid {
+    private List<AminoAcid> body = null;
     @Override
     public CellResource action(CellResource resource) throws InterruptedException {
         ChainResource chainResource = (ChainResource) resource;
         Protein protein = getProtein();
         TargetResource targetResource = chainResource.getTargetResource();
         CellResource node;
-        List<AminoAcid> body = protein.getBody();
-        if (body.size() == 0) {
-            // body defaults to awaitResource:
-            body.add(new Tryptophan());
-        }
+        if (body == null) body = protein.getBody();
         while (chainResource.hasNext()) {
             node = chainResource.next();
             for (AminoAcid aminoAcid : body) {
