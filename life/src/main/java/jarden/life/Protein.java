@@ -3,6 +3,7 @@ package jarden.life;
 import jarden.life.aminoacid.AminoAcid;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -12,16 +13,22 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class Protein implements Runnable, CellResource, TargetResource {
+    private enum RnaMode {
+        data, code, body;
+    }
     private Cell cell; // the cell this protein belongs to
 	private List<AminoAcid> aminoAcidList = new ArrayList<>();
+    private List<AminoAcid> dataList = new LinkedList<>();
+    private List<AminoAcid> codeList = new ArrayList<>();
+    private List<ArrayList<AminoAcid>> listOfBodies = new ArrayList<>();
+    // current body list; used in prepare stage:
+    private ArrayList<AminoAcid> aminoAcidBodyList;
     private Regulator regulator;
-    private int aminoAcidIndex;
     private int hashCode;
     private Thread thread = null;
     private String state; // for monitoring; put in LifeFX
-    private ArrayList<AminoAcid> aminoAcidBodyList;
-    private List<ArrayList<AminoAcid>> listOfBodies = new ArrayList<>();
     private boolean isForDna;
+    private boolean prepared = false; // in real life, "folded"
 
     /**
      * Used for debugging; set false if this protein should
@@ -89,38 +96,43 @@ public class Protein implements Runnable, CellResource, TargetResource {
         return isForDna;
     }
 
-    private enum RnaMode {
-        data, code, body;
-    }
     private CellResource action(CellResource resource) throws InterruptedException {
+        // new bits
+        if (!prepared) {
+            RnaMode rnaMode = RnaMode.code;
+            for (AminoAcid aminoAcid: aminoAcidList) {
+                if (Thread.interrupted()) {
+                    throw new InterruptedException(
+                            "Thread.interrupted detected in Protein.action()");
+                }
+                if (aminoAcid.isData()) {
+                    rnaMode = RnaMode.data;
+                    // TODO: this may come back to bite us one day!
+                    // used to turn off other way of passing data
+                    // to Tryptophan; not relevant with current style
+                    // of passing data to Tryptophan
+                    // currentResource = null;
+                } else if (aminoAcid.isCode()) {
+                    rnaMode = RnaMode.code;
+                } else if (aminoAcid.isBody()) {
+                    rnaMode = RnaMode.body;
+                    aminoAcidBodyList = new ArrayList<>();
+                    listOfBodies.add(aminoAcidBodyList);
+                } else if (rnaMode == RnaMode.code) {
+                    codeList.add(aminoAcid);
+                } else if (rnaMode == RnaMode.body) {
+                    aminoAcidBodyList.add(aminoAcid);
+                } else if (rnaMode == RnaMode.data) {
+                    dataList.add(aminoAcid);
+                }
+            }
+            prepared = true;
+        }
         CellResource currentResource = resource;
-        RnaMode rnaMode = RnaMode.code;
-        int aaSize = aminoAcidList.size();
-        for (aminoAcidIndex = 0; aminoAcidIndex < aaSize; aminoAcidIndex++) {
-            if (Thread.interrupted()) {
-                throw new InterruptedException(
-                        "Thread.interrupted detected in Protein.action()");
-            }
-            AminoAcid aminoAcid = aminoAcidList.get(aminoAcidIndex);
-            if (aminoAcid.isData()) {
-                rnaMode = RnaMode.data;
-                currentResource = null;
-            } else if (aminoAcid.isCode()) {
-                rnaMode = RnaMode.code;
-            } else if (aminoAcid.isBody()) {
-                rnaMode = RnaMode.body;
-                aminoAcidBodyList = new ArrayList<>();
-                listOfBodies.add(aminoAcidBodyList);
-            } else if (rnaMode == RnaMode.code) {
-                currentResource = aminoAcid.action(currentResource);
-            } else if (rnaMode == RnaMode.body) {
-                aminoAcidBodyList.add(aminoAcid);
-            }
+        for (AminoAcid aminoAcid: codeList) {
+            currentResource = aminoAcid.action(currentResource);
         }
         return currentResource;
-    }
-    public AminoAcid getAminoAcid(int relativeIndex) {
-        return aminoAcidList.get(aminoAcidIndex + relativeIndex);
     }
     public void addAminoAcid(AminoAcid aminoAcid) {
 		aminoAcidList.add(aminoAcid);
@@ -176,9 +188,16 @@ public class Protein implements Runnable, CellResource, TargetResource {
         this.regulator = regulator;
     }
 
+    /*
+    Last in, first out, to cater for nested bodies.
+     */
     public List<AminoAcid> getBody() {
         int bodiesSize = listOfBodies.size();
         if (bodiesSize == 0) return null;
         return listOfBodies.remove(bodiesSize - 1);
+    }
+    public AminoAcid getData() {
+        if (dataList.size() == 0) return null;
+        return dataList.remove(0);
     }
 }

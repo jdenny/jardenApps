@@ -120,7 +120,7 @@ public class Cell implements Food {
                     "TGT" + // Cysteine (code)
                     "TGG" + // UGG, Tryptophan, awaitResource: readyToDivide
                     "TTG" + // UUG, CopyDNA
-                    "TAC"   // DivideCell
+                    "TAC"   // UAC, DivideCell
     };
     private final ReentrantLock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();

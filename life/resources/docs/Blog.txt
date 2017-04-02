@@ -14,3 +14,8 @@ had to go back - dismantle some of the code - before we could go forward.
 
 As design evolved, much obsolete code that we removed; any obsolete
 machinery (proteins) or data (DNA) in cells?
+
+Came to realise it's not just about DNA; there has to be a lot of machinery
+in the cell to make it all work. Also, how come 20 simple molecules - amino
+acids - can do so much, just by being chained together? Were these simple
+molecules designed specifically for life?

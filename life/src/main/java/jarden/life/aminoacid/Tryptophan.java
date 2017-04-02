@@ -13,6 +13,8 @@ import jarden.life.nucleicacid.Uracil;
  * Created by john.denny@gmail.com on 18/03/2017.
  */
 public class Tryptophan extends AminoAcid {
+    private AminoAcid resourceType = null;
+
     @Override
     public CellResource action(CellResource resource)
             throws InterruptedException {
@@ -24,28 +26,27 @@ public class Tryptophan extends AminoAcid {
             } else if (resource instanceof Nucleotide) {
                 return cell.waitForNucleotide((Nucleotide) resource,
                         protein.isForDna());
-            } else {
-                cell.throwError("unrecognised resource: " + resource);
-                return null;
             }
         }
-        AminoAcid aminoAcid = protein.getAminoAcid(-2);
-        if (aminoAcid instanceof Arginine) {
+        if (resourceType == null) {
+            resourceType = protein.getData();
+        }
+        if (resourceType instanceof Arginine) {
             return cell.waitForRNA();
-        } else if (aminoAcid instanceof Glutamine) {
+        } else if (resourceType instanceof Glutamine) {
             cell.waitForCellReadyToDivide();
             return null;
-        } else if (aminoAcid instanceof Phenylalanine) {
+        } else if (resourceType instanceof Phenylalanine) {
             return cell.waitForFoodFromCell();
-        } else if (aminoAcid instanceof Histidine) {
+        } else if (resourceType instanceof Histidine) {
             return cell.waitForFoodFromEnvironment();
-        } else if (aminoAcid instanceof Proline) {
+        } else if (resourceType instanceof Proline) {
             return cell.waitForRnaBelowTarget();
-        } else if (aminoAcid instanceof Asparagine) {
+        } else if (resourceType instanceof Asparagine) {
             cell.waitForCellNeedsFood();
             return null;
         } else {
-            cell.throwError("unrecognised resource type: " + aminoAcid);
+            cell.throwError("unrecognised resource type: " + resourceType);
             return null;
         }
     }

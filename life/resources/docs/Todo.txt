@@ -1,10 +1,9 @@
-Notes on resource counts************************
+Current actions *************************************************
 CellFood creates an extra Adenine, to show how many
 times a cell has been fed.
 But Cell does same thing will Alenine, and the numbers are different!
 Where do the extra Uracils come from?
 
-Current actions *************************************************
 make food into a chainResource? does this fit with the spirit of the design?
 seeing as food is inert, can it have methods?
 
@@ -14,8 +13,7 @@ problem as geneIndex will be corrupted!
 catch exceptions thrown in thread pools; will need this, not just for
 debugging, but also to see how well fare cells with different DNA
 
-******************************************
-change DNA to use Codons instead of Nucleotides directly; write test
+change DNA to use Codons instead of Nucleotides directly? write test
 for methods used by copy DNA; not sure if this is a good idea; we'll
 know when we've done polymerase
 
@@ -199,3 +197,11 @@ DigestFood
 	Food food = cell.waitForFood()      - DONE
 EatFood
 	Food food = cellEnvironment.waitForFood() - DONE
+
+Protein.action() processes amino acids every time the protein is run,
+but this is overkill; should build body lists once; Serine then takes
+them off the list of lists once; code AAs should all be put into
+a list; once this "precompile" is complete, just the codeList needs
+to be actioned - DONE
+
+
