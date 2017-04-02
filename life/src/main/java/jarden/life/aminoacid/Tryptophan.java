@@ -33,6 +33,8 @@ public class Tryptophan extends AminoAcid {
         }
         if (resourceType instanceof Arginine) {
             return cell.waitForRNA();
+        } else if (resourceType instanceof Isoleucine) {
+            return cell.getDNA();
         } else if (resourceType instanceof Glutamine) {
             cell.waitForCellReadyToDivide();
             return null;

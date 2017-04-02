@@ -5,9 +5,7 @@ import jarden.life.aminoacid.AminoAcid;
 import jarden.life.aminoacid.Arginine;
 import jarden.life.aminoacid.Asparagine;
 import jarden.life.aminoacid.AsparticAcid;
-import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
-import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.GlutamicAcid;
 import jarden.life.aminoacid.Glutamine;
 import jarden.life.aminoacid.Glycine;
@@ -62,9 +60,8 @@ public class Cell extends Food implements TargetResource {
     private final List<Protein> proteinList = new LinkedList<>();
     private final List<Regulator> regulatorList = new ArrayList<>();
     private final List<RNA> rnaList = new LinkedList<>();
-    // TODO: when proper aminoAcids, replace length with 20
     // in same sequence as CellData.aminoAcidNames
-    public static int[] aminoAcidFeedCounts = new int[CellData.aminoAcidNames.length];
+    public static int[] aminoAcidFeedCounts = new int[20];
     // indexed by nucleotide.getIndex(); 5 is number of nucleotide types
     public static int[] nucleotideFeedCounts = new int[5];
 
@@ -83,7 +80,7 @@ public class Cell extends Food implements TargetResource {
                     "CCT" + // CCU, Proline, regulator
                     "TGT" + // UGU, Cysteine, code
                     "TGG" + // UGG, Tryptophan, awaitResource: regulator
-                    "TCT" + // UCU, Serine, loop
+                    "TCT" + // UCU, Serine, loop: get RNA from regulator
                     "GAA",  // GAA, GlutamicAcid, add resource (RNA) to cell
             // ribosome:
             "TTA" +         // UUA, Leucine, turn on body mode
@@ -92,7 +89,7 @@ public class Cell extends Food implements TargetResource {
                     "CGT" + // CGU, Arginine, data: RNA
                     "TGT" + // UGU, Cysteine, turn on code mode
                     "TGG" + // UGG, Tryptophan, awaitResource: RNA
-                    "TCT" + // UCU, Serine, loop
+                    "TCT" + // UCU, Serine, loop: get Codons from RNA
                     "GAA",  // GAA, GlutamicAcid, add resource (protein) to cell
             // eat food:
             "GAT" +         // GAU, AsparticAcid, data
@@ -113,12 +110,19 @@ public class Cell extends Food implements TargetResource {
                     "TCT",  // UCU, Serine, loop
             // divide cell:
             "GGT" +         // GGU, Glycine, run only one of these proteins
-                    "GAT" + // AsparticAcid, data
+                    "ATT" + // AUU, Isoleucine, set nucleotide type to DNA
+                    "GAT" + // AsparticAcid, data mode
                     "CAA" + // CAA, Glutamine, readyToDivide
                     "TGT" + // Cysteine (code)
                     "TGG" + // UGG, Tryptophan, awaitResource: readyToDivide
-                    "TTG" + // UUG, CopyDNA
-                    "TAC"   // UAC, DivideCell
+                    "TTA" + // UUA, Leucine, body mode
+                    "TGG" + // UGG, Tryptophan, awaitResource (dna nucleotide)
+                    "GAT" + // AsparticAcid, data mode
+                    "ATT" + // AUU, Isoleucine, data: DNA
+                    "TGT" + // Cysteine (code)
+                    "TGG" + // UGG, Tryptophan, awaitResource: DNA
+                    "TCT" + // UCU, Serine, loop: copyDNA
+                    "AAA"   // AAA, Lysine, DivideCell
     };
     private final ReentrantLock aminoAcidListLock = new ReentrantLock();
     private final Condition aminoAcidAvailableCondition = aminoAcidListLock.newCondition();
@@ -250,9 +254,7 @@ public class Cell extends Food implements TargetResource {
         else if (codonStr.equals("CGT")) return new Arginine();
         else if (codonStr.equals("AAT")) return new Asparagine();
         else if (codonStr.equals("GAT")) return new AsparticAcid();
-        else if (codonStr.equals("TTG")) return new CopyDNA();
         else if (codonStr.equals("TGT")) return new Cysteine();
-        else if (codonStr.equals("TAC")) return new DivideCell();
         else if (codonStr.equals("GAA")) return new GlutamicAcid();
         else if (codonStr.equals("CAA")) return new Glutamine();
         else if (codonStr.equals("GGT")) return new Glycine();

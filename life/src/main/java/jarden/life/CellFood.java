@@ -7,9 +7,7 @@ import jarden.life.aminoacid.AminoAcid;
 import jarden.life.aminoacid.Arginine;
 import jarden.life.aminoacid.Asparagine;
 import jarden.life.aminoacid.AsparticAcid;
-import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
-import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.GlutamicAcid;
 import jarden.life.aminoacid.Glutamine;
 import jarden.life.aminoacid.Glycine;
@@ -80,14 +78,8 @@ public class CellFood extends Food {
         for (int i = 0; i < Cell.aminoAcidFeedCounts[3]; i++) {
             aminoAcidList.add(new AsparticAcid());
         }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[20]; i++) {
-            aminoAcidList.add(new CopyDNA());
-        }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[4]; i++) {
             aminoAcidList.add(new Cysteine());
-        }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[21]; i++) {
-            aminoAcidList.add(new DivideCell());
         }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[5]; i++) {
             aminoAcidList.add(new GlutamicAcid());

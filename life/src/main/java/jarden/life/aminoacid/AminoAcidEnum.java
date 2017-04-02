@@ -11,16 +11,14 @@ F	0	"GCT" + // GCU, Alanine
 F	1	"CGT" + // CGU, Arginine, set nucleotide type to RNA; data: RNA
 	2	"AAT" + // AAU, Asparagine, data: needMoreFood
 	3	"GAT" + // GAU, AsparticAcid, turn on data mode
-	20	"TTG" + // UUG, CopyDNA
 	4	"TGT" + // UGU, Cysteine, turn on code mode
-	21	"TAC" + // UAC, DivideCell
 	5	"GAA" + // GAA, GlutamicAcid, add resource to cell
 F	6	"CAA" + // CAA, Glutamine, data: readyToDivide
 	7	"GGT" + // GGU, Glycine, run only one of these proteins
 F	8	"CAT" + // CAU, Histidine, data: food from environment
 F	9	"ATT" + // AUU, Isoleucine, set nucleotide type to DNA; data: DNA
 	10	"TTA" + // UUA, Leucine, turn on body mode
-F	11	"AAA" + // AAA, Lysine
+F	11	"AAA" + // AAA, Lysine, divide cell
 F	12	"ATG" + // AUG, Methionine
 	13	"TTT" + // UUU, Phenylalanine, data: Food
 F	14	"CCT" + // CCU, Proline, data: Regulator (rna < target)

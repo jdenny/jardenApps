@@ -1,15 +1,23 @@
 package jarden.life.nucleicacid;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import jarden.life.Cell;
 import jarden.life.CellResource;
+import jarden.life.ChainResource;
+import jarden.life.TargetResource;
 
-public class DNA implements CellResource {
+public class DNA implements ChainResource, TargetResource {
     private List<Nucleotide> strand1 = new ArrayList<>(); // master
     private List<Nucleotide> strand2 = new ArrayList<>(); // DNA messenger template
+    private int sourceIndex = 0;
+    private int targetIndex = 0;
+    /*
+    saved as instance variable, so can be copied to targetResource
+    and used in TargetResource.add(nucleotide);
+      */
+    private int dnaSize;
 
     public void add(Nucleotide n1, Nucleotide n2) {
         if (n1.dnaMatch(n2)) {
@@ -46,16 +54,38 @@ public class DNA implements CellResource {
     public String getName() {
         return this.toString();
     }
-    public List<Nucleotide> getStrand1() {
-        return strand1;
+
+    @Override
+    public boolean hasNext() {
+        if (sourceIndex >= strand1.size() * 2) {
+            sourceIndex = 0;
+            return false;
+        } else return true;
     }
-    public List<Nucleotide> getStrand2() {
-        return strand2;
+    @Override
+    public Nucleotide next() {
+        int index = sourceIndex++;
+        int dnaSize = strand1.size();
+        if (index < dnaSize) {
+            return strand1.get(index);
+        } else {
+            return strand2.get(index - dnaSize);
+        }
     }
-    public void addToStrand1(Nucleotide nucleotide) {
-        strand1.add(nucleotide);
+    @Override
+    public TargetResource getTargetResource() {
+        DNA dna = new DNA();
+        dna.dnaSize = this.strand1.size();
+        return dna;
     }
-    public void addToStrand2(Nucleotide nucleotide) {
-        strand2.add(nucleotide);
+    @Override
+    public void add(CellResource _nucleotide) {
+        Nucleotide nucleotide = (Nucleotide) _nucleotide;
+        int index = targetIndex++;
+        if (index < dnaSize) {
+            strand2.add(nucleotide);
+        } else {
+            strand1.add(nucleotide);
+        }
     }
 }

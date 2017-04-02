@@ -1,11 +1,10 @@
 Current actions *************************************************
+Lysine is currently specific to Divide Cell; needs to be generalised
+
 CellFood creates an extra Adenine, to show how many
 times a cell has been fed.
 But Cell does same thing will Alenine, and the numbers are different!
 Where do the extra Uracils come from?
-
-make food into a chainResource? does this fit with the spirit of the design?
-seeing as food is inert, can it have methods?
 
 could 2 threads be accessing the same regulator? if so this will cause a
 problem as geneIndex will be corrupted!
@@ -39,65 +38,6 @@ make sure TestCell and MasterDesigner still work
 Create nucleicAcid and aminoAcid from more basic raw materials,
 instead of from existing cells; in programming terms, an aminoAcid
 is a bit of code! where does that come from?
-
-Current aminoAcids******************
-polymerase
-    FindNextGene
-    	get DNA
-    	find start of gene (promoter)
-    GetRNAFromGene
-    	wait for required 3 nucleotides
-    	add to RNA
-    	repeat until end of gene (stop)
-ribosome
-	GetCodonFromRNA
-		if no RNA: waitForRNA
-		get next codon
-		move to new position
-		return codon
-
-		hasMore: if some RNA and not at end
-	GetAminoAcidFromCodon
-		if stop codon:
-			add protein to cell
-		else:
-			waitForAminoAcid
-			add aminoAcid to protein
-	AddAminoAcidToProtein
-		(incorporated into GetAminoAcidFromCodon)
-
-digestFood
-	DigestFood
-		wait for food
-		get nucleotides
-		for each: add to cell
-		get DNA
-		for each nucleotide: add to cell
-		get aminoAcids
-		for each: add to cell
-		get proteins
-		for each:
-			get aminoAcids
-			for each: add to cell
-
-divideCell
-	DivideCell
-		only run if another divideCell not running
-		wait until enough proteins to divide
-		copy DNA:
-			for each nucleotide pair:
-				wait for matching nucleotide
-		for each protein > base proteins:
-			stop protein
-			move to new cell
-
-20 aminoAcids **********************
-attach to matching resource; perhaps use some
-aminoAcids to identify resourceType
-
-move to next element in chain
-
-add created resource (e.g. protein) to cell
 
 Complete Actions *************************************
 replace FindNextGene, GetRNAFromGene with Polymerase - DONE
@@ -206,3 +146,6 @@ to be actioned - DONE
 
 report exceptions thrown in thread pools; will need this, not just for - DONE
 debugging, but also to see how well fare cells with different DNA
+
+make food into a chainResource? does this fit with the spirit of the design?
+seeing as food is inert, can it have methods? - DONE

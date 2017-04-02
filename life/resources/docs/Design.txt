@@ -33,7 +33,57 @@ The key issue is this: DivideCell should start when we have at lease one copy
  working on the same bit of DNA at the same time. Similarly, in ribosome always
  takes off the first RNA in the list, it will always produce proteins in the
  correct sequence.
-End of doodles**********************************************
+
+Outline design of proteins**********************************
+polymerase
+    FindNextGene
+    	get DNA
+    	find start of gene (promoter)
+    GetRNAFromGene
+    	wait for required 3 nucleotides
+    	add to RNA
+    	repeat until end of gene (stop)
+ribosome
+	GetCodonFromRNA
+		if no RNA: waitForRNA
+		get next codon
+		move to new position
+		return codon
+
+		hasMore: if some RNA and not at end
+	GetAminoAcidFromCodon
+		if stop codon:
+			add protein to cell
+		else:
+			waitForAminoAcid
+			add aminoAcid to protein
+	AddAminoAcidToProtein
+		(incorporated into GetAminoAcidFromCodon)
+
+digestFood
+	DigestFood
+		wait for food
+		get nucleotides
+		for each: add to cell
+		get DNA
+		for each nucleotide: add to cell
+		get aminoAcids
+		for each: add to cell
+		get proteins
+		for each:
+			get aminoAcids
+			for each: add to cell
+
+divideCell
+	DivideCell
+		only run if another divideCell not running
+		wait until enough proteins to divide
+		copy DNA:
+			for each nucleotide pair:
+				wait for matching nucleotide
+		for each protein > base proteins:
+			stop protein
+			move to new cell
 
 
 Current proposal******************************************************
