@@ -13,8 +13,7 @@ F	1	"CGT" + // CGU, Arginine, set nucleotide type to RNA; data: RNA
 	3	"GAT" + // GAU, AsparticAcid, turn on data mode
 	20	"TTG" + // UUG, CopyDNA
 	4	"TGT" + // UGU, Cysteine, turn on code mode
-	21	"TCA" + // UCA, DigestFood
-	22	"TAC" + // UAC, DivideCell
+	21	"TAC" + // UAC, DivideCell
 	5	"GAA" + // GAA, GlutamicAcid, add resource to cell
 F	6	"CAA" + // CAA, Glutamine, data: readyToDivide
 	7	"GGT" + // GGU, Glycine, run only one of these proteins

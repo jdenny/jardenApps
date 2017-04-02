@@ -11,6 +11,8 @@ instructions took many [how many?] lines.
 Many times we had to redesign our approach - even doing our best to copy
 the design of living cells - to make it work. Couldn't evolve towards it;
 had to go back - dismantle some of the code - before we could go forward.
+Need illustrations of how often we do this in ordinary life: tidying a room,
+Dawkins Sonnet 'proof', partially working wing, upgrade bike to disc brakes
 
 As design evolved, much obsolete code that we removed; any obsolete
 machinery (proteins) or data (DNA) in cells?

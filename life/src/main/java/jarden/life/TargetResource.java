@@ -5,5 +5,5 @@ package jarden.life;
  */
 
 public interface TargetResource extends CellResource {
-    void add(CellResource resource);
+    void add(CellResource resource) throws InterruptedException;
 }

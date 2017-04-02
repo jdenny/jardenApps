@@ -1,14 +1,14 @@
-package jarden.life.aminoacid;
+package jarden.life.obsolete;
 
-import java.util.List;
+/**
+ * Created by john.denny@gmail.com on 02/04/2017.
+ */
 
-import jarden.life.Cell;
 import jarden.life.CellResource;
-import jarden.life.Food;
+import jarden.life.aminoacid.AminoAcid;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Cytosine;
-import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.Uracil;
 
 /**
@@ -23,6 +23,7 @@ import jarden.life.nucleicacid.Uracil;
 
 public class DigestFood extends AminoAcid {
     public CellResource action(CellResource _food) throws InterruptedException {
+        /*!!
         Food food = (Food) _food;
         Cell cell = getCell();
         List<Nucleotide> nucleotides = food.getNucleotideList();
@@ -33,6 +34,7 @@ public class DigestFood extends AminoAcid {
         if (aminoAcids != null && aminoAcids.size() > 0) {
             cell.addAminoAcids(aminoAcids);
         }
+        */
         return null;
     }
     @Override

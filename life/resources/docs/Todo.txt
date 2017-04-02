@@ -10,8 +10,8 @@ seeing as food is inert, can it have methods?
 could 2 threads be accessing the same regulator? if so this will cause a
 problem as geneIndex will be corrupted!
 
-catch exceptions thrown in thread pools; will need this, not just for
-debugging, but also to see how well fare cells with different DNA
+move divideCell into Cell; run it in its own new thread, so that it
+doesn't need to worry about stopping itself
 
 change DNA to use Codons instead of Nucleotides directly? write test
 for methods used by copy DNA; not sure if this is a good idea; we'll
@@ -204,4 +204,5 @@ them off the list of lists once; code AAs should all be put into
 a list; once this "precompile" is complete, just the codeList needs
 to be actioned - DONE
 
-
+report exceptions thrown in thread pools; will need this, not just for - DONE
+debugging, but also to see how well fare cells with different DNA

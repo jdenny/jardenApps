@@ -7,7 +7,6 @@ import jarden.life.aminoacid.Asparagine;
 import jarden.life.aminoacid.AsparticAcid;
 import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
-import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.GlutamicAcid;
 import jarden.life.aminoacid.Glutamine;
@@ -52,16 +51,14 @@ import static jarden.life.nucleicacid.Nucleotide.startGuanineCt;
 import static jarden.life.nucleicacid.Nucleotide.startThymineCt;
 import static jarden.life.nucleicacid.Nucleotide.stopCode;
 
-public class Cell implements Food {
+public class Cell extends Food implements TargetResource {
     private final CellEnvironment cellEnvironment;
     private DNA dna;
     private int generation = 1;
     private int geneSize;
     private int hashCode = 0;
     private int id;
-    private final List<AminoAcid> aminoAcidList = new LinkedList<>();
     private final List<Food> foodList = new LinkedList<>();
-    private final List<Nucleotide> nucleotideList = new LinkedList<>();
     private final List<Protein> proteinList = new LinkedList<>();
     private final List<Regulator> regulatorList = new ArrayList<>();
     private final List<RNA> rnaList = new LinkedList<>();
@@ -110,9 +107,10 @@ public class Cell implements Food {
             // digest:
             "GAT" +         // GAU, AsparticAcid, data mode
                     "TTT" + // UUU, Phenylalanine, food
+                    "TTA" + // UUA, Leucine, body mode: empty body!
                     "TGT" + // UGU, Cysteine, code
                     "TGG" + // UGG, Tryptophan, awaitResource: food
-                    "TCA",  // UCA, DigestFood
+                    "TCT",  // UCU, Serine, loop
             // divide cell:
             "GGT" +         // GGU, Glycine, run only one of these proteins
                     "GAT" + // AsparticAcid, data
@@ -165,7 +163,8 @@ public class Cell implements Food {
         (thread 14 used by Timer)
 
      */
-    public static Cell getSyntheticCell(CellEnvironment cellEnvironment) throws InterruptedException {
+    public static Cell getSyntheticCell(CellEnvironment cellEnvironment)
+            throws InterruptedException {
         if (syntheticCell == null) {
             syntheticCell = makeSyntheticCell(cellEnvironment);
         }
@@ -253,7 +252,6 @@ public class Cell implements Food {
         else if (codonStr.equals("GAT")) return new AsparticAcid();
         else if (codonStr.equals("TTG")) return new CopyDNA();
         else if (codonStr.equals("TGT")) return new Cysteine();
-        else if (codonStr.equals("TCA")) return new DigestFood();
         else if (codonStr.equals("TAC")) return new DivideCell();
         else if (codonStr.equals("GAA")) return new GlutamicAcid();
         else if (codonStr.equals("CAA")) return new Glutamine();
@@ -359,8 +357,9 @@ public class Cell implements Food {
     public void throwError(String error) {
         String message = "Cell-" + id + " " +
                 Thread.currentThread().getName() + " ***** " + error;
-        System.out.println(message);
-        throw new IllegalStateException(message);
+        IllegalStateException e = new IllegalStateException(message);
+        e.printStackTrace();
+        throw e;
     }
     public static void throwError2(String error) {
         String message = Thread.currentThread().getName() +
@@ -462,26 +461,24 @@ public class Cell implements Food {
             protein.start(cellEnvironment.getThreadPoolExecutor());
         }
 	}
-	public void addAminoAcids(List<AminoAcid> aminoAcids) throws InterruptedException {
+    public void addAminoAcid(AminoAcid aminoAcid) throws InterruptedException {
         aminoAcidListLock.lockInterruptibly();
         try {
-            aminoAcidList.addAll(aminoAcids);
+            aminoAcidList.add(aminoAcid);
             aminoAcidAvailableCondition.signalAll();
         } finally {
             aminoAcidListLock.unlock();
         }
-	}
-	public void addNucleotides(List<Nucleotide> nucleotides) throws InterruptedException {
+    }
+    public void addNucleotide(Nucleotide nucleotide) throws InterruptedException {
         nucleotideListLock.lockInterruptibly();
         try {
-            for (Nucleotide nucleotide: nucleotides) {
-                nucleotideList.add(nucleotide);
-            }
+            nucleotideList.add(nucleotide);
             nucleotideAvailableCondition.signalAll();
         } finally {
             nucleotideListLock.unlock();
         }
-	}
+    }
 	public void addRNA(RNA rna) throws InterruptedException {
         rnaListLock.lockInterruptibly();
         try {
@@ -838,14 +835,6 @@ public class Cell implements Food {
     public List<Protein> getProteinList() {
         return proteinList;
     }
-    @Override
-    public List<AminoAcid> getAminoAcidList() {
-        return this.aminoAcidList;
-    }
-    @Override
-    public List<Nucleotide> getNucleotideList() {
-        return nucleotideList;
-    }
     public DNA getDNA() {
         return dna;
     }
@@ -881,5 +870,14 @@ public class Cell implements Food {
     }
     public Lock getRegulatorListLock() {
         return regulatorListLock;
+    }
+
+    @Override
+    public void add(CellResource resource) throws InterruptedException {
+        if (resource instanceof AminoAcid) {
+            addAminoAcid((AminoAcid) resource);
+        } else if (resource instanceof Nucleotide) {
+            addNucleotide((Nucleotide) resource);
+        }
     }
 }

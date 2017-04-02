@@ -15,7 +15,6 @@ import jarden.life.nucleicacid.Uracil;
  * Generic loop.
  * Created by john.denny@gmail.com on 18/03/2017.
  */
-
 public class Serine extends AminoAcid {
     private List<AminoAcid> body = null;
     @Override
@@ -23,6 +22,9 @@ public class Serine extends AminoAcid {
         ChainResource chainResource = (ChainResource) resource;
         Protein protein = getProtein();
         TargetResource targetResource = chainResource.getTargetResource();
+        if (targetResource == null) {
+            targetResource = getCell();
+        }
         CellResource node;
         if (body == null) body = protein.getBody();
         while (chainResource.hasNext()) {

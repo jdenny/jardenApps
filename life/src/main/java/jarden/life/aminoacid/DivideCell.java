@@ -42,7 +42,7 @@ public class DivideCell extends AminoAcid {
         if (proteinListSize < geneSize * 2) {
             System.out.println("DivideCell.proteinListSize=" + proteinListSize);
         }
-        // dis should stoppem floppen:
+        // disshud stoppemfloppen:
         daughterRegulatorListLock.lockInterruptibly();
         regulatorListLock.lockInterruptibly();
         try {
@@ -103,7 +103,7 @@ public class DivideCell extends AminoAcid {
     }
     @Override
     public int getIndex() {
-        return 22;
+        return 21;
     }
     @Override
     public String getName() {

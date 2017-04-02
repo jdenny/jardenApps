@@ -7,6 +7,7 @@ import jarden.life.Protein;
 import jarden.life.nucleicacid.Adenine;
 import jarden.life.nucleicacid.Codon;
 import jarden.life.nucleicacid.Guanine;
+import jarden.life.nucleicacid.Nucleotide;
 import jarden.life.nucleicacid.RNA;
 
 /**

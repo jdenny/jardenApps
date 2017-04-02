@@ -1,6 +1,5 @@
 package jarden.life;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import jarden.life.aminoacid.Alanine;
@@ -10,7 +9,6 @@ import jarden.life.aminoacid.Asparagine;
 import jarden.life.aminoacid.AsparticAcid;
 import jarden.life.aminoacid.CopyDNA;
 import jarden.life.aminoacid.Cysteine;
-import jarden.life.aminoacid.DigestFood;
 import jarden.life.aminoacid.DivideCell;
 import jarden.life.aminoacid.GlutamicAcid;
 import jarden.life.aminoacid.Glutamine;
@@ -38,19 +36,7 @@ import jarden.life.nucleicacid.Uracil;
  * Created by john.denny@gmail.com on 24/02/2017.
  */
 
-public class CellFood implements Food {
-    private List<AminoAcid> aminoAcidList = new LinkedList<>();
-    private List<Nucleotide> nucleotideList = new LinkedList<>();
-
-    @Override
-    public List<AminoAcid> getAminoAcidList() {
-        return aminoAcidList;
-    }
-    @Override
-    public List<Nucleotide> getNucleotideList() {
-        return nucleotideList;
-    }
-
+public class CellFood extends Food {
     @Override
     public String getName() {
         return "Cell Food";
@@ -101,9 +87,6 @@ public class CellFood implements Food {
             aminoAcidList.add(new Cysteine());
         }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[21]; i++) {
-            aminoAcidList.add(new DigestFood());
-        }
-        for (int i = 0; i < Cell.aminoAcidFeedCounts[22]; i++) {
             aminoAcidList.add(new DivideCell());
         }
         for (int i = 0; i < Cell.aminoAcidFeedCounts[5]; i++) {
