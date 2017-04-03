@@ -73,6 +73,7 @@ public class Lysine extends AminoAcid {
                 }
             }
             cell.getCellEnvironment().addCell(daughterCell);
+            cell.reportNewGeneration(daughterCell.getGeneration());
             cell.getRnaBelowTargetCondition().signalAll();
             return daughterCell;
         } finally {

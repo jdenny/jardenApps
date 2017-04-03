@@ -38,7 +38,8 @@ public class CellEnvironment implements TimerListener {
     public CellEnvironment(boolean startLife)
             throws InterruptedException {
         if (startLife) {
-            addCell(Cell.getSyntheticCell(this));
+            // Cell.addRandomDNAVariation();
+            addCell(Cell.makeSyntheticCell(this));
         }
     }
     public void setCellListener(CellListener cellListener) {

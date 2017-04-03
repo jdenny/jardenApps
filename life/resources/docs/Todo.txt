@@ -24,6 +24,26 @@ tidy up documentation so far, and write report on work so far
 check locks & conditions and Thread.isInterrupted()
 
 convert killCell to protein; cell maintain list of cells to be killed
+set synthetic cell to kill itself!
+
+Phase 3 **********************************************
+find out if any variations of DNA enable the cell to survive
+1. change codon; test if it reaches gen 3 (or 4?); test if any exceptions;
+   feed for 10 seconds
+produce log of:
+codon changed at position: <n> from value <AAA> to value <GGG>
+generation reached: <m>
+exceptions thrown: <list of exceptions>
+
+2. if above looks promising, have normal cell and variation competing
+   for same food
+
+1a. random variations to DNA
+1b. record how many generations were reached; print as higher
+ generation reached
+
+Eventually, would like to introduce a random variation in DNA each time
+a cell divides; for now, only vary initial DNA.
 
 End of current actions *****************************************
 

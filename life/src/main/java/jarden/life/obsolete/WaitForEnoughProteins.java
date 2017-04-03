@@ -15,16 +15,6 @@ public class WaitForEnoughProteins extends AminoAcid {
      * @return false if another instance of DivideCell is running,
      * otherwise return true.
      */
-    /*!!
-    public boolean activateOnCreate() {
-        Cell cell = getCell();
-        if (cell.isDivideCellRunning()) return false;
-        else {
-            cell.setDivideCellRunning(true);
-            return true;
-        }
-    }
-    */
     @Override
 	public CellResource action(CellResource notUsed) throws InterruptedException {
         Cell cell = getCell();

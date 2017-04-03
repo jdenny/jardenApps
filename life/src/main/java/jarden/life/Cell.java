@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -50,6 +51,8 @@ import static jarden.life.nucleicacid.Nucleotide.startThymineCt;
 import static jarden.life.nucleicacid.Nucleotide.stopCode;
 
 public class Cell extends Food implements TargetResource {
+    private static int highestGeneration = 1;
+
     private final CellEnvironment cellEnvironment;
     private DNA dna;
     private int generation = 1;
@@ -66,6 +69,16 @@ public class Cell extends Food implements TargetResource {
     public static int[] nucleotideFeedCounts = new int[5];
 
     private static boolean verbose = true;
+
+    /*
+    Used to introduce random variations into the DNA:
+     */
+    private static String[] codonStrs = {
+            "GCT", "CGT", "AAT", "GAT", "TGT",
+            "GAA", "CAA", "GGT", "CAT", "ATT",
+            "TTA", "AAA", "ATG", "TTT", "CCT",
+            "TCT", "ACT", "TGG", "TAT", "GTT"
+    };
     private static int currentId = 0;
     private static Cell syntheticCell;
     // used for building synthetic cell:
@@ -173,6 +186,22 @@ public class Cell extends Food implements TargetResource {
             syntheticCell = makeSyntheticCell(cellEnvironment);
         }
         return syntheticCell;
+    }
+    public static void addRandomDNAVariation() {
+        Random random = new Random();
+        int geneNum = random.nextInt(geneStrs.length);
+        String geneStr = geneStrs[geneNum];
+        int codonPos = random.nextInt(geneStr.length() / 3) * 3;
+        String codonStr = geneStr.substring(codonPos, codonPos + 3);
+        String newCodonStr;
+        do {
+            int newCodonNum = random.nextInt(20);
+            newCodonStr = codonStrs[newCodonNum];
+        } while (codonStr.equals(newCodonStr));
+        geneStrs[geneNum] = geneStr.substring(0, codonPos) +
+                newCodonStr + geneStr.substring(codonPos + 3);
+        log("in gene " + geneNum + ", codon at position " + codonPos +
+                " changed from " + codonStr + " to " + newCodonStr);
     }
     /**
      * This is the God cell. Cells are able to reproduce, by dividing, but how is the
@@ -850,12 +879,6 @@ public class Cell extends Food implements TargetResource {
     public Condition getRnaBelowTargetCondition() {
         return rnaBelowTargetCondition;
     }
-    public Condition getNeedMoreFoodCondition() {
-        return needMoreFoodCondition;
-    }
-    public Lock getFoodListLock() {
-        return foodListLock;
-    }
     public int getGeneSize() {
         return geneSize;
     }
@@ -880,6 +903,12 @@ public class Cell extends Food implements TargetResource {
             addAminoAcid((AminoAcid) resource);
         } else if (resource instanceof Nucleotide) {
             addNucleotide((Nucleotide) resource);
+        }
+    }
+    public void reportNewGeneration(int generation) {
+        if (generation > highestGeneration) {
+            highestGeneration = generation;
+            logId("new highestGeneration: " + highestGeneration);
         }
     }
 }
