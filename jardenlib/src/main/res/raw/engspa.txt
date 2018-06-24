@@ -1248,7 +1248,7 @@ free time,tiempo libre,phrase,n_a,n_a,1
 game,juego,noun,masculine,hobby,1
 games console,consola de juegos,noun,feminine,hobby,1
 Good Friday,Viernes Santo,phrase,n_a,time,1
-guitar,guitarra,noun,feminine,time,1
+guitar,guitarra,noun,feminine,music,1
 gymnastics,la gimnasia,phrase,n_a,sport,1
 handball,balonmano,noun,masculine,sport,1
 happy birthday,feliz cumpleaños,phrase,n_a,n_a,1

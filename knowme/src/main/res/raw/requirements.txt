@@ -4,6 +4,7 @@ Notes on projects:
 	KnowMeApp4: new graphics, designed by Sam	
 
 TODO:
+More questions; get to know your partner's preferences, not just facts, e.g. favourite breakfast, rather than favourite colour, or colour of grandmother's eyes.
 Show features of each release version, in this document.
 need more screen shots before can edit version published on playstore
 put POJOS in JardenAppLib?
@@ -19,8 +20,12 @@ a little longer.
 There seem to be a couple of issues with Bluetooth!
 	BluetoothService lines 437 & 438 look a bit suspect!
 	The write() seems to run in the main thread - that can't be right!
+Joe's UI suggestions
+--------------------
+Quit or restart button
+
 Joe's big red button idea
----------------------
+-------------------------
 is this feasible? open KnowMe
 bluetooth: start server; get list of paired devices; send IAmHere message
 to each one; status: "discover mode"

@@ -1,8 +1,11 @@
 package jarden.engspa;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import jarden.engspa.VerbUtils.Person;
 import jarden.engspa.VerbUtils.Tense;
@@ -30,7 +33,7 @@ public class EngSpaQuiz extends Quiz {
 	 */
 	private static final char[] LEARN_CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
 	private static final char[] TOPIC_CFP_LIST = {'C', 'F'};
-    private static final char[] PRACTICE_CFP_LIST = {'P', 'F'};
+    private static final char[] PRACTICE_CFP_LIST = {'C', 'F'};
 	private char[] cfpList;
 	
 	private String spanish;
@@ -46,16 +49,10 @@ public class EngSpaQuiz extends Quiz {
     /*
 	 * if in topic mode (this.topic != null):
 	 * 		currentWordList holds words of this topic
-	 * else (in level mode):
+	 * else (in learn mode):
 	 * 		currentWordList holds words where difficulty == userLevel
 	 */
 	private List<EngSpa> currentWordList;
-	/*
-	 * when the user has got to the end of all the topic words
-	 * we revert to learnWordList (then prompt user to choose
-	 * another topic if she wants to)
-	 */
-	private List<EngSpa> learnWordList;
 	/*
 	 * words wrong at this userLevel or carried over from
 	 * previous levels
@@ -90,14 +87,6 @@ public class EngSpaQuiz extends Quiz {
         this.modeInitialised = false;
         this.engSpaUser.setTopic(topic);
     }
-    private void initWordsForTopic() {
-        this.cfpList = TOPIC_CFP_LIST;
-        this.learnWordList = currentWordList; // to go back to later if necessary
-        this.currentWordList = engSpaDAO.findWordsByTopic(engSpaUser.getTopic());
-        Collections.shuffle(this.currentWordList);
-        this.cfpListIndex = 0;
-        this.failedWordList = this.engSpaDAO.getFailedWordList();
-    }
 	/**
 	 * if userLevel > maximum, based on size of dictionary,
 	 * replace with USER_LEVEL_ALL.
@@ -114,21 +103,7 @@ public class EngSpaQuiz extends Quiz {
     public void unsetModeInitialised() {
         this.modeInitialised = false;
     }
-    private void initWordsForLearn() {
-        int level = this.engSpaUser.getLearnLevel();
-        this.cfpList = LEARN_CFP_LIST;
-        this.currentWordList =  this.engSpaDAO.getCurrentWordList(level);
-        Collections.shuffle(currentWordList);
-        this.cfpListIndex = 0;
-        this.failedWordList = this.engSpaDAO.getFailedWordList();
-	}
-    private void initWordsForPractice() {
-        this.cfpList = PRACTICE_CFP_LIST;
-        this.currentWordList = null; // no currentWordList
-        this.cfpListIndex = 0;
-        this.failedWordList = this.engSpaDAO.getFailedWordList();
-    }
-	
+
 	/**
 	 * Get questions from Current, Passed and Failed lists.
 	 * @return spanish
@@ -140,7 +115,7 @@ public class EngSpaQuiz extends Quiz {
 	public String getNextQuestion(int questionSequence) throws EndOfQuestionsException {
         if (!this.modeInitialised) resetMode();
         QuizMode quizMode = engSpaUser.getQuizMode();
-        if ((quizMode == QuizMode.LEARN || quizMode == QuizMode.TOPIC) &&
+        if (/*!!(quizMode == QuizMode.LEARN || quizMode == QuizMode.TOPIC) &&*/
                 this.currentWordList.size() == 0 &&
                 this.failedWordList.size() == 0) {
             throw new EndOfQuestionsException("quizMode=" + quizMode);
@@ -241,6 +216,33 @@ public class EngSpaQuiz extends Quiz {
             initWordsForTopic();
         }
         this.modeInitialised = true;
+    }
+    private void initWordsForLearn() {
+        int level = this.engSpaUser.getLearnLevel();
+        this.cfpList = LEARN_CFP_LIST;
+        this.currentWordList = this.engSpaDAO.getCurrentWordList(level);
+        Collections.shuffle(currentWordList);
+        this.cfpListIndex = 0;
+        this.failedWordList = this.engSpaDAO.getFailedWordList();
+    }
+    private void initWordsForPracticeOld() {
+        this.cfpList = PRACTICE_CFP_LIST;
+        this.currentWordList = null; // no currentWordList
+        this.cfpListIndex = 0;
+        this.failedWordList = this.engSpaDAO.getFailedWordList();
+    }
+    private void initWordsForPractice() {
+        this.cfpList = PRACTICE_CFP_LIST;
+        this.currentWordList = getPassedWordSet();
+        this.cfpListIndex = 0;
+        this.failedWordList = this.engSpaDAO.getFailedWordList();
+    }
+    private void initWordsForTopic() {
+        this.cfpList = TOPIC_CFP_LIST;
+        this.currentWordList = engSpaDAO.findWordsByTopic(engSpaUser.getTopic());
+        Collections.shuffle(this.currentWordList);
+        this.cfpListIndex = 0;
+        this.failedWordList = this.engSpaDAO.getFailedWordList();
     }
 	private void incrementCfpListIndex() {
 		if (++this.cfpListIndex >= cfpList.length) {
@@ -357,6 +359,29 @@ public class EngSpaQuiz extends Quiz {
         }
         return es;
 	}
+	/*
+     Return a set (i.e. no duplicates) of randomPassedWords, that doesn't
+     include any recent words.
+       add 3 recent words
+       getRandomPassedWord until set contains 13;
+       remove 3 recent words
+	 */
+	private ArrayList<EngSpa> getPassedWordSet() {
+	    //
+        Set<EngSpa> randomPassedSet = new HashSet<>();
+        for (int i = 0; i < RECENTS_CT; i++) {
+            randomPassedSet.add(recentWords[i]);
+        }
+        int level = engSpaUser.getLearnLevel();
+        int targetCt = WORDS_PER_LEVEL + RECENTS_CT;
+        do {
+            randomPassedSet.add(engSpaDAO.getRandomPassedWord(level));
+        } while (randomPassedSet.size() < targetCt);
+        for (int i = 0; i < RECENTS_CT; i++) {
+            randomPassedSet.remove(recentWords[i]);
+        }
+        return new ArrayList<>(randomPassedSet);
+    }
 	/*
 	 * Return first word in failed list that was not recently used.
 	 */

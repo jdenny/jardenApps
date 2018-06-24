@@ -20,6 +20,7 @@ public class PresetQuiz extends Quiz {
 	private List<Integer> outstandingIndexList;
 	private int index = -1;
 	private String questionTemplate = null;
+	private String heading = null;
 
     /**
      * Build a Quiz from the InputStream. Assumes the inputStream contains
@@ -29,10 +30,17 @@ public class PresetQuiz extends Quiz {
      *		Q: question2
      *		A: answer2
      *		etc
+     *	    # comment line
+     *	    QA: questionAnswer - e.g. question spoken, then player types the same
+     *	    $IO: [questionStyle][answerStyle]
+     *	    $T: template for question
+     *	    $H: heading (or title)
      *
      * @param is an input stream containing the text
      * @param encoding e.g. "iso-8859-1"
      * @throws IOException
+     * @see Quiz#getQuestionStyle()
+     * @see #getNextQuestion(int)
      */
     public PresetQuiz(InputStream is, String encoding) throws IOException {
 		this(new InputStreamReader(is, encoding));
@@ -45,7 +53,7 @@ public class PresetQuiz extends Quiz {
 		while (true) {
 			String line = reader.readLine();
 			if (line == null) break; // end of file
-			if (line.startsWith("#")) continue;
+			if (line.length() == 0 || line.startsWith("#")) continue;
 			if (line.startsWith("Q: ")) {
 				question = line.substring(3);
 			} else if (line.startsWith("A: ")) {
@@ -58,6 +66,8 @@ public class PresetQuiz extends Quiz {
 				}
 			} else if (line.startsWith("$T: ")) {
 				questionTemplate = line.substring(4);
+            } else if (line.startsWith("$H: ")) {
+                heading = line.substring(4);
 			} else if (line.startsWith("$IO: ")) {
 				char questionStyle = line.charAt(5);
 				char answerStyle = line.charAt(6);
@@ -71,7 +81,7 @@ public class PresetQuiz extends Quiz {
 			}
 		}
 		reader.close();
-		common();
+		reset();
 	}
 	private void common() {
 		/*! if okay, replace calls to common() with reset()
@@ -100,7 +110,7 @@ public class PresetQuiz extends Quiz {
 				qaList.add(new QuestionAnswer(name, value));
 			}
 		}
-		common();
+		reset();
 	}
 	/**
 	 * Build a Quiz from a List of QuestionAnswer objects.
@@ -124,7 +134,7 @@ public class PresetQuiz extends Quiz {
 	public PresetQuiz(List<QuestionAnswer> qaList, String questionTemplate) {
 		this.qaList = qaList;
 		this.questionTemplate = questionTemplate;
-		common();
+		reset();
 	}
 	public List<QuestionAnswer> getQuestionAnswerList() {
 		return qaList;
@@ -132,6 +142,9 @@ public class PresetQuiz extends Quiz {
 	public String getQuestionTemplate() {
 		return questionTemplate;
 	}
+    public String getHeading() {
+        return this.heading;
+    }
 	@Override
 	public void reset() {
 		super.reset();

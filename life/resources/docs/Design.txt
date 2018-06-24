@@ -1,3 +1,6 @@
+Not sure if this has already been included!
+Object passed between amino acids is Properties. "Data" amino acid adds property. Aa1 turns on data; Aa2 turns it off. Aa can get its position, this get Aa's at position -1, -2 etc. Eg aa1, A, C, aa2, awaitresource, which gets type A, name C. Use enums. Protein.get-previousAA (1) or 2. So protein keeps track of aa index.
+
 Doodles ****************************************
 How to set the targets? obviously not critical
 proteins

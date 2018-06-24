@@ -1,16 +1,5 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.provider.engspa.EngSpaContract.QAStyle;
-import jarden.provider.engspa.EngSpaContract.VoiceText;
-import jarden.engspa.EngSpaDAO;
-import jarden.engspa.EngSpaQuiz;
-import jarden.engspa.EngSpaQuiz.QuizMode;
-import jarden.engspa.EngSpaUser;
-import jarden.quiz.EndOfQuestionsException;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -25,14 +14,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
+import jarden.engspa.EngSpaQuiz.QuizMode;
+import jarden.engspa.EngSpaUser;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
+import jarden.provider.engspa.EngSpaContract.VoiceText;
+import jarden.quiz.EndOfQuestionsException;
 
 public class EngSpaFragment extends Fragment implements OnClickListener,
 		OnLongClickListener, OnEditorActionListener {
@@ -239,22 +239,29 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.spanish = engSpaQuiz.getNextQuestion(
 					engSpaActivity.getQuestionSequence());
 		} catch (EndOfQuestionsException e) {
+            int userLevel = this.engSpaUser.getLearnLevel();
+            int maxUserLevel = this.engSpaDAO.getMaxUserLevel();
 			if (quizMode == QuizMode.LEARN) {
-				int userLevel = this.engSpaUser.getLearnLevel();
-				if (this.engSpaUser.isLearnModePhase2()) {
-					this.engSpaUser.setLearnModePhase2(false);
+                if (this.engSpaUser.isLearnModePhase2()) {
+                    this.engSpaUser.setLearnModePhase2(false);
                     int newUserLevel = userLevel + 1;
-                    if (newUserLevel > this.engSpaDAO.getMaxUserLevel()) {
+                    if (newUserLevel > maxUserLevel) {
                         startPracticeMode(R.string.levelsComplete);
                     } else {
                         engSpaQuiz.setUserLevel(newUserLevel);
                     }
-				} else {
-					engSpaQuiz.unsetModeInitialised();
+                } else {
+                    engSpaQuiz.unsetModeInitialised();
                     this.engSpaUser.setLearnModePhase2(true);
-				}
+                }
+            } else if (quizMode == QuizMode.PRACTICE) {
+                startPracticeMode(R.string.endOfPracticeSet);
 			} else { // must be topic mode
-                startPracticeMode(R.string.endOfTopic);
+                if (userLevel < maxUserLevel) {
+                    startLearnMode(R.string.endOfTopic);
+                } else {
+                    startPracticeMode(R.string.endOfTopic);
+                }
 			}
             try {
                 this.spanish = engSpaQuiz.getNextQuestion(
@@ -308,6 +315,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
     private void startPracticeMode(int messageId) {
         Toast.makeText(getActivity(), messageId, Toast.LENGTH_LONG).show();
         engSpaQuiz.setQuizMode(QuizMode.PRACTICE);
+        engSpaActivity.setAppBarTitle();
+    }
+    private void startLearnMode(int messageId) {
+        Toast.makeText(getActivity(), messageId, Toast.LENGTH_LONG).show();
+        engSpaQuiz.setQuizMode(QuizMode.LEARN);
         engSpaActivity.setAppBarTitle();
     }
     private void clearAnswerText() {

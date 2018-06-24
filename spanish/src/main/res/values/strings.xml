@@ -6,14 +6,13 @@
     <string name="chooseQAStyleStr">Choose Question/Answer Style</string>
     <string name="chooseTopic">Choose Topic</string>
     <string name="contents">Contents</string>
-    <string name="correctQueryStr">Correct?</string>
     <string name="currentStr">Currents:</string>
     <string name="deleteFailsStr">Delete all fails</string>
     <string name="endOfTopic">End of topic</string>
     <string name="englishStr">English</string>
     <string name="errorLoadingDB">Error loading database!</string>
     <string name="failStr">Fails:</string>
-    <string name="goStr">Go</string>
+    <string name="failsCorrectedStr">Fails corrected; resetting</string>
     <string name="helpHome">Help Home</string>
     <string name="hideHelp">Hide Help</string>
     <string name="invalidUserLevel">invalid learnLevel supplied</string>
@@ -28,7 +27,6 @@
     <string name="loadDBDone">Loading Spanish dictionary complete</string>
     <string name="loadingDB">Loading Spanish dictionary - please be patient with us!</string>
     <string name="micStr">Mic</string>
-    <string name="no">No</string>
     <string name="numbersGame">Numbers Game</string>
     <string name="numberPrompt">Number</string>
     <string name="one">1</string>
@@ -61,7 +59,7 @@
     <string name="userLevelErrorAudio">User level must be at least 2 for Audio Mode;
         you can increase your levels in Learn Mode
     </string>
-    <string name="userLevelErrorPractice">User level must be at least 2 for
+    <string name="userLevelErrorPractice">User level must be at least 3 for
         Practice Mode; you can increase your levels in Learn Mode
     </string>
     <string name="userNameStr">User name</string>
@@ -69,5 +67,5 @@
     <string name="userSettingsStr">User Settings</string>
     <string name="welcome"><b>¡Bienvenida! Welcome!</b> to Revise Spanish</string>
     <string name="wordLookup">Word Lookup</string>
-    <string name="yesLit">Yes</string>
+    <string name="endOfPracticeSet">practice batch done - felicitaciones!</string>
 </resources>

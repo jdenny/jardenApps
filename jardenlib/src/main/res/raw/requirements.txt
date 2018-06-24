@@ -32,6 +32,7 @@ engspa.txt
 		for hint, remove number at end
 
 small changes
+* conjugation of Cerrar - irregular verb!
 * when click on x (delete field) set focus
 * numbers game, change button to Start; when started, change it to Restart
 	add Pass button?
@@ -49,6 +50,8 @@ small changes
 * rename numbers game to gato y ratón?
 
 big changes
+* levels of verb tenses in Spanish; ideally, move to next level (e.g. future)
+	when mastered previous (e.g. present)
 * phrase generator: "the [noun] is in the [building or place]"
 	adjectives and adverbs, e.g. the green bus; el autobus verde; he ran quickly
 	I go to the city by bus; conjugate go; use any place, not just city;

@@ -1,8 +1,37 @@
 package com.jardenconsulting.spanishapp;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Deque;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
@@ -17,36 +46,6 @@ import jarden.engspa.EngSpaUtils;
 import jarden.http.MyHttpClient;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.quiz.QuizCache;
-
-import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.Handler;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
@@ -315,7 +314,7 @@ public class MainActivity extends AppCompatActivity
 			}
 		} else if (id == R.id.practiceMode) {
 			int level = getEngSpaUser().getLearnLevel();
-			if (level < 2) {
+			if (level < 3) {
 				showAlertDialog(R.string.userLevelErrorPractice);
 			} else {
 				engSpaQuiz.setQuizMode(QuizMode.PRACTICE);

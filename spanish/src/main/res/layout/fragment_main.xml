@@ -105,13 +105,13 @@
             android:id="@+id/correctButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yesLit" />
+            android:text="@string/yesStr" />
 
         <Button
             android:id="@+id/incorrectButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no" />
+            android:text="@string/noStr" />
 
     </LinearLayout>
 
