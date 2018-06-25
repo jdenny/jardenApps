@@ -3,7 +3,6 @@ package com.jardenconsulting.reviseanything;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,16 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
-import jarden.quiz.EndOfQuestionsException;
-import jarden.quiz.PresetQuiz;
-import jarden.quiz.QuestionAnswer;
+import jarden.quiz.ReviseItQuiz;
 
 /*
 https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
@@ -32,12 +24,21 @@ on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 User notes:
 to override question file, download a file called reviseit.txt
 
+TODO:
+Add this activity (renamed ReviseItActivity) to hotbridge
+1st pass (learn): go through mainList in order; save fails
+    after 3 corrects from mainList, ask a fail
+    when all mainList have been done, ask all fails
+    add fail to end of failList, including repeat fails
+    save, in preferences, where we are up to in currents, and which fails
+2nd pass (revise): as above, but go through mainList in random order
+    save last 3 questions, so don't repeat
+
+
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private String quizFileName = "reviseit.txt";
     public final static String TAG = "MainActivity";
-    private PresetQuiz quiz;
-    private List<QuestionAnswer> questionAnswerList;
+    private ReviseItQuiz reviseItQuiz;
 
     private TextView quizTitle;
     private TextView questionTextView;
@@ -77,45 +78,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.d(TAG, "CAN read external storage");
         }
-        this.quiz = getQuiz();
-        quizTitle.setText(quiz.getHeading());
-        questionAnswerList = this.quiz.getQuestionAnswerList();
-
+        try {
+            this.reviseItQuiz = new ReviseItQuiz(this);
+            quizTitle.setText(reviseItQuiz.getHeading());
+        } catch (IOException e) {
+            String message = "unable to load quiz: " + e;
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+        }
         askQuestion();
     }
-    /**
-     * Create a Quiz class based on Q-A text file called <i>quizFileName</i>.
-     * Get text file from downloads directory
-     * If it doesn't exists, use file in res/raw
-     */
-    private PresetQuiz getQuiz() {
-        try {
-            File publicDirectory = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(publicDirectory, quizFileName);
-            Log.d(TAG, file.getAbsolutePath());
-            InputStream inputStream;
-            if (file.canRead()) {
-                inputStream = new FileInputStream(file);
-            } else {
-                inputStream = getResources().openRawResource(R.raw.reviseit);
-            }
-            InputStreamReader isr = new InputStreamReader(inputStream);
-            return new PresetQuiz(isr);
-        } catch (IOException ioe) {
-            Log.e(TAG, "exception in getQuiz: " + ioe);
-            return null;
-        }
-    }
     private void askQuestion() {
-        try {
-            String question = quiz.getNextQuestion(1);
-            this.questionTextView.setText(question);
-            this.answerTextView.setText("");
-            showButtonLayout();
-        } catch (EndOfQuestionsException e) {
-            e.printStackTrace();
-        }
+        String question = reviseItQuiz.getNextQuestion(1);
+        this.questionTextView.setText(question);
+        this.answerTextView.setText("");
+        showButtonLayout();
     }
 
     @Override
@@ -136,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void goPressed() {
-        this.answerTextView.setText(quiz.getCorrectAnswer());
+        this.answerTextView.setText(reviseItQuiz.getCorrectAnswer());
         showSelfMarkLayout();
     }
 
@@ -148,22 +124,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.selfMarkLayout.setVisibility(View.GONE);
         this.goButton.setVisibility(View.VISIBLE);
     }
-
-    private void loadQuizzes() {
-        // I've left this here in case we need to use a background thread
-        Runnable runnable = new Runnable() {
-            private String message = "end of loadQuizzes()";
-            @Override
-            public void run() {
-                getQuiz();
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        };
-        new Thread(runnable).start();
-    }
-
 }

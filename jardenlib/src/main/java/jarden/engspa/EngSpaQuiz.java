@@ -115,8 +115,7 @@ public class EngSpaQuiz extends Quiz {
 	public String getNextQuestion(int questionSequence) throws EndOfQuestionsException {
         if (!this.modeInitialised) resetMode();
         QuizMode quizMode = engSpaUser.getQuizMode();
-        if (/*!!(quizMode == QuizMode.LEARN || quizMode == QuizMode.TOPIC) &&*/
-                this.currentWordList.size() == 0 &&
+        if (this.currentWordList.size() == 0 &&
                 this.failedWordList.size() == 0) {
             throw new EndOfQuestionsException("quizMode=" + quizMode);
         }
