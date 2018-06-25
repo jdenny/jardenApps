@@ -1,0 +1,12 @@
+$H: what does the last bid mean?
+# single bid
+Q: 1C
+A: 25pp & 5-card major or 26+pp
+Q: 1D
+A: 23-25pp & no 5-card major
+Q: 1H
+A: 4+ hearts & 20-22pp or 5+ hearts & 23-24pp
+Q: 1S
+A: <4 hearts; 4+ spades & 20-22pp or 5+ spades & 23-24pp
+Q: 1NT
+A: 12 HCP, 20-22 PP, no 4-card major, no 6+ minor, no 5-5 in minors

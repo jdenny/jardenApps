@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ReviseIt</string>
+    <string name="learnStr">Learn Mode</string>
+    <string name="reviseStr">Revise Mode</string>
 </resources>

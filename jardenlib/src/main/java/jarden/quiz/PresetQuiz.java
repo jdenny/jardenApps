@@ -83,15 +83,6 @@ public class PresetQuiz extends Quiz {
 		reader.close();
 		reset();
 	}
-	private void common() {
-		/*! if okay, replace calls to common() with reset()
-		if (questionTemplate == null) questionTemplate = "";
-		else if (!questionTemplate.endsWith(" ")) {
-			questionTemplate += " ";
-		}
-		*/
-		reset();
-	}
 	/**
 	 * Build a Quiz from properties, where for each property,
 	 * name is the question, and value is the answer.

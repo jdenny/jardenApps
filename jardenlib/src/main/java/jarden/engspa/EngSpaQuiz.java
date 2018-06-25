@@ -115,7 +115,8 @@ public class EngSpaQuiz extends Quiz {
 	public String getNextQuestion(int questionSequence) throws EndOfQuestionsException {
         if (!this.modeInitialised) resetMode();
         QuizMode quizMode = engSpaUser.getQuizMode();
-        if (this.currentWordList.size() == 0 &&
+        if (/*!!(quizMode == QuizMode.LEARN || quizMode == QuizMode.TOPIC) &&*/
+                this.currentWordList.size() == 0 &&
                 this.failedWordList.size() == 0) {
             throw new EndOfQuestionsException("quizMode=" + quizMode);
         }
@@ -351,7 +352,7 @@ public class EngSpaQuiz extends Quiz {
         EngSpa es = engSpaDAO.getRandomPassedWord(level);
         int wordId = es.getWordId();
         int maxId = (level - 1) * WORDS_PER_LEVEL;
-        for (int i = 0; isRecentWord(es) && i < 3; i++) {
+        for (int i = 0; isRecentWord(es) && i < RECENTS_CT; i++) {
             wordId++;
             if (wordId > maxId) wordId -= WORDS_PER_LEVEL;
             es = engSpaDAO.getWordById(wordId);
