@@ -23,9 +23,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import jarden.quiz.EndOfQuestionsException;
-import jarden.quiz.ReviseItQuiz;
+import jarden.quiz.PresetQuiz;
 
 /**
  * Create a Quiz class based on Q-A text file called <i>quizFileName</i>.
@@ -41,7 +42,6 @@ on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 TODO:
 Add this activity (renamed ReviseItActivity) to hotbridge
 Name options: Freak Wiz, york, mike, dunk, punk, trike
-add functionality of ReviseItQuiz to PresetQuiz and use that instead
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String TAG = "ReviseIt";
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // "reviseitmini.txt"; // ***also change name of resource file***
     private final static String questionIndexKey = "questionIndexKey";
 
-    private ReviseItQuiz reviseItQuiz;
+    private PresetQuiz reviseItQuiz;
     private TextView questionTextView;
     private TextView answerTextView;
     private TextView statsTextView;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 inputStream = getResources().openRawResource(R.raw.reviseit);
             }
-            this.reviseItQuiz = new ReviseItQuiz(inputStream);
+            this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
             quizTitle.setText(reviseItQuiz.getHeading());
             this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
             int savedQuestionIndex = sharedPreferences.getInt(questionIndexKey, -1);
@@ -121,10 +121,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Handle item selection
         int id = item.getItemId();
         if (id == R.id.learnModeButton) {
-            reviseItQuiz.setQuizMode(ReviseItQuiz.QuizMode.LEARN);
+            reviseItQuiz.setQuizMode(PresetQuiz.QuizMode.LEARN);
             setTitle(R.string.learnStr);
         } else if (id == R.id.reviseModeButton) {
-            reviseItQuiz.setQuizMode(ReviseItQuiz.QuizMode.REVISE);
+            reviseItQuiz.setQuizMode(PresetQuiz.QuizMode.REVISE);
             setTitle(R.string.reviseStr);
         } else {
             return super.onOptionsItemSelected(item);
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void askQuestion() {
         String question;
-        if (reviseItQuiz.getQuizMode() == ReviseItQuiz.QuizMode.LEARN) {
+        if (reviseItQuiz.getQuizMode() == PresetQuiz.QuizMode.LEARN) {
             int questionIndex = reviseItQuiz.getQuestionIndex();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt(questionIndexKey, questionIndex);
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             question = reviseItQuiz.getNextQuestion();
         } catch (EndOfQuestionsException e) {
             showMessage("end of questions! starting revise mode");
-            reviseItQuiz.setQuizMode(ReviseItQuiz.QuizMode.REVISE);
+            reviseItQuiz.setQuizMode(PresetQuiz.QuizMode.REVISE);
             setTitle(R.string.reviseStr);
             try {
                 question = reviseItQuiz.getNextQuestion();

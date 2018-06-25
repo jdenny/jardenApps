@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -21,6 +23,18 @@ public class PresetQuiz extends Quiz {
 	private int index = -1;
 	private String questionTemplate = null;
 	private String heading = null;
+	// added for ReviseItQuiz:
+    public enum QuizMode {
+        LEARN, REVISE
+    }
+    private final static int TARGET_CORRECT_CT = 3;
+    private final static int RECENTS_CT = 3;
+    private QuizMode quizMode = QuizMode.LEARN;
+    private List<QuestionAnswer> failedList = new LinkedList<>();
+    private QuestionAnswer[] recents = new QuestionAnswer[RECENTS_CT];
+    private QuestionAnswer currentQA;
+    private int questionIndex = -1;
+    private int consecutiveCorrects = 0;
 
     /**
      * Build a Quiz from the InputStream. Assumes the inputStream contains
@@ -47,7 +61,7 @@ public class PresetQuiz extends Quiz {
 	}
 	public PresetQuiz(InputStreamReader isReader) throws IOException {
 		BufferedReader reader = new BufferedReader(isReader);
-		qaList = new ArrayList<QuestionAnswer>();
+		qaList = new ArrayList<>();
 		String question = null;
 		String answer;
 		while (true) {
@@ -87,7 +101,7 @@ public class PresetQuiz extends Quiz {
 	 * Build a Quiz from properties, where for each property,
 	 * name is the question, and value is the answer.
 	 */
-	public PresetQuiz(Properties properties) throws IOException {
+	public PresetQuiz(Properties properties) {
 		Set<String> names = properties.stringPropertyNames();
 		qaList = new ArrayList<QuestionAnswer>();
 		for (String name: names) {
@@ -139,9 +153,9 @@ public class PresetQuiz extends Quiz {
 	@Override
 	public void reset() {
 		super.reset();
-		outstandingIndexList = new ArrayList<Integer>();
+		outstandingIndexList = new ArrayList<>();
 		for (int i = 0; i < qaList.size(); i++) {
-			outstandingIndexList.add(Integer.valueOf(i));
+			outstandingIndexList.add(i);
 		}
 		Collections.shuffle(outstandingIndexList);
 	}
@@ -187,4 +201,87 @@ public class PresetQuiz extends Quiz {
 		}
 		return answer.substring(0, len);
 	}
+	// Methods added for ReviseItQuiz
+    /**
+     * if QuizMode.LEARN
+     *    if no fails && end of currentQA: throw endOfQuestionsException
+     *    if (3 consecutiveCorrects && fails) or end of current: get first fail
+     *    get next currentQA
+     * if QuizMode.REVISE
+     *    if 3 consecutiveCorrects && fails: get first fail
+     *    get random from current, but not recent
+     * save last 3 questions, so don't repeat
+     *
+     * @return question string from current questionAnswer
+     * @throws EndOfQuestionsException only applies to Learn mode
+     */
+    public String getNextQuestion() throws EndOfQuestionsException {
+        int failCt = getFailedCount();
+        if (this.quizMode == QuizMode.LEARN) {
+            int currentCt = getCurrentCount() - 1; // haven't incremented questionIndex yet!
+            if (failCt == 0 && currentCt == 0) throw new EndOfQuestionsException();
+            if ((this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) || currentCt == 0) {
+                consecutiveCorrects = 0;
+                this.currentQA = this.failedList.remove(0);
+            } else {
+                this.questionIndex++;
+                this.currentQA = this.qaList.get(questionIndex);
+            }
+        } else { // must be REVISE mode
+            if (this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) {
+                consecutiveCorrects = 0;
+                this.currentQA = this.failedList.remove(0);
+            } else {
+                this.currentQA = getRandomNRUQuestion();
+            }
+        }
+        recents[0] = recents[1];
+        recents[1] = recents[2];
+        recents[2] = currentQA;
+        super.setQuestionAnswer(currentQA.question, currentQA.answer);
+        return this.currentQA.getQuestion();
+    }
+    public int getQuestionIndex() {
+        return questionIndex;
+    }
+    public void setQuestionIndex(int questionIndex) {
+        this.questionIndex = questionIndex;
+    }
+    public void setQuizMode(QuizMode quizMode) {
+        this.quizMode = quizMode;
+        questionIndex = -1;
+    }
+    public QuizMode getQuizMode() {
+        return this.quizMode;
+    }
+    public int getCurrentCount() {
+        return this.qaList.size() - this.questionIndex;
+    }
+    public void setCorrect(boolean correct) {
+        if (correct) {
+            this.consecutiveCorrects++;
+        } else {
+            consecutiveCorrects = 0;
+            failedList.add(this.currentQA);
+        }
+    }
+    public int getFailedCount() {
+        return this.failedList.size();
+    }
+    private QuestionAnswer getRandomNRUQuestion() {
+        int qaListSize = this.qaList.size();
+        int randomI = new Random().nextInt(qaListSize);
+        QuestionAnswer qa = this.qaList.get(randomI);
+        for (int i = 0; isRecentQuestion(qa) && i < RECENTS_CT; i++) {
+            if (++randomI >= qaListSize) randomI = 0;
+            qa = this.qaList.get(randomI);
+        }
+        return qa;
+    }
+    private boolean isRecentQuestion(QuestionAnswer qa) {
+        for (int i = 0; i < RECENTS_CT; i++) {
+            if (qa.equals(recents[i])) return true;
+        }
+        return false;
+    }
 }
