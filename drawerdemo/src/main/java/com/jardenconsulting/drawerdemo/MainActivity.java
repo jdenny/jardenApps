@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         }
         showFragment(tag);
 
-        //!! DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

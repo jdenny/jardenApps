@@ -58,13 +58,6 @@ public interface BluetoothListener {
 	void onMessageToast(String string);
 	
 	/**
-	 * Called when the user changes his playerName
-	 * @param playerName
-	 * @param playerEmail
-	 */
-	void onPlayerNameChange(String playerName, String playerEmail);
-
-	/**
 	 * Called when the state of the bluetooth service has changed.
 	 * @see class BluetoothService.BTState for possible values.
 	 * @param state

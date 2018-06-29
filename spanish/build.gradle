@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "com.jardenconsulting.spanishapp"
-        minSdkVersion 10
-        targetSdkVersion 23
+        minSdkVersion 14
+        targetSdkVersion 27
         versionCode 27
         versionName "2.4"
     }
@@ -22,7 +22,7 @@ dependencies {
     implementation project(':jardenlib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:25.3.0'
-    implementation 'com.android.support:support-v4:25.3.0'
-    implementation 'com.android.support:design:25.3.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 }

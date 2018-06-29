@@ -10,15 +10,14 @@ public class KnowMeService {
 		return instance;
 	}
 	private KnowMeService() {
-		activePlayers = new HashMap<String, Player>();
+		activePlayers = new HashMap<>();
 	}
 	/**
 	 * Create a new Player and add to the list of active players.
 	 * @param name: used to identify the player in the list of active players.
-	 * @param email
 	 */
-	public Player login(String name, String email) {
-		Player newPlayer = new Player(name, email);
+	public Player login(String name) {
+		Player newPlayer = new Player(name);
 		activePlayers.put(name, newPlayer);
 		return newPlayer;
 	}
@@ -26,11 +25,10 @@ public class KnowMeService {
 	/**
 	 * Start a game between these two players and return the first question and answers.
 	 * @param name1; login this player, using name1 and email
-	 * @param email
 	 * @param name2; name of existing player to link to
 	 */
-	public void linkPlayers(String name1, String email, String name2) {
-		Player player1 = login(name1, email);
+	public void linkPlayers(String name1, String name2) {
+		Player player1 = login(name1);
 		Player player2 = activePlayers.get(name2);
 		player1.setPairing(player2);
 	}
@@ -68,7 +66,7 @@ public class KnowMeService {
 	 * @param name
 	 * @return: questions and answers.
 	 * @throws EndOfQuestionsException
-	 * @see #login(String, String)
+	 * @see #login(String)
 	 */
 	public String[] getNextQuestion(String name) throws EndOfQuestionsException {
 		Player player = activePlayers.get(name);

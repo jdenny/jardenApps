@@ -108,32 +108,32 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		// Now get new layout
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		this.statsTextView = (TextView) rootView.findViewById(R.id.statsTextView);
+		this.statsTextView = rootView.findViewById(R.id.statsTextView);
         this.statsTextView.setOnLongClickListener(this);
-		this.selfMarkLayout = (ViewGroup) rootView.findViewById(R.id.selfMarkLayout);
-		this.buttonLayout = (ViewGroup) rootView.findViewById(R.id.buttonLayout);
+		this.selfMarkLayout = rootView.findViewById(R.id.selfMarkLayout);
+		this.buttonLayout = rootView.findViewById(R.id.buttonLayout);
 		this.selfMarkLayout.setVisibility(View.GONE);
-		Button button = (Button) rootView.findViewById(R.id.goButton);
+		Button button = rootView.findViewById(R.id.goButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
         int goButtonHeight = button.getHeight();
-		this.micButton = (ImageButton) rootView.findViewById(R.id.micButton);
+		this.micButton = rootView.findViewById(R.id.micButton);
 		this.micButton.setOnClickListener(this);
 		this.micButton.setOnLongClickListener(this);
         this.micButton.setMaxHeight(goButtonHeight);
-		button = (Button) rootView.findViewById(R.id.incorrectButton);
+		button = rootView.findViewById(R.id.incorrectButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
-		button = (Button) rootView.findViewById(R.id.correctButton);
+		button = rootView.findViewById(R.id.correctButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
-        this.clearAnswerButton = (Button) rootView.findViewById(R.id.clearAnswerButton);
+        this.clearAnswerButton = rootView.findViewById(R.id.clearAnswerButton);
         this.clearAnswerButton.setOnClickListener(this);
         this.clearAnswerButton.setOnLongClickListener(this);
         this.clearAnswerButton.setVisibility(View.GONE);
-		this.questionTextView = (TextView) rootView.findViewById(R.id.questionTextView);
-		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
-		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
+		this.questionTextView = rootView.findViewById(R.id.questionTextView);
+		this.attributeTextView = rootView.findViewById(R.id.attributeTextView);
+		this.answerEditText = rootView.findViewById(R.id.answerEditText);
 		if (questionText != null) {
 			this.questionTextView.setText(questionText);
 			this.answerEditText.setText(pendingAnswer);

@@ -1,11 +1,6 @@
 package com.jardenconsulting.cardapp;
 
-import com.jardenconsulting.bluetooth.BluetoothFragment;
-import com.jardenconsulting.bluetooth.BluetoothListener;
-import com.jardenconsulting.bluetooth.BluetoothService;
-import com.jardenconsulting.bluetooth.BluetoothService.BTState;
-
-import jarden.cardapp.CardFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jardenconsulting.bluetooth.BluetoothFragment;
+import com.jardenconsulting.bluetooth.BluetoothListener;
+import com.jardenconsulting.bluetooth.BluetoothService;
+import com.jardenconsulting.bluetooth.BluetoothService.BTState;
+
+import jarden.cardapp.CardFragment;
 
 /**
  * Shuffle and deal a pack of cards, showing my hand (Me), or
@@ -58,17 +60,21 @@ public class MainActivity extends AppCompatActivity
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.menuTwoPlayer) {
-			this.twoPlayer = !item.isChecked(); // isChecked returns old state!
-			item.setChecked(this.twoPlayer); // do what Android should do for us!
-			if (this.twoPlayer) {
-				showBluetoothFragment();
-			} else {
-				setTitle(this.appName + " - single player");
-				cardFragment.setClientMode(false);
-				showCardFragment();
-			}
-			return true; // menu item dealt with
+		if (id == R.id.twoPlayerButton) {
+            this.twoPlayer = !item.isChecked(); // isChecked returns old state!
+            item.setChecked(this.twoPlayer); // do what Android should do for us!
+            if (this.twoPlayer) {
+                showBluetoothFragment();
+            } else {
+                setTitle(this.appName + " - single player");
+                cardFragment.setClientMode(false);
+                showCardFragment();
+            }
+            return true; // menu item dealt with
+        } else if (id == R.id.reviseButton) {
+            Intent intent = new Intent(this, ReviseQuizActivity.class);
+            startActivity(intent);
+            return true;
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
@@ -164,10 +170,4 @@ public class MainActivity extends AppCompatActivity
 	public void setStatusMessage(String message) {
 		this.statusText.setText(message);
 	}
-
-	@Override // BluetoothListener
-	public void onPlayerNameChange(String playerName, String playerEmail) {
-		// TODO Auto-generated method stub
-	}
-
 }

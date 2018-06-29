@@ -1,4 +1,4 @@
-package com.jardenconsulting.reviseanything;
+package com.jardenconsulting.cardapp;
 
 import android.Manifest;
 import android.content.Context;
@@ -40,10 +40,13 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-Add this activity (renamed ReviseItActivity) to hotbridge
-Name options: Freak Wiz, york, mike, dunk, punk, trike
+This activity (renamed ReviseItActivity) needs to be in a
+library if we want hotbridge and a separate FunkWiz app
+Name options: Freak Wiz, york, mike, dunk, punk, trike, funk
+save fails in preferences; how about save fails and currentIndex when closing app
+and reload on restart? Hold failList as indices, to make it easier to save?
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReviseQuizActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String TAG = "ReviseIt";
     private final static String quizFileName = "reviseit.txt";
         // "reviseitmini.txt"; // ***also change name of resource file***
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_revise);
         TextView quizTitle = (TextView) findViewById(R.id.quizTitle);
         this.questionTextView = (TextView) findViewById(R.id.questionTextView);
         this.answerTextView = (TextView) findViewById(R.id.answerTextView);
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.revise, menu);
         return true;
     }
     @Override
@@ -132,14 +135,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         askQuestion();
         return true;
     }
-    private void askQuestion() {
-        String question;
+    @Override
+    protected void onPause() {
+        super.onPause();
         if (reviseItQuiz.getQuizMode() == PresetQuiz.QuizMode.LEARN) {
             int questionIndex = reviseItQuiz.getQuestionIndex();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt(questionIndexKey, questionIndex);
             editor.apply();
         }
+    }
+    private void askQuestion() {
+        String question;
         try {
             question = reviseItQuiz.getNextQuestion();
         } catch (EndOfQuestionsException e) {

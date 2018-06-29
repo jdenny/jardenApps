@@ -1,0 +1,232 @@
+$H: what does the last bid mean?
+# opening bid
+Q: 1C
+A: 25pp & 5+ major or 26+pp
+Q: 1D
+A: 23-25pp & no 5+ major
+Q: 1H
+A: 4+ hearts & 20-22pp or 5+ hearts & 23-24pp
+Q: 1S
+A: <4 hearts; 4+ spades & 20-22pp or 5+ spades & 23-24pp
+Q: 1NT
+A: 20-22pp, no 4+ major, no 6+ minor, no 5-5 in minors
+Q: 2C
+A: 6+ clubs, no 4+ major, <5 diamonds
+Q: 2D
+A: 6+ diamonds, no 4+ major, <5 clubs
+Q: 2H/2S
+A: 6 in suit, <20pp (preempt, disturbing, raw)
+Q: 2NT
+A: 5+ in both minors, 20-22pp, no 4+ major
+Q: 3C/3D/3H/3S
+A: 7 in suit, < 20pp (preempt, disturbing, raw)
+Q: 4H/4S
+A: 8+ in suit, <20pp (preempt, disturbing, raw)
+Q: 4C/4D
+A: 8 in suit, < 20pp (preempt, disturbing, raw)
+Q: 5C/5D
+A: 9+ in suit, < 20pp (preempt, disturbing, raw)
+
+# 1 bid after 1C
+Q: 1C, 1D
+A: 0-3 HCP, no 6+ major
+Q: 1C, 1H
+A: 4+ hearts, 4+ HCP (20 TP)
+Q: 1C, 1S
+A: <4 hearts, 4+ spades, 4+ HCP (20 TP)
+Q: 1C, 1NT
+A: 4-6 HCP, no 4+ major, no 6+ minor, not 5+ in both minors
+Q: 1C, 2C
+A: 7-8 HCP, no 4+ major (invitational relay, 23 TP)
+Q: 1C, 2D
+A: 9+ HCP, no 4+ major (compelling relay, 25 TP)
+Q: 1C, 2H/2S
+A: 0-3 HCP, 6+ in suit
+Q: 1C, 2NT
+A: 4-6 HCP, 5+ in both minors (two-choice)
+Q: 1C, 3C/3D
+A: 6+ in suit, no 4+ major, 4-6 HCP (raw)
+Q: 1C, 3H/3S/4C/4D
+A: long, strong suit (suit-setter)
+Q: 1C, (any bid), pass
+A: 0-3 HCP, no 6+ major (free bid)
+
+# 1 bid after 1D
+Q: 1D, 1H
+A: 4+ hearts, 0+ HCP
+Q: 1D, 1S
+A: <4 hearts, 4+ spades, 0+ HCP (15 TP)
+Q: 1D, 1NT
+A: 0-7 HCP, no 4+ major, no 6+ minor, not 5+ in both minors
+Q: 1D, 2C
+A: 8-9 HCP, no 4+ major (invitational relay, 23 TP)
+Q: 1D, 2D
+A: 10+ HCP, no 4+ major (compelling relay, 25 TP)
+Q: 1D, 2H/2S
+A: 0-4 HCP, 6+ in suit
+Q: partner bids 1D; what to bid with 6 hearts, 4 HCP
+A: 2H
+Q: partner bids 1D; what to bid with 6 hearts, 5 HCP
+A: 1H
+Q: 1D, 3C/3D
+A: 5-7 HCP, 6+ in suit, no 4-4 major (raw, 20 TP)
+Q: 1D, 3H/3S/4C/4D
+A: long, strong suit (suit-setter)
+Q: 1D, (any bid), pass
+A: 0-4 HCP, no 4+ major (free bid)
+
+# 1 bid after 1H
+Q: 1H, pass
+A: 0-7 HCP
+Q: 1H, 1S
+A: <4 hearts, 4+ spades, 8+ HCP (20 TP)
+Q: 1H, 1NT
+A: 8-10 HCP, no 4+ major, no 6+ minor (20 TP)
+Q: 1H, 2C
+A: 11-12 HCP, no 4+ major (invitational relay, 23 TP)
+Q: 1H, 2D
+A: 13+ HCP, no 4+ major (compelling relay, 25 TP)
+Q: 1H, 2H
+A: 8-10 HCP, 4 hearts (20 TP)
+Q: 1H, 2S
+A: <4 hearts, 6+ spades, 5-7 HCP, raw (17 TP)
+Q: 1H, 2NT
+A: 11+ HCP, 4+ hearts (strong fit, 23 TP)
+Q: 1H, 3C/3D
+A: 6+ in suit, 8-10 HCP, no 4+ major (20 TP)
+Q: 1H, 3H
+A: 8-10 HCP, 5 hearts (20 TP)
+Q: 1H, 3NT
+A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
+Q: 1H, 3S/4C/4D
+A: 4+ hearts, 13+ HCP, 0 or 1 in suit, control (A or Kx) in other 2 suits (splinter, 25+ TP)
+Q: 1H, 4H
+A: 8-10 HCP, 6+ hearts (20 TP)
+
+# 1 bid after 1S
+Q: 1S, pass
+A: 0-7 HCP
+Q: 1S, 1NT
+A: 8-10 HCP, <4 spades, no 6+ suit (20 TP)
+Q: 1S, 2C
+A: 11-12 HCP, <4 spades (invitational relay, 23 TP)
+Q: 1S, 2D
+A: 13+ HCP, <4 spades (compelling relay, 25 TP)
+Q: 1S, 2S
+A: 8-10 HCP, 4 spades (20 TP)
+Q: 1S, 2NT
+A: 11+ HCP, 4+ spades (strong fit, 23 TP)
+Q: 1S, 2H/3C/3D
+A: 8-10 HCP, <4 spades, 6+ in suit (20 TP)
+Q: 1S, 3S
+A: 8-10 HCP, 5 spades (20 TP)
+Q: 1S, 3NT
+A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
+Q: 1S, 3S/4C/4D
+A: 4+ spades, 13+ HCP, 0 or 1 in suit, control (A or Kx) in other 2 suits (splinter, 25+ TP)
+Q: 1S, 4S
+A: 8-10 HCP, 6+ spades (20 TP)
+
+# 1 bid after 1NT
+Q: 1NT, pass
+A: 0-10 HCP, no 6+ major, no 6+ minor & 8-10 HCP
+Q: 1NT, 2C
+A: 11-12 HCP (invitational relay, 23 TP)
+Q: 1NT, 2D
+A: 13+ HCP (compelling relay, 25 TP, may have 4+ major)
+Q: 1NT, 2H/2S
+A: 0-10 HCP, 6+ in suit
+Q: 1NT, 2NT
+A: 8+ HCP, 4+ in both minors, raw (20 TP)
+Q: 1NT, 3C/3D
+A: 8-10 HCP, 6+ in suit (raw)
+Q: 1NT, 3H/3S/4C/4D
+A: long strong suit (suit-setter)
+Q: 1NT, 4H/4S/5C/5D
+A: <11 HCP, long suit, preempt
+
+# 1 bid after 2C
+Q: 2C, 2D
+A: 11+ HCP, 4+ diamonds (23 TP)
+Q: 2C, 2H/2S
+A: 11+ HCP, 5+ in suit
+Q: 2C, 2NT
+A: 11+ HCP, 4+ clubs (strong fit, 23 TP)
+Q: 2C, 3C
+A: 8-10 HCP, 2 clubs
+Q: 2C, 4C
+A: 8-10 HCP, 3 clubs
+Q: 2C, 5C
+A: 8-10 HCP, 4+ clubs
+Q: 2C, 3D/3H/3S
+A: 2+ clubs, 13+ HCP, 0 or 1 in suit, control (A or Kx) in other 2 suits (splinter, 25+ TP)
+Q: 2C, 3NT
+A: 13+ HCP, all suits stopped (25 TP)
+
+# 1 bid after 2D
+Q: 2D, 2H/2S
+A: 11+ HCP, 5+ in suit
+Q: 2D, 2NT
+A: 11+ HCP, 4+ diamonds (strong fit, 23 TP)
+Q: 2D, 3C
+A: 11+ HCP, 4+ clubs (23 TP)
+Q: 2D, 3D
+A: 8-10 HCP, 2 diamonds (preempt)
+Q: 2D, 4D
+A: 8-10 HCP, 3 diamonds (preempt)
+Q: 2D, 5D
+A: 8-10 HCP, 4+ diamonds (preempt)
+Q: 2D, 3H/3S/4C
+A: 2+ diamonds, 13+ HCP, 0 or 1 in suit, control (A or Kx) in other 2 suits (splinter, 25+ TP)
+Q: 2C, 3NT
+A: 13+ HCP, all suits stopped (25 TP)
+
+# 3 bids
+Q: 1H, 1S; 2D
+A: 5+ hearts, 4+ diamonds, raw
+Q: 1H, 1S; 2NT
+A: 4+ in both minors (can’t be 5+ as already bid hearts!)
+# 4 bids
+Q: 1H, 1S; 2D, 2S
+A: 5+ spades
+
+# page references are to "What can possibly go wrong?", Alan Williams
+# page 39
+Q: 1H, 2D; 2H, 2S
+A: <3 hearts, 3 spades
+Q: 1H, 2D; 2S
+A: 4 hearts, 5+ spades
+# page 42
+Q: 1H, 1S; 3C
+A: <4 spades, 6+ clubs, raw
+# page 46
+Q: 1S, 2C; 2H
+A: 3 hearts; may have 5+ spades (25 TP)
+Q: 1S, 2C; 2H, 2NT
+A: 5+ hearts (although limited, strong support, as now compelled)
+# page 50
+Q: 1NT, 2D; 2S
+A: <3 hearts, 3 spades
+Q: 1NT, 2D; 2S, 4D
+A: splinter! 0 or 1 diamond, control (A or Kx) in clubs and hearts
+Q: 1NT, 2D; 2S, 4D; 4S
+A: to play (i.e. not forcing)
+# page 52
+Q: 1NT, 2D; 2H
+A: 3 hearts
+Q: 1NT, 2D; 2H, 2NT
+A: 5+ hearts
+Q: 1NT, 2D; 2H, 2NT; 3NT
+A: alternative place to play; partner can choose between pass and 4H
+# page 56
+Q: 1D, 1S; 2D
+A: <4 spades, 5+ diamonds, 4 clubs, raw (15 TP)
+Q: 1D, 1S; 2D, 3NT
+A: all suits covered (25 TP, to play)
+Q: 1D, 1S; 2S
+A: 4+ spades
+Q: 1D, 1S; 2S, 4H
+A: 0 or 1 heart, control (A or Kx) in clubs & diamonds (splinter, 25+ TP)
+
+
+

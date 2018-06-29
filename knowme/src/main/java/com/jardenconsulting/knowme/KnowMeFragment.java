@@ -1,15 +1,6 @@
 package com.jardenconsulting.knowme;
 
-import java.io.InputStream;
-
-import jarden.knowme.ActionName;
-import jarden.knowme.EndOfQuestionsException;
-import jarden.knowme.KnowMeService;
-import jarden.knowme.QAResults;
-import jarden.knowme.QuestionManager;
-
-import com.jardenconsulting.bluetooth.BluetoothService;
-
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -22,9 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+
+import com.jardenconsulting.bluetooth.BluetoothService;
+
+import java.io.InputStream;
+
+import jarden.knowme.ActionName;
+import jarden.knowme.EndOfQuestionsException;
+import jarden.knowme.KnowMeService;
+import jarden.knowme.QAResults;
+import jarden.knowme.QuestionManager;
 
 public class KnowMeFragment extends Fragment implements
 		OnCheckedChangeListener, OnClickListener {
@@ -56,12 +57,12 @@ public class KnowMeFragment extends Fragment implements
 	private String waitingTemplate;
 	private String waitingStr;
 	private String playerName;
-	private String playerEmail; // TODO: not currently used; will it ever?
 	private String otherPlayerName;
 	private String opt1, opt2, opt3, opt4;
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	@SuppressLint("ResourceType")
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_knowme, container, false);
 		Resources resources = getResources();
 		this.opt1 = resources.getString(R.string.opt1) + ". ";
@@ -74,16 +75,16 @@ public class KnowMeFragment extends Fragment implements
 		this.smallScreen = (screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL ||
 				screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL);
 		this.knowMeActivity = (KnowMeActivityIF) getActivity();
-		this.myQuestionView = (TextView) view.findViewById(R.id.myQuestionView);
-		this.hisQuestionView = (TextView) view.findViewById(R.id.hisQuestionView);
-		this.myRadioButton1 = (RadioButton) view.findViewById(R.id.myRadioButton1);
-		this.myRadioButton2 = (RadioButton) view.findViewById(R.id.myRadioButton2);
-		this.myRadioButton3 = (RadioButton) view.findViewById(R.id.myRadioButton3);
-		this.myRadioButton4 = (RadioButton) view.findViewById(R.id.myRadioButton4);
-		this.hisRadioButton1 = (RadioButton) view.findViewById(R.id.hisRadioButton1);
-		this.hisRadioButton2 = (RadioButton) view.findViewById(R.id.hisRadioButton2);
-		this.hisRadioButton3 = (RadioButton) view.findViewById(R.id.hisRadioButton3);
-		this.hisRadioButton4 = (RadioButton) view.findViewById(R.id.hisRadioButton4);
+		this.myQuestionView = view.findViewById(R.id.myQuestionView);
+		this.hisQuestionView = view.findViewById(R.id.hisQuestionView);
+		this.myRadioButton1 = view.findViewById(R.id.myRadioButton1);
+		this.myRadioButton2 = view.findViewById(R.id.myRadioButton2);
+		this.myRadioButton3 = view.findViewById(R.id.myRadioButton3);
+		this.myRadioButton4 = view.findViewById(R.id.myRadioButton4);
+		this.hisRadioButton1 = view.findViewById(R.id.hisRadioButton1);
+		this.hisRadioButton2 = view.findViewById(R.id.hisRadioButton2);
+		this.hisRadioButton3 = view.findViewById(R.id.hisRadioButton3);
+		this.hisRadioButton4 = view.findViewById(R.id.hisRadioButton4);
 		this.myRadioButton1.setId(1);
 		this.myRadioButton2.setId(2);
 		this.myRadioButton3.setId(3);
@@ -92,11 +93,11 @@ public class KnowMeFragment extends Fragment implements
 		this.hisRadioButton2.setId(2);
 		this.hisRadioButton3.setId(3);
 		this.hisRadioButton4.setId(4);
-		this.myRadioGroup = (RadioGroup) view.findViewById(R.id.myRadioGroup);
+		this.myRadioGroup = view.findViewById(R.id.myRadioGroup);
 		this.myRadioGroup.setOnCheckedChangeListener(this);
-		this.hisRadioGroup = (RadioGroup) view.findViewById(R.id.hisRadioGroup);
+		this.hisRadioGroup = view.findViewById(R.id.hisRadioGroup);
 		this.hisRadioGroup.setOnCheckedChangeListener(this);
-		goButton = (Button) view.findViewById(R.id.goButton);
+		goButton = view.findViewById(R.id.goButton);
 		goButton.setOnClickListener(this);
 		InputStream is = getResources().openRawResource(R.raw.questions);
 		QuestionManager qm = QuestionManager.getInstance();
@@ -106,8 +107,8 @@ public class KnowMeFragment extends Fragment implements
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		if (myRadioGroup.getCheckedRadioButtonId() > 0
-				&& hisRadioGroup.getCheckedRadioButtonId() > 0) {
+		if (myRadioGroup.getCheckedRadioButtonId() != 0
+				&& hisRadioGroup.getCheckedRadioButtonId() != 0) {
 			goButton.setEnabled(true);
 		}
 	}
@@ -188,9 +189,12 @@ public class KnowMeFragment extends Fragment implements
 		this.hisRadioGroup.clearCheck();
 		this.myQuestionView.setText(this.questionArray[0]);
 		this.hisQuestionView.setText(questionArray[1]);
+		String text;
 		if (this.smallScreen) {
-			this.hisRadioButton1.setText(this.opt1 + questionArray[2]);
-			this.hisRadioButton2.setText(this.opt2 + questionArray[3]);
+		    text = this.opt1 + questionArray[2];
+			this.hisRadioButton1.setText(text);
+			text = this.opt2 + questionArray[3];
+			this.hisRadioButton2.setText(text);
 		} else {
 			this.hisRadioButton1.setText(questionArray[2]);
 			this.myRadioButton1.setText(questionArray[2]);
@@ -199,7 +203,8 @@ public class KnowMeFragment extends Fragment implements
 		}
 		if (questionArray.length > 4) {
 			if (this.smallScreen) {
-				this.hisRadioButton3.setText(this.opt3 + questionArray[4]);
+			    text = this.opt3 + questionArray[4];
+				this.hisRadioButton3.setText(text);
 			} else {
 				this.hisRadioButton3.setText(questionArray[4]);
 				this.myRadioButton3.setText(questionArray[4]);
@@ -212,7 +217,8 @@ public class KnowMeFragment extends Fragment implements
 		}
 		if (questionArray.length > 5) {
 			if (this.smallScreen) {
-				this.hisRadioButton4.setText(this.opt4 + questionArray[5]);
+			    text = this.opt4 + questionArray[5];
+				this.hisRadioButton4.setText(text);
 			} else {
 				this.hisRadioButton4.setText(questionArray[5]);
 				this.myRadioButton4.setText(questionArray[5]);
@@ -241,13 +247,11 @@ public class KnowMeFragment extends Fragment implements
 		}
 		String name = tokens[1].substring(5);
 		if (action.equals(ActionName.START)) {
-			String email = tokens[2].substring(6);
-			knowMeService.login(name, email);
+			knowMeService.login(name);
 		} else if (action.equals(ActionName.LINK_TO_SERVER_PLAYER)) {
 			setOtherPlayerName(name);
-			String email = tokens[2].substring(6);
-			knowMeService.login(name, email);
-			knowMeService.linkPlayers(name, email, playerName);
+			knowMeService.login(name);
+			knowMeService.linkPlayers(name, playerName);
 			String[] qa = knowMeService.getCurrentQuestion(name); // questions for client
 			returnBTResults(ActionName.OTHER_PLAYER_NAME,
 					new String[] { playerName });
@@ -419,10 +423,9 @@ public class KnowMeFragment extends Fragment implements
 		this.btServerMode = serverMode;
 		this.knowMeService = KnowMeService.getInstance();
 		if (serverMode) {
-			this.knowMeService.login(playerName, playerEmail);
+			this.knowMeService.login(playerName);
 		} else {
-			sendBTMessage(ActionName.LINK_TO_SERVER_PLAYER, "&email="
-					+ playerEmail);
+			sendBTMessage(ActionName.LINK_TO_SERVER_PLAYER, null);
 		}
 		return this.otherPlayerName;
 	}
@@ -438,19 +441,18 @@ public class KnowMeFragment extends Fragment implements
 		this.bluetoothService = bluetoothService;
 	}
 
-	public void onPlayerNameChange(String playerName, String playerEmail) {
-		this.playerName = playerName;
-		this.playerEmail = playerEmail;
-	}
-
 	public void setSingleDeviceMode(String playerName, String otherPlayerName) {
 		this.singleDeviceMode = true;
 		this.playerName = playerName;
 		setOtherPlayerName(otherPlayerName);
 		connected(true);
-		knowMeService.linkPlayers(otherPlayerName, "otherEmail",
+		knowMeService.linkPlayers(otherPlayerName,
 				this.playerName);
 		this.questionArray = knowMeService.getCurrentQuestion(this.playerName);
 		poseQuestion();
 	}
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
 }

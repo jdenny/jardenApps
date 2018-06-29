@@ -1,10 +1,5 @@
 package com.jardenconsulting.bluetooth;
 
-import java.util.Set;
-
-import com.jardenconsulting.bluetoothapplib.BuildConfig;
-import com.jardenconsulting.bluetoothapplib.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,6 +23,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.jardenconsulting.bluetoothapplib.BuildConfig;
+import com.jardenconsulting.bluetoothapplib.R;
+
+import java.util.Set;
 
 public class DeviceListDialog extends DialogFragment
 		implements OnClickListener, OnItemClickListener {
@@ -55,27 +55,27 @@ public class DeviceListDialog extends DialogFragment
         			stateStr + ")");
         }
 		Activity activity = getActivity();
-		pairedDevicesAdapter = new ArrayAdapter<String>(activity, R.layout.device_name);
-		newDevicesAdapter = new ArrayAdapter<String>(activity, R.layout.device_name);
+		pairedDevicesAdapter = new ArrayAdapter<>(activity, R.layout.device_name);
+		newDevicesAdapter = new ArrayAdapter<>(activity, R.layout.device_name);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle(R.string.select_device);
 		LayoutInflater inflater = activity.getLayoutInflater();
 		View view = inflater.inflate(R.layout.device_list, null);
-        ListView pairedListView = (ListView) view.findViewById(R.id.paired_devices);
+        ListView pairedListView = view.findViewById(R.id.paired_devices);
         pairedListView.setAdapter(pairedDevicesAdapter);
         pairedListView.setOnItemClickListener(this);
         
-        ListView newDevicesListView = (ListView) view.findViewById(R.id.new_devices);
+        ListView newDevicesListView = view.findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(newDevicesAdapter);
         newDevicesListView.setOnItemClickListener(this);
         
-        this.titleNewDevices = (TextView) view.findViewById(R.id.title_new_devices);
+        this.titleNewDevices = view.findViewById(R.id.title_new_devices);
 
-        this.scanButton = (Button) view.findViewById(R.id.button_scan);
+        this.scanButton = view.findViewById(R.id.button_scan);
 		this.scanButton.setOnClickListener(this);
         builder.setView(view);
-        this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        this.progressBar = view.findViewById(R.id.progressBar);
         this.progressBar.setVisibility(View.GONE);
 
         // Register for broadcasts when a device is discovered

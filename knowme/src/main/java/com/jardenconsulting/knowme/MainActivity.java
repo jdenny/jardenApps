@@ -1,32 +1,28 @@
 package com.jardenconsulting.knowme;
 
-import jarden.knowme.EndOfQuestionsException;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jardenconsulting.bluetooth.BluetoothFragment;
 import com.jardenconsulting.bluetooth.BluetoothListener;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 
-import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import jarden.knowme.EndOfQuestionsException;
 
 public class MainActivity extends AppCompatActivity
 		implements BluetoothListener, OnClickListener, KnowMeActivityIF {
     public static final String TAG = "KnowMe";
-    public static final String PLAYER_NAME = "playerName";
 
     private TextView statusText;
 	private FragmentManager fragmentManager;
@@ -37,6 +33,8 @@ public class MainActivity extends AppCompatActivity
 	private BluetoothFragment bluetoothFragment;
 	private Fragment currentFragment;
 	private EditText playerNameEditText;
+    private EditText otherPlayerNameEditText;
+	private String playerName;
 	/*
 	 * When the app is closing down (using pressing back button or
 	 * rotating device) we will probably get notified the connection
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 				this.fragmentManager.findFragmentById(R.id.answerFragment);
 		this.summaryFragment =
 				(SummaryFragment) fragmentManager.findFragmentById(R.id.summaryFragment);
-		this.statusText = (TextView) findViewById(R.id.statusText);
+		this.statusText = findViewById(R.id.statusText);
 		// hide all fragments but introFragment
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.hide(knowMeFragment);
@@ -72,14 +70,15 @@ public class MainActivity extends AppCompatActivity
 		this.currentFragment = introFragment;
 		ft.commit();
 		// resources for IntroFragment...
-		((Button) findViewById(R.id.playButton)).setOnClickListener(this);
-		((Button) findViewById(R.id.playOneDeviceButton)).setOnClickListener(this);
-		playerNameEditText = (EditText) findViewById(R.id.yourNameEditText);
-		String[] playerEmail = BluetoothFragment.getPlayerNameEmail(this);
-		playerNameEditText.setText(playerEmail[0]);
+		findViewById(R.id.playButton).setOnClickListener(this);
+		findViewById(R.id.playOneDeviceButton).setOnClickListener(this);
+		this.playerNameEditText = findViewById(R.id.yourNameEditText);
+		this.playerName = BluetoothFragment.getPlayerName(this);
+		this.playerNameEditText.setText(this.playerName);
+        this.otherPlayerNameEditText = findViewById(R.id.otherNameEditText);
 		// resources for SummaryFragment...
-		((Button) findViewById(R.id.nextQuizButton)).setOnClickListener(this);
-		((Button) findViewById(R.id.nextQuestionButton)).setOnClickListener(this);
+		findViewById(R.id.nextQuizButton).setOnClickListener(this);
+		findViewById(R.id.nextQuestionButton).setOnClickListener(this);
 		Resources resources = getResources();
 		this.howDoneOptions = resources.getStringArray(R.array.howDoneStrings);
 		this.percentages = resources.getIntArray(R.array.percentages);
@@ -87,13 +86,13 @@ public class MainActivity extends AppCompatActivity
 		// end of resources for fragments
 	}
 
+	/* Menu not used at the moment
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -105,10 +104,23 @@ public class MainActivity extends AppCompatActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	*/
 
 	@Override
 	public void onClick(View view) {
 		int viewId = view.getId();
+		if (viewId == R.id.playButton || viewId == R.id.playOneDeviceButton) {
+            String playerNam = this.playerNameEditText.getText().toString().trim();
+            if (playerNam.length() == 0) {
+                this.statusText.setText("Please supply your name");
+                this.playerNameEditText.requestFocus();
+                return;
+            }
+            if (!playerNam.equals(this.playerName)) {
+                this.playerName = playerNam;
+                BluetoothFragment.setPlayerName(this, this.playerName);
+            }
+        }
 		if (viewId == R.id.playButton) {
 	 		if (this.bluetoothFragment == null) {
 	 	 		FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -116,13 +128,18 @@ public class MainActivity extends AppCompatActivity
 	 				ft.hide(currentFragment);
 	 			}
 	 			this.bluetoothFragment = new BluetoothFragment();
+	 			knowMeFragment.setPlayerName(playerName);
 	 			ft.add(R.id.bluetoothFragmentContainer, bluetoothFragment);
 	 			ft.commit();
 	 		}
 			showFragment(this.bluetoothFragment);
 		} else if (viewId == R.id.playOneDeviceButton) {
-			String playerName = this.playerNameEditText.getText().toString();
-			String otherPlayerName = ((EditText)findViewById(R.id.otherNameEditText)).getText().toString();
+			String otherPlayerName = this.otherPlayerNameEditText.getText().toString().trim();
+            if (otherPlayerName.length() == 0) {
+                this.statusText.setText("Please supply name of other player");
+                this.otherPlayerNameEditText.requestFocus();
+                return;
+            }
 			this.knowMeFragment.setSingleDeviceMode(playerName, otherPlayerName);
 		} else if (viewId == R.id.nextQuestionButton) {
 			this.knowMeFragment.nextQuestion();
@@ -207,12 +224,6 @@ public class MainActivity extends AppCompatActivity
 		message = message.replace("{1}", howDone);
 		setStatusMessage(message);
 		showFragment(this.summaryFragment);
-	}
-
-	@Override // BluetoothListener
-	public void onPlayerNameChange(String playerName, String playerEmail) {
-		this.knowMeFragment.onPlayerNameChange(playerName, playerEmail);
-		getSupportActionBar().setTitle("KnowMe: " + playerName);
 	}
 
 	@Override // BluetoothListener

@@ -1,21 +1,6 @@
 package jarden.cardapp;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-import jarden.cards.CardPack;
-import jarden.cards.CardPack.BidEnum;
-import jarden.cards.Hand;
-import jarden.cards.Player;
-
-import com.jardenconsulting.bluetooth.BluetoothService;
-import com.jardenconsulting.bluetooth.BluetoothService.BTState;
-import com.jardenconsulting.cardapp.BuildConfig;
-import com.jardenconsulting.cardapp.MainActivity;
-import com.jardenconsulting.cardapp.R;
-
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +18,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jardenconsulting.bluetooth.BluetoothService;
+import com.jardenconsulting.bluetooth.BluetoothService.BTState;
+import com.jardenconsulting.cardapp.BuildConfig;
+import com.jardenconsulting.cardapp.MainActivity;
+import com.jardenconsulting.cardapp.R;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+import jarden.cards.CardPack;
+import jarden.cards.CardPack.BidEnum;
+import jarden.cards.Hand;
+import jarden.cards.Player;
 
 /**
  * CardFragment is the main fragment of CardApp. It has up to 4 PlayerFragments
@@ -95,7 +95,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 		bidButton = (Button) view.findViewById(R.id.bidButton);
 		bidButton.setOnClickListener(this);
 		this.suggestedBidTextView = (TextView) view.findViewById(R.id.suggestedBidtextView);
-		bidList = new ArrayList<BidEnum>();
+		bidList = new ArrayList<>();
 		bidLayouts = new LinearLayout[4];
 		bidLayouts[0] = (LinearLayout) view.findViewById(R.id.bid1Layout);
 		bidLayouts[1] = (LinearLayout) view.findViewById(R.id.bid2Layout);
@@ -319,9 +319,9 @@ public class CardFragment extends Fragment implements OnClickListener {
 		super.onActivityCreated(savedInstanceState);
 	}
 	@Override
-	public void onAttach(Activity activity) {
+	public void onAttach(Context context) {
         if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onAttach()");
-		super.onAttach(activity);
+		super.onAttach(context);
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

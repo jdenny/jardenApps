@@ -1,8 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menuTwoPlayer"
+        android:id="@+id/twoPlayerButton"
         android:title="@string/menuTwoPlayer"
         android:checkable="true"
         android:checked="false"/>
+    <item
+        android:id="@+id/reviseButton"
+        android:title="@string/revise" />
 </menu>

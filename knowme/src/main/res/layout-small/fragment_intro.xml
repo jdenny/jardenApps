@@ -16,7 +16,14 @@
 	    android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/marginTop"
         android:text="@string/aboutKnowMe" />
-    
+
+    <EditText
+        android:id="@+id/yourNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/yourNameStr" />
+
     <Button
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
@@ -31,13 +38,6 @@
 	    android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/marginTop"
         android:text="@string/aboutSingleDevice" />
-
-    <EditText
-        android:id="@+id/yourNameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/yourNameStr" />
 
     <EditText
         android:id="@+id/otherNameEditText"

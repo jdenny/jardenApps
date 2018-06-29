@@ -1,10 +1,5 @@
 package com.jardenconsulting.bluetooth;
 
-import com.jardenconsulting.bluetoothapplib.BuildConfig;
-import com.jardenconsulting.bluetoothapplib.R;
-
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -20,14 +15,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import com.jardenconsulting.bluetoothapplib.BuildConfig;
+import com.jardenconsulting.bluetoothapplib.R;
 
 public class BluetoothFragment extends Fragment
 		implements OnClickListener, DeviceListListener {
-    public static final String PLAYER_NAME = "playerName";
     public final static String TAG = "BluetoothService";
-	
+    public final static String DEFAULT_PLAYER_NAME = "MyName";
+    // preferences key
+    private static final String PLAYER_NAME_KEY = "playerName";
+
 	// tag for DeviceListDialog
 	private final static String DLD = "dld";
 
@@ -40,9 +39,6 @@ public class BluetoothFragment extends Fragment
 	private boolean bluetoothEnabledByUs = false;
 	private BluetoothListener bluetoothListener;
 	private DeviceListDialog deviceListDialog;
-	private EditText myNameEditText;
-	private String playerEmail;
-	private String playerName;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,10 +48,6 @@ public class BluetoothFragment extends Fragment
         	Log.d(TAG, "BluetoothFragment.onCreateView(bundle=" +
         			(savedInstanceState==null?"":"not ") + "null)");
         }
-		String[] nameEmail = getPlayerNameEmail(getActivity());
-		this.playerName = nameEmail[0];
-		this.playerEmail = nameEmail[1];
-		this.bluetoothListener.onPlayerNameChange(nameEmail[0], nameEmail[1]);
         this.deviceListDialog = (DeviceListDialog) getFragmentManager().findFragmentByTag(DLD);
         if (this.deviceListDialog == null) {
         	this.deviceListDialog = new DeviceListDialog();
@@ -68,70 +60,32 @@ public class BluetoothFragment extends Fragment
             return null;
 		}
 		View view = inflater.inflate(R.layout.btfragment_layout, container, false);
-		Button connectButton = (Button) view.findViewById(R.id.connectButton);
-		Button discoverableButton = (Button) view.findViewById(R.id.discoverableButton);
-		Button updateNameButton = (Button) view.findViewById(R.id.updateMyNameButton);
+		Button connectButton = view.findViewById(R.id.connectButton);
+		Button discoverableButton = view.findViewById(R.id.discoverableButton);
 		connectButton.setOnClickListener(this);
 		discoverableButton.setOnClickListener(this);
-		updateNameButton.setOnClickListener(this);
-		TextView helpTextView = (TextView) view.findViewById(R.id.helpText);
+		TextView helpTextView = view.findViewById(R.id.helpText);
 		String helpString = bluetoothListener.getHelpString();
 		helpTextView.setText(helpString);
-		this.myNameEditText = (EditText) view.findViewById(R.id.editTextMyName);
-		this.myNameEditText.setText(this.playerName);
 		return view;
 	}
 	/**
-	 * Return an array of 2 Strings: playerName and playerEmail.
-	 * Try to retrieve playerName and playerEmail from SharedPreferences.
-	 * If not there, get the email of the first Account on the device,
-	 * and have a stab a making a name from this.
+	 * Try to retrieve playerName from SharedPreferences.
+	 * If not there, return default name
 	 * @param activity
 	 * @return
 	 */
-	public static String[] getPlayerNameEmail(Activity activity) {
-		String name;
-        String email = "Unknown";
-		/*!! Commented out, as PlayStore now requires a privacy certificate
-		AccountManager am = AccountManager.get(activity);
-		Account[] accounts = am.getAccounts();
-		// or could use am.getAccountsByType("com.google");
-		if (accounts.length == 0) {
-			email = "unknown";
-		} else {
-			email = accounts[0].name;
-		}
-		*/
+	public static String getPlayerName(Activity activity) {
 		SharedPreferences preferences = activity.getPreferences(Activity.MODE_PRIVATE);
-		name = preferences.getString(PLAYER_NAME, "Unknown");
-        /*!!
-		if (name == null) {
-			name = email;
-			int end = name.indexOf('@');
-			if (end > 0) {
-				name = name.substring(0, end);
-			}
-			end = name.indexOf('.');
-			if (end > 0) {
-				name = name.substring(0, end);
-			}
-			if (name.length() > 7) {
-				name = name.substring(0, 7);
-			}
-		}
-		*/
-		return new String[] { name, email };
+		return preferences.getString(PLAYER_NAME_KEY, "");
 	}
+	public static void setPlayerName(Activity activity, String playerName) {
+        SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PLAYER_NAME_KEY, playerName);
+        editor.apply();
+    }
 
-	private void updatePlayerName(String playerName) {
-		Activity activity = getActivity();
-		SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(PLAYER_NAME, playerName);
-		editor.commit();
-		this.playerName = playerName;
-		this.bluetoothListener.onPlayerNameChange(this.playerName, this.playerEmail);
-	}
     @Override
     public void onStart() {
         super.onStart();
@@ -175,8 +129,6 @@ public class BluetoothFragment extends Fragment
 		} else if (id == R.id.discoverableButton) {
             // Ensure this device is discoverable by others
             ensureDiscoverable();
-		} else if (id == R.id.updateMyNameButton) {
-			updatePlayerName(this.myNameEditText.getText().toString());
 		} else {
 			throw new IllegalStateException("unrecognised button clicked: " + view);
 		}

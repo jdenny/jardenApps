@@ -7,20 +7,15 @@ package jarden.knowme;
  */
 public class Player {
 	private String name;
-	private String email;
 	private int playerNumber;
 	private Player otherPlayer;
 	private QuizSession quizSession;
 
-	public Player(String name, String email) {
+	public Player(String name) {
 		this.name = name;
-		this.email = email;
 	}
 	public String getName() {
 		return this.name;
-	}
-	public String getEmail() {
-		return this.email;
 	}
 	/**
 	 * Link two players together for a quiz; "this" becomes player1.

@@ -29,14 +29,6 @@ public class ViewlessFragment extends Fragment {
         person = new Person("John", "john@work.com", "1234");
     }
 
-    /*!!
-    @Override // Fragment
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) Log.w(TAG, "onCreateView(); we weren't expecting this!");
-        return null;
-    }
-    */
     @Override // Fragment
     public void onResume() {
         if (BuildConfig.DEBUG) Log.d(TAG, "onResume()");

@@ -5,13 +5,13 @@
     <string name="action_settings">Settings</string>
     <string name="summaryHeader">End of Quiz</string>
     <string name="nextQuizStr">Next Quiz</string>
-    <string name="aboutKnowMe">The game (and it is only a game!) is to see how well you
+    <string name="aboutKnowMe">The aim is to see how well you
         and a friend know each other. You each need to be running this game on your
         own Android device. You will be asked a series of questions, with
         multi-choice answers. Guess what your friend will say, then give your own answer
         - the one you think is the best description of you. When you have both answered,
         the game will tell you if you guessed correctly.</string>
-    <string name="aboutSingleDevice">Alternatively, it is possible to play KnowMe on a
+    <string name="aboutSingleDevice">Alternatively, you can play on a
         single device. Supply your name and the name of the other player below, then
         click "Play On One Device". When you are both playing on a single device,
         supply your answer, then hand the device to the other player: the title-bar
