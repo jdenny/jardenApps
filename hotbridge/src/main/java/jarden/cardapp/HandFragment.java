@@ -1,15 +1,5 @@
 package jarden.cardapp;
 
-import jarden.cards.Card;
-import jarden.cards.CardPack;
-import jarden.cards.Hand;
-import jarden.cards.Player;
-import jarden.cards.Suit;
-
-import java.util.ArrayList;
-
-import com.jardenconsulting.cardapp.R;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class PlayerFragment extends Fragment {
+import com.jardenconsulting.cardapp.R;
+
+import java.util.ArrayList;
+
+import jarden.cards.Card;
+import jarden.cards.CardPack;
+import jarden.cards.Hand;
+import jarden.cards.Player;
+import jarden.cards.Suit;
+
+public class HandFragment extends Fragment {
 	private View view;
 	private Player player;
 	private CardPack cardPack;
@@ -30,13 +30,13 @@ public class PlayerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.player_view, container, false);
+		view = inflater.inflate(R.layout.hand_layout, container, false);
 
-		playerTitle = (TextView) view.findViewById(R.id.playerTitle);
-		spadeValues = (TextView) view.findViewById(R.id.spades);
-		heartValues = (TextView) view.findViewById(R.id.hearts);
-		diamondValues = (TextView) view.findViewById(R.id.diamonds);
-		clubValues = (TextView) view.findViewById(R.id.clubs);
+		playerTitle = view.findViewById(R.id.playerTitle);
+		spadeValues = view.findViewById(R.id.spades);
+		heartValues = view.findViewById(R.id.hearts);
+		diamondValues = view.findViewById(R.id.diamonds);
+		clubValues = view.findViewById(R.id.clubs);
 
 		return view;
 	}

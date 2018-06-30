@@ -35,12 +35,12 @@ import jarden.cards.Hand;
 import jarden.cards.Player;
 
 /**
- * CardFragment is the main fragment of CardApp. It has up to 4 PlayerFragments
+ * DealFragment is the main fragment of CardApp. It has up to 4 PlayerFragments
  * as components.
  * @author john.denny@gmail.com
  *
  */
-public class CardFragment extends Fragment implements OnClickListener {
+public class DealFragment extends Fragment implements OnClickListener {
 	/*
 	              mePlayer     btClientMode
 	              --------     ----------
@@ -51,10 +51,10 @@ public class CardFragment extends Fragment implements OnClickListener {
 	 */
 	private FragmentManager fragmentManager;
 	private boolean btClientMode = false; // turned on if we connect to remote server
-	private PlayerFragment northFragment;
-	private PlayerFragment southFragment;
-	private PlayerFragment eastFragment;
-	private PlayerFragment westFragment;
+	private HandFragment northFragment;
+	private HandFragment southFragment;
+	private HandFragment eastFragment;
+	private HandFragment westFragment;
 	private final static int SHOW_ME = 0;
 	private final static int SHOW_US = 1;
 	private final static int SHOW_ALL = 2;
@@ -83,8 +83,8 @@ public class CardFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onCreateView()");
-		View view = inflater.inflate(R.layout.card_layout, container, false);
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onCreateView()");
+		View view = inflater.inflate(R.layout.deal_layout, container, false);
 		this.mainActivity = (MainActivity) getActivity();
 		this.fragmentManager = mainActivity.getSupportFragmentManager();
 
@@ -113,10 +113,10 @@ public class CardFragment extends Fragment implements OnClickListener {
 			bidTextViews[i] = bidTextView;
 			bidLayouts[i/4].addView(bidTextView);
 		}
-		northFragment = new PlayerFragment();
-		southFragment = new PlayerFragment();
-		eastFragment = new PlayerFragment();
-		westFragment = new PlayerFragment();
+		northFragment = new HandFragment();
+		southFragment = new HandFragment();
+		eastFragment = new HandFragment();
+		westFragment = new HandFragment();
 		FragmentManager childFragmentManager = getChildFragmentManager();
 		FragmentTransaction transaction = childFragmentManager.beginTransaction();
 		transaction.add(R.id.northContainer, northFragment);
@@ -139,13 +139,13 @@ public class CardFragment extends Fragment implements OnClickListener {
 	}
 	@Override
 	public void onResume() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onResume()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onResume()");
 		super.onResume();
 		if (!this.btClientMode) shuffleAndDeal();
 	}
 	@Override
 	public void onDetach() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onDetach()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onDetach()");
 	    super.onDetach();
 	    
 	    // see http://stackoverflow.com/questions/15207305/getting-the-error-java-lang-illegalstateexception-activity-has-been-destroyed/15656428#15656428
@@ -200,7 +200,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 		}
 	}
 	public void shuffleAndDeal() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.shuffleAndDeal()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.shuffleAndDeal()");
 		cardPack.shuffle();
 		if (mainActivity.isTwoPlayer()) {
 	        if (bluetoothService.getState() == BTState.connected) {
@@ -213,7 +213,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 		dealAndShow();
 	}
 	private void dealAndShow() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.dealAndShow()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.dealAndShow()");
 		cardPack.deal(biased);
 		resetBidList();
 		handsButton.setText("Us");
@@ -269,7 +269,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 		this.bidTextViews[bidNumber++].setText(bid.toString());
 	}
 	private void showHands() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.showHands()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.showHands()");
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		if (this.handToShow == SHOW_US) {
 			ft.hide(northFragment);
@@ -296,7 +296,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 	}
 	public void setClientMode(boolean clientMode) {
         if(BuildConfig.DEBUG) {
-        	Log.i(MainActivity.TAG, "CardFragment.setClientMode(" +
+        	Log.i(MainActivity.TAG, "DealFragment.setClientMode(" +
         			clientMode + ")");
         }
 		this.btClientMode = clientMode;
@@ -313,26 +313,26 @@ public class CardFragment extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
         if(BuildConfig.DEBUG) {
         	Log.i(MainActivity.TAG,
-    			"CardFragment.onActivityCreated(savedInstanceState=" +
+    			"DealFragment.onActivityCreated(savedInstanceState=" +
     			(savedInstanceState==null?"null":"not null") + ")");
         }
 		super.onActivityCreated(savedInstanceState);
 	}
 	@Override
 	public void onAttach(Context context) {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onAttach()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onAttach()");
 		super.onAttach(context);
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onConfigurationChanged()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onConfigurationChanged()");
 		super.onConfigurationChanged(newConfig);
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         if(BuildConfig.DEBUG) {
         	Log.i(MainActivity.TAG,
-        			"CardFragment.onCreate(savedInstanceState=" +
+        			"DealFragment.onCreate(savedInstanceState=" +
         			(savedInstanceState==null?"null":"not null") +
         			")");
         }
@@ -340,27 +340,27 @@ public class CardFragment extends Fragment implements OnClickListener {
 	}
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onCreateOptionsMenu()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onCreateOptionsMenu()");
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	@Override
 	public void onDestroy() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onDestroy()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onDestroy()");
 		super.onDestroy();
 	}
 	@Override
 	public void onPause() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onPause()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onPause()");
 		super.onPause();
 	}
 	@Override
 	public void onStart() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onStart()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onStart()");
 		super.onStart();
 	}
 	@Override
 	public void onStop() {
-        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "CardFragment.onStop()");
+        if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.onStop()");
 		super.onStop();
 	}
 	public void onMessageRead(byte[] data) {

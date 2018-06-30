@@ -33,7 +33,7 @@
 	    <TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        style="@style/RedIcon"
+            style="@style/RedIcon"
 	        android:text="@string/iconHeart" />
 	    <TextView
 	        android:id="@+id/hearts"

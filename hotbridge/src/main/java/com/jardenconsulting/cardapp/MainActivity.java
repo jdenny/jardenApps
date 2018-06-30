@@ -16,7 +16,7 @@ import com.jardenconsulting.bluetooth.BluetoothListener;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 
-import jarden.cardapp.CardFragment;
+import jarden.cardapp.DealFragment;
 
 /**
  * Shuffle and deal a pack of cards, showing my hand (Me), or
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 	private String appName;
 	private FragmentManager fragmentManager;
 	private BluetoothFragment bluetoothFragment;
-	private CardFragment cardFragment;
+	private DealFragment cardFragment;
 	private TextView statusText;
 	private boolean closing = false;
 	private boolean twoPlayer = false;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 		this.appName = getResources().getString(R.string.app_name);
 		this.statusText = (TextView) findViewById(R.id.statusText);
 		this.fragmentManager = getSupportFragmentManager();
-		this.cardFragment = (CardFragment) fragmentManager.findFragmentById(R.id.cardFragment);
+		this.cardFragment = (DealFragment) fragmentManager.findFragmentById(R.id.cardFragment);
 		setTitle(this.appName + " - single player");
 		showCardFragment();
 	}
