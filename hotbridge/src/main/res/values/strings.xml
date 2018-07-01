@@ -22,6 +22,6 @@
     <string name="south">South</string>
     <string name="learnStr">Learn Mode</string>
     <string name="reviseStr">Revise Mode</string>
-    <string name="revise">Revise</string>
+    <string name="biddingQuiz">Bidding Quiz</string>
     <string name="reviseQuizActivity">ReviseQuizActivity</string>
 </resources>

@@ -7,5 +7,5 @@
         android:checked="false"/>
     <item
         android:id="@+id/reviseButton"
-        android:title="@string/revise" />
+        android:title="@string/biddingQuiz" />
 </menu>

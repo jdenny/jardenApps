@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.PresetQuiz;
@@ -40,7 +41,7 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-This activity (renamed ReviseItActivity) needs to be in a
+This activity needs to be in a
 library if we want hotbridge and a separate FunkWiz app
 Name options: Freak Wiz, york, mike, dunk, punk, trike, funk
 save fails in preferences; how about save fails and currentIndex when closing app
@@ -50,7 +51,8 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
     public final static String TAG = "ReviseIt";
     private final static String quizFileName = "reviseit.txt";
         // "reviseitmini.txt"; // ***also change name of resource file***
-    private final static String questionIndexKey = "questionIndexKey";
+    private final static String QUESTION_INDEX_KEY = "questionIndexKey";
+    private final static String FAIL_INDICES_KEY = "failIndicesKey";
 
     private PresetQuiz reviseItQuiz;
     private TextView questionTextView;
@@ -65,15 +67,15 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_revise);
-        TextView quizTitle = (TextView) findViewById(R.id.quizTitle);
-        this.questionTextView = (TextView) findViewById(R.id.questionTextView);
-        this.answerTextView = (TextView) findViewById(R.id.answerTextView);
-        this.statsTextView = (TextView) findViewById(R.id.statsTextView);
-        this.statusTextView = (TextView) findViewById(R.id.statusTextView);
-        this.goButton = (Button) findViewById(R.id.goButton);
-        Button correctButton = (Button) findViewById(R.id.correctButton);
-        Button incorrectButton = (Button) findViewById(R.id.incorrectButton);
-        this.selfMarkLayout = (ViewGroup) findViewById(R.id.selfMarkLayout);
+        TextView quizTitle = findViewById(R.id.quizTitle);
+        this.questionTextView = findViewById(R.id.questionTextView);
+        this.answerTextView = findViewById(R.id.answerTextView);
+        this.statsTextView = findViewById(R.id.statsTextView);
+        this.statusTextView = findViewById(R.id.statusTextView);
+        this.goButton = findViewById(R.id.goButton);
+        Button correctButton = findViewById(R.id.correctButton);
+        Button incorrectButton = findViewById(R.id.incorrectButton);
+        this.selfMarkLayout =  findViewById(R.id.selfMarkLayout);
         this.selfMarkLayout.setVisibility(View.GONE);
         this.goButton.setOnClickListener(this);
         correctButton.setOnClickListener(this);
@@ -103,9 +105,14 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
             quizTitle.setText(reviseItQuiz.getHeading());
             this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-            int savedQuestionIndex = sharedPreferences.getInt(questionIndexKey, -1);
+            int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
             if (savedQuestionIndex > -1) {
                 reviseItQuiz.setQuestionIndex(savedQuestionIndex);
+            }
+            String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
+            if (failIndexStr.length() > 0) {
+                String[] failIndices = failIndexStr.split(",");
+                reviseItQuiz.setFailIndices(failIndices);
             }
             setTitle(R.string.learnMode);
             askQuestion();
@@ -141,7 +148,19 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         if (reviseItQuiz.getQuizMode() == PresetQuiz.QuizMode.LEARN) {
             int questionIndex = reviseItQuiz.getQuestionIndex();
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(questionIndexKey, questionIndex);
+            editor.putInt(QUESTION_INDEX_KEY, questionIndex);
+            List<Integer> failList = reviseItQuiz.getFailedIndexList();
+            String failStr;
+            if (failList.size() == 0) {
+                failStr = "";
+            } else {
+                StringBuilder sBuilder = new StringBuilder();
+                for (int failIndex : failList) {
+                    sBuilder.append(failIndex + ",");
+                }
+                failStr = sBuilder.substring(0, sBuilder.length() - 1);
+            }
+            editor.putString(FAIL_INDICES_KEY, failStr);
             editor.apply();
         }
     }

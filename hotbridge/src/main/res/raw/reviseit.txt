@@ -73,7 +73,7 @@ A: 5-7 HCP, 6+ in suit, no 4-4 major (raw, 20 TP)
 Q: 1D, 3H/3S/4C/4D
 A: long, strong suit (suit-setter)
 Q: 1D, (any bid), pass
-A: 0-4 HCP, no 4+ major (free bid)
+A: 0-4 HCP (free bid; may have 4+ major)
 
 # 1 bid after 1H
 Q: 1H, pass
@@ -122,7 +122,7 @@ Q: 1S, 3S
 A: 8-10 HCP, 5 spades (20 TP)
 Q: 1S, 3NT
 A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
-Q: 1S, 3S/4C/4D
+Q: 1S, 4C/4D/4H
 A: 4+ spades, 13+ HCP, 0 or 1 in suit, control (A or Kx) in other 2 suits (splinter, 25+ TP)
 Q: 1S, 4S
 A: 8-10 HCP, 6+ spades (20 TP)

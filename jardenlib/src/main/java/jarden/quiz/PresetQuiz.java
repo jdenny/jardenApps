@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -19,22 +18,30 @@ import java.util.Set;
  */
 public class PresetQuiz extends Quiz {
 	private List<QuestionAnswer> qaList;
-	private List<Integer> outstandingIndexList;
-	private int index = -1;
+    private int qaListIndex = -1;
+	private List<Integer> randomIndexList;
+	private int randomListIndex = -1;
 	private String questionTemplate = null;
 	private String heading = null;
-	// added for ReviseItQuiz:
+
+    // added for ReviseItQuiz:
     public enum QuizMode {
         LEARN, REVISE
     }
     private final static int TARGET_CORRECT_CT = 3;
     private final static int RECENTS_CT = 3;
     private QuizMode quizMode = QuizMode.LEARN;
-    private List<QuestionAnswer> failedList = new LinkedList<>();
+    private List<Integer> failedIndexList = new LinkedList<>();
     private QuestionAnswer[] recents = new QuestionAnswer[RECENTS_CT];
     private QuestionAnswer currentQA;
-    private int questionIndex = -1;
     private int consecutiveCorrects = 0;
+    /*
+       index of current question, which may have come from
+          qaList[qaListIndex] - learn mode
+          or randomIndexList[randomListIndex] - revise mode
+          or failedIndexList[0]
+     */
+    private int currentQAIndex;
 
     /**
      * Build a Quiz from the InputStream. Assumes the inputStream contains
@@ -153,22 +160,22 @@ public class PresetQuiz extends Quiz {
 	@Override
 	public void reset() {
 		super.reset();
-		outstandingIndexList = new ArrayList<>();
+		randomIndexList = new ArrayList<>();
 		for (int i = 0; i < qaList.size(); i++) {
-			outstandingIndexList.add(i);
+			randomIndexList.add(i);
 		}
-		Collections.shuffle(outstandingIndexList);
+		Collections.shuffle(randomIndexList);
 	}
 	@Override
 	public String getNextQuestion(int level) throws EndOfQuestionsException {
-		if (outstandingIndexList.size() == 0) {
+		if (randomIndexList.size() == 0) {
 			throw new EndOfQuestionsException("No more questions");
 		}
-		index++;
-		if (index >= outstandingIndexList.size()) {
-			index = 0;
+		randomListIndex++;
+		if (randomListIndex >= randomIndexList.size()) {
+			randomListIndex = 0;
 		}
-		QuestionAnswer qa = qaList.get(outstandingIndexList.get(index));
+		QuestionAnswer qa = qaList.get(randomIndexList.get(randomListIndex));
 		String question;
 		if (questionTemplate == null) {
 			question = qa.question;
@@ -183,9 +190,9 @@ public class PresetQuiz extends Quiz {
 	}
 	@Override
 	public void notifyRightFirstTime() {
-		if (index >= 0) {
-			outstandingIndexList.remove(index);
-			index--; // otherwise we would miss out a question this time round
+		if (randomListIndex >= 0) {
+			randomIndexList.remove(randomListIndex);
+			randomListIndex--; // otherwise we would miss out a question this time round
 		}
 	}
 	@Override
@@ -215,66 +222,103 @@ public class PresetQuiz extends Quiz {
      * @return question string from current questionAnswer
      * @throws EndOfQuestionsException only applies to Learn mode
      */
+    /*
+       TODO: remove getNextQuestion(int level)
+       this means adding level (not used!) to this method
+
+       instead of holding recent 3, use oustandingIndexList
+       if learn mode, get question from qaList
+       if revise:
+            get question from outstandingList
+            use outstandingListIndex
+            when outstandingListIndex reaches end:
+                outstandingListIndex = 0
+                shuffle outstandingList
+     */
     public String getNextQuestion() throws EndOfQuestionsException {
         int failCt = getFailedCount();
         if (this.quizMode == QuizMode.LEARN) {
-            int currentCt = getCurrentCount() - 1; // haven't incremented questionIndex yet!
+            int currentCt = getCurrentCount() - 1; // haven't incremented qaListIndex yet
             if (failCt == 0 && currentCt == 0) throw new EndOfQuestionsException();
             if ((this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) || currentCt == 0) {
-                consecutiveCorrects = 0;
-                this.currentQA = this.failedList.remove(0);
+                this.currentQA = getNextFail();
             } else {
-                this.questionIndex++;
-                this.currentQA = this.qaList.get(questionIndex);
+                this.qaListIndex++;
+                this.currentQA = this.qaList.get(qaListIndex);
+                this.currentQAIndex = qaListIndex;
             }
         } else { // must be REVISE mode
             if (this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) {
-                consecutiveCorrects = 0;
-                this.currentQA = this.failedList.remove(0);
+                this.currentQA = getNextFail();
             } else {
-                this.currentQA = getRandomNRUQuestion();
+                //!! this.currentQA = getRandomNRUQuestion();
+                ++this.randomListIndex;
+                if (randomListIndex > this.randomIndexList.size()) {
+                    Collections.shuffle(randomIndexList);
+                    randomListIndex = 0;
+                }
+                this.currentQAIndex = this.randomIndexList.get(randomListIndex);
+                this.currentQA = this.qaList.get(currentQAIndex);
             }
         }
+        /*!!
         recents[0] = recents[1];
         recents[1] = recents[2];
         recents[2] = currentQA;
+        */
         super.setQuestionAnswer(currentQA.question, currentQA.answer);
-        return this.currentQA.getQuestion();
+        return this.currentQA.question;
+    }
+    private QuestionAnswer getNextFail() {
+        consecutiveCorrects = 0;
+        this.currentQAIndex = this.failedIndexList.remove(0);
+        return this.qaList.get(currentQAIndex);
     }
     public int getQuestionIndex() {
-        return questionIndex;
+        return qaListIndex;
     }
-    public void setQuestionIndex(int questionIndex) {
-        this.questionIndex = questionIndex;
+    public List<Integer> getFailedIndexList() {
+        return failedIndexList;
+    }
+
+    public void setQuestionIndex(int qaListIndex) {
+        this.qaListIndex = qaListIndex;
+    }
+    public void setFailIndices(String[] failIndices) {
+        for (String failIndex: failIndices) {
+            failedIndexList.add(Integer.parseInt(failIndex));
+        }
     }
     public void setQuizMode(QuizMode quizMode) {
         this.quizMode = quizMode;
-        questionIndex = -1;
+        qaListIndex = -1;
     }
     public QuizMode getQuizMode() {
         return this.quizMode;
     }
     public int getCurrentCount() {
-        return this.qaList.size() - this.questionIndex;
+        return this.qaList.size() - this.qaListIndex;
     }
     public void setCorrect(boolean correct) {
         if (correct) {
             this.consecutiveCorrects++;
         } else {
             consecutiveCorrects = 0;
-            failedList.add(this.currentQA);
+            assert this.currentQAIndex >= 0: "currentQAIndex=" + currentQAIndex;
+            this.failedIndexList.add(this.currentQAIndex);
         }
     }
     public int getFailedCount() {
-        return this.failedList.size();
+        return this.failedIndexList.size();
     }
+    /*!!
     private QuestionAnswer getRandomNRUQuestion() {
         int qaListSize = this.qaList.size();
-        int randomI = new Random().nextInt(qaListSize);
-        QuestionAnswer qa = this.qaList.get(randomI);
+        this.currentQAIndex = new Random().nextInt(qaListSize);
+        QuestionAnswer qa = this.qaList.get(currentQAIndex);
         for (int i = 0; isRecentQuestion(qa) && i < RECENTS_CT; i++) {
-            if (++randomI >= qaListSize) randomI = 0;
-            qa = this.qaList.get(randomI);
+            if (++currentQAIndex >= qaListSize) currentQAIndex = 0;
+            qa = this.qaList.get(currentQAIndex);
         }
         return qa;
     }
@@ -284,4 +328,5 @@ public class PresetQuiz extends Quiz {
         }
         return false;
     }
+    */
 }

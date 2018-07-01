@@ -16,7 +16,6 @@
       <module fileurl="file://$PROJECT_DIR$/life/life.iml" filepath="$PROJECT_DIR$/life/life.iml" />
       <module fileurl="file://$PROJECT_DIR$/music/music.iml" filepath="$PROJECT_DIR$/music/music.iml" />
       <module fileurl="file://$PROJECT_DIR$/quizmaze/quizmaze.iml" filepath="$PROJECT_DIR$/quizmaze/quizmaze.iml" />
-      <module fileurl="file://$PROJECT_DIR$/reviseanything/reviseanything.iml" filepath="$PROJECT_DIR$/reviseanything/reviseanything.iml" />
       <module fileurl="file://$PROJECT_DIR$/spanish/spanish.iml" filepath="$PROJECT_DIR$/spanish/spanish.iml" />
     </modules>
   </component>
