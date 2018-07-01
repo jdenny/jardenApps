@@ -29,6 +29,9 @@ import java.util.List;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.PresetQuiz;
 
+import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
+import static jarden.quiz.PresetQuiz.QuizMode.REVISE;
+
 /**
  * Create a Quiz class based on Q-A text file called <i>quizFileName</i>.
  * Get text file from downloads directory; this allows a user of the app
@@ -53,6 +56,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         // "reviseitmini.txt"; // ***also change name of resource file***
     private final static String QUESTION_INDEX_KEY = "questionIndexKey";
     private final static String FAIL_INDICES_KEY = "failIndicesKey";
+    private static final String LEARN_MODE_KEY = "learnModeKey";
 
     private PresetQuiz reviseItQuiz;
     private TextView questionTextView;
@@ -109,6 +113,8 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             if (savedQuestionIndex > -1) {
                 reviseItQuiz.setQuestionIndex(savedQuestionIndex);
             }
+            boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
+            reviseItQuiz.setQuizMode(learnMode ? LEARN : REVISE);
             String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
             if (failIndexStr.length() > 0) {
                 String[] failIndices = failIndexStr.split(",");
@@ -131,10 +137,10 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         // Handle item selection
         int id = item.getItemId();
         if (id == R.id.learnModeButton) {
-            reviseItQuiz.setQuizMode(PresetQuiz.QuizMode.LEARN);
+            reviseItQuiz.setQuizMode(LEARN);
             setTitle(R.string.learnStr);
         } else if (id == R.id.reviseModeButton) {
-            reviseItQuiz.setQuizMode(PresetQuiz.QuizMode.REVISE);
+            reviseItQuiz.setQuizMode(REVISE);
             setTitle(R.string.reviseStr);
         } else {
             return super.onOptionsItemSelected(item);
@@ -145,35 +151,35 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onPause() {
         super.onPause();
-        if (reviseItQuiz.getQuizMode() == PresetQuiz.QuizMode.LEARN) {
-            int questionIndex = reviseItQuiz.getQuestionIndex();
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(QUESTION_INDEX_KEY, questionIndex);
-            List<Integer> failList = reviseItQuiz.getFailedIndexList();
-            String failStr;
-            if (failList.size() == 0) {
-                failStr = "";
-            } else {
-                StringBuilder sBuilder = new StringBuilder();
-                for (int failIndex : failList) {
-                    sBuilder.append(failIndex + ",");
-                }
-                failStr = sBuilder.substring(0, sBuilder.length() - 1);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int questionIndex = reviseItQuiz.getQuestionIndex();
+        editor.putInt(QUESTION_INDEX_KEY, questionIndex);
+        PresetQuiz.QuizMode quizMode = reviseItQuiz.getQuizMode();
+        editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
+        List<Integer> failList = reviseItQuiz.getFailedIndexList();
+        String failStr;
+        if (failList.size() == 0) {
+            failStr = "";
+        } else {
+            StringBuilder sBuilder = new StringBuilder();
+            for (int failIndex : failList) {
+                sBuilder.append(failIndex + ",");
             }
-            editor.putString(FAIL_INDICES_KEY, failStr);
-            editor.apply();
+            failStr = sBuilder.substring(0, sBuilder.length() - 1);
         }
+        editor.putString(FAIL_INDICES_KEY, failStr);
+        editor.apply();
     }
     private void askQuestion() {
         String question;
         try {
-            question = reviseItQuiz.getNextQuestion();
+            question = reviseItQuiz.getNextQuestion(1);
         } catch (EndOfQuestionsException e) {
             showMessage("end of questions! starting revise mode");
-            reviseItQuiz.setQuizMode(PresetQuiz.QuizMode.REVISE);
+            reviseItQuiz.setQuizMode(REVISE);
             setTitle(R.string.reviseStr);
             try {
-                question = reviseItQuiz.getNextQuestion();
+                question = reviseItQuiz.getNextQuestion(1);
             } catch (EndOfQuestionsException e1) {
                 showMessage("exception: " + e);
                 return;

@@ -88,19 +88,19 @@ public class DealFragment extends Fragment implements OnClickListener {
 		this.mainActivity = (MainActivity) getActivity();
 		this.fragmentManager = mainActivity.getSupportFragmentManager();
 
-		Button dealButton = (Button) view.findViewById(R.id.dealButton);
+		Button dealButton = view.findViewById(R.id.dealButton);
 		dealButton.setOnClickListener(this);
-		handsButton = (Button) view.findViewById(R.id.handsButton);
+		handsButton = view.findViewById(R.id.handsButton);
 		handsButton.setOnClickListener(this);
-		bidButton = (Button) view.findViewById(R.id.bidButton);
+		bidButton = view.findViewById(R.id.bidButton);
 		bidButton.setOnClickListener(this);
-		this.suggestedBidTextView = (TextView) view.findViewById(R.id.suggestedBidtextView);
+		this.suggestedBidTextView = view.findViewById(R.id.suggestedBidtextView);
 		bidList = new ArrayList<>();
 		bidLayouts = new LinearLayout[4];
-		bidLayouts[0] = (LinearLayout) view.findViewById(R.id.bid1Layout);
-		bidLayouts[1] = (LinearLayout) view.findViewById(R.id.bid2Layout);
-		bidLayouts[2] = (LinearLayout) view.findViewById(R.id.bid3Layout);
-		bidLayouts[3] = (LinearLayout) view.findViewById(R.id.bid4Layout);
+		bidLayouts[0] = view.findViewById(R.id.bid1Layout);
+		bidLayouts[1] = view.findViewById(R.id.bid2Layout);
+		bidLayouts[2] = view.findViewById(R.id.bid3Layout);
+		bidLayouts[3] = view.findViewById(R.id.bid4Layout);
 		bidTextViews = new TextView[16];
 		TextView bidTextView;
 		LinearLayout.LayoutParams layoutParams =
