@@ -109,18 +109,22 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
             quizTitle.setText(reviseItQuiz.getHeading());
             this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-            int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
-            if (savedQuestionIndex > -1) {
-                reviseItQuiz.setQuestionIndex(savedQuestionIndex);
-            }
             boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
-            reviseItQuiz.setQuizMode(learnMode ? LEARN : REVISE);
+            if (learnMode) {
+                setLearnMode();
+            } else {
+                setReviseMode();
+            }
+            int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
+            if (savedQuestionIndex > 0) {
+                // subtract 1, to repeat most recent question, not yet answered:
+                reviseItQuiz.setQuestionIndex(savedQuestionIndex - 1);
+            }
             String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
             if (failIndexStr.length() > 0) {
                 String[] failIndices = failIndexStr.split(",");
                 reviseItQuiz.setFailIndices(failIndices);
             }
-            setTitle(R.string.learnMode);
             askQuestion();
         } catch (IOException e) {
             showMessage("unable to load quiz: " + e);
@@ -137,16 +141,22 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         // Handle item selection
         int id = item.getItemId();
         if (id == R.id.learnModeButton) {
-            reviseItQuiz.setQuizMode(LEARN);
-            setTitle(R.string.learnStr);
+            setLearnMode();
         } else if (id == R.id.reviseModeButton) {
-            reviseItQuiz.setQuizMode(REVISE);
-            setTitle(R.string.reviseStr);
+            setReviseMode();
         } else {
             return super.onOptionsItemSelected(item);
         }
         askQuestion();
         return true;
+    }
+    private void setLearnMode() {
+        reviseItQuiz.setQuizMode(LEARN);
+        setTitle(R.string.learnMode);
+    }
+    private void setReviseMode() {
+        reviseItQuiz.setQuizMode(REVISE);
+        setTitle(R.string.reviseMode);
     }
     @Override
     protected void onPause() {
@@ -176,8 +186,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             question = reviseItQuiz.getNextQuestion(1);
         } catch (EndOfQuestionsException e) {
             showMessage("end of questions! starting revise mode");
-            reviseItQuiz.setQuizMode(REVISE);
-            setTitle(R.string.reviseStr);
+            setReviseMode();
             try {
                 question = reviseItQuiz.getNextQuestion(1);
             } catch (EndOfQuestionsException e1) {

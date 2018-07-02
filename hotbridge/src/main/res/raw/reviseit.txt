@@ -11,9 +11,9 @@ A: <4 hearts; 4+ spades & 20-22pp or 5+ spades & 23-24pp
 Q: 1NT
 A: 20-22pp, no 4+ major, no 6+ minor, not 5-5 in minors
 Q: 2C
-A: 6+ clubs, no 4+ major, <5 diamonds
+A: 20-22pp, no 4+ major, 6+ clubs, <5 diamonds
 Q: 2D
-A: 6+ diamonds, no 4+ major, <5 clubs
+A: 20-22pp, no 4+ major, 6+ diamonds, <5 clubs
 Q: 2H/2S
 A: 6 in suit, <20pp (preempt, disturbing, raw)
 Q: 2NT

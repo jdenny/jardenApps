@@ -5,11 +5,11 @@
 
     <item
         android:id="@+id/learnModeButton"
-        android:title="@string/learnStr"
+        android:title="@string/learnMode"
         app:showAsAction="never"/>
     <item
         android:id="@+id/reviseModeButton"
-        android:title="@string/reviseStr"
+        android:title="@string/reviseMode"
         app:showAsAction="never"/>
 
 </menu>

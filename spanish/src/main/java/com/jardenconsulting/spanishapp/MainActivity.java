@@ -676,7 +676,7 @@ public class MainActivity extends AppCompatActivity
             titleId = R.string.numbersGame;
         } else { // must be ENGSPA
             if (quizMode == QuizMode.PRACTICE) {
-                titleId = R.string.practiceMode;
+                titleId = R.string.reviseMode;
             } else if (quizMode == QuizMode.TOPIC) {
                 titleId = TOPIC_FOR_TITLE;
             } else if (quizMode == QuizMode.LEARN) {
