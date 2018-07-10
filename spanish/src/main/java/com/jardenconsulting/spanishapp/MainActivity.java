@@ -121,18 +121,18 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		getEngSpaDAO();
 		setContentView(R.layout.activity_main);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		this.helpTextView = (TextView) findViewById(R.id.helpTextView);
-		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
+		this.helpTextView = findViewById(R.id.helpTextView);
+		this.statusTextView = findViewById(R.id.statusTextView);
         this.statusTextView.setVisibility(View.GONE); // hidden if no message is shown
-		this.showHelpCheckBox = (CheckBox) findViewById(R.id.showHelpCheckBox);
+		this.showHelpCheckBox = findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
 		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		//?? helpTextView.setMovementMethod(new ScrollingMovementMethod());
 		helpTextView.setHighlightColor(Color.TRANSPARENT);
-		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		this.progressBar = findViewById(R.id.progressBar);
+		this.drawerLayout = findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
 				this, drawerLayout, toolbar,
 				R.string.drawer_open,
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         };
 		drawerLayout.addDrawerListener(drawerToggle);
 		drawerToggle.syncState();
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		NavigationView navigationView = findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 		this.fragmentManager = getSupportFragmentManager();
 		if (savedInstanceState == null) {

@@ -3,6 +3,7 @@ package jarden.quiz;
 public class QuestionAnswer {
 	public String question;
 	public String answer;
+	public String helpText;
 
 	public QuestionAnswer() {
 	}
@@ -10,6 +11,10 @@ public class QuestionAnswer {
 		this.question = question;
 		this.answer = answer;
 	}
+    public QuestionAnswer(String question, String answer, String helpText) {
+	    this(question, answer);
+        this.helpText = helpText;
+    }
 	public String getQuestion() {
 		return question;
 	}

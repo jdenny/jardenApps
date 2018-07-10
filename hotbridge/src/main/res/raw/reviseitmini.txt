@@ -1,4 +1,14 @@
 $H: what does the last bid mean?
+Q: 2D
+A: 20-22pp, no 4+ major, 6+ diamonds, <5 clubs
+Q: 2H/2S
+F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+A: 6 in suit, <20pp
+Q: 2NT
+A: 5+ in both minors, 20-22pp, no 4+ major
+Q: 3C/3D/3H/3S
+F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+A: 7 in suit, < 20pp
 # single bid
 Q: 1C
 A: 25pp & 5-card major or 26+pp

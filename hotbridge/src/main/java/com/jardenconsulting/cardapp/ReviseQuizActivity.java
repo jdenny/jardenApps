@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,8 +28,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import jarden.document.DocumentTextView;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.PresetQuiz;
+import jarden.quiz.QuestionAnswer;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 import static jarden.quiz.PresetQuiz.QuizMode.REVISE;
@@ -44,11 +48,25 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
+Add levels:
+    # level 2 (all following QA at level 2 until told otherwise)
+Add tips: can hover over linked word, and get explanation of term
+Or, where we showed help in ReviseSpanish, show extra text:
+Q: 1H, 1S; 3H
+F1: [a]suit-setter[/a]; not a [a]splinter[/a], as hearts previously shown
+A: suit-setter
+separate help_strings.xml file:
+<string name="splinter">
+  in neutral, or disturbed auction, jump shift opposite
+  a natural bid below 2NT to another suit not previously shown and at
+  level that commits us to play at 4-level (i.e. between 3 and 4 of trump suit)
+</string>
+<string name="suit-setter">long, strong suit, not needing support from
+  partner; at least 5 winners in suit</string>
+
 This activity needs to be in a
 library if we want hotbridge and a separate FunkWiz app
 Name options: Freak Wiz, york, mike, dunk, punk, trike, funk
-save fails in preferences; how about save fails and currentIndex when closing app
-and reload on restart? Hold failList as indices, to make it easier to save?
  */
 public class ReviseQuizActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String TAG = "ReviseIt";
@@ -57,15 +75,38 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
     private final static String QUESTION_INDEX_KEY = "questionIndexKey";
     private final static String FAIL_INDICES_KEY = "failIndicesKey";
     private static final String LEARN_MODE_KEY = "learnModeKey";
+    private static final int[] helpResIds = {
+            R.string.autofit,
+            R.string.disturbing,
+            R.string.guard,
+            R.string.invitational_plus,
+            R.string.keycard_ask,
+            R.string.preempt,
+            R.string.queen_ask,
+            R.string.raw,
+            R.string.relay,
+            R.string.responses_to_1D,
+            R.string.sandpit,
+            R.string.skew,
+            R.string.splinter,
+            R.string.strong_fit,
+            R.string.suit_setter,
+            R.string.to_play,
+            R.string.two_choice,
+            R.string.values_for_5,
+            R.string.waiting_bid
+    };
 
     private PresetQuiz reviseItQuiz;
     private TextView questionTextView;
     private TextView answerTextView;
     private TextView statsTextView;
     private TextView statusTextView;
+    private TextView helpTextView;
     private Button goButton;
     private ViewGroup selfMarkLayout;
     private SharedPreferences sharedPreferences;
+    private DocumentTextView documentTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +117,9 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         this.answerTextView = findViewById(R.id.answerTextView);
         this.statsTextView = findViewById(R.id.statsTextView);
         this.statusTextView = findViewById(R.id.statusTextView);
+        this.helpTextView = findViewById(R.id.helpTextView);
+        this.helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        this.helpTextView.setHighlightColor(Color.TRANSPARENT);
         this.goButton = findViewById(R.id.goButton);
         Button correctButton = findViewById(R.id.correctButton);
         Button incorrectButton = findViewById(R.id.incorrectButton);
@@ -91,15 +135,15 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            Log.d(TAG, "can NOT read external storage");
+            showMessage("can NOT read external storage");
         } else {
-            Log.d(TAG, "CAN read external storage");
+            if (BuildConfig.DEBUG) Log.d(TAG, "CAN read external storage");
         }
         try {
             File publicDirectory = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS);
             File file = new File(publicDirectory, quizFileName);
-            Log.d(TAG, file.getAbsolutePath());
+            if (BuildConfig.DEBUG) Log.d(TAG, file.getAbsolutePath());
             InputStream inputStream;
             if (file.canRead()) {
                 inputStream = new FileInputStream(file);
@@ -223,10 +267,13 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         this.reviseItQuiz.setCorrect(isCorrect);
         showButtonLayout();
         askQuestion();
+        helpTextView.setText("");
     }
 
     private void goPressed() {
-        this.answerTextView.setText(reviseItQuiz.getCorrectAnswer());
+        QuestionAnswer currentQA = reviseItQuiz.getCurrentQuestionAnswer();
+        this.answerTextView.setText(currentQA.answer);
+        getDocumentTextView().showPageText(currentQA.helpText, "Notes");
         showSelfMarkLayout();
     }
 
@@ -239,7 +286,16 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         this.goButton.setVisibility(View.VISIBLE);
     }
     private void showMessage(String message) {
-        Log.d(TAG, message);
+        if (BuildConfig.DEBUG) Log.d(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    private DocumentTextView getDocumentTextView() {
+        if (this.documentTextView == null) {
+            this.documentTextView = new DocumentTextView(
+                    getApplicationContext(),
+                    helpTextView, helpResIds,
+                    true, null, false);
+        }
+        return documentTextView;
     }
 }

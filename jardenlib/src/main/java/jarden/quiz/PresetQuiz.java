@@ -47,6 +47,7 @@ public class PresetQuiz extends Quiz {
      *		Q: question1
      *		A: answer1
      *		Q: question2
+     *	    F1: helpText2
      *		A: answer2
      *		etc
      *	    # comment line
@@ -69,6 +70,7 @@ public class PresetQuiz extends Quiz {
 		qaList = new ArrayList<>();
 		String question = null;
 		String answer;
+		String helpText = null;
 		while (true) {
 			String line = reader.readLine();
 			if (line == null) break; // end of file
@@ -80,9 +82,12 @@ public class PresetQuiz extends Quiz {
 				// simple QA, using only first answer:
 				if (question != null) {
 					answer = line.substring(3);
-					qaList.add(new QuestionAnswer(question, answer));
+					qaList.add(new QuestionAnswer(question, answer, helpText));
+					helpText = null;
 					question = null;
 				}
+            } else if (line.startsWith("F1: ")) {
+			    helpText = line.substring(4);
 			} else if (line.startsWith("$T: ")) {
 				questionTemplate = line.substring(4);
             } else if (line.startsWith("$H: ")) {
@@ -271,7 +276,9 @@ public class PresetQuiz extends Quiz {
     public List<Integer> getFailedIndexList() {
         return failedIndexList;
     }
-
+    public QuestionAnswer getCurrentQuestionAnswer() {
+        return currentQA;
+    }
     public void setQuestionIndex(int qaListIndex) {
         this.qaListIndex = qaListIndex;
     }

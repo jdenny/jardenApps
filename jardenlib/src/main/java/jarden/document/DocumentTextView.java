@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.jardenconsulting.jardenlib.BuildConfig;
 
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Utility class to produce and process SpannableStrings to allow
@@ -53,18 +52,21 @@ public class DocumentTextView {
 	 * @param appContext
 	 * @param textView to hold hypertext
 	 * @param resIds string resource ids; first one assumed to be home page
+     * @param onShowPageListener notified each time page shown; may be null
 	 */
 	public DocumentTextView(Context appContext, TextView textView, int[] resIds,
                             OnShowPageListener onShowPageListener) {
 		this(appContext, textView, resIds, true, onShowPageListener, true);
 	}
-	/**
-	 *
-	 * @param appContext
-	 * @param textView to hold hypertext
-	 * @param resIds string resource ids; first one assumed to be home page
-	 * @param withPageNames show page name as title at head of page
-	 */
+    /**
+     *
+     * @param appContext
+     * @param textView to hold hypertext
+     * @param resIds string resource ids; first one assumed to be home page
+     * @param withPageNames show page name as title at head of page
+     * @param onShowPageListener notified each time page shown; may be null
+     * @param addHomeLink show link to home page
+     */
 	public DocumentTextView(Context appContext, TextView textView, int[] resIds,
                             boolean withPageNames, OnShowPageListener onShowPageListener,
                             boolean addHomeLink) {
@@ -101,28 +103,40 @@ public class DocumentTextView {
     }
     /**
      * Show hypertext page with given name.
-     * @param name of page
+     * @param pageName of page
      * @return false if name doesn't match ids passed to constructor
      */
-    public boolean showPage(String name) {
-		CharSequence ss = spannableMap.get(name);
+    public boolean showPage(String pageName) {
+		CharSequence ss = spannableMap.get(pageName);
         if (ss == null) {
             if (BuildConfig.DEBUG) Log.w(TAG,
-                    "showPage(" + name + "); name not found");
+                    "showPage(" + pageName + "); name not found");
             return false;
         }
         /* possibly save navigation history at some point:
         Deque<Integer> helpHistory = this.viewlessFragment.getHelpHistory();
         helpHistory.push(resId);
         */
+        setText(ss, pageName);
 
+        return true;
+	}
+	public void showPageText(String pageText, String pageName) {
+        CharSequence ss;
+        if (pageText == null) {
+            ss = "";
+        } else {
+            ss = getSpannable(pageText, pageName);
+        }
+        setText(ss, pageName);
+    }
+    private void setText(CharSequence ss, String pageName) {
         textView.setText(ss);
         textView.scrollTo(0, 0);
         if (this.onShowPageListener != null) {
-            this.onShowPageListener.onShowPage(name);
+            this.onShowPageListener.onShowPage(pageName);
         }
-        return true;
-	}
+    }
     private SpannableStringBuilder getSpannable(String src, String pageName) {
 		int index = 0;
 		int startIndex; // index of '[' in [tag]
