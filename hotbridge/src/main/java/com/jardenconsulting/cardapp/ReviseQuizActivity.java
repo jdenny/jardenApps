@@ -34,7 +34,7 @@ import jarden.quiz.PresetQuiz;
 import jarden.quiz.QuestionAnswer;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
-import static jarden.quiz.PresetQuiz.QuizMode.REVISE;
+import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
 
 /**
  * Create a Quiz class based on Q-A text file called <i>quizFileName</i>.
@@ -199,8 +199,8 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         setTitle(R.string.learnMode);
     }
     private void setReviseMode() {
-        reviseItQuiz.setQuizMode(REVISE);
-        setTitle(R.string.reviseMode);
+        reviseItQuiz.setQuizMode(PRACTICE);
+        setTitle(R.string.practiceMode);
     }
     @Override
     protected void onPause() {

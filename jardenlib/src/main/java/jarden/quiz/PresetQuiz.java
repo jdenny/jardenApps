@@ -26,10 +26,10 @@ public class PresetQuiz extends Quiz {
 
     // added for ReviseItQuiz:
     public enum QuizMode {
-        LEARN, REVISE
+        LEARN, PRACTICE
     }
     private final static int TARGET_CORRECT_CT = 3;
-    private QuizMode quizMode = QuizMode.REVISE;
+    private QuizMode quizMode = QuizMode.PRACTICE;
     private List<Integer> failedIndexList = new LinkedList<>();
     private QuestionAnswer currentQA;
     private int consecutiveCorrects = 0;
@@ -223,7 +223,7 @@ public class PresetQuiz extends Quiz {
      *    if (3 consecutiveCorrects && fails) or end of current:
      *          get qaList[failedIndexList[0]]
      *    else: get qaList[qaListIndex]
-     * if QuizMode.REVISE:
+     * if QuizMode.PRACTICE:
      *    if (3 consecutiveCorrects && fails): get qaList[failedIndexList[0]]
      *    else get qaList[randomIndexList[randomListIndex]]
      *
@@ -246,7 +246,7 @@ public class PresetQuiz extends Quiz {
                 this.currentQA = this.qaList.get(qaListIndex);
                 this.currentQAIndex = qaListIndex;
             }
-        } else { // must be REVISE mode
+        } else { // must be PRACTICE mode
             if (this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) {
                 this.currentQA = getNextFail();
             } else {

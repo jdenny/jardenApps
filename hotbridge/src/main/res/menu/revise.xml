@@ -9,7 +9,7 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/reviseModeButton"
-        android:title="@string/reviseMode"
+        android:title="@string/practiceMode"
         app:showAsAction="never"/>
 
 </menu>

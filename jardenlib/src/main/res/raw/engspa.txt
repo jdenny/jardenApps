@@ -96,6 +96,7 @@ lion,león,noun,masculine,animal,1
 spider,araña,noun,feminine,animal,1
 monkey,mono,noun,masculine,animal,1
 bull,toro,noun,masculine,animal,1
+sheep,oveja,noun,feminine,animal,1
 shirt,camisa,noun,feminine,clothing,1
 trouser,pantalón,noun,masculine,clothing,1
 shoe,zapato,noun,masculine,clothing,1
@@ -293,6 +294,7 @@ student,estudiante,noun,mf,person,1
 relative,pariente,noun,mf,person,1
 boyfriend,novio,noun,masculine,person,1
 girlfriend,novia,noun,feminine,person,1
+lad,muchacho,noun,masculine,person,1
 body,cuerpo,noun,masculine,body,1
 head,cabeza,noun,feminine,body,1
 arm,brazo,noun,masculine,body,1
@@ -345,7 +347,7 @@ do you have any rooms free?,¿tiene habitaciones libres?,phrase,n_a,travel,1
 I'd like a single room,quisiera una habitación individual,phrase,n_a,travel,1
 I'd like to stay here for two nights,quisiera quedarme aquí dos noches,phrase,n_a,travel,1
 how much is it per night for one person?,¿cuánto es por noche para una persona?,phrase,n_a,travel,1
-I'll take it,la tomo,phrase,n_a,travel,1
+I'll take it,la tomo,phrase,n_a,n_a,1
 I'd like to take the train,quisiera tomar el tren,phrase,n_a,travel,1
 is there a train to Madrid?,¿hay un tren para Madrid?,phrase,n_a,travel,1
 dine,cenar,verb,intransitive,food,1
@@ -406,6 +408,7 @@ fruit pie,tarta de frutas,noun,feminine,food,1
 fruit juice,jugo de fruta,noun,masculine,food,1
 green bean,judía verde,noun,feminine,food,1
 hamburger,hamburguesa,noun,feminine,food,1
+a slice of cake,una rebanada de pastel,phrase,n_a,food,1
 hot chocolate,chocolate caliente,noun,masculine,drink,1
 hypermarket,hipermercado,noun,masculine,building,1
 ice cream,helado,noun,masculine,food,1
@@ -428,7 +431,7 @@ mustard,mostaza,noun,feminine,food,1
 napkin,servilleta,noun,feminine,food,1
 omelette,tortilla,noun,feminine,food,1
 packet,paquete,noun,masculine,food,1
-pâté,paté,noun,masculine,food,1
+pate,paté,noun,masculine,food,1
 pizza,pizza,noun,feminine,food,1
 pineapple,piña,noun,feminine,food,1
 plum,ciruela,noun,feminine,food,1
@@ -666,6 +669,7 @@ sit here my friend,siéntate aquí mi amigo,phrase,n_a,n_a,1
 bring,traer,verb,transIntrans,n_a,1
 bag,bolsa,noun,feminine,n_a,1
 home,hogar,noun,masculine,place,1
+wood for the fire,leña para el fuego,phrase,n_a,home,1
 fly off the handle,perder los estribos,phrase,n_a,n_a,1
 son-in-law,yerno,noun,masculine,person,1
 accept,aceptar,verb,transIntrans,n_a,1
@@ -1165,6 +1169,7 @@ postcode,código postal,noun,masculine,n_a,1
 present,regalo,noun,masculine,n_a,1
 pretty,bonito,adjective,n_a,n_a,1
 rabbit,conejo,noun,masculine,animal,1
+ram,carnero,noun,masculine,animal,1
 reasonable,razonable,adjective,n_a,n_a,1
 relationship,relación,noun,feminine,person,1
 religion,religión,noun,feminine,n_a,1
@@ -1335,7 +1340,7 @@ train,entrenar,verb,intransitive,sport,1
 wheel,rueda,noun,feminine,technology,1
 computer,ordenador,noun,masculine,technology,1
 connection,conexión,noun,feminine,technology,1
-cyber bullying,acoso cybernético,phrase,n_a,technology,1
+cyber bullying,acoso cibernético,phrase,n_a,technology,1
 disk,disco,noun,masculine,technology,1
 e-mail,correo electrónico,noun,masculine,technology,1
 forward slash,barra,noun,feminine,technology,1
@@ -1510,7 +1515,7 @@ area,zona,noun,feminine,place,1
 rent,alquiler,noun,masculine,money,1
 reservation,reserva,noun,feminine,n_a,1
 return ticket,billete de ida y vuelta,noun,masculine,travel,1
-river,río,noun,masculine,size,1
+river,río,noun,masculine,travel,1
 road,carretera,noun,feminine,travel,1
 road map,mapa de carreteras,noun,masculine,travel,1
 street,calle,noun,feminine,travel,1
@@ -1571,7 +1576,7 @@ shop window,escaparate,noun,masculine,place,1
 forest,bosque,noun,masculine,place,1
 youth hostel,albergue juvenil,noun,masculine,building,1
 what's the weather like?,¿qué tiempo hace?,phrase,n_a,weather,1
-what will the weather be like tomorrow?,¿qué tiempo hará mañana?,phrase,n_a,weather,1
+what will the weather be like tomorrow?,¿qu tiempo hará mañana?,phrase,n_a,weather,1
 bad weather,mal tiempo,phrase,n_a,weather,1
 good weather,buen tiempo,phrase,n_a,weather,1
 climate,clima,noun,masculine,weather,1
