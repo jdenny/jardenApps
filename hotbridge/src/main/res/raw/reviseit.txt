@@ -367,6 +367,58 @@ Q: 1C, 1S; 2D, 3C
 F1: [a]skew[/a]
 A: <5 spades, <3 hearts, 4+ clubs, skew
 
+# page 68
+Q: 1H, 1S; 1NT, 2D; 3D
+F1: with 3 spades, would bid 2S, having already denied 4 spades
+A: <3 spades; 4+ diamonds
+Q: 1C, 2D; 3C
+F1: [a]skew[/a]
+A: 4+ clubs, no 5-card major, strong (>= 19 HCP) or skew
+Q: 1C, 2D; 3C, 4C
+F1: not forcing
+A: 4+ clubs
+Q: 1C, 2D; 3C, 4C; 4H
+F1: [a]keycard_ask[/a]
+A: keycard ask
+Q: 1C, 2D; 3C, 4C; 4H; 4S
+F1: [a]keycard_ask[/a]
+A: 0 or 3 keycards
+Q: 1C, 2D; 3C, 4C; 4H; 4S, 4NT
+F1: partner has no keycards; 4NT in minor fit is always natural
+A: to play
+
+# page 71
+Q: 1NT, 2D; 2H, 3C
+F1: [a]skew[/a]
+A: 4+ clubs, no 5-card major, strong (>= 15 HCP) or skew
+Q: 1NT, 2D; 2H, 3C; 4D
+F1: [a]autofit[/a], [a]values_for_5[/a]
+A: 4+ clubs, autofit, values for 5
+
+# page 72
+Q: 1H, 1S; 1NT, 2D; 3D, 4S
+F1: [a]autofit[/a], [a]keycard_ask[/a]
+A: 4+ diamonds, autofit, keycard ask
+Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
+F1: [a]keycard_ask[/a]
+A: 2 or 5 keycards
+Q: 1H, 1S; 1NT, 2D; 2NT
+F1: [a]responses_to_relay[/a]
+A: waiting - unable to bid a suit
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C
+F1: [a]responses_to_relay[/a]
+A: 4+ clubs, strong (>= 15 HCP) or skew
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
+F1: [a]autofit[/a], [a]values_for_5[/a]
+A: 4+ clubs, autofit, values for 5
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H
+F1: [a]keycard_ask[/a]
+A: keycard ask
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
+F1: [a]keycard_ask[/a]
+A: 2 or 5 keycards
+
+
 # page 82
 Q: 2D, 3H
 F1: [a]splinter[/a]
@@ -384,7 +436,7 @@ Q: 2D, 2S; 3D
 A: <14 HCP (decline invitation)
 Q: 2D, 2S; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]
-A: 3+ diamonds (25 TP)
+A: 3+ diamonds, autofit, keycard ask (25 TP)
 Q: 2D, 2S; 3S
 A: 14+ HCP, 3+ spades (accept invitation, compelled, 25 TP)
 

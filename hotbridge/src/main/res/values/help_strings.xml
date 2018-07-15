@@ -101,11 +101,12 @@
     </string>
     <string name="values_for_5">
         we have got enough points and length to bid 5; inviting partner to bid
-        [a]keycard_ask[/a] if strong enough.
+        [a]keycard_ask[/a] if strong enough, and if not return to trumps
     </string>
     <string name="waiting_bid">
         In a fit auction, 3 of trump suit when compelled or 2NT when
         non-compelled is a waiting bid; i.e. isn’t adding anything, but
-        partner can’t pass, so asking partner to make the next move
+        partner can’t pass, so asking partner to make the next move. In
+        response to [a]relay[/a], unable to bid a suit
     </string>
 </resources>

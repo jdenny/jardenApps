@@ -203,7 +203,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         if(BuildConfig.DEBUG) Log.i(MainActivity.TAG, "DealFragment.shuffleAndDeal()");
 		cardPack.shuffle();
 		if (mainActivity.isTwoPlayer()) {
-	        if (bluetoothService.getState() == BTState.connected) {
+	        if (bluetoothService != null && bluetoothService.getState() == BTState.connected) {
 	    		byte[] data = cardPack.getDealAsBytes();
 	        	bluetoothService.write(data);
 	        } else {
