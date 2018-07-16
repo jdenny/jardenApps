@@ -197,11 +197,13 @@ A: 13+ HCP, all suits stopped (25 TP)
 
 # 1 bid after 2D
 Q: 2D, 2H/2S
+F1: [a]invitational_plus[/a]
 A: 11+ HCP, 5+ in suit
 Q: 2D, 2NT
 F1: [a]strong_fit[/a]
 A: 11+ HCP, 3+ diamonds (23 TP)
 Q: 2D, 3C
+F1: [a]invitational_plus[/a]
 A: 11+ HCP, 4+ clubs (23 TP)
 Q: 2D, 3D
 F1: [a]preempt[/a]

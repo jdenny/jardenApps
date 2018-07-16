@@ -8,7 +8,7 @@
         android:title="@string/learnMode"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/reviseModeButton"
+        android:id="@+id/practiceModeButton"
         android:title="@string/practiceMode"
         app:showAsAction="never"/>
 

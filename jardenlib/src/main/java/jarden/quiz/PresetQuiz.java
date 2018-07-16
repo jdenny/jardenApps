@@ -36,7 +36,7 @@ public class PresetQuiz extends Quiz {
     /*
        index of current question, which may have come from
           qaList[qaListIndex] - learn mode
-          or randomIndexList[randomListIndex] - revise mode
+          or randomIndexList[randomListIndex] - practice mode
           or failedIndexList[0]
      */
     private int currentQAIndex;

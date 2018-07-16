@@ -50,19 +50,6 @@ on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 TODO:
 Add levels:
     # level 2 (all following QA at level 2 until told otherwise)
-Add tips: can hover over linked word, and get explanation of term
-Or, where we showed help in ReviseSpanish, show extra text:
-Q: 1H, 1S; 3H
-F1: [a]suit-setter[/a]; not a [a]splinter[/a], as hearts previously shown
-A: suit-setter
-separate help_strings.xml file:
-<string name="splinter">
-  in neutral, or disturbed auction, jump shift opposite
-  a natural bid below 2NT to another suit not previously shown and at
-  level that commits us to play at 4-level (i.e. between 3 and 4 of trump suit)
-</string>
-<string name="suit-setter">long, strong suit, not needing support from
-  partner; at least 5 winners in suit</string>
 
 This activity needs to be in a
 library if we want hotbridge and a separate FunkWiz app
@@ -157,7 +144,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             if (learnMode) {
                 setLearnMode();
             } else {
-                setReviseMode();
+                setPracticeMode();
             }
             int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
             if (savedQuestionIndex > 0) {
@@ -186,8 +173,8 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         int id = item.getItemId();
         if (id == R.id.learnModeButton) {
             setLearnMode();
-        } else if (id == R.id.reviseModeButton) {
-            setReviseMode();
+        } else if (id == R.id.practiceModeButton) {
+            setPracticeMode();
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -198,7 +185,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         reviseItQuiz.setQuizMode(LEARN);
         setTitle(R.string.learnMode);
     }
-    private void setReviseMode() {
+    private void setPracticeMode() {
         reviseItQuiz.setQuizMode(PRACTICE);
         setTitle(R.string.practiceMode);
     }
@@ -229,8 +216,8 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
         try {
             question = reviseItQuiz.getNextQuestion(1);
         } catch (EndOfQuestionsException e) {
-            showMessage("end of questions! starting revise mode");
-            setReviseMode();
+            showMessage("end of questions! starting practice mode");
+            setPracticeMode();
             try {
                 question = reviseItQuiz.getNextQuestion(1);
             } catch (EndOfQuestionsException e1) {
