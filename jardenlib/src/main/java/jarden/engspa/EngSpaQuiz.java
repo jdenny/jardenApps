@@ -138,6 +138,7 @@ public class EngSpaQuiz extends Quiz {
             // (so no passed words) and when any words in current or
             // failed lists are also in recentWords (e.g. in phase2)
             // so get word (not recently used) from previous and current level
+            cfpChar = 'P';
             this.currentWord = getPassedWord2(this.engSpaUser.getLearnLevel() + 1);
         }
         return conjugateCurrentWord(this.currentWord);
@@ -368,16 +369,22 @@ public class EngSpaQuiz extends Quiz {
 	private ArrayList<EngSpa> getPassedWordSet() {
 	    //
         Set<EngSpa> randomPassedSet = new HashSet<>();
+        int recentsAdded = 0;
         for (int i = 0; i < RECENTS_CT; i++) {
-            randomPassedSet.add(recentWords[i]);
+            if (recentWords[i] != null) {
+                randomPassedSet.add(recentWords[i]);
+                ++recentsAdded;
+            }
         }
         int level = engSpaUser.getLearnLevel();
-        int targetCt = WORDS_PER_LEVEL + RECENTS_CT;
+        int targetCt = WORDS_PER_LEVEL + recentsAdded;
         do {
             randomPassedSet.add(engSpaDAO.getRandomPassedWord(level));
         } while (randomPassedSet.size() < targetCt);
         for (int i = 0; i < RECENTS_CT; i++) {
-            randomPassedSet.remove(recentWords[i]);
+            if (recentWords[i] != null) {
+                randomPassedSet.remove(recentWords[i]);
+            }
         }
         return new ArrayList<>(randomPassedSet);
     }
