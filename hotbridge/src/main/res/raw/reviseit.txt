@@ -176,9 +176,11 @@ A: <11 HCP, long suit
 
 # 1 bid after 2C
 Q: 2C, 2D
+F1: [a]invitational_plus[/a]
 A: 11+ HCP, 4+ diamonds (23 TP)
 Q: 2C, 2H/2S
-A: 11+ HCP, 5+ in suit
+F1: [a]invitational_plus[/a]
+A: 11+ HCP, 5+ in suit (23 TP)
 Q: 2C, 2NT
 F1: [a]strong_fit[/a]
 A: 11+ HCP, 3+ clubs (23 TP)
@@ -236,14 +238,14 @@ A: 5+ spades
 Q: 1C/1D/1NT, 3H/3S/4C/4D
 F1: [a]suit_setter[/a]; not splinter as no suit to support
 A: suit-setter
-Q: 1H, 1S; 3H
-F1: [a]suit_setter[/a]; not a splinter, as hearts previously shown
+Q: 2D, 2S; 4D
+F1: [a]suit_setter[/a]; not a splinter, as diamonds previously shown
 A: suit-setter
 Q: 1C/1D/1H, 1S; 4C
 F1: [a]splinter[/a] agreeing spades (25 TP)
 A: splinter
-Q: 2C, 2NT; 3D
-F1: [a]splinter[/a] already agreed clubs (25 TP)
+Q: 2D, 2NT; 4C
+F1: [a]splinter[/a] already agreed diamonds (25 TP)
 A: splinter
 Q: 1H, 2NT; 4D
 F1: [a]splinter[/a] already agreed hearts (25 TP)
@@ -409,7 +411,7 @@ F1: [a]responses_to_relay[/a]
 A: waiting - unable to bid a suit
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C
 F1: [a]responses_to_relay[/a]
-A: 4+ clubs, strong (>= 15 HCP) or skew
+A: 4+ clubs, strong (>16 HCP) or skew
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
 A: 4+ clubs, autofit, values for 5
@@ -420,6 +422,36 @@ Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
 F1: [a]keycard_ask[/a]
 A: 2 or 5 keycards
 
+# page 74
+Q: 1C, 1S; 4C
+F1: [a]splinter[/a]
+A: 21+ HCP, 4+ spades, splinter (25 TP)
+
+# page 75
+Q: 1C, 2D; 4D
+F1: [a]suit-setter[/a]; can't be splinter, as no suit to support; forcing as unlimited
+A: suit-setter
+
+# page 76
+Q: 1H, 1S; 3H
+F1: [a]suit-setter[/a]; not forcing as limited and not compelled
+A: suit-setter
+Q: 1H, 2D; 2H
+F1: [a]responses_to_relay[/a]
+A: 5+ hearts
+Q: 1H, 2D; 2H, 3C
+F1: [a]responses_to_relay[/a]
+A: <3 hearts, <3 spades, 4+ clubs, strong (>16 HCP) or skew
+Q: 1H, 2D; 2H, 3C; 3H
+F1: [a]suit-setter[/a]; not [a]splinter[/a] as hearts previously shown; forcing as compelled
+A: suit-setter
+
+# page 77
+Q: 1H, 2D; 2NT
+A: <5 hearts, <5 spades
+Q: 1H, 2D; 2NT, 3H
+F1: delayed agreement
+A: 3 hearts with honours
 
 # page 82
 Q: 2D, 3H
@@ -441,6 +473,10 @@ F1: [a]autofit[/a], [a]keycard_ask[/a]
 A: 3+ diamonds, autofit, keycard ask (25 TP)
 Q: 2D, 2S; 3S
 A: 14+ HCP, 3+ spades (accept invitation, compelled, 25 TP)
+
+# page 84
+Q: 2C, 2S; 3S
+A: 3 spades
 
 # competitive bidding
 Q: 1D, (any bid), pass

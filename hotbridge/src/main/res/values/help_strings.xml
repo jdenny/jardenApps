@@ -13,23 +13,28 @@
         no suit-setters and no need to bid hearts before spades or clubs before
         diamonds - bid longest suit
     </string>
+    <string name="compelled">
+        following 2D compelling [a]relay[/a], or 2C invitational relay and partner
+        does not decline invitation with 2D. Team must bid to at least 3NT or penalise
+        them (even if one of team passes)
+    </string>
     <string name="guard">something to stop them running a suit,
         e.g. A or KQ or QJ10. Often used to explore 3NT
     </string>
     <string name="invitational_plus">
         called invitational+ in book; gets its name from [a]relay[/a], which has
         2 forms: 2C (invitational) and 2D (compelled). Invitational+ combines both,
-        i.e. 23+ TP.
+        i.e. 23+ TP. After any constructive response, bidding must continue
+        at least until 3 of opener's suit; past that it becomes [a]compelled[/a]
     </string>
     <string name="keycard_ask">
-        lowest available side-suit at level 4 is values for 5; next suit up is asking
-        for aces and trump king; if only 1 side-suit available, that suit is keycard ask
-         e.g. if we’re playing in spades, then 4NT is keycard ask.
+        In fit auction, not jump, lowest available side-suit at level 4 is [a]values_for_5[/a];
+        next suit up (usually 4D) is keycard_ask, asking for aces and trump king; if only
+        1 side-suit available, that suit is keycard ask, e.g. if we’re playing in spades,
+        then 4NT is keycard ask.
         \n +1: 0 or 3
         \n +2: 1 or 4
         \n +3: 2 or 5
-        Note: If bid is a jump from partner’s bid below 3 of trump suit,
-        then it’s a splinter!
     </string>
     <string name="preempt">weak hand with long suit</string>
     <string name="queen_ask">
@@ -80,11 +85,13 @@
         bid; 6-card suit, weak, preemptive
     </string>
     <string name="skew">hand containing singleton or void</string>
-    <string name="splinter">In neutral, or disturbed auction, jump shift opposite
-        a natural bid below 2NT to another suit not previously shown and at level
-        that commits us to play at 4-level (i.e. between 3 and 4 of trump suit)
-        \nIn fit auction, if [a]waiting_bid[/a] available, side suit bid between
-        3 and 4 of trump suit is splinter
+    <string name="splinter">
+        jump shift opposite natural suit bid below 3-level, to another suit not
+        previously shown, that commits us to play at 4-level in partner\'s suit
+        (neutral auction) or agreed suit (fit auction). [b]Meaning:[/b] void or
+        singleton (not A/K/Q) in bid suit and agreeing partner\'s suit; 1st or
+        2nd round control of other 2 suits (A or Kx); values for at least 4-level
+        (25+ TP); used to test slam potential; forcing.
     </string>
     <string name="strong_fit">
         8 trumps between us and 23 TP
@@ -92,7 +99,8 @@
     <string name="suit_setter">
         Long, strong suit, not needing support from partner; at least 5 winners in suit.
         In a neutral auction, not a [a]splinter[/a], not already denied suit,
-        then 3H/3S/4C/4D unilaterally sets the suit (hence fit auction).
+        then 3H/3S/4C/4D unilaterally sets the suit (hence fit auction). If
+        compelled or bidder unlimited, then suit-setter is forcing, otherwise not forcing
     </string>
     <string name="to_play">not forcing; partner happy to play in this contract,
         but you may bid on
@@ -100,7 +108,8 @@
     <string name="two_choice">partner to choose from 2 lowest unshown suits
     </string>
     <string name="values_for_5">
-        we have got enough points and length to bid 5; inviting partner to bid
+        In fit auction, not jump, lowest available side suit at 4-level (usually 4C).
+        We have got enough points and length to bid 5; inviting partner to bid
         [a]keycard_ask[/a] if strong enough, and if not return to trumps
     </string>
     <string name="waiting_bid">
