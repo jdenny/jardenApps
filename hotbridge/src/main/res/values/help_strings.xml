@@ -10,7 +10,7 @@
     <string name="disturbing">when they bid 1NT or higher; or we make a raw bid
         or when we pass opposite partner\'s bid or we redouble or when we make a
         takeout-double of 1S; in disturbed auction, no [a]relay[/a], no [a]sandpit[/a],
-        no suit-setters and no need to bid hearts before spades or clubs before
+        no [a]suit-setter[/a] and no need to bid hearts before spades or clubs before
         diamonds - bid longest suit
     </string>
     <string name="compelled">
@@ -25,7 +25,8 @@
         called invitational+ in book; gets its name from [a]relay[/a], which has
         2 forms: 2C (invitational) and 2D (compelled). Invitational+ combines both,
         i.e. 23+ TP. After any constructive response, bidding must continue
-        at least until 3 of opener's suit; past that it becomes [a]compelled[/a]
+        at least until 3 of opener\'s suit; past that (other than a simple raise)
+        it becomes [a]compelled[/a]
     </string>
     <string name="keycard_ask">
         In fit auction, not jump, lowest available side-suit at level 4 is [a]values_for_5[/a];
@@ -51,9 +52,9 @@
     <string name="relay">
         2C or 2D as a response. Relay is always available to an unlimited hand;
         never available to limited hand. Relay indicates:
-        \n * no 4-4 in either major
-        \n * enough for game (2C, invitational, 25 TP) or nearly enough for game
-        (2D, compelling, 23-24 TP)
+        \n * no 4-4 fit in either major
+        \n * enough for game (2D, compelling, 25 TP) or nearly enough for game
+        (2C, invitational, 23-24 TP)
         \n * now looking for 5-3 fit in a major, or 4-4 fit in minor
     </string>
     <string name="responses_to_relay">
@@ -64,7 +65,7 @@
         \n * 3NT = to play; no major fit, all suits covered; note: if partner is
         unlimited and you have a 4+ minor suit, bid 2NT to allow partner to explore
         for minor fit, and possible slam
-        \n * 3C/3D = natural, 4+ in suit, can't rebid majors; either strong or skew hand;
+        \n * 3C/3D = natural, 4+ in suit, cannot rebid majors; either strong or skew hand;
         bid 3C with 4+ in both minors
         \n * 2NT = waiting, none of above; limiting to game values, as otherwise
         would bid a minor or jump in no-trumps
@@ -80,6 +81,15 @@
         \n[b]3C/3D[/b] = 6+ in suit, no 4+ major, 5-7 HCP, [a]raw[/a]
         \n[b]1NT[/b] = 0-7 HCP, no 4+ major, no {6+ minor and 5-7 HCP}
         \n[b]pass[/b] = 0-4 HCP (free bid)
+    </string>
+    <string name="responses_to_1NT">
+        [b]2C/2D[/b] = [a]relay[/a] 11+ HCP
+        \n[b]2H/2S[/b] = 6+ in suit, 0-10 HCP
+        \n[b]3C/3D[/b] = 6+ in suit, 8-10 HCP
+        \n[b]2NT[/b] = 4+ in both minors, 0-10 HCP
+        \n[b]3H/3S/4C/4D[/b] = [a]suit_setter[/a]
+        \n[b]4H/4S/5C/5D[/b] = [a]preempt[/a], 0-10 HCP
+        \n[b]pass[/b] = none of above
     </string>
     <string name="sandpit">jump from 1-level to new suit; special case of [a]raw[/a]
         bid; 6-card suit, weak, preemptive

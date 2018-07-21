@@ -48,8 +48,8 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-Add levels:
-    # level 2 (all following QA at level 2 until told otherwise)
+Add levels, to PresetQuiz and here
+    Level 2 (all following QA at level 2 until told otherwise)
 
 This activity needs to be in a
 library if we want hotbridge and a separate FunkWiz app

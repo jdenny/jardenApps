@@ -230,10 +230,6 @@ public class PresetQuiz extends Quiz {
      * @return question string from current questionAnswer
      * @throws EndOfQuestionsException only applies to Learn mode
      */
-    /*
-       TODO: remove getNextQuestion(int level)
-       this means adding level (not used!) to this method
-     */
     public String getNextQuestion(int level) throws EndOfQuestionsException {
         int failCt = getFailedCount();
         if (this.quizMode == QuizMode.LEARN) {
