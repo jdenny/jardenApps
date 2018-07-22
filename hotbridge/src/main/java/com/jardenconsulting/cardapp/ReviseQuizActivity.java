@@ -64,6 +64,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
     private static final String LEARN_MODE_KEY = "learnModeKey";
     private static final int[] helpResIds = {
             R.string.autofit,
+            R.string.compelled,
             R.string.disturbing,
             R.string.guard,
             R.string.invitational_plus,
@@ -73,6 +74,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             R.string.raw,
             R.string.relay,
             R.string.responses_to_1D,
+            R.string.responses_to_1NT,
             R.string.sandpit,
             R.string.skew,
             R.string.splinter,

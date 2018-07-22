@@ -226,31 +226,32 @@ A: 13+ HCP, all suits stopped (25 TP)
 # 3 bids
 Q: 1H, 1S; 2D
 F1: [a]raw[/a]
-A: 5+ hearts, 4+ diamonds
+A: 5+ hearts, 4+ diamonds, <4 spades
 Q: 1H, 1S; 2NT
-F1: can’t be 5+ in both minors as already bid hearts!
+F1: can't be strong fit as limited; can’t be 5+ in both minors as already bid hearts!
 A: 4+ in both minors
 
 # 4 bids
 Q: 1H, 1S; 2D, 2S
-A: 5+ spades
+F1: [a]invitational_plus[/a]
+A: 5+ spades, 11+ HCP, <3 hearts
 
 # artificial bids
 Q: 1C/1D/1NT, 3H/3S/4C/4D
-F1: [a]suit_setter[/a]; not splinter as no suit to support
+F1: [a]suit_setter[/a]; not [a]splinter[/a] as no suit to support
 A: suit-setter
 Q: 2D, 2S; 4D
-F1: [a]suit_setter[/a]; not a splinter, as diamonds previously shown
+F1: [a]suit_setter[/a]; not a [a]splinter[/a], as diamonds previously shown
 A: suit-setter
 Q: 1C/1D/1H, 1S; 4C
-F1: [a]splinter[/a] agreeing spades (25 TP)
-A: splinter
+F1: [a]splinter[/a] agreeing spades
+A: 4+ spades, splinter (25 TP)
 Q: 2D, 2NT; 4C
-F1: [a]splinter[/a] already agreed diamonds (25 TP)
-A: splinter
+F1: [a]splinter[/a] already agreed diamonds
+A: 14+ HCP, splinter (25 TP)
 Q: 1H, 2NT; 4D
-F1: [a]splinter[/a] already agreed hearts (25 TP)
-A: splinter
+F1: [a]splinter[/a] already agreed hearts
+A: 14+ HCP, splinter (25 TP)
 
 # page references are to "What can possibly go wrong?", Alan Williams
 # page 39
@@ -265,10 +266,10 @@ F1: [a]raw[/a]
 A: 6+ clubs, <4 spades
 # page 46
 Q: 1S, 2C; 2H
-F1: may have 5+ spades
+F1: may have 5+ spades; [a]responses_to_relay[/a]
 A: 3 hearts (25 TP)
 Q: 1S, 2C; 2H, 2NT
-F1: although limited, strong support, as now compelled
+F1: although limited, [a]strong_fit[/a], as now [a]compelled[/a]
 A: 5+ hearts
 # page 50
 Q: 1NT, 2D; 2S
@@ -309,7 +310,7 @@ Q: 1D, 1S; 2S, 4H; 4NT, 5D; 5H
 F1: [a]queen_ask[/a]
 A: have you got the queen of hearts?
 Q: 1D, 1S; 2S, 4H; 4NT, 5D; 5H, 6C
-A: yes, I have QH, plus KC
+A: yes, I have heart queen, plus club king
 # page 61
 Q: 1C, 1H; 1S
 F1: AW page 61
@@ -322,8 +323,8 @@ A: 3 hearts
 Q: 1C, 1H; 1S, 2D; 2H, 2S
 A: 4 hearts, 3 spades
 Q: 1C, 1H; 1S, 2D; 2H, 2S; 2NT
-F1: [a]strong_fit[/a]
-A: 5+ spades (23 TP)
+F1: [a]strong_fit[/a] (already shown 25 TP)
+A: 5+ spades
 Q: 1C, 1NT; 2D
 F1: compelling [a]relay[/a]
 A: 21+ HCP (25 TP)
@@ -340,7 +341,7 @@ Q: 1C, 1D; 2D, 3C
 F1: [a]skew[/a]
 A: 4+ clubs, no 4+ major, skew
 Q: 1C, 1D; 2D, 3C; 3D
-A: 4+ diamonds
+A: 4+ diamonds, < 4 clubs
 Q: 1C, 1D; 2D, 3C; 3D, 4H
 F1: [a]autofit[/a]
 A: autofit, values for 5
@@ -351,20 +352,20 @@ F1: if had <2 hearts would have 4+ minor; [a]relay_responses[/a]
 A: 4 spades, 2 hearts, 14+ HCP (25 TP)
 Q: 1C, 2C; 2NT
 F1: [a]relay_responses[/a]
-A: <19 HCP, <3 spades, <3 hearts (25 TP)
+A: >17 HCP, <5 spades, <5 hearts, no 4+ minor (25 TP)
 Q: 1C, 2C; 3C
 F1: [a]relay_responses[/a]; [a]skew[/a]
-A: 4+ clubs, skew or strong (>22 HCP), <3 spades, <3 hearts (29 TP)
+A: 4+ clubs, strong (>22 HCP) or skew, <5 spades, <5 hearts (29 TP)
 
 # page 67
 Q: 1H, 1S; 1NT
-F1: with 15+ HCP would bid relay
-A: <4 spades, <15 HCP, no 6-card suit
+A: <4 spades, no 6-card suit, no {5+ hearts and 4+ minor}
 Q: 1H, 1S; 1NT, 2D
 F1: compelling [a]relay[/a]
 A: 13+ HCP
 Q: 1H, 1S; 1NT, 2D; 2NT
-A: 4 hearts, <3 spades
+F1: [a]responses_to_relay[/a]
+A: 4 hearts, <3 spades, no {4+ minor plus strong or skew}
 Q: 1C, 1S; 2D
 A: 21+ HCP, <4 spades (25 TP)
 Q: 1C, 1S; 2D, 3C
@@ -373,8 +374,8 @@ A: 4+ clubs, skew, <5 spades, <3 hearts
 
 # page 68
 Q: 1H, 1S; 1NT, 2D; 3D
-F1: with 3 spades, would bid 2S, having already denied 4 spades
-A: 4+ diamonds, <3 spades
+F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H
+A: 4+ diamonds, <3 spades, 4 hearts, strong or skew
 Q: 1C, 2D; 3C
 F1: [a]skew[/a]
 A: 4+ clubs, strong (>= 19 HCP) or skew, no 5-card major
@@ -408,7 +409,7 @@ F1: [a]keycard_ask[/a]
 A: 2 or 5 keycards
 Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]
-A: waiting - unable to bid a suit
+A: waiting - 4 hearts, <3 spades, no {4+ minor plus strong or skew}
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (>16 HCP) or skew
@@ -434,7 +435,7 @@ A: suit-setter
 
 # page 76
 Q: 1H, 1S; 3H
-F1: [a]suit-setter[/a]; not forcing as limited and not compelled
+F1: [a]suit-setter[/a]; not forcing as limited and not [a]compelled[/a]
 A: suit-setter
 Q: 1H, 2D; 2H
 F1: [a]responses_to_relay[/a]
@@ -443,12 +444,13 @@ Q: 1H, 2D; 2H, 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (>16 HCP) or skew, <3 hearts, <3 spades
 Q: 1H, 2D; 2H, 3C; 3H
-F1: [a]suit-setter[/a]; not [a]splinter[/a] as hearts previously shown; forcing as compelled
+F1: [a]suit-setter[/a]; not [a]splinter[/a] as hearts previously shown; forcing as [a]compelled[/a]
 A: suit-setter
 
 # page 77
 Q: 1H, 2D; 2NT
-A: <5 hearts, <5 spades
+F1: [a]responses_to_relay[/a]
+A: 4 hearts, <5 spades, no {4+ minor plus strong or skew}
 Q: 1H, 2D; 2NT, 3H
 F1: delayed agreement
 A: 3 hearts with honours
@@ -472,11 +474,12 @@ Q: 2D, 2S; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]
 A: 3+ diamonds, autofit, keycard ask (25 TP)
 Q: 2D, 2S; 3S
+F1: [a]compelled[/a]
 A: 3+ spades, 14+ HCP (accept invitation, compelled, 25 TP)
 
 # page 84
 Q: 2C, 2S; 3S
-A: 3 spades
+A: 3+ spades
 
 # competitive bidding
 Q: 1D, (any bid), pass
