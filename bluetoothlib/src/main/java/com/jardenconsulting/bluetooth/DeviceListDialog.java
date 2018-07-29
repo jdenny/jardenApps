@@ -99,8 +99,7 @@ public class DeviceListDialog extends DialogFragment
             	pairedDevicesAdapter.add(device.getName() + "\n" + device.getAddress());
             }
         } else {
-            String noDevices = getResources().getText(R.string.none_paired).toString();
-            pairedDevicesAdapter.add(noDevices);
+            builder.setTitle(R.string.none_paired);
         }
 		this.alertDialog = builder.create();
 		return this.alertDialog;

@@ -34,6 +34,7 @@ A: 9+ in suit, < 20pp
 
 # 1 bid after 1C
 Q: 1C, 1D
+F1: i.e. I bid 1C, partner bids 1D
 A: 0-3 HCP, no 6+ major
 Q: 1C, 1H
 A: 4+ hearts, 4+ HCP (20 TP)
@@ -225,7 +226,7 @@ A: 13+ HCP, all suits stopped (25 TP)
 
 # 3 bids
 Q: 1H, 1S; 2D
-F1: [a]raw[/a]
+F1: semi-colon starts next round of bidding, i.e. partner bids 1H, I bid 1S, partner bids 2; [a]raw[/a]
 A: 5+ hearts, 4+ diamonds, <4 spades
 Q: 1H, 1S; 2NT
 F1: can't be strong fit as limited; can’t be 5+ in both minors as already bid hearts!
@@ -483,13 +484,183 @@ A: 3+ spades
 
 # competitive bidding
 Q: 1D, (any bid), pass
-F1: free bid; may have 4+ major
+F1: free bid; may have 4+ major; parentheses show bid made by opponents
 A: 0-4 HCP
 Q: 1C, (1D), pass
 F1: free bid
 A: 0-3 HCP, no 6+ major
 
+# page 86
+Q: 1C, (1S), double
+F1: replacement for 1 heart
+A: 4+ hearts, 4+ HCP
+Q: 1C, (1S), double, (pass); 2NT
+F1: [a]strong_fit[/a] in hearts
+A: 4+ hearts, 19+ HCP (23 TP)
+Q: 1D, (1H), double
+F1: replacement for 1 heart
+A: 4+ hearts, 5+ HCP
+Q: 1D, (1H), 1S
+F1: may have 4+ hearts
+A: 4+ spades, 5+ HCP
+Q: 1D, (1H), 1NT
+F1: with <5 HCP pass; with >7 HCP, bid [a]relay[/a]
+A: 5-7 HCP, no 4+ major, no 6+ minor
+Q: 1H, (double), redouble
+F1: too weak to play in 1H doubled
+A: weak; better places to play
+Q: (1C), double
+F1: replacement for 1C
+A: 25pp and 5+ major or 26+pp
+Q: (1C), 1H
+F1: same as if they hadn't bid
+A: 4+ hearts & 20-22pp or 5+ hearts & 23-24pp
+Q: (1D), double
+F1: replacement for 1C or 1D
+A: 23+pp
+Q: (1H), double
+F1: replacement for 1C or 1D
+A: 23+pp
+Q: (1H), double, (1S), double
+F1: replacement for 1H
+A: 4+ hearts, 5+ HCP
+Q: (1H), 1S
+F1: may have 4+ hearts
+A: 4+ spades & 20-22pp or 5+ spades & 23-24pp
+Q: (1H), 1NT
+F1: may have 4 or 5 hearts
+A: 20-22pp
+Q: (1H), 2H
+F1: may have 20-22pp
+A: 6+ hearts, 6+ HCP
+Q: (1S), double
+F1: [a]takeout_double[/a]
+A: asks partner to bid best unbid suit
+Q: (1S), double, (pass), pass
+F1: [a]takeout_double[/a] now become penalty double
+A: penalty
+Q: (1S), double, (pass), 1NT
+A: 5-9 HCP, no 6+ suit
+Q: (1S), double, (pass), 2C/2D/2H
+A: 4+ in suit, 0-4 HCP
+Q: (1S), double, (pass), 2NT
+F1: [a]invitational_plus[/a]
+A: 10+ HCP
+Q: (1S), double, (pass), 3C/3D/3H
+A: 5-9 HCP, 6+ in suit
 
+# page 98
+Q: 1H, (2C), 2D
+F1: natural (not relay), as 2C by them is [a]disturbing[/a]
+A: 4+ diamonds, 8+ HCP, no 4+ major
 
+# page 102
+Q: 1D, (2H), double
+F1: [a]takeout_double[/a]
+A: asks partner to bid best suit (except hearts)
 
+# page 124
+Q: 1H, 1S; 2S
+A: 4+ spades
+Q: 1H, 1S; 2S, 2NT
+F1: [a]waiting_bid[/a]
+A: nothing to add
+Q: 1H, 1S; 2S, 2NT; 3D
+A: 4+ diamonds
+Q: 1H, 2D; 2H, 2NT
+F1: [a]strong_fit[/a]
+A: 3 hearts
 
+# page 125
+Q: 1C, 1S; 2S, 4C
+F1: [a]splinter[/a], already agreed spades
+A: 0 or 1 club, A or Kx in hearts and diamonds (25 TP)
+Q: 1C, 2D; 2S
+F1: [a]responses_to_relay[/a]
+A: 5+ spades
+Q: 1C, 2D; 2S, 2NT
+F1: [a]strong_fit[/a]
+A: 3 spades
+Q: 1C, 2D; 2S, 2NT; 4H
+F1: [a]splinter[/a], already agreed spades
+A: 0 or 1 heart, A or Kx in clubs and diamonds
+Q: 2D, 2NT; 3H
+F1: exploring 3NT
+A: extra tricks, guard in hearts
+
+# page 128
+Q: 1C, 2D; 2S, 2NT; 4H, 4S
+F1: [a]to_play[/a]
+A: to play
+Q: 1C, 2D; 2S, 2NT; 4H, 4S; 4NT
+F1: [a]keycard_ask[/a]
+A: keycard ask
+Q: 1C, 2D; 2S, 2NT; 4H, 4S; 4NT, 5C
+F1: [a]keycard_ask[/a]
+A: 0 or 3 keycards
+
+# page 129
+Q: 1H, 2NT; 3D
+A: 4+ diamonds, extra strength
+Q: 1H, 2NT; 3D, 3H
+F1: [a]to_play[/a]
+A: to play
+Q: 1H, 2NT; 3D, 3NT
+F1: [a]to_play[/a]
+A: all suits guarded
+Q: 1H, 2NT; 3D, 4C
+F1: [a]values_for_5[/a]
+A: values for 5
+Q: 1H, 2NT; 3D, 4D
+F1: [a]keycard_ask[/a]
+A: keycard ask
+Q: 1H, 2NT; 3D, 4H
+F1: [a]to_play[/a]
+A: to play
+Q: 1H, 2D; 2S, 3C
+A: 4+ clubs, <3 spades
+Q: 1H, 2D; 2S, 3C; 3NT
+F1: [a]to_play[/a]
+A: all suits guarded
+Q: 1H, 2D; 2S, 3C; 3NT, 4C
+F1: [a]suit_setter[/a]
+A: suit setter, forcing as unlimited
+Q: 1H, 2D; 2S, 3C; 3NT, 4C; 4D
+F1: [a]values_for_5[/a]
+A: values for 5
+Q: 1H, 2D; 2S, 3C; 3NT, 4C; 4H
+F1: [a]keycard_ask[/a]
+A: keycard ask
+
+# page 130
+Q: 1C, 1S; 2NT
+F1: [a]strong_fit[/a]
+A: 4+ spades, 19+ HCP (23 TP)
+Q: 1C, 1S; 2NT, 4S
+F1: [a]to_play[/a]
+A: to play
+Q: 1C, 1S; 2NT, 4S; 4NT
+F1: [a]keycard_ask[/a]; only side suit available
+A: keycard ask
+Q: 1H, (pass), 2NT, (4S); 4NT
+F1: [a]keycard_ask[/a]; only side suit available
+A: keycard ask
+Q: 1C, 1H; 2H
+A: 4+ hearts
+Q: 1C, 1H; 2H, 3C
+A: 4+ diamonds, extra strength
+Q: 1C, 1H; 2H, 3C; 4C
+F1: [a]values_for_5[/a]
+A: values for 5
+
+# page 131
+Q: 1NT, 2D; 2S, 3C
+A: 4+ clubs, <5 spades
+Q: 1NT, 2D; 2S, 3C; 4C
+F1: limited, else would bid [a]autofit[/a]
+A: 4+ clubs, limited
+Q: 1NT, 2D; 2S, 3C; 4C, 4D
+F1: [a]values_for_5[/a]
+A: values for 5
+
+# page 132

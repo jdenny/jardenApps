@@ -7,16 +7,16 @@
         \n 4H = autofit, [a]values_for_5[/a]
         \n 4S = autofit, [a]keycard_ask[/a]
     </string>
+    <string name="compelled">
+        following 2D compelling [a]relay[/a], or 2C invitational relay and partner
+        does not decline invitation with 2D. Team must bid to at least 3NT or penalise
+        them (even if one of team passes)
+    </string>
     <string name="disturbing">when they bid 1NT or higher; or we make a raw bid
         or when we pass opposite partner\'s bid or we redouble or when we make a
         takeout-double of 1S; in disturbed auction, no [a]relay[/a], no [a]sandpit[/a],
         no [a]suit-setter[/a] and no need to bid hearts before spades or clubs before
         diamonds - bid longest suit
-    </string>
-    <string name="compelled">
-        following 2D compelling [a]relay[/a], or 2C invitational relay and partner
-        does not decline invitation with 2D. Team must bid to at least 3NT or penalise
-        them (even if one of team passes)
     </string>
     <string name="guard">something to stop them running a suit,
         e.g. A or KQ or QJ10. Often used to explore 3NT
@@ -113,6 +113,11 @@
         then 3H/3S/4C/4D unilaterally sets the suit (hence fit auction). If
         [a]compelled[/a] or bidder unlimited, then suit-setter is forcing, otherwise
         not forcing
+    </string>
+    <string name="takeout_double">
+        (aka offensive double) telling partner to bid best of the unbid suits;
+        in contrast to defensive (aka values or penalties) double, where we expect
+        to defeat the contract
     </string>
     <string name="to_play">not forcing; partner happy to play in this contract,
         but you may bid on

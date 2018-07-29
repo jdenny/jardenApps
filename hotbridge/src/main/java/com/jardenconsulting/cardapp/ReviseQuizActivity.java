@@ -80,6 +80,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
             R.string.splinter,
             R.string.strong_fit,
             R.string.suit_setter,
+            R.string.takeout_double,
             R.string.to_play,
             R.string.two_choice,
             R.string.values_for_5,
