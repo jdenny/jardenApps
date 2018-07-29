@@ -15,21 +15,21 @@ A: 6+ clubs, 20-22pp, no 4+ major, <5 diamonds
 Q: 2D
 A: 6+ diamonds, 20-22pp, no 4+ major, <5 clubs
 Q: 2H/2S
-F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
 A: 6 in suit, <20pp
 Q: 2NT
 A: 5+ in both minors, 20-22pp
 Q: 3C/3D/3H/3S
-F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
 A: 7 in suit, < 20pp
 Q: 4H/4S
-F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
 A: 8+ in suit, <20pp
 Q: 4C/4D
-F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
 A: 8 in suit, < 20pp
 Q: 5C/5D
-F1: [a]preempt[/a], [a]disturbing[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
 A: 9+ in suit, < 20pp
 
 # 1 bid after 1C
@@ -551,7 +551,7 @@ A: 5-9 HCP, 6+ in suit
 
 # page 98
 Q: 1H, (2C), 2D
-F1: natural (not relay), as 2C by them is [a]disturbing[/a]
+F1: natural (not relay), as 2C by them makes auction [a]disturbed[/a]
 A: 4+ diamonds, 8+ HCP, no 4+ major
 
 # page 102
@@ -664,3 +664,58 @@ F1: [a]values_for_5[/a]
 A: values for 5
 
 # page 132
+Q: 1C, 1H; 2H, 3C; 4C, 4D
+F1: [a]keycard_ask[/a]
+A: keycard ask
+Q: 1C, 1H; 2H, 3C; 4C, 4D; 4H
+F1: [a]keycard_ask[/a]
+A: 0 or 3 keycards
+
+#page 133
+Q: 2C, 2NT; 3H
+A: guard, extra values
+Q: 2C, 2NT; 3H, 4H
+F1: [a]keycard_ask[/a]
+A: keycard ask
+Q: 2C, 2NT; 3H, 4H; 4S
+F1: [a]keycard_ask[/a]
+A: 0 or 3 keycards
+
+# page 148
+Q: 1S, (2C), 2NT
+F1: [a]strong_fit[/a]; not affected by their 2C which makes the auction [a]disturbed[/a]
+A: 4+ spades, 11+ HCP (23 TP)
+Q: 1S, (2C), 2NT, (3C); 3S
+F1: [a]to_play[/a]
+A: to play, <14 HCP, 5+ spades
+Q: 1S, (2C), 2NT, (3C); 3NT
+F1: [a]to_play[/a]
+A: 14+ HCP, at least 2 club guards
+
+# page 149
+Q: 1C, 1H; 1NT
+A: no 4+ major, no 6+ minor, <19 HCP
+Q: 1C, 1H; 1NT, 2C
+F1: may have 4+ spades; invitational [a]relay[/a]
+A: 7-8 HCP
+Q: 1C, 1H; 1NT, 2C; 2D
+F1: declined invitation [a]responses_to_relay[/a]
+A: <18 HCP
+
+# page 151
+Q: 1H, 2C; 2D
+F1: declined invitation [a]responses_to_relay[/a]
+A: <14 HCP
+Q: 1H, 2C; 2D, 3D
+A: 4+ diamonds
+Q: 1H, 2C; 2D, 2S
+F1: 2C [a]relay[/a] denies 4 spades
+A: 3 spades
+Q: 1H, 2C; 2D, 2S; 4S
+A: 5+ spades
+
+# page 152
+Q: (1C), double, (pass), 2C
+A: 4+ clubs, best suit
+
+

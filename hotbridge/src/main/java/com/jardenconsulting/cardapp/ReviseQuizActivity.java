@@ -51,6 +51,10 @@ TODO:
 Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
 
+You type in a bid, e.g. 1C, it searches for Q: 1C and shows the answer, plus
+a list of all the next bids! (i.e. search for Q: 1C, [something!] regular expression)
+choose from list, and repeats from above
+
 This activity needs to be in a
 library if we want hotbridge and a separate FunkWiz app
 Name options: Freak Wiz, york, mike, dunk, punk, trike, funk
@@ -65,7 +69,7 @@ public class ReviseQuizActivity extends AppCompatActivity implements View.OnClic
     private static final int[] helpResIds = {
             R.string.autofit,
             R.string.compelled,
-            R.string.disturbing,
+            R.string.disturbed,
             R.string.guard,
             R.string.invitational_plus,
             R.string.keycard_ask,

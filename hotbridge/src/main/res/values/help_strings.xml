@@ -12,11 +12,15 @@
         does not decline invitation with 2D. Team must bid to at least 3NT or penalise
         them (even if one of team passes)
     </string>
-    <string name="disturbing">when they bid 1NT or higher; or we make a raw bid
-        or when we pass opposite partner\'s bid or we redouble or when we make a
-        takeout-double of 1S; in disturbed auction, no [a]relay[/a], no [a]sandpit[/a],
-        no [a]suit-setter[/a] and no need to bid hearts before spades or clubs before
-        diamonds - bid longest suit
+    <string name="disturbed">
+        in disturbed auction, no [a]relay[/a], no [a]sandpit[/a], no
+        [a]suit-setter[/a] and no need to bid hearts before spades or clubs
+        before diamonds - bid longest suit; the following disturbs the auction:
+        \n they bid 1NT or higher
+        \n we make a [a]raw[/a] bid
+        \n we pass opposite partner\'s bid
+        \n we redouble
+        \n we make a takeout-double of 1S
     </string>
     <string name="guard">something to stop them running a suit,
         e.g. A or KQ or QJ10. Often used to explore 3NT
@@ -108,16 +112,17 @@
         [b]Meaning[/b]: 8 trumps between us, 23 TP
     </string>
     <string name="suit_setter">
-        Long, strong suit, not needing support from partner; at least 5 winners in suit.
-        In a neutral auction, not a [a]splinter[/a], not already denied suit,
-        then 3H/3S/4C/4D unilaterally sets the suit (hence fit auction). If
-        [a]compelled[/a] or bidder unlimited, then suit-setter is forcing, otherwise
-        not forcing
+        Long, strong suit, not needing support from partner; usually at least
+        5 winners in suit. In a neutral auction, not a [a]splinter[/a], not
+        already denied suit, then 3H/3S/4C/4D unilaterally sets the suit (hence
+        fit auction). If [a]compelled[/a] or bidder unlimited, then suit-setter
+        is forcing, otherwise not forcing
     </string>
     <string name="takeout_double">
-        (aka offensive double) telling partner to bid best of the unbid suits;
-        in contrast to defensive (aka values or penalties) double, where we expect
-        to defeat the contract
+        (in book called offensive double, as still expecting to play) telling
+        partner to bid best of the unbid suits; in contrast to defensive (aka
+        values or penalties) double, where we expect to defend and subsequently
+        defeat the contract
     </string>
     <string name="to_play">not forcing; partner happy to play in this contract,
         but you may bid on
