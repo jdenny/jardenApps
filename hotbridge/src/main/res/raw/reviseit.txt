@@ -14,22 +14,22 @@ Q: 2C
 A: 6+ clubs, 20-22pp, no 4+ major, <5 diamonds
 Q: 2D
 A: 6+ diamonds, 20-22pp, no 4+ major, <5 clubs
-Q: 2H/2S
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+Q: 2S
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]; similarly 2H
 A: 6 in suit, <20pp
 Q: 2NT
 A: 5+ in both minors, 20-22pp
-Q: 3C/3D/3H/3S
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+Q: 3C
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]; similarly 3D, 3H, 3S
 A: 7 in suit, < 20pp
-Q: 4H/4S
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+Q: 4H
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]; similarly 4S
 A: 8+ in suit, <20pp
-Q: 4C/4D
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+Q: 4D
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]; similarly 4C
 A: 8 in suit, < 20pp
-Q: 5C/5D
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+Q: 5C
+F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]; similarly 5D
 A: 9+ in suit, < 20pp
 
 # 1 bid after 1C

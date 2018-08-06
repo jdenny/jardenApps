@@ -19,8 +19,8 @@
         \n they bid 1NT or higher
         \n we make a [a]raw[/a] bid
         \n we pass opposite partner\'s bid
-        \n we redouble
-        \n we make a takeout-double of 1S
+        \n we [a]redouble[/a]
+        \n we make a [a]takeout_double[/a] of 1S
     </string>
     <string name="guard">something to stop them running a suit,
         e.g. A or KQ or QJ10. Often used to explore 3NT
@@ -53,6 +53,9 @@
         \n bid of suit other than trumps = king in that suit
     </string>
     <string name="raw">now given full description of hand</string>
+    <string name="redouble">
+        same as [a]takeout_double[/a] i.e. tells partner to bid something else
+    </string>
     <string name="relay">
         2C or 2D as a response. Relay is always available to an unlimited hand;
         never available to limited hand. Relay indicates:

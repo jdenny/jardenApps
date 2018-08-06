@@ -10,13 +10,6 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/quizTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/textPadding"
-        android:textSize="@dimen/spanishTextFieldSize" />
-
-    <TextView
         android:id="@+id/questionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,57 +29,102 @@
         android:paddingLeft="@dimen/textPadding"
         android:textSize="@dimen/spanishTextFieldSize" />
 
-    <TextView
-        android:id="@+id/statsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_marginTop="@dimen/spanishMargin"
-        android:layout_marginBottom="@dimen/spanishMargin"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:layout_marginRight="@dimen/small_margin" />
-
-    <Button
-        android:id="@+id/goButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/goStr" />
-
     <LinearLayout
-        android:id="@+id/selfMarkLayout"
+        android:id="@+id/quizLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/statsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/correctQueryStr" />
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/spanishMargin"
+            android:layout_marginBottom="@dimen/spanishMargin"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin" />
 
         <Button
-            android:id="@+id/correctButton"
+            android:id="@+id/goButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yesStr" />
+            android:text="@string/goStr" />
 
-        <Button
-            android:id="@+id/incorrectButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/selfMarkLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/noStr" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/correctQueryStr" />
+
+            <Button
+                android:id="@+id/correctButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/yesStr" />
+
+            <Button
+                android:id="@+id/incorrectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/noStr" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/helpTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars = "vertical"
+            android:textSize="@dimen/helpTextFieldSize"/>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/statusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/helpTextView"
+    <LinearLayout
+        android:id="@+id/bidSearchLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars = "vertical"
-        android:textSize="@dimen/helpTextFieldSize"/>
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back" />
+
+            <Button
+                android:id="@+id/quizButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quiz" />
+
+            <Button
+                android:id="@+id/moreButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/more" />
+
+            <Button
+                android:id="@+id/lessButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/less" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/bidListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </LinearLayout>

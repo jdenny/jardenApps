@@ -1,13 +1,5 @@
 package com.jardenconsulting.spanishapp;
 
-import java.util.List;
-
-import jarden.engspa.EngSpa;
-import jarden.engspa.EngSpaDAO;
-import jarden.engspa.VerbUtils;
-import jarden.engspa.VerbUtils.Person;
-import jarden.engspa.VerbUtils.Tense;
-import jarden.provider.engspa.EngSpaContract.WordType;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,6 +14,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import java.util.List;
+
+import jarden.engspa.EngSpa;
+import jarden.engspa.EngSpaDAO;
+import jarden.engspa.VerbUtils;
+import jarden.engspa.VerbUtils.Person;
+import jarden.engspa.VerbUtils.Tense;
+import jarden.provider.engspa.EngSpaContract.WordType;
 
 public class WordLookupFragment extends Fragment implements OnEditorActionListener,
         View.OnClickListener {
@@ -48,16 +49,16 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 		this.engSpaActivity = (EngSpaActivity) getActivity();
 		engSpaActivity.setTip(R.string.Word_Lookup);
 		View rootView = inflater.inflate(R.layout.fragment_word_lookup, container, false);
-		this.spanishLookupEditText = (EditText) rootView.findViewById(R.id.spanishLookupEditText);
-		this.englishLookupEditText = (EditText) rootView.findViewById(R.id.englishLookupEditText);
-		Button button = (Button) rootView.findViewById(R.id.clearSpanishButton);
+		this.spanishLookupEditText = rootView.findViewById(R.id.spanishLookupEditText);
+		this.englishLookupEditText = rootView.findViewById(R.id.englishLookupEditText);
+		Button button = rootView.findViewById(R.id.clearSpanishButton);
         button.setOnClickListener(this);
-        button = (Button) rootView.findViewById(R.id.clearEnglishButton);
+        button = rootView.findViewById(R.id.clearEnglishButton);
         button.setOnClickListener(this);
         this.spanishLookupEditText.setOnEditorActionListener(this);
 		this.englishLookupEditText.setOnEditorActionListener(this);
-		this.conjugationListView = (ListView) rootView.findViewById(R.id.conjugationListView);
-		this.conjugateListAdapter = new ArrayAdapter<String>(
+		this.conjugationListView = rootView.findViewById(R.id.conjugationListView);
+		this.conjugateListAdapter = new ArrayAdapter<>(
 				getActivity(), android.R.layout.simple_list_item_1);
 		this.conjugationListView.setAdapter(conjugateListAdapter);
 
