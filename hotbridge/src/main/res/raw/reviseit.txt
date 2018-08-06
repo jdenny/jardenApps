@@ -48,16 +48,17 @@ A: 7-8 HCP, no 4+ major (23 TP)
 Q: 1C, 2D
 F1: compelling [a]relay[/a]
 A: 9+ HCP, no 4+ major (25 TP)
-Q: 1C, 2H/2S
+Q: 1C, 2H
+F1: similarly 1C, 2S
 A: 6+ in suit, 0-3 HCP
 Q: 1C, 2NT
 F1: [a]two_choice[/a]
 A: 5+ in both minors, 4-6 HCP
-Q: 1C, 3C/3D
-F1: [a]raw[/a]
+Q: 1C, 3D
+F1: [a]raw[/a]; similarly 1C, 3C
 A: 6+ in suit, 4-6 HCP, no 4+ major
-Q: 1C, 3H/3S/4C/4D
-F1: [a]suit_setter[/a]
+Q: 1C, 4D
+F1: [a]suit_setter[/a]; similarly 1C, 3H or 1C, 3S or 1C, 4C
 A: suit_setter
 
 # 1 bid after 1D
@@ -76,18 +77,18 @@ A: 8-9 HCP, no 4+ major (23 TP)
 Q: 1D, 2D
 F1: compelling [a]relay[/a]; [a]responses_to_1D[/a]
 A: 10+ HCP, no 4+ major (25 TP)
-Q: 1D, 2H/2S
-F1: [a]responses_to_1D[/a]
+Q: 1D, 2H
+F1: [a]responses_to_1D[/a]; similarly 1D, 2S
 A: 6+ in suit, 0-4 HCP
 Q: partner bids 1D; what to bid with 6 hearts, 4 HCP
 A: 2H
 Q: partner bids 1D; what to bid with 6 hearts, 5 HCP
 A: 1H
-Q: 1D, 3C/3D
-F1: [a]raw[/a]; note: with 0-4 HCP bid 1NT; with 8+ bid [a]relay[/a]; [a]responses_to_1D[/a]
+Q: 1D, 3D
+F1: [a]raw[/a]; note: with 0-4 HCP bid 1NT; with 8+ bid [a]relay[/a]; [a]responses_to_1D[/a]; similarly 1D, 3C
 A: 6+ in suit, 5-7 HCP, no 4+ major (20 TP)
-Q: 1D, 3H/3S/4C/4D
-F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]
+Q: 1D, 4C
+F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]; similarly 1D then 3H or 3S or 4D
 A: suit-setter
 
 # 1 bid after 1H
@@ -111,14 +112,15 @@ A: 6+ spades, 5-7 HCP, <4 hearts (17 TP)
 Q: 1H, 2NT
 F1: [a]strong_fit[/a]
 A: 4+ hearts, 11+ HCP (23 TP)
-Q: 1H, 3C/3D
+Q: 1H, 3C
+F1: similarly 1H, 3D
 A: 6+ in suit, 8-10 HCP, no 4+ major (20 TP)
 Q: 1H, 3H
 A: 5 hearts, 8-10 HCP (20 TP)
 Q: 1H, 3NT
 A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
-Q: 1H, 3S/4C/4D
-F1: [a]splinter[/a]
+Q: 1H, 4C
+F1: [a]splinter[/a]; similarly 1H, 3S or 1H 4D
 A: 4+ hearts, 13+ HCP, splinter (25 TP)
 Q: 1H, 4H
 A: 6+ hearts, 8-10 HCP (20 TP)
@@ -139,14 +141,15 @@ A: 4 spades, 8-10 HCP (20 TP)
 Q: 1S, 2NT
 F1: [a]strong_fit[/a]
 A: 4+ spades, 11+ HCP (23 TP)
-Q: 1S, 2H/3C/3D
+Q: 1S, 3D
+F1: similarly 1S then 2H or 3C
 A: 6+ in suit, 8-10 HCP, <4 spades (20 TP)
 Q: 1S, 3S
 A: 5 spades, 8-10 HCP (20 TP)
 Q: 1S, 3NT
 A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
-Q: 1S, 4C/4D/4H
-F1: [a]splinter[/a]
+Q: 1S, 4H
+F1: [a]splinter[/a]; similarly 1S then 4C or 4D
 A: 4+ spades, 13+ HCP, splinter (25 TP)
 Q: 1S, 4S
 A: 6+ spades, 8-10 HCP (20 TP)
@@ -161,27 +164,28 @@ A: 11-12 HCP (23 TP)
 Q: 1NT, 2D
 F1: may have 4+ major; compelling [a]relay[/a]
 A: 13+ HCP (25 TP)
-Q: 1NT, 2H/2S
+Q: 1NT, 2H
+F1: similarly 1NT, 2S
 A: 6+ in suit, 0-10 HCP
 Q: 1NT, 2NT
 F1: [a]raw[/a]
 A: 4+ in both minors, 0-10 HCP
-Q: 1NT, 3C/3D
-F1: [a]raw[/a]
+Q: 1NT, 3C
+F1: [a]raw[/a]; similarly 1NT, 3D
 A: 6+ in suit, 8-10 HCP (20 TP)
-Q: 1NT, 3H/3S/4C/4D
-F1: [a]suit_setter[/a]
+Q: 1NT, 3H
+F1: [a]suit_setter[/a]; similarly 1NT then 3S or 4C or 4D
 A: suit-setter
-Q: 1NT, 4H/4S/5C/5D
-F1: [a]preempt[/a]
+Q: 1NT, 5D
+F1: [a]preempt[/a]; similarly 1NT then 4H or 4S or 5C
 A: long suit, 0-10 HCP
 
 # 1 bid after 2C
 Q: 2C, 2D
 F1: [a]invitational_plus[/a]
 A: 4+ diamonds, 11+ HCP (23 TP)
-Q: 2C, 2H/2S
-F1: [a]invitational_plus[/a]
+Q: 2C, 2S
+F1: [a]invitational_plus[/a]; similarly 2C, 2H
 A: 5+ in suit, 11+ HCP (23 TP)
 Q: 2C, 2NT
 F1: [a]strong_fit[/a]
@@ -192,16 +196,16 @@ Q: 2C, 4C
 A: 4 clubs, 8-10 HCP
 Q: 2C, 5C
 A: 5+ clubs, 8-10 HCP
-Q: 2C, 3D/3H/3S
-F1: [a]splinter[/a]
+Q: 2C, 3S
+F1: [a]splinter[/a]; similarly 2C then 3D or 3H
 A: 3+ clubs, 13+ HCP, (splinter, 25 TP)
 Q: 2C, 3NT
 F1: [a]to_play[/a]
 A: 13+ HCP, all suits stopped (25 TP)
 
 # 1 bid after 2D
-Q: 2D, 2H/2S
-F1: [a]invitational_plus[/a]
+Q: 2D, 2H
+F1: [a]invitational_plus[/a]; similarly 2D, 2S
 A: 5+ in suit, 11+ HCP
 Q: 2D, 2NT
 F1: [a]strong_fit[/a]
@@ -218,8 +222,8 @@ A: 4 diamonds, 8-10 HCP
 Q: 2D, 5D
 F1: [a]preempt[/a]
 A: 5+ diamonds, 8-10 HCP
-Q: 2D, 3H/3S/4C
-F1: [a]splinter[/a]
+Q: 2D, 4C
+F1: [a]splinter[/a]; similarly 2D then 3H or 3S
 A: 3+ diamonds, 13+ HCP, (splinter, 25 TP)
 Q: 2C, 3NT
 A: 13+ HCP, all suits stopped (25 TP)
@@ -238,14 +242,14 @@ F1: [a]invitational_plus[/a]
 A: 5+ spades, 11+ HCP, <3 hearts
 
 # artificial bids
-Q: 1C/1D/1NT, 3H/3S/4C/4D
-F1: [a]suit_setter[/a]; not [a]splinter[/a] as no suit to support
+Q: 1C, 3H
+F1: [a]suit_setter[/a]; not [a]splinter[/a] as no suit to support; similarly 1C/1D/1NT, 3H/3S/4C/4D
 A: suit-setter
 Q: 2D, 2S; 4D
 F1: [a]suit_setter[/a]; not a [a]splinter[/a], as diamonds previously shown
 A: suit-setter
-Q: 1C/1D/1H, 1S; 4C
-F1: [a]splinter[/a] agreeing spades
+Q: 1H, 1S; 4C
+F1: [a]splinter[/a] agreeing spades; similarly 1C/1D/1H, 1S; 4C
 A: 4+ spades, splinter (25 TP)
 Q: 2D, 2NT; 4C
 F1: [a]splinter[/a] already agreed diamonds
@@ -541,12 +545,14 @@ F1: [a]takeout_double[/a] now become penalty double
 A: penalty
 Q: (1S), double, (pass), 1NT
 A: 5-9 HCP, no 6+ suit
-Q: (1S), double, (pass), 2C/2D/2H
+Q: (1S), double, (pass), 2H
+F1: similarly (1S), double, (pass), 2C/2D/2H
 A: 4+ in suit, 0-4 HCP
 Q: (1S), double, (pass), 2NT
 F1: [a]invitational_plus[/a]
 A: 10+ HCP
-Q: (1S), double, (pass), 3C/3D/3H
+Q: (1S), double, (pass), 3D
+F1: similarly (1S), double, (pass), 3C/3D/3H
 A: 5-9 HCP, 6+ in suit
 
 # page 98

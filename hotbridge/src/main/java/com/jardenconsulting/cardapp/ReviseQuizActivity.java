@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import jarden.document.DocumentTextView;
 import jarden.quiz.EndOfQuestionsException;
@@ -119,6 +120,7 @@ public class ReviseQuizActivity extends AppCompatActivity
     private DocumentTextView documentTextView;
     private ListView bidListView;
     private ArrayAdapter<String> bidListAdapter;
+    private Stack<QuestionAnswer> bidSearchStack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         Button correctButton = findViewById(R.id.correctButton);
         Button incorrectButton = findViewById(R.id.incorrectButton);
         Button quizButton = findViewById(R.id.quizButton);
+        Button backButton = findViewById(R.id.backButton);
         this.selfMarkLayout =  findViewById(R.id.selfMarkLayout);
         this.quizLayout = findViewById(R.id.quizLayout);
         this.selfMarkLayout.setVisibility(View.GONE);
@@ -141,6 +144,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         this.bidSearchLayout.setVisibility(View.GONE);
         this.goButton.setOnClickListener(this);
         quizButton.setOnClickListener(this);
+        backButton.setOnClickListener(this);
         correctButton.setOnClickListener(this);
         incorrectButton.setOnClickListener(this);
         this.bidListAdapter = new ArrayAdapter<>(
@@ -285,14 +289,28 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else if (id == R.id.incorrectButton) {
             selfMarkButton(false);
         } else if (id == R.id.quizButton) {
-            this.bidSearchLayout.setVisibility(View.GONE);
-            this.quizLayout.setVisibility(View.VISIBLE);
+            backToQuiz();
+        } else if (id == R.id.backButton) {
+            if (bidSearchStack.empty()) backToQuiz();
+            else {
+                bidSearchStack.pop();
+                if (bidSearchStack.empty()) backToQuiz();
+                else showBidAndResponses(bidSearchStack.peek());
+            }
         }
+    }
+    private void backToQuiz() {
+        this.bidSearchLayout.setVisibility(View.GONE);
+        this.quizLayout.setVisibility(View.VISIBLE);
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d(TAG, "position=" + position);
         QuestionAnswer qa = this.currentQAList.get(position);
+        this.bidSearchStack.add(qa);
+        showBidAndResponses(qa);
+    }
+    private void showBidAndResponses(QuestionAnswer qa) {
         this.questionTextView.setText(qa.question);
         this.answerTextView.setText(qa.answer);
         loadBidList(qa.question);
@@ -340,6 +358,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         if (this.qaList == null) {
             qaList = reviseItQuiz.getQuestionAnswerList();
             this.currentQAList = new ArrayList<>();
+            this.bidSearchStack = new Stack<>();
         } else {
             this.currentQAList.clear();
         }
@@ -355,11 +374,14 @@ public class ReviseQuizActivity extends AppCompatActivity
         this.bidListAdapter.notifyDataSetChanged();
     }
     private boolean isResponseToBid(String bid, String question) {
-        if (bid == null) {
+        if (bid == null) { // getting only opening bids:
             return !question.contains(",");
         } else {
-            return (question.startsWith(bid + ", ") || question.startsWith(bid + "; "));
+            if (question.startsWith(bid + ", ") || question.startsWith(bid + "; ")) {
+                int pos = bid.length() + 2;
+                return !(question.substring(pos).contains(",") ||
+                        question.substring(pos).contains(";"));
+            } else return false;
         }
-
     }
 }
