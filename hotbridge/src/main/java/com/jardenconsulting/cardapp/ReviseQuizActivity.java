@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,19 +54,13 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
+Fix visibility of everything!
+Refactor as 2 fragments (revise, i.e. Learn & Practice; Bid Search)
+
 try to fix red cards on Julie's phone
-get rid of "what does the last bid mean??
 merge takeout_double and redouble into double
 Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
-
-You type in a bid, e.g. 1C, it searches for Q: 1C and shows the answer, plus
-a list of all the next bids! (i.e. search for Q: 1C, [something!] regular expression)
-choose from list, and repeats from above
-    add to menu Lookup mode
-    list all single bids
-    user clicks item in list; Q goes into blue, A into red, next bids into list
-    buttons: back, quiz, more (shows F1 stuff, changes to 'less')
 
 This activity needs to be in a
 library if we want hotbridge and a separate FunkWiz app
@@ -74,12 +69,16 @@ Name options: Freak Wiz, york, mike, dunk, punk, trike, funk
 public class ReviseQuizActivity extends AppCompatActivity
         implements View.OnClickListener, AdapterView.OnItemClickListener {
     public final static String TAG = "ReviseIt";
+    private final static int LEARN_MODE = 1;
+    private final static int PRACTICE_MODE = 2;
+    private final static int BID_SEARCH_MODE = 3;
     private final static String quizFileName = "reviseit.txt";
         // "reviseitmini.txt"; // ***also change name of resource file***
     private final static String QUESTION_INDEX_KEY = "questionIndexKey";
     private final static String FAIL_INDICES_KEY = "failIndicesKey";
     private static final String LEARN_MODE_KEY = "learnModeKey";
-    private static final int[] helpResIds = {
+    private static final String BID_SEARCH_KEY = "bidSearchKey";
+    private static final int[] notesResIds = {
             R.string.autofit,
             R.string.compelled,
             R.string.disturbed,
@@ -106,13 +105,16 @@ public class ReviseQuizActivity extends AppCompatActivity
     };
 
     private PresetQuiz reviseItQuiz;
+    private boolean bidSearch;
     private List<QuestionAnswer> qaList;
     private List<QuestionAnswer> currentQAList;
     private TextView questionTextView;
     private TextView answerTextView;
     private TextView statsTextView;
-    private TextView helpTextView;
+    private TextView notesTextView;
     private Button goButton;
+    private Button backButton;
+    private CheckBox notesCheckBox;
     private ViewGroup selfMarkLayout;
     private ViewGroup bidSearchLayout;
     private ViewGroup quizLayout;
@@ -129,24 +131,26 @@ public class ReviseQuizActivity extends AppCompatActivity
         this.questionTextView = findViewById(R.id.questionTextView);
         this.answerTextView = findViewById(R.id.answerTextView);
         this.statsTextView = findViewById(R.id.statsTextView);
-        this.helpTextView = findViewById(R.id.helpTextView);
-        this.helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        this.helpTextView.setHighlightColor(Color.TRANSPARENT);
+        this.notesTextView = findViewById(R.id.notesTextView);
+        this.notesTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        this.notesTextView.setHighlightColor(Color.TRANSPARENT);
         this.goButton = findViewById(R.id.goButton);
+        this.goButton.setOnClickListener(this);
+        this.backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
         Button correctButton = findViewById(R.id.correctButton);
+        correctButton.setOnClickListener(this);
         Button incorrectButton = findViewById(R.id.incorrectButton);
+        incorrectButton.setOnClickListener(this);
         Button quizButton = findViewById(R.id.quizButton);
-        Button backButton = findViewById(R.id.backButton);
+        quizButton.setOnClickListener(this);
+        this.notesCheckBox = findViewById(R.id.notesCheckBox);
+        this.notesCheckBox.setOnClickListener(this);
         this.selfMarkLayout =  findViewById(R.id.selfMarkLayout);
         this.quizLayout = findViewById(R.id.quizLayout);
         this.selfMarkLayout.setVisibility(View.GONE);
         this.bidSearchLayout = findViewById(R.id.bidSearchLayout);
         this.bidSearchLayout.setVisibility(View.GONE);
-        this.goButton.setOnClickListener(this);
-        quizButton.setOnClickListener(this);
-        backButton.setOnClickListener(this);
-        correctButton.setOnClickListener(this);
-        incorrectButton.setOnClickListener(this);
         this.bidListAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1);
         this.bidListView = findViewById(R.id.bidListView);
@@ -156,7 +160,6 @@ public class ReviseQuizActivity extends AppCompatActivity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             showMessage("can NOT read external storage");
@@ -177,10 +180,15 @@ public class ReviseQuizActivity extends AppCompatActivity
             this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
             this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
             boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
-            if (learnMode) {
-                setLearnMode();
+            this.bidSearch = sharedPreferences.getBoolean(BID_SEARCH_KEY, false);
+            if (bidSearch) {
+                setBidSearchMode();
             } else {
-                setPracticeMode();
+                if (learnMode) {
+                    setLearnMode();
+                } else {
+                    setPracticeMode();
+                }
             }
             int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
             if (savedQuestionIndex > 0) {
@@ -212,9 +220,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else if (id == R.id.practiceModeButton) {
             setPracticeMode();
         } else if (id == R.id.bidSearchButton) {
-            this.bidSearchLayout.setVisibility(View.VISIBLE);
-            this.quizLayout.setVisibility(View.GONE);
-            loadBidList(null);
+            setBidSearchMode();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -222,13 +228,32 @@ public class ReviseQuizActivity extends AppCompatActivity
         askQuestion();
         return true;
     }
-    private void setLearnMode() {
-        reviseItQuiz.setQuizMode(LEARN);
-        setTitle(R.string.learnMode);
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.goButton) {
+            goPressed();
+        } else if (id == R.id.correctButton) {
+            selfMarkButton(true);
+        } else if (id == R.id.incorrectButton) {
+            selfMarkButton(false);
+        } else if (id == R.id.quizButton) {
+            backToQuiz();
+        } else if (id == R.id.backButton) {
+            bidSearchStack.pop();
+            if (bidSearchStack.empty()) loadBidList(null);
+            else showBidAndResponses(bidSearchStack.peek());
+        } else if (id == R.id.notesCheckBox) {
+            //!! showMessage("notes checked: " + this.notesCheckBox.isChecked());
+            showNotesOrBids();
+        }
     }
-    private void setPracticeMode() {
-        reviseItQuiz.setQuizMode(PRACTICE);
-        setTitle(R.string.practiceMode);
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "position=" + position);
+        QuestionAnswer qa = this.currentQAList.get(position);
+        this.bidSearchStack.add(qa);
+        showBidAndResponses(qa);
     }
     @Override
     protected void onPause() {
@@ -238,6 +263,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         editor.putInt(QUESTION_INDEX_KEY, questionIndex);
         PresetQuiz.QuizMode quizMode = reviseItQuiz.getQuizMode();
         editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
+        editor.putBoolean(BID_SEARCH_KEY, bidSearch);
         List<Integer> failList = reviseItQuiz.getFailedIndexList();
         String failStr;
         if (failList.size() == 0) {
@@ -271,6 +297,15 @@ public class ReviseQuizActivity extends AppCompatActivity
         showButtonLayout();
         showStats();
     }
+    private void showNotesOrBids() {
+        if (this.notesCheckBox.isChecked()) {
+            this.bidListView.setVisibility(View.INVISIBLE);
+            this.notesTextView.setVisibility(View.VISIBLE);
+        } else {
+            this.bidListView.setVisibility(View.VISIBLE);
+            this.notesTextView.setVisibility(View.INVISIBLE);
+        }
+    }
     private void showStats() {
         String stats = "Current=" +
                 reviseItQuiz.getCurrentCount() +
@@ -278,41 +313,28 @@ public class ReviseQuizActivity extends AppCompatActivity
                 reviseItQuiz.getFailedCount();
         this.statsTextView.setText(stats);
     }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        if (id == R.id.goButton) {
-            goPressed();
-        } else if (id == R.id.correctButton) {
-            selfMarkButton(true);
-        } else if (id == R.id.incorrectButton) {
-            selfMarkButton(false);
-        } else if (id == R.id.quizButton) {
-            backToQuiz();
-        } else if (id == R.id.backButton) {
-            if (bidSearchStack.empty()) backToQuiz();
-            else {
-                bidSearchStack.pop();
-                if (bidSearchStack.empty()) backToQuiz();
-                else showBidAndResponses(bidSearchStack.peek());
-            }
-        }
+    private void setLearnMode() {
+        reviseItQuiz.setQuizMode(LEARN);
+        setTitle(R.string.learnMode);
     }
+    private void setPracticeMode() {
+        reviseItQuiz.setQuizMode(PRACTICE);
+        setTitle(R.string.practiceMode);
+    }
+    private void setBidSearchMode() {
+        this.bidSearchLayout.setVisibility(View.VISIBLE);
+        this.quizLayout.setVisibility(View.GONE);
+        loadBidList(null);
+        setTitle(R.string.bidSearch);
+    }
+
     private void backToQuiz() {
         this.bidSearchLayout.setVisibility(View.GONE);
         this.quizLayout.setVisibility(View.VISIBLE);
     }
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "position=" + position);
-        QuestionAnswer qa = this.currentQAList.get(position);
-        this.bidSearchStack.add(qa);
-        showBidAndResponses(qa);
-    }
     private void showBidAndResponses(QuestionAnswer qa) {
         this.questionTextView.setText(qa.question);
-        this.answerTextView.setText(qa.answer);
+        showAnswer(qa);
         loadBidList(qa.question);
     }
 
@@ -320,14 +342,17 @@ public class ReviseQuizActivity extends AppCompatActivity
         this.reviseItQuiz.setCorrect(isCorrect);
         showButtonLayout();
         askQuestion();
-        helpTextView.setText("");
+        notesTextView.setText("");
     }
 
     private void goPressed() {
         QuestionAnswer currentQA = reviseItQuiz.getCurrentQuestionAnswer();
-        this.answerTextView.setText(currentQA.answer);
-        getDocumentTextView().showPageText(currentQA.helpText, "Notes");
+        showAnswer(currentQA);
         showSelfMarkLayout();
+    }
+    private void showAnswer(QuestionAnswer qa) {
+        this.answerTextView.setText(qa.answer);
+        getDocumentTextView().showPageText(qa.notesText, "Notes");
     }
 
     private void showSelfMarkLayout() {
@@ -346,7 +371,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         if (this.documentTextView == null) {
             this.documentTextView = new DocumentTextView(
                     getApplicationContext(),
-                    helpTextView, helpResIds,
+                    notesTextView, notesResIds,
                     true, null, false);
         }
         return documentTextView;
@@ -362,6 +387,8 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else {
             this.currentQAList.clear();
         }
+        this.backButton.setEnabled(bid != null);
+        this.notesCheckBox.setEnabled(bid != null);
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
         for (QuestionAnswer qa: qaList) {

@@ -7,6 +7,7 @@
 
     <string name="all">All</string>
     <string name="app_name">Hot Bridge</string>
+    <string name="back">Back</string>
     <string name="bid">Bid</string>
     <string name="biddingQuiz">Bidding Quiz</string>
     <string name="bidSearch">Bid Search</string>
@@ -19,12 +20,10 @@
     <string name="me">Me</string>
     <string name="menuTwoPlayer">2-player</string>
     <string name="north">North</string>
+    <string name="notes">Notes</string>
+    <string name="quiz">Quiz</string>
     <string name="reviseQuizActivity">ReviseQuizActivity</string>
     <string name="south">South</string>
     <string name="us">Us</string>
     <string name="west">West</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
-    <string name="less">Less</string>
-    <string name="quiz">Quiz</string>
 </resources>

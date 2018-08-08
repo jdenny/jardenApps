@@ -75,13 +75,6 @@
                 android:text="@string/noStr" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/helpTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars = "vertical"
-            android:textSize="@dimen/helpTextFieldSize"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -107,17 +100,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/quiz" />
 
-            <Button
-                android:id="@+id/moreButton"
+            <CheckBox
+                android:id="@+id/notesCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/more" />
+                android:text="@string/notes" />
 
-            <Button
-                android:id="@+id/lessButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/less" />
         </LinearLayout>
 
         <ListView
@@ -126,5 +114,12 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/notesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars = "vertical"
+        android:textSize="@dimen/helpTextFieldSize"/>
 
 </LinearLayout>
