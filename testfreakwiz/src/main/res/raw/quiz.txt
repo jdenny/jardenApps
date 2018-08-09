@@ -1,0 +1,8 @@
+Q: what is the capital of Norway
+A: Oslo
+Q: length of hypotenuse of sides 3 and 4
+F1: [a]pythagoras[/a] theorem: 5 = sqrt(3*3 + 4*4)
+A: 5
+Q: Spanish for cat
+F1: female cat would be la gata
+A: gato

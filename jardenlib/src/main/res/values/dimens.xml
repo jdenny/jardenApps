@@ -14,6 +14,7 @@
     <dimen name="spanishMargin">8dp</dimen>
     <dimen name="spanishTextFieldSize">25sp</dimen>
     <dimen name="helpTextFieldSize">20sp</dimen>
+    <dimen name="textPadding">5sp</dimen>
 
     <!-- My values for QuizRace -->
     <dimen name="small_margin">4dp</dimen>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TestFreakWiz</string>
+    <string name="pythagoras">
+        For a right-angled triangle, the square on the hypotenuse
+        is equal to the sum of the squares on the other two sides
+    </string>
+</resources>

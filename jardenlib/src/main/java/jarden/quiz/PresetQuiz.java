@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class PresetQuiz extends Quiz {
 	private List<QuestionAnswer> qaList;
-    private int qaListIndex = -1;
+    private int qaListIndex = -1; // used in learn mode
 	private List<Integer> randomIndexList;
 	private int randomListIndex = -1;
 	private String questionTemplate = null;
@@ -35,8 +35,8 @@ public class PresetQuiz extends Quiz {
     private int consecutiveCorrects = 0;
     /*
        index of current question, which may have come from
-          qaList[qaListIndex] - learn mode
-          or randomIndexList[randomListIndex] - practice mode
+          qaList[qaListIndex] (learn mode)
+          or randomIndexList[randomListIndex] (practice mode)
           or failedIndexList[0]
      */
     private int currentQAIndex;
@@ -247,7 +247,7 @@ public class PresetQuiz extends Quiz {
                 this.currentQA = getNextFail();
             } else {
                 ++this.randomListIndex;
-                if (randomListIndex > this.randomIndexList.size()) {
+                if (randomListIndex >= this.randomIndexList.size()) {
                     reset();
                 }
                 this.currentQAIndex = this.randomIndexList.get(randomListIndex);
@@ -285,13 +285,15 @@ public class PresetQuiz extends Quiz {
     }
     public void setQuizMode(QuizMode quizMode) {
         this.quizMode = quizMode;
-        qaListIndex = -1;
     }
     public QuizMode getQuizMode() {
         return this.quizMode;
     }
     public int getCurrentCount() {
         return this.qaList.size() - this.qaListIndex;
+    }
+    public int getCurrentQAIndex() {
+        return this.currentQAIndex;
     }
     public void setCorrect(boolean correct) {
         if (correct) {

@@ -16,4 +16,8 @@
         android:title="@string/bidSearch"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/setCurrentIndexButton"
+        android:title="@string/setCurrentIndex"
+        app:showAsAction="never"/>
 </menu>

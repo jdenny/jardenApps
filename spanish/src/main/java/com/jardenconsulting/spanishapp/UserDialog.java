@@ -1,10 +1,10 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.engspa.EngSpaUser;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+
+import jarden.engspa.EngSpaUser;
 
 public class UserDialog extends DialogFragment
 		implements DialogInterface.OnClickListener, OnCheckedChangeListener {
@@ -27,9 +29,9 @@ public class UserDialog extends DialogFragment
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		this.userSettingsListener = (UserSettingsListener) activity;
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		this.userSettingsListener = (UserSettingsListener) context;
 	}
 
 	@SuppressLint("InflateParams")
@@ -40,7 +42,7 @@ public class UserDialog extends DialogFragment
 		LayoutInflater inflater =activity.getLayoutInflater();
 		builder.setTitle(R.string.userSettingsStr);
 		View view = inflater.inflate(R.layout.dialog_user, null);
-		this.userLevelEditText = (EditText) view.findViewById(R.id.userLevelEditText);
+		this.userLevelEditText = view.findViewById(R.id.userLevelEditText);
 		EngSpaUser user = userSettingsListener.getEngSpaUser();
 		if (user == null) {
 			// if it's a new engSpaUser, the user must supply the values

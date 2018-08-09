@@ -1,1 +1,1 @@
-include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':androidcourse', ':explorer', ':documentation', ':jardenprovider', ':music', ':johnjava', ':jardenjavalib', ':quizmaze', ':life', ':knowme', ':reviseanything'
+include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':androidcourse', ':explorer', ':documentation', ':jardenprovider', ':music', ':johnjava', ':jardenjavalib', ':quizmaze', ':life', ':knowme', ':testfreakwiz'

@@ -2,7 +2,6 @@
 <resources>
     <!--<string name="allLit">ALL</string>-->
     <string name="app_name">Revise Spanish</string>
-    <string name="cancel">Cancel</string>
     <string name="chooseQAStyleStr">Choose Question/Answer Style</string>
     <string name="chooseTopic">Choose Topic</string>
     <string name="contents">Contents</string>
@@ -53,7 +52,6 @@
     <string name="ttsLoading">Loading textToSpeech...</string>
 	<string name="ttsNotSupported">TextToSpeech for Spanish is not
         supported on this device</string>
-    <string name="update">Update</string>
     <string name="setUserLevel">Set User level</string>
     <string name="learnLevel">User level</string>
     <string name="userLevelErrorAudio">User level must be at least 2 for Audio Mode;
@@ -64,7 +62,6 @@
     </string>
     <string name="userNameStr">User name</string>
     <string name="userNotChanged">No changes made to user</string>
-    <string name="userSettingsStr">User Settings</string>
     <string name="welcome"><b>¡Bienvenida! Welcome!</b> to Revise Spanish</string>
     <string name="wordLookup">Word Lookup</string>
     <string name="endOfPracticeSet">practice batch done - felicitaciones!</string>

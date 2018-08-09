@@ -7,119 +7,16 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:context=".MainActivity">
+    tools:context=".ReviseQuizActivity">
 
-    <TextView
-        android:id="@+id/questionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spanishMargin"
-        android:layout_marginBottom="@dimen/spanishMargin"
-        android:background="@color/spanishBlue"
-        android:textColor="@color/white"
-        android:paddingLeft="@dimen/textPadding"
-        android:textSize="@dimen/spanishTextFieldSize" />
+    <fragment android:name="jarden.app.revisequiz.FreakWizFragment"
+              android:id="@+id/freakWizFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/answerTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/spanishRed"
-        android:textColor="@color/white"
-        android:paddingLeft="@dimen/textPadding"
-        android:textSize="@dimen/spanishTextFieldSize" />
-
-    <LinearLayout
-        android:id="@+id/quizLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/statsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_marginTop="@dimen/spanishMargin"
-            android:layout_marginBottom="@dimen/spanishMargin"
-            android:layout_marginEnd="@dimen/small_margin"
-            android:layout_marginRight="@dimen/small_margin" />
-
-        <Button
-            android:id="@+id/goButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/goStr" />
-
-        <LinearLayout
-            android:id="@+id/selfMarkLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/correctQueryStr" />
-
-            <Button
-                android:id="@+id/correctButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/yesStr" />
-
-            <Button
-                android:id="@+id/incorrectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/noStr" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/bidSearchLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/backButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/back" />
-
-            <Button
-                android:id="@+id/quizButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/quiz" />
-
-            <CheckBox
-                android:id="@+id/notesCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notes" />
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/bidListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/notesTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars = "vertical"
-        android:textSize="@dimen/helpTextFieldSize"/>
+    <fragment android:name="jarden.app.revisequiz.BidSearchFragment"
+              android:id="@+id/bidsearchFragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -34,7 +34,7 @@ A: 9+ in suit, < 20pp
 
 # 1 bid after 1C
 Q: 1C, 1D
-F1: i.e. I bid 1C, partner bids 1D
+F1: i.e. you bid 1C, partner bids 1D
 A: 0-3 HCP, no 6+ major
 Q: 1C, 1H
 A: 4+ hearts, 4+ HCP (20 TP)
@@ -230,7 +230,7 @@ A: 13+ HCP, all suits stopped (25 TP)
 
 # 3 bids
 Q: 1H, 1S; 2D
-F1: semi-colon starts next round of bidding, i.e. partner bids 1H, I bid 1S, partner bids 2; [a]raw[/a]
+F1: semi-colon starts next round of bidding, i.e. partner bids 1H, you bid 1S, partner bids 2; [a]raw[/a]
 A: 5+ hearts, 4+ diamonds, <4 spades
 Q: 1H, 1S; 2NT
 F1: can't be strong fit as limited; can’t be 5+ in both minors as already bid hearts!

@@ -22,8 +22,8 @@
             <option value="$PROJECT_DIR$/life" />
             <option value="$PROJECT_DIR$/music" />
             <option value="$PROJECT_DIR$/quizmaze" />
-            <option value="$PROJECT_DIR$/reviseanything" />
             <option value="$PROJECT_DIR$/spanish" />
+            <option value="$PROJECT_DIR$/testfreakwiz" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
