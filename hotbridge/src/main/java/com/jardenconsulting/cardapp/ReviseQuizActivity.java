@@ -118,8 +118,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         this.bidSearch = sharedPreferences.getBoolean(BID_SEARCH_KEY, false);
         int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
         if (savedQuestionIndex > 0) {
-            // subtract 1, to repeat most recent question, not yet answered:
-            reviseItQuiz.setQuestionIndex(savedQuestionIndex - 1);
+            reviseItQuiz.setQuestionIndex(savedQuestionIndex);
         }
         String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
         if (failIndexStr.length() > 0) {
@@ -175,7 +174,7 @@ public class ReviseQuizActivity extends AppCompatActivity
                 this.integerDialog = new IntegerDialog();
                 this.integerDialog.setTitle("Change Current Index");
             }
-            this.integerDialog.setUserLevel(reviseItQuiz.getQuestionIndex());
+            this.integerDialog.setUserLevel(reviseItQuiz.getQuestionIndex() + 1);
             this.integerDialog.show(getSupportFragmentManager(), "UserLevelDialog");
         } else {
             return super.onOptionsItemSelected(item);
@@ -205,6 +204,29 @@ public class ReviseQuizActivity extends AppCompatActivity
         editor.putString(FAIL_INDICES_KEY, failStr);
         editor.apply();
     }
+    @Override // Quizable
+    public PresetQuiz getReviseQuiz() {
+        return this.reviseItQuiz;
+    }
+
+    @Override // Quizable
+    public int[] getNotesResIds() {
+        return this.notesResIds;
+    }
+
+    @Override // UserSettingsListener
+    public void onUpdateUserLevel(int userLevel) {
+        // to people, ordinals start from 1; to computers, they start from 0
+        this.reviseItQuiz.setQuestionIndex(userLevel - 1);
+        this.freakWizFragment.askQuestion();
+    }
+    public void backToQuiz() {
+        if (this.reviseItQuiz.getQuizMode() == LEARN) {
+            setLearnMode();
+        } else {
+            setPracticeMode();
+        }
+    }
     private void setLearnMode() {
         reviseItQuiz.setQuizMode(LEARN);
         setTitle(R.string.learnMode);
@@ -229,30 +251,9 @@ public class ReviseQuizActivity extends AppCompatActivity
         this.bidSearchFragment.loadBidList(null);
         setTitle(R.string.bidSearch);
     }
-    public void backToQuiz() {
-        if (this.reviseItQuiz.getQuizMode() == LEARN) {
-            setLearnMode();
-        } else {
-            setPracticeMode();
-        }
-    }
     private void showMessage(String message) {
         if (BuildConfig.DEBUG) Log.d(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public PresetQuiz getReviseQuiz() {
-        return this.reviseItQuiz;
-    }
-
-    @Override
-    public int[] getNotesResIds() {
-        return this.notesResIds;
-    }
-
-    @Override
-    public void onUpdateUserLevel(int userLevel) {
-        this.reviseItQuiz.setQuestionIndex(userLevel);
-    }
 }

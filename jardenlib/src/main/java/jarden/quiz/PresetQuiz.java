@@ -276,7 +276,11 @@ public class PresetQuiz extends Quiz {
         return currentQA;
     }
     public void setQuestionIndex(int qaListIndex) {
-        this.qaListIndex = qaListIndex;
+        // subtract 1, to repeat most recent question, not yet answered:
+        int index = qaListIndex - 1;
+        if (index >= qaList.size()) index = qaList.size() - 1;
+        else if (index < -1) index = -1;
+        this.qaListIndex = index;
     }
     public void setFailIndices(String[] failIndices) {
         for (String failIndex: failIndices) {

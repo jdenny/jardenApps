@@ -140,8 +140,9 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
     private void showStats() {
-        String stats = "Current=" +
-                reviseItQuiz.getCurrentQAIndex() + "/" +
+        // humans count from 1, machines from 0
+        int humanIndex = reviseItQuiz.getCurrentQAIndex() + 1;
+        String stats = "Current=" + humanIndex + "/" +
                 reviseItQuiz.getCurrentCount() +
                 " Fails=" +
                 reviseItQuiz.getFailedCount();
