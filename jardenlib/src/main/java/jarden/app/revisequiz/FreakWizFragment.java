@@ -21,6 +21,7 @@ import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.PresetQuiz;
 import jarden.quiz.QuestionAnswer;
 
+import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
 
 /**
@@ -142,10 +143,11 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     private void showStats() {
         // humans count from 1, machines from 0
         int humanIndex = reviseItQuiz.getCurrentQAIndex() + 1;
-        String stats = "Current=" + humanIndex + "/" +
-                reviseItQuiz.getCurrentCount() +
-                " Fails=" +
-                reviseItQuiz.getFailedCount();
+        String stats = "Current=" + humanIndex;
+        if (reviseItQuiz.getQuizMode() == LEARN) {
+            stats += ", ToDo=" + reviseItQuiz.getCurrentCount();
+        }
+        stats += ", Fails=" + reviseItQuiz.getFailedCount();
         this.statsTextView.setText(stats);
     }
 }

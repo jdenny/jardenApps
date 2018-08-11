@@ -234,7 +234,10 @@ public class PresetQuiz extends Quiz {
         int failCt = getFailedCount();
         if (this.quizMode == QuizMode.LEARN) {
             int currentCt = getCurrentCount() - 1; // haven't incremented qaListIndex yet
-            if (failCt == 0 && currentCt == 0) throw new EndOfQuestionsException();
+            if (failCt == 0 && currentCt == 0) {
+                this.qaListIndex = -1;
+                throw new EndOfQuestionsException();
+            }
             if ((this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) || currentCt == 0) {
                 this.currentQA = getNextFail();
             } else {

@@ -93,6 +93,7 @@ A: suit-setter
 
 # 1 bid after 1H
 Q: 1H, pass
+F1: with 6+ spades and 5-7 HCP, bid 2S
 A: 0-7 HCP; no {6+ spades and 5-7 HCP}
 Q: 1H, 1S
 A: 4+ spades, 8+ HCP, <4 hearts (20 TP)
