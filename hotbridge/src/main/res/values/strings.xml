@@ -14,8 +14,8 @@
     <string name="deal">Deal</string>
     <string name="east">East</string>
     <string name="iconClub">\u2663</string>
-    <string name="iconDiamond">\u25C6</string>
-    <string name="iconHeart">\u2764\uFE0F</string>
+    <string name="iconDiamond">\u2662</string>
+    <string name="iconHeart">\u2661</string>
     <string name="iconSpade">\u2660</string>
     <string name="me">Me</string>
     <string name="menuTwoPlayer">2-player</string>

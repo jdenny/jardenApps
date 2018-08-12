@@ -49,17 +49,23 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/handsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/us" />
+                <Button
+                    android:id="@+id/bidButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bid" />
+            </LinearLayout>
 	    
-	        <Button
-	            android:id="@+id/handsButton"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/us" />
-	        <Button
-	            android:id="@+id/bidButton"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/bid" />
 		    <FrameLayout
 		        android:id="@+id/southContainer"
 		        android:layout_width="match_parent"

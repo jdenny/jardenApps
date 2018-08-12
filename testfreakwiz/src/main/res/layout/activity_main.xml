@@ -9,6 +9,32 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RedIcon"
+            android:text="\u2661 \u2663 \u2662 \u2660 Q 2" />
+        <TextView
+            android:id="@+id/hearts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 5 4 3"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RedIcon"
+            android:text="\u2662" />
+        <TextView
+            android:id="@+id/diamonds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" A K J 10 5"/>
+    </LinearLayout>
+
     <fragment android:name="jarden.app.revisequiz.FreakWizFragment"
               android:id="@+id/freakWizFragment"
               android:layout_width="match_parent"

@@ -44,9 +44,6 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-Fix visibility of everything!
-
-try to fix red cards on Julie's phone
 merge takeout_double and redouble into double
 Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
