@@ -44,7 +44,8 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-merge takeout_double and redouble into double
+Add all responses from google docs. Add to document meaning of 3H/3S
+
 Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
  */
@@ -61,14 +62,15 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.autofit,
             R.string.compelled,
             R.string.disturbed,
+            R.string.Double,
             R.string.guard,
             R.string.invitational_plus,
             R.string.keycard_ask,
             R.string.preempt,
             R.string.queen_ask,
             R.string.raw,
-            R.string.redouble,
             R.string.relay,
+            R.string.responses_to_relay,
             R.string.responses_to_1D,
             R.string.responses_to_1NT,
             R.string.sandpit,
@@ -76,7 +78,6 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.splinter,
             R.string.strong_fit,
             R.string.suit_setter,
-            R.string.takeout_double,
             R.string.to_play,
             R.string.two_choice,
             R.string.values_for_5,

@@ -57,6 +57,7 @@ public class BidSearchFragment extends Fragment
         this.notesTextView = rootView.findViewById(R.id.notesTextView);
         this.notesTextView.setMovementMethod(LinkMovementMethod.getInstance());
         this.notesTextView.setHighlightColor(Color.TRANSPARENT);
+        this.notesTextView.setVisibility(View.INVISIBLE);
         this.backButton = rootView.findViewById(R.id.backButton);
         backButton.setOnClickListener(this);
         Button quizButton = rootView.findViewById(R.id.quizButton);
@@ -108,7 +109,8 @@ public class BidSearchFragment extends Fragment
     }
     private void showBidAndResponses(QuestionAnswer qa) {
         this.questionTextView.setText(qa.question);
-        showAnswer(qa);
+        this.answerTextView.setText(qa.answer);
+        this.documentTextView.showPageText(qa.notes, "Notes");
         loadBidList(qa.question);
     }
     private void showNotesOrBids() {
@@ -119,10 +121,6 @@ public class BidSearchFragment extends Fragment
             this.bidListView.setVisibility(View.VISIBLE);
             this.notesTextView.setVisibility(View.INVISIBLE);
         }
-    }
-    private void showAnswer(QuestionAnswer qa) {
-        this.answerTextView.setText(qa.answer);
-        this.documentTextView.showPageText(qa.notes, "Notes");
     }
     /*
     Get all responses to supplied bid. If bid is null, get all opening bids.
@@ -135,28 +133,41 @@ public class BidSearchFragment extends Fragment
         } else {
             this.currentQAList.clear();
         }
-        this.backButton.setEnabled(bid != null);
-        this.notesCheckBox.setEnabled(bid != null);
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
+        if (bid == null) {
+            this.backButton.setEnabled(false);
+            this.notesCheckBox.setEnabled(false);
+            this.questionTextView.setText("");
+            this.answerTextView.setText("");
+            this.notesTextView.setText("");
+        } else {
+            this.backButton.setEnabled(true);
+            this.notesCheckBox.setEnabled(true);
+        }
+        String response;
         for (QuestionAnswer qa: qaList) {
             String question = qa.question;
-            if (isResponseToBid(bid, question)) {
-                bidListAdapter.add(question);
+            if ((response = getResponseToBid(bid, question)) != null) {
+                bidListAdapter.add(response + "=" + qa.answer);
                 currentQAList.add(qa);
             }
         }
         this.bidListAdapter.notifyDataSetChanged();
+        this.notesCheckBox.setChecked(false);
+        showNotesOrBids();
     }
-    private boolean isResponseToBid(String bid, String question) {
+    private String getResponseToBid(String bid, String question) {
         if (bid == null) { // getting only opening bids:
-            return !question.contains(",");
+            if (question.contains(",")) return null;
+            else return question;
         } else {
             if (question.startsWith(bid + ", ") || question.startsWith(bid + "; ")) {
-                int pos = bid.length() + 2;
-                return !(question.substring(pos).contains(",") ||
-                        question.substring(pos).contains(";"));
-            } else return false;
+                String response = question.substring(bid.length() + 2);
+                if (response.contains(",") || response.contains(";")) {
+                    return null;
+                } else return response;
+            } else return null;
         }
     }
 }
