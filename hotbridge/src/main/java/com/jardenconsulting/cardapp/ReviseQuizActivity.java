@@ -64,6 +64,7 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.disturbed,
             R.string.Double,
             R.string.guard,
+            R.string.help,
             R.string.invitational_plus,
             R.string.keycard_ask,
             R.string.preempt,
@@ -81,7 +82,7 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.to_play,
             R.string.two_choice,
             R.string.values_for_5,
-            R.string.waiting_bid
+            R.string.waiting
     };
 
     private PresetQuiz reviseItQuiz;

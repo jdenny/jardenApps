@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="autofit">
-        jump shift to four- or five-level opposite three of minor; agrees the minor,
+        Jump to new suit opposite three of minor; agrees the minor,
         then interpreted as if already in fit auction. Responses to 3D:
-        \n 4D = [a]to_play[/a]
-        \n 4H = autofit, [a]values_for_5[/a]
-        \n 4S = autofit, [a]keycard_ask[/a]
+        \n [b]4D[/b] = [a]to_play[/a]
+        \n [b]4H[/b] = autofit, [a]values_for_5[/a]
+        \n [b]4S[/b] = autofit, [a]keycard_ask[/a]
     </string>
     <string name="compelled">
-        following 2D compelling [a]relay[/a], or 2C invitational relay and partner
+        Following 2D compelling [a]relay[/a], or 2C invitational relay and partner
         does not decline invitation with 2D. Team must bid to at least 3NT or penalise
-        them (even if one of team passes)
+        them (even if one of team passes).
     </string>
     <string name="disturbed">
-        in disturbed auction, no [a]relay[/a], no [a]sandpit[/a], no
+        In disturbed auction, no [a]relay[/a], no [a]sandpit[/a], no
         [a]suit-setter[/a] and no need to bid hearts before spades or clubs
-        before diamonds - bid longest suit; the following disturbs the auction:
+        before diamonds - bid longest suit. The following disturbs the auction:
         \n they bid 1NT or higher
         \n we make a [a]raw[/a] bid
         \n we pass opposite partner\'s bid
@@ -30,11 +30,22 @@
         \n [b]Redouble[/b] same as [a]takeout_double[/a] i.e. tells partner to bid
         something else
     </string>
-    <string name="guard">something to stop them running a suit,
+    <string name="guard">Something to stop them running a suit,
         e.g. A or KQ or QJ10. Often used to explore 3NT
     </string>
+    <string name="help">
+        If question is single bid, explain meaning of that bid.
+        \nIf question is multiple bids, explain meaning of last bid.
+        \nMultiple bids separated by commas for each round; rounds
+        are separated by semi-colons, e.g. 1C, 1H; 1S means partner
+        bid 1C, you bid 1H, partner\'s 2nd bid was 1S; you have to
+        explain his 1S.
+        \nIf they bid, their bids are shown in brackets, e.g.
+        1C, (1S), double means you bid 1C, opponent bid 1S, your partner
+        doubled; explain his double.
+    </string>
     <string name="invitational_plus">
-        called invitational+ in book; gets its name from [a]relay[/a], which has
+        Called invitational+ in book; gets its name from [a]relay[/a], which has
         2 forms: 2C (invitational) and 2D (compelled). Invitational+ combines both,
         i.e. 23+ TP. After any constructive response, bidding must continue
         at least until 3 of opener\'s suit; past that (other than a simple raise)
@@ -49,16 +60,18 @@
         \n +2: 1 or 4
         \n +3: 2 or 5
     </string>
-    <string name="preempt">weak hand with long suit</string>
+    <string name="preempt">
+        Weak hand with long suit; bid to block opponents.
+    </string>
     <string name="queen_ask">
         After response to keycard ask, lowest side-suit = queen ask
         \n Responses to queen ask (bid lowest suitable bid):
         \n * any bid up to and including lowest bid of trump suit = no trump queen
         \n * lowest bid of trump suit = no trump queen, no kings that could
         be mentioned, but something, i.e. king that couldn’t be mentioned
-        \n any bid above lowest bid of trump suit = trump queen
-        \n no trumps = no kings that could be mentioned
-        \n bid of suit other than trumps = king in that suit
+        \n * any bid above lowest bid of trump suit = trump queen
+        \n * no trumps = no kings that could be mentioned
+        \n * bid of suit other than trumps = king in that suit
     </string>
     <string name="raw">now given full description of hand</string>
     <string name="relay">
@@ -70,16 +83,16 @@
         \n * now looking for 5-3 fit in a major, or 4-4 fit in minor
     </string>
     <string name="responses_to_relay">
-        * 2D (i.e. after 2C invite) = invitation declined, less than 25 TP; all other
+        [b]2D[/b] (i.e. after 2C invite) = invitation declined, less than 25 TP; all other
         bids accept the invitation, so [a]compelled[/a]
-        \n * 2H = 5+ hearts (as 2C/D denies 4-4 major) or 3 if already denied hearts
-        \n * 2S = 5+ spades or 3 if already denied spades; denies ability to bid hearts
-        \n * 3NT = to play; no major fit, all suits covered; note: if partner is
+        \n [b]2H[/b] = 5+ hearts (as 2C/D denies 4-4 major) or 3 if already denied hearts
+        \n [b]2S[/b] = 5+ spades or 3 if already denied spades; denies ability to bid hearts
+        \n [b]3NT[/b] = to play; no major fit, all suits covered; note: if partner is
         unlimited and you have a 4+ minor suit, bid 2NT to allow partner to explore
         for minor fit, and possible slam
-        \n * 3C/3D = natural, 4+ in suit, cannot rebid majors; either strong or skew hand;
+        \n [b]3C/3D[/b] = natural, 4+ in suit, cannot rebid majors; either strong or skew hand;
         bid 3C with 4+ in both minors
-        \n * 2NT = waiting, no major fit, no {4+ minor plus strong or skew};
+        \n [b]2NT[/b] = [a]waiting[/a], no major fit, no {4+ minor plus strong or skew};
         limiting to game values, as otherwise would bid a minor or jump in no-trumps
     </string>
     <string name="responses_to_1D">
@@ -103,17 +116,26 @@
         \n[b]4H/4S/5C/5D[/b] = [a]preempt[/a], 0-10 HCP
         \n[b]pass[/b] = none of above
     </string>
-    <string name="sandpit">jump from 1-level to new suit; special case of [a]raw[/a]
+    <string name="sandpit">Jump from 1-level to new suit; special case of [a]raw[/a]
         bid; 6-card suit, weak, preemptive
     </string>
     <string name="skew">hand containing singleton or void</string>
     <string name="splinter">
-        jump shift opposite natural suit bid below 3-level, to another suit not
-        previously shown, that commits us to play at 4-level in partner\'s suit
-        (neutral auction) or agreed suit (fit auction). [b]Meaning[/b]: void or
-        singleton (not A/K/Q) in bid suit and agreeing partner\'s suit; 1st or
-        2nd round control of other 2 suits (A or Kx); values for at least 4-level
-        (25+ TP); used to test slam potential; forcing.
+        Neutral auction: jump shift opposite natural suit bid below 3-level, to another
+        suit not previously shown that commits us to play at 4-level
+        suit
+        \n1H/2H, 3S/4C/4D
+        \n1S/2S, 4C/4D/4H
+        \n2C, 3D/3H/3S
+        \n2D, 3H/3S/4C
+        \nFit auction: jump shift to another suit not previously shown that commits us to
+        play at 4-level, e.g
+        \n1C, 1H; 2H, 3S/4C/4D
+        \n1H, 1S; 2NT, 4C/4D/4H
+        \n[b]Meaning[/b]: void or singleton (not A/K/Q) in bid suit and agreeing
+        partner\'s suit (if not already agreed); 1st or 2nd round control of other 2
+        suits (A or Kx); values for at least 4-level (25+ TP); used to test slam
+        potential; forcing.
     </string>
     <string name="strong_fit">
         2NT opposite natural suit bid and unlimited or [a]compelled[/a].
@@ -124,22 +146,22 @@
         5 winners in suit. In a neutral auction, not a [a]splinter[/a], not
         already denied suit, then 3H/3S/4C/4D unilaterally sets the suit (hence
         fit auction). If [a]compelled[/a] or bidder unlimited, then suit-setter
-        is forcing, otherwise not forcing
+        is forcing, otherwise not forcing.
     </string>
-    <string name="to_play">not forcing; partner happy to play in this contract,
-        but you may bid on
+    <string name="to_play">Not forcing; partner happy to play in this contract,
+        but you may bid on.
     </string>
-    <string name="two_choice">partner to choose from 2 lowest unshown suits
+    <string name="two_choice">Partner to choose from 2 lowest unshown suits.
     </string>
     <string name="values_for_5">
         In fit auction, not jump, lowest available side suit at 4-level (usually 4C).
         We have got enough points and length to bid 5; inviting partner to bid
-        [a]keycard_ask[/a] if strong enough, and if not return to trumps
+        [a]keycard_ask[/a] if strong enough, and if not return to trumps.
     </string>
-    <string name="waiting_bid">
+    <string name="waiting">
         In a fit auction, 3 of trump suit when [a]compelled[/a] or 2NT when
         non-compelled is a waiting bid; i.e. isn’t adding anything, but
         partner can’t pass, so asking partner to make the next move. In
-        response to [a]relay[/a], unable to bid a suit
+        response to [a]relay[/a], unable to bid a suit.
     </string>
 </resources>

@@ -115,11 +115,11 @@ public class BidSearchFragment extends Fragment
     }
     private void showNotesOrBids() {
         if (this.notesCheckBox.isChecked()) {
-            this.bidListView.setVisibility(View.INVISIBLE);
+            this.bidListView.setVisibility(View.GONE);
             this.notesTextView.setVisibility(View.VISIBLE);
         } else {
             this.bidListView.setVisibility(View.VISIBLE);
-            this.notesTextView.setVisibility(View.INVISIBLE);
+            this.notesTextView.setVisibility(View.GONE);
         }
     }
     /*
@@ -128,6 +128,7 @@ public class BidSearchFragment extends Fragment
     public void loadBidList(String bid) {
         if (this.qaList == null) {
             qaList = reviseItQuiz.getQuestionAnswerList();
+            //!! LinkedHashSet
             this.currentQAList = new ArrayList<>();
             this.bidSearchStack = new Stack<>();
         } else {

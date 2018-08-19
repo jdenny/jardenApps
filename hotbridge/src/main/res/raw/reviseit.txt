@@ -1,6 +1,7 @@
 $H: what does the last bid mean?
 # opening bid
 Q: 1C
+F1: [a]help[/a]
 A: 25pp & 5+ major or 26+pp
 Q: 1D
 A: 23-25pp & no 5+ major
@@ -18,6 +19,7 @@ Q: 2H/2S
 F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
 A: 6 in suit, <20pp, 6-10 HCP
 Q: 2NT
+F1: [a]two_choice[/a], forcing, [a]disturbed[/a], [a]raw[/a]
 A: 5+ in both minors, 20-22pp
 Q: 3C/3D/3H/3S
 F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
@@ -34,11 +36,12 @@ A: 9+ in suit, <20pp, 6-8 HCP
 
 # 1 bid after 1C
 Q: 1C, 1D
-F1: i.e. you bid 1C, partner bids 1D
 A: 0-3 HCP, no 6+ major
 Q: 1C, 1H
+F1: forcing
 A: 4+ hearts, 4+ HCP (20 TP)
 Q: 1C, 1S
+F1: forcing
 A: 4+ spades, 4+ HCP, <4 hearts (20 TP)
 Q: 1C, 1NT
 A: 4-6 HCP, no 4+ major, no 6+ minor, not 5+ in both minors
@@ -51,21 +54,21 @@ A: 9+ HCP, no 4+ major (25 TP)
 Q: 1C, 2H/2S
 A: 6+ in suit, 0-3 HCP
 Q: 1C, 2NT
-F1: [a]two_choice[/a]
+F1: [a]two_choice[/a], forcing
 A: 5+ in both minors, 4-6 HCP
 Q: 1C, 3C/3D
 F1: [a]raw[/a]
 A: 6+ in suit, 4-6 HCP, no 4+ major
 Q: 1C, 3H/3S/4C/4D
 F1: [a]suit_setter[/a]
-A: suit_setter
+A: suit-setter
 
 # 1 bid after 1D
 Q: 1D, 1H
 F1: [a]responses_to_1D[/a]
 A: 4+ hearts, 0+ HCP (15 TP)
 Q: 1D, 1S
-F1: [a]responses_to_1D[/a]
+F1: [a]responses_to_1D[/a], forcing
 A: 4+ spades, 0+ HCP, <4 hearts (15 TP)
 Q: 1D, 1NT
 F1: Note: with 5-7 HCP and 6+ in minor, bid 3 of minor; [a]responses_to_1D[/a]
@@ -83,8 +86,11 @@ Q: partner bids 1D; what to bid with 6 hearts, 4 HCP
 A: 2H
 Q: partner bids 1D; what to bid with 6 hearts, 5 HCP
 A: 1H
-Q: 1D, 3D
-F1: [a]raw[/a]; note: with 0-4 HCP bid 1NT; with 8+ bid [a]relay[/a]; [a]responses_to_1D[/a]; similarly 1D, 3C
+Q: 1D, 2NT
+F1: [a]two_choice[/a], forcing
+A: 5+ in both minors, 5-7 HCP
+Q: 1D, 3C/3D
+F1: [a]raw[/a]; note: with 0-4 HCP bid 1NT; with 8+ bid [a]relay[/a]; [a]responses_to_1D[/a]
 A: 6+ in suit, 5-7 HCP, no 4+ major (20 TP)
 Q: 1D, 3H/3S/4C/4D
 F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]
@@ -95,6 +101,7 @@ Q: 1H, pass
 F1: with 6+ spades and 5-7 HCP, bid 2S
 A: 0-7 HCP; no {6+ spades and 5-7 HCP}
 Q: 1H, 1S
+F1: forcing
 A: 4+ spades, 8+ HCP, <4 hearts (20 TP)
 Q: 1H, 1NT
 A: 8-10 HCP, no 4+ major, no 6+ minor (20 TP)
@@ -105,25 +112,29 @@ Q: 1H, 2D
 F1: compelling [a]relay[/a]
 A: 13+ HCP, no 4+ major (25 TP)
 Q: 1H, 2H
-A: 4 hearts, 8-10 HCP (20 TP)
+F1: [a]raw[/a]
+A: 4 hearts, 8-10 HCP, raw (20 TP)
 Q: 1H, 2S
 F1: [a]raw[/a]
 A: 6+ spades, 5-7 HCP, <4 hearts (17 TP)
 Q: 1H, 2NT
-F1: [a]strong_fit[/a]
+F1: [a]strong_fit[/a], forcing
 A: 4+ hearts, 11+ HCP (23 TP)
 Q: 1H, 3C/3D
-F1: similarly 1H
-A: 6+ in suit, 8-10 HCP, no 4+ major (20 TP)
+F1: [a]raw[/a]
+A: 6+ in suit, 8-10 HCP, no 4+ major, raw (20 TP)
 Q: 1H, 3H
-A: 5 hearts, 8-10 HCP (20 TP)
+F1: [a]raw[/a]
+A: 5 hearts, 8-10 HCP (20 TP), raw
 Q: 1H, 3NT
-A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
+F1: with 16+ HCP bid 2D, [a]relay[/a]
+A: 13-15 HCP, no 4+ major, 3343 or 3334 (25 TP)
 Q: 1H, 3S/4C/4D
 F1: [a]splinter[/a]
 A: 4+ hearts, 13+ HCP, splinter (25 TP)
 Q: 1H, 4H
-A: 6+ hearts, 8-10 HCP (20 TP)
+F1: [a]raw[/a]
+A: 6+ hearts, 8-10 HCP, raw (20 TP)
 
 # 1 bid after 1S
 Q: 1S, pass
@@ -137,21 +148,26 @@ Q: 1S, 2D
 F1: compelling [a]relay[/a]
 A: 13+ HCP, <4 spades (25 TP)
 Q: 1S, 2S
-A: 4 spades, 8-10 HCP (20 TP)
+F1: [a]raw[/a]
+A: 4 spades, 8-10 HCP, raw (20 TP)
 Q: 1S, 2NT
 F1: [a]strong_fit[/a]
 A: 4+ spades, 11+ HCP (23 TP)
 Q: 1S, 2H/3C/3D
-A: 6+ in suit, 8-10 HCP, <4 spades (20 TP)
+F1: [a]raw[/a]
+A: 6+ in suit, 8-10 HCP, <4 spades, raw (20 TP)
 Q: 1S, 3S
-A: 5 spades, 8-10 HCP (20 TP)
+F1: [a]raw[/a]
+A: 5 spades, 8-10 HCP, raw (20 TP)
 Q: 1S, 3NT
-A: 13+ HCP, no 4+ major, 3343 or 3334 (25 TP)
+F1: with 16+ HCP bid 2D, [a]relay[/a]
+A: 13-15 HCP, <4 spades, 3433, 3343 or 3334 (25 TP)
 Q: 1S, 4C/4D/4H
 F1: [a]splinter[/a]
 A: 4+ spades, 13+ HCP, splinter (25 TP)
 Q: 1S, 4S
-A: 6+ spades, 8-10 HCP (20 TP)
+F1: [a]raw[/a]
+A: 6+ spades, 8-10 HCP, raw (20 TP)
 
 # 1 bid after 1NT
 Q: 1NT, pass
@@ -166,8 +182,8 @@ A: 13+ HCP (25 TP)
 Q: 1NT, 2H/2S
 A: 6+ in suit, 0-10 HCP
 Q: 1NT, 2NT
-F1: [a]raw[/a]
-A: 4+ in both minors, 0-10 HCP
+F1: [a]two_choice[/a], forcing
+A: 4+ in both minors, two-choice, 0-10 HCP
 Q: 1NT, 3C/3D
 F1: [a]raw[/a]
 A: 6+ in suit, 8-10 HCP (20 TP)
@@ -175,7 +191,7 @@ Q: 1NT, 3H/3S/4C/4D
 F1: [a]suit_setter[/a]
 A: suit-setter
 Q: 1NT, 4H/4S/5C/5D
-F1: [a]preempt[/a]
+F1: [a]preempt[/a], [a]to_play[/a]
 A: long suit, 0-10 HCP
 
 # 1 bid after 2C
@@ -186,7 +202,7 @@ Q: 2C, 2H/2S
 F1: [a]invitational_plus[/a]
 A: 5+ in suit, 11+ HCP (23 TP)
 Q: 2C, 2NT
-F1: [a]strong_fit[/a]
+F1: [a]strong_fit[/a]; subsequent bids of side suits show guards, exploring 3NT
 A: 3+ clubs, 11+ HCP (23 TP)
 Q: 2C, 3C
 A: 3 clubs, 8-10 HCP
@@ -238,17 +254,17 @@ Q: 1H, 2D, 2S
 F1: [a]responses_to_relay[/a]
 A: 4 hearts, 5+ spades
 Q: 1H, 2D; 3NT
-F1: [a]to_play[/a]; [a]responses_to_relay[/a]
-A: all suits guarded (25 TP)
+F1: [a]to_play[/a]; [a]responses_to_relay[/a]; with 4+ minor, bid 2NT as partner unlimited
+A: 4 hearts, <5 spades, no 4+ minor, all suits guarded (25 TP)
 Q: 1H, 2C; 3C
 F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
 A: 4+ clubs, 4 hearts, 14+ HCP, <5 spades
 Q: 1H, 2D; 3D
 F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
-A: 4+ diamonds, 4 hearts, <5 spades
+A: 4+ diamonds, 4 hearts, <5 spades, <4 clubs
 Q: 1H, 2C; 2NT
-F1: [a]waiting_bid[/a]; [a]responses_to_relay[/a]
-A: 14+ HCP, waiting
+F1: [a]waiting[/a]; [a]responses_to_relay[/a]
+A: 14+ HCP, 4 hearts, <5 spades, waiting
 
 Q: 1S, 2D; 2H
 F1: may have 5+ spades; [a]responses_to_relay[/a]
@@ -256,22 +272,22 @@ A: 3 hearts
 Q: 1S, 2C, 2S
 F1: [a]responses_to_relay[/a]
 A: 5+ spades, 14+ HCP
-Q: 1S, 2D; 3NT
+Q: 1S, 2C; 3NT
 F1: [a]to_play[/a]; [a]responses_to_relay[/a]
-A: all suits guarded (25 TP)
+A: 14+ HCP, 4 spades, <5 hearts, all suits guarded (25 TP)
 Q: 1S, 2D; 3C
 F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
 A: 4+ clubs, 4 spades, <3 hearts
 Q: 1S, 2C; 3D
 F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
-A: 4+ diamonds, 14+ HCP, <3 hearts, 4 spades
+A: 4+ diamonds, 14+ HCP, 4 spades, <3 hearts
 Q: 1S, 2D; 2NT
-F1: [a]waiting_bid[/a]; [a]responses_to_relay[/a]
-A: waiting
+F1: [a]waiting[/a]; [a]responses_to_relay[/a]; may have 4+ minor
+A: 4 spades, <3 hearts, waiting
 
 # 3 bids
 Q: 1H, 1S; 2D
-F1: semi-colon starts next round of bidding, i.e. partner bids 1H, you bid 1S, partner bids 2; [a]raw[/a]
+F1: [a]raw[/a]
 A: 5+ hearts, 4+ diamonds, <4 spades
 Q: 1H, 1S; 2NT
 F1: can't be strong fit as limited; can’t be 5+ in both minors as already bid hearts!
@@ -415,8 +431,8 @@ Q: 1C, 1D; 2D
 F1: compelling [a]relay[/a]
 A: 25+ HCP (25 TP)
 Q: 1C, 1D; 2D, 3C
-F1: [a]skew[/a]
-A: 4+ clubs, no 4+ major, skew
+F1: [a]skew[/a]; if no skew, bid 2NT
+A: 4+ clubs, no 4+ major, strong or skew
 Q: 1C, 1D; 2D, 3C; 3D
 A: 4+ diamonds, <4 clubs
 Q: 1C, 1D; 2D, 3C; 3D, 4H
@@ -425,7 +441,7 @@ A: autofit, values for 5
 
 # page 66
 Q: 1S, 2C; 2NT
-F1: if had <2 hearts would have 4+ minor; [a]relay_responses[/a]
+F1: <2 hearts would be skew, so would bid 3C/3D; [a]relay_responses[/a]
 A: 4 spades, 2 hearts, 14+ HCP (25 TP)
 Q: 1C, 2C; 2NT
 F1: [a]relay_responses[/a]
@@ -560,7 +576,7 @@ A: 3+ spades
 
 # competitive bidding
 Q: 1D, (any bid), pass
-F1: free bid; may have 4+ major; parentheses show bid made by opponents
+F1: free bid; may have 4+ major
 A: 0-4 HCP
 Q: 1C, (1D), pass
 F1: free bid
@@ -641,7 +657,7 @@ A: asks partner to bid best suit (except hearts)
 Q: 1H, 1S; 2S
 A: 4+ spades
 Q: 1H, 1S; 2S, 2NT
-F1: [a]waiting_bid[/a]
+F1: [a]waiting[/a]
 A: nothing to add
 Q: 1H, 1S; 2S, 2NT; 3D
 A: 4+ diamonds
