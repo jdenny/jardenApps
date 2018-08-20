@@ -128,7 +128,6 @@ public class BidSearchFragment extends Fragment
     public void loadBidList(String bid) {
         if (this.qaList == null) {
             qaList = reviseItQuiz.getQuestionAnswerList();
-            //!! LinkedHashSet
             this.currentQAList = new ArrayList<>();
             this.bidSearchStack = new Stack<>();
         } else {
