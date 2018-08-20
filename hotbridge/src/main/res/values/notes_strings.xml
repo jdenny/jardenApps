@@ -92,9 +92,9 @@
         \n [b]3NT[/b] = to play; no major fit, all suits covered; note: if partner is
         unlimited and you have a 4+ minor suit, bid 2NT to allow partner to explore
         for minor fit, and possible slam
-        \n [b]3C/3D[/b] = natural, 4+ in suit, cannot rebid majors; either strong or skew hand;
+        \n [b]3C/3D[/b] = natural, 4+ in suit, cannot rebid majors; [a]strong_or_skew[/a];
         bid 3C with 4+ in both minors
-        \n [b]2NT[/b] = [a]waiting[/a], no major fit, no {4+ minor plus strong or skew};
+        \n [b]2NT[/b] = [a]waiting[/a], no major fit, no {4+ minor plus [a]strong_or_skew[/a]};
         limiting to game values, as otherwise would bid a minor or jump in no-trumps
     </string>
     <string name="responses_to_1D">
@@ -121,7 +121,12 @@
     <string name="sandpit">Jump from 1-level to new suit; special case of [a]raw[/a]
         bid; 6-card suit, weak, preemptive
     </string>
-    <string name="skew">hand containing singleton or void</string>
+    <string name="strong_or_skew">
+        Used when bidding 3C or 3D in response to [a]relay[/a].
+        Skew is hand containing singleton or void; strong means
+        enough total points (TP) to reach 5 in minor, should we
+        so choose - nominally 29 HCP.
+    </string>
     <string name="splinter">
         Neutral auction: jump shift opposite natural suit bid below 3-level, to another
         suit not previously shown that commits us to play at 4-level

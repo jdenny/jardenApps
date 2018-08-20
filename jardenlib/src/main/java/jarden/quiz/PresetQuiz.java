@@ -233,7 +233,7 @@ public class PresetQuiz extends Quiz {
     public String getNextQuestion(int level) throws EndOfQuestionsException {
         int failCt = getFailedCount();
         if (this.quizMode == QuizMode.LEARN) {
-            int currentCt = getToDoCount() - 1; // haven't incremented qaListIndex yet
+            int currentCt = getToDoCount();
             if (failCt == 0 && currentCt == 0) {
                 this.qaListIndex = -1;
                 throw new EndOfQuestionsException();
@@ -297,7 +297,7 @@ public class PresetQuiz extends Quiz {
         return this.quizMode;
     }
     public int getToDoCount() {
-        return this.qaList.size() - this.qaListIndex;
+        return this.qaList.size() - this.qaListIndex - 1;
     }
     public int getCurrentQAIndex() {
         return this.currentQAIndex;

@@ -257,10 +257,10 @@ Q: 1H, 2D; 3NT
 F1: [a]to_play[/a]; [a]responses_to_relay[/a]; with 4+ minor, bid 2NT as partner unlimited
 A: 4 hearts, <5 spades, no 4+ minor, all suits guarded (25 TP)
 Q: 1H, 2C; 3C
-F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
 A: 4+ clubs, 4 hearts, 14+ HCP, <5 spades
 Q: 1H, 2D; 3D
-F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
 A: 4+ diamonds, 4 hearts, <5 spades, <4 clubs
 Q: 1H, 2C; 2NT
 F1: [a]waiting[/a]; [a]responses_to_relay[/a]
@@ -276,10 +276,10 @@ Q: 1S, 2C; 3NT
 F1: [a]to_play[/a]; [a]responses_to_relay[/a]
 A: 14+ HCP, 4 spades, <5 hearts, all suits guarded (25 TP)
 Q: 1S, 2D; 3C
-F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
 A: 4+ clubs, 4 spades, <3 hearts
 Q: 1S, 2C; 3D
-F1: strong or [a]skew[/a]; [a]responses_to_relay[/a]
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
 A: 4+ diamonds, 14+ HCP, 4 spades, <3 hearts
 Q: 1S, 2D; 2NT
 F1: [a]waiting[/a]; [a]responses_to_relay[/a]; may have 4+ minor
@@ -426,13 +426,13 @@ Q: 1C, 1D; 2D
 F1: compelling [a]relay[/a]
 A: 25+ HCP (25 TP)
 Q: 1C, 1D; 2D, 3C
-F1: [a]skew[/a]; if no skew, bid 2NT
-A: 4+ clubs, no 4+ major, strong or skew
+F1: [a]strong_or_skew[/a]
+A: 4+ clubs, no 4+ major, strong (13+ HCP) or skew
 Q: 1C, 1D; 2D, 3C; 3D
 A: 4+ diamonds, <4 clubs
 Q: 1C, 1D; 2D, 3C; 3D, 4H
 F1: [a]autofit[/a]
-A: autofit, values for 5
+A: autofit, 4+ diamonds, values for 5
 
 # page 66
 Q: 1S, 2C; 2NT
@@ -442,8 +442,8 @@ Q: 1C, 2C; 2NT
 F1: [a]relay_responses[/a]
 A: >17 HCP, <5 spades, <5 hearts, no 4+ minor (25 TP)
 Q: 1C, 2C; 3C
-F1: [a]relay_responses[/a]; [a]skew[/a]
-A: 4+ clubs, strong (>22 HCP) or skew, <5 spades, <5 hearts (29 TP)
+F1: [a]strong_or_skew[/a]; [a]relay_responses[/a]
+A: 4+ clubs, strong (22+ HCP) or skew, <5 spades, <5 hearts (29 TP)
 
 # page 67
 Q: 1H, 1S; 1NT
@@ -452,38 +452,38 @@ Q: 1H, 1S; 1NT, 2D
 F1: compelling [a]relay[/a]
 A: 13+ HCP
 Q: 1H, 1S; 1NT, 2D; 2NT
-F1: [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]; [a]strong_or_skew[/a]
 A: 4 hearts, <3 spades, no {4+ minor plus strong or skew}
 Q: 1C, 1S; 2D
 A: 21+ HCP, <4 spades (25 TP)
 Q: 1C, 1S; 2D, 3C
-F1: [a]skew[/a]
-A: 4+ clubs, skew, <5 spades, <3 hearts
+F1: [a]strong_or_skew[/a]
+A: 4+ clubs, strong or skew, <5 spades, <3 hearts
 
 # page 68
 Q: 1H, 1S; 1NT, 2D; 3D
-F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H
+F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H; [a]strong_or_skew[/a]
 A: 4+ diamonds, <3 spades, 4 hearts, strong or skew
 Q: 1C, 2D; 3C
-F1: [a]skew[/a]
-A: 4+ clubs, strong (>= 19 HCP) or skew, no 5-card major
+F1: [a]strong_or_skew[/a]; [a]relay_responses[/a]
+A: 4+ clubs, strong (20+ HCP) or skew, no 5-card major
 Q: 1C, 2D; 3C, 4C
 F1: not forcing
 A: 4+ clubs
 Q: 1C, 2D; 3C, 4C; 4H
 F1: [a]keycard_ask[/a]
 A: keycard ask
-Q: 1C, 2D; 3C, 4C; 4H; 4S
+Q: 1C, 2D; 3C, 4C; 4H, 4S
 F1: [a]keycard_ask[/a]
 A: 0 or 3 keycards
-Q: 1C, 2D; 3C, 4C; 4H; 4S, 4NT
+Q: 1C, 2D; 3C, 4C; 4H, 4S; 4NT
 F1: partner has no keycards; 4NT in minor fit is always natural
 A: to play
 
 # page 71
 Q: 1NT, 2D; 2H, 3C
-F1: [a]skew[/a]
-A: 4+ clubs, strong (>= 15 HCP) or skew, no 5-card major
+F1: [a]strong_or_skew[/a]
+A: 4+ clubs, strong (17+ HCP) or skew, no 5-card major
 Q: 1NT, 2D; 2H, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
 A: 4+ clubs, autofit, values for 5
@@ -496,11 +496,11 @@ Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
 F1: [a]keycard_ask[/a]
 A: 2 or 5 keycards
 Q: 1H, 1S; 1NT, 2D; 2NT
-F1: [a]responses_to_relay[/a]
+F1: [a]waiting[/a], [a]responses_to_relay[/a]
 A: waiting - 4 hearts, <3 spades, no {4+ minor plus strong or skew}
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C
-F1: [a]responses_to_relay[/a]
-A: 4+ clubs, strong (>16 HCP) or skew
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+A: 4+ clubs, strong (17+ HCP) or skew
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
 A: 4+ clubs, autofit, values for 5
@@ -529,10 +529,10 @@ Q: 1H, 2D; 2H
 F1: [a]responses_to_relay[/a]
 A: 5+ hearts
 Q: 1H, 2D; 2H, 3C
-F1: [a]responses_to_relay[/a]
-A: 4+ clubs, strong (>16 HCP) or skew, <3 hearts, <3 spades
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+A: 4+ clubs, strong (17+ HCP) or skew, <3 hearts, <3 spades
 Q: 1H, 2D; 2H, 3C; 3H
-F1: [a]suit-setter[/a]; not [a]splinter[/a] as hearts previously shown; forcing as [a]compelled[/a]
+F1: [a]suit-setter[/a]; forcing as [a]compelled[/a]
 A: suit-setter
 
 # page 77
@@ -616,7 +616,7 @@ F1: may have 4+ hearts
 A: 4+ spades & 20-22pp or 5+ spades & 23-24pp
 Q: (1H), 1NT
 F1: may have 4 or 5 hearts
-A: 20-22pp
+A: 20-22pp, <4 spades
 Q: (1H), 2H
 F1: may have 20-22pp
 A: 6+ hearts, 6+ HCP
@@ -628,8 +628,7 @@ F1: [a]Double|takeout_double[/a] now become penalty double
 A: penalty
 Q: (1S), double, (pass), 1NT
 A: 5-9 HCP, no 6+ suit
-Q: (1S), double, (pass), 2H
-F1: similarly (1S), double, (pass), 2C/2D/2H
+Q: (1S), double, (pass), 2C/2D/2H
 A: 4+ in suit, 0-4 HCP
 Q: (1S), double, (pass), 2NT
 F1: [a]invitational_plus[/a]
@@ -653,7 +652,7 @@ Q: 1H, 1S; 2S
 A: 4+ spades
 Q: 1H, 1S; 2S, 2NT
 F1: [a]waiting[/a]
-A: nothing to add
+A: waiting
 Q: 1H, 1S; 2S, 2NT; 3D
 A: 4+ diamonds
 Q: 1H, 2D; 2H, 2NT
@@ -804,7 +803,7 @@ Q: 1H, 2C; 2D, 2S; 4S
 A: 5+ spades
 
 # page 152
-Q: (1C), double, (pass), 2C
+Q: (1S), double, (pass), 2C
 A: 4+ clubs, best suit
 
 

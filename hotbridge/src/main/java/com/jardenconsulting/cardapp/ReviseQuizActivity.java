@@ -44,9 +44,11 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-Add all responses from google docs. Add to document meaning of 3H/3S
+* Add all responses from google docs. Add to document meaning of 3H/3S
+* Replace bid search stack with remove last bid. Could then ask for responses
+to current bid.
 
-Add levels, to PresetQuiz and here
+* Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
  */
 public class ReviseQuizActivity extends AppCompatActivity
@@ -75,9 +77,9 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.responses_to_1D,
             R.string.responses_to_1NT,
             R.string.sandpit,
-            R.string.skew,
             R.string.splinter,
             R.string.strong_fit,
+            R.string.strong_or_skew,
             R.string.suit_setter,
             R.string.to_play,
             R.string.two_choice,
