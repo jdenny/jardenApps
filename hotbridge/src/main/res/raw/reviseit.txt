@@ -293,11 +293,6 @@ Q: 1H, 1S; 2NT
 F1: can't be strong fit as limited; can’t be 5+ in both minors as already bid hearts!
 A: 4+ in both minors
 
-# 4 bids
-Q: 1H, 1S; 2D, 2S
-F1: [a]invitational_plus[/a]
-A: 5+ spades, 11+ HCP, <3 hearts
-
 # artificial bids
 Q: 1C, 3H
 F1: [a]suit_setter[/a]; not [a]splinter[/a] as no suit to support; similarly 1C/1D/1NT, 3H/3S/4C/4D

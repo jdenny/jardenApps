@@ -145,7 +145,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         int humanIndex = reviseItQuiz.getCurrentQAIndex() + 1;
         String stats = "Current=" + humanIndex;
         if (reviseItQuiz.getQuizMode() == LEARN) {
-            stats += ", ToDo=" + reviseItQuiz.getCurrentCount();
+            stats += ", ToDo=" + reviseItQuiz.getToDoCount();
         }
         stats += ", Fails=" + reviseItQuiz.getFailedCount();
         this.statsTextView.setText(stats);

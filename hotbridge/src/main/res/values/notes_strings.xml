@@ -38,9 +38,11 @@
         \nIf question is multiple bids, explain meaning of last bid.
         \nMultiple bids separated by commas for each round; rounds
         are separated by semi-colons, e.g. 1C, 1H; 1S means partner
-        bid 1C, you bid 1H, partner\'s 2nd bid was 1S; you have to
+        bid 1C, you bid 1H, partner\'s rebid was 1S; you have to
         explain his 1S.
-        \nIf they bid, their bids are shown in brackets, e.g.
+        \nAlternative bids are separated by /, e.g. 1C, 2H/2S means
+        you bid 1C and partner bids 2H or 2S
+        \nIf they bid, their bids are shown in parentheses, e.g.
         1C, (1S), double means you bid 1C, opponent bid 1S, your partner
         doubled; explain his double.
     </string>
