@@ -1,4 +1,3 @@
-$H: what does the last bid mean?
 # opening bid
 Q: 1C
 F1: [a]help[/a]
@@ -16,22 +15,22 @@ A: 6+ clubs, 20-22pp, no 4+ major, <5 diamonds
 Q: 2D
 A: 6+ diamonds, 20-22pp, no 4+ major, <5 clubs
 Q: 2H/2S
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]raw[/a]
 A: 6 in suit, <20pp, 6-10 HCP
 Q: 2NT
-F1: [a]two_choice[/a], forcing, [a]disturbed[/a], [a]raw[/a]
+F1: [a]two_choice[/a], [a]raw[/a]
 A: 5+ in both minors, 20-22pp
 Q: 3C/3D/3H/3S
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]raw[/a]
 A: 7 in suit, <20pp, 6-10 HCP
 Q: 4H/4S
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]raw[/a]
 A: 8+ in suit, <20pp, 6-9 HCP
 Q: 4C/4D
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]raw[/a]
 A: 8 in suit, <20pp, 6-9 HCP
 Q: 5C/5D
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]raw[/a]
 A: 9+ in suit, <20pp, 6-8 HCP
 
 # 1 bid after 1C
@@ -54,7 +53,7 @@ A: 9+ HCP, no 4+ major (25 TP)
 Q: 1C, 2H/2S
 A: 6+ in suit, 0-3 HCP
 Q: 1C, 2NT
-F1: [a]two_choice[/a], forcing
+F1: [a]two_choice[/a]
 A: 5+ in both minors, 4-6 HCP
 Q: 1C, 3C/3D
 F1: [a]raw[/a]
@@ -87,7 +86,7 @@ A: 2H
 Q: partner bids 1D; what to bid with 6 hearts, 5 HCP
 A: 1H
 Q: 1D, 2NT
-F1: [a]two_choice[/a], forcing
+F1: [a]two_choice[/a]
 A: 5+ in both minors, 5-7 HCP
 Q: 1D, 3C/3D
 F1: [a]raw[/a]; note: with 0-4 HCP bid 1NT; with 8+ bid [a]relay[/a]; [a]responses_to_1D[/a]
@@ -113,7 +112,7 @@ F1: compelling [a]relay[/a]
 A: 13+ HCP, no 4+ major (25 TP)
 Q: 1H, 2H
 F1: [a]raw[/a]
-A: 4 hearts, 8-10 HCP, raw (20 TP)
+A: 4 hearts, 8-10 HCP (20 TP)
 Q: 1H, 2S
 F1: [a]raw[/a]
 A: 6+ spades, 5-7 HCP, <4 hearts (17 TP)
@@ -122,19 +121,19 @@ F1: [a]strong_fit[/a], forcing
 A: 4+ hearts, 11+ HCP (23 TP)
 Q: 1H, 3C/3D
 F1: [a]raw[/a]
-A: 6+ in suit, 8-10 HCP, no 4+ major, raw (20 TP)
+A: 6+ in suit, 8-10 HCP, no 4+ major (20 TP)
 Q: 1H, 3H
 F1: [a]raw[/a]
-A: 5 hearts, 8-10 HCP (20 TP), raw
+A: 5 hearts, 8-10 HCP (20 TP)
 Q: 1H, 3NT
-F1: with 16+ HCP bid 2D, [a]relay[/a]
+F1: [a]threeNT|3NT[/a]; with 16+ HCP bid 2D, [a]relay[/a]
 A: 13-15 HCP, no 4+ major, 3343 or 3334 (25 TP)
 Q: 1H, 3S/4C/4D
 F1: [a]splinter[/a]
 A: 4+ hearts, 13+ HCP, splinter (25 TP)
 Q: 1H, 4H
 F1: [a]raw[/a]
-A: 6+ hearts, 8-10 HCP, raw (20 TP)
+A: 6+ hearts, 8-10 HCP (20 TP)
 
 # 1 bid after 1S
 Q: 1S, pass
@@ -149,25 +148,25 @@ F1: compelling [a]relay[/a]
 A: 13+ HCP, <4 spades (25 TP)
 Q: 1S, 2S
 F1: [a]raw[/a]
-A: 4 spades, 8-10 HCP, raw (20 TP)
+A: 4 spades, 8-10 HCP (20 TP)
 Q: 1S, 2NT
 F1: [a]strong_fit[/a]
 A: 4+ spades, 11+ HCP (23 TP)
 Q: 1S, 2H/3C/3D
 F1: [a]raw[/a]
-A: 6+ in suit, 8-10 HCP, <4 spades, raw (20 TP)
+A: 6+ in suit, 8-10 HCP, <4 spades (20 TP)
 Q: 1S, 3S
 F1: [a]raw[/a]
-A: 5 spades, 8-10 HCP, raw (20 TP)
+A: 5 spades, 8-10 HCP (20 TP)
 Q: 1S, 3NT
-F1: with 16+ HCP bid 2D, [a]relay[/a]
+F1: [a]threeNT|3NT[/a]; with 16+ HCP bid 2D, [a]relay[/a]
 A: 13-15 HCP, <4 spades, 3433, 3343 or 3334 (25 TP)
 Q: 1S, 4C/4D/4H
 F1: [a]splinter[/a]
 A: 4+ spades, 13+ HCP, splinter (25 TP)
 Q: 1S, 4S
 F1: [a]raw[/a]
-A: 6+ spades, 8-10 HCP, raw (20 TP)
+A: 6+ spades, 8-10 HCP (20 TP)
 
 # 1 bid after 1NT
 Q: 1NT, pass
@@ -182,7 +181,7 @@ A: 13+ HCP (25 TP)
 Q: 1NT, 2H/2S
 A: 6+ in suit, 0-10 HCP
 Q: 1NT, 2NT
-F1: [a]two_choice[/a], forcing
+F1: [a]two_choice[/a]
 A: 4+ in both minors, two-choice, 0-10 HCP
 Q: 1NT, 3C/3D
 F1: [a]raw[/a]
@@ -216,8 +215,8 @@ Q: 2C, 3D/3H/3S
 F1: [a]splinter[/a]
 A: 3+ clubs, 13+ HCP, (splinter, 25 TP)
 Q: 2C, 3NT
-F1: [a]to_play[/a]
-A: 13+ HCP, all suits guarded (25 TP)
+F1: [a]threeNT|3NT[/a]
+A: 13-15 HCP, all suits guarded (25 TP)
 
 # 1 bid after 2D
 Q: 2D, 2H/2S
@@ -241,7 +240,8 @@ Q: 2D, 3H/3S/4C
 F1: [a]splinter[/a]
 A: 3+ diamonds, 13+ HCP, (splinter, 25 TP)
 Q: 2C, 3NT
-A: 13+ HCP, all suits guarded (25 TP)
+F1: [a]threeNT|3NT[/a]
+A: 13-15 HCP, all suits guarded (25 TP)
 
 # responses to 1NT
 Q: 1C, 1NT; 2C
@@ -266,11 +266,11 @@ A: <14 HCP (<25 TP)
 Q: 1H, 2C; 2H
 F1: [a]responses_to_relay[/a]
 A: 5+ hearts, 14+ HCP (25 TP)
-Q: 1H, 2D, 2S
+Q: 1H, 2D; 2S
 F1: [a]responses_to_relay[/a]
 A: 4 hearts, 5+ spades
 Q: 1H, 2D; 3NT
-F1: [a]to_play[/a]; [a]responses_to_relay[/a]; with 4+ minor, bid 2NT as partner unlimited
+F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]; with 4+ minor, bid 2NT as partner unlimited
 A: 4 hearts, <5 spades, no 4+ minor, all suits guarded (25 TP)
 Q: 1H, 2C; 3C
 F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
@@ -285,12 +285,12 @@ A: 14+ HCP, 4 hearts, <5 spades, waiting
 Q: 1S, 2D; 2H
 F1: may have 5+ spades; [a]responses_to_relay[/a]
 A: 3 hearts
-Q: 1S, 2C, 2S
+Q: 1S, 2C; 2S
 F1: [a]responses_to_relay[/a]
-A: 5+ spades, 14+ HCP
+A: 5+ spades, 14+ HCP, <3 hearts
 Q: 1S, 2C; 3NT
-F1: [a]to_play[/a]; [a]responses_to_relay[/a]
-A: 14+ HCP, 4 spades, <5 hearts, all suits guarded (25 TP)
+F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]
+A: 14+ HCP, 4 spades, <3 hearts, all suits guarded (25 TP)
 Q: 1S, 2D; 3C
 F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
 A: 4+ clubs, 4 spades, <3 hearts
@@ -328,7 +328,7 @@ A: 14+ HCP, splinter (25 TP)
 
 # meaning of 4C/4D
 Q: 4C
-F1: [a]preempt[/a], [a]disturbed[/a], [a]raw[/a]
+F1: [a]preempt[/a], [a]raw[/a]
 A: 8 clubs, <20pp, 6-9 HCP
 Q: 2C, 4C
 A: 4 clubs, 8-10 HCP
@@ -391,14 +391,14 @@ A: 3 hearts
 Q: 1NT, 2D; 2H, 2NT
 A: 5+ hearts
 Q: 1NT, 2D; 2H, 2NT; 3NT
-F1: [a]to_play[/a]; partner to choose between pass and 4H
+F1: [a]threeNT|3NT[/a]; partner to choose between pass and 4H
 A: alternative place to play
 # page 56
 Q: 1D, 1S; 2D
 F1: [a]raw[/a]
 A: 5+ diamonds, 4 clubs, <4 spades (15 TP)
 Q: 1D, 1S; 2D, 3NT
-F1: [a]to_play[/a]
+F1: [a]threeNT|3NT[/a]
 A: all suits covered (25 TP)
 Q: 1D, 1S; 2S
 A: 4+ spades
@@ -717,7 +717,7 @@ Q: 1H, 2NT; 3D, 3H
 F1: [a]to_play[/a]
 A: to play
 Q: 1H, 2NT; 3D, 3NT
-F1: [a]to_play[/a], but partner can return to hearts
+F1: [a]threeNT|3NT[/a]; partner can return to hearts
 A: all suits guarded
 Q: 1H, 2NT; 3D, 4C
 F1: [a]values_for_5[/a]
@@ -732,7 +732,7 @@ Q: 1H, 2D; 2S, 3C
 F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
 A: 4+ clubs, strong (17+ HCP) or skew, <3 spades
 Q: 1H, 2D; 2S, 3C; 3NT
-F1: [a]to_play[/a]
+F1: [a]threeNT|3NT[/a]
 A: all suits guarded
 Q: 1H, 2D; 2S, 3C; 3NT, 4C
 F1: [a]suit_setter[/a]
@@ -804,7 +804,7 @@ Q: 1S, (2C), 2NT, (3C); 3S
 F1: [a]to_play[/a]
 A: to play, <14 HCP, 5+ spades
 Q: 1S, (2C), 2NT, (3C); 3NT
-F1: [a]to_play[/a]
+F1: [a]threeNT|3NT[/a]
 A: 14+ HCP, at least 2 club guards
 
 # page 149

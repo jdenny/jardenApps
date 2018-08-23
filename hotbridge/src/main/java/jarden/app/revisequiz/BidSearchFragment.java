@@ -122,6 +122,18 @@ public class BidSearchFragment extends Fragment
             this.notesTextView.setVisibility(View.GONE);
         }
     }
+    // TODO: use this instead of bidSearchStack
+    private QuestionAnswer getBackBid(String bid) {
+        int lastComma = bid.lastIndexOf(',');
+        int lastColon = bid.lastIndexOf(';');
+        int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
+        if (lastSeparator == -1) return null;
+        String backQuestion = bid.substring(0, lastSeparator);
+        for (QuestionAnswer qa: this.qaList) {
+            if (backQuestion.equals(qa.question)) return qa;
+        }
+        throw new IllegalArgumentException("no backBid for bid " + bid);
+    }
     /*
     Get all responses to supplied bid. If bid is null, get all opening bids.
      */

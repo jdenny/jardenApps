@@ -28,7 +28,7 @@
         defensive (aka values or penalties) double, where we expect to defend and
         subsequently defeat the contract.
         \n [b]Redouble[/b] same as [a]takeout_double[/a] i.e. tells partner to bid
-        something else
+        something else; bidding is now [a]disturbed[/a]
     </string>
     <string name="guard">Something to stop them running a suit,
         e.g. A or KQ or QJ10. Often used to explore 3NT
@@ -63,7 +63,7 @@
         \n +3: 2 or 5
     </string>
     <string name="preempt">
-        Weak hand with long suit; bid to block opponents.
+        Weak hand with long suit; bid to block opponents; [a]to_play[/a]
     </string>
     <string name="queen_ask">
         After response to keycard ask, lowest side-suit = queen ask
@@ -75,7 +75,9 @@
         \n * no trumps = no kings that could be mentioned
         \n * bid of suit other than trumps = king in that suit
     </string>
-    <string name="raw">now given full description of hand</string>
+    <string name="raw">
+        given full description of hand; bidding is now [a]disturbed[/a]
+    </string>
     <string name="relay">
         2C or 2D as a response. Relay is always available to an unlimited hand;
         never available to limited hand. Relay indicates:
@@ -102,7 +104,7 @@
         \n[b]2H/2S[/b] = &lt;5 HCP; 6+ in suit (with 5+ HCP bid 1 of major)
         \n[b]1H[/b] = 4+ hearts
         \n[b]1S[/b] = 4+ spades, &lt;4 hearts
-        \n[b]2C/2D[/b] = [a]relay[/a] 23+ TP, no 4+ major
+        \n[b]2C/2D[/b] = [a]relay[/a] 8+ HCP, no 4+ major
         \n[b]4C/4D[/b] = [a]suit_setter[/a]
         \n[b]2NT[/b] = [a]two_choice[/a], no 4+ major, 5+ in both minors, 5-7 HCP
         \n[b]3C/3D[/b] = 6+ in suit, no 4+ major, 5-7 HCP, [a]raw[/a]
@@ -130,7 +132,6 @@
     <string name="splinter">
         Neutral auction: jump shift opposite natural suit bid below 3-level, to another
         suit not previously shown that commits us to play at 4-level
-        suit
         \n1H/2H, 3S/4C/4D
         \n1S/2S, 4C/4D/4H
         \n2C, 3D/3H/3S
@@ -155,10 +156,10 @@
         fit auction). If [a]compelled[/a] or bidder unlimited, then suit-setter
         is forcing, otherwise not forcing.
     </string>
-    <string name="to_play">Not forcing; partner happy to play in this contract,
-        but you may bid on.
+    <string name="to_play">Not forcing; bidder happy to play in this contract,
+        but partner may bid on.
     </string>
-    <string name="two_choice">Partner to choose from 2 lowest unshown suits.
+    <string name="two_choice">Partner to choose from 2 lowest unshown suits; forcing.
     </string>
     <string name="values_for_5">
         In fit auction, not jump, lowest available side suit at 4-level (usually 4C).
@@ -170,5 +171,13 @@
         non-compelled is a waiting bid; i.e. isn’t adding anything, but
         partner can’t pass, so asking partner to make the next move. In
         response to [a]relay[/a], unable to bid a suit.
+    </string>
+    <string name="threeNT">
+        3NT is always [a]to_play[/a], and is bid when we have at least
+        one [a]guard[/a] in every suit, enough points for game
+        but not enough to explore a slam - so 25-27 TP. If we don\'t have
+        9 winners off the top, and they have bid a suit, we need 2 guards
+        in that suit. Partner may choose to return to a previously agreed
+        suit, or with extra values explore a slam.
     </string>
 </resources>

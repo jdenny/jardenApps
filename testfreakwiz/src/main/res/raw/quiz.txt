@@ -1,8 +1,15 @@
-Q: what is the capital of Norway
-A: Oslo
-Q: length of hypotenuse of sides 3 and 4
-F1: [a]pythagoras[/a] theorem: 5 = sqrt(3*3 + 4*4)
-A: 5
-Q: Spanish for cat
-F1: female cat would be la gata
-A: gato
+Q: God so loved the world
+F1: that he gave his only begotten son
+A: John 3:16
+Q: God will wipe out every tear
+F1: from their eyes, and death will be no more
+A: Revelation 21:4
+Q: This good news of the kingdom
+F1: will be preached in all the inhabited earth
+A: Matthew 24:14
+Q: Trust in Jehovah with all your heart
+F1: and do not rely on your own understanding
+A: Proverbs 3:5
+Q: Do not be anxious over anything
+F1: [a]Philippians4_6[/a]
+A: Philippians 4:6

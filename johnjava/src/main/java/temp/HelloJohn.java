@@ -1,11 +1,6 @@
 package temp;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 /**
  * Created by john.denny@gmail.com on 22/06/2018.
@@ -14,21 +9,21 @@ import java.util.ArrayList;
 public class HelloJohn {
     public static void main(String[] args) throws IOException {
         System.out.println("hello John");
-        File file = new File("hotbridge/src/main/res/raw/reviseit.txt");
-        System.out.println("exists=" + file.exists());
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
-        BufferedReader reader = new BufferedReader(isr);
-        ArrayList<String> lines = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            lines.add(line);
-        }
-        String regex = "Q: 1C, 1H.*";
-        for (String lineA: lines) {
-            if (lineA.matches(regex)) {
-                System.out.println(lineA);
-            }
+        new HelloJohn();
+    }
+    public HelloJohn() {
+        String question = "1D, 1S; 2S, 4H; 4NT, 5D; 5H, 6C";
+        String backBid = question;
+        while ((backBid = back(backBid)) != null) {
+            System.out.println(backBid);
         }
         System.out.println("adios amigo");
+    }
+    private String back(String bid) {
+        int lastComma = bid.lastIndexOf(',');
+        int lastColon = bid.lastIndexOf(';');
+        int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
+        if (lastSeparator < 0) return null;
+        else return bid.substring(0, lastSeparator);
     }
 }

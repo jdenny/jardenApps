@@ -81,6 +81,7 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.strong_fit,
             R.string.strong_or_skew,
             R.string.suit_setter,
+            R.string.threeNT,
             R.string.to_play,
             R.string.two_choice,
             R.string.values_for_5,

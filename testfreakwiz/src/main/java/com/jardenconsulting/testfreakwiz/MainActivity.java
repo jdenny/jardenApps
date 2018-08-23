@@ -18,7 +18,7 @@ import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 public class MainActivity extends AppCompatActivity implements FreakWizFragment.Quizable {
     public static final String TAG = "TestFreakWiz";
     private static final int[] notesResIds = {
-            R.string.pythagoras
+            R.string.Philippians4_6
     };
 
     private PresetQuiz presetQuiz;
