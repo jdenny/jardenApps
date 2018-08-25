@@ -123,6 +123,7 @@
     <string name="sandpit">Jump from 1-level to new suit; special case of [a]raw[/a]
         bid; 6-card suit, weak, preemptive
     </string>
+    <string name="skew">Hand containing singleton or void.</string>
     <string name="strong_or_skew">
         Used when bidding 3C or 3D in response to [a]relay[/a].
         Skew is hand containing singleton or void; strong means
@@ -147,7 +148,7 @@
     </string>
     <string name="strong_fit">
         2NT opposite natural suit bid and unlimited or [a]compelled[/a].
-        [b]Meaning[/b]: 8 trumps between us, 23 TP
+        [b]Meaning[/b]: 8 trumps between us, 23 TP; forcing
     </string>
     <string name="suit_setter">
         Long, strong suit, not needing support from partner; usually at least
@@ -159,7 +160,8 @@
     <string name="to_play">Not forcing; bidder happy to play in this contract,
         but partner may bid on.
     </string>
-    <string name="two_choice">Partner to choose from 2 lowest unshown suits; forcing.
+    <string name="two_choice">
+        Partner to choose from 2 lowest unshown suits; forcing.
     </string>
     <string name="values_for_5">
         In fit auction, not jump, lowest available side suit at 4-level (usually 4C).

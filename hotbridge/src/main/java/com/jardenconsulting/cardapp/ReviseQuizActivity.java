@@ -77,6 +77,7 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.responses_to_1D,
             R.string.responses_to_1NT,
             R.string.sandpit,
+            R.string.skew,
             R.string.splinter,
             R.string.strong_fit,
             R.string.strong_or_skew,
