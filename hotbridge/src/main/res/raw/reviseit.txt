@@ -9,7 +9,7 @@ A: 4+ hearts & 20-22pp or 5+ hearts & 23-24pp
 Q: 1S
 A: 4+ spades & 20-22pp or 5+ spades & 23-24pp; <4 hearts
 Q: 1NT
-A: 20-22pp, no 4+ major, no 6+ minor, not 5-5 in minors
+A: 20-22pp, no 4+ major, not 5-5 in minors, no 6+ minor
 Q: 2C
 A: 6+ clubs, 20-22pp, no 4+ major, <5 diamonds
 Q: 2D
@@ -71,7 +71,7 @@ F1: [a]responses_to_1D[/a], forcing
 A: 4+ spades, 0+ HCP, <4 hearts (15 TP)
 Q: 1D, 1NT
 F1: [a]responses_to_1D[/a]
-A: 0-7 HCP, no 4+ major, not 5+ in both minors, not {6+ in minor & 5-7 HCP}
+A: 0-7 HCP, no 4+ major, not {5+ in both minors & 5-7 HCP}, not {6+ minor & 5-7 HCP}
 Q: 1D, 2C
 F1: invitational [a]relay[/a]; [a]responses_to_1D[/a]
 A: 8-9 HCP, no 4+ major (23 TP)

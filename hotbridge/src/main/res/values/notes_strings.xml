@@ -101,22 +101,23 @@
     </string>
     <string name="responses_to_1D">
         [b]3H/3S[/b] = [a]suit_setter[/a]
-        \n[b]2H/2S[/b] = &lt;5 HCP; 6+ in suit (with 5+ HCP bid 1 of major)
         \n[b]1H[/b] = 4+ hearts
         \n[b]1S[/b] = 4+ spades, &lt;4 hearts
         \n[b]2C/2D[/b] = [a]relay[/a] 8+ HCP, no 4+ major
         \n[b]4C/4D[/b] = [a]suit_setter[/a]
         \n[b]2NT[/b] = [a]two_choice[/a], no 4+ major, 5+ in both minors, 5-7 HCP
         \n[b]3C/3D[/b] = 6+ in suit, no 4+ major, 5-7 HCP, [a]raw[/a]
-        \n[b]1NT[/b] = 0-7 HCP, no 4+ major, no {6+ minor and 5-7 HCP}
+        \n[b]2H/2S[/b] = 0-4 HCP; 6+ in suit (with 5+ HCP bid 1 of major)
+        \n[b]4H/4S/5C/5D[/b] = [a]preempt[/a], 0-10 HCP
+        \n[b]1NT[/b] = 0-7 HCP, no 4+ major, not {5+ in both minors and 5-7 HCP}, not {6+ minor and 5-7 HCP}
         \n[b]pass[/b] = 0-4 HCP (free bid)
     </string>
     <string name="responses_to_1NT">
         [b]2C/2D[/b] = [a]relay[/a] 11+ HCP
+        \n[b]3H/3S/4C/4D[/b] = [a]suit_setter[/a]
         \n[b]2H/2S[/b] = 6+ in suit, 0-10 HCP
         \n[b]3C/3D[/b] = 6+ in suit, 8-10 HCP
         \n[b]2NT[/b] = 4+ in both minors, 0-10 HCP
-        \n[b]3H/3S/4C/4D[/b] = [a]suit_setter[/a]
         \n[b]4H/4S/5C/5D[/b] = [a]preempt[/a], 0-10 HCP
         \n[b]pass[/b] = none of above
     </string>
