@@ -108,7 +108,7 @@
         \n[b]2NT[/b] = [a]two_choice[/a], no 4+ major, 5+ in both minors, 5-7 HCP
         \n[b]3C/3D[/b] = 6+ in suit, no 4+ major, 5-7 HCP, [a]raw[/a]
         \n[b]2H/2S[/b] = 0-4 HCP; 6+ in suit (with 5+ HCP bid 1 of major)
-        \n[b]4H/4S/5C/5D[/b] = [a]preempt[/a], 0-10 HCP
+        \n[b]4H/4S/5C/5D[/b] = [a]preempt[/a], 0-7 HCP
         \n[b]1NT[/b] = 0-7 HCP, no 4+ major, not {5+ in both minors and 5-7 HCP}, not {6+ minor and 5-7 HCP}
         \n[b]pass[/b] = 0-4 HCP (free bid)
     </string>
@@ -128,8 +128,8 @@
     <string name="strong_or_skew">
         Used when bidding 3C or 3D in response to [a]relay[/a].
         Skew is hand containing singleton or void; strong means
-        enough total points (TP) to reach 5 in minor, should we
-        so choose - nominally 29 HCP.
+        maybe enough total points to reach 5 in minor (29 TP), should we
+        so choose - nominally at least 27.
     </string>
     <string name="splinter">
         Neutral auction: jump shift opposite natural suit bid below 3-level, to another
@@ -158,6 +158,15 @@
         fit auction). If [a]compelled[/a] or bidder unlimited, then suit-setter
         is forcing, otherwise not forcing.
     </string>
+    <string name="threeNT">
+        3NT is always [a]to_play[/a], and is bid when we have at least
+        one [a]guard[/a] in every suit, not 8-cards in a major between us,
+        enough points for game
+        but not enough to explore a slam - so 25-27 TP. If we don\'t have
+        9 winners off the top, and they have bid a suit, we need 2 guards
+        in that suit. Partner may choose to return to a previously agreed
+        suit, or with extra values explore a slam.
+    </string>
     <string name="to_play">Not forcing; bidder happy to play in this contract,
         but partner may bid on.
     </string>
@@ -174,13 +183,5 @@
         non-compelled is a waiting bid; i.e. isn’t adding anything, but
         partner can’t pass, so asking partner to make the next move. In
         response to [a]relay[/a], unable to bid a suit.
-    </string>
-    <string name="threeNT">
-        3NT is always [a]to_play[/a], and is bid when we have at least
-        one [a]guard[/a] in every suit, enough points for game
-        but not enough to explore a slam - so 25-27 TP. If we don\'t have
-        9 winners off the top, and they have bid a suit, we need 2 guards
-        in that suit. Partner may choose to return to a previously agreed
-        suit, or with extra values explore a slam.
     </string>
 </resources>
