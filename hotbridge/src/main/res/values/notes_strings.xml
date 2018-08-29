@@ -124,6 +124,12 @@
     <string name="sandpit">Jump from 1-level to new suit; special case of [a]raw[/a]
         bid; 6-card suit, weak, preemptive
     </string>
+    <string name="side_suit">
+        In major fit auction, bid of a side-suit at the 3 level shows extra tricks,
+        often 4+ in suit with missing honours; usually says enough for game, and
+        have we got enough for a slam. In minor fit auction, shows a guard in that
+        suit, exploring 3NT.
+    </string>
     <string name="skew">Hand containing singleton or void.</string>
     <string name="strong_or_skew">
         Used when bidding 3C or 3D in response to [a]relay[/a].

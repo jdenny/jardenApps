@@ -752,9 +752,6 @@ A: <14 HCP (decline invitation)
 Q: 2D, 2S; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]
 A: 3+ diamonds, autofit, keycard ask (25 TP)
-Q: 2D, 2S; 3S
-F1: [a]compelled[/a]
-A: 3+ spades, 14+ HCP (accept invitation, compelled, 25 TP)
 
 # page 84
 Q: 2C, 2S; 3S
@@ -770,7 +767,7 @@ A: 0-3 HCP, no 6+ major
 
 # page 86
 Q: 1C, (1S), double
-F1: replacement for 1 heart
+F1: 1C/1D, (1H/1S), double is replacement for 1 heart
 A: 4+ hearts, 4+ HCP
 Q: 1C, (1S), double, (pass); 2NT
 F1: [a]strong_fit[/a] in hearts
@@ -778,12 +775,18 @@ A: 4+ hearts, 19+ HCP (23 TP)
 Q: 1D, (1H), double
 F1: replacement for 1 heart
 A: 4+ hearts, 5+ HCP
+
+# page 87
+Q: 1H, (1S), double
+F1: replacement for 1 spade
+A: 4+ spades, 8+ HCP, <4 hearts
 Q: 1D, (1H), 1S
-F1: may have 4+ hearts
-A: 4+ spades, 5+ HCP
+A: 4+ spades, 5+ HCP, <4 hearts
 Q: 1D, (1H), 1NT
-F1: with <5 HCP pass; with >7 HCP, bid [a]relay[/a]
+F1: with <5 HCP pass; with 8+ HCP, bid [a]relay[/a]
 A: 5-7 HCP, no 4+ major, no 6+ minor
+
+# page 88
 Q: 1H, (double), redouble
 F1: too weak to play in 1H doubled
 A: weak; better places to play
@@ -847,6 +850,7 @@ A: asks partner to bid best suit (except hearts)
 # page 124
 Q: 1H, 1S; 2S, 2NT
 F1: [a]waiting[/a]
+# are these points correct?
 A: 13-15 HCP, waiting
 Q: 1H, 1S; 2S, 2NT; 3D
 A: 4+ diamonds
@@ -865,8 +869,8 @@ Q: 1C, 2D; 2S, 2NT; 4H
 F1: [a]splinter[/a], already agreed spades
 A: splinter (25 TP)
 Q: 2D, 2NT; 3H
-F1: exploring 3NT
-A: extra tricks, guard in hearts
+F1: [a]side_suit[/a]
+A: guard in hearts
 
 # page 128
 Q: 1C, 2D; 2S, 2NT; 4H, 4S
@@ -881,8 +885,8 @@ A: 0 or 3 keycards
 
 # page 129
 Q: 1H, 2NT; 3D
-F1: exploring slam potential
-A: 4+ diamonds with missing honours, extra strength
+F1: [a]side_suit[/a]
+A: 4+ diamonds
 Q: 1H, 2NT; 3D, 3H
 F1: [a]to_play[/a]
 A: to play
@@ -925,15 +929,16 @@ Q: 1H, (pass), 2NT, (4S); 4NT
 F1: [a]keycard_ask[/a]; only side suit available
 A: keycard ask
 Q: 1C, 1H; 2H, 3C
-F1: exploring slam potential
-A: 4+ clubs, extra strength
+F1: [a]side_suit[/a]
+A: 4+ clubs
 Q: 1C, 1H; 2H, 3C; 4C
 F1: [a]values_for_5[/a]
 A: values for 5
 
 # page 131
 Q: 1NT, 2D; 2S, 3C
-A: 4+ clubs, <5 spades
+F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+A: 4+ clubs and strong (15+ HCP) or skew, <5 spades
 Q: 1NT, 2D; 2S, 3C; 4C
 F1: limited, else would bid [a]autofit[/a]
 A: 4+ clubs, limited
@@ -951,8 +956,8 @@ A: 0 or 3 keycards
 
 #page 133
 Q: 2C, 2NT; 3H
-F1: exploring 3NT
-A: guard, extra values
+F1: [a]side_suit[/a]
+A: guard in hearts
 Q: 2C, 2NT; 3H, 4H
 F1: [a]keycard_ask[/a]
 A: keycard ask
@@ -966,7 +971,7 @@ F1: [a]strong_fit[/a]; not affected by their 2C which makes the auction [a]distu
 A: 4+ spades, 11+ HCP (23 TP)
 Q: 1S, (2C), 2NT, (3C); 3S
 F1: [a]to_play[/a]
-A: to play, <14 HCP, 5+ spades
+A: to play, <14 HCP
 Q: 1S, (2C), 2NT, (3C); 3NT
 F1: [a]threeNT|3NT[/a]
 A: 14+ HCP, at least 2 club guards
@@ -989,7 +994,7 @@ Q: 1H, 2C; 2D, 2S
 F1: 2C [a]relay[/a] denies 4 spades
 A: 3 spades
 Q: 1H, 2C; 2D, 2S; 4S
-F1: already shown <14 HCP, so must have skew
+F1: [a]to_play[/a]; already shown <14 HCP, so must have skew
 A: 5+ spades
 
 # page 152
