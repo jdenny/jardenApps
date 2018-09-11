@@ -320,7 +320,7 @@ A: 4+ spades, 21+ HCP, splinter (25 TP)
 
 # (page 66)
 Q: 1C, 2C; 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (20+ HCP) or skew, <5 spades, <5 hearts
 
 # page 125
@@ -329,7 +329,7 @@ F1: [a]responses_to_relay[/a]
 A: 5+ spades, <5 hearts
 # (page 68)
 Q: 1C, 2D; 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (18+ HCP) or skew, no 5+ major
 # (page 75)
 Q: 1C, 2D; 4D
@@ -351,7 +351,7 @@ Q: 1D, 1H; 2H
 A: 4+ hearts
 Q: 1D, 1H; 2NT
 F1: [a]two_choice[/a]
-A: 5+ in both minors, no 4+ major
+A: 5+ in both minors
 Q: 1D, 1H; 3C
 F1: [a]raw[/a]
 A: 6+ clubs, no 4+ major, <4 diamonds
@@ -391,6 +391,7 @@ F1: [a]raw[/a]
 A: 5+ hearts, 4+ clubs, <4 spades
 Q: 1H, 1S; 2D
 F1: [a]raw[/a]
+A: 5+ hearts, 4+ diamonds, <4 spades
 Q: 1H, 1S; 2H
 F1: [a]raw[/a]
 A: 6+ hearts, <4 spades
@@ -518,10 +519,10 @@ Q: 1H, 2D; 3NT
 F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]; with 4+ minor, bid it or 2NT as partner unlimited
 A: 4 hearts, <5 spades, no 4+ minor, all suits guarded (25 TP)
 Q: 1H, 2C; 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, 4 hearts, strong (16 HCP) or skew, <5 spades
 Q: 1H, 2D; 3D
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ diamonds, 4 hearts, strong (14+ HCP) or skew, <5 spades, <4 clubs
 Q: 1H, 2C; 2NT
 F1: [a]responses_to_relay[/a]
@@ -537,10 +538,10 @@ Q: 1S, 2C; 3NT
 F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]
 A: 14+ HCP, 4 spades, <3 hearts, all suits guarded (25 TP)
 Q: 1S, 2D; 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, 4 spades, strong (14+ HCP) or skew, <3 hearts
 Q: 1S, 2C; 3D
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ diamonds, strong (16 HCP) or skew, 4 spades, <3 hearts, <4 clubs
 Q: 1S, 2D; 2NT
 F1: <2 hearts would be skew, so would bid 3C/3D as must have 4+ minor; [a]responses_to_relay[/a]
@@ -599,7 +600,7 @@ F1: [a]to_play[/a]
 A: to play
 # page 52
 Q: 1NT, 2D; 2H, 2NT
-F1: [a]strong_fit[a], stronger than 3H
+F1: [a]strong_fit[/a], stronger than 3H
 A: 5+ hearts
 Q: 1NT, 2D; 2H, 2NT; 3NT
 F1: [a]threeNT|3NT[/a]; partner to choose between pass and 4H
@@ -661,15 +662,15 @@ Q: 1H, 1S; 1NT, 2D
 F1: compelling [a]relay[/a]
 A: 13+ HCP
 Q: 1H, 1S; 1NT, 2D; 2NT
-F1: [a]responses_to_relay[/a]; [a]strong_or_skew[/a]
+F1: [a]responses_to_relay[/a]
 A: 4 hearts, 2 spades, no {4+ minor plus strong or skew}
 Q: 1C, 1S; 2D, 3C
-F1: [a]strong_or_skew[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (6+ HCP) or skew, 4 spades, <3 hearts
 
 # page 68
 Q: 1H, 1S; 1NT, 2D; 3D
-F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H; [a]strong_or_skew[/a]
+F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H; [a]responses_to_relay[/a]
 A: 4+ diamonds, <3 spades, 4 hearts, strong (14+ HCP) or skew, <4 clubs
 Q: 1C, 2D; 3C, 4C
 F1: [a]to_play[/a]
@@ -686,7 +687,7 @@ A: to play
 
 # page 71
 Q: 1NT, 2D; 2H, 3C
-F1: [a]strong_or_skew[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (15+ HCP) or skew, no 5+ major
 Q: 1NT, 2D; 2H, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
@@ -703,7 +704,7 @@ Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]
 A: 4 hearts, 2 spades, no {4+ minor plus strong or skew}
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (14+ HCP) or skew
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
@@ -720,7 +721,7 @@ Q: 1H, 2D; 2H
 F1: [a]responses_to_relay[/a]
 A: 5+ hearts
 Q: 1H, 2D; 2H, 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (15+ HCP) or skew, <3 hearts, <3 spades
 Q: 1H, 2D; 2H, 3C; 3H
 F1: [a]suit-setter[/a]; forcing as [a]compelled[/a]
@@ -903,7 +904,7 @@ Q: 1H, 2NT; 3D, 4H
 F1: [a]to_play[/a]
 A: to play
 Q: 1H, 2D; 2S, 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (15+ HCP) or skew, <3 spades
 Q: 1H, 2D; 2S, 3C; 3NT
 F1: [a]threeNT|3NT[/a]
@@ -937,7 +938,7 @@ A: values for 5
 
 # page 131
 Q: 1NT, 2D; 2S, 3C
-F1: [a]strong_or_skew[/a]; [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs and strong (15+ HCP) or skew, <5 spades
 Q: 1NT, 2D; 2S, 3C; 4C
 F1: limited, else would bid [a]autofit[/a]
@@ -1001,4 +1002,7 @@ A: 5+ spades
 Q: (1S), double, (pass), 2C
 A: 4+ clubs, <5 HCP, best suit
 
-
+# not in book
+Q: 1C, (1NT), 2D
+F1: not [a]relay[/a] as [a]disturbed[/a]
+A: no 4+ major, 4+ diamonds, <4 clubs

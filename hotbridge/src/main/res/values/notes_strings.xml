@@ -79,12 +79,13 @@
         given full description of hand; bidding is now [a]disturbed[/a]
     </string>
     <string name="relay">
-        2C or 2D as a response. Relay is always available to an unlimited hand;
-        never available to limited hand. Relay indicates:
+        2C or 2D as a response. Relay only available when bidder is unlimited, and
+        the auction is not [a]disturbed[/a]. Relay indicates:
         \n * no 4-4 fit in either major
         \n * enough for game (2D, [a]compelled[/a], 25 TP) or nearly enough for game
         (2C, invitational, 23-24 TP)
         \n * now looking for 5-3 fit in a major, or 4-4 fit in minor
+        \n[a]responses_to_relay[/a]
     </string>
     <string name="responses_to_relay">
         [b]2D[/b] (i.e. after 2C invite) = invitation declined, less than 25 TP; all other
@@ -98,6 +99,7 @@
         bid 3C with 4+ in both minors
         \n [b]2NT[/b] = [a]waiting[/a], no major fit, no {4+ minor plus [a]strong_or_skew[/a]};
         limiting to game values, as otherwise would bid a minor or jump in no-trumps
+        \n[a]relay[/a]
     </string>
     <string name="responses_to_1D">
         [b]3H/3S[/b] = [a]suit_setter[/a]

@@ -44,6 +44,7 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
+* add new fit bids from google doc
 * Add to document: meaning of 3H/3S; comprehensive responses to fit
 * restart in quiz if previously in quiz
 * Replace bid search stack with remove last bid. Could then ask for responses
