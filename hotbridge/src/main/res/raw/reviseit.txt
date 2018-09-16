@@ -619,9 +619,9 @@ Q: 1D, 1S; 2S, 4H; 4NT, 5D
 A: 1 or 4 keycards
 Q: 1D, 1S; 2S, 4H; 4NT, 5D; 5H
 F1: [a]queen_ask[/a]
-A: have you got the queen of hearts?
+A: have you got the spade queen?
 Q: 1D, 1S; 2S, 4H; 4NT, 5D; 5H, 6C
-A: yes, I have heart queen, plus club king
+A: yes, I have spade queen, plus club king
 # page 61
 Q: 1C, 1H; 1S, 2D
 F1: compelling [a]relay[/a]
@@ -641,7 +641,7 @@ F1: with 7+ HCP bid [a]relay[/a]
 A: 3 hearts, 4-6 HCP
 # page 63
 Q: 1C, 1D; 2D, 3C
-F1: [a]skew[/a]
+F1: [a]responses_to_relay[/a]
 A: 4+ clubs, no 4+ major, skew
 Q: 1C, 1D; 2D, 3C; 3D
 A: 4+ diamonds, <4 clubs

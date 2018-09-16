@@ -49,6 +49,7 @@ TODO:
 * restart in quiz if previously in quiz
 * Replace bid search stack with remove last bid. Could then ask for responses
 to current bid.
+* for multi-bid auctions, add Reveal button, to show meaning of all bids in auction
 
 * Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
