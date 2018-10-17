@@ -75,7 +75,6 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
                 true, null, false);
         askQuestion();
     }
-
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -86,7 +85,6 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         } else if (id == R.id.incorrectButton) {
             selfMarkButton(false);
         }
-
     }
     public void askQuestion() {
         String question;
@@ -107,17 +105,26 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         this.notesTextView.setText("");
         showButtonLayout();
         showStats();
+        resetListView();
+    }
+
+    /**
+     * Override these two methods subclasses if necessary
+     */
+    public void setListView() {
+    }
+    public void resetListView() {
     }
     private void selfMarkButton(boolean isCorrect) {
         this.reviseItQuiz.setCorrect(isCorrect);
         showButtonLayout();
         askQuestion();
     }
-
     private void goPressed() {
         QuestionAnswer currentQA = reviseItQuiz.getCurrentQuestionAnswer();
         showAnswer(currentQA);
         showSelfMarkLayout();
+        setListView();
     }
     private void showAnswer(QuestionAnswer qa) {
         this.answerTextView.setText(qa.answer);
@@ -127,7 +134,6 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         reviseItQuiz.setQuizMode(PRACTICE);
         getActivity().setTitle(R.string.practiceMode);
     }
-
     private void showSelfMarkLayout() {
         this.goButton.setVisibility(View.GONE);
         this.selfMarkLayout.setVisibility(View.VISIBLE);

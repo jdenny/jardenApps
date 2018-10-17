@@ -44,15 +44,16 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
+* for multi-bid auctions, add Reveal button, to show meaning of all bids in auction
 * add new fit bids from google doc
+* show bid sequence in columns
 * Add to document: meaning of 3H/3S; comprehensive responses to fit
-* restart in quiz if previously in quiz
 * Replace bid search stack with remove last bid. Could then ask for responses
 to current bid.
-* for multi-bid auctions, add Reveal button, to show meaning of all bids in auction
-
 * Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
+* add spy glass icon for bid search
+* mark all the raw bids
  */
 public class ReviseQuizActivity extends AppCompatActivity
         implements FreakWizFragment.Quizable, IntegerDialog.UserSettingsListener {

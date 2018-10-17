@@ -20,14 +20,16 @@
     <string name="me">Me</string>
     <string name="menuTwoPlayer">2-player</string>
     <string name="north">North</string>
-    <string name="notes">Notes</string>
     <string name="quiz">Quiz</string>
     <string name="reviseQuizActivity">ReviseQuizActivity</string>
+    <string name="setCurrentIndex">Set Current Index</string>
     <string name="south">South</string>
     <string name="us">Us</string>
     <string name="west">West</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="setCurrentIndex">Set Current Index</string>
+    <string-array name="spinnerValues">
+        <item>Notes</item>
+        <item>Responses</item>
+        <item>Itemise</item>
+    </string-array>
 </resources>

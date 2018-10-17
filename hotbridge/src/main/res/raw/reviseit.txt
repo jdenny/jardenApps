@@ -115,7 +115,7 @@ F1: [a]raw[/a]
 A: 4 hearts, 8-10 HCP (20 TP)
 Q: 1H, 2S
 F1: [a]raw[/a]
-A: 6+ spades, 5-7 HCP, <4 hearts (17 TP)
+A: 6+ spades, 5-7 HCP (17 TP)
 Q: 1H, 2NT
 F1: [a]strong_fit[/a]
 A: 4+ hearts, 11+ HCP (23 TP)
@@ -246,8 +246,10 @@ A: 13-15 HCP, all suits guarded (25 TP)
 # 2 bids after 1C
 # (page 63)
 Q: 1C, 1D; 1H
+F1: forcing
 A: 4+ hearts
 Q: 1C, 1D; 1S
+F1: forcing
 A: 4+ spades, <4 hearts
 Q: 1C, 1D; 1NT
 A: <23 HCP, no 4+ major, no 6+ minor, not 5+ in both minors
@@ -457,6 +459,9 @@ A: no 6+ suit, not 4+ in both minors, not {5+ spades and 4+ minor}
 Q: 1S, 1NT; 2C/2D
 F1: [a]raw[/a]
 A: 5+ spades, 4+ in bid suit
+Q: 1S, 1NT; 2H
+F1: partner may have 5 hearts
+A: 3 hearts, no 6+ suit
 Q: 1S, 1NT; 2S
 F1: [a]raw[/a]
 A: 6+ spades
@@ -519,8 +524,8 @@ Q: 1H, 2D; 3NT
 F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]; with 4+ minor, bid it or 2NT as partner unlimited
 A: 4 hearts, <5 spades, no 4+ minor, all suits guarded (25 TP)
 Q: 1H, 2C; 3C
-F1: [a]responses_to_relay[/a]
-A: 4+ clubs, 4 hearts, strong (16 HCP) or skew, <5 spades
+F1: [a]responses_to_relay[/a]; likely skew, as strong would be 16+ HCP
+A: 4+ clubs, 4 hearts, skew, <5 spades
 Q: 1H, 2D; 3D
 F1: [a]responses_to_relay[/a]
 A: 4+ diamonds, 4 hearts, strong (14+ HCP) or skew, <5 spades, <4 clubs
@@ -541,8 +546,8 @@ Q: 1S, 2D; 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, 4 spades, strong (14+ HCP) or skew, <3 hearts
 Q: 1S, 2C; 3D
-F1: [a]responses_to_relay[/a]
-A: 4+ diamonds, strong (16 HCP) or skew, 4 spades, <3 hearts, <4 clubs
+F1: [a]responses_to_relay[/a]; likely skew, as strong would be 16+ HCP
+A: 4+ diamonds, skew, 4 spades, <3 hearts, <4 clubs
 Q: 1S, 2D; 2NT
 F1: <2 hearts would be skew, so would bid 3C/3D as must have 4+ minor; [a]responses_to_relay[/a]
 A: 4 spades, 2 hearts, no {4+ minor plus strong or skew}
@@ -705,7 +710,7 @@ F1: [a]responses_to_relay[/a]
 A: 4 hearts, 2 spades, no {4+ minor plus strong or skew}
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C
 F1: [a]responses_to_relay[/a]
-A: 4+ clubs, strong (14+ HCP) or skew
+A: 4+ clubs, strong (15+ HCP) or skew
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
 A: 4+ clubs, autofit, values for 5
@@ -1005,4 +1010,4 @@ A: 4+ clubs, <5 HCP, best suit
 # not in book
 Q: 1C, (1NT), 2D
 F1: not [a]relay[/a] as [a]disturbed[/a]
-A: no 4+ major, 4+ diamonds, <4 clubs
+A: 4+ HCP, no 4+ major, 4+ diamonds

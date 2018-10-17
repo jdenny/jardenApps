@@ -31,23 +31,30 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/correctQueryStr" />
-
         <Button
             android:id="@+id/correctButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yesStr" />
+            android:text="Right" />
 
         <Button
             android:id="@+id/incorrectButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/noStr" />
+            android:text="Wrong" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/notesTextView"

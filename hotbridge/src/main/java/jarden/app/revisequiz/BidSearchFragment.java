@@ -66,7 +66,7 @@ public class BidSearchFragment extends Fragment
         this.notesCheckBox.setOnClickListener(this);
         this.bidListAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
-        this.bidListView = rootView.findViewById(R.id.bidListView);
+        this.bidListView = rootView.findViewById(R.id.listView);
         this.bidListView.setAdapter(bidListAdapter);
         this.bidListView.setOnItemClickListener(this);
         this.currentQAList = new ArrayList<>();
