@@ -26,4 +26,5 @@
     <string name="south">South</string>
     <string name="us">Us</string>
     <string name="west">West</string>
+    <string name="equalsStr">=</string>
 </resources>

@@ -44,12 +44,14 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
-* for multi-bid auctions, add Reveal button, to show meaning of all bids in auction
+* new bid search not working with competitive bids!
+* perhaps hold bidList as QuestionAnswer array, then use adapter to
+    display qa.question = qa.answer;
+    see https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
 * add new fit bids from google doc
+* long press on response, then Wrong marks the original bid as wrong, not the current
 * show bid sequence in columns
 * Add to document: meaning of 3H/3S; comprehensive responses to fit
-* Replace bid search stack with remove last bid. Could then ask for responses
-to current bid.
 * Add levels, to PresetQuiz and here
     Level 2 (all following QA at level 2 until told otherwise)
 * add spy glass icon for bid search

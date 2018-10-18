@@ -5,10 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.jardenconsulting.cardapp.R;
 
@@ -22,11 +20,13 @@ import jarden.quiz.QuestionAnswer;
 public class ReviseQuizFragment extends FreakWizFragment
         implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener /*!!, AdapterView.OnItemSelectedListener*/ {
     private final static char[] findChars = {',', ';'};
-    private final static String OPENING_BIDS = "Opening Bids";
+    //!! private final static String OPENING_BIDS = "Opening Bids";
+    private final static QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening", "bids");
 
     private CheckBox notesCheckBox;
     private ListView bidListView;
-    private ArrayAdapter<String> bidListAdapter;
+    //!! private ArrayAdapter<String> bidListAdapter;
+    private BidListAdapter bidListAdapter;
     private List<QuestionAnswer> qaList;
 
     @Override
@@ -39,11 +39,14 @@ public class ReviseQuizFragment extends FreakWizFragment
         selfMarkLayout.addView(notesCheckBox, -1);
         notesCheckBox.setId(R.id.notes2CheckBox);
         this.notesTextView.setVisibility(View.GONE);
-        //!! this.notesCheckBox = rootView.findViewById(R.id.notesCheckBox);
 
         notesCheckBox.setOnClickListener(this);
+        /*!!
         this.bidListAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
+         */
+        Object o = android.R.layout.simple_list_item_1;
+        this.bidListAdapter = new BidListAdapter(getActivity());
         this.bidListView = rootView.findViewById(R.id.listView);
         this.bidListView.setAdapter(bidListAdapter);
         this.bidListView.setOnItemClickListener(this);
@@ -71,13 +74,23 @@ public class ReviseQuizFragment extends FreakWizFragment
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        /*!!
         String selection = bidListAdapter.getItem(position);
         loadBidList(selection);
+        */
+        QuestionAnswer qa = bidListAdapter.getItem(position);
+        loadBidList(qa);
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        String selection = bidListAdapter.getItem(position);
-        Toast.makeText(getContext(), selection, Toast.LENGTH_LONG).show();
+        //!! String selection = bidListAdapter.getItem(position);
+        QuestionAnswer qa = bidListAdapter.getItem(position);
+        if (qa != OPENING_BIDS) {
+            this.questionTextView.setText(qa.question);
+            this.answerTextView.setText(qa.answer);
+            this.documentTextView.showPageText(qa.notes, "Notes");
+        }
+        /*!!
         int index = selection.indexOf('=');
         if (index != -1) {
             String bid = selection.substring(0, index);
@@ -90,7 +103,8 @@ public class ReviseQuizFragment extends FreakWizFragment
                 }
             }
         }
-        loadBidList(selection);
+        */
+        loadBidList(qa);
         return true;
     }
     @Override
@@ -103,7 +117,9 @@ public class ReviseQuizFragment extends FreakWizFragment
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
         int start = 0, findCharsIndex = 0, end;
-        String nextBid, nextBidAnswer;
+        //!! String nextBid, nextBidAnswer;
+        String nextBid;
+        QuestionAnswer nextQA;
         char findChar;
         do {
             findChar = findChars[findCharsIndex]; // i.e. ',' or ';'
@@ -115,17 +131,29 @@ public class ReviseQuizFragment extends FreakWizFragment
                 start = end + 2;
                 findCharsIndex = ++findCharsIndex % 2;
             }
+            /*!!
             nextBidAnswer = findNextBidAnswer(nextBid);
             bidListAdapter.add(nextBid + "=" + nextBidAnswer);
+            */
+            nextQA = findNextBidAnswer(nextBid);
+            bidListAdapter.add(nextQA);
         } while (end != -1);
         this.bidListAdapter.notifyDataSetChanged();
     }
+    private QuestionAnswer findNextBidAnswer(String nextBid) {
+        for (QuestionAnswer qa: qaList) {
+            if (qa.question.equals(nextBid)) return qa;
+        }
+        return null;
+    }
+    /*!!
     private String findNextBidAnswer(String nextBid) {
         for (QuestionAnswer qa: qaList) {
             if (qa.question.equals(nextBid)) return qa.answer;
         }
         return null;
     }
+    */
     /*
     Get all responses to supplied bid.
         e.g. Q: 1C, 1H; 2D
@@ -143,6 +171,37 @@ public class ReviseQuizFragment extends FreakWizFragment
             1C, 1D = ...
             1C, 1H = ...
      */
+    public void loadBidList(QuestionAnswer targetQA) {
+        this.bidListAdapter.setNotifyOnChange(false);
+        this.bidListAdapter.clear();
+        if (targetQA == OPENING_BIDS) {
+            for (QuestionAnswer qa: qaList) {
+                if (!qa.question.contains(",")) {
+                    bidListAdapter.add(qa);
+                }
+            }
+        } else {
+            String question = targetQA.question;
+            int i = question.indexOf(',');
+            if (i == -1) {
+                bidListAdapter.add(OPENING_BIDS);
+            } else {
+                QuestionAnswer qa = getBackBid(question);
+                bidListAdapter.add(qa);
+            }
+            for (QuestionAnswer qa : qaList) {
+                if (qa.question.startsWith(question + ", ") ||
+                        qa.question.startsWith(question + "; ")) {
+                    String response = qa.question.substring(question.length() + 2);
+                    if (!(response.contains(",") || response.contains(";"))) {
+                        bidListAdapter.add(qa);
+                    }
+                }
+            }
+        }
+        this.bidListAdapter.notifyDataSetChanged();
+    }
+    /*!!
     public void loadBidList(String selection) {
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
@@ -173,6 +232,7 @@ public class ReviseQuizFragment extends FreakWizFragment
         }
         this.bidListAdapter.notifyDataSetChanged();
     }
+    */
     private QuestionAnswer getBackBid(String bid) {
         int lastComma = bid.lastIndexOf(',');
         int lastColon = bid.lastIndexOf(';');
