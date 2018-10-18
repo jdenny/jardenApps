@@ -26,10 +26,4 @@
     <string name="south">South</string>
     <string name="us">Us</string>
     <string name="west">West</string>
-
-    <string-array name="spinnerValues">
-        <item>Notes</item>
-        <item>Responses</item>
-        <item>Itemise</item>
-    </string-array>
 </resources>

@@ -1,15 +1,5 @@
 package jarden.app.race;
 
-import com.jardenconsulting.spanishapp.BuildConfig;
-import com.jardenconsulting.spanishapp.EngSpaActivity;
-import com.jardenconsulting.spanishapp.R;
-
-import jarden.engspa.EngSpaUser;
-import jarden.quiz.EndOfQuestionsException;
-import jarden.quiz.NumbersQuiz;
-import jarden.quiz.Quiz;
-import jarden.timer.Timer;
-import jarden.timer.TimerListener;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -21,14 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
+import com.jardenconsulting.spanishapp.BuildConfig;
+import com.jardenconsulting.spanishapp.EngSpaActivity;
+import com.jardenconsulting.spanishapp.R;
+
+import jarden.engspa.EngSpaUser;
+import jarden.quiz.EndOfQuestionsException;
+import jarden.quiz.NumbersQuiz;
+import jarden.quiz.Quiz;
+import jarden.timer.Timer;
+import jarden.timer.TimerListener;
 
 public class RaceFragment extends Fragment implements TimerListener,
 		OnClickListener, OnEditorActionListener, OnLongClickListener {
@@ -122,7 +123,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 				poseQuestion(quiz.getCurrentQuestion());
 			} else {
 				if (result == Quiz.CORRECT) {
-					status = getResources().getString(R.string.correct);
+					status = getResources().getString(R.string.right);
 					onRightAnswer(); // move player in lane
 				} else { // result must be FAIL
 					engSpaActivity.onWrongAnswer();

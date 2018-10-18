@@ -32,16 +32,17 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         PresetQuiz getReviseQuiz();
         int[] getNotesResIds();
     }
+    protected DocumentTextView documentTextView;
+    protected TextView questionTextView;
+    protected TextView answerTextView;
+    protected TextView notesTextView;
+    protected PresetQuiz reviseItQuiz;
+    protected ViewGroup selfMarkLayout;
+
     private static final String TAG = "FreakWizFragment";
 
-    private PresetQuiz reviseItQuiz;
-    private TextView questionTextView;
-    private TextView answerTextView;
     private TextView statsTextView;
-    private TextView notesTextView;
     private Button goButton;
-    private ViewGroup selfMarkLayout;
-    private DocumentTextView documentTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

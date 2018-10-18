@@ -1,4 +1,5 @@
-<resources>
+<resources tools:ignore="ExtraTranslation"
+           xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">JardenAppClassses</string>
     
@@ -17,7 +18,6 @@
     <!-- Quiz apps -->
     <string name="audioMode">Audio Mode</string>
     <string name="cancel">Cancel</string>
-    <string name="correct">right</string>
     <string name="correctQueryStr">Correct?</string>
     <string name="emptyAnswer">please supply an answer</string>
     <string name="exit">Exit</string>
@@ -31,9 +31,11 @@
     <string name="numbersGame">Numbers Game</string>
     <string name="practiceMode">Practice Mode</string>
     <string name="qaStyle">Question Style</string>
+    <string name="right">Right</string>
     <string name="selectTopic">Topic Mode</string>
     <string name="update">Update</string>
     <string name="wordLookup">Word Lookup</string>
+    <string name="wrong">Wrong</string>
     <string name="yesStr">Yes</string>
 
 
