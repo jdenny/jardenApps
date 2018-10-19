@@ -113,6 +113,15 @@ public class ReviseQuizFragment extends FreakWizFragment
     }
     @Override
     public void setListView() {
+        /* Notes for competitive bidding:
+        if bid sequence contains '(':
+            if first '(' not at beginning:
+                add string before first '('
+            while there remains a ',' or ';':
+                get next bid in form [,;] (bid)[,;] bid
+                add this bid
+        else: as below!
+         */
         String bidSequence = this.questionTextView.getText().toString();
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
@@ -155,21 +164,32 @@ public class ReviseQuizFragment extends FreakWizFragment
     }
     */
     /*
-    Get all responses to supplied bid.
-        e.g. Q: 1C, 1H; 2D
-
-        BID_LIST
+    Get all responses to selected bid sequence
+        BID_LIST for Q: 1C, 1H; 2D
             1C = ...
             1C, 1H = ...
             1C, 1H; 2D = ...
+        click on 1C
+            opening bids (replaces old "Back" button)
+            1C, 1D = ...
+            1C, 1H = ...
         click on 1C, 1H
-            1C = ... (i.e. back/up)
+            1C = ... ("Back")
             1C, 1H; 1S = ...
             1C, 1H; 1NT = ...
+
+        BID_LIST for Q: 1C, (1S), double, (pass); 2NT
+            1C = ...
+            1C, (1S), double = ...
+            1C, (1S), double, (pass); 2NT = ...
         click on 1C
             opening bids
             1C, 1D = ...
             1C, 1H = ...
+        click on 1C, (1S), double
+            1C = ...
+            1C, (1S), double, (pass); 2NT
+
      */
     public void loadBidList(QuestionAnswer targetQA) {
         this.bidListAdapter.setNotifyOnChange(false);

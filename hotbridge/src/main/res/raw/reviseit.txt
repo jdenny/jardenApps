@@ -931,7 +931,10 @@ A: to play
 Q: 1C, 1S; 2NT, 4S; 4NT
 F1: [a]keycard_ask[/a]; only side suit available
 A: keycard ask
-Q: 1H, (pass), 2NT, (4S); 4NT
+Q: 1H, (1S), 2NT
+F1: [a]strong_fit[/a]; not affected by their bid
+A: 4+ hearts, 11+ HCP
+Q: 1H, (1S), 2NT, (4S); 4NT
 F1: [a]keycard_ask[/a]; only side suit available
 A: keycard ask
 Q: 1C, 1H; 2H, 3C
