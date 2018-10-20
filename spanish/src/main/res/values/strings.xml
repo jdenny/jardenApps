@@ -52,7 +52,7 @@
     <string name="ttsLoading">Loading textToSpeech...</string>
 	<string name="ttsNotSupported">TextToSpeech for Spanish is not
         supported on this device</string>
-    <string name="setUserLevel">Set User level</string>
+    <string name="setUserLevel">Set User Level</string>
     <string name="learnLevel">User level</string>
     <string name="userLevelErrorAudio">User level must be at least 2 for Audio Mode;
         you can increase your levels in Learn Mode

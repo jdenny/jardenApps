@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaQuiz;
-import jarden.quiz.EndOfQuestionsException;
 
 /**
  * Created by john.denny@gmail.com on 16/04/2016.

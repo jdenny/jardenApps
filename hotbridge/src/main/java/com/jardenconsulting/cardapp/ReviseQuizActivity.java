@@ -24,9 +24,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import jarden.app.dialog.IntegerDialog;
 import jarden.app.revisequiz.BidSearchFragment;
 import jarden.app.revisequiz.FreakWizFragment;
-import jarden.app.dialog.IntegerDialog;
 import jarden.quiz.PresetQuiz;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;

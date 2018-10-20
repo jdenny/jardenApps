@@ -4,8 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import jarden.quiz.AnagramQuiz;
-
 public class JardenAppLibUtils {
 	public static void main(String[] args) throws IOException {
 		String srcFileName = "/Users/John/git/JardenProviders/res/raw/engspa.txt";

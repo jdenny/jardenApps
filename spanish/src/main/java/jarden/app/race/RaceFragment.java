@@ -1,7 +1,6 @@
 package jarden.app.race;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,7 +46,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private boolean caught = false;
 	private Quiz quiz = new NumbersQuiz();
 	private EngSpaActivity engSpaActivity;
-	private SharedPreferences sharedPreferences;
 	private EngSpaUser engSpaUser;
 
 	@SuppressWarnings("deprecation")
@@ -68,15 +66,15 @@ public class RaceFragment extends Fragment implements TimerListener,
 		Resources res = getResources();
 		this.laneCols = res.getInteger(R.integer.laneCols);
 		View view = inflater.inflate(R.layout.fragment_race, container, false);
-		LaneView laneAView = (LaneView) view.findViewById(R.id.laneA);
+		LaneView laneAView = view.findViewById(R.id.laneA);
 		laneAView.setBitmapId(R.drawable.blue_man);
-		TextView levelAView = (TextView) view.findViewById(R.id.laneALevel);
-		laneBView = (LaneView) view.findViewById(R.id.laneB);
+		TextView levelAView = view.findViewById(R.id.laneALevel);
+		laneBView = view.findViewById(R.id.laneB);
 		laneBView.setBitmapId(R.drawable.red_man);
-		levelBView = (TextView) view.findViewById(R.id.laneBLevel);
-		this.answerEditText = (EditText) view.findViewById(R.id.answerEditText);
+		levelBView = view.findViewById(R.id.laneBLevel);
+		this.answerEditText = view.findViewById(R.id.answerEditText);
 		this.answerEditText.setOnEditorActionListener(this);
-		Button button = (Button) view.findViewById(R.id.resetButton);
+		Button button = view.findViewById(R.id.resetButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
 		myLaneView = laneAView;

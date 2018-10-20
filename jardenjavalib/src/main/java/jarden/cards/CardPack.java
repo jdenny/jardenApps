@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import static jarden.cards.Suit.*;
+import static jarden.cards.Suit.Club;
+import static jarden.cards.Suit.Diamond;
+import static jarden.cards.Suit.Heart;
+import static jarden.cards.Suit.Spade;
 
 // TODO: hold cards as byte[], to indicate which player has this card!
 public class CardPack {

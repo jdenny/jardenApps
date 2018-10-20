@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import jarden.provider.engspa.EngSpaContract;
-import jarden.quiz.ArithmeticQuiz;
-import jarden.quiz.EndOfQuestionsException;
-import jarden.quiz.PresetQuiz;
-import jarden.quiz.QuestionAnswer;
 import jarden.quiz.Quiz;
 import jarden.quiz.QuizListener;
 import android.support.v7.app.AppCompatActivity;

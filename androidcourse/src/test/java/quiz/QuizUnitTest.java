@@ -2,13 +2,6 @@ package quiz;
 
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-import jarden.quiz.ArithmeticQuiz;
-import jarden.quiz.EndOfQuestionsException;
-import jarden.quiz.PresetQuiz;
 import jarden.quiz.Quiz;
 
 /**

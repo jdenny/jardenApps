@@ -40,7 +40,7 @@ public class UserDialog extends DialogFragment
 		Activity activity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		LayoutInflater inflater =activity.getLayoutInflater();
-		builder.setTitle(R.string.userSettingsStr);
+		builder.setTitle(R.string.setUserLevel);
 		View view = inflater.inflate(R.layout.dialog_user, null);
 		this.userLevelEditText = view.findViewById(R.id.userLevelEditText);
 		EngSpaUser user = userSettingsListener.getEngSpaUser();

@@ -20,7 +20,6 @@ import jarden.quiz.QuestionAnswer;
  */
 public class ReviseQuizFragment extends FreakWizFragment
         implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-    private final static char[] findChars = {',', ';'};
     private final static QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening", "bids");
 
     private CheckBox notesCheckBox;
@@ -40,7 +39,6 @@ public class ReviseQuizFragment extends FreakWizFragment
         this.notesTextView.setVisibility(View.GONE);
 
         notesCheckBox.setOnClickListener(this);
-        Object o = android.R.layout.simple_list_item_1;
         this.bidListAdapter = new BidListAdapter(getActivity());
         this.bidListView = rootView.findViewById(R.id.listView);
         this.bidListView.setAdapter(bidListAdapter);
@@ -87,7 +85,6 @@ public class ReviseQuizFragment extends FreakWizFragment
     public void resetListView() {
         this.bidListAdapter.clear();
     }
-    @Override
     /**
      * Break down question into component bids.
      * Examples:
@@ -100,6 +97,7 @@ public class ReviseQuizFragment extends FreakWizFragment
      *         1C, (1S), double = ...
      *         1C, (1S), double, (pass); 2NT = ...
      */
+    @Override
     public void setListView() {
         String bidSequence = this.questionTextView.getText().toString();
         this.bidListAdapter.setNotifyOnChange(false);
@@ -110,25 +108,6 @@ public class ReviseQuizFragment extends FreakWizFragment
             nextQA = findNextBidAnswer(bid);
             bidListAdapter.add(nextQA);
         }
-        /*!!
-        int start = 0, findCharsIndex = 0, end;
-        String nextBid;
-        QuestionAnswer nextQA;
-        char findChar;
-        do {
-            findChar = findChars[findCharsIndex]; // i.e. ',' or ';'
-            end = bidSequence.indexOf(findChar, start);
-            if (end == -1) {
-                nextBid = bidSequence;
-            } else {
-                nextBid = bidSequence.substring(0, end);
-                start = end + 2;
-                findCharsIndex = ++findCharsIndex % 2;
-            }
-            nextQA = findNextBidAnswer(nextBid);
-            bidListAdapter.add(nextQA);
-        } while (end != -1);
-        */
         this.bidListAdapter.notifyDataSetChanged();
     }
     private QuestionAnswer findNextBidAnswer(String nextBid) {

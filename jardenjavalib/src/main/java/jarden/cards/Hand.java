@@ -1,11 +1,33 @@
 package jarden.cards;
 
+import java.util.ArrayList;
+
 import jarden.cards.CardPack.AuctionType;
 import jarden.cards.CardPack.BidEnum;
 import jarden.cards.CardPack.CardEnum;
-import static jarden.cards.CardPack.BidEnum.*;
 
-import java.util.ArrayList;
+import static jarden.cards.CardPack.BidEnum.B1C;
+import static jarden.cards.CardPack.BidEnum.B1D;
+import static jarden.cards.CardPack.BidEnum.B1H;
+import static jarden.cards.CardPack.BidEnum.B1N;
+import static jarden.cards.CardPack.BidEnum.B1S;
+import static jarden.cards.CardPack.BidEnum.B2C;
+import static jarden.cards.CardPack.BidEnum.B2D;
+import static jarden.cards.CardPack.BidEnum.B2H;
+import static jarden.cards.CardPack.BidEnum.B2N;
+import static jarden.cards.CardPack.BidEnum.B2S;
+import static jarden.cards.CardPack.BidEnum.B3C;
+import static jarden.cards.CardPack.BidEnum.B3D;
+import static jarden.cards.CardPack.BidEnum.B3H;
+import static jarden.cards.CardPack.BidEnum.B3N;
+import static jarden.cards.CardPack.BidEnum.B3S;
+import static jarden.cards.CardPack.BidEnum.B4C;
+import static jarden.cards.CardPack.BidEnum.B4D;
+import static jarden.cards.CardPack.BidEnum.B4H;
+import static jarden.cards.CardPack.BidEnum.B4S;
+import static jarden.cards.CardPack.BidEnum.B5C;
+import static jarden.cards.CardPack.BidEnum.B5D;
+import static jarden.cards.CardPack.BidEnum.PASS;
 
 public class Hand {
 	private final static int C = 0, D = 1, H = 2, S = 3;
