@@ -275,7 +275,7 @@ Samsung Galaxy Note 3, SM-N9005
 	32Gb, 3Gb RAM
 Moto G5
 	1920 x 1080 pixels, 5.0"
-	Android 7.0, Nougat, API 24
+	Android 8.1, Oreo, API 27
 	16GB, 3Gb RAM
 
 Samsung Galaxy S3 Mini, GT-I8190N

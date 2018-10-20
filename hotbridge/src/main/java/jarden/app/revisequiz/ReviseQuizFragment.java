@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.jardenconsulting.cardapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jarden.quiz.QuestionAnswer;
@@ -18,14 +19,12 @@ import jarden.quiz.QuestionAnswer;
  * Created by john.denny@gmail.com on 15/10/2018.
  */
 public class ReviseQuizFragment extends FreakWizFragment
-        implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener /*!!, AdapterView.OnItemSelectedListener*/ {
+        implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     private final static char[] findChars = {',', ';'};
-    //!! private final static String OPENING_BIDS = "Opening Bids";
     private final static QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening", "bids");
 
     private CheckBox notesCheckBox;
     private ListView bidListView;
-    //!! private ArrayAdapter<String> bidListAdapter;
     private BidListAdapter bidListAdapter;
     private List<QuestionAnswer> qaList;
 
@@ -41,10 +40,6 @@ public class ReviseQuizFragment extends FreakWizFragment
         this.notesTextView.setVisibility(View.GONE);
 
         notesCheckBox.setOnClickListener(this);
-        /*!!
-        this.bidListAdapter = new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_list_item_1);
-         */
         Object o = android.R.layout.simple_list_item_1;
         this.bidListAdapter = new BidListAdapter(getActivity());
         this.bidListView = rootView.findViewById(R.id.listView);
@@ -74,36 +69,17 @@ public class ReviseQuizFragment extends FreakWizFragment
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        /*!!
-        String selection = bidListAdapter.getItem(position);
-        loadBidList(selection);
-        */
         QuestionAnswer qa = bidListAdapter.getItem(position);
         loadBidList(qa);
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        //!! String selection = bidListAdapter.getItem(position);
         QuestionAnswer qa = bidListAdapter.getItem(position);
         if (qa != OPENING_BIDS) {
             this.questionTextView.setText(qa.question);
             this.answerTextView.setText(qa.answer);
             this.documentTextView.showPageText(qa.notes, "Notes");
         }
-        /*!!
-        int index = selection.indexOf('=');
-        if (index != -1) {
-            String bid = selection.substring(0, index);
-            for (QuestionAnswer qa: qaList) {
-                if (qa.question.equals(bid)) {
-                    this.questionTextView.setText(qa.question);
-                    this.answerTextView.setText(qa.answer);
-                    this.documentTextView.showPageText(qa.notes, "Notes");
-                    break;
-                }
-            }
-        }
-        */
         loadBidList(qa);
         return true;
     }
@@ -112,21 +88,30 @@ public class ReviseQuizFragment extends FreakWizFragment
         this.bidListAdapter.clear();
     }
     @Override
+    /**
+     * Break down question into component bids.
+     * Examples:
+     *     BID_LIST for Q: 1C, 1H; 2D
+     *         1C = ...
+     *         1C, 1H = ...
+     *         1C, 1H; 2D = ...
+     *     BID_LIST for Q: 1C, (1S), double, (pass); 2NT
+     *         1C = ...
+     *         1C, (1S), double = ...
+     *         1C, (1S), double, (pass); 2NT = ...
+     */
     public void setListView() {
-        /* Notes for competitive bidding:
-        if bid sequence contains '(':
-            if first '(' not at beginning:
-                add string before first '('
-            while there remains a ',' or ';':
-                get next bid in form [,;] (bid)[,;] bid
-                add this bid
-        else: as below!
-         */
         String bidSequence = this.questionTextView.getText().toString();
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
+        List<String> bidList = getBidItems(bidSequence);
+        QuestionAnswer nextQA;
+        for (String bid: bidList) {
+            nextQA = findNextBidAnswer(bid);
+            bidListAdapter.add(nextQA);
+        }
+        /*!!
         int start = 0, findCharsIndex = 0, end;
-        //!! String nextBid, nextBidAnswer;
         String nextBid;
         QuestionAnswer nextQA;
         char findChar;
@@ -140,13 +125,10 @@ public class ReviseQuizFragment extends FreakWizFragment
                 start = end + 2;
                 findCharsIndex = ++findCharsIndex % 2;
             }
-            /*!!
-            nextBidAnswer = findNextBidAnswer(nextBid);
-            bidListAdapter.add(nextBid + "=" + nextBidAnswer);
-            */
             nextQA = findNextBidAnswer(nextBid);
             bidListAdapter.add(nextQA);
         } while (end != -1);
+        */
         this.bidListAdapter.notifyDataSetChanged();
     }
     private QuestionAnswer findNextBidAnswer(String nextBid) {
@@ -155,14 +137,45 @@ public class ReviseQuizFragment extends FreakWizFragment
         }
         return null;
     }
-    /*!!
-    private String findNextBidAnswer(String nextBid) {
-        for (QuestionAnswer qa: qaList) {
-            if (qa.question.equals(nextBid)) return qa.answer;
+    private static List<String> getBidItems(String bidSequence) {
+        List<String> bidItems = new ArrayList();
+        int index;
+        String nextBid;
+        index = bidSequence.indexOf('(');
+        boolean compete = (index != -1);
+        if (compete) {
+            if (index > 0) {
+                bidItems.add(bidSequence.substring(0, index - 2));
+            }
+        } else {
+            index = 0;
         }
-        return null;
+        do {
+            if (compete) {
+                index = bidSequence.indexOf(')', index) + 3;
+            }
+            index = findNextSeparator(bidSequence, index);
+            if (index == -1) {
+                nextBid = bidSequence;
+            } else {
+                nextBid = bidSequence.substring(0, index);
+                index += 2;
+            }
+            bidItems.add(nextBid);
+        } while (index != -1);
+        return bidItems;
     }
-    */
+    private static int findNextSeparator(String bidSequence, int start) {
+        int commaI = bidSequence.indexOf(',', start);
+        int colonI = bidSequence.indexOf(';', start);
+        if (commaI == -1) {
+            if (colonI == -1) return -1;
+            return colonI;
+        } else {
+            if (colonI == -1) return commaI;
+            return (commaI > colonI) ? colonI : commaI;
+        }
+    }
     /*
     Get all responses to selected bid sequence
         BID_LIST for Q: 1C, 1H; 2D
@@ -190,6 +203,13 @@ public class ReviseQuizFragment extends FreakWizFragment
             1C = ...
             1C, (1S), double, (pass); 2NT
 
+        BID_LIST for Q: (1S), double, (pass), 2NT
+            opening bids
+            (1S), double = ...
+            (1S), double, (pass), 2NT
+        click on (1S), double
+            opening bids
+            (1S), double, (pass), 2NT
      */
     public void loadBidList(QuestionAnswer targetQA) {
         this.bidListAdapter.setNotifyOnChange(false);
@@ -221,47 +241,21 @@ public class ReviseQuizFragment extends FreakWizFragment
         }
         this.bidListAdapter.notifyDataSetChanged();
     }
-    /*!!
-    public void loadBidList(String selection) {
-        this.bidListAdapter.setNotifyOnChange(false);
-        this.bidListAdapter.clear();
-        if (selection.equals(OPENING_BIDS)) {
-            for (QuestionAnswer qa: qaList) {
-                if (!qa.question.contains(",")) {
-                    bidListAdapter.add(qa.question + "=" + qa.answer);
-                }
-            }
+    private QuestionAnswer getBackBid(String bidSequence) {
+        String backQuestion;
+        int lastBracket = bidSequence.lastIndexOf('(');
+        if (lastBracket == -1) {
+            int lastComma = bidSequence.lastIndexOf(',');
+            int lastColon = bidSequence.lastIndexOf(';');
+            int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
+            if (lastSeparator == -1) return null;
+            backQuestion = bidSequence.substring(0, lastSeparator);
         } else {
-            int index = selection.indexOf('=');
-            String bid = selection.substring(0, index);
-            int i = bid.indexOf(',');
-            if (i == -1) {
-                bidListAdapter.add(OPENING_BIDS);
-            } else {
-                QuestionAnswer qa = getBackBid(bid);
-                bidListAdapter.add(qa.question + "=" + qa.answer);
-            }
-            for (QuestionAnswer qa : qaList) {
-                if (qa.question.startsWith(bid + ", ") || qa.question.startsWith(bid + "; ")) {
-                    String response = qa.question.substring(bid.length() + 2);
-                    if (!(response.contains(",") || response.contains(";"))) {
-                        bidListAdapter.add(qa.question + "=" + qa.answer);
-                    }
-                }
-            }
+            backQuestion = bidSequence.substring(0, lastBracket - 2);
         }
-        this.bidListAdapter.notifyDataSetChanged();
-    }
-    */
-    private QuestionAnswer getBackBid(String bid) {
-        int lastComma = bid.lastIndexOf(',');
-        int lastColon = bid.lastIndexOf(';');
-        int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
-        if (lastSeparator == -1) return null;
-        String backQuestion = bid.substring(0, lastSeparator);
         for (QuestionAnswer qa: this.qaList) {
             if (backQuestion.equals(qa.question)) return qa;
         }
-        return new QuestionAnswer(bid, "no backBid found!");
+        return new QuestionAnswer(bidSequence, "no backBid found!");
     }
 }

@@ -197,9 +197,12 @@ A: long suit, 0-10 HCP
 Q: 2C, 2D
 F1: [a]invitational_plus[/a]
 A: 4+ diamonds, 11+ HCP (23 TP)
-Q: 2C, 2H/2S
+Q: 2C, 2H
 F1: [a]invitational_plus[/a]
-A: 5+ in suit, 11+ HCP (23 TP)
+A: 5+ hearts, 11+ HCP (23 TP)
+Q: 2C, 2S
+F1: [a]invitational_plus[/a]
+A: 5+ spades, 11+ HCP (23 TP)
 Q: 2C, 2NT
 F1: [a]strong_fit[/a]; subsequent bids of side suits show guards, exploring 3NT
 A: 3+ clubs, 11+ HCP (23 TP)
