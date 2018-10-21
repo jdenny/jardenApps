@@ -6,13 +6,14 @@ public abstract class Quiz {
     public static final int CORRECT = 1;
     public static final int INCORRECT = 0;
     public static final int FAIL = -1;
-    public static final int MAX_ATTEMPTS = 3;
-    public static final int BASE_MAX = 20;
     public static final int ANSWER_TYPE_INT = 0;
     public static final int ANSWER_TYPE_DOUBLE = 1;
     public static final int ANSWER_TYPE_STRING = 2;
     public static final String TEMPLATE_KEY = "$TEMPLATE";
 	public static final String IO_KEY = "$IO";
+    private static final int MAX_ATTEMPTS = 3;
+    private static final int BASE_MAX = 20;
+
 	protected Random randomNum = new Random();
 	private char questionStyle = 'P';
 	private char answerStyle = 'P';

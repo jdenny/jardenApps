@@ -767,92 +767,92 @@ Q: 2C, 2S; 3S
 A: 3+ spades
 
 # competitive bidding
-Q: 1D, (any bid), pass
+Q: 1D, (any bid) pass
 F1: free bid; may have 4+ major
 A: 0-4 HCP
-Q: 1C, (1D), pass
+Q: 1C, (1D) pass
 F1: free bid
 A: 0-3 HCP, no 6+ major
 
 # page 86
-Q: 1C, (1S), double
+Q: 1C, (1S) double
 F1: 1C/1D, (1H/1S), double is replacement for 1 heart
 A: 4+ hearts, 4+ HCP
-Q: 1C, (1S), double, (pass); 2NT
+Q: 1C, (1S) double; (pass) 2NT
 F1: [a]strong_fit[/a] in hearts
 A: 4+ hearts, 19+ HCP (23 TP)
-Q: 1D, (1H), double
+Q: 1D, (1H) double
 F1: replacement for 1 heart
 A: 4+ hearts, 5+ HCP
 
 # page 87
-Q: 1H, (1S), double
+Q: 1H, (1S) double
 F1: replacement for 1 spade
 A: 4+ spades, 8+ HCP, <4 hearts
-Q: 1D, (1H), 1S
+Q: 1D, (1H) 1S
 A: 4+ spades, 5+ HCP, <4 hearts
-Q: 1D, (1H), 1NT
+Q: 1D, (1H) 1NT
 F1: with <5 HCP pass; with 8+ HCP, bid [a]relay[/a]
 A: 5-7 HCP, no 4+ major, no 6+ minor
 
 # page 88
-Q: 1H, (double), redouble
+Q: 1H, (double) redouble
 F1: too weak to play in 1H doubled
 A: weak; better places to play
-Q: (1C), double
+Q: (1C) double
 F1: replacement for 1C
 A: 25pp and 5+ major or 26+pp
-Q: (1C), 1H
+Q: (1C) 1H
 F1: same as if they hadn't bid
 A: 4+ hearts & 20-22pp or 5+ hearts & 23-24pp
-Q: (1D), double
+Q: (1D) double
 F1: replacement for 1C or 1D
 A: 23+pp
 
 # page 92
-Q: (1H), double
+Q: (1H) double
 F1: replacement for 1C or 1D
 A: 23+pp
-Q: (1H), double, (1S), double
+Q: (1H) double, (1S) double
 F1: replacement for 1H
 A: 4+ hearts, 5+ HCP
-Q: (1H), 1S
+Q: (1H) 1S
 F1: may have 4+ hearts
 A: 4+ spades & 20-22pp or 5+ spades & 23-24pp
-Q: (1H), 1NT
+Q: (1H) 1NT
 F1: may have 4 or 5 hearts
 A: 20-22pp, <4 spades
-Q: (1H), 2H
+Q: (1H) 2H
 F1: may have 20-22pp
 A: 6+ hearts, 6+ HCP
 
 # page 93
-Q: (1S), double
+Q: (1S) double
 F1: [a]Double|takeout_double[/a]
 A: asks partner to bid best unbid suit
-Q: (1S), double, (pass), pass
+Q: (1S) double, (pass) pass
 F1: [a]Double|takeout_double[/a] now becomes penalty double
 A: penalty
-Q: (1S), double, (pass), 2C/2D/2H
+Q: (1S) double, (pass) 2C/2D/2H
 F1: [a]to_play[/a]; bid longest suit
 A: 0-4 HCP, 4+ in suit
-Q: (1S), double, (pass), 1NT
+Q: (1S) double, (pass) 1NT
 F1: [a]to_play[/a]
 A: 5-9 HCP, no 6+ suit
-Q: (1S), double, (pass), 3C/3D/3H/3S
+Q: (1S) double, (pass) 3C/3D/3H/3S
 F1: [a]to_play[/a]
 A: 5-9 HCP, 6+ in suit
-Q: (1S), double, (pass), 2NT
+Q: (1S) double, (pass) 2NT
 F1: [a]invitational_plus[/a]
 A: 10+ HCP
 
 # page 98
-Q: 1H, (2C), 2D
+Q: 1H, (2C) 2D
 F1: natural (not relay), as 2C by them makes auction [a]disturbed[/a]
 A: 4+ diamonds, 8+ HCP, no 4+ major
 
 # page 102
-Q: 1D, (2H), double
+Q: 1D, (2H) double
 F1: [a]Double|takeout_double[/a]
 A: asks partner to bid best suit (except hearts)
 
@@ -934,10 +934,10 @@ A: to play
 Q: 1C, 1S; 2NT, 4S; 4NT
 F1: [a]keycard_ask[/a]; only side suit available
 A: keycard ask
-Q: 1H, (1S), 2NT
+Q: 1H, (1S) 2NT
 F1: [a]strong_fit[/a]; not affected by their bid
 A: 4+ hearts, 11+ HCP
-Q: 1H, (1S), 2NT, (4S); 4NT
+Q: 1H, (1S) 2NT; (4S) 4NT
 F1: [a]keycard_ask[/a]; only side suit available
 A: keycard ask
 Q: 1C, 1H; 2H, 3C
@@ -978,13 +978,13 @@ F1: [a]keycard_ask[/a]
 A: 0 or 3 keycards
 
 # page 148
-Q: 1S, (2C), 2NT
+Q: 1S, (2C) 2NT
 F1: [a]strong_fit[/a]; not affected by their 2C which makes the auction [a]disturbed[/a]
 A: 4+ spades, 11+ HCP (23 TP)
-Q: 1S, (2C), 2NT, (3C); 3S
+Q: 1S, (2C) 2NT; (3C) 3S
 F1: [a]to_play[/a]
 A: to play, <14 HCP
-Q: 1S, (2C), 2NT, (3C); 3NT
+Q: 1S, (2C) 2NT; (3C) 3NT
 F1: [a]threeNT|3NT[/a]
 A: 14+ HCP, at least 2 club guards
 
@@ -1010,10 +1010,10 @@ F1: [a]to_play[/a]; already shown <14 HCP, so must have skew
 A: 5+ spades
 
 # page 152
-Q: (1S), double, (pass), 2C
+Q: (1S) double, (pass) 2C
 A: 4+ clubs, <5 HCP, best suit
 
 # not in book
-Q: 1C, (1NT), 2D
+Q: 1C (1NT), 2D
 F1: not [a]relay[/a] as [a]disturbed[/a]
 A: 4+ HCP, no 4+ major, 4+ diamonds

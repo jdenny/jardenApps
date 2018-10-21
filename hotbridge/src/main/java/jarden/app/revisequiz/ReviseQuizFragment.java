@@ -20,7 +20,7 @@ import jarden.quiz.QuestionAnswer;
  */
 public class ReviseQuizFragment extends FreakWizFragment
         implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-    private final static QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening", "bids");
+    private final static QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
 
     private CheckBox notesCheckBox;
     private ListView bidListView;
@@ -118,21 +118,9 @@ public class ReviseQuizFragment extends FreakWizFragment
     }
     private static List<String> getBidItems(String bidSequence) {
         List<String> bidItems = new ArrayList();
-        int index;
+        int index = 0;
         String nextBid;
-        index = bidSequence.indexOf('(');
-        boolean compete = (index != -1);
-        if (compete) {
-            if (index > 0) {
-                bidItems.add(bidSequence.substring(0, index - 2));
-            }
-        } else {
-            index = 0;
-        }
         do {
-            if (compete) {
-                index = bidSequence.indexOf(')', index) + 3;
-            }
             index = findNextSeparator(bidSequence, index);
             if (index == -1) {
                 nextBid = bidSequence;
@@ -222,16 +210,11 @@ public class ReviseQuizFragment extends FreakWizFragment
     }
     private QuestionAnswer getBackBid(String bidSequence) {
         String backQuestion;
-        int lastBracket = bidSequence.lastIndexOf('(');
-        if (lastBracket == -1) {
-            int lastComma = bidSequence.lastIndexOf(',');
-            int lastColon = bidSequence.lastIndexOf(';');
-            int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
-            if (lastSeparator == -1) return null;
-            backQuestion = bidSequence.substring(0, lastSeparator);
-        } else {
-            backQuestion = bidSequence.substring(0, lastBracket - 2);
-        }
+        int lastComma = bidSequence.lastIndexOf(',');
+        int lastColon = bidSequence.lastIndexOf(';');
+        int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
+        if (lastSeparator == -1) return null;
+        backQuestion = bidSequence.substring(0, lastSeparator);
         for (QuestionAnswer qa: this.qaList) {
             if (backQuestion.equals(qa.question)) return qa;
         }

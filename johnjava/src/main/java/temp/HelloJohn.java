@@ -11,8 +11,9 @@ public class HelloJohn {
     private final static String[] bidSequences = {
             "1C, 1H; 2D",
             "1D, 1S; 2S, 4H; 4NT, 5D; 5H, 6C",
-            "1C, (1S), double, (pass); 2NT",
-            "(1S), double, (pass), 2NT"
+            "1C, (1S) double; (pass) 2NT",
+            "(1S) double, (pass) 2NT",
+            "(1H) double"
     };
 
     public static void main(String[] args) {
@@ -29,16 +30,18 @@ public class HelloJohn {
         }
     }
     private static String getBackBid(String bidSequence) {
-        int index = bidSequence.lastIndexOf('(');
-        if (index == -1) {
+        //!! int index = bidSequence.lastIndexOf('(');
+        //!! if (index == -1) {
             int lastComma = bidSequence.lastIndexOf(',');
             int lastColon = bidSequence.lastIndexOf(';');
             int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
             if (lastSeparator == -1) return null;
             return bidSequence.substring(0, lastSeparator);
+        /*!!
         } else {
             return bidSequence.substring(0, index - 2);
         }
+        */
     }
     private static void testGetBidItems() {
         List<String> bidList;
@@ -52,8 +55,9 @@ public class HelloJohn {
     }
     private static List<String> getBidItems(String bidSequence) {
         List<String> bidItems = new ArrayList();
-        int index;
+        int index = 0;
         String nextBid;
+        /*!!
         index = bidSequence.indexOf('(');
         boolean compete = (index != -1);
         if (compete) {
@@ -63,10 +67,13 @@ public class HelloJohn {
         } else {
             index = 0;
         }
+        */
         do {
+            /*!!
             if (compete) {
                 index = bidSequence.indexOf(')', index) + 3;
             }
+            */
             index = findNextSeparator(bidSequence, index);
             if (index == -1) {
                 nextBid = bidSequence;

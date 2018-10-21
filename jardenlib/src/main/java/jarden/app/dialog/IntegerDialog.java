@@ -38,7 +38,6 @@ public class IntegerDialog extends DialogFragment
 		this.userSettingsListener = (UserSettingsListener) context;
 	}
 
-	//!! @SuppressLint("InflateParams")
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Activity activity = getActivity();

@@ -2,7 +2,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/question"
@@ -10,13 +11,7 @@
         android:layout_height="wrap_content"
         android:text="question"
         android:textSize="@dimen/list_text_size"
-        android:textColor="@android:color/holo_red_dark"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/equalsStr"
-        android:textSize="@dimen/list_text_size"
+        android:textColor="@color/spanishBlue"
         />
     <TextView
         android:id="@+id/answer"
@@ -24,6 +19,9 @@
         android:layout_height="wrap_content"
         android:text="answer"
         android:textSize="@dimen/list_text_size"
-        android:minHeight="35sp"
+        android:textColor="@color/spanishRed"
         />
 </LinearLayout>
+
+<!--         android:minHeight="35sp"
+-->
