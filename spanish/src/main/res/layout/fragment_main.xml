@@ -41,8 +41,7 @@
             android:ems="10"
             android:hint="@string/spanishStr"
             android:imeOptions="actionGo"
-            android:inputType="text"
-            android:singleLine="true"
+            android:inputType="textMultiLine"
             android:textColor="@color/white"
             android:textColorHint="@color/hintColor"
             android:textSize="@dimen/spanishTextFieldSize" >

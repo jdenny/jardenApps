@@ -1637,3 +1637,14 @@ where do you live?,¿dónde vives?,phrase,n_a,n_a,1
 I live in England,vivo en Inglaterra,phrase,n_a,n_a,1
 how do you get there?,¿cómo vas?,phrase,n_a,travel,1
 I go on foot,voy a pie,phrase,n_a,travel,1
+my name is Julie,me llamo Julie,phrase,n_a,person,1
+my husband is called John,mi esposo se llama John,phrase,n_a,person,1
+I have 5 children,tengo cinqo hijos,phrase,n_a,person,1
+I live in the south of England,vivo en el sur de Inglaterra,phrase,n_a,person,1
+my good friend is Mexican,mi buena amiga es mexicana,phrase,n_a,person,1
+her name is Ana,ella se llama Ana,phrase,n_a,person,1
+our son lives in Canada,nuestro hijo vive en Canadá,phrase,n_a,person,1
+he came here last week,vino aquí la semana pasada,phrase,n_a,person,1
+Canada is too cold for us,Canadá es demasiado frío para nosostros,phrase,n_a,person,1
+is there a good restaurant near here?,¿hay un buen restaurante cerca de aquí?,phrase,n_a,travel,1
+where do you normally go to eat lunch?,¿a dónde van normalmente a almorzar?,phrase,n_a,travel,1

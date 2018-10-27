@@ -48,7 +48,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private static final String DB_NAME = "engspa.db";
 	// Note: if we update DB_VERSION, also update res/raw/engspaversion.txt
 	private static final int DB_VERSION =
-			39; // updated 15 July 2018; now update engspaversion.txt!
+			40; // updated 27 October 2018; now update engspaversion.txt!
 
 	private static final String TAG = "EngSpaSQLite";
 	private static final String CREATE_TABLE =
@@ -358,7 +358,10 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		if (userLevel < 1) userLevel = 1;
 		int firstId = (userLevel - 1) * EngSpaQuiz.WORDS_PER_LEVEL + 1;
 		int dbSize = getDictionarySize();
-		if (firstId > (dbSize - EngSpaQuiz.WORDS_PER_LEVEL)) {
+		if (firstId > (dbSize + 1 - EngSpaQuiz.WORDS_PER_LEVEL)) {
+            if (BuildConfig.DEBUG) Log.w(TAG,
+                    "getCurrentWordList(this shouldn't happen! firstId=" + firstId +
+                            ", dbSize=" + dbSize + ")");
 			firstId = random.nextInt(dbSize - EngSpaQuiz.WORDS_PER_LEVEL);
 		}
 		int lastId = firstId + EngSpaQuiz.WORDS_PER_LEVEL;

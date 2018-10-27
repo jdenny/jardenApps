@@ -1017,3 +1017,6 @@ A: 4+ clubs, <5 HCP, best suit
 Q: 1C (1NT), 2D
 F1: not [a]relay[/a] as [a]disturbed[/a]
 A: 4+ HCP, no 4+ major, 4+ diamonds
+Q: 1D, 1H; 1S, 1NT
+F1: with 8+ HCP bid relay;
+A: <4 spades, <8 HCP, no 6-card suit

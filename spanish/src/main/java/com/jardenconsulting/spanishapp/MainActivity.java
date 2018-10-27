@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 	private static final int[] helpResIds = {
-            R.string.Contents, // 1st in list shown initially
+            R.string.Contents, // first in list shown initially
             R.string.Introduction,
             R.string.Audio_Mode,
             R.string.Feedback,
@@ -196,7 +196,13 @@ public class MainActivity extends AppCompatActivity
     }
     private void dbLoadComplete() {
 		showFragment();
-		checkForDBUpdates();
+		/* checkForDBUpdates() allows us to update the database by uploading
+		   a text file to Google sites, rather than reissuing the complete app;
+		   we have found that, in practice, this is more trouble than it's worth,
+		   so we are dropping the idea, but keeping the code in place for possible
+		   future use.
+		 */
+		// checkForDBUpdates();
 	}
 	@Override // OnClickListener
 	public void onClick(View view) {
