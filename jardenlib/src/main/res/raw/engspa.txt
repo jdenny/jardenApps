@@ -1678,3 +1678,21 @@ I don't know,no lo sé,phrase,n_a,person,1
 to do the laundry,lavar la ropa,phrase,n_a,home,1
 to make the bed,hacer la cama,phrase,n_a,home,1
 to wash the dishes,lavar los platos,phrase,n_a,home,1
+
+*** to add to next release
+spicey,picante,adjective,n_a,food,1
+on the way,en camino,phrase,n_a,travel,1
+the bill please,la cuenta por favor,phrase,n_a,food,1
+cash,efectivo,noun,masculine,money,1
+credit card,tarjeta de crédito,noun,feminine,money,1
+bring it to me,tráigamelo,phrase,n_a,n_a,1
+can I get the bill please?,¿me trae la cuenta por favor?,phrase,n_a,money,1
+we should divide the pizza into six pieces,debemos dividir la pizza en seis piezas,phrase,n_a,food,1
+allergy,alergia,noun,feminine,person,1
+that is all,eso es todo,phrase,n_a,food,1
+
+excuse me,disculpe,phrase,n_a,n_a,1
+insipid,insípido,adjective,n_a,food,1
+lime,lima,noun,feminine,food,1
+avocado,aguacate,noun,masculine,food,1
+turkey,pavo,noun,masculine,food,1
