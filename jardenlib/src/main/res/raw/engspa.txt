@@ -1639,13 +1639,13 @@ how do you get there?,¿cómo vas?,phrase,n_a,travel,1
 I go on foot,voy a pie,phrase,n_a,travel,1
 my name is Julie,me llamo Julie,phrase,n_a,person,1
 my husband is called John,mi esposo se llama John,phrase,n_a,person,1
-I have 5 children,tengo cinqo hijos,phrase,n_a,person,1
+I have 5 children,tengo cinco hijos,phrase,n_a,person,1
 I live in the south of England,vivo en el sur de Inglaterra,phrase,n_a,person,1
 my good friend is Mexican,mi buena amiga es mexicana,phrase,n_a,person,1
 her name is Ana,ella se llama Ana,phrase,n_a,person,1
 our son lives in Canada,nuestro hijo vive en Canadá,phrase,n_a,person,1
-he came here last week,vino aquí la semana pasada,phrase,n_a,person,1
-Canada is too cold for us,Canadá es demasiado frío para nosostros,phrase,n_a,travel,1
+he came here last week,él vino aquí la semana pasada,phrase,n_a,person,1
+Canada is too cold for us,Canadá es demasiado frío para nosotros,phrase,n_a,travel,1
 is there a good restaurant near here?,¿hay un buen restaurante cerca de aquí?,phrase,n_a,travel,1
 where do you normally go to eat lunch?,¿a dónde van normalmente a almorzar?,phrase,n_a,travel,1
 chest,pecho,noun,masculine,body,1
@@ -1657,7 +1657,7 @@ I tripped and twisted my ankle while playing football,me tropecé y me torcí el t
 breast,seno,noun,masculine,body,1
 I have cracked a rib,tengo una fisura en la costilla,phrase,n_a,person,1
 wrist,muñeca,noun,feminine,body,1
-how do I get to?,¿cómo llego a?,phrase,n_a,travel,1
+how do I get to ...?,¿cómo llego a ...?,phrase,n_a,travel,1
 straight ahead,todo derecho,adverb,n_a,n_a,1
 at night,de la noche,phrase,n_a,time,1
 in the afternoon,de la tarde,phrase,n_a,time,1
@@ -1668,11 +1668,11 @@ cousin,prima,noun,feminine,person,1
 teapot,tetera,noun,feminine,home,1
 pot,olla,noun,feminine,home,1
 microwave,microonda,noun,feminine,home,1
-where I can find?,¿dónde puedo encontrar?,phrase,n_a,travel,1
-I don't feel well,no me siento bien,phrase,n_a,person,1
+where I can find ...?,¿dónde puedo encontrar ...?,phrase,n_a,travel,1
+I do not feel well,no me siento bien,phrase,n_a,person,1
 what time is it?,¿qué hora es?,phrase,n_a,time,1
 do you need help?,¿necesitas ayuda?,phrase,n_a,person,1
-can you help me?,¿me puede ayuda?,phrase,n_a,person,1
+can you help me?,¿me puede ayudar?,phrase,n_a,person,1
 don't worry,no te preocupes,phrase,n_a,person,1
 I don't know,no lo sé,phrase,n_a,person,1
 to do the laundry,lavar la ropa,phrase,n_a,home,1
