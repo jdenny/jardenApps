@@ -1696,3 +1696,14 @@ insipid,insípido,adjective,n_a,food,1
 lime,lima,noun,feminine,food,1
 avocado,aguacate,noun,masculine,food,1
 turkey,pavo,noun,masculine,food,1
+
+eleventh,undécimo,number,n_a,n_a,1
+twelfth,duodécimo,number,n_a,n_a,1
+thirteenth,decimotercero,number,n_a,n_a,1
+fourteenth,decimocuarto,number,n_a,n_a,1
+fifteenth,decimoquinto,number,n_a,n_a,1
+sixteenth,decimosexto,number,n_a,n_a,1
+seventeenth,decimoséptimo,number,n_a,n_a,1
+eighteenth,decimoctavo,number,n_a,n_a,1
+nineteenth,decimonoveno,number,n_a,n_a,1
+twentieth,vigésimo,number,n_a,n_a,1
