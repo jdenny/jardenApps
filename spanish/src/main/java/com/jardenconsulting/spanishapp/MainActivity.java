@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 		NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "Spanish";
 	private static final int[] helpResIds = {
             R.string.Contents, // first in list shown initially
             R.string.Introduction,

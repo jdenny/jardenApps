@@ -90,7 +90,7 @@ public final class EngSpaContract {
 	public enum Attribute {
 		animal, body, building, clothing, colour, culture, drink, food,
 		hobby, home, interrogative, language, mineral, money, music, n_a,
-		person, place, size, sport, technology, time,
+		number, person, place, size, sport, technology, time,
 		travel, weather
 	}
 	public static final String[] wordTypeNames;

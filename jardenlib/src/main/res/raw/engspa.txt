@@ -8,20 +8,20 @@ I am not well,estoy mal,phrase,n_a,n_a,1
 please,por favor,adverb,n_a,n_a,1
 thank you,gracias,phrase,n_a,n_a,1
 my pleasure,mucho gusto,phrase,n_a,n_a,1
-one,uno,number,n_a,n_a,1
-two,dos,number,n_a,n_a,1
-three,tres,number,n_a,n_a,1
-four,cuatro,number,n_a,n_a,1
-five,cinco,number,n_a,n_a,1
+one,uno,number,n_a,number,1
+two,dos,number,n_a,number,1
+three,tres,number,n_a,number,1
+four,cuatro,number,n_a,number,1
+five,cinco,number,n_a,number,1
 cat,gato,noun,masculine,animal,1
 dog,perro,noun,masculine,animal,1
 eat,comer,verb,transIntrans,food,1
 drink,beber,verb,transIntrans,drink,1
-six,seis,number,n_a,n_a,1
-seven,siete,number,n_a,n_a,1
-eight,ocho,number,n_a,n_a,1
-nine,nueve,number,n_a,n_a,1
-ten,diez,number,n_a,n_a,1
+six,seis,number,n_a,number,1
+seven,siete,number,n_a,number,1
+eight,ocho,number,n_a,number,1
+nine,nueve,number,n_a,number,1
+ten,diez,number,n_a,number,1
 mouse,ratón,noun,masculine,animal,1
 rat,rata,noun,feminine,animal,1
 cow,vaca,noun,feminine,animal,1
@@ -199,7 +199,7 @@ December,diciembre,noun,masculine,time,1
 March,marzo,noun,masculine,time,1
 morning,mañana,noun,feminine,time,1
 June,junio,noun,masculine,time,1
-second,segundo,number,n_a,n_a,1
+second,segundo,number,n_a,number,1
 July,julio,noun,masculine,time,1
 May,mayo,noun,masculine,time,1
 September,septiembre,noun,masculine,time,1
@@ -264,16 +264,16 @@ short,corto,adjective,n_a,size,1
 size,tamaño,noun,masculine,size,1
 I am tall,soy alto,phrase,n_a,n_a,1
 I am short,soy bajo,phrase,n_a,n_a,1
-eleven,once,number,n_a,n_a,1
-twelve,doce,number,n_a,n_a,1
-thirteen,trece,number,n_a,n_a,1
-fourteen,catorce,number,n_a,n_a,1
-fifteen,quince,number,n_a,n_a,1
-sixteen,dieciséis,number,n_a,n_a,1
-seventeen,diecisiete,number,n_a,n_a,1
-eighteen,dieciocho,number,n_a,n_a,1
-nineteen,diecinueve,number,n_a,n_a,1
-twenty,veinte,number,n_a,n_a,1
+eleven,once,number,n_a,number,1
+twelve,doce,number,n_a,number,1
+thirteen,trece,number,n_a,number,1
+fourteen,catorce,number,n_a,number,1
+fifteen,quince,number,n_a,number,1
+sixteen,dieciséis,number,n_a,number,1
+seventeen,diecisiete,number,n_a,number,1
+eighteen,dieciocho,number,n_a,number,1
+nineteen,diecinueve,number,n_a,number,1
+twenty,veinte,number,n_a,number,1
 mother,madre,noun,feminine,person,1
 father,padre,noun,masculine,person,1
 sister,hermana,noun,feminine,person,1
@@ -592,8 +592,8 @@ over,encima de,preposition,n_a,place,1
 since,desde,preposition,n_a,place,1
 within,dentro de,preposition,n_a,place,1
 door,puerta,noun,feminine,home,1
-bitter,amargo,adjective,n_a,n_a,1
-sweet,dulce,adjective,n_a,person,1
+bitter,amargo,adjective,n_a,food,1
+sweet,dulce,adjective,n_a,food,1
 I am English,soy inglés,phrase,n_a,n_a,1
 wavy,ondulado,adjective,n_a,n_a,1
 fountain,fuente,noun,feminine,n_a,1
@@ -899,55 +899,55 @@ on the corner of,en la esquina de,preposition,n_a,n_a,1
 opposite,enfrente de,preposition,n_a,n_a,1
 through,a través de,preposition,n_a,n_a,1
 until,hasta,preposition,n_a,n_a,1
-twenty-one,veintiuno,number,n_a,n_a,1
-twenty-two,veintidós,number,n_a,n_a,1
-twenty-three,veintitrés,number,n_a,n_a,1
-twenty-four,veinticuatro,number,n_a,n_a,1
-twenty-five,veinticinco,number,n_a,n_a,1
-twenty-six,veintiséis,number,n_a,n_a,1
-twenty-seven,veintisiete,number,n_a,n_a,1
-twenty-eight,veintiocho,number,n_a,n_a,1
-twenty-nine,veintinueve,number,n_a,n_a,1
-thirty,treinta,number,n_a,n_a,1
-thirty-one,treinta y uno,number,n_a,n_a,1
-thirty-two,treinta y dos,number,n_a,n_a,1
-forty,cuarenta,number,n_a,n_a,1
-fifty,cincuenta,number,n_a,n_a,1
-sixty,sesenta,number,n_a,n_a,1
-seventy,setenta,number,n_a,n_a,1
-eighty,ochenta,number,n_a,n_a,1
-ninety,noventa,number,n_a,n_a,1
-hundred,cien,number,n_a,n_a,1
-zero,cero,number,n_a,n_a,1
-101,ciento uno,number,n_a,n_a,1
-102,ciento dos,number,n_a,n_a,1
-120,ciento veinte,number,n_a,n_a,1
-200,doscientos,number,n_a,n_a,1
-201,doscientos uno,number,n_a,n_a,1
-300,trescientos,number,n_a,n_a,1
-400,cuatrocientos,number,n_a,n_a,1
-500,quinientos,number,n_a,n_a,1
-600,seiscientos,number,n_a,n_a,1
-700,setecientos,number,n_a,n_a,1
-800,ochocientos,number,n_a,n_a,1
-900,novecientos,number,n_a,n_a,1
-1000,mil,number,n_a,n_a,1
-1001,mil uno,number,n_a,n_a,1
-1100,mil cien,number,n_a,n_a,1
-2000,dos mil,number,n_a,n_a,1
-100 000,cien mil,number,n_a,n_a,1
-200 000,doscientos mil,number,n_a,n_a,1
-million,millón,number,n_a,n_a,1
-two million,dos millones,number,n_a,n_a,1
-first,primero,number,n_a,n_a,1
-third,tercero,number,n_a,n_a,1
-fourth,cuarto,number,n_a,n_a,1
-fifth,quinto,number,n_a,n_a,1
-sixth,sexto,number,n_a,n_a,1
-seventh,séptimo,number,n_a,n_a,1
-eighth,octavo,number,n_a,n_a,1
-ninth,noveno,number,n_a,n_a,1
-tenth,décimo,number,n_a,n_a,1
+twenty-one,veintiuno,number,n_a,number,1
+twenty-two,veintidós,number,n_a,number,1
+twenty-three,veintitrés,number,n_a,number,1
+twenty-four,veinticuatro,number,n_a,number,1
+twenty-five,veinticinco,number,n_a,number,1
+twenty-six,veintiséis,number,n_a,number,1
+twenty-seven,veintisiete,number,n_a,number,1
+twenty-eight,veintiocho,number,n_a,number,1
+twenty-nine,veintinueve,number,n_a,number,1
+thirty,treinta,number,n_a,number,1
+thirty-one,treinta y uno,number,n_a,number,1
+thirty-two,treinta y dos,number,n_a,number,1
+forty,cuarenta,number,n_a,number,1
+fifty,cincuenta,number,n_a,number,1
+sixty,sesenta,number,n_a,number,1
+seventy,setenta,number,n_a,number,1
+eighty,ochenta,number,n_a,number,1
+ninety,noventa,number,n_a,number,1
+hundred,cien,number,n_a,number,1
+zero,cero,number,n_a,number,1
+101,ciento uno,number,n_a,number,1
+102,ciento dos,number,n_a,number,1
+120,ciento veinte,number,n_a,number,1
+200,doscientos,number,n_a,number,1
+201,doscientos uno,number,n_a,number,1
+300,trescientos,number,n_a,number,1
+400,cuatrocientos,number,n_a,number,1
+500,quinientos,number,n_a,number,1
+600,seiscientos,number,n_a,number,1
+700,setecientos,number,n_a,number,1
+800,ochocientos,number,n_a,number,1
+900,novecientos,number,n_a,number,1
+1000,mil,number,n_a,number,1
+1001,mil uno,number,n_a,number,1
+1100,mil cien,number,n_a,number,1
+2000,dos mil,number,n_a,number,1
+100 000,cien mil,number,n_a,number,1
+200 000,doscientos mil,number,n_a,number,1
+million,millón,number,n_a,number,1
+two million,dos millones,number,n_a,number,1
+first,primero,number,n_a,number,1
+third,tercero,number,n_a,number,1
+fourth,cuarto,number,n_a,number,1
+fifth,quinto,number,n_a,number,1
+sixth,sexto,number,n_a,number,1
+seventh,séptimo,number,n_a,number,1
+eighth,octavo,number,n_a,number,1
+ninth,noveno,number,n_a,number,1
+tenth,décimo,number,n_a,number,1
 box,caja,noun,feminine,size,1
 dozen,docena,noun,feminine,size,1
 little,poco,noun,masculine,size,1
@@ -1028,7 +1028,7 @@ middle,medio,noun,masculine,n_a,1
 miss,señorita,noun,feminine,person,1
 mr,señor,noun,masculine,person,1
 mrs,señora,noun,feminine,person,1
-number,número,noun,masculine,n_a,1
+number,número,noun,masculine,number,1
 shape,forma,noun,feminine,n_a,1
 someone,alguien,pronoun,n_a,person,1
 something,algo,pronoun,n_a,n_a,1
@@ -1576,7 +1576,7 @@ shop window,escaparate,noun,masculine,place,1
 forest,bosque,noun,masculine,place,1
 youth hostel,albergue juvenil,noun,masculine,building,1
 what's the weather like?,¿qué tiempo hace?,phrase,n_a,weather,1
-what will the weather be like tomorrow?,¿qu tiempo hará mañana?,phrase,n_a,weather,1
+what will the weather be like tomorrow?,¿qué tiempo hará mañana?,phrase,n_a,weather,1
 bad weather,mal tiempo,phrase,n_a,weather,1
 good weather,buen tiempo,phrase,n_a,weather,1
 climate,clima,noun,masculine,weather,1
@@ -1678,8 +1678,6 @@ I don't know,no lo sé,phrase,n_a,person,1
 to do the laundry,lavar la ropa,phrase,n_a,home,1
 to make the bed,hacer la cama,phrase,n_a,home,1
 to wash the dishes,lavar los platos,phrase,n_a,home,1
-
-*** to add to next release
 spicey,picante,adjective,n_a,food,1
 on the way,en camino,phrase,n_a,travel,1
 the bill please,la cuenta por favor,phrase,n_a,food,1
@@ -1690,20 +1688,43 @@ can I get the bill please?,¿me trae la cuenta por favor?,phrase,n_a,money,1
 we should divide the pizza into six pieces,debemos dividir la pizza en seis piezas,phrase,n_a,food,1
 allergy,alergia,noun,feminine,person,1
 that is all,eso es todo,phrase,n_a,food,1
-
 excuse me,disculpe,phrase,n_a,n_a,1
 insipid,insípido,adjective,n_a,food,1
 lime,lima,noun,feminine,food,1
 avocado,aguacate,noun,masculine,food,1
 turkey,pavo,noun,masculine,food,1
-
-eleventh,undécimo,number,n_a,n_a,1
-twelfth,duodécimo,number,n_a,n_a,1
-thirteenth,decimotercero,number,n_a,n_a,1
-fourteenth,decimocuarto,number,n_a,n_a,1
-fifteenth,decimoquinto,number,n_a,n_a,1
-sixteenth,decimosexto,number,n_a,n_a,1
-seventeenth,decimoséptimo,number,n_a,n_a,1
-eighteenth,decimoctavo,number,n_a,n_a,1
-nineteenth,decimonoveno,number,n_a,n_a,1
-twentieth,vigésimo,number,n_a,n_a,1
+eleventh,undécimo,number,n_a,number,1
+twelfth,duodécimo,number,n_a,number,1
+thirteenth,decimotercero,number,n_a,number,1
+fourteenth,decimocuarto,number,n_a,number,1
+fifteenth,decimoquinto,number,n_a,number,1
+sixteenth,decimosexto,number,n_a,number,1
+seventeenth,decimoséptimo,number,n_a,number,1
+eighteenth,decimoctavo,number,n_a,number,1
+nineteenth,decimonoveno,number,n_a,number,1
+twentieth,vigésimo,number,n_a,number,1
+I'm bored,estoy aburrido,phrase,n_a,person,1
+I'm happy,estoy feliz,phrase,n_a,person,1
+I'm very well,estoy muy bien,phrase,n_a,person,1
+I'm sick,estoy enfermo,phrase,n_a,person,1
+I don't know what's the matter with me,no sé qué me pasa,phrase,n_a,person,1
+I think I'm sick,creo que estoy enfermo,phrase,n_a,person,1
+I'm tired,estoy cansado,phrase,n_a,person,1
+I'm sad,estoy triste,phrase,n_a,person,1
+not bad at all,nada mal,phrase,n_a,person,1
+very well - and you?,muy bien - y tú,phrase,n_a,person,1
+backpack,mochila,noun,masculine,travel,1
+you don't say!,¡no me diga!,phrase,n_a,n_a,1
+what do you do on weekends?,¿qué hacen los fines de semana?,phrase,n_a,n_a,1
+we go to our beach house,vamos a la casa que tenemos en la playa,phrase,n_a,n_a,1
+job,trabajo,noun,masculine,n_a,1
+gym,gimnasio,noun,masculine,building,1
+I stay at home,me quedo en casa,phrase,n_a,n_a,1
+lesson,lección,noun,feminine,n_a,1
+I am going shopping,me voy de compras,phrase,n_a,n_a,1
+nothing more,nada más,phrase,n_a,n_a,1
+sparkling water,agua con gas,phrase,n_a,drink,1
+still water,agua sin gas,phrase,n_a,drink,1
+ice,hielo,noun,masculine,mineral,1
+honey,miel,noun,feminine,food,1
+tomato sauce,salsa de tomate,phrase,n_a,food,1

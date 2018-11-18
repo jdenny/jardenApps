@@ -48,7 +48,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private static final String DB_NAME = "engspa.db";
 	// Note: if we update DB_VERSION, also update res/raw/engspaversion.txt
 	private static final int DB_VERSION =
-			43; // updated 1 November 2018; now update engspaversion.txt!
+			45; // updated 18 November 2018; now update engspaversion.txt!
 
 	private static final String TAG = "EngSpaSQLite";
 	private static final String CREATE_TABLE =

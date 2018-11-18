@@ -246,6 +246,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
                     this.engSpaUser.setLearnModePhase2(false);
                     int newUserLevel = userLevel + 1;
                     if (newUserLevel > maxUserLevel) {
+                        this.engSpaUser.setQAStyle(QAStyle.alternate);
                         startPracticeMode(R.string.levelsComplete);
                     } else {
                         engSpaQuiz.setUserLevel(newUserLevel);
