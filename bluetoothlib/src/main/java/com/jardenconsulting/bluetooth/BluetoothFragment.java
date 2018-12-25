@@ -22,13 +22,12 @@ import com.jardenconsulting.bluetoothapplib.R;
 
 public class BluetoothFragment extends Fragment
 		implements OnClickListener, DeviceListListener {
-    public final static String TAG = "BluetoothService";
-    public final static String DEFAULT_PLAYER_NAME = "MyName";
+    public static final String TAG = "BluetoothService";
     // preferences key
     private static final String PLAYER_NAME_KEY = "playerName";
 
 	// tag for DeviceListDialog
-	private final static String DLD = "dld";
+	private static final String DLD = "dld";
 
     // Intent request codes:
     private static final int REQUEST_ENABLE_BT = 2;
@@ -40,7 +39,13 @@ public class BluetoothFragment extends Fragment
 	private BluetoothListener bluetoothListener;
 	private DeviceListDialog deviceListDialog;
 
-	@Override
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		bluetoothListener = (BluetoothListener) getActivity();
@@ -53,7 +58,7 @@ public class BluetoothFragment extends Fragment
         	this.deviceListDialog = new DeviceListDialog();
         }
 		this.deviceListDialog.setListener(this);
-		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (bluetoothAdapter == null) {
 			bluetoothListener.setStatusMessage("Bluetooth not supported on this device");
 			bluetoothListener.setBluetoothService(null);

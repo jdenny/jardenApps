@@ -11,14 +11,14 @@ import static jarden.cards.Suit.Spade;
 
 // TODO: hold cards as byte[], to indicate which player has this card!
 public class CardPack {
-	public enum CardEnum {
+    public enum CardEnum {
 		C2, C3, C4, C5, C6, C7, C8, C9, CT, CJ, CQ, CK, CA,
 		D2, D3, D4, D5, D6, D7, D8, D9, DT, DJ, DQ, DK, DA,
 		H2, H3, H4, H5, H6, H7, H8, H9, HT, HJ, HQ, HK, HA,
 		S2, S3, S4, S5, S6, S7, S8, S9, ST, SJ, SQ, SK, SA
 	}
 	public enum BidEnum {
-		PASS(null, "pass"),
+		PASS(null, "pass"), None(null, "-"),
 		B1C(Club, "1C"), B1D(Diamond, "1D"), B1H(Heart, "1H"), B1S(Spade, "1S"), B1N(null, "1NT"),
 		B2C(Club, "2C"), B2D(Diamond, "2D"), B2H(Heart, "2H"), B2S(Spade, "2S"), B2N(null, "2NT"),
 		B3C(Club, "3C"), B3D(Diamond, "3D"), B3H(Heart, "3H"), B3S(Spade, "3S"), B3N(null, "3NT"),
@@ -51,9 +51,9 @@ public class CardPack {
 			}
 		}
 	}
-	public final static int DECK_SIZE = 52;
-	public final static int PLAYER_CT = 4;
-	public final static int HAND_SIZE = DECK_SIZE / PLAYER_CT;
+	private final static int DECK_SIZE = 52;
+	private final static int PLAYER_CT = 4;
+	private final static int HAND_SIZE = DECK_SIZE / PLAYER_CT;
 	private final static int AVE_PLAYING_POINTS = 18;
 
 	private Card[] cards;
@@ -92,7 +92,7 @@ public class CardPack {
 		ArrayList<Card> cardList;
 		Card card;
 		for (int p = 0; p < PLAYER_CT; p++) {
-			cardList = new ArrayList<Card>();
+			cardList = new ArrayList<>();
 			for (int i = 0; i < HAND_SIZE; i++) {
 				card = cards[i * PLAYER_CT + p];
 				cardList.add(card);
@@ -137,7 +137,7 @@ public class CardPack {
 	}
 	/**
 	 * Use one byte to encode each card: suitNum and rankNum.
-	 * @return
+	 * @return byte[] to be sent across network
 	 */
 	public byte[] getDealAsBytes() {
 		byte[] data = new byte[DECK_SIZE];
@@ -152,4 +152,15 @@ public class CardPack {
 		}
 		return data;
 	}
+	/*!!
+    public String getDealAsString() {
+        Card card;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < DECK_SIZE; i++) {
+            card = cards[i];
+            builder.append(card.toString());
+        }
+        return builder.toString();
+    }
+     */
 }

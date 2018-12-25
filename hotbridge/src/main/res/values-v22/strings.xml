@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="iconDiamond">\u2666</string>
+    <string name="iconHeart">\u2665</string>
+</resources>

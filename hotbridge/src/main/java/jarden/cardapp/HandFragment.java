@@ -2,11 +2,14 @@ package jarden.cardapp;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jardenconsulting.cardapp.BuildConfig;
+import com.jardenconsulting.cardapp.HotBridgeActivity;
 import com.jardenconsulting.cardapp.R;
 
 import java.util.ArrayList;
@@ -18,7 +21,6 @@ import jarden.cards.Player;
 import jarden.cards.Suit;
 
 public class HandFragment extends Fragment {
-	private View view;
 	private Player player;
 	private CardPack cardPack;
 	private TextView playerTitle;
@@ -30,7 +32,7 @@ public class HandFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.hand_layout, container, false);
+		View view = inflater.inflate(R.layout.hand_layout, container, false);
 
 		playerTitle = view.findViewById(R.id.playerTitle);
 		spadeValues = view.findViewById(R.id.spades);
@@ -40,11 +42,22 @@ public class HandFragment extends Fragment {
 
 		return view;
 	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        if(BuildConfig.DEBUG) {
+            Log.i(HotBridgeActivity.TAG,
+                    "HandFragment.onCreate(savedInstanceState=" +
+                            (savedInstanceState==null?"null":"not null") +
+                            ")");
+        }
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 	public void setData(Player player, CardPack cardPack) {
 		this.player = player;
 		this.cardPack = cardPack;
 	}
-	public void getHand() {
+	public void showHand() {
 		Hand hand = cardPack.getHand(player);
 		this.playerTitle.setText(player.toString());
 		ArrayList<Card> cards = hand.getCards();

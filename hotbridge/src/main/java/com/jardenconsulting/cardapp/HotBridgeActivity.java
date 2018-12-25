@@ -25,30 +25,34 @@ import jarden.cardapp.DealFragment;
  * linked via bluetooth.
  * 
  * Android app version of jarden.cards in Java course.
+ *
  * @author john.denny@gmail.com
  */
-public class MainActivity extends AppCompatActivity
+public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener {
-    public static final String TAG = "CardApp";
-	private String appName;
+    public static final String TAG = "hotbridge";
+    private static final String BLUETOOTH = "bluetooth";
+    private String appName;
 	private FragmentManager fragmentManager;
 	private BluetoothFragment bluetoothFragment;
-	private DealFragment cardFragment;
+	private DealFragment dealFragment;
 	private TextView statusText;
 	private boolean closing = false;
-	private boolean twoPlayer = false;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 		this.appName = getResources().getString(R.string.app_name);
-		this.statusText = (TextView) findViewById(R.id.statusText);
+		this.statusText = findViewById(R.id.statusText);
 		this.fragmentManager = getSupportFragmentManager();
-		this.cardFragment = (DealFragment) fragmentManager.findFragmentById(R.id.cardFragment);
-		setTitle(this.appName + " - single player");
-		showCardFragment();
-	}
+		this.dealFragment = (DealFragment) fragmentManager.findFragmentById(R.id.cardFragment);
+		showDealFragment();
+		// see if bluetoothFragment has been retained from previous creation
+        if (savedInstanceState != null) {
+            this.bluetoothFragment = (BluetoothFragment) fragmentManager.findFragmentByTag(BLUETOOTH);
+        }
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,14 +65,14 @@ public class MainActivity extends AppCompatActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.twoPlayerButton) {
-            this.twoPlayer = !item.isChecked(); // isChecked returns old state!
-            item.setChecked(this.twoPlayer); // do what Android should do for us!
-            if (this.twoPlayer) {
+            boolean twoPlayer = !item.isChecked(); // isChecked returns old state!
+            item.setChecked(twoPlayer); // do what Android should do for us!
+            this.dealFragment.setTwoPlayer(twoPlayer);
+            if (twoPlayer) {
                 showBluetoothFragment();
             } else {
-                setTitle(this.appName + " - single player");
-                cardFragment.setClientMode(false);
-                showCardFragment();
+                dealFragment.setClientMode(false);
+                showDealFragment();
             }
             return true; // menu item dealt with
         } else if (id == R.id.reviseButton) {
@@ -83,20 +87,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(BuildConfig.DEBUG) Log.d(TAG, "MainActivity.onDestroy()");
+        if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.onDestroy()");
         this.closing = true;
-    }
-    
-    public boolean isTwoPlayer() {
-    	return this.twoPlayer;
     }
 
 	private void showBluetoothFragment() {
  		FragmentTransaction ft = fragmentManager.beginTransaction();
- 		ft.hide(cardFragment);
+ 		ft.hide(dealFragment);
  		if (this.bluetoothFragment == null) {
  			bluetoothFragment = new BluetoothFragment();
- 			ft.add(R.id.fragmentContainer, bluetoothFragment);
+ 			ft.add(R.id.fragmentContainer, bluetoothFragment, BLUETOOTH);
  		} else {
  			ft.show(this.bluetoothFragment);
  		}
@@ -104,20 +104,24 @@ public class MainActivity extends AppCompatActivity
 		setTitle(this.appName + " - not connected");
 	}
 	public void setConnected(boolean clientMode) {
-        if(BuildConfig.DEBUG) Log.d(TAG, "MainActivity.setConnected()");
-        showCardFragment();
-		setTitle(this.appName + " - connected");
+        if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.setConnected()");
+        dealFragment.setClientMode(clientMode);
+        showDealFragment();
 		setStatusMessage("");
-		cardFragment.setClientMode(clientMode);
 	}
-	private void showCardFragment() {
-		String title = this.appName + " - " + (this.twoPlayer?"two players":"single player");
-		setTitle(title);
+	private void showDealFragment() {
+        String title;
+        if (dealFragment.isTwoPlayer()) {
+            title = "two player " + (dealFragment.isClientMode() ? "(C)" : "(S)");
+        } else {
+            title = "single player";
+        }
+		setTitle(this.appName + " - " + title);
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		if (this.bluetoothFragment != null) {
 			ft.hide(bluetoothFragment);
 		}
-		ft.show(cardFragment);
+		ft.show(dealFragment);
 		ft.commit();
 	}
 
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 	@Override // BluetoothListener
 	public void onConnectedAsServer(String deviceName) {
     	setConnected(false);
-		cardFragment.shuffleAndDeal();
+        dealFragment.shuffleDealShow();
 	}
 	@Override // BluetoothListener
 	public void onConnectedAsClient(String deviceName) {
@@ -136,12 +140,12 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // BluetoothListener
 	public void onMessageRead(byte[] data) {
-		cardFragment.onMessageRead(data);
+		dealFragment.onMessageRead(data);
 	}
 	@Override // BluetoothListener
 	public void onConnectionLost() {
-        if(BuildConfig.DEBUG) Log.d(TAG, "MainActivity.handleConnectionLost()");
-        if (this.closing || !this.twoPlayer) return;
+        if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.handleConnectionLost()");
+        if (this.closing || !this.dealFragment.isTwoPlayer()) return;
         showBluetoothFragment();
 		setStatusMessage("other device has disconnected; waiting for another player");
 	}
@@ -161,9 +165,9 @@ public class MainActivity extends AppCompatActivity
 	public void setBluetoothService(BluetoothService bluetoothService) {
 		if (bluetoothService == null) {
 			Toast.makeText(this, "Bluetooth not available", Toast.LENGTH_LONG).show();
-			showCardFragment();
+			showDealFragment();
 		} else {
-			this.cardFragment.setBluetoothService(bluetoothService);
+			this.dealFragment.setBluetoothService(bluetoothService);
 		}
 	}
 	@Override // BluetoothListener
