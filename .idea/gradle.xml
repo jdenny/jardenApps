@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/jardenjavalib" />
             <option value="$PROJECT_DIR$/jardenlib" />
             <option value="$PROJECT_DIR$/jardenprovider" />
+            <option value="$PROJECT_DIR$/javacourse" />
             <option value="$PROJECT_DIR$/johnjava" />
             <option value="$PROJECT_DIR$/knowme" />
             <option value="$PROJECT_DIR$/life" />
@@ -24,6 +25,7 @@
             <option value="$PROJECT_DIR$/quizmaze" />
             <option value="$PROJECT_DIR$/spanish" />
             <option value="$PROJECT_DIR$/testfreakwiz" />
+            <option value="$PROJECT_DIR$/wifidirect" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

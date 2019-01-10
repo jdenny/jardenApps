@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/jardenjavalib/jardenjavalib.iml" filepath="$PROJECT_DIR$/jardenjavalib/jardenjavalib.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenlib/jardenlib.iml" filepath="$PROJECT_DIR$/jardenlib/jardenlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenprovider/jardenprovider.iml" filepath="$PROJECT_DIR$/jardenprovider/jardenprovider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/javacourse/javacourse.iml" filepath="$PROJECT_DIR$/javacourse/javacourse.iml" />
       <module fileurl="file://$PROJECT_DIR$/johnjava/johnjava.iml" filepath="$PROJECT_DIR$/johnjava/johnjava.iml" />
       <module fileurl="file://$PROJECT_DIR$/knowme/knowme.iml" filepath="$PROJECT_DIR$/knowme/knowme.iml" />
       <module fileurl="file://$PROJECT_DIR$/life/life.iml" filepath="$PROJECT_DIR$/life/life.iml" />
@@ -18,6 +19,7 @@
       <module fileurl="file://$PROJECT_DIR$/quizmaze/quizmaze.iml" filepath="$PROJECT_DIR$/quizmaze/quizmaze.iml" />
       <module fileurl="file://$PROJECT_DIR$/spanish/spanish.iml" filepath="$PROJECT_DIR$/spanish/spanish.iml" />
       <module fileurl="file://$PROJECT_DIR$/testfreakwiz/testfreakwiz.iml" filepath="$PROJECT_DIR$/testfreakwiz/testfreakwiz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wifidirect/wifidirect.iml" filepath="$PROJECT_DIR$/wifidirect/wifidirect.iml" />
     </modules>
   </component>
 </project>

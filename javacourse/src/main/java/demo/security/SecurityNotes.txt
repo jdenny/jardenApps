@@ -1,0 +1,44 @@
+Adding security features to Java.
+
+demo.security.GetProperties
+	Run without security manager: runs okay.
+	Run with security manager; pass VM argument: -Djava.security.manager
+		throws security exception
+	Add security policy
+		create a policy file, e.g. docs/GetProperties.policy (using policytool)
+		add VM argument: -Djava.security.policy=docs/java.policy
+		runs okay
+
+demo.security.Login
+	Run as is: LoginException: no login modules configured
+	Add login configuration file, e.g. docs/Login.acn
+		add VM argument: -Djava.security.auth.login.config=docs/Login.acn
+		runs okay
+	Note: 2 different options in Login.acn for the loginModule to use:
+		either Windows own security realm, or my UserLoginModule
+
+demo.security.SignAFile and Verify.Signature
+	see java-docs on SignAFile
+	
+thread.jdk5.demo.ProblemCache (reads files from a web site over http)
+	Create a jar file for this program:
+ 		export to c:/temp/ProblemCache.jar the required files:
+ 			thread.jdk5.demo.ProblemCache
+ 			thread.jdk5.demo.ProblemSwing
+ 			jarden.http.MyHttpClient
+ 		(set main class to ProblemSwing)
+ 	Sign the jar file:
+ 		jarsigner -keystore c:/users/john/java/keystores/johnIdentity2.jks
+ 			-signedjar c:/temp/SProblemCache.jar c:/temp/ProblemCache.jar john2
+ 	Export the public key (as a certificate)
+ 		keytool -export -keystore <as above> -alias john2 -file c:/temp/john.cer
+ 	Import public key into new keystore
+ 		keytool -import -alias john -file c:/temp/john.cer -keystore c:/temp/mycerts.jks
+ 	Run without security manager; should run ok:
+ 		java -jar c:/temp/SProblemCache.jar
+ 	Run with security manager; should throw java.security.AccessControlException:
+ 		java -Djava.security.manager -jar c:/temp/SProblemCache.jar
+ 	Create policy file (using policytool); see docs/ProblemCache.policy
+ 	Run with security manager and policy file; should run ok:
+ 		java -Djava.security.manager -java.security.policy=c:/temp/problemCache.policy
+ 			-jar c:/temp/SProblemCache.jar

@@ -276,18 +276,16 @@ Samsung Galaxy Note 3, SM-N9005
 Moto G5
 	1920 x 1080 pixels, 5.0"
 	Android 8.1, Oreo, API 27
-	16GB, 3Gb RAM
-
+	16Gb, 3Gb RAM
+Huawei MediaPad M3 Lite
+	1920 x 1200 pixels
+	Android 7.0, Nougat, API 24
+	32Gb, 3Gb RAM
 Samsung Galaxy S3 Mini, GT-I8190N
 	480 x 800 pixels, 4.0", ~233 ppi
 	Android 4.1.2, Jellybean, API 16
 	8Gb, 1Gb RAM
 	7.34Gb SD card
-samsung galaxy young (Y) GT-S5360
-	240 x 320 pixels, 3.0 inches, ~133 ppi
-		or 290 x 385 dp
-	Android 2.3.6, Gingerbread, API 10
-	160Mb available memory, 290Mb Ram
 	
 Media
 -----
@@ -340,14 +338,10 @@ TableLayout, stretchColumns="1" (column/s to fill extra space)
 			Button, layout_width="wrap_content"
 			Button
 
-Clear system cache on Nexus 7
------------------------------
-power off
-hold power and volume down for 10 seconds
-"recovery mode", power, android on back with "no command"
-power and volume up for 3 seconds; release volume up
-"wipe cache partition"
-"reboot system now"
+Encoding
+--------
+if error: unmappable character for encoding UTF8 (e.g. characters with accents)
+	reload file with alternative encoding: ISO-8859-1 (reload, not convert)
 
 Android Versions
 ----------------
