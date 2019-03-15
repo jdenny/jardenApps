@@ -30,18 +30,18 @@ public class MainActivity extends AppCompatActivity
         this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
         this.maxPitch = this.sharedPreferences.getInt(MAX_PITCH_KEY, 3);
         setContentView(R.layout.activity_main);
-        this.staveView = (StaveView) findViewById(R.id.staveView);
-        Button button = (Button) findViewById(R.id.goButton);
+        this.staveView = findViewById(R.id.staveView);
+        Button button = findViewById(R.id.goButton);
         button.setOnClickListener(this);
-        button = (Button) findViewById(R.id.playButton);
+        button = findViewById(R.id.playButton);
         button.setOnClickListener(this);
-        button = (Button) findViewById(R.id.cButton);
+        button = findViewById(R.id.cButton);
         button.setOnClickListener(this);
-        this.upButton = (Button) findViewById(R.id.upButton);
+        this.upButton = findViewById(R.id.upButton);
         this.upButton.setOnClickListener(this);
-        this.downButton = (Button) findViewById(R.id.downButton);
+        this.downButton = findViewById(R.id.downButton);
         this.downButton.setOnClickListener(this);
-        this.maxPitchTextView = (TextView) findViewById(R.id.maxPitchTextView);
+        this.maxPitchTextView = findViewById(R.id.maxPitchTextView);
         setMaxPitch2(maxPitch);
     }
 

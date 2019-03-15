@@ -37,6 +37,7 @@
     <string name="wordLookup">Word Lookup</string>
     <string name="wrong">Wrong</string>
     <string name="yesStr">Yes</string>
+    <string name="intValue">int value</string>
 
 
 </resources>

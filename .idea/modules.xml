@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/androidcourse/androidcourse.iml" filepath="$PROJECT_DIR$/androidcourse/androidcourse.iml" />
       <module fileurl="file://$PROJECT_DIR$/bluetoothlib/bluetoothlib.iml" filepath="$PROJECT_DIR$/bluetoothlib/bluetoothlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/developmentmastersamplesWiFiDirectDemo/developmentmastersamplesWiFiDirectDemo.iml" filepath="$PROJECT_DIR$/developmentmastersamplesWiFiDirectDemo/developmentmastersamplesWiFiDirectDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/documentation/documentation.iml" filepath="$PROJECT_DIR$/documentation/documentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/explorer/explorer.iml" filepath="$PROJECT_DIR$/explorer/explorer.iml" />
       <module fileurl="file://$PROJECT_DIR$/hotbridge/hotbridge.iml" filepath="$PROJECT_DIR$/hotbridge/hotbridge.iml" />

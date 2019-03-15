@@ -28,7 +28,7 @@ public class PresetQuiz extends Quiz {
     public enum QuizMode {
         LEARN, PRACTICE
     }
-    private final static int TARGET_CORRECT_CT = 3;
+    private int targetCorrectCt = 5;
     private QuizMode quizMode = QuizMode.PRACTICE;
     private List<Integer> failedIndexList = new LinkedList<>();
     private QuestionAnswer currentQA;
@@ -220,11 +220,11 @@ public class PresetQuiz extends Quiz {
     /**
      * if QuizMode.LEARN:
      *    if no fails && end of currentQA: throw endOfQuestionsException
-     *    if (3 consecutiveCorrects && fails) or end of current:
+     *    if (targetCorrectCt consecutiveCorrects && fails) or end of current:
      *          get qaList[failedIndexList[0]]
      *    else: get qaList[qaListIndex]
      * if QuizMode.PRACTICE:
-     *    if (3 consecutiveCorrects && fails): get qaList[failedIndexList[0]]
+     *    if (targetCorrectCt consecutiveCorrects && fails): get qaList[failedIndexList[0]]
      *    else get qaList[randomIndexList[randomListIndex]]
      *
      * @return question string from current questionAnswer
@@ -238,7 +238,7 @@ public class PresetQuiz extends Quiz {
                 this.qaListIndex = -1;
                 throw new EndOfQuestionsException();
             }
-            if ((this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) || currentCt == 0) {
+            if ((this.consecutiveCorrects >= targetCorrectCt && failCt > 0) || currentCt == 0) {
                 this.currentQA = getNextFail();
             } else {
                 this.qaListIndex++;
@@ -246,7 +246,7 @@ public class PresetQuiz extends Quiz {
                 this.currentQAIndex = qaListIndex;
             }
         } else { // must be PRACTICE mode
-            if (this.consecutiveCorrects >= TARGET_CORRECT_CT && failCt > 0) {
+            if (this.consecutiveCorrects >= targetCorrectCt && failCt > 0) {
                 this.currentQA = getNextFail();
             } else {
                 ++this.randomListIndex;
@@ -313,5 +313,11 @@ public class PresetQuiz extends Quiz {
     }
     public int getFailedCount() {
         return this.failedIndexList.size();
+    }
+    public void setTargetCorrectCt(int targetCorrectCt) {
+        this.targetCorrectCt = targetCorrectCt;
+    }
+    public int getTargetCorrectCt() {
+        return this.targetCorrectCt;
     }
 }

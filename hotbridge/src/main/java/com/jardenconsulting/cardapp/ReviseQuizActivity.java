@@ -58,11 +58,12 @@ TODO:
 * mark all the raw bids
  */
 public class ReviseQuizActivity extends AppCompatActivity
-        implements FreakWizFragment.Quizable, IntegerDialog.UserSettingsListener {
+        implements FreakWizFragment.Quizable, IntegerDialog.IntValueListener {
     public static final String TAG = "ReviseIt";
     private static final String quizFileName = "reviseit.txt";
         // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String QUESTION_INDEX_KEY = "questionIndexKey";
+    private static final String TARGET_CORRECTS_KEY = "targetCorrectsKey";
     private static final String FAIL_INDICES_KEY = "failIndicesKey";
     private static final String LEARN_MODE_KEY = "learnModeKey";
     private static final String BID_SEARCH_KEY = "bidSearchKey";
@@ -98,6 +99,7 @@ public class ReviseQuizActivity extends AppCompatActivity
 
     private PresetQuiz reviseItQuiz;
     private boolean bidSearch;
+    private boolean changingQuestionIndex;
     private FragmentManager fragmentManager;
     private FreakWizFragment freakWizFragment;
     private BidSearchFragment bidSearchFragment;
@@ -129,6 +131,10 @@ public class ReviseQuizActivity extends AppCompatActivity
         int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
         if (savedQuestionIndex > 0) {
             reviseItQuiz.setQuestionIndex(savedQuestionIndex);
+        }
+        int savedTargetsCorrect = sharedPreferences.getInt(TARGET_CORRECTS_KEY, -1);
+        if (savedTargetsCorrect > 0) {
+            reviseItQuiz.setTargetCorrectCt(savedTargetsCorrect);
         }
         String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
         if (failIndexStr.length() > 0) {
@@ -180,12 +186,23 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else if (id == R.id.bidSearchButton) {
             setBidSearchMode();
         } else if (id == R.id.setCurrentIndexButton) {
+            // if we add more ints for the user to update, then
+            // change this boolean to an enum
+            changingQuestionIndex = true;
             if (this.integerDialog == null) {
                 this.integerDialog = new IntegerDialog();
-                this.integerDialog.setTitle("Change Current Index");
             }
-            this.integerDialog.setUserLevel(reviseItQuiz.getQuestionIndex() + 1);
+            this.integerDialog.setTitle("Change Current Index");
+            this.integerDialog.setIntValue(reviseItQuiz.getQuestionIndex() + 1);
             this.integerDialog.show(getSupportFragmentManager(), "UserLevelDialog");
+        } else if (id == R.id.setTargetCorrectsButton) {
+            changingQuestionIndex = false;
+            if (this.integerDialog == null) {
+                this.integerDialog = new IntegerDialog();
+            }
+            this.integerDialog.setTitle("Change Target Corrects");
+            this.integerDialog.setIntValue(reviseItQuiz.getTargetCorrectCt());
+            this.integerDialog.show(getSupportFragmentManager(), "TargetCorrectsDialog");
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -197,6 +214,8 @@ public class ReviseQuizActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         int questionIndex = reviseItQuiz.getQuestionIndex();
         editor.putInt(QUESTION_INDEX_KEY, questionIndex);
+        int targetCorrectCt = reviseItQuiz.getTargetCorrectCt();
+        editor.putInt(TARGET_CORRECTS_KEY, targetCorrectCt);
         PresetQuiz.QuizMode quizMode = reviseItQuiz.getQuizMode();
         editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
         editor.putBoolean(BID_SEARCH_KEY, bidSearch);
@@ -224,11 +243,15 @@ public class ReviseQuizActivity extends AppCompatActivity
         return this.notesResIds;
     }
 
-    @Override // UserSettingsListener
-    public void onUpdateUserLevel(int userLevel) {
-        // to people, ordinals start from 1; to computers, they start from 0
-        this.reviseItQuiz.setQuestionIndex(userLevel - 1);
-        this.freakWizFragment.askQuestion();
+    @Override // IntValueListener
+    public void onUpdateIntValue(int intValue) {
+        if (changingQuestionIndex) {
+            // to people, ordinals start from 1; to computers, they start from 0
+            this.reviseItQuiz.setQuestionIndex(intValue - 1);
+            this.freakWizFragment.askQuestion();
+        } else {
+            this.reviseItQuiz.setTargetCorrectCt(intValue);
+        }
     }
     public void backToQuiz() {
         if (this.reviseItQuiz.getQuizMode() == LEARN) {

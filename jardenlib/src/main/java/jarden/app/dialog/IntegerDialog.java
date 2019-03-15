@@ -16,26 +16,26 @@ import com.jardenconsulting.jardenlib.R;
 
 public class IntegerDialog extends DialogFragment
 		implements DialogInterface.OnClickListener {
-	private EditText userLevelEditText;
-	private int userLevel = 1;
-	private UserSettingsListener userSettingsListener;
+	private EditText intValueEditText;
+	private int intValue = 1;
+	private IntValueListener intValueListener;
 	private AlertDialog alertDialog;
     private String title = "IntegerDialog";
 
-    public interface UserSettingsListener {
-        void onUpdateUserLevel(int userLevel);
+    public interface IntValueListener {
+        void onUpdateIntValue(int intValue);
 	}
     public void setTitle(String title) {
         this.title = title;
     }
-	public void setUserLevel(int userLevel) {
-	    this.userLevel = userLevel;
+	public void setIntValue(int intValue) {
+	    this.intValue = intValue;
     }
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		this.userSettingsListener = (UserSettingsListener) context;
+		this.intValueListener = (IntValueListener) context;
 	}
 
 	@Override
@@ -45,8 +45,8 @@ public class IntegerDialog extends DialogFragment
 		LayoutInflater inflater = activity.getLayoutInflater();
 		builder.setTitle(this.title);
 		View view = inflater.inflate(R.layout.dialog_integer, null);
-        this.userLevelEditText = view.findViewById(R.id.userLevelEditText);
-        userLevelEditText.setText(String.valueOf(this.userLevel));
+        this.intValueEditText = view.findViewById(R.id.intValueEditText);
+        intValueEditText.setText(String.valueOf(this.intValue));
         builder.setNegativeButton(R.string.cancel, this);
 		builder.setView(view);
 		builder.setPositiveButton(R.string.update, this);
@@ -63,14 +63,14 @@ public class IntegerDialog extends DialogFragment
 			// may be tempted to click again
 			Button positiveButton = this.alertDialog.getButton(which);
 			positiveButton.setEnabled(false);
-			String userLevelStr = userLevelEditText.getText().toString();
-			int userLevel;
+			String intValueStr = intValueEditText.getText().toString();
+			int intValue;
             try {
-                userLevel = Integer.parseInt(userLevelStr);
+                intValue = Integer.parseInt(intValueStr);
             } catch (NumberFormatException nfe) {
-                userLevel = -1;
+                intValue = -1;
             }
-            this.userSettingsListener.onUpdateUserLevel(userLevel);
+            this.intValueListener.onUpdateIntValue(intValue);
 		}
 	}
 }

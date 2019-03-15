@@ -15,9 +15,12 @@
         android:id="@+id/bidSearchButton"
         android:title="@string/bidSearch"
         app:showAsAction="never"/>
-
     <item
         android:id="@+id/setCurrentIndexButton"
         android:title="@string/setCurrentIndex"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/setTargetCorrectsButton"
+        android:title="@string/setTargetCorrects"
         app:showAsAction="never"/>
 </menu>

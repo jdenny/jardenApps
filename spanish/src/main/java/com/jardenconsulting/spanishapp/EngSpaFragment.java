@@ -533,7 +533,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		 * 		EngSpaFragment.onNewLevel() [I/F QuizEventListener]
 		 * 
 		 * UserDialog ->
-		 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
+		 * 		MainActivity.onUserUpdate() [I/F IntValueListener] ->
 		 * 			EngSpaFragment.setUser() ->
 		 * 				EngSpaFragment.onNewLevel() [if level changed]
 		 */

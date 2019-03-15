@@ -584,10 +584,10 @@ public class MainActivity extends AppCompatActivity
 	/**
 	 * Called on completion of UserDialog.
 	 */
-	@Override // UserSettingsListener
+	@Override // IntValueListener
 	public void onUpdateUserLevel(int userLevel) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"onUpdateUserLevel(" + userLevel + ")");
+				"onUpdateIntValue(" + userLevel + ")");
 		if (userLevel < 1 || userLevel > this.engSpaDAO.getMaxUserLevel()) {
 			this.statusTextView.setText(R.string.invalidUserLevel);
 			return;
@@ -605,7 +605,7 @@ public class MainActivity extends AppCompatActivity
 		if (this.currentFragmentTag == FragmentTag.ENGSPA &&
                 this.engSpaFragment != null) this.engSpaFragment.reset();
 	}
-	@Override // UserSettingsListener && EngSpaActivity
+	@Override // IntValueListener && EngSpaActivity
 	public EngSpaUser getEngSpaUser() {
 		return this.viewlessFragment.getEngSpaUser();
 	}

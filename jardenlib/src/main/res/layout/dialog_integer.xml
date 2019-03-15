@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/userLevelEditText"
+        android:id="@+id/intValueEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/learning_level"
+        android:hint="@string/intValue"
         android:inputType="number" />
