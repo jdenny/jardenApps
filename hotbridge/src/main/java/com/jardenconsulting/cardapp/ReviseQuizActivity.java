@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +24,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import jarden.app.dialog.IntegerDialog;
-import jarden.app.revisequiz.BidSearchFragment;
 import jarden.app.revisequiz.FreakWizFragment;
 import jarden.quiz.PresetQuiz;
 
@@ -66,7 +64,6 @@ public class ReviseQuizActivity extends AppCompatActivity
     private static final String TARGET_CORRECTS_KEY = "targetCorrectsKey";
     private static final String FAIL_INDICES_KEY = "failIndicesKey";
     private static final String LEARN_MODE_KEY = "learnModeKey";
-    private static final String BID_SEARCH_KEY = "bidSearchKey";
     private static final int[] notesResIds = {
             R.string.autofit,
             R.string.compelled,
@@ -86,7 +83,6 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.sandpit,
             R.string.side_suit,
             R.string.skew,
-            R.string.splinter,
             R.string.strong_fit,
             R.string.strong_or_skew,
             R.string.suit_setter,
@@ -98,11 +94,9 @@ public class ReviseQuizActivity extends AppCompatActivity
     };
 
     private PresetQuiz reviseItQuiz;
-    private boolean bidSearch;
     private boolean changingQuestionIndex;
-    private FragmentManager fragmentManager;
+    //!! private FragmentManager fragmentManager;
     private FreakWizFragment freakWizFragment;
-    private BidSearchFragment bidSearchFragment;
     private SharedPreferences sharedPreferences;
     private IntegerDialog integerDialog;
 
@@ -127,7 +121,6 @@ public class ReviseQuizActivity extends AppCompatActivity
         }
         this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
         boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
-        this.bidSearch = sharedPreferences.getBoolean(BID_SEARCH_KEY, false);
         int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
         if (savedQuestionIndex > 0) {
             reviseItQuiz.setQuestionIndex(savedQuestionIndex);
@@ -143,12 +136,11 @@ public class ReviseQuizActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_revise);
-        this.fragmentManager = getSupportFragmentManager();
+        //!! this.fragmentManager =
+        FragmentManager fragmentManager =
+                getSupportFragmentManager();
         this.freakWizFragment = (FreakWizFragment)
-                this.fragmentManager.findFragmentById(R.id.freakWizFragment);
-        this.bidSearchFragment = (BidSearchFragment)
-                this.fragmentManager.findFragmentById(R.id.bidsearchFragment);
-
+                fragmentManager.findFragmentById(R.id.freakWizFragment);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -158,14 +150,10 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else {
             if (BuildConfig.DEBUG) Log.d(TAG, "CAN read external storage");
         }
-        if (bidSearch) {
-            setBidSearchMode();
+        if (learnMode) {
+            setLearnMode();
         } else {
-            if (learnMode) {
-                setLearnMode();
-            } else {
-                setPracticeMode();
-            }
+            setPracticeMode();
         }
     }
     @Override
@@ -183,8 +171,6 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else if (id == R.id.practiceModeButton) {
             setPracticeMode();
             this.freakWizFragment.askQuestion();
-        } else if (id == R.id.bidSearchButton) {
-            setBidSearchMode();
         } else if (id == R.id.setCurrentIndexButton) {
             // if we add more ints for the user to update, then
             // change this boolean to an enum
@@ -218,7 +204,6 @@ public class ReviseQuizActivity extends AppCompatActivity
         editor.putInt(TARGET_CORRECTS_KEY, targetCorrectCt);
         PresetQuiz.QuizMode quizMode = reviseItQuiz.getQuizMode();
         editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
-        editor.putBoolean(BID_SEARCH_KEY, bidSearch);
         List<Integer> failList = reviseItQuiz.getFailedIndexList();
         String failStr;
         if (failList.size() == 0) {
@@ -226,7 +211,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         } else {
             StringBuilder sBuilder = new StringBuilder();
             for (int failIndex : failList) {
-                sBuilder.append(failIndex + ",");
+                sBuilder.append(failIndex).append(",");
             }
             failStr = sBuilder.substring(0, sBuilder.length() - 1);
         }
@@ -240,7 +225,7 @@ public class ReviseQuizActivity extends AppCompatActivity
 
     @Override // Quizable
     public int[] getNotesResIds() {
-        return this.notesResIds;
+        return notesResIds;
     }
 
     @Override // IntValueListener
@@ -253,37 +238,23 @@ public class ReviseQuizActivity extends AppCompatActivity
             this.reviseItQuiz.setTargetCorrectCt(intValue);
         }
     }
-    public void backToQuiz() {
-        if (this.reviseItQuiz.getQuizMode() == LEARN) {
-            setLearnMode();
-        } else {
-            setPracticeMode();
-        }
-    }
     private void setLearnMode() {
         reviseItQuiz.setQuizMode(LEARN);
         setTitle(R.string.learnMode);
-        showFreakWizFragment();
+        //!! showFreakWizFragment();
     }
     private void setPracticeMode() {
         reviseItQuiz.setQuizMode(PRACTICE);
         setTitle(R.string.practiceMode);
-        showFreakWizFragment();
+        //!! showFreakWizFragment();
     }
+    /*!!
     private void showFreakWizFragment() {
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.hide(bidSearchFragment);
         ft.show(freakWizFragment);
         ft.commit();
     }
-    private void setBidSearchMode() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.show(bidSearchFragment);
-        ft.hide(freakWizFragment);
-        ft.commit();
-        this.bidSearchFragment.loadBidList(null);
-        setTitle(R.string.bidSearch);
-    }
+    */
     private void showMessage(String message) {
         if (BuildConfig.DEBUG) Log.d(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

@@ -11,10 +11,11 @@
         android:id="@+id/practiceModeButton"
         android:title="@string/practiceMode"
         app:showAsAction="never"/>
+    <!--
     <item
         android:id="@+id/bidSearchButton"
         android:title="@string/bidSearch"
-        app:showAsAction="never"/>
+        app:showAsAction="never"/> -->
     <item
         android:id="@+id/setCurrentIndexButton"
         android:title="@string/setCurrentIndex"

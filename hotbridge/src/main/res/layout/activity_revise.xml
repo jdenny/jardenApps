@@ -14,9 +14,4 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent" />
 
-    <fragment android:name="jarden.app.revisequiz.BidSearchFragment"
-              android:id="@+id/bidsearchFragment"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
-
 </LinearLayout>

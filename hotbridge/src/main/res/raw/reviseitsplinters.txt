@@ -66,7 +66,7 @@ Q: 1C, 3C/3D
 F1: [a]raw[/a]
 A: 6+ in suit, 4-6 HCP, no 4+ major
 Q: 1C, 3H/3S/4C/4D
-F1: [a]suit_setter[/a]; similarly 1C/1D/1NT, 3H/3S/4C/4D
+F1: [a]suit_setter[/a]; not [a]splinter[/a] as no suit to support; similarly 1C/1D/1NT, 3H/3S/4C/4D
 A: suit-setter
 
 # 1 bid after 1D
@@ -127,7 +127,7 @@ Q: 1H, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
 A: 4+ hearts, 11+ HCP (23 TP)
 Q: 1H, 3C/3D
-F1: [a]raw[/a]spl
+F1: [a]raw[/a]
 A: 6+ in suit, 8-10 HCP, no 4+ major (20 TP)
 Q: 1H, 3H
 F1: [a]raw[/a]
@@ -136,8 +136,8 @@ Q: 1H, 3NT
 F1: [a]threeNT|3NT[/a]; with 16+ HCP bid 2D, [a]relay[/a]
 A: 13-15 HCP, no 4+ major, 3343 or 3334 (25 TP)
 Q: 1H, 3S/4C/4D
-F1: [a]suit_setter[/a]
-A: suit-setter
+F1: [a]splinter[/a]
+A: 4+ hearts, 13+ HCP, splinter (25 TP)
 Q: 1H, 4H
 F1: [a]raw[/a]
 A: 6+ hearts, 8-10 HCP (20 TP)
@@ -168,9 +168,9 @@ A: 5 spades, 8-10 HCP (20 TP)
 Q: 1S, 3NT
 F1: [a]threeNT|3NT[/a]; with 16+ HCP bid 2D, [a]relay[/a]
 A: 13-15 HCP, <4 spades, 3433, 3343 or 3334 (25 TP)
-Q: 1S, 3H/4C/4D
-F1: [a]suit_setter[/a]
-A: suit-setter
+Q: 1S, 4C/4D/4H
+F1: [a]splinter[/a]
+A: 4+ spades, 13+ HCP, splinter (25 TP)
 Q: 1S, 4S
 F1: [a]raw[/a]
 A: 6+ spades, 8-10 HCP (20 TP)
@@ -221,9 +221,9 @@ A: 4 clubs, 8-10 HCP
 Q: 2C, 5C
 F1: [a]preempt[/a]
 A: 5+ clubs, 8-10 HCP
-Q: 2C, 3H/3S/4D
-F1: [a]suit_setter[/a]
-A: suit-setter
+Q: 2C, 3D/3H/3S
+F1: [a]splinter[/a]
+A: 3+ clubs, 13+ HCP, splinter (25 TP)
 Q: 2C, 3NT
 F1: [a]threeNT|3NT[/a]
 A: 13-15 HCP, all suits guarded (25 TP)
@@ -247,8 +247,8 @@ Q: 2D, 5D
 F1: [a]preempt[/a]
 A: 5+ diamonds, 8-10 HCP
 Q: 2D, 3H/3S/4C
-F1: [a]suit_setter[/a]
-A: suit-setter
+F1: [a]splinter[/a]
+A: 3+ diamonds, 13+ HCP, splinter (25 TP)
 Q: 2C, 3NT
 F1: [a]threeNT|3NT[/a]
 A: 13-15 HCP, all suits guarded (25 TP)
@@ -327,9 +327,9 @@ A: 6+ clubs, <4 spades, <19 HCP (20 TP)
 Q: 1C, 1S; 3D
 A: 6+ diamonds, <4 spades, <19 HCP (20 TP)
 # (page 74)
-Q: 1C, 1S; 3H/4C/4D
-F1: [a]suit_setter[/a]
-A: suit-setter
+Q: 1C, 1S; 4C
+F1: [a]splinter[/a]
+A: 4+ spades, 21+ HCP, splinter (25 TP)
 
 # (page 66)
 Q: 1C, 2C; 3C
@@ -345,8 +345,8 @@ Q: 1C, 2D; 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (18+ HCP) or skew, no 5+ major
 # (page 75)
-Q: 1C, 2D; 3H/3S/4C
-F1: [a]suit_setter[/a]
+Q: 1C, 2D; 4D
+F1: [a]suit-setter[/a]; can't be splinter, as no suit to support
 A: suit-setter
 
 # 2 bids after 1D
@@ -420,16 +420,16 @@ F1: [a]raw[/a]
 A: 6+ in suit, <4 spades
 # (page 76)
 Q: 1H, 1S; 3H
-F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
+F1: [a]suit-setter[/a]; not forcing as limited and not [a]compelled[/a]
 A: suit-setter
 Q: 1H, 1S; 3S
 A: 5 spades
 Q: 1H, 1S; 3NT
 F1: [a]threeNT[/a]
 A: all suits guarded (25 TP)
-Q: 1H, 1S; 3H/4C/4D
-F1: [a]suit_setter[/a]; similarly 1C/1D, 1S; 3H/4C/4D
-A: suit-setter
+Q: 1H, 1S; 4C/4D
+F1: [a]splinter[/a] agreeing spades; similarly 1C/1D, 1S; 4C/4D
+A: 4+ spades, splinter (25 TP)
 Q: 1H, 1S; 4S
 A: 6+ spades
 
@@ -448,7 +448,7 @@ Q: 1H, 1NT; 3C/3D
 F1: [a]raw[/a]
 A: 6+ in bid suit
 Q: 1H, 1NT; 3H/3S/4C/4D
-F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
+F1: [a]suit-setter[/a]; not forcing as limited and not [a]compelled[/a]
 A: suit-setter
 Q: 1H, 1NT; 4H/4S/5C/5D
 F1: [a]to_play[/a]
@@ -462,8 +462,8 @@ Q: 1H, 2S; 3C/3D
 A: 7+ in suit, 0 spades
 
 Q: 1H, 2NT; 4D
-F1: [a]keycard_ask[/a] as agreed hearts
-A: keycard ask
+F1: [a]splinter[/a] already agreed hearts
+A: 14+ HCP, splinter (25 TP)
 
 # 2 bids after 1S
 Q: 1S, 1NT; pass
@@ -484,7 +484,7 @@ Q: 1S, 1NT; 3C/3D
 F1: [a]raw[/a]
 A: 6+ in bid suit
 Q: 1S, 1NT; 3S/4C/4D
-F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
+F1: [a]suit-setter[/a]; not forcing as limited and not [a]compelled[/a]
 A: suit-setter
 Q: 1S, 1NT; 4S/5C/5D
 F1: [a]to_play[/a]
@@ -500,11 +500,11 @@ A: 3 spades, <3 hearts
 
 # 2 bids after 2D
 Q: 2D, 2S; 4D
-F1: [a]suit_setter[/a]
+F1: [a]suit_setter[/a]; not [a]splinter[/a], as diamonds previously shown
 A: suit-setter
 Q: 2D, 2NT; 4C
-F1: [a]values_for_5[/a] already agreed diamonds
-A: values for 5
+F1: [a]splinter[/a] already agreed diamonds
+A: 14+ HCP, splinter (25 TP)
 
 # responses to 1NT
 Q: 1C, 1NT; 2C
@@ -571,19 +571,19 @@ A: 8 clubs, <20pp, 6-9 HCP
 Q: 2C, 4C
 A: 4 clubs, 8-10 HCP
 Q: 1H, 4C
-F1: [a]suit_setter[/a]
-A: suit-setter
+F1: [a]splinter[/a]
+A: 4+ hearts, 13+ HCP, splinter (25 TP)
 Q: 2D, 4C
-F1: [a]suit_setter[/a]
-A: suit-setter
+F1: [a]splinter[/a]
+A: 3+ diamonds, 13+ HCP, splinter (25 TP)
 Q: 1H, 2NT; 4C
-F1: [a]values_for_5[/a]; already agreed hearts
-A: values for 5
+F1: [a]splinter[/a]; already agreed hearts
+A: 14+ HCP, splinter (25+ TP)
 Q: 2C, 2S; 4C
-F1: [a]suit_setter[/a]
+F1: [a]suit_setter[/a] can’t be splinter as already bid clubs
 A: suit-setter
 Q: 1C/1D/1NT, 4C
-F1: [a]suit_setter[/a]
+F1: [a]suit_setter[/a] can’t be splinter as no suit to support
 A: suit-setter
 Q: 1H, 2NT; 3D, 4C
 F1: [a]values_for_5[/a]
@@ -610,8 +610,8 @@ F1: although limited, [a]strong_fit[/a], as now [a]compelled[/a]. Alert: artific
 A: 5+ hearts
 # page 50
 Q: 1NT, 2D; 2S, 4D
-F1: [a]suit_setter[/a]
-A: suit-setter
+F1: [a]splinter[/a]
+A: 5+ spades, splinter (25 TP)
 Q: 1NT, 2D; 2S, 4D; 4S
 F1: [a]to_play[/a]
 A: to play
@@ -626,9 +626,9 @@ A: all suits guarded (alternative place to play)
 Q: 1D, 1S; 2D, 3NT
 F1: [a]threeNT|3NT[/a]
 A: all suits covered (25 TP)
-Q: 1D, 1S; 2S, 4D
-F1: [a]keycard_ask[/a]
-A: keycard ask
+Q: 1D, 1S; 2S, 4H
+F1: [a]splinter[/a]
+A: splinter, 10+ HCP (25 TP)
 Q: 1D, 1S; 2S, 4H; 4NT
 F1: [a]keycard_ask[/a]
 A: keycard ask
@@ -744,7 +744,7 @@ Q: 1H, 2D; 2H, 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (15+ HCP) or skew, <3 hearts, <3 spades
 Q: 1H, 2D; 2H, 3C; 3H
-F1: [a]suit_setter[/a]; forcing as [a]compelled[/a]
+F1: [a]suit-setter[/a]; forcing as [a]compelled[/a]
 A: suit-setter
 
 # page 77
@@ -757,8 +757,8 @@ A: 3 hearts with honours
 
 # page 82
 Q: 2D, 3H
-F1: [a]suit_setter[/a]; forcing as unlimited
-A: suit-setter
+F1: [a]splinter[/a]
+A: 3+ diamonds, 13+ HCP, splinter (25 TP)
 Q: 2C, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
 A: 3+ clubs, 11+ HCP (23 TP)
@@ -881,14 +881,14 @@ A: 3 hearts
 
 # page 125
 Q: 1C, 1S; 2S, 4C
-F1: [a]values_for_5[/a], already agreed spades
-A: values for 5
+F1: [a]splinter[/a], already agreed spades
+A: 9+ HCP, splinter (25 TP)
 Q: 1C, 2D; 2S, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
 A: 3 spades
-Q: 1C, 2D; 2S, 2NT; 4D
-F1: [a]keycard_ask[/a], already agreed spades
-A: keycard ask
+Q: 1C, 2D; 2S, 2NT; 4H
+F1: [a]splinter[/a], already agreed spades
+A: splinter (25 TP)
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
 A: guard in hearts
