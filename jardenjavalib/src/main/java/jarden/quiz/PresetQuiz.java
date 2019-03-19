@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -30,16 +31,19 @@ public class PresetQuiz extends Quiz {
     }
     private int targetCorrectCt = 5;
     private QuizMode quizMode = QuizMode.PRACTICE;
-    private List<Integer> failedIndexList = new LinkedList<>();
+    //!! List<Integer> failedIndexList = new LinkedList<>();
+    private Set<Integer> failedIndexSet = new HashSet<>();
     private QuestionAnswer currentQA;
     private int consecutiveCorrects = 0;
     /*
        index of current question, which may have come from
           qaList[qaListIndex] (learn mode)
           or randomIndexList[randomListIndex] (practice mode)
-          or failedIndexList[0]
+          or failedIndexList[failedIndexSetIndex]
      */
     private int currentQAIndex;
+    // current index of failedIndexList:
+    private int failedIndexSetIndex = -1;
 
     /**
      * Build a Quiz from the InputStream. Assumes the inputStream contains
@@ -217,6 +221,26 @@ public class PresetQuiz extends Quiz {
 		return answer.substring(0, len);
 	}
 	// Methods added for ReviseItQuiz
+    /**   Revised methods:
+     * if QuizMode.LEARN:
+     *    if no fails && end of currentQA: throw endOfQuestionsException
+     *    if (targetCorrectCt consecutiveCorrects && fails) or end of current:
+     *       getNextFail()
+     *    else: get qaList[qaListIndex]
+     * if QuizMode.PRACTICE:
+     *    if (targetCorrectCt consecutiveCorrects && fails):
+     *       getNextFail()
+     *    else get qaList[randomIndexList[randomListIndex]]
+     *
+     * getNextFail()
+     *    if (fails.size == 0) throw exception
+     *    get qaList[failedIndexList[failedIndexSetIndex++]] // don't remove!
+     *    if (failedIndexSetIndex > fails.size) failedIndexSetIndex = 0
+     *
+     * setCorrect(booleanCorrect):
+     *       if correct: remove from failed list (if in!) // QA could have been random or fail
+     *       else: add to failed list (if not in!) // QA could have been random or fail
+     */
     /**
      * if QuizMode.LEARN:
      *    if no fails && end of currentQA: throw endOfQuestionsException
@@ -265,15 +289,26 @@ public class PresetQuiz extends Quiz {
         return question;
     }
     private QuestionAnswer getNextFail() {
-        consecutiveCorrects = 0;
-        this.currentQAIndex = this.failedIndexList.remove(0);
+        if (++failedIndexSetIndex >= failedIndexSet.size()) {
+            failedIndexSetIndex = 0;
+        }
+        this.consecutiveCorrects = 0;
+        Iterator<Integer> iterator = failedIndexSet.iterator();
+        Integer index = null;
+        // really want to do:
+        //    currentQAIndex = failedIndexSet.get(failedIndexSetIndex)
+        // but no such method!
+        for (int i = 0; i <= failedIndexSetIndex; i++) {
+            index = iterator.next();
+        }
+        this.currentQAIndex = index;
         return this.qaList.get(currentQAIndex);
     }
     public int getQuestionIndex() {
         return qaListIndex;
     }
-    public List<Integer> getFailedIndexList() {
-        return failedIndexList;
+    public Set<Integer> getFailedIndexSet() {
+        return failedIndexSet;
     }
     public QuestionAnswer getCurrentQuestionAnswer() {
         return currentQA;
@@ -287,7 +322,7 @@ public class PresetQuiz extends Quiz {
     }
     public void setFailIndices(String[] failIndices) {
         for (String failIndex: failIndices) {
-            failedIndexList.add(Integer.parseInt(failIndex));
+            failedIndexSet.add(Integer.parseInt(failIndex));
         }
     }
     public void setQuizMode(QuizMode quizMode) {
@@ -303,16 +338,17 @@ public class PresetQuiz extends Quiz {
         return this.currentQAIndex;
     }
     public void setCorrect(boolean correct) {
+        // failedIndexSet
         if (correct) {
             this.consecutiveCorrects++;
+            failedIndexSet.remove(this.currentQAIndex);
         } else {
             consecutiveCorrects = 0;
-            assert this.currentQAIndex >= 0: "currentQAIndex=" + currentQAIndex;
-            this.failedIndexList.add(this.currentQAIndex);
+            this.failedIndexSet.add(this.currentQAIndex);
         }
     }
     public int getFailedCount() {
-        return this.failedIndexList.size();
+        return this.failedIndexSet.size();
     }
     public void setTargetCorrectCt(int targetCorrectCt) {
         this.targetCorrectCt = targetCorrectCt;

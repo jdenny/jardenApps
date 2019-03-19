@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.Set;
 
 import jarden.app.dialog.IntegerDialog;
 import jarden.app.revisequiz.FreakWizFragment;
@@ -95,7 +95,6 @@ public class ReviseQuizActivity extends AppCompatActivity
 
     private PresetQuiz reviseItQuiz;
     private boolean changingQuestionIndex;
-    //!! private FragmentManager fragmentManager;
     private FreakWizFragment freakWizFragment;
     private SharedPreferences sharedPreferences;
     private IntegerDialog integerDialog;
@@ -136,7 +135,6 @@ public class ReviseQuizActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_revise);
-        //!! this.fragmentManager =
         FragmentManager fragmentManager =
                 getSupportFragmentManager();
         this.freakWizFragment = (FreakWizFragment)
@@ -204,13 +202,13 @@ public class ReviseQuizActivity extends AppCompatActivity
         editor.putInt(TARGET_CORRECTS_KEY, targetCorrectCt);
         PresetQuiz.QuizMode quizMode = reviseItQuiz.getQuizMode();
         editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
-        List<Integer> failList = reviseItQuiz.getFailedIndexList();
+        Set<Integer> failedIndexSet = reviseItQuiz.getFailedIndexSet();
         String failStr;
-        if (failList.size() == 0) {
+        if (failedIndexSet.size() == 0) {
             failStr = "";
         } else {
             StringBuilder sBuilder = new StringBuilder();
-            for (int failIndex : failList) {
+            for (int failIndex : failedIndexSet) {
                 sBuilder.append(failIndex).append(",");
             }
             failStr = sBuilder.substring(0, sBuilder.length() - 1);
@@ -241,20 +239,11 @@ public class ReviseQuizActivity extends AppCompatActivity
     private void setLearnMode() {
         reviseItQuiz.setQuizMode(LEARN);
         setTitle(R.string.learnMode);
-        //!! showFreakWizFragment();
     }
     private void setPracticeMode() {
         reviseItQuiz.setQuizMode(PRACTICE);
         setTitle(R.string.practiceMode);
-        //!! showFreakWizFragment();
     }
-    /*!!
-    private void showFreakWizFragment() {
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.show(freakWizFragment);
-        ft.commit();
-    }
-    */
     private void showMessage(String message) {
         if (BuildConfig.DEBUG) Log.d(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
