@@ -179,7 +179,15 @@
         but partner may bid on.
     </string>
     <string name="two_choice">
-        Partner to choose from 2 lowest unshown suits; forcing.
+        Partner to choose from 2 lowest unshown suits (usually both minors); forcing.
+        \n1H, 1S; 2NT = 4+ in minors; cannot be 5+ as shown 4+ hearts
+        \n1NT, 2NT = 4+ in minors; we must have 8+ in a minor; they must have 8+ in a major
+        \notherwise 5+, e.g. 1C/1D, 2NT = 5+ in both minors
+    </string>
+    <string name="twoNT">
+        [a]strong_fit[/a]
+        \n[a]responses_to_relay[/a]
+        \n[a]two_choice[/a]
     </string>
     <string name="values_for_5">
         In fit auction, lowest available side suit at 4-level (usually 4C).

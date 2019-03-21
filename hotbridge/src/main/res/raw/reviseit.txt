@@ -121,7 +121,7 @@ Q: 1H, 2H
 F1: [a]raw[/a]
 A: 4 hearts, 8-10 HCP (20 TP)
 Q: 1H, 2S
-F1: [a]raw[/a]
+F1: [a]raw[/a]; with 4 hearts, pass
 A: 6+ spades, <4 hearts, 5-7 HCP (17 TP)
 Q: 1H, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
@@ -226,7 +226,7 @@ F1: [a]suit_setter[/a]
 A: suit-setter
 Q: 2C, 3NT
 F1: [a]threeNT|3NT[/a]
-A: 13-15 HCP, all suits guarded (25 TP)
+A: <3 clubs, 13-15 HCP, all suits guarded (25 TP)
 
 # 1 bid after 2D
 Q: 2D, 2H/2S

@@ -155,5 +155,8 @@
     <orderEntry type="module" module-name="jardenjavalib" />
     <orderEntry type="module" module-name="jardenlib" />
     <orderEntry type="module" module-name="bluetoothlib" />
+    <orderEntry type="module" module-name="jardenjavalib" />
+    <orderEntry type="module" module-name="jardenlib" />
+    <orderEntry type="module" module-name="bluetoothlib" />
   </component>
 </module>
