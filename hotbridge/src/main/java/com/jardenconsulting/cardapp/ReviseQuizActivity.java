@@ -133,7 +133,6 @@ public class ReviseQuizActivity extends AppCompatActivity
             String[] failIndices = failIndexStr.split(",");
             reviseItQuiz.setFailIndices(failIndices);
         }
-
         setContentView(R.layout.activity_revise);
         FragmentManager fragmentManager =
                 getSupportFragmentManager();

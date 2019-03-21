@@ -510,7 +510,7 @@ A: values for 5
 Q: 1C, 1NT; 2C
 F1: may have 4+ major; invitational [a]relay[/a]. Alert: artificial
 A: 19-20 HCP (23 TP)
-Q: 1D, 1NT; 2C/2D/2H/2S
+Q: 1D, 1NT; 2H/2S/3C/3D
 F1: [a]raw[/a]
 A: 6+ in suit
 Q: 1D, 1NT; 2NT
@@ -861,7 +861,7 @@ A: 10+ HCP
 # page 98
 Q: 1H, (2C) 2D
 F1: natural (not relay), as 2C by them makes auction [a]disturbed[/a]
-A: 4+ diamonds, 8+ HCP, no 4+ major
+A: 4+ diamonds, <4 clubs, 8+ HCP, no 4+ major
 
 # page 102
 Q: 1D, (2H) double
@@ -871,8 +871,7 @@ A: asks partner to bid best suit (except hearts)
 # page 124
 Q: 1H, 1S; 2S, 2NT
 F1: [a]waiting[/a]. Alert: artificial
-# are these points correct?
-A: 13-15 HCP, waiting
+A: 11+ HCP, waiting
 Q: 1H, 1S; 2S, 2NT; 3D
 A: 4+ diamonds
 Q: 1H, 2D; 2H, 2NT
@@ -1031,4 +1030,4 @@ F1: not [a]relay[/a] as [a]disturbed[/a]
 A: 4+ HCP, no 4+ major, 4+ diamonds
 Q: 1D, 1H; 1S, 1NT
 F1: with 8+ HCP bid relay;
-A: <4 spades, <8 HCP, no 6-card suit
+A: <4 spades, <8 HCP, no 6+ suit
