@@ -626,18 +626,18 @@ A: all suits guarded (alternative place to play)
 Q: 1D, 1S; 2D, 3NT
 F1: [a]threeNT|3NT[/a]
 A: all suits covered (25 TP)
-Q: 1D, 1S; 2S, 4D
+Q: 1D, 1S; 2S, 3D
+F1: exploring game or more
+A: 4+ diamonds
+Q: 1D, 1S; 2S, 3D; 4D
 F1: [a]keycard_ask[/a]
 A: keycard ask
-Q: 1D, 1S; 2S, 4H; 4NT
-F1: [a]keycard_ask[/a]
-A: keycard ask
-Q: 1D, 1S; 2S, 4H; 4NT, 5D
-A: 1 or 4 keycards
-Q: 1D, 1S; 2S, 4H; 4NT, 5D; 5H
+Q: 1D, 1S; 2S, 3D; 4D, 4NT
+A: 2 or 5 keycards
+Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C
 F1: [a]queen_ask[/a]
 A: have you got the spade queen?
-Q: 1D, 1S; 2S, 4H; 4NT, 5D; 5H, 6C
+Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C, 6C
 A: yes, I have spade queen, plus club king
 # page 61
 Q: 1C, 1H; 1S, 2D
