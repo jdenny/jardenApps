@@ -31,7 +31,6 @@ public class PresetQuiz extends Quiz {
     }
     private int targetCorrectCt = 5;
     private QuizMode quizMode = QuizMode.PRACTICE;
-    //!! List<Integer> failedIndexList = new LinkedList<>();
     private Set<Integer> failedIndexSet = new HashSet<>();
     private QuestionAnswer currentQA;
     private int consecutiveCorrects = 0;
@@ -42,7 +41,7 @@ public class PresetQuiz extends Quiz {
           or failedIndexList[failedIndexSetIndex]
      */
     private int currentQAIndex;
-    // current index of failedIndexList:
+    // current index of failedIndexSet:
     private int failedIndexSetIndex = -1;
 
     /**
@@ -62,9 +61,7 @@ public class PresetQuiz extends Quiz {
      *
      * @param is an input stream containing the text
      * @param encoding e.g. "iso-8859-1"
-     * @throws IOException
-     * @see Quiz#getQuestionStyle()
-     * @see #getNextQuestion(int)
+     * @throws IOException if problem reading from InputStream is
      */
     public PresetQuiz(InputStream is, String encoding) throws IOException {
 		this(new InputStreamReader(is, encoding));
