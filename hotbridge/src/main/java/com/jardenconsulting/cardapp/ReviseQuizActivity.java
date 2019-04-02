@@ -194,6 +194,7 @@ public class ReviseQuizActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        if (BuildConfig.DEBUG) Log.d(TAG, "ReviseQuizActivity.onPause()");
         SharedPreferences.Editor editor = sharedPreferences.edit();
         int questionIndex = reviseItQuiz.getQuestionIndex();
         editor.putInt(QUESTION_INDEX_KEY, questionIndex);
