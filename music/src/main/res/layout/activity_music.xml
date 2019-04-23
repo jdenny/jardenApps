@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.jardenconsulting.music.MainActivity">
+    tools:context="com.jardenconsulting.music.MusicActivity">
 
     <jarden.music.StaveView
         android:id="@+id/staveView"
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/minus"
-            android:id="@+id/downButton"/>
+            android:id="@+id/minusButton"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/plus"
-            android:id="@+id/upButton"/>
+            android:id="@+id/plusButton"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -60,5 +60,12 @@
             android:id="@+id/cButton"/>
 
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/notesEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textCapCharacters"/>
 
 </LinearLayout>
