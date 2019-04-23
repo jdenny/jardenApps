@@ -215,7 +215,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 		this.caught = false;
 		this.timer = new Timer(this, getCurrentBaddySleep());
 	}
-	@Override
+	@Override // TimerListener
 	public void onTimerEvent() {
     	// check to see if game already over before we
 		// create new runnable object:

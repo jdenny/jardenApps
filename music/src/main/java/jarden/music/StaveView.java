@@ -82,6 +82,17 @@ public class StaveView extends View {
         this.radius = staveGap / 2;
         this.noteGap = 3 * staveGap;
         if (!this.isInEditMode()) {
+            /*
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .build();
+            this.soundPool =
+                    new SoundPool.Builder()
+                            .setMaxStreams(2)
+                            .setAudioAttributes(audioAttributes)
+                            .build();
+             */
             this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
             guitarSounds = new int[8];
             // To create new sounds, use QuickTime player, trim, save,
@@ -162,10 +173,12 @@ public class StaveView extends View {
     public void playNext() {
         if (++highlightedNote >= notePitches.length) highlightedNote = 0;
         invalidate(); // i.e. redraw showing new highlighted note
-        this.soundPool.play(guitarSounds[notePitches[highlightedNote]], 1.0f, 1.0f, 0, 0, 1.5f);
+        this.soundPool.play(guitarSounds[notePitches[highlightedNote]], 1.0f, 1.0f, 0, 0, 1.0f);
+        //?? playSound(FREQUENCIES[notePitches[highlightedNote]], 144100);
     }
     public void playC() {
-        this.soundPool.play(guitarSounds[0], 1.0f, 1.0f, 0, 0, 1.5f);
+        this.soundPool.play(guitarSounds[0], 1.0f, 1.0f, 0, 0, 1.0f);
+        //?? playSound(FREQUENCIES[0], 144100);
     }
     public void stop() {
         this.stopping = true;
@@ -217,7 +230,7 @@ public class StaveView extends View {
         playSound(FREQUENCIES[highlightedNote++], 44100);
         if (highlightedNote >= FREQUENCIES.length) highlightedNote = 0;
         */
-        this.soundPool.play(guitarSounds[highlightedNote++], 1.0f, 1.0f, 0, 0, 1.5f);
+        this.soundPool.play(guitarSounds[highlightedNote++], 1.0f, 1.0f, 0, 0, 1.0f);
         if (highlightedNote >= guitarSounds.length) highlightedNote = 0;
     }
 

@@ -102,7 +102,7 @@ public class PresetQuiz extends Quiz {
 				answer = line.substring(4);
 				qaList.add(new QuestionAnswer(answer, answer));
 			} else {
-				System.out.println("unrecognised line: " + line);
+				throw new IOException("unrecognised line: " + line);
 			}
 		}
 		reader.close();
