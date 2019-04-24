@@ -2,7 +2,9 @@ package com.jardenconsulting.music;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,9 +20,6 @@ import android.widget.Toast;
 import java.util.Random;
 
 import jarden.music.StaveView;
-
-import static jarden.music.StaveView.NOTE_CT;
-
 
 /*
     current strategy, which only copes with key of C:
@@ -41,8 +40,10 @@ public class MusicActivity extends AppCompatActivity
         implements View.OnClickListener, TextWatcher {
     private static final String TAG = "MusicActivity";
     private static final String MAX_PITCH_KEY = "MaxPitch";
+    private static final int MAX_NOTE_CT = 12;
 
-    private int[] notePitches = new int[NOTE_CT];
+    private int[] notePitches = new int[MAX_NOTE_CT];
+    private int noteCt = MAX_NOTE_CT;
     private StaveView staveView;
     private SharedPreferences sharedPreferences;
     private Button downButton;
@@ -122,9 +123,9 @@ public class MusicActivity extends AppCompatActivity
             Toast.makeText(this, "unrecognised onClick()", Toast.LENGTH_LONG).show();
         }
     }
-    public void newNotes() {
+    private void newNotes() {
         if (BuildConfig.DEBUG) Log.d(TAG, "newNotes()");
-        for (int i = 0; i < NOTE_CT; i++) {
+        for (int i = 0; i < MAX_NOTE_CT; i++) {
             int newPitch = random.nextInt(maxPitch);
             // don't have same note 3 times in succession
             if (i >= 2 && newPitch == notePitches[i-1] && newPitch == notePitches[i-2]) {
@@ -132,8 +133,9 @@ public class MusicActivity extends AppCompatActivity
             }
             notePitches[i] = newPitch;
         }
+        noteCt = MAX_NOTE_CT;
         setNotesText();
-        staveView.setNotePitches(notePitches);
+        staveView.setNotePitches(notePitches, noteCt);
         staveView.setHighlightedNote(-1);
     }
     private void setNotesText() {
@@ -147,7 +149,7 @@ public class MusicActivity extends AppCompatActivity
         notesEditText.setText(strBuilder.toString());
     }
     public void playNext() {
-        if (++highlightedNote >= notePitches.length) highlightedNote = 0;
+        if (++highlightedNote >= noteCt) highlightedNote = 0;
         staveView.setHighlightedNote(highlightedNote);
         this.soundPool.play(guitarSounds[notePitches[highlightedNote]], 1.0f, 1.0f, 0, 0, 1.0f);
     }
@@ -163,7 +165,7 @@ public class MusicActivity extends AppCompatActivity
         setMaxPitch2(maxPitch);
     }
     private void setMaxPitch2(int maxPitch) {
-        this.upButton.setEnabled(maxPitch <= NOTE_CT);
+        this.upButton.setEnabled(maxPitch <= MAX_NOTE_CT);
         this.downButton.setEnabled(maxPitch >= 3);
         this.maxPitchTextView.setText(Integer.toString(maxPitch));
         this.maxPitch = maxPitch;
@@ -176,23 +178,54 @@ public class MusicActivity extends AppCompatActivity
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (BuildConfig.DEBUG) Log.d(TAG, "onTextChanged(" + s + ")");
         String notesText = notesEditText.getText().toString();
         char ch;
-        int i, j;
-        for (i = 0, j = 0; i < notesText.length() && j < NOTE_CT; i++) {
+        noteCt = 0;
+        for (int i = 0; i < notesText.length() && noteCt < MAX_NOTE_CT; i++) {
             ch = notesText.charAt(i);
             if (ch != ' ') {
-                notePitches[j++] = ch - 'C';
+                notePitches[noteCt++] = ch - 'C';
             }
         }
-        for (; j < NOTE_CT; j++) {
-            notePitches[j] = -1;
-        }
-        staveView.setNotePitches(notePitches);
+        staveView.setNotePitches(notePitches, noteCt);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+
+    }
+
+    // alternative way of playing sounds:
+    public static final double[] FREQUENCIES = {
+            261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251
+    };
+
+    private void playSound(double frequency, int duration) {
+        // AudioTrack definition
+        int mBufferSize = AudioTrack.getMinBufferSize(44100,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_8BIT);
+
+        AudioTrack mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
+                AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
+                mBufferSize, AudioTrack.MODE_STREAM);
+
+        // Sine wave
+        double[] mSound = new double[4410];
+        short[] mBuffer = new short[duration];
+        for (int i = 0; i < mSound.length; i++) {
+            mSound[i] = Math.sin((2.0 * Math.PI * i / (44100 / frequency)));
+            mBuffer[i] = (short) (mSound[i] * Short.MAX_VALUE);
+        }
+
+        mAudioTrack.setStereoVolume(AudioTrack.getMaxVolume(), AudioTrack.getMaxVolume());
+        // mAudioTrack.setVolume(AudioTrack.getMaxVolume()); // API 21 onwards
+        mAudioTrack.play();
+
+        mAudioTrack.write(mBuffer, 0, mSound.length);
+        mAudioTrack.stop();
+        mAudioTrack.release();
 
     }
 }

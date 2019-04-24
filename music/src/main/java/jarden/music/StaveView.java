@@ -6,9 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +18,6 @@ import com.jardenconsulting.music.R;
  */
 public class StaveView extends View {
     private static final int INDENT = 5;
-    public static final int NOTE_CT = 12;
     private static final String TAG = "StaveView";
 
     private int staveGap;
@@ -31,8 +27,8 @@ public class StaveView extends View {
     private Paint blackPaint = new Paint();
     private Paint redPaint;
     private int[] notePitches;
+    private int noteCt;
     private int viewWidth;
-    private boolean stopping = false;
     private int highlightedNote = -1;
 
     public StaveView(Context context) {
@@ -66,13 +62,9 @@ public class StaveView extends View {
             int y = INDENT + i * this.staveGap;
             canvas.drawLine(0, y, viewWidth, y, this.blackPaint);
         }
-        int notePitch;
-        for (int i = 0; i < NOTE_CT; i++) {
-            notePitch = notePitches[i];
-            if (notePitch >= 0) {
-                Paint paint = (i == this.highlightedNote) ? redPaint : blackPaint;
-                showNote(canvas, i + 1, notePitches[i], paint);
-            }
+        for (int i = 0; i < noteCt; i++) {
+            Paint paint = (i == this.highlightedNote) ? redPaint : blackPaint;
+            showNote(canvas, i + 1, notePitches[i], paint);
         }
     }
     private void showNote(Canvas canvas, int position, int notePitch, Paint paint) {
@@ -93,45 +85,9 @@ public class StaveView extends View {
         this.highlightedNote = highlightedNote;
         invalidate();
     }
-    public void setNotePitches(int[] notePitches) {
+    public void setNotePitches(int[] notePitches, int noteCt) {
         this.notePitches = notePitches;
+        this.noteCt = noteCt;
         invalidate();
-    }
-
-    public void stop() {
-        this.stopping = true;
-    }
-
-    // alternative way of playing sounds:
-    public static final double[] FREQUENCIES = {
-            261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251
-    };
-
-    private void playSound(double frequency, int duration) {
-        // AudioTrack definition
-        int mBufferSize = AudioTrack.getMinBufferSize(44100,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_8BIT);
-
-        AudioTrack mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
-                AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
-                mBufferSize, AudioTrack.MODE_STREAM);
-
-        // Sine wave
-        double[] mSound = new double[4410];
-        short[] mBuffer = new short[duration];
-        for (int i = 0; i < mSound.length; i++) {
-            mSound[i] = Math.sin((2.0 * Math.PI * i / (44100 / frequency)));
-            mBuffer[i] = (short) (mSound[i] * Short.MAX_VALUE);
-        }
-
-        mAudioTrack.setStereoVolume(AudioTrack.getMaxVolume(), AudioTrack.getMaxVolume());
-        // mAudioTrack.setVolume(AudioTrack.getMaxVolume()); // API 21 onwards
-        mAudioTrack.play();
-
-        mAudioTrack.write(mBuffer, 0, mSound.length);
-        mAudioTrack.stop();
-        mAudioTrack.release();
-
     }
 }
