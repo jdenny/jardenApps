@@ -22,6 +22,8 @@ import java.util.Random;
 import jarden.music.StaveView;
 
 /*
+    next step: c is middle c (c'); C is octave above (c'')
+
     current strategy, which only copes with key of C:
     pitches are specified relative to middle c (c'):
         c'=0, d'=1, e'=2, f'=3, etc, c''=7
@@ -41,6 +43,9 @@ public class MusicActivity extends AppCompatActivity
     private static final String TAG = "MusicActivity";
     private static final String MAX_PITCH_KEY = "MaxPitch";
     private static final int MAX_NOTE_CT = 12;
+    private static final char[] noteMap = {
+            'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C', 'D', 'E', 'F', 'G', 'A', 'B'
+    };
 
     private int[] notePitches = new int[MAX_NOTE_CT];
     private int noteCt = MAX_NOTE_CT;
@@ -90,7 +95,7 @@ public class MusicActivity extends AppCompatActivity
                         .build();
          */
         this.soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-        guitarSounds = new int[8];
+        guitarSounds = new int[14];
         // To create new sounds, use QuickTime player, trim, save,
         // copy m4a files to res/raw; m4a are audio files
         guitarSounds[0] = soundPool.load(this, R.raw.guitarc, 1);
@@ -101,6 +106,12 @@ public class MusicActivity extends AppCompatActivity
         guitarSounds[5] = soundPool.load(this, R.raw.guitara, 1);
         guitarSounds[6] = soundPool.load(this, R.raw.guitarb, 1);
         guitarSounds[7] = soundPool.load(this, R.raw.guitarc2, 1);
+        guitarSounds[8] = soundPool.load(this, R.raw.guitard2, 1);
+        guitarSounds[9] = soundPool.load(this, R.raw.guitare2, 1);
+        guitarSounds[10] = soundPool.load(this, R.raw.guitarf2, 1);
+        guitarSounds[11] = soundPool.load(this, R.raw.guitarg2, 1);
+        guitarSounds[12] = soundPool.load(this, R.raw.guitara2, 1);
+        guitarSounds[13] = soundPool.load(this, R.raw.guitarb2, 1);
         newNotes();
     }
 
@@ -140,10 +151,8 @@ public class MusicActivity extends AppCompatActivity
     }
     private void setNotesText() {
         StringBuilder strBuilder = new StringBuilder();
-        char ch;
         for (int pitch: notePitches) {
-            ch = (char)('C' + pitch);
-            strBuilder.append(ch);
+            strBuilder.append(noteMap[pitch]);
             strBuilder.append(' ');
         }
         notesEditText.setText(strBuilder.toString());
@@ -156,7 +165,6 @@ public class MusicActivity extends AppCompatActivity
     public void playC() {
         this.soundPool.play(guitarSounds[0], 1.0f, 1.0f, 0, 0, 1.0f);
     }
-
 
     private void setMaxPitch(int maxPitch) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -173,27 +181,34 @@ public class MusicActivity extends AppCompatActivity
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
-
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onTextChanged(" + s + ")");
         String notesText = notesEditText.getText().toString();
         char ch;
+        int chi;
         noteCt = 0;
         for (int i = 0; i < notesText.length() && noteCt < MAX_NOTE_CT; i++) {
             ch = notesText.charAt(i);
+            chi = -1;
             if (ch != ' ') {
-                notePitches[noteCt++] = ch - 'C';
+                for (int j = 0; j < noteMap.length && chi < 0; j++) {
+                    if (ch == noteMap[j]) {
+                        chi = j;
+                    }
+                }
+                if (chi >= 0) {
+                    notePitches[noteCt++] = chi;
+                } else {
+                    Toast.makeText(this, "illegal char: " + ch, Toast.LENGTH_LONG).show();
+                }
             }
         }
         staveView.setNotePitches(notePitches, noteCt);
     }
-
     @Override
     public void afterTextChanged(Editable s) {
-
     }
 
     // alternative way of playing sounds:

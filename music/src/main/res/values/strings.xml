@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">music</string>
-    <string name="go">Go</string>
+    <string name="go">New</string>
     <string name="play">Play</string>
     <string name="stop">Stop</string>
     <string name="c1">C\'</string>
