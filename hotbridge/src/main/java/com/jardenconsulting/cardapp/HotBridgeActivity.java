@@ -2,6 +2,7 @@ package com.jardenconsulting.cardapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,14 @@ import com.jardenconsulting.bluetooth.BluetoothListener;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import jarden.cardapp.DealFragment;
+import jarden.quiz.PresetQuiz;
 
 /**
  * Shuffle and deal a pack of cards, showing my hand (Me), or
@@ -31,6 +39,8 @@ import jarden.cardapp.DealFragment;
 public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener {
     public static final String TAG = "hotbridge";
+    private static final String quizFileName = "reviseit.txt";
+    // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
     private String appName;
 	private FragmentManager fragmentManager;
@@ -38,10 +48,32 @@ public class HotBridgeActivity extends AppCompatActivity
 	private DealFragment dealFragment;
 	private TextView statusText;
 	private boolean closing = false;
+	/* TODO: resolve these issues:
+	    - share reviseItQuiz between both halves of app
+	      first half needs: qaList
+	    - share method getPossibleResponses(), now in ReviseQuizFragment
+	 */
+    private PresetQuiz reviseItQuiz;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        try {
+            File publicDirectory = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS);
+            File file = new File(publicDirectory, quizFileName);
+            if (BuildConfig.DEBUG) Log.d(TAG, file.getAbsolutePath());
+            InputStream inputStream;
+            if (file.canRead()) {
+                inputStream = new FileInputStream(file);
+            } else {
+                inputStream = getResources().openRawResource(R.raw.reviseit);
+            }
+            this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
+        } catch (IOException e) {
+            showMessage("unable to load quiz: " + e);
+            return;
+        }
         setContentView(R.layout.activity_main);
 		this.appName = getResources().getString(R.string.app_name);
 		this.statusText = findViewById(R.id.statusText);
@@ -124,6 +156,10 @@ public class HotBridgeActivity extends AppCompatActivity
 		ft.show(dealFragment);
 		ft.commit();
 	}
+    private void showMessage(String message) {
+        if (BuildConfig.DEBUG) Log.d(TAG, message);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 
 	@Override // BluetoothListener
 	public void onStateChange(BTState state) {

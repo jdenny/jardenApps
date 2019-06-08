@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import jarden.app.revisequiz.FreakWizFragment;
+import jarden.quiz.PresetQuiz;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 

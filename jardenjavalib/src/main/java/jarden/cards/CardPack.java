@@ -18,7 +18,7 @@ public class CardPack {
 		S2, S3, S4, S5, S6, S7, S8, S9, ST, SJ, SQ, SK, SA
 	}
 	public enum BidEnum {
-		PASS(null, "pass"), None(null, "-"),
+		PASS(null, "pass"), NONE(null, "-"),
 		B1C(Club, "1C"), B1D(Diamond, "1D"), B1H(Heart, "1H"), B1S(Spade, "1S"), B1N(null, "1NT"),
 		B2C(Club, "2C"), B2D(Diamond, "2D"), B2H(Heart, "2H"), B2S(Spade, "2S"), B2N(null, "2NT"),
 		B3C(Club, "3C"), B3D(Diamond, "3D"), B3H(Heart, "3H"), B3S(Spade, "3S"), B3N(null, "3NT"),
@@ -152,15 +152,4 @@ public class CardPack {
 		}
 		return data;
 	}
-	/*!!
-    public String getDealAsString() {
-        Card card;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < DECK_SIZE; i++) {
-            card = cards[i];
-            builder.append(card.toString());
-        }
-        return builder.toString();
-    }
-     */
 }

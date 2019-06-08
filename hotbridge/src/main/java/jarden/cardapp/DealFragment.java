@@ -210,8 +210,8 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.bidButton.setEnabled(!twoPlayer);
         this.shuffled = true;
         if (!westDeal && !twoPlayer) { // TODO: same as in showHands()
-            addBid(BidEnum.None);
-            addBid(BidEnum.None);
+            addBid(BidEnum.NONE);
+            addBid(BidEnum.NONE);
             getPartnerBid();
         }
         showHands();

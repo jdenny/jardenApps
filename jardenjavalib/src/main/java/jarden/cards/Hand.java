@@ -1,10 +1,13 @@
 package jarden.cards;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jarden.cards.CardPack.AuctionType;
 import jarden.cards.CardPack.BidEnum;
 import jarden.cards.CardPack.CardEnum;
+import jarden.quiz.PresetQuiz;
+import jarden.quiz.QuestionAnswer;
 
 import static jarden.cards.CardPack.BidEnum.B1C;
 import static jarden.cards.CardPack.BidEnum.B1D;
@@ -27,12 +30,14 @@ import static jarden.cards.CardPack.BidEnum.B4H;
 import static jarden.cards.CardPack.BidEnum.B4S;
 import static jarden.cards.CardPack.BidEnum.B5C;
 import static jarden.cards.CardPack.BidEnum.B5D;
+import static jarden.cards.CardPack.BidEnum.NONE;
 import static jarden.cards.CardPack.BidEnum.PASS;
+import static jarden.quiz.PresetQuiz.OPENING_BIDS;
 
 public class Hand {
 	private final static int C = 0, D = 1, H = 2, S = 3;
 	private ArrayList<Card> cards;
-	private int[] suitLengths = new int[4]; // c, d, h, s
+	protected int[] suitLengths = new int[4]; // c, d, h, s
 	// suitValues: add 1 for J, 2 for Q, 4 for K, 8 for A
 	private int[] suitValues = new int[4]; // c, d, h, s
 	private int highCardPoints;
@@ -51,7 +56,7 @@ public class Hand {
 		this.cards = cards;
 	}
 	public Hand(CardEnum[] cardEnums) {
-		cards = new ArrayList<Card>();
+		cards = new ArrayList<>();
 		for (CardEnum cardEnum : cardEnums) {
 			cards.add(CardPack.SORTED_CARDS[cardEnum.ordinal()]);
 		}
@@ -546,8 +551,7 @@ public class Hand {
 	}
 
 	public BidEnum getPrimaryBid() {
-		if (this.playingPoints == 0)
-			evaluateHand();
+		if (this.playingPoints == 0) evaluateHand();
 		BidEnum bid;
 		boolean fiveCardMajor = (suitLengths[H] >= 5 || suitLengths[S] >= 5);
 		if (this.previousBid == null && playingPoints >= 26) {
@@ -650,8 +654,17 @@ public class Hand {
 		}
 		return bid;
 	}
+    public BidEnum getPrimaryBid(PresetQuiz reviseItQuiz) {
+        if (this.playingPoints == 0) evaluateHand();
+        List<QuestionAnswer> openingBids = reviseItQuiz.getPossibleResponses(OPENING_BIDS);
+        for (QuestionAnswer qa: openingBids) {
+            // TODO: change qa into qap
+            // if (doesHandMatch(qa.answer)) return BidEnum.valueOf("B" + qa.question);
+        }
+	    return NONE;
+    }
 
-	private void evaluateHand() {
+    public void evaluateHand() {
 		this.limited = false;
 		for (Card card : cards) {
 			int suitOrdinal = card.getSuit().ordinal();
@@ -708,7 +721,7 @@ public class Hand {
 		return true;
 	}
 
-	public BidEnum checkForMajor1(int minHCP) {
+	private BidEnum checkForMajor1(int minHCP) {
 		BidEnum bid = null;
 		if (this.highCardPoints >= minHCP) {
 			String pointsHint = minHCP + "+ HCP, ";

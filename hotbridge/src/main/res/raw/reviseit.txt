@@ -4,7 +4,7 @@ F1: [a]help[/a]. Alert: artificial
 A: 25pp & 5+ major or 26+pp
 Q: 1D
 F1: Alert: artificial
-A: 23-25pp & no 5+ major
+A: 23-25pp, no 5+ major
 Q: 1H
 F1: Alert: may not be longest suit
 A: 20-22pp & 4+ hearts or 23-24pp & 5+ hearts
@@ -400,7 +400,7 @@ A: <4 spades, 6+ diamonds, <4 clubs
 
 # 2 bids after 1H
 Q: 1H, 1S; 1NT
-A: <4 spades, no {5+ hearts and 4+ minor}, no 4+ in both minors, no 6+ suit
+A: <4 spades, not {5+ hearts and 4+ minor}, no 4+ in both minors, no 6+ suit
 Q: 1H, 1S; 2C
 F1: [a]raw[/a]
 A: <4 spades, 5+ hearts, 4+ clubs
@@ -544,7 +544,7 @@ F1: [a]responses_to_relay[/a]
 A: 4 hearts, <5 spades, 4+ diamonds, strong (14+ HCP) or skew, <4 clubs
 Q: 1H, 2C; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 14+ HCP, 4 hearts, <5 spades, no {4+ minor plus strong or skew}
+A: 14+ HCP, 4 hearts, <5 spades, not {4+ minor plus strong or skew}
 
 Q: 1S, 2D; 2H
 F1: may have 5+ spades; [a]responses_to_relay[/a]
@@ -563,7 +563,7 @@ F1: [a]responses_to_relay[/a]; likely skew, as strong would be 16+ HCP
 A: <3 hearts, 4 spades, 4+ diamonds, skew, <4 clubs
 Q: 1S, 2D; 2NT
 F1: <2 hearts would be skew, so would bid 3C/3D as must have 4+ minor; [a]responses_to_relay[/a]. Alert
-A: 4 spades, 2 hearts, no {4+ minor plus strong or skew}
+A: 4 spades, 2 hearts, not {4+ minor plus strong or skew}
 
 # meaning of 4C/4D
 Q: 4C
@@ -672,10 +672,10 @@ A: autofit, 4+ diamonds, values for 5
 # page 66
 Q: 1S, 2C; 2NT
 F1: <2 hearts would be skew, so would bid 3C/3D; [a]responses_to_relay[/a]. Alert: artificial
-A: 14+ HCP, 2 hearts, 4 spades, no {4+ minor plus strong or skew} (25 TP)
+A: 14+ HCP, 2 hearts, 4 spades, not {4+ minor plus strong or skew} (25 TP)
 Q: 1C, 2C; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 18+ HCP, <5 spades, <5 hearts, no {4+ minor plus strong or skew} (25 TP)
+A: 18+ HCP, <5 spades, <5 hearts, not {4+ minor plus strong or skew} (25 TP)
 
 # page 67
 Q: 1H, 1S; 1NT, 2D
@@ -683,7 +683,7 @@ F1: compelling [a]relay[/a]. Alert: artificial
 A: 13+ HCP
 Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 4 hearts, 2 spades, no {4+ minor plus strong or skew}
+A: 4 hearts, 2 spades, not {4+ minor plus strong or skew}
 Q: 1C, 1S; 2D, 3C
 F1: [a]responses_to_relay[/a]
 A: <3 hearts, 4 spades, 4+ clubs, strong (6+ HCP) or skew
@@ -722,7 +722,7 @@ F1: [a]keycard_ask[/a]
 A: 2 or 5 keycards
 Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 4 hearts, 2 spades, no {4+ minor plus strong or skew}
+A: 4 hearts, 2 spades, not {4+ minor plus strong or skew}
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, strong (15+ HCP) or skew
@@ -750,7 +750,7 @@ A: suit-setter
 # page 77
 Q: 1H, 2D; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 4 hearts, <5 spades, no {4+ minor plus strong or skew}
+A: 4 hearts, <5 spades, not {4+ minor plus strong or skew}
 Q: 1H, 2D; 2NT, 3H
 F1: delayed agreement
 A: 3 hearts with honours
@@ -891,17 +891,6 @@ A: keycard ask
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
 A: guard in hearts
-
-# page 128
-Q: 1C, 2D; 2S, 2NT; 4H, 4S
-F1: [a]to_play[/a]
-A: to play
-Q: 1C, 2D; 2S, 2NT; 4H, 4S; 4NT
-F1: [a]keycard_ask[/a]
-A: keycard ask
-Q: 1C, 2D; 2S, 2NT; 4H, 4S; 4NT, 5C
-F1: [a]keycard_ask[/a]
-A: 0 or 3 keycards
 
 # page 129
 Q: 1H, 2NT; 3D

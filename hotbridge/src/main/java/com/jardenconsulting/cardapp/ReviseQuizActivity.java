@@ -42,6 +42,12 @@ https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
 on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
+* replace calculated bids in deals with lookup based on reviseit.txt
+    for each deal:
+        get list of next bids (based on bidding so far)
+        for each response: match hand against criteria of each
+        add bid to bidList
+        if raw, stop bidding!
 * new bid search not working with competitive bids!
 * perhaps hold bidList as QuestionAnswer array, then use adapter to
     display qa.question = qa.answer;
@@ -98,6 +104,8 @@ public class ReviseQuizActivity extends AppCompatActivity
     private FreakWizFragment freakWizFragment;
     private SharedPreferences sharedPreferences;
     private IntegerDialog integerDialog;
+    // new way of calculating bid
+    private boolean dataDrivenBidding = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

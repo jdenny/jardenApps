@@ -7,20 +7,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jardenconsulting.cardapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jarden.quiz.QuestionAnswer;
+
+import static jarden.quiz.PresetQuiz.OPENING_BIDS;
 
 /**
  * Created by john.denny@gmail.com on 15/10/2018.
  */
 public class ReviseQuizFragment extends FreakWizFragment
         implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-    private final static QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
 
     private CheckBox notesCheckBox;
     private ListView bidListView;
@@ -68,7 +69,13 @@ public class ReviseQuizFragment extends FreakWizFragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QuestionAnswer qa = bidListAdapter.getItem(position);
-        loadBidList(qa);
+        if (qa == null) {
+            Toast.makeText(getContext(),
+                    "item selected at position " + position + " is null!",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            loadBidList(qa);
+        }
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,46 +109,13 @@ public class ReviseQuizFragment extends FreakWizFragment
         String bidSequence = this.questionTextView.getText().toString();
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
-        List<String> bidList = getBidItems(bidSequence);
+        List<String> bidList = reviseItQuiz.getBidItems(bidSequence);
         QuestionAnswer nextQA;
         for (String bid: bidList) {
-            nextQA = findNextBidAnswer(bid);
+            nextQA = reviseItQuiz.findNextBidAnswer(bid);
             bidListAdapter.add(nextQA);
         }
         this.bidListAdapter.notifyDataSetChanged();
-    }
-    private QuestionAnswer findNextBidAnswer(String nextBid) {
-        for (QuestionAnswer qa: qaList) {
-            if (qa.question.equals(nextBid)) return qa;
-        }
-        return null;
-    }
-    private static List<String> getBidItems(String bidSequence) {
-        List<String> bidItems = new ArrayList();
-        int index = 0;
-        String nextBid;
-        do {
-            index = findNextSeparator(bidSequence, index);
-            if (index == -1) {
-                nextBid = bidSequence;
-            } else {
-                nextBid = bidSequence.substring(0, index);
-                index += 2;
-            }
-            bidItems.add(nextBid);
-        } while (index != -1);
-        return bidItems;
-    }
-    private static int findNextSeparator(String bidSequence, int start) {
-        int commaI = bidSequence.indexOf(',', start);
-        int colonI = bidSequence.indexOf(';', start);
-        if (commaI == -1) {
-            if (colonI == -1) return -1;
-            return colonI;
-        } else {
-            if (colonI == -1) return commaI;
-            return (commaI > colonI) ? colonI : commaI;
-        }
     }
     /*
     Get all responses to selected bid sequence
@@ -150,11 +124,12 @@ public class ReviseQuizFragment extends FreakWizFragment
             1C, 1H = ...
             1C, 1H; 2D = ...
         click on 1C
-            opening bids (replaces old "Back" button)
+            opening bids
             1C, 1D = ...
             1C, 1H = ...
         click on 1C, 1H
-            1C = ... ("Back")
+            opening bids
+            1C = ...
             1C, 1H; 1S = ...
             1C, 1H; 1NT = ...
 
@@ -167,6 +142,7 @@ public class ReviseQuizFragment extends FreakWizFragment
             1C, 1D = ...
             1C, 1H = ...
         click on 1C, (1S) double
+            opening bids
             1C = ...
             1C, (1S) double; (pass) 2NT
 
@@ -181,43 +157,19 @@ public class ReviseQuizFragment extends FreakWizFragment
     public void loadBidList(QuestionAnswer targetQA) {
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
-        if (targetQA == OPENING_BIDS) {
-            for (QuestionAnswer qa: qaList) {
-                if (!qa.question.contains(",")) {
-                    bidListAdapter.add(qa);
-                }
-            }
-        } else {
+        if (targetQA != OPENING_BIDS) {
+            bidListAdapter.add(OPENING_BIDS);
             String question = targetQA.question;
             int i = question.indexOf(',');
-            if (i == -1) {
-                bidListAdapter.add(OPENING_BIDS);
-            } else {
-                QuestionAnswer qa = getBackBid(question);
+            if (i >= 0) {
+                QuestionAnswer qa = reviseItQuiz.getBackBid(question);
                 bidListAdapter.add(qa);
             }
-            for (QuestionAnswer qa : qaList) {
-                if (qa.question.startsWith(question + ", ") ||
-                        qa.question.startsWith(question + "; ")) {
-                    String response = qa.question.substring(question.length() + 2);
-                    if (!(response.contains(",") || response.contains(";"))) {
-                        bidListAdapter.add(qa);
-                    }
-                }
-            }
+        }
+        List<QuestionAnswer> possibleResponses = reviseItQuiz.getPossibleResponses(targetQA);
+        for (QuestionAnswer qa : possibleResponses) {
+            bidListAdapter.add(qa);
         }
         this.bidListAdapter.notifyDataSetChanged();
-    }
-    private QuestionAnswer getBackBid(String bidSequence) {
-        String backQuestion;
-        int lastComma = bidSequence.lastIndexOf(',');
-        int lastColon = bidSequence.lastIndexOf(';');
-        int lastSeparator = (lastComma > lastColon) ? lastComma : lastColon;
-        if (lastSeparator == -1) return null;
-        backQuestion = bidSequence.substring(0, lastSeparator);
-        for (QuestionAnswer qa: this.qaList) {
-            if (backQuestion.equals(qa.question)) return qa;
-        }
-        return new QuestionAnswer(bidSequence, "no backBid found!");
     }
 }
