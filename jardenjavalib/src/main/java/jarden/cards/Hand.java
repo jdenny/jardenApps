@@ -659,7 +659,7 @@ public class Hand {
         List<QuestionAnswer> openingBids = reviseItQuiz.getPossibleResponses(OPENING_BIDS);
         for (QuestionAnswer qa: openingBids) {
             // TODO: change qa into qap
-            // if (doesHandMatch(qa.answer)) return BidEnum.valueOf("B" + qa.question);
+            // if (doesMatchHand(qa.answer)) return BidEnum.valueOf("B" + qa.question);
         }
 	    return NONE;
     }

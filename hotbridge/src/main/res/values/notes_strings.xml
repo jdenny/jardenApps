@@ -89,7 +89,8 @@
     </string>
     <string name="responses_to_relay">
         [b]2D[/b] (i.e. after 2C invite) = invitation declined, less than 25 TP; all other
-        bids accept the invitation, so [a]compelled[/a]
+        bids accept the invitation, so [a]compelled[/a]; note that 2C is optional - no need
+        to bid this if partner bidding 2D would be awkward
         \n [b]2H[/b] = 5+ hearts (as 2C/D denies 4-4 major) or 3 if already denied hearts
         \n [b]2S[/b] = 5+ spades or 3 if already denied spades; denies ability to bid hearts
         \n [b]3NT[/b] = to play; no major fit, all suits covered; note: if partner is
