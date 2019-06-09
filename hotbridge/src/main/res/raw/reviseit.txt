@@ -20,24 +20,27 @@ A: 6+ clubs, 20-22 pp, no 4+ major, <5 diamonds
 Q: 2D
 F1: announce: intermediate
 A: 6+ diamonds, 20-22 pp, no 4+ major, <5 clubs
-Q: 2H/2S
+Q: 2H
 F1: [a]preempt[/a], [a]raw[/a]. Announce: weak
-A: 6 in suit, <20 pp, 6-10 HCP
+A: 6 hearts, <20 pp
+Q: 2S
+F1: [a]preempt[/a], [a]raw[/a]. Announce: weak
+A: <6 hearts, 6 spades, <20 pp
 Q: 2NT
 F1: [a]two_choice[/a], [a]raw[/a]. Alert: artificial
 A: 5+ in both minors, 20-22 pp
 Q: 3C/3D/3H/3S
 F1: [a]preempt[/a], [a]raw[/a]
-A: 7 in suit, <20 pp, 6-10 HCP
+A: 7 in suit, <20 pp
 Q: 4H/4S
 F1: [a]preempt[/a], [a]raw[/a]
-A: 8+ in suit, <20 pp, 6-9 HCP
+A: 8+ in suit, <20 pp
 Q: 4C/4D
 F1: [a]preempt[/a], [a]raw[/a]
-A: 8 in suit, <20 pp, 6-9 HCP
+A: 8 in suit, <20 pp
 Q: 5C/5D
 F1: [a]preempt[/a], [a]raw[/a]
-A: 9+ in suit, <20 pp, 6-8 HCP
+A: 9+ in suit, <20 pp
 Q: <20 pp, not {6+suit, 6+ HCP}
 A: pass
 
@@ -107,7 +110,7 @@ A: suit-setter
 # 1 bid after 1H
 Q: 1H, pass
 F1: with 6+ spades and 5-7 HCP, bid 2S
-A: 0-7 HCP, not {6+ spades and 5-7 HCP}
+A: 0-7 HCP, not {6+ spades & 5-7 HCP}
 Q: 1H, 1S
 F1: Alert: denies 4+ hearts; may not be longest suit
 A: 8+ HCP, <4 hearts, 4+ spades (20 TP)
@@ -357,7 +360,7 @@ Q: 1D, 1H; 1S
 F1: Alert: denies 4+ hearts; may not be longest suit
 A: 4+ spades, <4 hearts
 Q: 1D, 1H; 1NT
-A: no 4+ major, not 5+ in both minors, not 5-4 in minors, no 6+ minor
+A: no 4+ major, not 5+/4+ in minors, no 6+ minor
 Q: 1D, 1H; 2C
 F1: [a]raw[/a]
 A: no 4+ major, 5+ clubs, 4 diamonds
@@ -377,7 +380,7 @@ F1: [a]raw[/a]; with 4 clubs bid 2NT
 A: no 4+ major, 6+ diamonds, <4 clubs
 
 Q: 1D, 1S; 1NT
-A: <4 spades, not 5-5 or 5-4 in minors, no 6+ suit
+A: <4 spades, not 5+/4+ in minors, no 6+ suit
 Q: 1D, 1S; 2C
 F1: [a]raw[/a]
 A: <4 spades, 5+ clubs, 4 diamonds
@@ -402,7 +405,7 @@ A: <4 spades, 6+ diamonds, <4 clubs
 
 # 2 bids after 1H
 Q: 1H, 1S; 1NT
-A: <4 spades, not {5+ hearts and 4+ minor}, no 4+ in both minors, no 6+ suit
+A: <4 spades, not {5+ hearts & 4+ minor}, no 4+ in both minors, no 6+ suit
 Q: 1H, 1S; 2C
 F1: [a]raw[/a]
 A: <4 spades, 5+ hearts, 4+ clubs
@@ -437,7 +440,7 @@ Q: 1H, 1S; 4S
 A: 6+ spades
 
 Q: 1H, 1NT; pass
-A: not {5+ hearts and 4+ minor}, not 4+ in both minors, no 6+ suit
+A: not {5+ hearts & 4+ minor}, not 4+ in both minors, no 6+ suit
 Q: 1H, 1NT; 2C/2D
 F1: [a]raw[/a]
 A: 5+ hearts, 4+ in bid suit
@@ -470,7 +473,7 @@ A: keycard ask
 
 # 2 bids after 1S
 Q: 1S, 1NT; pass
-A: not {5+ spades and 4+ minor}, not 4+ in both minors, no 6+ suit
+A: not {5+ spades & 4+ minor}, not 4+ in both minors, no 6+ suit
 Q: 1S, 1NT; 2C/2D
 F1: [a]raw[/a]
 A: 5+ spades, 4+ in bid suit
@@ -815,7 +818,7 @@ F1: too weak to play in 1H doubled
 A: weak, better places to play
 Q: (1C) double
 F1: replacement for 1C. Alert
-A: 25 pp and 5+ major or 26+ pp
+A: 25 pp, 5+ major or 26+ pp
 Q: (1C) 1H
 F1: same as if they hadn't bid. Alert: may not be longest suit
 A: 20-22 pp & 4+ hearts or 23-24 pp & 5+ hearts

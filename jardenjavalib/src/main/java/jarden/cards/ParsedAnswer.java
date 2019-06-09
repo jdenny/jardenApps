@@ -12,8 +12,9 @@ package jarden.cards;
  */
 public class ParsedAnswer {
     private int minPP = -1, maxPP = -1;
+    private int minHCP = -1, maxHCP = -1;
     private int minMajor = -1;
-    private int minMinor = -1;
+    private int minMinor = -1, maxMinor = -1;
     private int minClubs = -1, maxClubs = -1;
     private int minDiamonds = -1, maxDiamonds = -1;
     private int minHearts = -1, maxHearts = -1;
@@ -42,6 +43,15 @@ public class ParsedAnswer {
                 }
                 if (previousMin > 0) {
                     minPP = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("HCP")) {
+                if (previousMax > 0) {
+                    maxHCP = previousMax;
+                    previousMax = -1;
+                }
+                if (previousMin > 0) {
+                    minHCP = previousMin;
                     previousMin = -1;
                 }
             } else if (token.equals("clubs")) {
@@ -126,9 +136,8 @@ public class ParsedAnswer {
                         previousMin = -1;
                     }
                 }
-            } else if (token.equals("minor") || token.equals("minors")) {
-                // usage of minor: [no] <n>+ in [both] minor[s]
-                // but see reviseit.txt line 360!
+            } else if (token.equals("minor")) {
+                // usage of minor: [no] <n>+ minor
                 if (isNegative) {
                     if (previousMin > 0) {
                         maxDiamonds = maxClubs = previousMin - 1;
@@ -141,6 +150,29 @@ public class ParsedAnswer {
                         previousMin = -1;
                     }
                 }
+            } else if (token.equals("minors")) {
+                // usage of minors:
+                //      not 5+/4+ in minors (put values in minMinor and maxMinor)
+                //      [not] <n>+ in [both] minors
+                if (previousMin > 0 && previousMax > 0) { // i.e. first usage
+                    maxMinor = previousMax;
+                    minMinor = previousMin;
+                    previousMin = -1;
+                    previousMax = -1;
+                } else {
+                    if (isNegative) {
+                        if (previousMin > 0) {
+                            maxMinor = previousMin - 1;
+                            previousMin = -1;
+                            isNegative = false;
+                        }
+                    } else {
+                        if (previousMin > 0) {
+                            minMinor = previousMin;
+                            previousMin = -1;
+                        }
+                    }
+                }
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.endsWith("+")) {
@@ -151,6 +183,11 @@ public class ParsedAnswer {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
                 previousMax = Integer.parseInt(token.substring(indexMinus + 1));
+            } else if (token.contains("/")) { // assuming n+/m+
+                int indexSlash = token.indexOf('/');
+                previousMin = Integer.parseInt(token.substring(0, indexSlash - 1));
+                previousMax = Integer.parseInt(
+                        token.substring(indexSlash + 1, token.length() - 1));
             } else {
                 // assume it's a number; if not, Exception shows it's a token
                 // we don't recognise!
@@ -159,11 +196,6 @@ public class ParsedAnswer {
             }
         }
     }
-    // 1C(0)=25 pp, 5+ major or 26+ pp
-    // 1D(1)=23-25 pp, no 5+ major
-    // 1H(2)=20-22 pp, 4+ hearts or 23-24 pp, 5+ hearts
-    // 1S(3)=<4 hearts, 20-22 pp, 4+ spades or <4 hearts, 23-24 pp, 5+ spades
-    // 1N(4)=20-22 pp, no 4+ major, not 5-5 in minors, no 6+ minor
     public boolean doesMatchHand(Hand hand) {
         boolean match = doesHandMatch2(hand, this);
         if (!match && orParsedAnswer != null) match = doesHandMatch2(hand, orParsedAnswer);
@@ -173,18 +205,31 @@ public class ParsedAnswer {
         int handPP = hand.getPlayingPoints();
         if (pa.minPP >= 0 && handPP < pa.minPP) return false;
         if (pa.maxPP >= 0 && handPP > pa.maxPP) return false;
+        int handHCP = hand.getHighCardPoints();
+        if (pa.minHCP >= 0 && handHCP < pa.minHCP) return false;
+        if (pa.maxHCP >= 0 && handHCP > pa.maxHCP) return false;
         if (pa.minMajor >= 0 && hand.suitLengths[2] < pa.minMajor &&
                 hand.suitLengths[3] < pa.minMajor) return false;
+        if (pa.minMinor >= 0 && pa.maxMinor >= 0) {
+            // special case (bodge!) to cater for:
+            //      not 5+/4+ in minors (put values in minMinor and maxMinor)
+            if (hand.suitLengths[0] > pa.minMinor && hand.suitLengths[1] > pa.maxMinor ||
+                    hand.suitLengths[1] > pa.minMinor && hand.suitLengths[0] > pa.maxMinor) {
+                return false;
+            }
+        }
         if (pa.minMinor >= 0 && hand.suitLengths[0] < pa.minMinor &&
                 hand.suitLengths[1] < pa.minMinor) return false;
+        if (pa.maxMinor >= 0 && (hand.suitLengths[0] > pa.maxMinor ||
+                hand.suitLengths[1] > pa.maxMinor)) return false;
         if (pa.minClubs >= 0 &&
-                hand.suitLengths[2] < pa.minClubs) return false;
+                hand.suitLengths[0] < pa.minClubs) return false;
         if (pa.maxClubs >= 0 &&
-                hand.suitLengths[2] > pa.maxHearts) return false;
+                hand.suitLengths[0] > pa.maxClubs) return false;
         if (pa.minDiamonds >= 0 &&
-                hand.suitLengths[3] < pa.minDiamonds) return false;
+                hand.suitLengths[1] < pa.minDiamonds) return false;
         if (pa.maxDiamonds >= 0 &&
-                hand.suitLengths[3] > pa.maxDiamonds) return false;
+                hand.suitLengths[1] > pa.maxDiamonds) return false;
         if (pa.minHearts >= 0 &&
                 hand.suitLengths[2] < pa.minHearts) return false;
         if (pa.maxHearts >= 0 &&
