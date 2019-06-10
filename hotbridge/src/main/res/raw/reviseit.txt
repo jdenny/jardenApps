@@ -22,26 +22,44 @@ F1: announce: intermediate
 A: 6+ diamonds, 20-22 pp, no 4+ major, <5 clubs
 Q: 2H
 F1: [a]preempt[/a], [a]raw[/a]. Announce: weak
-A: 6 hearts, <20 pp
+A: 6 hearts, <20 pp, 6+ HCP
 Q: 2S
 F1: [a]preempt[/a], [a]raw[/a]. Announce: weak
-A: <6 hearts, 6 spades, <20 pp
+A: <6 hearts, 6 spades, <20 pp, 6+ HCP
 Q: 2NT
 F1: [a]two_choice[/a], [a]raw[/a]. Alert: artificial
 A: 5+ in both minors, 20-22 pp
-Q: 3C/3D/3H/3S
+Q: 3C
 F1: [a]preempt[/a], [a]raw[/a]
-A: 7 in suit, <20 pp
-Q: 4H/4S
+A: 7 clubs, <20 pp, 6+ HCP
+Q: 3D
 F1: [a]preempt[/a], [a]raw[/a]
-A: 8+ in suit, <20 pp
-Q: 4C/4D
+A: 7 diamonds, <20 pp, 6+ HCP
+Q: 3H
 F1: [a]preempt[/a], [a]raw[/a]
-A: 8 in suit, <20 pp
-Q: 5C/5D
+A: 7 hearts, <20 pp, 6+ HCP
+Q: 3S
 F1: [a]preempt[/a], [a]raw[/a]
-A: 9+ in suit, <20 pp
-Q: <20 pp, not {6+suit, 6+ HCP}
+A: 7 spades, <20 pp, 6+ HCP
+Q: 4H
+F1: [a]preempt[/a], [a]raw[/a]
+A: 8+ hearts, <20 pp, 6+ HCP
+Q: 4S
+F1: [a]preempt[/a], [a]raw[/a]
+A: 8+ spades, <20 pp, 6+ HCP
+Q: 4C
+F1: [a]preempt[/a], [a]raw[/a]
+A: 8 clubs, <20 pp, 6+ HCP
+Q: 4D
+F1: [a]preempt[/a], [a]raw[/a]
+A: 8 diamonds, <20 pp, 6+ HCP
+Q: 5C
+F1: [a]preempt[/a], [a]raw[/a]
+A: 9+ clubs, <20 pp, 6+ HCP
+Q: 5D
+F1: [a]preempt[/a], [a]raw[/a]
+A: 9+ diamonds, <20 pp
+Q: <20 pp, not {6+ suit, 6+ HCP}
 A: pass
 
 # 1 bid after 1C

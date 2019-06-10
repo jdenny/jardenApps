@@ -21,10 +21,14 @@ public class TestHand {
             "6+ clubs, 20-22 pp, no 4+ major, <5 diamonds";
     private static final String bid2D =
             "6+ diamonds, 20-22 pp, no 4+ major, <5 clubs";
-    private static final String bid2H =
-            "6 hearts, <20 pp";
-    private static final String bid2S =
-            "6 spades, <20 pp";
+    private static final String bid2H = "6 hearts, <20 pp, 6+ HCP";
+    private static final String bid2S = "6 spades, <20 pp, 6+ HCP";
+    private static final String bid2NT = "5+ in both minors, 20-22 pp";
+    private static final String bid3C = "7 clubs, <20 pp, 6+ HCP";
+    private static final String bid4D = "8 diamonds, <20 pp, 6+ HCP";
+    private static final String bid4H = "8+ hearts, <20 pp, 6+ HCP";
+    private static final String bid5C = "9+ clubs, <20 pp, 6+ HCP";
+    private static final String bidPass = "<20 pp, not {6+ suit, 6+ HCP}";
     private static final CardPack.CardEnum[] cards1C = { // 25pp, 5 hearts
             CK, CQ, CJ, C8, DK, DQ, D4, HA, H6, H5, H4, H3, SJ
     };
@@ -61,46 +65,96 @@ public class TestHand {
     private static final CardPack.CardEnum[] cards2S = { // 15pp, 3-2-2-6
             C9, C8, C5, DQ, D5, H9, H8, SK, SJ, S8, S5, S4, S3
     };
+    private static final CardPack.CardEnum[] cards2NT = { // 22pp, 5-6-1-1
+            CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7
+    };
+    private static final CardPack.CardEnum[] cards3C = { // 16pp, 7-1-2-3
+            CK, C9, C8, C6, C5, C4, C2, DK, H9, H8, S5, S4, S3
+    };
+    private static final CardPack.CardEnum[] cards4D = { // 17pp, 0-8-2-3
+            DK, DQ, DT, D9, D8, D7, D6, D5, HJ, H8, S5, S4, S3
+    };
+    private static final CardPack.CardEnum[] cards4H = { // 18pp, 3-0-8-2
+            C9, C8, C5, HK, HQ, H9, H8, H7, H6, H5, H3, SQ, S3
+    };
+    private static final CardPack.CardEnum[] cards5C = { // 19pp, 9-1-0-3
+            CA, CK, C9, C8, C7, C5, C4, C3, C2, D8, S5, S4, S3
+    };
+    private static final CardPack.CardEnum[] cardsPass = { // 19pp, 5-1-2-5
+            C9, C8, C5, C3, C2, D9, HA, HK, SQ, S8, S5, S4, S3
+    };
     public static final QuestionAnswerParsed[] answers = {
-            new QuestionAnswerParsed("", bid1C),  // 0
-            new QuestionAnswerParsed("", bid1D),  // 1
-            new QuestionAnswerParsed("", bid1H),  // 2
-            new QuestionAnswerParsed("", bid1S),  // 3
-            new QuestionAnswerParsed("", bid1NT), // 4
-            new QuestionAnswerParsed("", bid2C),  // 5
-            new QuestionAnswerParsed("", bid2D),  // 6
-            new QuestionAnswerParsed("", bid2H),  // 7
-            new QuestionAnswerParsed("", bid2S)   // 8
+            new QuestionAnswerParsed("1C", bid1C),
+            new QuestionAnswerParsed("1D", bid1D),
+            new QuestionAnswerParsed("1H", bid1H),
+            new QuestionAnswerParsed("1S", bid1S),
+            new QuestionAnswerParsed("1NT", bid1NT),
+            new QuestionAnswerParsed("2C", bid2C),
+            new QuestionAnswerParsed("2D", bid2D),
+            new QuestionAnswerParsed("2H", bid2H),
+            new QuestionAnswerParsed("2S", bid2S),
+            new QuestionAnswerParsed("2NT", bid2NT),
+            new QuestionAnswerParsed("3C", bid3C),
+            new QuestionAnswerParsed("4D", bid4D),
+            new QuestionAnswerParsed("4H", bid4H),
+            new QuestionAnswerParsed("5C", bid5C),
+            new QuestionAnswerParsed("pass", bidPass)
     };
     public static final Hand[] hands = {
-            new Hand(cards1C),  // 0
-            new Hand(cards1Cb), // 1
-            new Hand(cards1D),  // 2
-            new Hand(cards1H),  // 3
-            new Hand(cards1Hb), // 4
-            new Hand(cards1S),  // 5
-            new Hand(cards1Sb), // 6
-            new Hand(cards1NT), // 7
-            new Hand(cards2C),  // 8
-            new Hand(cards2D),  // 9
-            new Hand(cards2H),  // 10
-            new Hand(cards2S),  // 11
+            new Hand(cards1C),
+            new Hand(cards1Cb),
+            new Hand(cards1D),
+            new Hand(cards1H),
+            new Hand(cards1Hb),
+            new Hand(cards1S),
+            new Hand(cards1Sb),
+            new Hand(cards1NT),
+            new Hand(cards2C),
+            new Hand(cards2D),
+            new Hand(cards2H),
+            new Hand(cards2S),
+            new Hand(cards2NT),
+            new Hand(cards3C),
+            new Hand(cards4D),
+            new Hand(cards4H),
+            new Hand(cards5C),
+            new Hand(cardsPass)
     };
 
     public static void main(String[] args) {
         System.out.println("start of test");
+        Hand hand;
         for (int i = 0; i < hands.length; i++) {
-            System.out.print("hand" + i + " matches:");
+            hand = hands[i];
+            System.out.print(hand + " matches:");
             int matchCt = 0;
+            QuestionAnswerParsed qap;
             for (int j = 0; j < answers.length; j++) {
-                boolean isMatch = answers[j].getParsedAnswer().doesMatchHand(hands[i]);
+                qap = answers[j];
+                boolean isMatch = qap.getParsedAnswer().doesMatchHand(hand);
                 if (isMatch) ++matchCt;
-                System.out.print(" " + j + "=" + isMatch);
+                System.out.print(" " + qap.question + "=" + (isMatch?"T":"F"));
             }
             if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
             System.out.println();
 
         }
         System.out.println("end of test");
+    }
+
+    private static void pocRestartForLoop() {
+        String namesStr = "john julie stop sam joe";
+        String[] names = namesStr.split(" ");
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            if (name.equals("stop")) {
+                int indexStart = namesStr.indexOf("stop");
+                int indexEnd = indexStart + 4;
+                namesStr = namesStr.substring(indexEnd + 1);
+                names = namesStr.split(" ");
+                i = 0;
+            }
+            System.out.println(names[i]);
+        }
     }
 }

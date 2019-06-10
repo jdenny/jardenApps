@@ -69,22 +69,26 @@ public class Hand {
 	}
 
 	public int getHighCardPoints() {
-		if (this.playingPoints == 0)
-			evaluateHand();
+		if (this.playingPoints == 0) evaluateHand();
 		return this.highCardPoints;
 	}
 
 	public int getPlayingPoints() {
-		if (this.playingPoints == 0)
-			evaluateHand();
+		if (this.playingPoints == 0) evaluateHand();
 		return this.playingPoints;
 	}
 
 	public boolean isBalanced() {
-		if (this.playingPoints == 0)
-			evaluateHand();
+		if (this.playingPoints == 0) evaluateHand();
 		return this.balanced;
 	}
+
+	public String toString() {
+        if (this.playingPoints == 0) evaluateHand();
+        return playingPoints + "pp " + highCardPoints + "HCP " +
+                suitLengths[0] + "-" + suitLengths[1] + "-" +
+                suitLengths[2] + "-" + suitLengths[3];
+    }
 
 	public String getBidVerbose() {
 		return this.bidVerbose;
@@ -93,8 +97,7 @@ public class Hand {
 	public BidEnum getSecondaryBid(BidEnum partnerBid) {
 		// "Failure to bid a major at the one-level denies a four-card holding
 		// in the suit, regardless of what is held elsewhere."
-		if (this.playingPoints == 0) // i.e. hand not yet evaluated
-			evaluateHand();
+		if (this.playingPoints == 0) evaluateHand();
 		boolean forcing = (this.partner.previousBid == B1C &&
 				(partnerBid == B1H || partnerBid == B1S));
 		/*
