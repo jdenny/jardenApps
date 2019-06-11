@@ -162,10 +162,11 @@
     </string>
     <string name="suit_setter">
         Long, strong suit, not needing support from partner; usually at least
-        5 winners in suit. In a neutral auction, not
-        already denied suit, then 3H/3S/4C/4D unilaterally sets the suit (hence
-        fit auction). If [a]compelled[/a] or bidder unlimited, then suit-setter
-        is forcing, otherwise not forcing.
+        5 winners in suit. As a simple test: number of HCP in that suit plus
+        length of that suit should be at least 15. E.g. AKJxxxx or AKQJxx.
+        In a neutral auction, not already denied suit, then 3H/3S/4C/4D unilaterally
+        sets the suit (hence fit auction). If [a]compelled[/a] or bidder unlimited,
+        then suit-setter is forcing, otherwise not forcing.
     </string>
     <string name="threeNT">
         3NT is always [a]to_play[/a], and is bid when we have at least

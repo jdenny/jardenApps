@@ -33,7 +33,7 @@ public class QuestionAnswer {
 	public String toString() {
 		return question + ": " + answer;
 	}
-    public ParsedAnswer getParsedAnswer() {
+    public ParsedAnswer getParsedAnswer() throws NumberFormatException {
         if (parsedAnswer == null) {
             parsedAnswer = new ParsedAnswer(answer);
         }

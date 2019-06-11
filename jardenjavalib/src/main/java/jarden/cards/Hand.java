@@ -38,8 +38,8 @@ public class Hand {
 	private final static int C = 0, D = 1, H = 2, S = 3;
 	private ArrayList<Card> cards;
 	protected int[] suitLengths = new int[4]; // c, d, h, s
-	// suitValues: add 1 for J, 2 for Q, 4 for K, 8 for A
-	private int[] suitValues = new int[4]; // c, d, h, s
+	// suitValues: add 1 for J, 2 for Q, 3 for K, 4 for A
+	protected int[] suitValues = new int[4]; // c, d, h, s
 	private int highCardPoints;
 	private int playingPoints;
 	private boolean balanced;
@@ -677,9 +677,9 @@ public class Hand {
 			if (hcp > 0)
 				highCardPoints += hcp;
 			if (rank == Rank.Ace)
-				suitValues[suitOrdinal] += 8;
-			else if (rank == Rank.King)
 				suitValues[suitOrdinal] += 4;
+			else if (rank == Rank.King)
+				suitValues[suitOrdinal] += 3;
 			if (rank == Rank.Queen)
 				suitValues[suitOrdinal] += 2;
 			if (rank == Rank.Jack)
@@ -831,12 +831,12 @@ public class Hand {
 					} else { // suitLen = 1
 						if (this.suitValues[i] < 2) { // check not A or K or Q
 							responseSuit = shortSuit;
-						} else if (this.suitValues[i] < 8) {
+						} else if (this.suitValues[i] == 2 || this.suitValues[i] == 3) {
 							return null; // found singleton K or Q
 						} // else continue to search for suitable short suit
 					}
-				} else if (this.suitValues[i] < 6) { // no 1st or 2nd round
-														// control
+				} else if (this.suitValues[i] < 3) {
+				    // i.e. no 1st or 2nd round control
 					return null;
 				}
 			}

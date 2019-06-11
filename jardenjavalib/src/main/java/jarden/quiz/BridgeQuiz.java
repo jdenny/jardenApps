@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import jarden.cards.CardPack;
 import jarden.cards.Hand;
 
 /**
@@ -13,6 +12,7 @@ import jarden.cards.Hand;
  */
 public class BridgeQuiz extends PresetQuiz {
     public static final QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
+    private static final int OPENING_BID_CT = 21;
 
     public BridgeQuiz(InputStreamReader is) throws IOException {
         super(is);
@@ -30,22 +30,11 @@ public class BridgeQuiz extends PresetQuiz {
     public List<QuestionAnswer> getPossibleResponses(QuestionAnswer targetQA) {
         List<QuestionAnswer> possibleResponses = new ArrayList<>();
         if (targetQA == OPENING_BIDS) {
-            for (QuestionAnswer qa: qaList) {
-                if (!qa.question.contains(",")) {
-                    possibleResponses.add(qa);
-                }
+            for (int i = 0; i < OPENING_BID_CT; i++) {
+                possibleResponses.add(qaList.get(i));
             }
         } else {
             String question = targetQA.question;
-            int i = question.indexOf(',');
-            /*!!
-            if (i == -1) {
-                bidListAdapter.add(OPENING_BIDS);
-            } else {
-                QuestionAnswer qa = getBackBid(question);
-                bidListAdapter.add(qa);
-            }
-            */
             for (QuestionAnswer qa : qaList) {
                 if (qa.question.startsWith(question + ", ") ||
                         qa.question.startsWith(question + "; ")) {

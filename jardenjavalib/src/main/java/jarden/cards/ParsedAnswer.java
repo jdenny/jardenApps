@@ -15,6 +15,10 @@ public class ParsedAnswer {
     private int minSuit = -1, maxSuit = -1;
     private int minMajor = -1;
     private int minMinor = -1, maxMinor = -1;
+    private int minClubWinners = -1;
+    private int minDiamondWinners = -1;
+    private int minHeartWinners = -1;
+    private int minSpadeWinners = -1;
     private int minClubs = -1, maxClubs = -1;
     private int minDiamonds = -1, maxDiamonds = -1;
     private int minHearts = -1, maxHearts = -1;
@@ -22,7 +26,7 @@ public class ParsedAnswer {
     private ParsedAnswer orParsedAnswer;
     private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
 
-    public ParsedAnswer(String answer) {
+    public ParsedAnswer(String answer) throws NumberFormatException {
         int indexOr = answer.indexOf(" or ");
         if (indexOr > 0) {
             orParsedAnswer = new ParsedAnswer(answer.substring(indexOr + 4));
@@ -161,6 +165,26 @@ public class ParsedAnswer {
                         }
                     }
                 }
+            } else if (token.equals("club-winners")) {
+                if (previousMin > 0) {
+                    minClubWinners = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("diamond-winners")) {
+                if (previousMin > 0) {
+                    minDiamondWinners = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("heart-winners")) {
+                if (previousMin > 0) {
+                    minHeartWinners = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("spade-winners")) {
+                if (previousMin > 0) {
+                    minSpadeWinners = previousMin;
+                    previousMin = -1;
+                }
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
@@ -244,6 +268,14 @@ public class ParsedAnswer {
                 hand.suitLengths[3] < pa.minSpades) return false;
         if (pa.maxSpades >= 0 &&
                 hand.suitLengths[3] > pa.maxSpades) return false;
+        if (pa.minClubWinners > 0 &&
+                (hand.suitLengths[0] + hand.suitValues[0] < pa.minClubWinners * 3)) return false;
+        if (pa.minDiamondWinners > 0 &&
+                (hand.suitLengths[1] + hand.suitValues[1] < pa.minDiamondWinners * 3)) return false;
+        if (pa.minHeartWinners > 0 &&
+                (hand.suitLengths[2] + hand.suitValues[2] < pa.minHeartWinners * 3)) return false;
+        if (pa.minSpadeWinners > 0 &&
+                (hand.suitLengths[3] + hand.suitValues[3] < pa.minSpadeWinners * 3)) return false;
         if (pa.notParsedAnswer != null) {
             boolean notAnswerMatch = pa.notParsedAnswer.doesMatchHand(hand);
             if (notAnswerMatch) return false;
