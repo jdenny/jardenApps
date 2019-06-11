@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import jarden.cardapp.DealFragment;
-import jarden.quiz.PresetQuiz;
+import jarden.quiz.BridgeQuiz;
 
 /**
  * Shuffle and deal a pack of cards, showing my hand (Me), or
@@ -37,7 +37,7 @@ import jarden.quiz.PresetQuiz;
  * @author john.denny@gmail.com
  */
 public class HotBridgeActivity extends AppCompatActivity
-		implements BluetoothListener {
+		implements BluetoothListener, DealFragment.Bridgeable {
     public static final String TAG = "hotbridge";
     private static final String quizFileName = "reviseit.txt";
     // "reviseitmini.txt"; // ***also change name of resource file***
@@ -48,12 +48,7 @@ public class HotBridgeActivity extends AppCompatActivity
 	private DealFragment dealFragment;
 	private TextView statusText;
 	private boolean closing = false;
-	/* TODO: resolve these issues:
-	    - share reviseItQuiz between both halves of app
-	      first half needs: qaList
-	    - share method getPossibleResponses(), now in ReviseQuizFragment
-	 */
-    private PresetQuiz reviseItQuiz;
+    private BridgeQuiz bridgeQuiz;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +64,7 @@ public class HotBridgeActivity extends AppCompatActivity
             } else {
                 inputStream = getResources().openRawResource(R.raw.reviseit);
             }
-            this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
+            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
         } catch (IOException e) {
             showMessage("unable to load quiz: " + e);
             return;
@@ -210,4 +205,9 @@ public class HotBridgeActivity extends AppCompatActivity
 	public void setStatusMessage(String message) {
 		this.statusText.setText(message);
 	}
+
+    @Override // Bridgeable
+    public BridgeQuiz getBridgeQuiz() {
+        return bridgeQuiz;
+    }
 }

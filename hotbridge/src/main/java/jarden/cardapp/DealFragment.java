@@ -33,6 +33,8 @@ import jarden.cards.CardPack;
 import jarden.cards.CardPack.BidEnum;
 import jarden.cards.Hand;
 import jarden.cards.Player;
+import jarden.quiz.BridgeQuiz;
+import jarden.quiz.QuestionAnswer;
 
 /**
  * DealFragment is the main fragment of CardApp. It has up to 4 PlayerFragments
@@ -41,6 +43,9 @@ import jarden.cards.Player;
  *
  */
 public class DealFragment extends Fragment implements OnClickListener {
+    public interface Bridgeable {
+        BridgeQuiz getBridgeQuiz();
+    }
     private final static int SHOW_ME = 0;
     private final static int SHOW_US = 1;
     private final static int SHOW_ALL = 2;
@@ -71,6 +76,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 
 	private CardPack cardPack;
 	private BidEnum lastBid;
+    private QuestionAnswer lastQA;
 	private List<BidEnum> bidList;
 	private boolean westDeal;
 	private boolean primaryBid;
@@ -79,6 +85,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private boolean biddingOver;
     private boolean shuffled = false;
     private boolean twoPlayer = false;
+    private BridgeQuiz bridgeQuiz;
 
     @SuppressWarnings("deprecation")
 	@Override
@@ -162,19 +169,22 @@ public class DealFragment extends Fragment implements OnClickListener {
 			showSelectedHands();
 		} else if (id == R.id.bidButton) {
 			Hand hand = cardPack.getHand(this.mePlayer);
-			if (this.primaryBid) {
-				this.lastBid = hand.getPrimaryBid();
-				this.primaryBid = false;
+			if (primaryBid) {
+				//!! this.lastBid = hand.getPrimaryBid();
+                lastQA = bridgeQuiz.getPrimaryBid(hand);
+                lastBid = CardPack.BidEnum.valueOf("B" + lastQA.question);
+                primaryBid = false;
 			} else {
 				this.lastBid = hand.getSecondaryBid(this.lastBid);
 			}
-			String bidVerbose = hand.getBidVerbose();
+			//!! String bidVerbose = hand.getBidVerbose();
+            String bidVerbose = lastQA.answer;
 			this.suggestedBidTextView.setText(bidVerbose);
 			if (this.lastBid == null) {
 				Toast.makeText(activity, "null bid returned!", Toast.LENGTH_LONG).show();
 			} else {
 				addBid(this.lastBid);
-				addBid(BidEnum.PASS);
+				addBid(BidEnum.BPass);
 				if (!this.biddingOver) {
 					getPartnerBid();
 				}
@@ -274,13 +284,13 @@ public class DealFragment extends Fragment implements OnClickListener {
 			Toast.makeText(activity, "null bid returned!", Toast.LENGTH_LONG).show();
 		} else {
 			addBid(lastBid);
-			addBid(BidEnum.PASS);
+			addBid(BidEnum.BPass);
 		}
 	}
 	private void addBid(BidEnum bid) {
 		if (this.biddingOver) return;
 		this.bidList.add(bid);
-		if (bid == BidEnum.PASS) {
+		if (bid == BidEnum.BPass) {
 			if (++consecutivePasses >= 3) {
 				this.bidButton.setEnabled(false);
 				this.biddingOver = true;
@@ -309,15 +319,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         return btClientMode;
     }
 	// Fragment lifecycle methods:
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-        if(BuildConfig.DEBUG) {
-        	Log.i(HotBridgeActivity.TAG,
-    			"DealFragment.onActivityCreated(savedInstanceState=" +
-    			(savedInstanceState==null?"null":"not null") + ")");
-        }
-		super.onActivityCreated(savedInstanceState);
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Bridgeable bridgeableActivity = (Bridgeable) getActivity();
+        this.bridgeQuiz = bridgeableActivity.getBridgeQuiz();
+    }
 	@Override
 	public void onAttach(Context context) {
         if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onAttach()");

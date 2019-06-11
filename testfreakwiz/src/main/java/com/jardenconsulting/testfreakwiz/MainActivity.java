@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements FreakWizFragment.
     }
 
     @Override
-    public PresetQuiz getReviseQuiz() {
+    public PresetQuiz getBridgeQuiz() {
         return presetQuiz;
     }
 

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jarden.quiz.PresetQuiz;
+import jarden.quiz.BridgeQuiz;
 
 /**
  * Created by john.denny@gmail.com on 7th June 2019.
@@ -24,7 +24,7 @@ public class ViewLessFragment extends Fragment {
     private static final String TAG = "ViewlessFragment";
     private static final String quizFileName = "reviseit.txt";
     // "reviseitmini.txt"; // ***also change name of resource file***
-    private PresetQuiz reviseItQuiz;
+    private BridgeQuiz reviseItQuiz;
 
 
     @Override // Fragment
@@ -32,7 +32,7 @@ public class ViewLessFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
-    public PresetQuiz getReviseItQuiz() {
+    public BridgeQuiz getReviseItQuiz() {
         if (reviseItQuiz == null) {
             try {
                 File publicDirectory = Environment.getExternalStoragePublicDirectory(
@@ -45,7 +45,7 @@ public class ViewLessFragment extends Fragment {
                 } else {
                     inputStream = getResources().openRawResource(R.raw.reviseit);
                 }
-                this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
+                this.reviseItQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
             } catch (IOException ioe) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "exception loading data file: " + ioe);
                 reviseItQuiz = null;

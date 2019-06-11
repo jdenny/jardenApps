@@ -17,8 +17,8 @@ import com.jardenconsulting.jardenlib.BuildConfig;
 import com.jardenconsulting.jardenlib.R;
 
 import jarden.document.DocumentTextView;
+import jarden.quiz.BridgeQuiz;
 import jarden.quiz.EndOfQuestionsException;
-import jarden.quiz.PresetQuiz;
 import jarden.quiz.QuestionAnswer;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
@@ -29,14 +29,14 @@ import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
  */
 public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public interface Quizable {
-        PresetQuiz getReviseQuiz();
+        BridgeQuiz getBridgeQuiz();
         int[] getNotesResIds();
     }
     protected DocumentTextView documentTextView;
     protected TextView questionTextView;
     protected TextView answerTextView;
     protected TextView notesTextView;
-    protected PresetQuiz reviseItQuiz;
+    protected BridgeQuiz bridgeQuiz;
     protected ViewGroup selfMarkLayout;
 
     private static final String TAG = "FreakWizFragment";
@@ -69,7 +69,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Quizable reviseActivity = (Quizable) getActivity();
-        this.reviseItQuiz = reviseActivity.getReviseQuiz();
+        this.bridgeQuiz = reviseActivity.getBridgeQuiz();
         this.documentTextView = new DocumentTextView(
                 getActivity().getApplicationContext(),
                 notesTextView, reviseActivity.getNotesResIds(),
@@ -90,12 +90,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public void askQuestion() {
         String question;
         try {
-            question = reviseItQuiz.getNextQuestion(1);
+            question = bridgeQuiz.getNextQuestion(1);
         } catch (EndOfQuestionsException e) {
             showMessage("end of questions! starting practice mode");
             setPracticeMode();
             try {
-                question = reviseItQuiz.getNextQuestion(1);
+                question = bridgeQuiz.getNextQuestion(1);
             } catch (EndOfQuestionsException e1) {
                 showMessage("exception: " + e);
                 return;
@@ -117,12 +117,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public void resetListView() {
     }
     private void selfMarkButton(boolean isCorrect) {
-        this.reviseItQuiz.setCorrect(isCorrect);
+        this.bridgeQuiz.setCorrect(isCorrect);
         showButtonLayout();
         askQuestion();
     }
     private void goPressed() {
-        QuestionAnswer currentQA = reviseItQuiz.getCurrentQuestionAnswer();
+        QuestionAnswer currentQA = bridgeQuiz.getCurrentQuestionAnswer();
         showAnswer(currentQA);
         showSelfMarkLayout();
         setListView();
@@ -132,7 +132,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         this.documentTextView.showPageText(qa.notes, "Notes");
     }
     private void setPracticeMode() {
-        reviseItQuiz.setQuizMode(PRACTICE);
+        bridgeQuiz.setQuizMode(PRACTICE);
         getActivity().setTitle(R.string.practiceMode);
     }
     private void showSelfMarkLayout() {
@@ -149,12 +149,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     }
     private void showStats() {
         // humans count from 1, machines from 0
-        int humanIndex = reviseItQuiz.getCurrentQAIndex() + 1;
+        int humanIndex = bridgeQuiz.getCurrentQAIndex() + 1;
         String stats = "Current=" + humanIndex;
-        if (reviseItQuiz.getQuizMode() == LEARN) {
-            stats += ", ToDo=" + reviseItQuiz.getToDoCount();
+        if (bridgeQuiz.getQuizMode() == LEARN) {
+            stats += ", ToDo=" + bridgeQuiz.getToDoCount();
         }
-        stats += ", Fails=" + reviseItQuiz.getFailedCount();
+        stats += ", Fails=" + bridgeQuiz.getFailedCount();
         this.statsTextView.setText(stats);
     }
 }

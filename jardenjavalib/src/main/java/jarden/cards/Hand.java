@@ -6,7 +6,7 @@ import java.util.List;
 import jarden.cards.CardPack.AuctionType;
 import jarden.cards.CardPack.BidEnum;
 import jarden.cards.CardPack.CardEnum;
-import jarden.quiz.PresetQuiz;
+import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
 import static jarden.cards.CardPack.BidEnum.B1C;
@@ -31,8 +31,8 @@ import static jarden.cards.CardPack.BidEnum.B4S;
 import static jarden.cards.CardPack.BidEnum.B5C;
 import static jarden.cards.CardPack.BidEnum.B5D;
 import static jarden.cards.CardPack.BidEnum.NONE;
-import static jarden.cards.CardPack.BidEnum.PASS;
-import static jarden.quiz.PresetQuiz.OPENING_BIDS;
+import static jarden.cards.CardPack.BidEnum.BPass;
+import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 public class Hand {
 	private final static int C = 0, D = 1, H = 2, S = 3;
@@ -106,11 +106,11 @@ public class Hand {
 		 * = 15; else partnerNominalHCP = 13; }
 		 */
 		BidEnum bid;
-		if (partnerBid == PASS) {
+		if (partnerBid == BPass) {
 			if (this.previousBid == null) { // i.e. my first bid
 				return getPrimaryBid();
 			} else {
-				bid = PASS;
+				bid = BPass;
 				bidVerbose = "passing, as partner passed";
 			}
 		} else if (partnerBid == B1C) {
@@ -230,8 +230,8 @@ public class Hand {
 				bid = B2S;
 				bidVerbose = "5-7 HCP: 6+ spades: 2S";
 			} else {
-				bid = PASS;
-				bidVerbose = "0-7 HCP: Pass";
+				bid = BPass;
+				bidVerbose = "0-7 HCP: BPass";
 			}
 		} else if (suitLengths[H] >= 4) { // i.e. heart fit
 			this.auctionType = AuctionType.FIT;
@@ -303,8 +303,8 @@ public class Hand {
 		}
 		if (this.highCardPoints <= 7 && !forcing) { // will be false if
 													// already bid
-			bid = PASS;
-			bidVerbose = "0-7 HCP: Pass";
+			bid = BPass;
+			bidVerbose = "0-7 HCP: BPass";
 		} else if (suitLengths[S] >= 4) { // i.e. spade fit
 			this.auctionType = AuctionType.FIT;
 			if (this.previousBid == B1C) {
@@ -373,8 +373,8 @@ public class Hand {
 				bid = B2H;
 				bidVerbose = "0-10 HCP, 6+ spades: 2S";
 			} else {
-				bid = PASS;
-				bidVerbose = "0-10 HCP: Pass";
+				bid = BPass;
+				bidVerbose = "0-10 HCP: BPass";
 			}
 		} else if (this.highCardPoints >= 12) {
 			bid = B2D;
@@ -397,8 +397,8 @@ public class Hand {
 	private BidEnum getResponseTo2C(BidEnum partnerBid) {
 		BidEnum bid;
 		if (this.highCardPoints <= 7) {
-			bid = PASS;
-			bidVerbose = "0-7 HCP: Pass";
+			bid = BPass;
+			bidVerbose = "0-7 HCP: BPass";
 		} else if (this.highCardPoints >= 11 && this.suitLengths[H] >= 5) {
 			bid = B2H;
 			bidVerbose = "11+ HCP, 5+ hearts: 1H";
@@ -426,16 +426,16 @@ public class Hand {
 				bidVerbose = "8+ HCP, 3 clubs: 3C";
 			}
 		} else {
-			bid = PASS;
-			bidVerbose = "8+ HCP, <5 in majors, <3 clubs: Pass";
+			bid = BPass;
+			bidVerbose = "8+ HCP, <5 in majors, <3 clubs: BPass";
 		}
 		return bid;
 	}
 	private BidEnum getResponseTo2D(BidEnum partnerBid) {
 		BidEnum bid;
 		if (this.highCardPoints <= 7) {
-			bid = PASS;
-			bidVerbose = "0-7 HCP: Pass";
+			bid = BPass;
+			bidVerbose = "0-7 HCP: BPass";
 		} else if (this.highCardPoints >= 11 && this.suitLengths[H] >= 5) {
 			bid = B2H;
 			bidVerbose = "11+ HCP, 5+ hearts: 1H";
@@ -463,8 +463,8 @@ public class Hand {
 				bidVerbose = "8+ HCP, 3 diamonds: 3D";
 			}
 		} else {
-			bid = PASS;
-			bidVerbose = "8+ HCP, <5 in majors, <4 diamonds: Pass";
+			bid = BPass;
+			bidVerbose = "8+ HCP, <5 in majors, <4 diamonds: BPass";
 		}
 		return bid;
 	}
@@ -492,8 +492,8 @@ public class Hand {
 			}
 			// TODO: rest of this doesn't work yet!
 		} else if (this.highCardPoints <= 7 && !forcing) {
-			bid = PASS;
-			bidVerbose = "0-7 HCP: Pass";
+			bid = BPass;
+			bidVerbose = "0-7 HCP: BPass";
 		} else if (suitLengths[S] >= 4) { // i.e. spade fit
 			this.auctionType = AuctionType.FIT;
 			if (this.previousBid == B1C) {
@@ -643,12 +643,12 @@ public class Hand {
 				bid = B3D;
 				bidVerbose = "< 20 pp, 6+ HCP, 7 diamonds: 3D";
 			} else {
-				bid = PASS;
-				bidVerbose = "< 20 pp, 6+ HCP, but no long suit: Pass";
+				bid = BPass;
+				bidVerbose = "< 20 pp, 6+ HCP, but no long suit: BPass";
 			}
 		} else {
-			bid = PASS;
-			bidVerbose = "< 20 pp, < 6 HCP: Pass";
+			bid = BPass;
+			bidVerbose = "< 20 pp, < 6 HCP: BPass";
 		}
 		this.limited = !(bid == BidEnum.B1C);
 		this.previousBid = bid;
@@ -657,7 +657,7 @@ public class Hand {
 		}
 		return bid;
 	}
-    public BidEnum getPrimaryBid(PresetQuiz reviseItQuiz) {
+    public BidEnum getPrimaryBid(BridgeQuiz reviseItQuiz) {
         if (this.playingPoints == 0) evaluateHand();
         List<QuestionAnswer> openingBids = reviseItQuiz.getPossibleResponses(OPENING_BIDS);
         for (QuestionAnswer qa: openingBids) {

@@ -1,9 +1,12 @@
 package jarden.quiz;
 
+import jarden.cards.ParsedAnswer;
+
 public class QuestionAnswer {
 	public String question;
 	public String answer;
 	public String notes;
+    private ParsedAnswer parsedAnswer;
 
 	public QuestionAnswer() {
 	}
@@ -30,5 +33,11 @@ public class QuestionAnswer {
 	public String toString() {
 		return question + ": " + answer;
 	}
+    public ParsedAnswer getParsedAnswer() {
+        if (parsedAnswer == null) {
+            parsedAnswer = new ParsedAnswer(answer);
+        }
+        return parsedAnswer;
+    }
 }
 

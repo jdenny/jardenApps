@@ -15,7 +15,7 @@ import java.util.List;
 
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.quiz.PresetQuiz.OPENING_BIDS;
+import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
  * Created by john.denny@gmail.com on 15/10/2018.
@@ -51,7 +51,7 @@ public class ReviseQuizFragment extends FreakWizFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        qaList = reviseItQuiz.getQuestionAnswerList();
+        qaList = bridgeQuiz.getQuestionAnswerList();
     }
     @Override
     public void onClick(View view) {
@@ -109,10 +109,10 @@ public class ReviseQuizFragment extends FreakWizFragment
         String bidSequence = this.questionTextView.getText().toString();
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
-        List<String> bidList = reviseItQuiz.getBidItems(bidSequence);
+        List<String> bidList = bridgeQuiz.getBidItems(bidSequence);
         QuestionAnswer nextQA;
         for (String bid: bidList) {
-            nextQA = reviseItQuiz.findNextBidAnswer(bid);
+            nextQA = bridgeQuiz.findNextBidAnswer(bid);
             bidListAdapter.add(nextQA);
         }
         this.bidListAdapter.notifyDataSetChanged();
@@ -162,11 +162,11 @@ public class ReviseQuizFragment extends FreakWizFragment
             String question = targetQA.question;
             int i = question.indexOf(',');
             if (i >= 0) {
-                QuestionAnswer qa = reviseItQuiz.getBackBid(question);
+                QuestionAnswer qa = bridgeQuiz.getBackBid(question);
                 bidListAdapter.add(qa);
             }
         }
-        List<QuestionAnswer> possibleResponses = reviseItQuiz.getPossibleResponses(targetQA);
+        List<QuestionAnswer> possibleResponses = bridgeQuiz.getPossibleResponses(targetQA);
         for (QuestionAnswer qa : possibleResponses) {
             bidListAdapter.add(qa);
         }

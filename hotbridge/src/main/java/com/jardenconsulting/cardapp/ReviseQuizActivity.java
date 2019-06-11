@@ -25,7 +25,7 @@ import java.util.Set;
 
 import jarden.app.dialog.IntegerDialog;
 import jarden.app.revisequiz.FreakWizFragment;
-import jarden.quiz.PresetQuiz;
+import jarden.quiz.BridgeQuiz;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
@@ -99,7 +99,7 @@ public class ReviseQuizActivity extends AppCompatActivity
             R.string.waiting
     };
 
-    private PresetQuiz reviseItQuiz;
+    private BridgeQuiz bridgeQuiz;
     private boolean changingQuestionIndex;
     private FreakWizFragment freakWizFragment;
     private SharedPreferences sharedPreferences;
@@ -121,7 +121,7 @@ public class ReviseQuizActivity extends AppCompatActivity
             } else {
                 inputStream = getResources().openRawResource(R.raw.reviseit);
             }
-            this.reviseItQuiz = new PresetQuiz(new InputStreamReader(inputStream));
+            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
         } catch (IOException e) {
             showMessage("unable to load quiz: " + e);
             return;
@@ -130,16 +130,16 @@ public class ReviseQuizActivity extends AppCompatActivity
         boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
         int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
         if (savedQuestionIndex > 0) {
-            reviseItQuiz.setQuestionIndex(savedQuestionIndex);
+            bridgeQuiz.setQuestionIndex(savedQuestionIndex);
         }
         int savedTargetsCorrect = sharedPreferences.getInt(TARGET_CORRECTS_KEY, -1);
         if (savedTargetsCorrect > 0) {
-            reviseItQuiz.setTargetCorrectCt(savedTargetsCorrect);
+            bridgeQuiz.setTargetCorrectCt(savedTargetsCorrect);
         }
         String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
         if (failIndexStr.length() > 0) {
             String[] failIndices = failIndexStr.split(",");
-            reviseItQuiz.setFailIndices(failIndices);
+            bridgeQuiz.setFailIndices(failIndices);
         }
         setContentView(R.layout.activity_revise);
         FragmentManager fragmentManager =
@@ -184,7 +184,7 @@ public class ReviseQuizActivity extends AppCompatActivity
                 this.integerDialog = new IntegerDialog();
             }
             this.integerDialog.setTitle("Change Current Index");
-            this.integerDialog.setIntValue(reviseItQuiz.getQuestionIndex() + 1);
+            this.integerDialog.setIntValue(bridgeQuiz.getQuestionIndex() + 1);
             this.integerDialog.show(getSupportFragmentManager(), "UserLevelDialog");
         } else if (id == R.id.setTargetCorrectsButton) {
             changingQuestionIndex = false;
@@ -192,7 +192,7 @@ public class ReviseQuizActivity extends AppCompatActivity
                 this.integerDialog = new IntegerDialog();
             }
             this.integerDialog.setTitle("Change Target Corrects");
-            this.integerDialog.setIntValue(reviseItQuiz.getTargetCorrectCt());
+            this.integerDialog.setIntValue(bridgeQuiz.getTargetCorrectCt());
             this.integerDialog.show(getSupportFragmentManager(), "TargetCorrectsDialog");
         } else {
             return super.onOptionsItemSelected(item);
@@ -204,13 +204,13 @@ public class ReviseQuizActivity extends AppCompatActivity
         super.onPause();
         if (BuildConfig.DEBUG) Log.d(TAG, "ReviseQuizActivity.onPause()");
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        int questionIndex = reviseItQuiz.getQuestionIndex();
+        int questionIndex = bridgeQuiz.getQuestionIndex();
         editor.putInt(QUESTION_INDEX_KEY, questionIndex);
-        int targetCorrectCt = reviseItQuiz.getTargetCorrectCt();
+        int targetCorrectCt = bridgeQuiz.getTargetCorrectCt();
         editor.putInt(TARGET_CORRECTS_KEY, targetCorrectCt);
-        PresetQuiz.QuizMode quizMode = reviseItQuiz.getQuizMode();
+        BridgeQuiz.QuizMode quizMode = bridgeQuiz.getQuizMode();
         editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
-        Set<Integer> failedIndexSet = reviseItQuiz.getFailedIndexSet();
+        Set<Integer> failedIndexSet = bridgeQuiz.getFailedIndexSet();
         String failStr;
         if (failedIndexSet.size() == 0) {
             failStr = "";
@@ -225,8 +225,8 @@ public class ReviseQuizActivity extends AppCompatActivity
         editor.apply();
     }
     @Override // Quizable
-    public PresetQuiz getReviseQuiz() {
-        return this.reviseItQuiz;
+    public BridgeQuiz getBridgeQuiz() {
+        return this.bridgeQuiz;
     }
 
     @Override // Quizable
@@ -238,18 +238,18 @@ public class ReviseQuizActivity extends AppCompatActivity
     public void onUpdateIntValue(int intValue) {
         if (changingQuestionIndex) {
             // to people, ordinals start from 1; to computers, they start from 0
-            this.reviseItQuiz.setQuestionIndex(intValue - 1);
+            this.bridgeQuiz.setQuestionIndex(intValue - 1);
             this.freakWizFragment.askQuestion();
         } else {
-            this.reviseItQuiz.setTargetCorrectCt(intValue);
+            this.bridgeQuiz.setTargetCorrectCt(intValue);
         }
     }
     private void setLearnMode() {
-        reviseItQuiz.setQuizMode(LEARN);
+        bridgeQuiz.setQuizMode(LEARN);
         setTitle(R.string.learnMode);
     }
     private void setPracticeMode() {
-        reviseItQuiz.setQuizMode(PRACTICE);
+        bridgeQuiz.setQuizMode(PRACTICE);
         setTitle(R.string.practiceMode);
     }
     private void showMessage(String message) {

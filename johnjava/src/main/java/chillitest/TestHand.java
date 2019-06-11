@@ -2,9 +2,55 @@ package chillitest;
 
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
-import jarden.cards.QuestionAnswerParsed;
+import jarden.quiz.QuestionAnswer;
 
-import static jarden.cards.CardPack.CardEnum.*;
+import static jarden.cards.CardPack.CardEnum.C2;
+import static jarden.cards.CardPack.CardEnum.C3;
+import static jarden.cards.CardPack.CardEnum.C4;
+import static jarden.cards.CardPack.CardEnum.C5;
+import static jarden.cards.CardPack.CardEnum.C6;
+import static jarden.cards.CardPack.CardEnum.C7;
+import static jarden.cards.CardPack.CardEnum.C8;
+import static jarden.cards.CardPack.CardEnum.C9;
+import static jarden.cards.CardPack.CardEnum.CA;
+import static jarden.cards.CardPack.CardEnum.CJ;
+import static jarden.cards.CardPack.CardEnum.CK;
+import static jarden.cards.CardPack.CardEnum.CQ;
+import static jarden.cards.CardPack.CardEnum.D2;
+import static jarden.cards.CardPack.CardEnum.D3;
+import static jarden.cards.CardPack.CardEnum.D4;
+import static jarden.cards.CardPack.CardEnum.D5;
+import static jarden.cards.CardPack.CardEnum.D6;
+import static jarden.cards.CardPack.CardEnum.D7;
+import static jarden.cards.CardPack.CardEnum.D8;
+import static jarden.cards.CardPack.CardEnum.D9;
+import static jarden.cards.CardPack.CardEnum.DA;
+import static jarden.cards.CardPack.CardEnum.DJ;
+import static jarden.cards.CardPack.CardEnum.DK;
+import static jarden.cards.CardPack.CardEnum.DQ;
+import static jarden.cards.CardPack.CardEnum.DT;
+import static jarden.cards.CardPack.CardEnum.H2;
+import static jarden.cards.CardPack.CardEnum.H3;
+import static jarden.cards.CardPack.CardEnum.H4;
+import static jarden.cards.CardPack.CardEnum.H5;
+import static jarden.cards.CardPack.CardEnum.H6;
+import static jarden.cards.CardPack.CardEnum.H7;
+import static jarden.cards.CardPack.CardEnum.H8;
+import static jarden.cards.CardPack.CardEnum.H9;
+import static jarden.cards.CardPack.CardEnum.HA;
+import static jarden.cards.CardPack.CardEnum.HJ;
+import static jarden.cards.CardPack.CardEnum.HK;
+import static jarden.cards.CardPack.CardEnum.HQ;
+import static jarden.cards.CardPack.CardEnum.HT;
+import static jarden.cards.CardPack.CardEnum.S3;
+import static jarden.cards.CardPack.CardEnum.S4;
+import static jarden.cards.CardPack.CardEnum.S5;
+import static jarden.cards.CardPack.CardEnum.S7;
+import static jarden.cards.CardPack.CardEnum.S8;
+import static jarden.cards.CardPack.CardEnum.S9;
+import static jarden.cards.CardPack.CardEnum.SJ;
+import static jarden.cards.CardPack.CardEnum.SK;
+import static jarden.cards.CardPack.CardEnum.SQ;
 
 /**
  * Created by john.denny@gmail.com on 08/06/2019.
@@ -83,24 +129,24 @@ public class TestHand {
     private static final CardPack.CardEnum[] cardsPass = { // 19pp, 5-1-2-5
             C9, C8, C5, C3, C2, D9, HA, HK, SQ, S8, S5, S4, S3
     };
-    public static final QuestionAnswerParsed[] answers = {
-            new QuestionAnswerParsed("1C", bid1C),
-            new QuestionAnswerParsed("1D", bid1D),
-            new QuestionAnswerParsed("1H", bid1H),
-            new QuestionAnswerParsed("1S", bid1S),
-            new QuestionAnswerParsed("1NT", bid1NT),
-            new QuestionAnswerParsed("2C", bid2C),
-            new QuestionAnswerParsed("2D", bid2D),
-            new QuestionAnswerParsed("2H", bid2H),
-            new QuestionAnswerParsed("2S", bid2S),
-            new QuestionAnswerParsed("2NT", bid2NT),
-            new QuestionAnswerParsed("3C", bid3C),
-            new QuestionAnswerParsed("4D", bid4D),
-            new QuestionAnswerParsed("4H", bid4H),
-            new QuestionAnswerParsed("5C", bid5C),
-            new QuestionAnswerParsed("pass", bidPass)
+    private static final QuestionAnswer[] answers = {
+            new QuestionAnswer("1C", bid1C),
+            new QuestionAnswer("1D", bid1D),
+            new QuestionAnswer("1H", bid1H),
+            new QuestionAnswer("1S", bid1S),
+            new QuestionAnswer("1N", bid1NT),
+            new QuestionAnswer("2C", bid2C),
+            new QuestionAnswer("2D", bid2D),
+            new QuestionAnswer("2H", bid2H),
+            new QuestionAnswer("2S", bid2S),
+            new QuestionAnswer("2N", bid2NT),
+            new QuestionAnswer("3C", bid3C),
+            new QuestionAnswer("4D", bid4D),
+            new QuestionAnswer("4H", bid4H),
+            new QuestionAnswer("5C", bid5C),
+            new QuestionAnswer("NB", bidPass)
     };
-    public static final Hand[] hands = {
+    private static final Hand[] hands = {
             new Hand(cards1C),
             new Hand(cards1Cb),
             new Hand(cards1D),
@@ -123,38 +169,29 @@ public class TestHand {
 
     public static void main(String[] args) {
         System.out.println("start of test");
-        Hand hand;
-        for (int i = 0; i < hands.length; i++) {
-            hand = hands[i];
-            System.out.print(hand + " matches:");
+        String initialBlank = "                  ";
+        int headerSize = initialBlank.length();
+        System.out.print(initialBlank);
+        for (QuestionAnswer qa: answers) {
+            System.out.print(" " + qa.question);
+        }
+        System.out.println();
+        for (Hand hand : hands) {
+            String handName = hand.toString();
+            System.out.print(hand);
+            for (int i = handName.length(); i < headerSize; i++) {
+                System.out.print(" ");
+            }
             int matchCt = 0;
-            QuestionAnswerParsed qap;
-            for (int j = 0; j < answers.length; j++) {
-                qap = answers[j];
-                boolean isMatch = qap.getParsedAnswer().doesMatchHand(hand);
+            for (QuestionAnswer qa : answers) {
+                boolean isMatch = qa.getParsedAnswer().doesMatchHand(hand);
                 if (isMatch) ++matchCt;
-                System.out.print(" " + qap.question + "=" + (isMatch?"T":"F"));
+                System.out.print("  " + (isMatch ? "T" : "."));
             }
             if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
             System.out.println();
 
         }
         System.out.println("end of test");
-    }
-
-    private static void pocRestartForLoop() {
-        String namesStr = "john julie stop sam joe";
-        String[] names = namesStr.split(" ");
-        for (int i = 0; i < names.length; i++) {
-            String name = names[i];
-            if (name.equals("stop")) {
-                int indexStart = namesStr.indexOf("stop");
-                int indexEnd = indexStart + 4;
-                namesStr = namesStr.substring(indexEnd + 1);
-                names = namesStr.split(" ");
-                i = 0;
-            }
-            System.out.println(names[i]);
-        }
     }
 }
