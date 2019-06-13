@@ -67,6 +67,14 @@ public class Hand {
 	public ArrayList<Card> getCards() {
 		return this.cards;
 	}
+	public String cardsAsString() {
+	    StringBuilder builder = new StringBuilder();
+	    for (Card card: cards) {
+	        builder.append(card);
+	        builder.append(", ");
+        }
+	    return builder.toString();
+    }
 
 	public int getHighCardPoints() {
 		if (this.playingPoints == 0) evaluateHand();

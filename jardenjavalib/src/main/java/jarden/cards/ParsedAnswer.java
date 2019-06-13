@@ -23,6 +23,12 @@ public class ParsedAnswer {
     private int minDiamonds = -1, maxDiamonds = -1;
     private int minHearts = -1, maxHearts = -1;
     private int minSpades = -1, maxSpades = -1;
+    private int minBiddableSuits = -1;
+    private boolean allSuitsGuarded = false;
+    private boolean clubGuard = false;
+    private boolean diamondGuard = false;
+    private boolean heartGuard = false;
+    private boolean spadeGuard = false;
     private ParsedAnswer orParsedAnswer;
     private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
 
@@ -185,6 +191,21 @@ public class ParsedAnswer {
                     minSpadeWinners = previousMin;
                     previousMin = -1;
                 }
+            } else if (token.equals("biddable-suits")) {
+                if (previousMin > 0) {
+                    minBiddableSuits = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("club-guard")) {
+                clubGuard = true;
+            } else if (token.equals("diamond-guard")) {
+                diamondGuard = true;
+            } else if (token.equals("heart-guard")) {
+                heartGuard = true;
+            } else if (token.equals("spade-guard")) {
+                spadeGuard = true;
+            } else if (token.equals("all-suits-guarded")) {
+                allSuitsGuarded = true;
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
@@ -285,6 +306,22 @@ public class ParsedAnswer {
                 (hand.suitLengths[2] + hand.suitValues[2] < pa.minHeartWinners * 3)) return false;
         if (pa.minSpadeWinners > 0 &&
                 (hand.suitLengths[3] + hand.suitValues[3] < pa.minSpadeWinners * 3)) return false;
+        if (pa.minBiddableSuits > 0) {
+            int biddableSuits = 0;
+            for (int i = 0; i < 4; i++) {
+                if (hand.suitLengths[1] >= 4) ++biddableSuits;
+            }
+            if (biddableSuits < pa.minBiddableSuits) return false;
+        }
+        if (pa.allSuitsGuarded) {
+            for (int i = 0; i < 4; i++) {
+                if (hand.suitValues[i] < 4) return false;
+            }
+        }
+        if (pa.clubGuard && hand.suitValues[0] < 4) return false;
+        if (pa.diamondGuard && hand.suitValues[1] < 4) return false;
+        if (pa.heartGuard && hand.suitValues[2] < 4) return false;
+        if (pa.spadeGuard && hand.suitValues[3] < 4) return false;
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {
             if (notPA.doesMatchHand(hand)) return false;

@@ -13,6 +13,7 @@ import jarden.cards.Hand;
 public class BridgeQuiz extends PresetQuiz {
     public static final QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
     private static final int OPENING_BID_CT = 21;
+    public QuestionAnswer PassBid;
     private List<QuestionAnswer> primaryBids;
 
     public BridgeQuiz(InputStreamReader is) throws IOException {
@@ -30,17 +31,23 @@ public class BridgeQuiz extends PresetQuiz {
         }
         return null;
     }
+    private List<QuestionAnswer> getPrimaryBids() {
+        if (primaryBids == null) {
+            primaryBids = new ArrayList<>();
+            QuestionAnswer qa;
+            for (int i = 0; i < OPENING_BID_CT; i++) {
+                qa = qaList.get(i);
+                if (qa.question.equals("Pass")) PassBid = qa;
+                primaryBids.add(qa);
+            }
+        }
+        return primaryBids;
+    }
     public List<QuestionAnswer> getPossibleResponses(QuestionAnswer targetQA) {
         List<QuestionAnswer> possibleResponses;
         // TODO: generalise this special case of bid cache
-        if (targetQA == OPENING_BIDS) {
-            if (primaryBids == null) {
-                primaryBids = new ArrayList<>();
-                for (int i = 0; i < OPENING_BID_CT; i++) {
-                    primaryBids.add(qaList.get(i));
-                }
-            }
-            possibleResponses = primaryBids;
+        if (targetQA == OPENING_BIDS || targetQA == PassBid) {
+            possibleResponses = getPrimaryBids();
         } else {
             String question = targetQA.question;
             possibleResponses = new ArrayList<>();

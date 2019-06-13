@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import jarden.cards.Card;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
 import jarden.cards.Player;
@@ -132,7 +131,7 @@ public class TestHand {
     private final CardPack.CardEnum[] cardsPassb = { // 19pp, 6-3-1-3
             CA, CQ, C8, C6, C4, C2, DK, DT, D5, HT, SJ, S7, S4
     };
-    private final Hand[] hands = {
+    private final Hand[] myHands = {
             new Hand(cards1C),
             new Hand(cards1Cb),
             new Hand(cards1D),
@@ -161,11 +160,15 @@ public class TestHand {
     public static void main(String[] args) throws IOException {
         System.out.println("start of test");
         TestHand testHand = new TestHand();
-        testHand.testMyPrimaryBids();
-        testHand.testRandomPrimaryBids();
-        testHand.test2Hands1H1S();
-        testHand.testOrs();
-        testHand.testNots();
+        // testHand.testMyPrimaryBids();
+        // testHand.testRandomPrimaryBids();
+        // testHand.test2Hands1H1S();
+        // testHand.testOrs();
+        // testHand.testNots();
+        // testHand.testRandomNBids(10, 2);
+        // testHand.testRandomSecondBids();
+        testHand.testAllSecondBids();
+        // testHand.testMySecondBids();
         System.out.println("end of test");
     }
 
@@ -186,7 +189,7 @@ public class TestHand {
             System.out.print(" " + qa.question);
         }
         System.out.println();
-        for (Hand hand : hands) {
+        for (Hand hand : myHands) {
             String handName = hand.toString();
             System.out.print(hand);
             for (int i = handName.length(); i < headerSize; i++) {
@@ -200,27 +203,27 @@ public class TestHand {
             }
             if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
             System.out.println();
-
         }
     }
+    // deal random hands, and check that each one matches exactly 1 primary bid
     private void testRandomPrimaryBids() {
-        // TODO: add test for only 1 match, as in testMyPrimaryBids()
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
             cardPack.deal(true);
             Hand hand = cardPack.getHand(Player.West);
             System.out.print(hand);
-            QuestionAnswer qa = bridgeQuiz.getPrimaryBid(hand);
-            if (qa == null) {
-                System.out.println();
-                List<Card> cards = hand.getCards();
-                for (Card card: cards) System.out.print(card + " ");
-                System.out.println();
+            int matchCt = 0;
+            for (QuestionAnswer qa : primaryBids) {
+                boolean isMatch = qa.getParsedAnswer().doesMatchHand(hand);
+                if (isMatch) ++matchCt;
+            }
+            if (matchCt != 1) {
+                System.out.println(hand + " *** matchCt=" + matchCt);
+                System.out.println(hand.cardsAsString());
                 // put breakpoint at next line to debug problem
                 bridgeQuiz.getPrimaryBid(hand);
-            } else {
-                System.out.println(" BID=" + qa.question + ", " + qa.answer);
             }
+            System.out.println();
         }
     }
     private void test2Hands4H() {
@@ -311,4 +314,113 @@ public class TestHand {
             System.out.println();
         }
     }
+    /*
+    For dealCt deals, get handWest and handEast to do bidCt bids between them
+     */
+    private void testRandomNBids(int dealCt, int bidCt) {
+        for (int j = 0; j < dealCt; j++) {
+            cardPack.shuffle();
+            cardPack.deal(true);
+            Hand handWest = cardPack.getHand(Player.West);
+            Hand handEast = cardPack.getHand(Player.East);
+            System.out.println("West: " + handWest);
+            System.out.println("East: " + handEast);
+            QuestionAnswer qa = OPENING_BIDS;
+            boolean west = true;
+            Hand hand;
+            for (int i = 0; i < bidCt && qa != null; i++) {
+                hand = west ? handWest : handEast;
+                qa = bridgeQuiz.getNextBid(hand, qa);
+                west = !west;
+                System.out.println(qa);
+            }
+            System.out.println();
+        }
+    }
+    // deal random hands
+    // for each primary bid:
+    //      check that randomEast matches exactly 1 second bid
+    private void testAllSecondBids() {
+        for (int i = 0; i < 50; i++) {
+            cardPack.shuffle();
+            cardPack.deal(true);
+            Hand handEast = cardPack.getHand(Player.East);
+
+            for (QuestionAnswer qa1 : primaryBids) {
+                int matchCt = 0;
+                List<QuestionAnswer> qa2List = bridgeQuiz.getPossibleResponses(qa1);
+                for (QuestionAnswer qa2 : qa2List) {
+                    boolean isMatch = qa2.getParsedAnswer().doesMatchHand(handEast);
+                    if (isMatch) ++matchCt;
+                }
+                if (matchCt != 1) {
+                    System.out.println("primary bid: " + qa1);
+                    System.out.println("East: " + handEast + " *** matchCt=" + matchCt);
+                    System.out.println(handEast.cardsAsString());
+                    // put breakpoint at next line to debug problem
+                    bridgeQuiz.getPrimaryBid(handEast);
+                }
+                System.out.println();
+            }
+        }
+    }
+    private void testMySecondBids() { // 2 matches for 1C; 3 for 1D
+        CardPack.CardEnum[] cards1 = { // 22pp, 11HCP, 5-6-2-0
+                C9, C7, C6, C5, C2, DA, DK, DJ, DT, D9, D4, HK, H8
+        };
+        Hand hand1 = new Hand(cards1);
+        List<QuestionAnswer> possibles =
+                bridgeQuiz.getPossibleResponses(primaryBids.get(1)); // get responses for 1D
+        int matchCt = 0;
+        for (QuestionAnswer qa : possibles) {
+            boolean isMatch = qa.getParsedAnswer().doesMatchHand(hand1);
+            if (isMatch) {
+                ++matchCt;
+                System.out.println(qa);
+            }
+        }
+        if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
+        System.out.println();
+    }
+    // deal random hands and check that each one matches exactly 1 primary bid
+    private void testRandomSecondBids() {
+        for (int i = 0; i < 50; i++) {
+            cardPack.shuffle();
+            cardPack.deal(true);
+            Hand handWest = cardPack.getHand(Player.West);
+            Hand handEast = cardPack.getHand(Player.East);
+
+            // first check West matches exactly 1 primary bid
+            int matchCt = 0;
+            for (QuestionAnswer qa : primaryBids) {
+                boolean isMatch = qa.getParsedAnswer().doesMatchHand(handWest);
+                if (isMatch) ++matchCt;
+            }
+            if (matchCt != 1) {
+                System.out.println(handWest + " *** matchCt=" + matchCt);
+                System.out.println(handWest.cardsAsString());
+                // put breakpoint at next line to debug problem
+                bridgeQuiz.getPrimaryBid(handWest);
+            }
+            System.out.println();
+
+            // now check East matches exactly 1 second bid
+            QuestionAnswer qa1 = bridgeQuiz.getPrimaryBid(handWest);
+            List<QuestionAnswer> qa2List = bridgeQuiz.getPossibleResponses(qa1);
+            matchCt = 0;
+            for (QuestionAnswer qa2 : qa2List) {
+                boolean isMatch = qa2.getParsedAnswer().doesMatchHand(handEast);
+                if (isMatch) ++matchCt;
+            }
+            if (matchCt != 1) {
+                System.out.println("West: " + handWest);
+                System.out.println("East: " + handEast + " *** matchCt=" + matchCt);
+                System.out.println(handWest.cardsAsString());
+                // put breakpoint at next line to debug problem
+                bridgeQuiz.getPrimaryBid(handEast);
+            }
+            System.out.println();
+        }
+    }
+
 }
