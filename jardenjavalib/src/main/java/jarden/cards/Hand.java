@@ -90,6 +90,14 @@ public class Hand {
 		if (this.playingPoints == 0) evaluateHand();
 		return this.balanced;
 	}
+	public boolean isSkew() {
+        for (int i = 0; i < 4; i++) {
+            if (suitValues[i] < 2) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	public String toString() {
         if (this.playingPoints == 0) evaluateHand();

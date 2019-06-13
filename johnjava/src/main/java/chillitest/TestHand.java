@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import jarden.cards.CardPack;
@@ -160,6 +161,7 @@ public class TestHand {
     public static void main(String[] args) throws IOException {
         System.out.println("start of test");
         TestHand testHand = new TestHand();
+        testHand.parseAllBids();
         // testHand.testMyPrimaryBids();
         // testHand.testRandomPrimaryBids();
         // testHand.test2Hands1H1S();
@@ -167,7 +169,7 @@ public class TestHand {
         // testHand.testNots();
         // testHand.testRandomNBids(10, 2);
         // testHand.testRandomSecondBids();
-        testHand.testAllSecondBids();
+        // testHand.testAllSecondBids();
         // testHand.testMySecondBids();
         System.out.println("end of test");
     }
@@ -180,6 +182,13 @@ public class TestHand {
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
 
+    }
+    private void parseAllBids() {
+        List<QuestionAnswer> qaList = bridgeQuiz.getQuestionAnswerList();
+        Hand hand = myHands[0];
+        for (QuestionAnswer qa: qaList) {
+            qa.getParsedAnswer().doesMatchHand(hand);
+        }
     }
     private void testMyPrimaryBids() {
         String initialBlank = "                  ";
@@ -345,18 +354,20 @@ public class TestHand {
             cardPack.shuffle();
             cardPack.deal(true);
             Hand handEast = cardPack.getHand(Player.East);
+            List<QuestionAnswer> matches = new ArrayList<>();
 
             for (QuestionAnswer qa1 : primaryBids) {
-                int matchCt = 0;
+                matches.clear();
                 List<QuestionAnswer> qa2List = bridgeQuiz.getPossibleResponses(qa1);
                 for (QuestionAnswer qa2 : qa2List) {
                     boolean isMatch = qa2.getParsedAnswer().doesMatchHand(handEast);
-                    if (isMatch) ++matchCt;
+                    if (isMatch) matches.add(qa2);
                 }
-                if (matchCt != 1) {
+                if (matches.size() != 1) {
                     System.out.println("primary bid: " + qa1);
-                    System.out.println("East: " + handEast + " *** matchCt=" + matchCt);
+                    System.out.println("East: " + handEast + " *** matchCt=" + matches.size());
                     System.out.println(handEast.cardsAsString());
+                    for (QuestionAnswer qaMatch: matches) System.out.println("matched: " + qaMatch);
                     // put breakpoint at next line to debug problem
                     bridgeQuiz.getPrimaryBid(handEast);
                 }

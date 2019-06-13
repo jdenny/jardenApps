@@ -72,6 +72,7 @@ public class ReviseQuizActivity extends AppCompatActivity
     private static final String LEARN_MODE_KEY = "learnModeKey";
     private static final int[] notesResIds = {
             R.string.autofit,
+            R.string.balanced,
             R.string.compelled,
             R.string.disturbed,
             R.string.Double,

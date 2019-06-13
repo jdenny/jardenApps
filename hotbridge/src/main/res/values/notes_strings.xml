@@ -7,6 +7,10 @@
         \n [b]4H[/b] = autofit, [a]values_for_5[/a]
         \n [b]4S[/b] = autofit, [a]keycard_ask[/a]
     </string>
+    <string name="balanced">
+        No singleton or void, and at most one doubleton, i.e.
+        \n 4-3-3-3, 4-4-3-2 or 5-3-3-2.
+    </string>
     <string name="compelled">
         Following 2D compelling [a]relay[/a], or 2C invitational relay and partner
         does not decline invitation with 2D. Team must bid to at least 3NT or penalise

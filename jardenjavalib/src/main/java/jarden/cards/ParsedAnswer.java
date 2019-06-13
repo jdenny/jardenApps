@@ -29,6 +29,9 @@ public class ParsedAnswer {
     private boolean diamondGuard = false;
     private boolean heartGuard = false;
     private boolean spadeGuard = false;
+    private boolean balanced = false;
+    private int hcpOrSkew = -1;
+    private int hcpOrSkewWith4PlusMinor = -1;
     private ParsedAnswer orParsedAnswer;
     private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
 
@@ -196,6 +199,19 @@ public class ParsedAnswer {
                     minBiddableSuits = previousMin;
                     previousMin = -1;
                 }
+            } else if (token.equals("HCP-or-skew")) {
+                // usage: n+ HCP-or-skew
+                if (previousMin > 0) {
+                    hcpOrSkew = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("HCP-or-skew-with-4+minor")) {
+                // usage: not n+ HCP-or-skew-with-4+minor
+                if (previousMin > 0) {
+                    hcpOrSkewWith4PlusMinor = previousMin;
+                    previousMin = -1;
+                    isNegative = false;
+                }
             } else if (token.equals("club-guard")) {
                 clubGuard = true;
             } else if (token.equals("diamond-guard")) {
@@ -206,6 +222,8 @@ public class ParsedAnswer {
                 spadeGuard = true;
             } else if (token.equals("all-suits-guarded")) {
                 allSuitsGuarded = true;
+            } else if (token.equals("balanced")) {
+                balanced = true;
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
@@ -223,6 +241,11 @@ public class ParsedAnswer {
                 tokens = answer.split(" ");
                 i = 0;
                 isNegative = false;
+            } else if (token.contains("/")) { // assuming n+/m+
+                int indexSlash = token.indexOf('/');
+                previousMin = Integer.parseInt(token.substring(0, indexSlash - 1));
+                previousMax = Integer.parseInt(
+                        token.substring(indexSlash + 1, token.length() - 1));
             } else if (token.endsWith("+")) {
                 previousMin = Integer.parseInt(token.substring(0, token.length() - 1));
             } else if (token.startsWith("<")) {
@@ -231,11 +254,6 @@ public class ParsedAnswer {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
                 previousMax = Integer.parseInt(token.substring(indexMinus + 1));
-            } else if (token.contains("/")) { // assuming n+/m+
-                int indexSlash = token.indexOf('/');
-                previousMin = Integer.parseInt(token.substring(0, indexSlash - 1));
-                previousMax = Integer.parseInt(
-                        token.substring(indexSlash + 1, token.length() - 1));
             } else {
                 // assume it's a number; if not, Exception shows it's a token
                 // we don't recognise!
@@ -306,6 +324,17 @@ public class ParsedAnswer {
                 (hand.suitLengths[2] + hand.suitValues[2] < pa.minHeartWinners * 3)) return false;
         if (pa.minSpadeWinners > 0 &&
                 (hand.suitLengths[3] + hand.suitValues[3] < pa.minSpadeWinners * 3)) return false;
+        if (pa.hcpOrSkew >= 0 && handHCP < pa.hcpOrSkew && !hand.isSkew()) return false;
+        if (pa.hcpOrSkewWith4PlusMinor >= 0) {
+            /*
+            boolean minor4 = hand.suitLengths[0] >= 4 || hand.suitLengths[1] >= 4;
+            boolean enoughHCP = handHCP >= pa.hcpOrSkewWith4PlusMinor;
+            boolean isSkew = hand.isSkew();
+            return !(minor4 && (enoughHCP || isSkew));
+            */
+            return !((hand.suitLengths[0] >= 4 || hand.suitLengths[1] >= 4) &&
+                    (handHCP >= pa.hcpOrSkewWith4PlusMinor || hand.isSkew()));
+        }
         if (pa.minBiddableSuits > 0) {
             int biddableSuits = 0;
             for (int i = 0; i < 4; i++) {
@@ -322,6 +351,17 @@ public class ParsedAnswer {
         if (pa.diamondGuard && hand.suitValues[1] < 4) return false;
         if (pa.heartGuard && hand.suitValues[2] < 4) return false;
         if (pa.spadeGuard && hand.suitValues[3] < 4) return false;
+        if (pa.balanced) {
+            int doubletonCt = 0;
+            int suitValue;
+            for (int i = 0; i < 4; i++) {
+                suitValue = hand.suitValues[i];
+                if (suitValue < 2) return false;
+                if (suitValue == 2) ++doubletonCt;
+            }
+            if (doubletonCt > 1) return false;
+        }
+
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {
             if (notPA.doesMatchHand(hand)) return false;
