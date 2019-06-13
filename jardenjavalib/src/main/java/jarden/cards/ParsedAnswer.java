@@ -351,17 +351,7 @@ public class ParsedAnswer {
         if (pa.diamondGuard && hand.suitValues[1] < 4) return false;
         if (pa.heartGuard && hand.suitValues[2] < 4) return false;
         if (pa.spadeGuard && hand.suitValues[3] < 4) return false;
-        if (pa.balanced) {
-            int doubletonCt = 0;
-            int suitValue;
-            for (int i = 0; i < 4; i++) {
-                suitValue = hand.suitValues[i];
-                if (suitValue < 2) return false;
-                if (suitValue == 2) ++doubletonCt;
-            }
-            if (doubletonCt > 1) return false;
-        }
-
+        if (pa.balanced && !hand.isBalanced()) return false;
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {
             if (notPA.doesMatchHand(hand)) return false;

@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import static jarden.cards.Suit.Club;
-import static jarden.cards.Suit.Diamond;
-import static jarden.cards.Suit.Heart;
-import static jarden.cards.Suit.Spade;
-
 // TODO: hold cards as byte[], to indicate which player has this card!
 public class CardPack {
     public enum CardEnum {
@@ -17,6 +12,7 @@ public class CardPack {
 		H2, H3, H4, H5, H6, H7, H8, H9, HT, HJ, HQ, HK, HA,
 		S2, S3, S4, S5, S6, S7, S8, S9, ST, SJ, SQ, SK, SA
 	}
+	/*!!
 	public enum BidEnum {
 		BPass(null, "pass"), NONE(null, "-"),
 		B1C(Club, "1C"), B1D(Diamond, "1D"), B1H(Heart, "1H"), B1S(Spade, "1S"), B1N(null, "1NT"),
@@ -41,6 +37,7 @@ public class CardPack {
 	public enum AuctionType {
 		NEUTRAL, DISTURBED, FIT, SCRAMBLE
 	}
+	*/
 	public static final Card[] SORTED_CARDS;
 	static {
 		SORTED_CARDS = new Card[52];
@@ -115,9 +112,11 @@ public class CardPack {
 				hands[3] = temp;
 			}
 		}
+		/*!!
 		for (int i = 0; i < PLAYER_CT; i++) {
 			hands[i].setPartner(hands[(i+2)%4]);
 		}
+		*/
 	}
 	public Hand getHand(Player player) {
 		return hands[player.ordinal()];

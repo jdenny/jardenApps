@@ -26,15 +26,13 @@ import com.jardenconsulting.cardapp.BuildConfig;
 import com.jardenconsulting.cardapp.HotBridgeActivity;
 import com.jardenconsulting.cardapp.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jarden.cards.CardPack;
-import jarden.cards.CardPack.BidEnum;
 import jarden.cards.Hand;
 import jarden.cards.Player;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
+
+import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
  * DealFragment is the main fragment of CardApp. It has up to 4 PlayerFragments
@@ -75,11 +73,11 @@ public class DealFragment extends Fragment implements OnClickListener {
     private TextView[] bidTextViews;
 
 	private CardPack cardPack;
-	private BidEnum lastBid;
+	//!! private BidEnum lastBid;
     private QuestionAnswer lastQA;
-	private List<BidEnum> bidList;
+	//!! private List<BidEnum> bidList;
 	private boolean westDeal;
-	private boolean primaryBid;
+	//!! private boolean primaryBid;
 	private int bidNumber;
 	private int consecutivePasses;
 	private boolean biddingOver;
@@ -137,8 +135,10 @@ public class DealFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 	private void resetBidList() {
+		/*!!
 		this.bidList.clear();
 		this.bidNumber = 0;
+		 */
 		for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
 	}
 	@Override
@@ -169,22 +169,26 @@ public class DealFragment extends Fragment implements OnClickListener {
 			showSelectedHands();
 		} else if (id == R.id.bidButton) {
 			Hand hand = cardPack.getHand(this.mePlayer);
+			lastQA = bridgeQuiz.getNextBid(hand, lastQA);
+			/*!!
 			if (primaryBid) {
-				//!! this.lastBid = hand.getPrimaryBid();
                 lastQA = bridgeQuiz.getPrimaryBid(hand);
                 lastBid = CardPack.BidEnum.valueOf("B" + lastQA.question);
                 primaryBid = false;
 			} else {
+			    lastQA = bridgeQuiz.getNextBid(hand, lastQA);
 				this.lastBid = hand.getSecondaryBid(this.lastBid);
 			}
+			*/
 			//!! String bidVerbose = hand.getBidVerbose();
             String bidVerbose = lastQA.answer;
 			this.suggestedBidTextView.setText(bidVerbose);
-			if (this.lastBid == null) {
+			//!! if (this.lastBid == null) {
+            if (lastQA == null) {
 				Toast.makeText(activity, "null bid returned!", Toast.LENGTH_LONG).show();
 			} else {
-				addBid(this.lastBid);
-				addBid(BidEnum.BPass);
+				//!! addBid(this.lastBid);
+				//!! addBid(BidEnum.BPass);
 				if (!this.biddingOver) {
 					getPartnerBid();
 				}
@@ -210,8 +214,9 @@ public class DealFragment extends Fragment implements OnClickListener {
         cardPack.deal(true); // i.e. dealShow with bias in our favour
         resetBidList();
         this.westDeal = !this.westDeal;
-        this.primaryBid = true;
-        this.lastBid = null;
+        //!! this.primaryBid = true;
+        //!! this.lastBid = null;
+        lastQA = OPENING_BIDS;
         handsButton.setText("Us");
         this.handToShow = SHOW_ME;
         // game ends after 3 consecutive passes, or first 4
@@ -220,8 +225,8 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.bidButton.setEnabled(!twoPlayer);
         this.shuffled = true;
         if (!westDeal && !twoPlayer) { // TODO: same as in showHands()
-            addBid(BidEnum.NONE);
-            addBid(BidEnum.NONE);
+            //!! addBid(BidEnum.NONE);
+            //!! addBid(BidEnum.NONE);
             getPartnerBid();
         }
         showHands();
@@ -233,6 +238,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         eastFragment.showHand();
         westFragment.showHand();
         showSelectedHands();
+        /*??
         if (!twoPlayer) {
             // bidding doesn't yet work on twoPlayer; TODO: fix it!
             for (int i = 0; i < bidList.size(); i++) {
@@ -240,6 +246,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             }
             indicateNextBid();
         }
+        */
 	}
 	private void indicateNextBid() {
         if (!this.biddingOver) {
@@ -274,19 +281,35 @@ public class DealFragment extends Fragment implements OnClickListener {
     }
 	private void getPartnerBid() {
 		Hand hand = cardPack.getHand(partnerPlayer);
-		if (this.primaryBid) {
+        QuestionAnswer nextQA = bridgeQuiz.getNextBid(hand, lastQA);
+        if (nextQA != null) {
+            lastQA = nextQA;
+            showBids();
+        }
+        /*!!
+        if (this.primaryBid) {
 			this.lastBid = hand.getPrimaryBid();
 			this.primaryBid = false;
 		} else {
 			this.lastBid = hand.getSecondaryBid(lastBid);
 		}
 		if (this.lastBid == null) {
+        if (lastQA == null) {
 			Toast.makeText(activity, "null bid returned!", Toast.LENGTH_LONG).show();
 		} else {
 			addBid(lastBid);
 			addBid(BidEnum.BPass);
 		}
+		*/
 	}
+	private void showBids() {
+        String[] bids = lastQA.question.split("[ ,;]+");
+        for (int i = 0; i < bids.length; i++) {
+            bidTextViews[i].setText(bids[i]);
+        }
+
+    }
+    /*!!
 	private void addBid(BidEnum bid) {
 		if (this.biddingOver) return;
 		this.bidList.add(bid);
@@ -301,6 +324,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 		this.bidTextViews[bidNumber++].setText(bid.toString());
 		indicateNextBid();
 	}
+	*/
 	public void setClientMode(boolean clientMode) {
         if(BuildConfig.DEBUG) {
         	Log.i(HotBridgeActivity.TAG, "DealFragment.setClientMode(" +
@@ -346,7 +370,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstanceState);
         setRetainInstance(true);
         cardPack = new CardPack();
-        bidList = new ArrayList<>();
+        //!! bidList = new ArrayList<>();
         setClientMode(false); // because initially single user
 	}
 	@Override
