@@ -1,7 +1,17 @@
 package chillitest;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import jarden.cards.Card;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
+import jarden.cards.Player;
+import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
 import static jarden.cards.CardPack.CardEnum.C2;
@@ -16,6 +26,7 @@ import static jarden.cards.CardPack.CardEnum.CA;
 import static jarden.cards.CardPack.CardEnum.CJ;
 import static jarden.cards.CardPack.CardEnum.CK;
 import static jarden.cards.CardPack.CardEnum.CQ;
+import static jarden.cards.CardPack.CardEnum.CT;
 import static jarden.cards.CardPack.CardEnum.D2;
 import static jarden.cards.CardPack.CardEnum.D3;
 import static jarden.cards.CardPack.CardEnum.D4;
@@ -42,116 +53,92 @@ import static jarden.cards.CardPack.CardEnum.HJ;
 import static jarden.cards.CardPack.CardEnum.HK;
 import static jarden.cards.CardPack.CardEnum.HQ;
 import static jarden.cards.CardPack.CardEnum.HT;
+import static jarden.cards.CardPack.CardEnum.S2;
 import static jarden.cards.CardPack.CardEnum.S3;
 import static jarden.cards.CardPack.CardEnum.S4;
 import static jarden.cards.CardPack.CardEnum.S5;
+import static jarden.cards.CardPack.CardEnum.S6;
 import static jarden.cards.CardPack.CardEnum.S7;
 import static jarden.cards.CardPack.CardEnum.S8;
 import static jarden.cards.CardPack.CardEnum.S9;
+import static jarden.cards.CardPack.CardEnum.SA;
 import static jarden.cards.CardPack.CardEnum.SJ;
 import static jarden.cards.CardPack.CardEnum.SK;
 import static jarden.cards.CardPack.CardEnum.SQ;
+import static jarden.cards.CardPack.CardEnum.ST;
+import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
  * Created by john.denny@gmail.com on 08/06/2019.
  */
 public class TestHand {
-    private static final String bid1C = "25 pp, 5+ major or 26+ pp";
-    private static final String bid1D = "23-25 pp, no 5+ major";
-    private static final String bid1H = "20-22 pp, 4+ hearts or 23-24 pp, 5+ hearts";
-    private static final String bid1S =
-            "<4 hearts, 20-22 pp, 4+ spades or <4 hearts, 23-24 pp, 5+ spades";
-    private static final String bid1NT =
-            "20-22 pp, no 4+ major, not 5+ in both minors, no 6+ minor";
-    private static final String bid2C =
-            "6+ clubs, 20-22 pp, no 4+ major, <5 diamonds";
-    private static final String bid2D =
-            "6+ diamonds, 20-22 pp, no 4+ major, <5 clubs";
-    private static final String bid2H = "6 hearts, <20 pp, 6+ HCP";
-    private static final String bid2S = "6 spades, <20 pp, 6+ HCP";
-    private static final String bid2NT = "5+ in both minors, 20-22 pp";
-    private static final String bid3C = "7 clubs, <20 pp, 6+ HCP";
-    private static final String bid4D = "8 diamonds, <20 pp, 6+ HCP";
-    private static final String bid4H = "8+ hearts, <20 pp, 6+ HCP";
-    private static final String bid5C = "9+ clubs, <20 pp, 6+ HCP";
-    private static final String bidPass = "<20 pp, not {6+ suit, 6+ HCP}";
-    private static final CardPack.CardEnum[] cards1C = { // 25pp, 5 hearts
+    private final CardPack.CardEnum[] cards1C = { // 25pp, 5 hearts
             CK, CQ, CJ, C8, DK, DQ, D4, HA, H6, H5, H4, H3, SJ
     };
-    private static final CardPack.CardEnum[] cards1Cb = { // 26pp
+    private final CardPack.CardEnum[] cards1Cb = { // 26pp
             CA, CK, CQ, CJ, C8, DK, D8, D4, HA, H6, H5, H4, S3
     };
-    private static final CardPack.CardEnum[] cards1D = { // 25pp, 5-4-2-2
+    private final CardPack.CardEnum[] cards1D = { // 25pp, 5-4-2-2
             CA, CK, CQ, CJ, C8, DA, DQ, D5, D4, H5, H4, S5, S4
     };
-    private static final CardPack.CardEnum[] cards1H = { // 21pp, 4 hearts
+    private final CardPack.CardEnum[] cards1H = { // 21pp, 4 hearts
             CJ, C8, DK, DQ, D5, D4, HA, HK, H5, H4, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cards1Hb = { // 23pp, 5 hearts
+    private final CardPack.CardEnum[] cards1Hb = { // 23pp, 5 hearts
             CQ, C8, DK, DQ, D5, D4, HA, HK, H5, H4, H3, S4, S3
     };
-    private static final CardPack.CardEnum[] cards1S = { // 22pp, 4 spades, <4 hearts
+    private final CardPack.CardEnum[] cards1Hc = { // 24pp, 4 hearts, 5 spades
+            CK, CJ, C7, C6, HA, HJ, HT, H5, SA, SQ, S8, S3, S2
+    };
+    private final CardPack.CardEnum[] cards1S = { // 22pp, 4 spades, <4 hearts
             CJ, C8, DK, DQ, D5, D4, HA, HK, HJ, S8, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cards1Sb = { // 23pp, 6 spades, <4 hearts
+    private final CardPack.CardEnum[] cards1Sb = { // 23pp, 6 spades, <4 hearts
             CQ, C8, DK, DQ, D5, D4, HA, SQ, S9, S8, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cards1NT = { // 21pp, 4-4-2-3
+    private final CardPack.CardEnum[] cards1NT = { // 21pp, 4-4-2-3
             CQ, C8, C4, C3, DK, DQ, D5, D4, HA, HQ, S9, S8, S5
     };
-    private static final CardPack.CardEnum[] cards2C = { // 20pp, 7-1-2-3
+    private final CardPack.CardEnum[] cards2C = { // 20pp, 7-1-2-3
             CK, CQ, CJ, C8, C4, C3, C2, D4, HA, HT, S9, S8, S5
     };
-    private static final CardPack.CardEnum[] cards2D = { // 21pp, 2-6-2-3
+    private final CardPack.CardEnum[] cards2D = { // 21pp, 2-6-2-3
             CK, CQ, DJ, D8, D7, D4, D3, D2, HA, HQ, S9, S8, S5
     };
-    private static final CardPack.CardEnum[] cards2H = { // 19pp, 1-5-6-1
+    private final CardPack.CardEnum[] cards2H = { // 19pp, 1-5-6-1
             CJ, D8, D7, D6, D5, D4, HA, HK, H5, H4, H3, H2, S3
     };
-    private static final CardPack.CardEnum[] cards2S = { // 15pp, 3-2-2-6
+    private final CardPack.CardEnum[] cards2S = { // 15pp, 3-2-2-6
             C9, C8, C5, DQ, D5, H9, H8, SK, SJ, S8, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cards2NT = { // 22pp, 5-6-1-1
+    private final CardPack.CardEnum[] cards2NT = { // 22pp, 5-6-1-1
             CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7
     };
-    private static final CardPack.CardEnum[] cards3C = { // 16pp, 7-1-2-3
+    private final CardPack.CardEnum[] cards3C = { // 16pp, 7-1-2-3
             CK, C9, C8, C6, C5, C4, C2, DK, H9, H8, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cards4D = { // 17pp, 0-8-2-3
+    private final CardPack.CardEnum[] cards4D = { // 17pp, 0-8-2-3
             DK, DQ, DT, D9, D8, D7, D6, D5, HJ, H8, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cards4H = { // 18pp, 3-0-8-2
+    private final CardPack.CardEnum[] cards4H = { // 18pp, 3-0-8-2
             C9, C8, C5, HK, HQ, H9, H8, H7, H6, H5, H3, SQ, S3
     };
-    private static final CardPack.CardEnum[] cards5C = { // 19pp, 9-1-0-3
+    private final CardPack.CardEnum[] cards5C = { // 19pp, 9-1-0-3
             CA, CK, C9, C8, C7, C5, C4, C3, C2, D8, S5, S4, S3
     };
-    private static final CardPack.CardEnum[] cardsPass = { // 19pp, 5-1-2-5
+    private final CardPack.CardEnum[] cardsPass = { // 19pp, 5-1-2-5
             C9, C8, C5, C3, C2, D9, HA, HK, SQ, S8, S5, S4, S3
     };
-    private static final QuestionAnswer[] answers = {
-            new QuestionAnswer("1C", bid1C),
-            new QuestionAnswer("1D", bid1D),
-            new QuestionAnswer("1H", bid1H),
-            new QuestionAnswer("1S", bid1S),
-            new QuestionAnswer("1N", bid1NT),
-            new QuestionAnswer("2C", bid2C),
-            new QuestionAnswer("2D", bid2D),
-            new QuestionAnswer("2H", bid2H),
-            new QuestionAnswer("2S", bid2S),
-            new QuestionAnswer("2N", bid2NT),
-            new QuestionAnswer("3C", bid3C),
-            new QuestionAnswer("4D", bid4D),
-            new QuestionAnswer("4H", bid4H),
-            new QuestionAnswer("5C", bid5C),
-            new QuestionAnswer("NB", bidPass)
+    private final CardPack.CardEnum[] cardsPassb = { // 19pp, 6-3-1-3
+            CA, CQ, C8, C6, C4, C2, DK, DT, D5, HT, SJ, S7, S4
     };
-    private static final Hand[] hands = {
+    private final Hand[] hands = {
             new Hand(cards1C),
             new Hand(cards1Cb),
             new Hand(cards1D),
             new Hand(cards1H),
             new Hand(cards1Hb),
+            new Hand(cards1Hc),
             new Hand(cards1S),
             new Hand(cards1Sb),
             new Hand(cards1NT),
@@ -164,15 +151,38 @@ public class TestHand {
             new Hand(cards4D),
             new Hand(cards4H),
             new Hand(cards5C),
-            new Hand(cardsPass)
+            new Hand(cardsPass),
+            new Hand(cardsPassb)
     };
+    private BridgeQuiz bridgeQuiz;
+    private List<QuestionAnswer> primaryBids;
+    private CardPack cardPack;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("start of test");
+        TestHand testHand = new TestHand();
+        testHand.testMyPrimaryBids();
+        testHand.testRandomPrimaryBids();
+        testHand.test2Hands1H1S();
+        testHand.testOrs();
+        testHand.testNots();
+        System.out.println("end of test");
+    }
+
+    public TestHand() throws IOException {
+        File file = new File("./hotbridge/src/main/res/raw/reviseit.txt");
+        InputStream is = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(is);
+        bridgeQuiz = new BridgeQuiz(isr);
+        cardPack = new CardPack();
+        primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
+
+    }
+    private void testMyPrimaryBids() {
         String initialBlank = "                  ";
         int headerSize = initialBlank.length();
         System.out.print(initialBlank);
-        for (QuestionAnswer qa: answers) {
+        for (QuestionAnswer qa: primaryBids) {
             System.out.print(" " + qa.question);
         }
         System.out.println();
@@ -183,7 +193,7 @@ public class TestHand {
                 System.out.print(" ");
             }
             int matchCt = 0;
-            for (QuestionAnswer qa : answers) {
+            for (QuestionAnswer qa : primaryBids) {
                 boolean isMatch = qa.getParsedAnswer().doesMatchHand(hand);
                 if (isMatch) ++matchCt;
                 System.out.print("  " + (isMatch ? "T" : "."));
@@ -192,6 +202,113 @@ public class TestHand {
             System.out.println();
 
         }
-        System.out.println("end of test");
+    }
+    private void testRandomPrimaryBids() {
+        // TODO: add test for only 1 match, as in testMyPrimaryBids()
+        for (int i = 0; i < 50; i++) {
+            cardPack.shuffle();
+            cardPack.deal(true);
+            Hand hand = cardPack.getHand(Player.West);
+            System.out.print(hand);
+            QuestionAnswer qa = bridgeQuiz.getPrimaryBid(hand);
+            if (qa == null) {
+                System.out.println();
+                List<Card> cards = hand.getCards();
+                for (Card card: cards) System.out.print(card + " ");
+                System.out.println();
+                // put breakpoint at next line to debug problem
+                bridgeQuiz.getPrimaryBid(hand);
+            } else {
+                System.out.println(" BID=" + qa.question + ", " + qa.answer);
+            }
+        }
+    }
+    private void test2Hands4H() {
+        CardPack.CardEnum[] cardsWest = {
+                CA, CQ, C6, C5, DK, DQ, DJ, D8, D6, H6, SJ, S7, S4
+        };
+        CardPack.CardEnum[] cardsEast = {
+                CK, C7, HA, H9, H7, H5, H4, H3, SK, SQ, ST, S6, S5
+        };
+        Hand handWest = new Hand(cardsWest);
+        Hand handEast = new Hand(cardsEast);
+        QuestionAnswer qa1 = bridgeQuiz.getNextBid(handWest, OPENING_BIDS);
+        System.out.println("qa1=" + qa1);
+        QuestionAnswer qa2 = bridgeQuiz.getNextBid(handEast, qa1);
+        System.out.println("qa2=" + qa2);
+    }
+    private void test2Hands1H1S() {
+        CardPack.CardEnum[] cardsWest = {
+                CK, C8, C5, C4, DJ, D8, D3, HA, HK, H7, H5, SK, S8
+        };
+        CardPack.CardEnum[] cardsEast = {
+                CA, CQ, CT, C6, D7, HJ, H8, H4, SA, SQ, SJ, S7, S6
+        };
+        Hand handWest = new Hand(cardsWest);
+        Hand handEast = new Hand(cardsEast);
+        QuestionAnswer qa = OPENING_BIDS;
+        boolean west = true;
+        Hand hand;
+        for (int i = 0; i < 4; i++) {
+            hand = west ? handWest : handEast;
+            qa = bridgeQuiz.getNextBid(hand, qa);
+            west = !west;
+            System.out.println(qa);
+        }
+    }
+    private void testOrs() {
+        CardPack.CardEnum[] cards6C = { // 10 HCP, 6-1-2-4
+                CA, CK, CQ, CJ, CT, C9, D8, H7, H6, S5, S4, S3, S2
+        };
+        CardPack.CardEnum[] cards6D = { // 10 HCP, 3-6-0-4
+                CA, CK, CQ, DJ, DT, D9, D8, D7, D6, S5, S4, S3, S2
+        };
+        CardPack.CardEnum[] cards6H = { // 10 HCP, 4-1-6-2
+                CA, CK, CQ, CJ, DT, H9, H8, H7, H6, H5, H4, S3, S2
+        };
+        CardPack.CardEnum[] cards6S = { // 10 HCP, 4-3-0-6
+                CA, CK, CQ, CJ, DT, D9, D8, S7, S6, S5, S4, S3, S2
+        };
+        Hand[] hands = {
+                new Hand(cards6C), new Hand(cards6D), new Hand(cards6H), new Hand(cards6S)
+        };
+        boolean[] expectedResults = {
+                true, true, false, true
+        };
+        QuestionAnswer qa = new QuestionAnswer("ors", "6 clubs or 6 diamonds or 6 spades");
+        for (int i = 0; i < hands.length; i++) {
+            boolean isMatch = qa.getParsedAnswer().doesMatchHand(hands[i]);
+            System.out.print(isMatch);
+            if (isMatch != expectedResults[i]) System.out.print(" *** wrong!");
+            System.out.println();
+        }
+    }
+    private void testNots() {
+        CardPack.CardEnum[] cards6C = { // 10 HCP, 6-1-2-4
+                CA, CK, CQ, CJ, CT, C9, D8, H7, H6, S5, S4, S3, S2
+        };
+        CardPack.CardEnum[] cards6D = { // 10 HCP, 3-6-0-4
+                CA, CK, CQ, DJ, DT, D9, D8, D7, D6, S5, S4, S3, S2
+        };
+        CardPack.CardEnum[] cards6H = { // 10 HCP, 4-1-6-2
+                CA, CK, CQ, CJ, DT, H9, H8, H7, H6, H5, H4, S3, S2
+        };
+        CardPack.CardEnum[] cards6S = { // 10 HCP, 4-3-0-6
+                CA, CK, CQ, CJ, DT, D9, D8, S7, S6, S5, S4, S3, S2
+        };
+        Hand[] hands = {
+                new Hand(cards6C), new Hand(cards6D), new Hand(cards6H), new Hand(cards6S)
+        };
+        boolean[] expectedResults = {
+                false, false, true, false
+        };
+        QuestionAnswer qa = new QuestionAnswer(
+                "nots", "not {10 HCP, 6 clubs}, not {10 HCP, 6 diamonds}, not {10 HCP, 6 spades}");
+        for (int i = 0; i < hands.length; i++) {
+            boolean isMatch = qa.getParsedAnswer().doesMatchHand(hands[i]);
+            System.out.print(isMatch);
+            if (isMatch != expectedResults[i]) System.out.print(" *** wrong!");
+            System.out.println();
+        }
     }
 }

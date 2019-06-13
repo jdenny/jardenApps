@@ -13,28 +13,37 @@ import jarden.cards.Hand;
 public class BridgeQuiz extends PresetQuiz {
     public static final QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
     private static final int OPENING_BID_CT = 21;
+    private List<QuestionAnswer> primaryBids;
 
     public BridgeQuiz(InputStreamReader is) throws IOException {
         super(is);
     }
     public QuestionAnswer getPrimaryBid(Hand hand) {
-        List<QuestionAnswer> primaryBids = getPossibleResponses(OPENING_BIDS);
-        for (QuestionAnswer qa : primaryBids) {
+        return getNextBid(hand, OPENING_BIDS);
+    }
+    public QuestionAnswer getNextBid(Hand hand, QuestionAnswer targetQA) {
+        List<QuestionAnswer> possibleResponses = getPossibleResponses(targetQA);
+        for (QuestionAnswer qa : possibleResponses) {
             if (qa.getParsedAnswer().doesMatchHand(hand)) {
                 return qa;
             }
         }
         return null;
     }
-
     public List<QuestionAnswer> getPossibleResponses(QuestionAnswer targetQA) {
-        List<QuestionAnswer> possibleResponses = new ArrayList<>();
+        List<QuestionAnswer> possibleResponses;
+        // TODO: generalise this special case of bid cache
         if (targetQA == OPENING_BIDS) {
-            for (int i = 0; i < OPENING_BID_CT; i++) {
-                possibleResponses.add(qaList.get(i));
+            if (primaryBids == null) {
+                primaryBids = new ArrayList<>();
+                for (int i = 0; i < OPENING_BID_CT; i++) {
+                    primaryBids.add(qaList.get(i));
+                }
             }
+            possibleResponses = primaryBids;
         } else {
             String question = targetQA.question;
+            possibleResponses = new ArrayList<>();
             for (QuestionAnswer qa : qaList) {
                 if (qa.question.startsWith(question + ", ") ||
                         qa.question.startsWith(question + "; ")) {

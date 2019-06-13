@@ -188,11 +188,16 @@ public class ParsedAnswer {
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
-                // usage: not {...}
+                // usage: not {...} [not {...}]
+                // create linkedList of ParsedAnswer, with first in this.notParsedAnswer
                 int indexStartB = answer.indexOf('{');
                 int indexEndB = answer.indexOf("}", indexStartB);
                 String notAnswer = answer.substring(indexStartB + 1, indexEndB);
-                notParsedAnswer = new ParsedAnswer(notAnswer);
+                ParsedAnswer notPA = this;
+                while (notPA.notParsedAnswer != null) {
+                    notPA = notPA.notParsedAnswer;
+                }
+                notPA.notParsedAnswer = new ParsedAnswer(notAnswer);
                 answer = answer.substring(indexEndB + 1);
                 tokens = answer.split(" ");
                 i = 0;
@@ -219,11 +224,14 @@ public class ParsedAnswer {
         }
     }
     public boolean doesMatchHand(Hand hand) {
-        boolean match = doesHandMatch2(hand, this);
-        if (!match && orParsedAnswer != null) match = doesHandMatch2(hand, orParsedAnswer);
-        return match;
+        return doesHandMatch2(hand, this);
     }
     private static boolean doesHandMatch2(Hand hand, ParsedAnswer pa) {
+        boolean match = doesHandMatch3(hand, pa);
+        if (!match && pa.orParsedAnswer != null) match = doesHandMatch2(hand, pa.orParsedAnswer);
+        return match;
+    }
+    private static boolean doesHandMatch3(Hand hand, ParsedAnswer pa) {
         int handPP = hand.getPlayingPoints();
         if (pa.minPP >= 0 && handPP < pa.minPP) return false;
         if (pa.maxPP >= 0 && handPP > pa.maxPP) return false;
@@ -242,7 +250,8 @@ public class ParsedAnswer {
         }
         if (pa.minMinor >= 0 && hand.suitLengths[0] < pa.minMinor &&
                 hand.suitLengths[1] < pa.minMinor) return false;
-        if (pa.maxMinor >= 0 && (hand.suitLengths[0] > pa.maxMinor ||
+        // another special case(!) maxMinor used for both minors
+        if (pa.maxMinor >= 0 && (hand.suitLengths[0] > pa.maxMinor &&
                 hand.suitLengths[1] > pa.maxMinor)) return false;
         if (pa.minSuit >= 0 && hand.suitLengths[0] < pa.minSuit &&
                 hand.suitLengths[1] < pa.minSuit &&
@@ -276,9 +285,10 @@ public class ParsedAnswer {
                 (hand.suitLengths[2] + hand.suitValues[2] < pa.minHeartWinners * 3)) return false;
         if (pa.minSpadeWinners > 0 &&
                 (hand.suitLengths[3] + hand.suitValues[3] < pa.minSpadeWinners * 3)) return false;
-        if (pa.notParsedAnswer != null) {
-            boolean notAnswerMatch = pa.notParsedAnswer.doesMatchHand(hand);
-            if (notAnswerMatch) return false;
+        ParsedAnswer notPA = pa.notParsedAnswer;
+        while (notPA != null) {
+            if (notPA.doesMatchHand(hand)) return false;
+            notPA = notPA.notParsedAnswer;
         }
         return true;
     }
