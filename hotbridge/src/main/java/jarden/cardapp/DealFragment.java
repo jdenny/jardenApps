@@ -25,6 +25,7 @@ import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 import com.jardenconsulting.cardapp.BuildConfig;
 import com.jardenconsulting.cardapp.R;
 
+import jarden.cards.BadBridgeTokenException;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
 import jarden.cards.Player;
@@ -80,9 +81,10 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private boolean biddingOver;
     private boolean shuffled = false;
     private boolean twoPlayer = false;
+    private boolean firstBidPass;
     private BridgeQuiz bridgeQuiz;
 
-    @SuppressWarnings("deprecation")
+    // @SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -131,9 +133,6 @@ public class DealFragment extends Fragment implements OnClickListener {
 		westFragment.setData(Player.West, cardPack);
 		return view;
 	}
-	private void resetBidList() {
-		for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
-	}
 	@Override
 	public void onResume() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onResume()");
@@ -175,7 +174,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         QuestionAnswer nextQA = null;
         try {
             nextQA = bridgeQuiz.getNextBid(hand, lastQA);
-        } catch (Exception e) {
+        } catch (BadBridgeTokenException e) {
             // treat as no bid!
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
         }
@@ -184,6 +183,9 @@ public class DealFragment extends Fragment implements OnClickListener {
             bidButton.setEnabled(false);
             Toast.makeText(activity, "no bid; bidding over", Toast.LENGTH_LONG).show();
         } else {
+            // if first bid is a pass, bidding starts from partner,
+            // i.e. first pass not shown in reviseit.txt questions
+            if (lastQA == OPENING_BIDS && bridgeQuiz.isPassBid(nextQA)) firstBidPass = true;
             lastQA = nextQA;
         }
         showBids();
@@ -202,9 +204,10 @@ public class DealFragment extends Fragment implements OnClickListener {
         dealAndShow();
     }
     private void dealAndShow() {
+        this.westDeal = !this.westDeal;
+        firstBidPass = false;
         cardPack.deal(true); // i.e. dealShow with bias in our favour
         resetBidList();
-        this.westDeal = !this.westDeal;
         lastQA = OPENING_BIDS;
         handsButton.setText("Us");
         this.handToShow = SHOW_ME;
@@ -218,6 +221,11 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         showHands();
 	}
+    private void resetBidList() {
+        for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
+        int firstBidPos = westDeal ? 0 : 2;
+        bidTextViews[firstBidPos].setText("?");
+    }
 	public void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
         northFragment.showHand();
@@ -225,7 +233,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         eastFragment.showHand();
         westFragment.showHand();
         showSelectedHands();
-        /*??
+        /*!!
         if (!twoPlayer) {
             // bidding doesn't yet work on twoPlayer; TODO: fix it!
             for (int i = 0; i < bidList.size(); i++) {
@@ -266,9 +274,13 @@ public class DealFragment extends Fragment implements OnClickListener {
         boolean theyBid = lastQA.question.contains("(");
         boolean theyBidFirst = bids[0].charAt(0) == '(';
         int j = theyBidFirst ? (westDeal ? 3: 1) : (westDeal ? 0: 2);
+        if (firstBidPass) {
+            bidTextViews[j++].setText("Pass");
+            bidTextViews[j++].setText("Pass");
+        }
         for (String bid: bids) {
             bidTextViews[j++].setText(bid);
-            if (!theyBid) bidTextViews[j++].setText("pass");
+            if (!theyBid) bidTextViews[j++].setText("Pass");
         }
         bidTextViews[j].setText("?");
     }
@@ -317,7 +329,6 @@ public class DealFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstanceState);
         setRetainInstance(true);
         cardPack = new CardPack();
-        //!! bidList = new ArrayList<>();
         setClientMode(false); // because initially single user
 	}
 	@Override

@@ -35,7 +35,7 @@ public class ParsedAnswer {
     private ParsedAnswer orParsedAnswer;
     private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
 
-    public ParsedAnswer(String answer) throws NumberFormatException {
+    public ParsedAnswer(String answer) throws BadBridgeTokenException {
         int indexOr = answer.indexOf(" or ");
         if (indexOr > 0) {
             orParsedAnswer = new ParsedAnswer(answer.substring(indexOr + 4));
@@ -257,8 +257,12 @@ public class ParsedAnswer {
             } else {
                 // assume it's a number; if not, Exception shows it's a token
                 // we don't recognise!
-                int number = Integer.parseInt(token);
-                previousMin = previousMax = number;
+                try {
+                    int number = Integer.parseInt(token);
+                    previousMin = previousMax = number;
+                } catch (NumberFormatException nfe) {
+                    throw new BadBridgeTokenException(answer, nfe);
+                }
             }
         }
     }

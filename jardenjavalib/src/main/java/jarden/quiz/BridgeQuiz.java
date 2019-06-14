@@ -13,7 +13,7 @@ import jarden.cards.Hand;
 public class BridgeQuiz extends PresetQuiz {
     public static final QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
     private static final int OPENING_BID_CT = 21;
-    public QuestionAnswer PassBid;
+    private QuestionAnswer PassBid;
     private List<QuestionAnswer> primaryBids;
 
     public BridgeQuiz(InputStreamReader is) throws IOException {
@@ -100,6 +100,9 @@ public class BridgeQuiz extends PresetQuiz {
         } while (index != -1);
         return bidItems;
     }
+    public boolean isPassBid(QuestionAnswer bid) {
+        return bid == PassBid;
+    }
     private static int findNextSeparator(String bidSequence, int start) {
         int commaI = bidSequence.indexOf(',', start);
         int colonI = bidSequence.indexOf(';', start);
@@ -111,5 +114,6 @@ public class BridgeQuiz extends PresetQuiz {
             return (commaI > colonI) ? colonI : commaI;
         }
     }
+
 
 }
