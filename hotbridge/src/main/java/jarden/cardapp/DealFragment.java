@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 import com.jardenconsulting.cardapp.BuildConfig;
-import com.jardenconsulting.cardapp.HotBridgeActivity;
 import com.jardenconsulting.cardapp.R;
 
 import jarden.cards.CardPack;
@@ -32,6 +31,7 @@ import jarden.cards.Player;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
+import static com.jardenconsulting.cardapp.HotBridgeActivity.TAG;
 import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
@@ -73,11 +73,8 @@ public class DealFragment extends Fragment implements OnClickListener {
     private TextView[] bidTextViews;
 
 	private CardPack cardPack;
-	//!! private BidEnum lastBid;
     private QuestionAnswer lastQA;
-	//!! private List<BidEnum> bidList;
 	private boolean westDeal;
-	//!! private boolean primaryBid;
 	private int bidNumber;
 	private int consecutivePasses;
 	private boolean biddingOver;
@@ -89,7 +86,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onCreateView()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onCreateView()");
         // get previous state of handsButton if fragment already exists:
         String handsButtonText = null;
         if (this.handsButton != null) handsButtonText = handsButton.getText().toString();
@@ -135,15 +132,11 @@ public class DealFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 	private void resetBidList() {
-		/*!!
-		this.bidList.clear();
-		this.bidNumber = 0;
-		 */
 		for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
 	}
 	@Override
 	public void onResume() {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onResume()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onResume()");
 		super.onResume();
         if (shuffled) showHands();
         else shuffleDealShow();
@@ -168,37 +161,35 @@ public class DealFragment extends Fragment implements OnClickListener {
 			}
 			showSelectedHands();
 		} else if (id == R.id.bidButton) {
-			Hand hand = cardPack.getHand(this.mePlayer);
-			lastQA = bridgeQuiz.getNextBid(hand, lastQA);
-			/*!!
-			if (primaryBid) {
-                lastQA = bridgeQuiz.getPrimaryBid(hand);
-                lastBid = CardPack.BidEnum.valueOf("B" + lastQA.question);
-                primaryBid = false;
-			} else {
-			    lastQA = bridgeQuiz.getNextBid(hand, lastQA);
-				this.lastBid = hand.getSecondaryBid(this.lastBid);
-			}
-			*/
-			//!! String bidVerbose = hand.getBidVerbose();
-            String bidVerbose = lastQA.answer;
-			this.suggestedBidTextView.setText(bidVerbose);
-			//!! if (this.lastBid == null) {
-            if (lastQA == null) {
-				Toast.makeText(activity, "null bid returned!", Toast.LENGTH_LONG).show();
-			} else {
-				//!! addBid(this.lastBid);
-				//!! addBid(BidEnum.BPass);
-				if (!this.biddingOver) {
-					getPartnerBid();
-				}
-			}
+			getNextBid(this.mePlayer);
+            if (!this.biddingOver) {
+                this.suggestedBidTextView.setText(lastQA.answer);
+                getNextBid(partnerPlayer);
+            }
 		} else {
 			throw new RuntimeException("unrecognised view clicked: " + view);
 		}
 	}
+	private void getNextBid(Player player) {
+        Hand hand = cardPack.getHand(player);
+        QuestionAnswer nextQA = null;
+        try {
+            nextQA = bridgeQuiz.getNextBid(hand, lastQA);
+        } catch (Exception e) {
+            // treat as no bid!
+            if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
+        }
+        if (nextQA == null) {
+            biddingOver = true;
+            bidButton.setEnabled(false);
+            Toast.makeText(activity, "no bid; bidding over", Toast.LENGTH_LONG).show();
+        } else {
+            lastQA = nextQA;
+        }
+        showBids();
+    }
 	public void shuffleDealShow() {
-        if (BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.shuffleDealShow()");
+        if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
         cardPack.shuffle();
         if (twoPlayer) {
             if (bluetoothService != null && bluetoothService.getState() == BTState.connected) {
@@ -214,8 +205,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         cardPack.deal(true); // i.e. dealShow with bias in our favour
         resetBidList();
         this.westDeal = !this.westDeal;
-        //!! this.primaryBid = true;
-        //!! this.lastBid = null;
         lastQA = OPENING_BIDS;
         handsButton.setText("Us");
         this.handToShow = SHOW_ME;
@@ -225,14 +214,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.bidButton.setEnabled(!twoPlayer);
         this.shuffled = true;
         if (!westDeal && !twoPlayer) { // TODO: same as in showHands()
-            //!! addBid(BidEnum.NONE);
-            //!! addBid(BidEnum.NONE);
-            getPartnerBid();
+            getNextBid(partnerPlayer);
         }
         showHands();
 	}
 	public void showHands() {
-        if (BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.showHands()");
+        if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
         northFragment.showHand();
         southFragment.showHand();
         eastFragment.showHand();
@@ -248,13 +235,8 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         */
 	}
-	private void indicateNextBid() {
-        if (!this.biddingOver) {
-            this.bidTextViews[bidNumber].setText("?");
-        }
-    }
     private void showSelectedHands() {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.showSelectedHands()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showSelectedHands()");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (this.handToShow == SHOW_US) {
             ft.hide(northFragment);
@@ -279,55 +261,20 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         ft.commit();
     }
-	private void getPartnerBid() {
-		Hand hand = cardPack.getHand(partnerPlayer);
-        QuestionAnswer nextQA = bridgeQuiz.getNextBid(hand, lastQA);
-        if (nextQA != null) {
-            lastQA = nextQA;
-            showBids();
-        }
-        /*!!
-        if (this.primaryBid) {
-			this.lastBid = hand.getPrimaryBid();
-			this.primaryBid = false;
-		} else {
-			this.lastBid = hand.getSecondaryBid(lastBid);
-		}
-		if (this.lastBid == null) {
-        if (lastQA == null) {
-			Toast.makeText(activity, "null bid returned!", Toast.LENGTH_LONG).show();
-		} else {
-			addBid(lastBid);
-			addBid(BidEnum.BPass);
-		}
-		*/
-	}
 	private void showBids() {
         String[] bids = lastQA.question.split("[ ,;]+");
-        for (int i = 0; i < bids.length; i++) {
-            bidTextViews[i].setText(bids[i]);
+        boolean theyBid = lastQA.question.contains("(");
+        boolean theyBidFirst = bids[0].charAt(0) == '(';
+        int j = theyBidFirst ? (westDeal ? 3: 1) : (westDeal ? 0: 2);
+        for (String bid: bids) {
+            bidTextViews[j++].setText(bid);
+            if (!theyBid) bidTextViews[j++].setText("pass");
         }
-
+        bidTextViews[j].setText("?");
     }
-    /*!!
-	private void addBid(BidEnum bid) {
-		if (this.biddingOver) return;
-		this.bidList.add(bid);
-		if (bid == BidEnum.BPass) {
-			if (++consecutivePasses >= 3) {
-				this.bidButton.setEnabled(false);
-				this.biddingOver = true;
-			}
-		} else {
-			consecutivePasses = 0;
-		}
-		this.bidTextViews[bidNumber++].setText(bid.toString());
-		indicateNextBid();
-	}
-	*/
 	public void setClientMode(boolean clientMode) {
         if(BuildConfig.DEBUG) {
-        	Log.i(HotBridgeActivity.TAG, "DealFragment.setClientMode(" +
+        	Log.i(TAG, "DealFragment.setClientMode(" +
         			clientMode + ")");
         }
 		this.btClientMode = clientMode;
@@ -351,18 +298,18 @@ public class DealFragment extends Fragment implements OnClickListener {
     }
 	@Override
 	public void onAttach(Context context) {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onAttach()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onAttach()");
 		super.onAttach(context);
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onConfigurationChanged()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onConfigurationChanged()");
 		super.onConfigurationChanged(newConfig);
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         if(BuildConfig.DEBUG) {
-        	Log.i(HotBridgeActivity.TAG,
+        	Log.i(TAG,
         			"DealFragment.onCreate(savedInstanceState=" +
         			(savedInstanceState==null?"null":"not null") +
         			")");
@@ -375,27 +322,27 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onCreateOptionsMenu()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onCreateOptionsMenu()");
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	@Override
 	public void onDestroy() {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onDestroy()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onDestroy()");
 		super.onDestroy();
 	}
 	@Override
 	public void onPause() {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onPause()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onPause()");
 		super.onPause();
 	}
 	@Override
 	public void onStart() {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onStart()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onStart()");
 		super.onStart();
 	}
 	@Override
 	public void onStop() {
-        if(BuildConfig.DEBUG) Log.i(HotBridgeActivity.TAG, "DealFragment.onStop()");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onStop()");
 		super.onStop();
 	}
 	public void onMessageRead(byte[] data) {

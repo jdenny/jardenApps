@@ -12,7 +12,6 @@ public class Hand {
 	private int highCardPoints;
 	private int playingPoints;
 	private boolean balanced;
-	//!! private AuctionType auctionType = AuctionType.NEUTRAL; // all auctions start neutral
 
 	public Hand(ArrayList<Card> cards) {
 		this.cards = cards;

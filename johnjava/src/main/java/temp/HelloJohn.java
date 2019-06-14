@@ -5,7 +5,7 @@ package temp;
  */
 
 public class HelloJohn {
-    private final static String[] bidSequences = {
+    private final static String[] questions = {
             "1C, 1H; 2D",
             "1D, 1S; 2S, 4H; 4NT, 5D; 5H, 6C",
             "1C, (1S) double; (pass) 2NT",
@@ -20,16 +20,35 @@ public class HelloJohn {
     }
 
     private static void testGetBidsFromSequence() {
-        for (String sequence: bidSequences) {
-            System.out.println(sequence);
-            String[] bidStrs = getBidsFromSequence(sequence);
-            for (String bidStr: bidStrs) {
-                System.out.println("  " + bidStr);
-            }
+        for (String question: questions) {
+            System.out.println(question);
+            getBidsFromSequence(question, true);
+        }
+        for (String question: questions) {
+            System.out.println(question);
+            getBidsFromSequence(question, false);
         }
     }
 
-    private static String[] getBidsFromSequence(String sequence) {
-        return sequence.split("[ ,;]+");
+    private static void getBidsFromSequence(String question, boolean westDeal) {
+        String[] bids = question.split("[ ,;]+");
+        boolean theyBid = question.contains("(");
+        boolean theyBidFirst = bids[0].charAt(0) == '(';
+        int j = theyBidFirst ? (westDeal ? 3: 1) : (westDeal ? 0: 2);
+        System.out.println("West\tNorth\tEast\tSouth");
+        for (int i = 0; i < j; i++) {
+            System.out.print("\t");
+        }
+        for (String bid: bids) {
+            printBid(j++, bid);
+            if (!theyBid) printBid(j++, "pass");
+        }
+        printBid(j, "?");
+        System.out.println();
     }
+    private static void printBid(int j, String bid) {
+        String formatStr = (j + 1) % 4 == 0 ? "\n" : "\t";
+        System.out.print(bid + formatStr);
+    }
+
 }
