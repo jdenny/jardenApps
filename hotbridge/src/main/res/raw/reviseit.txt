@@ -76,10 +76,10 @@ Q: 1C, 1NT
 A: 4-6 HCP, no 4+ major, not 5+ in both minors, no 6+ minor
 Q: 1C, 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 7-8 HCP, no 4+ major
+A: 7-8 HCP, no 4+ major, invitational-relay
 Q: 1C, 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 9+ HCP, no 4+ major
+A: 9+ HCP, no 4+ major, compelling-relay
 Q: 1C, 2H
 A: 0-3 HCP, 6+ hearts
 Q: 1C, 2S
@@ -95,16 +95,16 @@ F1: [a]raw[/a]
 A: 4-6 HCP, no 4+ major, not 5+ in both minors, 6+ diamonds
 Q: 1C, 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1C, 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1C, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1C, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 
 # 1 bid after 1D
 Q: 1D, 1H
@@ -118,10 +118,10 @@ F1: [a]responses_to_1D[/a]
 A: 0-7 HCP, no 4+ major, not {5+ in both minors & 5-7 HCP}, not {6+ minor & 5-7 HCP}
 Q: 1D, 2C
 F1: invitational [a]relay[/a]; [a]responses_to_1D[/a]. 23 TP. Alert: artificial
-A: 8-9 HCP, no 4+ major
+A: 8-9 HCP, no 4+ major, invitational-relay
 Q: 1D, 2D
 F1: compelling [a]relay[/a]; [a]responses_to_1D[/a]. 25 TP. Alert: artificial
-A: 10+ HCP, no 4+ major
+A: 10+ HCP, no 4+ major, compelling-relay
 Q: 1D, 2H
 F1: [a]responses_to_1D[/a]
 A: 0-4 HCP, 6+ hearts
@@ -139,16 +139,16 @@ F1: [a]raw[/a]; note: with 0-4 HCP bid 1NT; with 8+ bid [a]relay[/a]; [a]respons
 A: 5-7 HCP, no 4+ major, not 5+ in both minors, 6+ diamonds
 Q: 1D, 3H
 F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1D, 3S
 F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1D, 4C
 F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1D, 4D
 F1: [a]suit_setter[/a]; [a]responses_to_1D[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 
 # 1 bid after 1H
 Q: 1H, Pass
@@ -162,10 +162,10 @@ Q: 1H, 1NT
 A: 8-10 HCP, no 4+ major, no 6+ minor
 Q: 1H, 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 11-12 HCP, no 4+ major
+A: 11-12 HCP, no 4+ major, invitational-relay
 Q: 1H, 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 13+ HCP, no 4+ major
+A: 13+ HCP, no 4+ major, compelling-relay
 Q: 1H, 2H
 F1: [a]raw[/a]. 20 TP
 A: 8-10 HCP, 4 hearts
@@ -189,13 +189,13 @@ F1: [a]threeNT|3NT[/a], [a]balanced[/a]; with 16+ HCP bid 2D, [a]relay[/a]. 25 T
 A: 13-15 HCP, no 4+ major, balanced, club-guard, diamond-guard, spade-guard
 Q: 1H, 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1H, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1H, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 Q: 1H, 4H
 F1: [a]raw[/a]. 20 TP
 A: 8-10 HCP, 6+ hearts
@@ -208,10 +208,10 @@ F1: 20 TP
 A: 8-10 HCP, <4 spades, no 6+ suit
 Q: 1S, 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 11-12 HCP, <4 spades
+A: 11-12 HCP, <4 spades, invitational-relay
 Q: 1S, 2D
 F1: compelling [a]relay[/a]. 25 TP Alert: artificial
-A: 13+ HCP, <4 spades
+A: 13+ HCP, <4 spades, compelling-relay
 Q: 1S, 2H
 F1: [a]raw[/a]. 20 TP
 A: 8-10 HCP, <4 spades, 6+ hearts
@@ -235,13 +235,13 @@ F1: [a]threeNT|3NT[/a]; with 16+ HCP bid 2D, [a]relay[/a]. 25 TP
 A: 13-15 HCP, <4 spades, club-guard, diamond-guard, heart-guard, balanced
 Q: 1S, 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1S, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1S, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 Q: 1S, 4S
 F1: [a]raw[/a]. 20 TP
 A: 8-10 HCP, 6+ spades
@@ -252,10 +252,10 @@ F1: [a]responses_to_1NT[/a]
 A: 0-10 HCP, no 6+ major, not 4+ in both minors, not {6+ minor & 8-10 HCP}
 Q: 1NT, 2C
 F1: may have 4+ major; invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 11-12 HCP
+A: 11-12 HCP, invitational-relay
 Q: 1NT, 2D
 F1: may have 4+ major; compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 13+ HCP
+A: 13+ HCP, compelling-relay
 Q: 1NT, 2H
 A: 0-10 HCP, 6+ hearts
 Q: 1NT, 2S
@@ -271,16 +271,16 @@ F1: [a]raw[/a]. 20 TP
 A: 8-10 HCP, 6+ diamonds
 Q: 1NT, 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1NT, 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1NT, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1NT, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 Q: 1NT, 4H
 F1: [a]preempt[/a], [a]to_play[/a]
 A: 0-10 HCP, 7+ hearts
@@ -317,13 +317,13 @@ F1: [a]preempt[/a]
 A: 8-10 HCP, 5+ clubs
 Q: 2C, 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 2C, 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 2C, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 Q: 2C, 3NT
 F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
 A: 13-15 HCP, <3 clubs, diamond-guard, heart-guard, spade-guard
@@ -351,13 +351,13 @@ F1: [a]preempt[/a]
 A: 8-10 HCP, 5+ diamonds
 Q: 2D, 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 2D, 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 2D, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 
 # 2 bids after 1C
 # (page 62)
@@ -371,10 +371,10 @@ Q: 1C, 1D; 1NT
 A: <23 HCP, no 4+ major, not 5+ in both minors, no 6+ minor
 Q: 1C, 1D; 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 23-24 HCP, no 4+ major
+A: 23-24 HCP, no 4+ major, invitational-relay
 Q: 1C, 1D; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 25+ HCP, no 4+ major
+A: 25+ HCP, no 4+ major, compelling-relay
 Q: 1C, 1D; 2H
 A: <23 HCP, 6+ hearts
 Q: 1C, 1D; 2S
@@ -386,16 +386,16 @@ Q: 1C, 1D; 3C/3D
 A: <23 HCP, no 4+ major, not 5+ in both minors, 6+ in minor
 Q: 1C, 1D; 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1C, 1D; 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1C, 1D; 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1C, 1D; 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 
 # (page 61)
 Q: 1C, 1H; 1S
@@ -406,10 +406,10 @@ Q: 1C, 1H; 1NT
 A: <19 HCP, no 4+ major, no 6+ minor
 Q: 1C, 1H; 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial)
-A: 19-20 HCP, no 4+ major
+A: 19-20 HCP, no 4+ major, invitational-relay
 Q: 1C, 1H; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 21+ HCP, no 4+ major
+A: 21+ HCP, no 4+ major, compelling-relay
 Q: 1C, 1H; 2H
 F1: with 19+ HCP would bid 2NT [a]strong_fit[/a]
 A: <19 HCP, 4+ hearts
@@ -429,11 +429,11 @@ Q: 1C, 1S; 1NT
 A: <19 HCP, <4 spades, no 6+ suit
 Q: 1C, 1S; 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 19-20 HCP, <4 spades
+A: 19-20 HCP, <4 spades, invitational-relay
 # page 67
 Q: 1C, 1S; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 21+ HCP, <4 spades
+A: 21+ HCP, <4 spades, compelling-relay
 Q: 1C, 1S; 2H
 F1: 20 TP
 A: <19 HCP, <4 spades, 6+ hearts
@@ -453,13 +453,13 @@ A: <19 HCP, <4 spades, 6+ diamonds
 # (page 74)
 Q: 1C, 1S; 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1C, 1S; 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1C, 1S; 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 
 # (page 66)
 Q: 1C, 2C; 3C
@@ -477,13 +477,13 @@ A: no 5+ major, 4+ clubs, 18+ HCP-or-skew
 # (page 75)
 Q: 1C, 2D; 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1C, 2D; 3S
 F1: [a]suit_setter[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1C, 2D; 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 
 # 2 bids after 1D
 Q: 1D, 1H; 1S
@@ -560,7 +560,7 @@ A: <4 spades, diamonds
 # (page 76)
 Q: 1H, 1S; 3H
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1H, 1S; 3S
 A: 5 spades
 Q: 1H, 1S; 3NT
@@ -568,13 +568,13 @@ F1: [a]threeNT[/a], all suits guarded, 25 TP
 A: 17+ HCP, <4 spades, club-guard, diamond-guard
 Q: 1H, 1S; 3H
 F1: [a]suit_setter[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1H, 1S; 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1H, 1S;, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 Q: 1H, 1S; 4S
 A: 6+ spades
 
@@ -603,19 +603,28 @@ F1: [a]raw[/a]. Bid 2C/2D if 5 hearts, 2H if 6+ hearts, 2NT if 4+ in both minors
 A: 4 hearts, not 4+ in both minors, 6+ diamonds
 Q: 1H, 1NT; 3H
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 1H, 1NT; 3S
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1H, 1NT; 4C
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1H, 1NT; 4D
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ diamond-winners
-Q: 1H, 1NT; 4H/4S/5C/5D
+A: 5+ diamond-winners, suit-setter
+Q: 1H, 1NT; 4H
 F1: [a]to_play[/a]
-A: to play
+A: to-play
+Q: 1H, 1NT; 4S
+F1: [a]to_play[/a]
+A: to-play
+Q: 1H, 1NT; 4C
+F1: [a]to_play[/a]
+A: to-play
+Q: 1H, 1NT; 5D
+F1: [a]to_play[/a]
+A: to-play
 
 Q: 1H, 2S; 3S
 A: 3 spades
@@ -628,7 +637,7 @@ A: 7+ diamonds, 0 spades
 
 Q: 1H, 2NT; 4D
 F1: [a]keycard_ask[/a] as agreed hearts
-A: keycard ask
+A: 22+ HCP, keycard-ask
 
 # 2 bids after 1S
 Q: 1S, 1NT; Pass
@@ -656,14 +665,20 @@ F1: [a]raw[/a]
 A: 6+ diamonds
 Q: 1S, 1NT; 3S
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ spade-winners
+A: 5+ spade-winners, suit-setter
 Q: 1S, 1NT; 4C
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1S, 1NT; 4D
 F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
-A: 5+ diamond-winners
-Q: 1S, 1NT; 4S/5C/5D
+A: 5+ diamond-winners, suit-setter
+Q: 1S, 1NT; 4S
+F1: [a]to_play[/a]
+A: to play
+Q: 1S, 1NT; 5C
+F1: [a]to_play[/a]
+A: to play
+Q: 1S, 1NT; 5D
 F1: [a]to_play[/a]
 A: to play
 
@@ -678,15 +693,15 @@ A: 3 spades, <3 hearts
 # 2 bids after 2D
 Q: 2D, 2S; 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond-winners
+A: 5+ diamond-winners, suit-setter
 Q: 2D, 2NT; 4C
 F1: [a]values_for_5[/a] already agreed diamonds
-A: values for 5
+A: values-for-5
 
 # responses to 1NT
 Q: 1C, 1NT; 2C
 F1: may have 4+ major; invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 19-20 HCP
+A: 19-20 HCP, invitational-relay
 Q: 1D, 1NT; 2H
 F1: [a]raw[/a]
 A: 6+ hearts
@@ -704,7 +719,7 @@ F1: [a]two_choice[/a]. Alert: artificial
 A: 4+ in both minors
 Q: 1C, 1H; 1S, 1NT; 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
-A: 19-20 HCP
+A: 19-20 HCP, invitational-relay
 Q: 1D, 1H; 1S, 1NT; 2C
 A: 5+ spades, 4+ clubs
 
@@ -758,25 +773,25 @@ Q: 2C, 4C
 A: 8-10 HCP, 4 clubs
 Q: 1H, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 2D, 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1H, 2NT; 4C
 F1: [a]values_for_5[/a]; already agreed hearts
-A: values for 5
+A: values-for-5
 Q: 2C, 2S; 4C
 F1: [a]suit_setter[/a]
-A: 5+ club-winners
-Q: 1H, 2NT; 3D, 4C
-F1: [a]values_for_5[/a]
-A: values for 5
+A: 5+ club-winners, suit-setter
+# Q: 1H, 2NT; 3D, 4C
+# F1: [a]values_for_5[/a]
+# A: values-for-5
 Q: 1C, 1H; 2NT, 3D; 4D
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: 14+ HCP, keycard-ask
 Q: 1H, 2D; 3C, 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
-A: 4+ clubs, autofit, values for 5
+A: 4+ clubs, autofit, values-for-5
 
 # page 39
 Q: 1H, 2D; 2H, 2S
@@ -793,7 +808,7 @@ A: 5+ hearts
 # page 50
 Q: 1NT, 2D; 2S, 4D
 F1: [a]suit_setter[/a]
-A: 5+ diamond_winners
+A: 5+ diamond_winners, suit-setter
 Q: 1NT, 2D; 2S, 4D; 4S
 F1: [a]to_play[/a]
 A: to play
@@ -813,18 +828,18 @@ F1: exploring game or more
 A: 4+ diamonds
 Q: 1D, 1S; 2S, 3D; 4D
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: 23+ HCP, keycard-ask
 Q: 1D, 1S; 2S, 3D; 4D, 4NT
-A: 2 or 5 keycards
+A: 2 keycards or 5 keycards
 Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C
 F1: [a]queen_ask[/a]
-A: have you got the spade queen?
+A: spade-queen-ask
 Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C, 6C
 A: yes, I have spade queen, plus club king
 # page 61
 Q: 1C, 1H; 1S, 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 9+ HCP, <4 spades
+A: 9+ HCP, <4 spades, compelling-relay
 Q: 1C, 1H; 1S, 2D; 2H
 F1: forcing
 A: 3 hearts
@@ -836,7 +851,7 @@ F1: [a]strong_fit[/a] (already shown 25 TP). Alert: artificial
 A: 5+ spades
 Q: 1C, 1NT; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
-A: 21+ HCP
+A: 21+ HCP, compelling-relay
 Q: 1C, 1S; 1NT, 2H
 F1: with 7+ HCP bid [a]relay[/a]
 A: 4-6 HCP, 3 hearts
@@ -849,7 +864,7 @@ F1: forcing
 A: 4+ diamonds, <4 clubs
 Q: 1C, 1D; 2D, 3C; 3D, 4H
 F1: [a]autofit[/a]
-A: autofit, 4+ diamonds, values for 5
+A: autofit, 4+ diamonds, values-for-5
 
 # page 66
 Q: 1S, 2C; 2NT
@@ -862,7 +877,7 @@ A: 18+ HCP, <5 spades, <5 hearts, not 11+ HCP-or-skew-with-4+minor
 # page 67
 Q: 1H, 1S; 1NT, 2D
 F1: compelling [a]relay[/a]. Alert: artificial
-A: 13+ HCP
+A: 13+ HCP, compelling-relay
 Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
 A: 4 hearts, 2 spades, not 14+ HCP-or-skew-with-4+minor
@@ -879,13 +894,13 @@ F1: [a]to_play[/a]
 A: 4+ clubs
 Q: 1C, 2D; 3C, 4C; 4H
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: 24+ HCP, keycard-ask
 Q: 1C, 2D; 3C, 4C; 4H, 4S
 F1: [a]keycard_ask[/a]
-A: 0 or 3 keycards
+A: 0 keycards or 3 keycards
 Q: 1C, 2D; 3C, 4C; 4H, 4S; 4NT
 F1: partner has no keycards; 4NT in minor fit is always natural
-A: to play
+A: to-play
 
 # page 71
 Q: 1NT, 2D; 2H, 3C
@@ -893,7 +908,7 @@ F1: [a]responses_to_relay[/a]
 A: no 5+ major, 4+ clubs, 15+ HCP-or-skew
 Q: 1NT, 2D; 2H, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
-A: 4+ clubs, autofit, values for 5
+A: 4+ clubs, autofit, values-for-5
 
 # page 72
 Q: 1H, 1S; 1NT, 2D; 3D, 4S
@@ -901,7 +916,7 @@ F1: [a]autofit[/a], [a]keycard_ask[/a]
 A: 4+ diamonds, autofit, keycard ask
 Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
 F1: [a]keycard_ask[/a]
-A: 2 or 5 keycards
+A: 2 keycards or 5 keycards
 Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
 A: 4 hearts, 2 spades, not 14+ HCP-or-skew-with-4+minor
@@ -910,13 +925,13 @@ F1: [a]responses_to_relay[/a]
 A: 4+ clubs, 15+ HCP-or-skew
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]
-A: 4+ clubs, autofit, values for 5
+A: 4+ clubs, autofit, values-for-5
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: keycard-ask
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
 F1: [a]keycard_ask[/a]
-A: 2 or 5 keycards
+A: 2 keycards or 5 keycards
 
 # page 76
 Q: 1H, 2D; 2H
@@ -927,7 +942,7 @@ F1: [a]responses_to_relay[/a]
 A: <3 hearts, <3 spades, 4+ clubs, 15+ HCP-or-skew
 Q: 1H, 2D; 2H, 3C; 3H
 F1: [a]suit_setter[/a]; forcing as [a]compelled[/a]
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 
 # page 77
 Q: 1H, 2D; 2NT
@@ -940,7 +955,7 @@ A: 3 hearts with honours
 # page 82
 Q: 2D, 3H
 F1: [a]suit_setter[/a]; forcing as unlimited
-A: 5+ heart-winners
+A: 5+ heart-winners, suit-setter
 Q: 2C, 2NT; 3D
 F1: [a]guard[/a]; exploring 3NT
 A: diamond-guard
@@ -951,7 +966,7 @@ Q: 2D, 2S; 3D
 A: <14 HCP (decline invitation)
 Q: 2D, 2S; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. 25 TP
-A: 3+ diamonds, autofit, keycard ask
+A: 3+ diamonds, autofit, keycard-ask
 
 # page 84
 Q: 2C, 2S; 3S
@@ -1075,13 +1090,13 @@ A: 3 hearts
 # page 125
 Q: 1C, 1S; 2S, 4C
 F1: [a]values_for_5[/a], already agreed spades
-A: values for 5
+A: values-for-5
 Q: 1C, 2D; 2S, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
 A: 3 spades
 Q: 1C, 2D; 2S, 2NT; 4D
 F1: [a]keycard_ask[/a], already agreed spades
-A: keycard ask
+A: keycard-ask
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
 A: guard in hearts
@@ -1098,13 +1113,13 @@ F1: [a]threeNT|3NT[/a]; all suits guarded; partner can return to hearts
 A: club-guard, spade-guard
 Q: 1H, 2NT; 3D, 4C
 F1: [a]values_for_5[/a]
-A: values for 5
+A: values-for-5
 Q: 1H, 2NT; 3D, 4D
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: keycard-ask
 Q: 1H, 2NT; 3D, 4H
 F1: [a]to_play[/a]
-A: to play
+A: to-play
 Q: 1H, 2D; 2S, 3C
 F1: [a]responses_to_relay[/a]
 A: <3 spades, 4+ clubs, 15+ HCP-or-skew
@@ -1113,33 +1128,33 @@ F1: [a]threeNT|3NT[/a], all suits guarded
 A: diamond-guard
 Q: 1H, 2D; 2S, 3C; 3NT, 4C
 F1: [a]suit_setter[/a]; forcing as unlimited
-A: 5+ club-winners
+A: 5+ club-winners, suit-setter
 Q: 1H, 2D; 2S, 3C; 3NT, 4C; 4D
 F1: [a]values_for_5[/a]
-A: values for 5
+A: values-for-5
 Q: 1H, 2D; 2S, 3C; 3NT, 4C; 4H
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: keycard-ask
 
 # page 130
 Q: 1C, 1S; 2NT, 4S
 F1: [a]to_play[/a]
-A: to play
+A: to-play
 Q: 1C, 1S; 2NT, 4S; 4NT
 F1: [a]keycard_ask[/a]; only side suit available
-A: keycard ask
+A: keycard-ask
 Q: 1H, (1S) 2NT
 F1: [a]strong_fit[/a]; not affected by their bid. Alert: artificial
 A: 11+ HCP, 4+ hearts
 Q: 1H, (1S) 2NT; (4S) 4NT
 F1: [a]keycard_ask[/a]; only side suit available
-A: keycard ask
+A: keycard-ask
 Q: 1C, 1H; 2H, 3C
 F1: [a]side_suit[/a]
 A: 4+ clubs
 Q: 1C, 1H; 2H, 3C; 4C
 F1: [a]values_for_5[/a]
-A: values for 5
+A: values-for-5
 
 # page 131
 Q: 1NT, 2D; 2S, 3C
@@ -1150,15 +1165,15 @@ F1: limited, else would bid [a]autofit[/a]
 A: 4+ clubs, limited
 Q: 1NT, 2D; 2S, 3C; 4C, 4D
 F1: [a]values_for_5[/a]
-A: values for 5
+A: values-for-5
 
 # page 132
 Q: 1C, 1H; 2H, 3C; 4C, 4D
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: keycard-ask
 Q: 1C, 1H; 2H, 3C; 4C, 4D; 4H
 F1: [a]keycard_ask[/a]
-A: 0 or 3 keycards
+A: 0 keycards or 3 keycards
 
 #page 133
 Q: 2C, 2NT; 3H
@@ -1166,10 +1181,10 @@ F1: [a]side_suit[/a]
 A: guard in hearts
 Q: 2C, 2NT; 3H, 4H
 F1: [a]keycard_ask[/a]
-A: keycard ask
+A: keycard-ask
 Q: 2C, 2NT; 3H, 4H; 4S
 F1: [a]keycard_ask[/a]
-A: 0 or 3 keycards
+A: 0 keycards or 3 keycards
 
 # page 148
 Q: 1S, (2C) 2NT
@@ -1177,7 +1192,7 @@ F1: [a]strong_fit[/a]; not affected by their 2C which makes the auction [a]distu
 A: 11+ HCP, 4+ spades
 Q: 1S, (2C) 2NT; (3C) 3S
 F1: [a]to_play[/a]
-A: to play, <14 HCP
+A: to-play, <14 HCP
 Q: 1S, (2C) 2NT; (3C) 3NT
 F1: [a]threeNT|3NT[/a], at least 2 club guards
 A: 14+ HCP, all-suits-guarded
@@ -1185,7 +1200,7 @@ A: 14+ HCP, all-suits-guarded
 # page 149
 Q: 1C, 1H; 1NT, 2C
 F1: may have 4+ spades; invitational [a]relay[/a]. Alert: artificial
-A: 7-8 HCP
+A: 7-8 HCP, invitational-relay
 Q: 1C, 1H; 1NT, 2C; 2D
 F1: declined invitation [a]responses_to_relay[/a]. Alert: artificial
 A: <18 HCP

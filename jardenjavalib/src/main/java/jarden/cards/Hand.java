@@ -7,8 +7,8 @@ import jarden.cards.CardPack.CardEnum;
 public class Hand {
 	private final static int C = 0, D = 1, H = 2, S = 3;
 	private ArrayList<Card> cards;
-	protected int[] suitLengths = new int[4]; // c, d, h, s
-	protected int[] suitValues = new int[4]; // c, d, h, s; A=4, K=3, Q=2, J=1
+	private int[] suitLengths = new int[4]; // c, d, h, s
+	private int[] suitValues = new int[4]; // c, d, h, s; A=4, K=3, Q=2, J=1
 	private int highCardPoints;
 	private int playingPoints;
 	private boolean balanced;
@@ -55,6 +55,12 @@ public class Hand {
             }
         }
         return false;
+    }
+    public int[] getSuitLengths() {
+	    return suitLengths;
+    }
+    public int[] getSuitValues() {
+	    return suitValues;
     }
 
 	public String toString() {

@@ -30,10 +30,19 @@ public class ParsedAnswer {
     private boolean heartGuard = false;
     private boolean spadeGuard = false;
     private boolean balanced = false;
+    private boolean valuesFor5 = false;
+    private boolean keycardAsk = false;
     private int hcpOrSkew = -1;
     private int hcpOrSkewWith4PlusMinor = -1;
     private ParsedAnswer orParsedAnswer;
     private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
+    private final String[] ignoredWords = {
+            "&", // same as ','
+            "in", "both", // readability
+            // notes to reader:
+            "autofit", "compelling-relay", "invitational-relay", "keycard-ask",
+            "queen-ask", "suit-setter", "to-play", "values-for-5",
+    };
 
     public ParsedAnswer(String answer) throws BadBridgeTokenException {
         int indexOr = answer.indexOf(" or ");
@@ -47,10 +56,16 @@ public class ParsedAnswer {
         boolean isNegative = false;
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
-            // '&' same as ','; 'in' and 'both' for readability
-            if (token.equals("&") || token.equals("in") ||
-                    token.equals("both")) continue;
+            boolean ignored = false;
+            for (String ignoredWord: ignoredWords) {
+                if (token.equals(ignoredWord)) {
+                    ignored = true;
+                    break;
+                }
+            }
+            if (ignored) continue;
             if (token.endsWith(",")) token = token.substring(0, token.length() - 1);
+
             if (token.equals("pp")) {
                 // usage of pp: <20 pp, 26+ pp, 25 pp, 20-22 pp
                 if (previousMax > 0) {
@@ -269,92 +284,94 @@ public class ParsedAnswer {
     public boolean doesMatchHand(Hand hand) {
         return doesHandMatch2(hand, this);
     }
-    private static boolean doesHandMatch2(Hand hand, ParsedAnswer pa) {
+    private boolean doesHandMatch2(Hand hand, ParsedAnswer pa) {
         boolean match = doesHandMatch3(hand, pa);
         if (!match && pa.orParsedAnswer != null) match = doesHandMatch2(hand, pa.orParsedAnswer);
         return match;
     }
-    private static boolean doesHandMatch3(Hand hand, ParsedAnswer pa) {
+    private boolean doesHandMatch3(Hand hand, ParsedAnswer pa) {
         int handPP = hand.getPlayingPoints();
+        int[] suitLengths = hand.getSuitLengths();
+        int[] suitValues = hand.getSuitValues();
         if (pa.minPP >= 0 && handPP < pa.minPP) return false;
         if (pa.maxPP >= 0 && handPP > pa.maxPP) return false;
         int handHCP = hand.getHighCardPoints();
         if (pa.minHCP >= 0 && handHCP < pa.minHCP) return false;
         if (pa.maxHCP >= 0 && handHCP > pa.maxHCP) return false;
-        if (pa.minMajor >= 0 && hand.suitLengths[2] < pa.minMajor &&
-                hand.suitLengths[3] < pa.minMajor) return false;
+        if (pa.minMajor >= 0 && suitLengths[2] < pa.minMajor &&
+                suitLengths[3] < pa.minMajor) return false;
         if (pa.minMinor >= 0 && pa.maxMinor >= 0) {
             // special case (bodge!) to cater for:
             //      not 5+/4+ in minors (put values in minMinor and maxMinor)
-            if (hand.suitLengths[0] > pa.minMinor && hand.suitLengths[1] > pa.maxMinor ||
-                    hand.suitLengths[1] > pa.minMinor && hand.suitLengths[0] > pa.maxMinor) {
+            if (suitLengths[0] > pa.minMinor && suitLengths[1] > pa.maxMinor ||
+                    suitLengths[1] > pa.minMinor && suitLengths[0] > pa.maxMinor) {
                 return false;
             }
         }
-        if (pa.minMinor >= 0 && hand.suitLengths[0] < pa.minMinor &&
-                hand.suitLengths[1] < pa.minMinor) return false;
+        if (pa.minMinor >= 0 && suitLengths[0] < pa.minMinor &&
+                suitLengths[1] < pa.minMinor) return false;
         // another special case(!) maxMinor used for both minors
-        if (pa.maxMinor >= 0 && (hand.suitLengths[0] > pa.maxMinor &&
-                hand.suitLengths[1] > pa.maxMinor)) return false;
-        if (pa.minSuit >= 0 && hand.suitLengths[0] < pa.minSuit &&
-                hand.suitLengths[1] < pa.minSuit &&
-                hand.suitLengths[2] < pa.minSuit &&
-                hand.suitLengths[3] < pa.minSuit) return false;
-        if (pa.maxSuit >= 0 && (hand.suitLengths[0] > pa.maxSuit ||
-                hand.suitLengths[1] > pa.maxSuit ||
-                hand.suitLengths[2] > pa.maxSuit ||
-                hand.suitLengths[3] > pa.maxSuit)) return false;
+        if (pa.maxMinor >= 0 && (suitLengths[0] > pa.maxMinor &&
+                suitLengths[1] > pa.maxMinor)) return false;
+        if (pa.minSuit >= 0 && suitLengths[0] < pa.minSuit &&
+                suitLengths[1] < pa.minSuit &&
+                suitLengths[2] < pa.minSuit &&
+                suitLengths[3] < pa.minSuit) return false;
+        if (pa.maxSuit >= 0 && (suitLengths[0] > pa.maxSuit ||
+                suitLengths[1] > pa.maxSuit ||
+                suitLengths[2] > pa.maxSuit ||
+                suitLengths[3] > pa.maxSuit)) return false;
         if (pa.minClubs >= 0 &&
-                hand.suitLengths[0] < pa.minClubs) return false;
+                suitLengths[0] < pa.minClubs) return false;
         if (pa.maxClubs >= 0 &&
-                hand.suitLengths[0] > pa.maxClubs) return false;
+                suitLengths[0] > pa.maxClubs) return false;
         if (pa.minDiamonds >= 0 &&
-                hand.suitLengths[1] < pa.minDiamonds) return false;
+                suitLengths[1] < pa.minDiamonds) return false;
         if (pa.maxDiamonds >= 0 &&
-                hand.suitLengths[1] > pa.maxDiamonds) return false;
+                suitLengths[1] > pa.maxDiamonds) return false;
         if (pa.minHearts >= 0 &&
-                hand.suitLengths[2] < pa.minHearts) return false;
+                suitLengths[2] < pa.minHearts) return false;
         if (pa.maxHearts >= 0 &&
-                hand.suitLengths[2] > pa.maxHearts) return false;
+                suitLengths[2] > pa.maxHearts) return false;
         if (pa.minSpades >= 0 &&
-                hand.suitLengths[3] < pa.minSpades) return false;
+                suitLengths[3] < pa.minSpades) return false;
         if (pa.maxSpades >= 0 &&
-                hand.suitLengths[3] > pa.maxSpades) return false;
+                suitLengths[3] > pa.maxSpades) return false;
         if (pa.minClubWinners > 0 &&
-                (hand.suitLengths[0] + hand.suitValues[0] < pa.minClubWinners * 3)) return false;
+                (suitLengths[0] + suitValues[0] < pa.minClubWinners * 3)) return false;
         if (pa.minDiamondWinners > 0 &&
-                (hand.suitLengths[1] + hand.suitValues[1] < pa.minDiamondWinners * 3)) return false;
+                (suitLengths[1] + suitValues[1] < pa.minDiamondWinners * 3)) return false;
         if (pa.minHeartWinners > 0 &&
-                (hand.suitLengths[2] + hand.suitValues[2] < pa.minHeartWinners * 3)) return false;
+                (suitLengths[2] + suitValues[2] < pa.minHeartWinners * 3)) return false;
         if (pa.minSpadeWinners > 0 &&
-                (hand.suitLengths[3] + hand.suitValues[3] < pa.minSpadeWinners * 3)) return false;
+                (suitLengths[3] + suitValues[3] < pa.minSpadeWinners * 3)) return false;
         if (pa.hcpOrSkew >= 0 && handHCP < pa.hcpOrSkew && !hand.isSkew()) return false;
         if (pa.hcpOrSkewWith4PlusMinor >= 0) {
             /*
-            boolean minor4 = hand.suitLengths[0] >= 4 || hand.suitLengths[1] >= 4;
+            boolean minor4 = suitLengths[0] >= 4 || suitLengths[1] >= 4;
             boolean enoughHCP = handHCP >= pa.hcpOrSkewWith4PlusMinor;
             boolean isSkew = hand.isSkew();
             return !(minor4 && (enoughHCP || isSkew));
             */
-            return !((hand.suitLengths[0] >= 4 || hand.suitLengths[1] >= 4) &&
+            return !((suitLengths[0] >= 4 || suitLengths[1] >= 4) &&
                     (handHCP >= pa.hcpOrSkewWith4PlusMinor || hand.isSkew()));
         }
         if (pa.minBiddableSuits > 0) {
             int biddableSuits = 0;
             for (int i = 0; i < 4; i++) {
-                if (hand.suitLengths[1] >= 4) ++biddableSuits;
+                if (suitLengths[1] >= 4) ++biddableSuits;
             }
             if (biddableSuits < pa.minBiddableSuits) return false;
         }
         if (pa.allSuitsGuarded) {
             for (int i = 0; i < 4; i++) {
-                if (hand.suitValues[i] < 4) return false;
+                if (suitValues[i] < 4) return false;
             }
         }
-        if (pa.clubGuard && hand.suitValues[0] < 4) return false;
-        if (pa.diamondGuard && hand.suitValues[1] < 4) return false;
-        if (pa.heartGuard && hand.suitValues[2] < 4) return false;
-        if (pa.spadeGuard && hand.suitValues[3] < 4) return false;
+        if (pa.clubGuard && suitValues[0] < 4) return false;
+        if (pa.diamondGuard && suitValues[1] < 4) return false;
+        if (pa.heartGuard && suitValues[2] < 4) return false;
+        if (pa.spadeGuard && suitValues[3] < 4) return false;
         if (pa.balanced && !hand.isBalanced()) return false;
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {
