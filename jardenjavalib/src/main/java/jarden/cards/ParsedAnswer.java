@@ -1,5 +1,7 @@
 package jarden.cards;
 
+import static jarden.cards.Hand.*;
+
 /**
  * Created by john.denny@gmail.com on 08/06/2019.
  * Example parsing:
@@ -30,18 +32,29 @@ public class ParsedAnswer {
     private boolean heartGuard = false;
     private boolean spadeGuard = false;
     private boolean balanced = false;
-    private boolean valuesFor5 = false;
-    private boolean keycardAsk = false;
+    private boolean clubKing = false;
+    private boolean diamondKing = false;
+    private boolean heartKing = false;
+    private boolean spadeKing = false;
+    private boolean clubQueen = false;
+    private boolean diamondQueen = false;
+    private boolean heartQueen = false;
+    private boolean spadeQueen = false;
     private int hcpOrSkew = -1;
     private int hcpOrSkewWith4PlusMinor = -1;
+    private int keyCardsClubs = -1;
+    private int keyCardsDiamonds = -1;
+    private int keyCardsHearts = -1;
+    private int keyCardsSpades = -1;
     private ParsedAnswer orParsedAnswer;
     private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
     private final String[] ignoredWords = {
+            "", // empty token
             "&", // same as ','
             "in", "both", // readability
             // notes to reader:
             "autofit", "compelling-relay", "invitational-relay", "keycard-ask",
-            "queen-ask", "suit-setter", "to-play", "values-for-5",
+            "spade-queen-ask", "suit-setter", "to-play", "values-for-5"
     };
 
     public ParsedAnswer(String answer) throws BadBridgeTokenException {
@@ -50,12 +63,13 @@ public class ParsedAnswer {
             orParsedAnswer = new ParsedAnswer(answer.substring(indexOr + 4));
             answer = answer.substring(0, indexOr);
         }
-        String[] tokens = answer.split(" ");
+        String[] tokens = answer.split("[ ,;]+");
         int previousMin = -1;
         int previousMax = -1;
+        int orNumber = -1;
         boolean isNegative = false;
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i];
+        for (int tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
+            String token = tokens[tokenIndex];
             boolean ignored = false;
             for (String ignoredWord: ignoredWords) {
                 if (token.equals(ignoredWord)) {
@@ -64,7 +78,6 @@ public class ParsedAnswer {
                 }
             }
             if (ignored) continue;
-            if (token.endsWith(",")) token = token.substring(0, token.length() - 1);
 
             if (token.equals("pp")) {
                 // usage of pp: <20 pp, 26+ pp, 25 pp, 20-22 pp
@@ -227,6 +240,26 @@ public class ParsedAnswer {
                     previousMin = -1;
                     isNegative = false;
                 }
+            } else if (token.equals("keycards-clubs")) {
+                keyCardsSpades = previousMin;
+                // previousMax not needed to keycards
+                previousMin = -1;
+                previousMax = -1;
+            } else if (token.equals("keycards-diamonds")) {
+                keyCardsSpades = previousMin;
+                // previousMax not needed to keycards
+                previousMin = -1;
+                previousMax = -1;
+            } else if (token.equals("keycards-hearts")) {
+                keyCardsSpades = previousMin;
+                // previousMax not needed to keycards
+                previousMin = -1;
+                previousMax = -1;
+            } else if (token.equals("keycards-spades")) {
+                keyCardsSpades = previousMin;
+                // previousMax not needed to keycards
+                previousMin = -1;
+                previousMax = -1;
             } else if (token.equals("club-guard")) {
                 clubGuard = true;
             } else if (token.equals("diamond-guard")) {
@@ -235,6 +268,22 @@ public class ParsedAnswer {
                 heartGuard = true;
             } else if (token.equals("spade-guard")) {
                 spadeGuard = true;
+            } else if (token.equals("club-king")) {
+                clubKing = true;
+            } else if (token.equals("diamond-king")) {
+                diamondKing = true;
+            } else if (token.equals("heart-king")) {
+                heartKing = true;
+            } else if (token.equals("spade-king")) {
+                spadeKing = true;
+            } else if (token.equals("club-queen")) {
+                clubQueen = true;
+            } else if (token.equals("diamond-queen")) {
+                diamondQueen = true;
+            } else if (token.equals("heart-queen")) {
+                heartQueen = true;
+            } else if (token.equals("spade-queen")) {
+                spadeQueen = true;
             } else if (token.equals("all-suits-guarded")) {
                 allSuitsGuarded = true;
             } else if (token.equals("balanced")) {
@@ -252,9 +301,10 @@ public class ParsedAnswer {
                     notPA = notPA.notParsedAnswer;
                 }
                 notPA.notParsedAnswer = new ParsedAnswer(notAnswer);
+                // continue to process rest of tokens:
                 answer = answer.substring(indexEndB + 1);
-                tokens = answer.split(" ");
-                i = 0;
+                tokens = answer.split("[ ,;]+");
+                tokenIndex = 0;
                 isNegative = false;
             } else if (token.contains("/")) { // assuming n+/m+
                 int indexSlash = token.indexOf('/');
@@ -265,6 +315,10 @@ public class ParsedAnswer {
                 previousMin = Integer.parseInt(token.substring(0, token.length() - 1));
             } else if (token.startsWith("<")) {
                 previousMax = Integer.parseInt(token.substring(1)) - 1;
+            } else if (token.contains("-or-")) {
+                int indexMinus = token.indexOf('-');
+                previousMin = Integer.parseInt(token.substring(0, indexMinus));
+                orNumber = Integer.parseInt(token.substring(indexMinus + 4));
             } else if (token.contains("-")) {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
@@ -277,6 +331,8 @@ public class ParsedAnswer {
                     previousMin = previousMax = number;
                 } catch (NumberFormatException nfe) {
                     throw new BadBridgeTokenException(answer, nfe);
+                } catch (RuntimeException re) {
+                    throw new RuntimeException(answer, re);
                 }
             }
         }
@@ -373,6 +429,30 @@ public class ParsedAnswer {
         if (pa.heartGuard && suitValues[2] < 4) return false;
         if (pa.spadeGuard && suitValues[3] < 4) return false;
         if (pa.balanced && !hand.isBalanced()) return false;
+        if (pa.clubKing && !hand.hasKing(C)) return false;
+        if (pa.diamondKing && !hand.hasKing(D)) return false;
+        if (pa.heartKing && !hand.hasKing(H)) return false;
+        if (pa.spadeKing && !hand.hasKing(S)) return false;
+        if (pa.clubQueen && !hand.hasQueen(C)) return false;
+        if (pa.diamondQueen && !hand.hasQueen(D)) return false;
+        if (pa.heartQueen && !hand.hasQueen(H)) return false;
+        if (pa.spadeQueen && !hand.hasQueen(S)) return false;
+        if (pa.keyCardsClubs > -1) {
+            int keycardCt = hand.getKeyCardCt(Suit.Club);
+            return (keycardCt != pa.keyCardsClubs) && ((keycardCt + 3) != pa.keyCardsClubs);
+        }
+        if (pa.keyCardsDiamonds > -1) {
+            int keycardCt = hand.getKeyCardCt(Suit.Diamond);
+            return (keycardCt != pa.keyCardsDiamonds) && ((keycardCt + 3) != pa.keyCardsDiamonds);
+        }
+        if (pa.keyCardsHearts > -1) {
+            int keycardCt = hand.getKeyCardCt(Suit.Heart);
+            return (keycardCt != pa.keyCardsHearts) && ((keycardCt + 3) != pa.keyCardsHearts);
+        }
+        if (pa.keyCardsSpades > -1) {
+            int keycardCt = hand.getKeyCardCt(Suit.Spade);
+            return (keycardCt != pa.keyCardsSpades) && ((keycardCt + 3) != pa.keyCardsSpades);
+        }
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {
             if (notPA.doesMatchHand(hand)) return false;

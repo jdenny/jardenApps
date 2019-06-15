@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import jarden.cards.CardPack.CardEnum;
 
 public class Hand {
-	private final static int C = 0, D = 1, H = 2, S = 3;
+	public final static int C = 0;
+    public final static int D = 1;
+    public final static int H = 2;
+    public final static int S = 3;
 	private ArrayList<Card> cards;
 	private int[] suitLengths = new int[4]; // c, d, h, s
 	private int[] suitValues = new int[4]; // c, d, h, s; A=4, K=3, Q=2, J=1
 	private int highCardPoints;
 	private int playingPoints;
+	private int aceCt = 0;
+	private boolean[] kings = new boolean[4];
+    private boolean[] queens = new boolean[4];
 	private boolean balanced;
 
 	public Hand(ArrayList<Card> cards) {
@@ -69,7 +75,6 @@ public class Hand {
                 suitLengths[0] + "-" + suitLengths[1] + "-" +
                 suitLengths[2] + "-" + suitLengths[3];
     }
-
     private void evaluateHand() {
 		for (Card card : cards) {
 			int suitOrdinal = card.getSuit().ordinal();
@@ -78,14 +83,21 @@ public class Hand {
 			int hcp = rank.ordinal() - Rank.R10.ordinal();
 			if (hcp > 0)
 				highCardPoints += hcp;
-			if (rank == Rank.Ace)
-				suitValues[suitOrdinal] += 4;
-			else if (rank == Rank.King)
-				suitValues[suitOrdinal] += 3;
-			if (rank == Rank.Queen)
-				suitValues[suitOrdinal] += 2;
-			if (rank == Rank.Jack)
-				suitValues[suitOrdinal] += 1;
+			if (rank == Rank.Ace) {
+			    suitValues[suitOrdinal] += 4;
+			    ++aceCt;
+            }
+			else if (rank == Rank.King) {
+			    suitValues[suitOrdinal] += 3;
+			    kings[suitOrdinal] = true;
+            }
+			if (rank == Rank.Queen) {
+			    suitValues[suitOrdinal] += 2;
+			    queens[suitOrdinal] = true;
+            }
+			if (rank == Rank.Jack) {
+			    suitValues[suitOrdinal] += 1;
+            }
 		}
 		// find 2 longest suits:
 		int high1 = suitLengths[C];
@@ -124,4 +136,14 @@ public class Hand {
 		}
 		return true;
 	}
+    public int getKeyCardCt(Suit suit) {
+	    int suitOrdinal = suit.ordinal();
+	    return aceCt + (kings[suitOrdinal] ? 1 : 0);
+    }
+    public boolean hasKing(int suitOrdinal) {
+	    return kings[suitOrdinal];
+    }
+    public boolean hasQueen(int suitOrdinal) {
+        return queens[suitOrdinal];
+    }
 }

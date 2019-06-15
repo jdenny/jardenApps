@@ -161,6 +161,7 @@ public class TestHand {
     public static void main(String[] args) throws IOException {
         System.out.println("start of test");
         TestHand testHand = new TestHand();
+        // testHand.testOneBid();
         testHand.parseAllBids();
         // testHand.testMyPrimaryBids();
         // testHand.testRandomPrimaryBids();
@@ -183,12 +184,35 @@ public class TestHand {
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
 
     }
+    private void testOneBid() {
+        String answer = "<4 spades, not {5+ hearts & 4+ minor}, not 4+ in both minors, no 6+ suit";
+        QuestionAnswer qa = new QuestionAnswer("qa", answer);
+        qa.getParsedAnswer();
+    }
     private void parseAllBids() {
         List<QuestionAnswer> qaList = bridgeQuiz.getQuestionAnswerList();
         Hand hand = myHands[0];
         for (QuestionAnswer qa: qaList) {
             qa.getParsedAnswer().doesMatchHand(hand);
         }
+    }
+    private void testKeycardAskReply() {
+
+    }
+    private void testHcpOrSkew() {
+
+    }
+    private void testHcpOrSkewWith4PlusMinor() {
+
+    }
+    private void testBiddableSuits() {
+
+    }
+    private void testSuitWinners() {
+
+    }
+    private void testMultipleNotClauses() {
+
     }
     private void testMyPrimaryBids() {
         String initialBlank = "                  ";
