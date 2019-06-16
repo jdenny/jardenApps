@@ -171,24 +171,31 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	private void getNextBid(Player player) {
         Hand hand = cardPack.getHand(player);
-        QuestionAnswer nextQA = null;
+        boolean openingBid = (lastQA == OPENING_BIDS);
         try {
-            nextQA = bridgeQuiz.getNextBid(hand, lastQA);
+            lastQA = bridgeQuiz.getNextBid(hand, lastQA);
         } catch (BadBridgeTokenException e) {
             // treat as no bid!
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
         }
-        if (nextQA == null) {
+        if (lastQA == null) {
             biddingOver = true;
             bidButton.setEnabled(false);
             Toast.makeText(activity, "no bid; bidding over", Toast.LENGTH_LONG).show();
         } else {
-            // if first bid is a pass, bidding starts from partner,
-            // i.e. first pass not shown in reviseit.txt questions
-            if (lastQA == OPENING_BIDS && bridgeQuiz.isPassBid(nextQA)) firstBidPass = true;
-            lastQA = nextQA;
+            showBids();
+            if (openingBid && bridgeQuiz.isPassBid(lastQA)) {
+                if (firstBidPass) {
+                    // must be 3 consecutive passes
+                    biddingOver = true;
+                    bidButton.setEnabled(false);
+                } else {
+                    // if first bid is a pass, partner's bid is counted as opening bid
+                    firstBidPass = true;
+                    lastQA = OPENING_BIDS;
+                }
+            }
         }
-        showBids();
     }
 	public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");

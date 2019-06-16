@@ -98,10 +98,10 @@ public class TestHand {
         /*
         testHand.testPage50();
         testHand.testPage56();
-        */
         testHand.testPage56B();
-        /*
+        */
         testHand.testOneBid();
+        /*
         testHand.testKeycards();
         testHand.testHcpOrSkew();
         testHand.testHcpOrSkewWith4PlusMinor();
@@ -192,9 +192,11 @@ public class TestHand {
     }
     private void testOneBid() {
         System.out.println("testOneBid()");
-        String answer = "<4 spades, not {5+ hearts & 4+ minor}, not 4+ in both minors, no 6+ suit";
-        QuestionAnswer qa = new QuestionAnswer("qa", answer);
-        qa.getParsedAnswer();
+        Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
+                C7, C5, DA, DK, D9, D4, HK, HT, H3, SK, S5, S3, S2
+        });
+        QuestionAnswer qa = bridgeQuiz.getNextBid(handWest, OPENING_BIDS);
+        System.out.println(qa);
     }
     private void parseAllBids() {
         System.out.println("parseAllBids()");
