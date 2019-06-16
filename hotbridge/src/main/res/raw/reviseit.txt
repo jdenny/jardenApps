@@ -913,7 +913,7 @@ A: 4+ clubs, autofit, values-for-5
 # page 72
 Q: 1H, 1S; 1NT, 2D; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]
-A: 4+ diamonds, autofit, keycard ask
+A: 4+ diamonds, autofit, keycard-ask
 Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
 F1: [a]keycard_ask[/a]
 A: 2-or-5 keycards-diamonds
@@ -931,7 +931,7 @@ F1: [a]keycard_ask[/a]
 A: keycard-ask
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
 F1: [a]keycard_ask[/a]
-A: 2-or-5 keycards
+A: 2-or-5 keycards-clubs
 
 # page 76
 Q: 1H, 2D; 2H
@@ -950,7 +950,7 @@ F1: [a]responses_to_relay[/a]. Alert: artificial
 A: 4 hearts, <5 spades, not 14+ HCP-or-skew-with-4+minor
 Q: 1H, 2D; 2NT, 3H
 F1: delayed agreement
-A: 3 hearts with honours
+A: 3 hearts-with-honours
 
 # page 82
 Q: 2D, 3H
@@ -1037,9 +1037,9 @@ A: 6+ hearts, 6+ HCP
 Q: (1S) double
 F1: [a]Double|takeout_double[/a]. Asks partner to bid best unbid suit. Alert: takeout double
 A: 25+ pp
-Q: (1S) double, (Pass) Pass
-F1: [a]Double|takeout_double[/a] now becomes penalty double
-A: penalty
+# Q: (1S) double, (Pass) Pass
+# F1: [a]Double|takeout_double[/a] now becomes penalty double
+# A: penalty
 Q: (1S) double, (Pass) 2C
 F1: [a]to_play[/a]; bid longest suit
 A: 0-4 HCP, 4+ clubs
@@ -1100,7 +1100,7 @@ F1: [a]keycard_ask[/a], already agreed spades
 A: keycard-ask
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
-A: guard in hearts
+A: heart-guard
 
 # page 129
 Q: 1H, 2NT; 3D
@@ -1174,18 +1174,18 @@ F1: [a]keycard_ask[/a]
 A: keycard-ask
 Q: 1C, 1H; 2H, 3C; 4C, 4D; 4H
 F1: [a]keycard_ask[/a]
-A: 0-or-3 keycards
+A: 0-or-3 keycards-hearts
 
 #page 133
 Q: 2C, 2NT; 3H
 F1: [a]side_suit[/a]
-A: guard in hearts
+A: heart-guard
 Q: 2C, 2NT; 3H, 4H
 F1: [a]keycard_ask[/a]
 A: keycard-ask
 Q: 2C, 2NT; 3H, 4H; 4S
 F1: [a]keycard_ask[/a]
-A: 0-or-3 keycards
+A: 0-or-3 keycards-clubs
 
 # page 148
 Q: 1S, (2C) 2NT
@@ -1221,7 +1221,7 @@ A: 5+ spades
 
 # page 152
 Q: (1S) double, (Pass) 2C
-A: <5 HCP, 4+ clubs, best suit
+A: <5 HCP, 4+ clubs, <4 hearts, <4 spades, <5 diamonds
 
 # not in book
 Q: 1C, (1NT) 2D

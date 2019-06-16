@@ -25,6 +25,8 @@ public class ParsedAnswer {
     private int minDiamonds = -1, maxDiamonds = -1;
     private int minHearts = -1, maxHearts = -1;
     private int minSpades = -1, maxSpades = -1;
+    private int heartsWithHonours = -1;
+    private int spadesWithHonours = -1;
     private int minBiddableSuits = -1;
     private boolean allSuitsGuarded = false;
     private boolean clubGuard = false;
@@ -53,8 +55,8 @@ public class ParsedAnswer {
             "&", // same as ','
             "in", "both", // readability
             // notes to reader:
-            "autofit", "compelling-relay", "invitational-relay", "keycard-ask",
-            "spade-queen-ask", "suit-setter", "to-play", "values-for-5"
+            "autofit", "compelling-relay", "invitational-relay", "keycard-ask", "limited",
+            "spade-queen-ask", "suit-setter", "to-play", "values-for-5", "waiting"
     };
 
     public ParsedAnswer(String answer) throws BadBridgeTokenException {
@@ -128,6 +130,12 @@ public class ParsedAnswer {
                     minHearts = previousMin;
                     previousMin = -1;
                 }
+            } else if (token.equals("hearts-with-honours")) {
+                heartsWithHonours = previousMin;
+                previousMin = -1;
+            } else if (token.equals("spades-with-honours")) {
+                spadesWithHonours = previousMin;
+                previousMin = -1;
             } else if (token.equals("spades")) {
                 if (previousMax > 0) {
                     maxSpades = previousMax;
@@ -241,17 +249,17 @@ public class ParsedAnswer {
                     isNegative = false;
                 }
             } else if (token.equals("keycards-clubs")) {
-                keyCardsSpades = previousMin;
+                keyCardsClubs = previousMin;
                 // previousMax not needed to keycards
                 previousMin = -1;
                 previousMax = -1;
             } else if (token.equals("keycards-diamonds")) {
-                keyCardsSpades = previousMin;
+                keyCardsDiamonds = previousMin;
                 // previousMax not needed to keycards
                 previousMin = -1;
                 previousMax = -1;
             } else if (token.equals("keycards-hearts")) {
-                keyCardsSpades = previousMin;
+                keyCardsHearts = previousMin;
                 // previousMax not needed to keycards
                 previousMin = -1;
                 previousMax = -1;
@@ -393,6 +401,8 @@ public class ParsedAnswer {
                 suitLengths[3] < pa.minSpades) return false;
         if (pa.maxSpades >= 0 &&
                 suitLengths[3] > pa.maxSpades) return false;
+        if (pa.heartsWithHonours >= 0 &&
+                suitLengths[2] < pa.heartsWithHonours && suitValues[2] < 7) return false;
         if (pa.minClubWinners > 0 &&
                 (suitLengths[0] + suitValues[0] < pa.minClubWinners * 3)) return false;
         if (pa.minDiamondWinners > 0 &&
@@ -408,6 +418,7 @@ public class ParsedAnswer {
             boolean enoughHCP = handHCP >= pa.hcpOrSkewWith4PlusMinor;
             boolean isSkew = hand.isSkew();
             return !(minor4 && (enoughHCP || isSkew));
+            // more succinctly:
             */
             return !((suitLengths[0] >= 4 || suitLengths[1] >= 4) &&
                     (handHCP >= pa.hcpOrSkewWith4PlusMinor || hand.isSkew()));
@@ -439,19 +450,23 @@ public class ParsedAnswer {
         if (pa.spadeQueen && !hand.hasQueen(S)) return false;
         if (pa.keyCardsClubs > -1) {
             int keycardCt = hand.getKeyCardCt(Suit.Club);
-            return (keycardCt != pa.keyCardsClubs) && ((keycardCt + 3) != pa.keyCardsClubs);
+            if ((keycardCt != pa.keyCardsClubs) &&
+                    (keycardCt != pa.keyCardsClubs + 3)) return false;
         }
         if (pa.keyCardsDiamonds > -1) {
             int keycardCt = hand.getKeyCardCt(Suit.Diamond);
-            return (keycardCt != pa.keyCardsDiamonds) && ((keycardCt + 3) != pa.keyCardsDiamonds);
+            if ((keycardCt != pa.keyCardsDiamonds) &&
+                    (keycardCt != pa.keyCardsDiamonds + 3)) return false;
         }
         if (pa.keyCardsHearts > -1) {
             int keycardCt = hand.getKeyCardCt(Suit.Heart);
-            return (keycardCt != pa.keyCardsHearts) && ((keycardCt + 3) != pa.keyCardsHearts);
+            if ((keycardCt != pa.keyCardsHearts) &&
+                    (keycardCt != pa.keyCardsHearts + 3)) return false;
         }
         if (pa.keyCardsSpades > -1) {
             int keycardCt = hand.getKeyCardCt(Suit.Spade);
-            return (keycardCt != pa.keyCardsSpades) && ((keycardCt + 3) != pa.keyCardsSpades);
+            if ((keycardCt != pa.keyCardsSpades) &&
+                    (keycardCt != pa.keyCardsSpades + 3)) return false;
         }
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {

@@ -162,7 +162,8 @@ public class TestHand {
         System.out.println("start of test");
         TestHand testHand = new TestHand();
         // testHand.testOneBid();
-        testHand.parseAllBids();
+        testHand.testTokens();
+        // testHand.parseAllBids();
         // testHand.testMyPrimaryBids();
         // testHand.testRandomPrimaryBids();
         // testHand.test2Hands1H1S();
@@ -196,8 +197,53 @@ public class TestHand {
             qa.getParsedAnswer().doesMatchHand(hand);
         }
     }
-    private void testKeycardAskReply() {
-
+    private void testTokens() {
+        // keycardAsk reply
+        CardPack.CardEnum[] cards0Keycards_clubs = { // 17pp, 6HCP, 5-6-1-1
+                CQ, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7
+        };
+        CardPack.CardEnum[] cards1Keycards_clubs = { // 19pp, 8HCP, 5-6-1-1
+                CA, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7
+        };
+        CardPack.CardEnum[] cards2Keycards_clubs = { // 22pp, 12 HCP, 5-5-2-1
+                CA, CT, C9, C8, C5, DK, DJ, D9, D8, D6, HA, H9, S7
+        };
+        CardPack.CardEnum[] cards3Keycards_clubs = { // 26pp, 15HCP, 5-6-1-1
+                CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, SA
+        };
+        CardPack.CardEnum[] cards4Keycards_clubs = { // 27pp, 16HCP, 5-6-1-1
+                CA, CK, C9, C8, C5, DA, DJ, D9, D8, D6, D5, H9, SA
+        };
+        CardPack.CardEnum[] cards5Keycards_clubs = { // 31pp, 20HCP, 5-6-1-1
+                CA, CK, C9, C8, C5, DA, DJ, D9, D8, D6, D5, HA, SA
+        };
+        Hand[] hands = {
+                new Hand(cards0Keycards_clubs), new Hand(cards1Keycards_clubs),
+                new Hand(cards2Keycards_clubs), new Hand(cards3Keycards_clubs),
+                new Hand(cards4Keycards_clubs), new Hand(cards5Keycards_clubs)
+        };
+        String[] answers = {
+                "0-or-3 keycards-clubs", "1-or-4 keycards-clubs", "2-or-5 keycards-clubs"
+        };
+        boolean[] keycardClubsMatch = {
+                true, false, false, true, false, false,
+                false, true, false, false, true, false,
+                false, false, true, false, false, true
+        };
+        QuestionAnswer qa;
+        for (int a = 0; a < answers.length; a++) {
+            qa = new QuestionAnswer("qa", answers[a]);
+            boolean isMatch;
+            Hand hand;
+            for (int h = 0; h < hands.length; h++) {
+                hand = hands[h];
+                isMatch = qa.getParsedAnswer().doesMatchHand(hand);
+                if (isMatch != keycardClubsMatch[hands.length * a + h]) {
+                    System.out.println("*****" + hand + " did" +
+                            (isMatch?"":" not") + " match " + qa.answer);
+                }
+            }
+        }
     }
     private void testHcpOrSkew() {
 
