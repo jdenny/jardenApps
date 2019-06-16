@@ -426,7 +426,7 @@ public class ParsedAnswer {
         if (pa.minBiddableSuits > 0) {
             int biddableSuits = 0;
             for (int i = 0; i < 4; i++) {
-                if (suitLengths[1] >= 4) ++biddableSuits;
+                if (suitLengths[i] >= 4) ++biddableSuits;
             }
             if (biddableSuits < pa.minBiddableSuits) return false;
         }

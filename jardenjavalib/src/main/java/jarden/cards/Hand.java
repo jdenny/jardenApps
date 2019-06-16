@@ -56,7 +56,7 @@ public class Hand {
 	}
 	public boolean isSkew() {
         for (int i = 0; i < 4; i++) {
-            if (suitValues[i] < 2) {
+            if (suitLengths[i] < 2) {
                 return true;
             }
         }
