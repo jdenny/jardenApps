@@ -34,14 +34,14 @@ public class ParsedAnswer {
     private boolean heartGuard = false;
     private boolean spadeGuard = false;
     private boolean balanced = false;
-    private boolean clubKing = false;
-    private boolean diamondKing = false;
-    private boolean heartKing = false;
-    private boolean spadeKing = false;
-    private boolean clubQueen = false;
-    private boolean diamondQueen = false;
-    private boolean heartQueen = false;
-    private boolean spadeQueen = false;
+    private Boolean clubKing = null;
+    private Boolean diamondKing = null;
+    private Boolean heartKing = null;
+    private Boolean spadeKing = null;
+    private Boolean clubQueen = null;
+    private Boolean diamondQueen = null;
+    private Boolean heartQueen = null;
+    private Boolean spadeQueen = null;
     private int hcpOrSkew = -1;
     private int hcpOrSkewWith4PlusMinor = -1;
     private int keyCardsClubs = -1;
@@ -277,21 +277,29 @@ public class ParsedAnswer {
             } else if (token.equals("spade-guard")) {
                 spadeGuard = true;
             } else if (token.equals("club-king")) {
-                clubKing = true;
+                clubKing = !isNegative;
+                isNegative = false;
             } else if (token.equals("diamond-king")) {
-                diamondKing = true;
+                diamondKing = !isNegative;
+                isNegative = false;
             } else if (token.equals("heart-king")) {
-                heartKing = true;
+                heartKing = !isNegative;
+                isNegative = false;
             } else if (token.equals("spade-king")) {
-                spadeKing = true;
+                spadeKing = !isNegative;
+                isNegative = false;
             } else if (token.equals("club-queen")) {
-                clubQueen = true;
+                clubQueen = !isNegative;
+                isNegative = false;
             } else if (token.equals("diamond-queen")) {
-                diamondQueen = true;
+                diamondQueen = !isNegative;
+                isNegative = false;
             } else if (token.equals("heart-queen")) {
-                heartQueen = true;
+                heartQueen = !isNegative;
+                isNegative = false;
             } else if (token.equals("spade-queen")) {
-                spadeQueen = true;
+                spadeQueen = !isNegative;
+                isNegative = false;
             } else if (token.equals("all-suits-guarded")) {
                 allSuitsGuarded = true;
             } else if (token.equals("balanced")) {
@@ -440,14 +448,14 @@ public class ParsedAnswer {
         if (pa.heartGuard && suitValues[2] < 4) return false;
         if (pa.spadeGuard && suitValues[3] < 4) return false;
         if (pa.balanced && !hand.isBalanced()) return false;
-        if (pa.clubKing && !hand.hasKing(C)) return false;
-        if (pa.diamondKing && !hand.hasKing(D)) return false;
-        if (pa.heartKing && !hand.hasKing(H)) return false;
-        if (pa.spadeKing && !hand.hasKing(S)) return false;
-        if (pa.clubQueen && !hand.hasQueen(C)) return false;
-        if (pa.diamondQueen && !hand.hasQueen(D)) return false;
-        if (pa.heartQueen && !hand.hasQueen(H)) return false;
-        if (pa.spadeQueen && !hand.hasQueen(S)) return false;
+        if (pa.clubKing != null && (hand.hasKing(C) != pa.clubKing)) return false;
+        if (pa.diamondKing != null && (hand.hasKing(D) != pa.diamondKing)) return false;
+        if (pa.heartKing != null && (hand.hasKing(H) != pa.heartKing)) return false;
+        if (pa.spadeKing != null && (hand.hasKing(S) != pa.spadeKing)) return false;
+        if (pa.clubQueen != null && (hand.hasQueen(C) != pa.clubQueen)) return false;
+        if (pa.diamondQueen != null && (hand.hasQueen(D) != pa.diamondQueen)) return false;
+        if (pa.heartQueen != null && (hand.hasQueen(H) != pa.heartQueen)) return false;
+        if (pa.spadeQueen != null && (hand.hasQueen(S) != pa.spadeQueen)) return false;
         if (pa.keyCardsClubs > -1) {
             int keycardCt = hand.getKeyCardCt(Suit.Club);
             if ((keycardCt != pa.keyCardsClubs) &&

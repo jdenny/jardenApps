@@ -93,30 +93,33 @@ public class TestHand {
     private CardPack cardPack;
 
     public static void main(String[] args) throws IOException {
+        boolean verbose = false;
+        boolean testAll = false;
         System.out.println("start of test");
         TestHand testHand = new TestHand();
-        testHand.parseAllBids();
-        /*
-        testHand.testPage50();
-        testHand.testPage56();
-        testHand.testPage56B();
-        testHand.testAllResponses();
-        testHand.testOneBid();
-        testHand.testKeycards();
-        testHand.testHcpOrSkew();
-        testHand.testHcpOrSkewWith4PlusMinor();
-        testHand.testBiddableSuits();
-        testHand.testSuitWinners();
-        testHand.testMyPrimaryBids();
-        testHand.testRandomPrimaryBids();
-        testHand.test2Hands1H1S();
-        testHand.testOrs();
-        testHand.testNots();
-        testHand.testRandomNBids(10, 2);
-        testHand.testRandomSecondBids();
-        testHand.testAllSecondBids();
-        testHand.testMySecondBids();
-        */
+        testHand.testQueenAsk();
+        if (testAll) {
+            testHand.parseAllBids();
+            testHand.testPage50();
+            testHand.testPage56();
+            testHand.testPage56B();
+            testHand.testOneBid();
+            testHand.testKeycards();
+            testHand.testHcpOrSkew();
+            testHand.testHcpOrSkewWith4PlusMinor();
+            testHand.testBiddableSuits();
+            testHand.testSuitWinners();
+            testHand.testMyPrimaryBids();
+            testHand.testRandomPrimaryBids();
+            testHand.test2Hands1H1S();
+            testHand.testOrs();
+            testHand.testNots();
+            testHand.testRandomNBids(10, 2);
+            testHand.testRandomSecondBids();
+            testHand.testAllSecondBids();
+            testHand.testMySecondBids();
+            testHand.testAllResponses(verbose);
+        }
         System.out.println("end of test");
     }
 
@@ -129,12 +132,16 @@ public class TestHand {
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
 
     }
-    private void testAllResponses() {
+    private void testAllResponses(boolean verbose) {
+        System.out.println("\ntestAllResponses()");
         for (QuestionAnswer qa: primaryBids) {
-            testResponses(qa);
+            if (qa.question.equals("Pass")) {
+                System.out.println("about to do Pass");
+            }
+            testResponses(qa, verbose);
         }
     }
-    private void testResponses(QuestionAnswer qa) {
+    private void testResponses(QuestionAnswer qa, boolean verbose) {
         List<QuestionAnswer> allResponses = bridgeQuiz.getPossibleResponses(qa);
         if (allResponses.size() == 0) {
             System.out.println("no responses to " + qa);
@@ -144,14 +151,67 @@ public class TestHand {
             if (qa2 == null) {
                 System.out.println("null response to " + qa);
             } else if (qa2.question.endsWith("Pass")) {
-                System.out.println("pass response to " + qa);
+                if (verbose) System.out.println("pass response to " + qa);
             } else {
-                testResponses(qa2);
+                testResponses(qa2, verbose);
+            }
+        }
+    }
+    private void testQueenAsk() {
+        System.out.println("\ntestQueenAsk()");
+        QuestionAnswer[] answers = {
+                new QuestionAnswer("qa", "spade-queen, club-king"),
+                new QuestionAnswer("qa", "heart-queen, diamond-king"),
+                new QuestionAnswer("qa", "diamond-queen, heart-king"),
+                new QuestionAnswer("qa", "club-queen, spade-king"),
+                new QuestionAnswer("qa", "no spade-queen, club-king"),
+                new QuestionAnswer("qa", "no heart-queen"),
+                new QuestionAnswer("qa", "no spade-queen, diamond-king"),
+                new QuestionAnswer("qa", "no club-queen, diamond-king")
+        };
+        Hand[] hands = {
+                new Hand(new CardPack.CardEnum[] { // SQ, CK
+                        CA, CK, C6, C5, DA, DQ, DJ, D8, D6, H6, SQ, S7, S4
+                }),
+                new Hand(new CardPack.CardEnum[] { // HQ, DK
+                        CA, C8, C6, C5, DK, DJ, DT, D8, D6, HQ, S8, S7, S4
+                }),
+                new Hand(new CardPack.CardEnum[] { // DQ, HK
+                        CA, C8, C6, C5, DA, DQ, DJ, D8, D6, HK, SQ, S7, S4
+                }),
+                new Hand(new CardPack.CardEnum[] { // CQ, SK
+                        CA, CQ, C6, C5, DK, DQ, DJ, D8, D6, H6, SK, S7, S4
+                })
+        };
+        boolean[] matches = {
+                true, false, false, false, // spade-queen, club-king
+                false, true, false, false, // heart-queen, diamond-king
+                false, false, true, false, // diamond-queen, heart-king
+                false, false, false, true, // club-queen, spade-king
+
+                false, false, false, false, // no spade-queen, club-king
+                true, false, true, true, // no heart-queen
+                false, true, false, true, // no spade-queen, diamond-king
+                false, true, false, false // no club-queen, diamond-king
+        };
+        Hand hand;
+        for (int h = 0; h < hands.length; h++) {
+            hand = hands[h];
+            boolean match;
+            for (int a = 0; a < answers.length; a++) {
+                QuestionAnswer qa = answers[a];
+                match = qa.getParsedAnswer().doesMatchHand(hand);
+                if (match != matches[hands.length * a + h]) {
+                    System.out.println("*****" + hand + "[" + h + "] did" +
+                            (match ? "" : " not") + " match " + qa.answer);
+                }
+
+
             }
         }
     }
     private void testPage50() {
-        System.out.println("testPage50");
+        System.out.println("\ntestPage50");
         Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
                 CA, CQ, C6, C5, DK, DQ, DJ, D8, D6, H6, SJ, S7, S4
         });
@@ -171,7 +231,7 @@ public class TestHand {
         }
     }
     private void testPage56() {
-        System.out.println("testPage56");
+        System.out.println("\ntestPage56");
         Hand handWest = new Hand(new CardPack.CardEnum[] { // 24pp, 15HCP, 4-5-3-1
                 CK, CQ, CJ, C9, DA, DK, D8, D6, D5, HQ, H8, H2, S8
         });
@@ -191,7 +251,7 @@ public class TestHand {
         }
     }
     private void testPage56B() {
-        System.out.println("testPage56B");
+        System.out.println("\ntestPage56B");
         Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
                 CK, CQ, CJ, C9, DA, DK, D8, D6, D5, H8, SQ, S8, S2
         });
@@ -211,7 +271,7 @@ public class TestHand {
         }
     }
     private void testOneBid() {
-        System.out.println("testOneBid()");
+        System.out.println("\ntestOneBid()");
         Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
                 C7, C5, DA, DK, D9, D4, HK, HT, H3, SK, S5, S3, S2
         });
@@ -219,14 +279,14 @@ public class TestHand {
         System.out.println(qa);
     }
     private void parseAllBids() {
-        System.out.println("parseAllBids()");
+        System.out.println("\nparseAllBids()");
         List<QuestionAnswer> qaList = bridgeQuiz.getQuestionAnswerList();
         for (QuestionAnswer qa: qaList) {
             qa.getParsedAnswer().doesMatchHand(hand1C);
         }
     }
     private void testKeycards() {
-        System.out.println("testKeycards()");
+        System.out.println("\ntestKeycards()");
         CardPack.CardEnum[] cards0KeycardsClubs = { // 17pp, 6HCP, 5-6-1-1
                 CQ, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7 // D=1, H=0, S=0
         };
@@ -306,7 +366,7 @@ public class TestHand {
         }
     }
     private void testHcpOrSkew() {
-        System.out.println("testHcpOrSkew()");
+        System.out.println("\ntestHcpOrSkew()");
         CardPack.CardEnum[] cards15Hcp5611 = { // 26pp, 15HCP, 5-6-1-1
                 CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, SA
         };
@@ -336,10 +396,9 @@ public class TestHand {
                         (match ? "" : " not") + " match " + qaSkew.answer);
             }
         }
-        System.out.println("end of testHcpOrSkew");
     }
     private void testHcpOrSkewWith4PlusMinor() {
-        System.out.println("testHcpOrSkewWith4PlusMinor()");
+        System.out.println("\ntestHcpOrSkewWith4PlusMinor()");
         CardPack.CardEnum[] cards13Hcp3343 = { // 20pp, 13HCP, 3-3-4-3
                 // no 4+ minor; no 14+ HCP or skew
                 CA, CJ, C9, D8, D5, DK, HJ, H9, H8, H6, S5, S9, SA
@@ -364,10 +423,9 @@ public class TestHand {
                         (match ? "" : " not") + " match " + qaNotSkew.answer);
             }
         }
-        System.out.println("end of testHcpOrSkewWith4PlusMinor");
     }
     private void testBiddableSuits() {
-        System.out.println("testBiddableSuits()");
+        System.out.println("\ntestBiddableSuits()");
         // biddable suit: 4+ in suit
         Hand[] hands = {
                 hand14Hcp3343, hand13Hcp3145, hand14Hcp4540
@@ -385,10 +443,9 @@ public class TestHand {
                         (match ? "" : " not") + " match " + qa.answer);
             }
         }
-        System.out.println("end of testBiddableSuits");
     }
     private void testSuitWinners() {
-        System.out.println("testSuitWinners()");
+        System.out.println("\ntestSuitWinners()");
         // suitLength + suitValues >= minWinners * 3
         Hand hand11Hcp6025 = new Hand(new CardPack.CardEnum[] { // 22pp, 11HCP, 6-0-2-5
                 CA, CK, CQ, CJ, C9, C8, H9, H5, SJ, S6, S5, S4, S3
@@ -437,7 +494,7 @@ public class TestHand {
 
     }
     private void testMyPrimaryBids() {
-        System.out.println("testMyPrimaryBids()");
+        System.out.println("\ntestMyPrimaryBids()");
         CardPack.CardEnum[] cards1Cb = { // 26pp
                 CA, CK, CQ, CJ, C8, DK, D8, D4, HA, H6, H5, H4, S3
         };
@@ -542,7 +599,7 @@ public class TestHand {
     }
     // deal random hands, and check that each one matches exactly 1 primary bid
     private void testRandomPrimaryBids() {
-        System.out.println("testRandomPrimaryBids()");
+        System.out.println("\ntestRandomPrimaryBids()");
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
             cardPack.deal(true);
@@ -563,7 +620,7 @@ public class TestHand {
         }
     }
     private void test2Hands4H() {
-        System.out.println("test2Hands4H()");
+        System.out.println("\ntest2Hands4H()");
         CardPack.CardEnum[] cardsWest = {
                 CA, CQ, C6, C5, DK, DQ, DJ, D8, D6, H6, SJ, S7, S4
         };
@@ -578,7 +635,7 @@ public class TestHand {
         System.out.println("qa2=" + qa2);
     }
     private void test2Hands1H1S() {
-        System.out.println("test2Hands1H1S()");
+        System.out.println("\ntest2Hands1H1S()");
         CardPack.CardEnum[] cardsWest = {
                 CK, C8, C5, C4, DJ, D8, D3, HA, HK, H7, H5, SK, S8
         };
@@ -598,7 +655,7 @@ public class TestHand {
         }
     }
     private void testOrs() {
-        System.out.println("testOrs()");
+        System.out.println("\ntestOrs()");
         CardPack.CardEnum[] cards6C = { // 10 HCP, 6-1-2-4
                 CA, CK, CQ, CJ, CT, C9, D8, H7, H6, S5, S4, S3, S2
         };
@@ -626,7 +683,7 @@ public class TestHand {
         }
     }
     private void testNots() {
-        System.out.println("testNots()");
+        System.out.println("\ntestNots()");
         CardPack.CardEnum[] cards6C = { // 10 HCP, 6-1-2-4
                 CA, CK, CQ, CJ, CT, C9, D8, H7, H6, S5, S4, S3, S2
         };
@@ -658,7 +715,7 @@ public class TestHand {
     For dealCt deals, get handWest and handEast to do bidCt bids between them
      */
     private void testRandomNBids(int dealCt, int bidCt) {
-        System.out.println("testRandomNBids()");
+        System.out.println("\ntestRandomNBids()");
         for (int j = 0; j < dealCt; j++) {
             cardPack.shuffle();
             cardPack.deal(true);
@@ -682,7 +739,7 @@ public class TestHand {
     // for each primary bid:
     //      check that randomEast matches exactly 1 second bid
     private void testAllSecondBids() {
-        System.out.println("testAllSecondBids()");
+        System.out.println("\ntestAllSecondBids()");
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
             cardPack.deal(true);
@@ -709,7 +766,7 @@ public class TestHand {
         }
     }
     private void testMySecondBids() { // 2 matches for 1C; 3 for 1D
-        System.out.println("testMySecondBids()");
+        System.out.println("\ntestMySecondBids()");
         CardPack.CardEnum[] cards1 = { // 22pp, 11HCP, 5-6-2-0
                 C9, C7, C6, C5, C2, DA, DK, DJ, DT, D9, D4, HK, H8
         };
@@ -725,11 +782,10 @@ public class TestHand {
             }
         }
         if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
-        System.out.println();
     }
     // deal random hands and check that each one matches exactly 1 primary bid
     private void testRandomSecondBids() {
-        System.out.println("testRandomSecondBids()");
+        System.out.println("\ntestRandomSecondBids()");
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
             cardPack.deal(true);
@@ -765,8 +821,6 @@ public class TestHand {
                 // put breakpoint at next line to debug problem
                 bridgeQuiz.getPrimaryBid(handEast);
             }
-            System.out.println();
         }
     }
-
 }

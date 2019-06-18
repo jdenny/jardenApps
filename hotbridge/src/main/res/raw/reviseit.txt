@@ -1288,6 +1288,9 @@ Q: 1D, 2D; 3D
 F1: [a]responses_to_relay[/a]
 A: no 5+ major, <4 clubs, 4+ diamonds, 17+ HCP-or-skew
 
+Q: 1H, 2NT; 3H
+A: <14 HCP
+
 Q: 1S, 2C; 2H, 2S
 A: <5 hearts, 3 spades
 Q: 1S, 2C; 2H, 2NT
@@ -1301,3 +1304,15 @@ A: <5 hearts, <3 spades, <4 clubs, 4+ diamonds, 15+ HCP-or-skew
 Q: 1S, 2C; 2H, 3H
 F1: [a]responses_to_relay[/a]
 A: 5+ hearts
+
+Q: 1S, 2NT; 3S
+A: <14 HCP
+
+Q: 2NT, 3C
+A: <15 HCP, 4+ clubs
+Q: 2NT, 3D
+A: <15 HCP, <4 clubs, 4+ diamonds
+Q: 2NT, 4C
+A: 15+ HCP, 4+ clubs
+Q: 2NT, 4D
+A: 15+ HCP, <4 clubs, 4+ diamonds

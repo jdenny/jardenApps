@@ -13,7 +13,6 @@ import jarden.cards.Hand;
 public class BridgeQuiz extends PresetQuiz {
     public static final QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
     private static final int OPENING_BID_CT = 21;
-    private QuestionAnswer PassBid;
     private List<QuestionAnswer> primaryBids;
 
     public BridgeQuiz(InputStreamReader is) throws IOException {
@@ -37,7 +36,6 @@ public class BridgeQuiz extends PresetQuiz {
             QuestionAnswer qa;
             for (int i = 0; i < OPENING_BID_CT; i++) {
                 qa = qaList.get(i);
-                if (qa.question.equals("Pass")) PassBid = qa;
                 primaryBids.add(qa);
             }
         }
@@ -46,7 +44,7 @@ public class BridgeQuiz extends PresetQuiz {
     public List<QuestionAnswer> getPossibleResponses(QuestionAnswer targetQA) {
         List<QuestionAnswer> possibleResponses;
         // TODO: generalise this special case of bid cache
-        if (targetQA == OPENING_BIDS || targetQA == PassBid) {
+        if (targetQA == OPENING_BIDS) {
             possibleResponses = getPrimaryBids();
         } else {
             String question = targetQA.question;
@@ -99,9 +97,6 @@ public class BridgeQuiz extends PresetQuiz {
             bidItems.add(nextBid);
         } while (index != -1);
         return bidItems;
-    }
-    public boolean isPassBid(QuestionAnswer bid) {
-        return bid == PassBid;
     }
     private static int findNextSeparator(String bidSequence, int start) {
         int commaI = bidSequence.indexOf(',', start);

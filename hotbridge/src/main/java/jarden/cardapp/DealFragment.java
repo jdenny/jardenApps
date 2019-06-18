@@ -176,6 +176,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         Hand hand = cardPack.getHand(player);
         QuestionAnswer previousQA = lastQA;
         boolean openerPassed = false;
+        boolean noResponseFound = false;
         try {
             lastQA = bridgeQuiz.getNextBid(hand, lastQA);
         } catch (BadBridgeTokenException e) {
@@ -183,6 +184,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
         }
         if (lastQA == null) {
+            noResponseFound = true;
             if (BuildConfig.DEBUG) Log.d(TAG, "null response from getNextBid(); hand=" + hand +
                     " previousQA=" + previousQA);
             // convert it into Pass!

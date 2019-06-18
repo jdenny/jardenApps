@@ -35,6 +35,30 @@ import jarden.quiz.BridgeQuiz;
  * Android app version of jarden.cards in Java course.
  *
  * @author john.denny@gmail.com
+ *
+ * TODO following:
+Factor-in hand evaluation, including re-evaluate when suit agreed
+Show HCP on screen; add new tokens "agreed-clubs" etc; callback interface to DealFragment which passes it on to hand
+
+change all multi-word terms to use _ instead of -
+
+testPage50, 56, 56B not fully working; add more hand-pairs from book
+
+Show qa.helpText under qa.answer on screen; make hypertext life, as in ReviseQuiz
+
+add bidding to 2-player
+
+Devise a way to share BridgeQuiz between 2 parts of app
+
+Possibly change PresetQuiz to use generics?
+
+Check that other uses of PresetQuiz are okay
+if so, remove commented-out getNextQuestion(int level)
+
+Investigate illegalstateexception: cannot perform this action after onSaveInstanceState, after closing one of two-player devices; stack trace: bluetoothHandler.java:42 -> HotBridgeAtivity.onConnectionList -> showBlueToothFragment (HotBrigeActivity.java:130)
+
+reviseit.txt***
+
  */
 public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener, DealFragment.Bridgeable {
