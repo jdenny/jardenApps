@@ -201,7 +201,7 @@ public class HotBridgeActivity extends AppCompatActivity
 			this.dealFragment.setBluetoothService(bluetoothService);
 		}
 	}
-	@Override // BluetoothListener
+	@Override // BluetoothListener, Bridgeable
 	public void setStatusMessage(String message) {
 		this.statusText.setText(message);
 	}

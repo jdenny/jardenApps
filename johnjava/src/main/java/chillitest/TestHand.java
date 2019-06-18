@@ -95,19 +95,18 @@ public class TestHand {
     public static void main(String[] args) throws IOException {
         System.out.println("start of test");
         TestHand testHand = new TestHand();
+        testHand.parseAllBids();
         /*
         testHand.testPage50();
         testHand.testPage56();
         testHand.testPage56B();
-        */
+        testHand.testAllResponses();
         testHand.testOneBid();
-        /*
         testHand.testKeycards();
         testHand.testHcpOrSkew();
         testHand.testHcpOrSkewWith4PlusMinor();
         testHand.testBiddableSuits();
         testHand.testSuitWinners();
-        testHand.parseAllBids();
         testHand.testMyPrimaryBids();
         testHand.testRandomPrimaryBids();
         testHand.test2Hands1H1S();
@@ -129,6 +128,27 @@ public class TestHand {
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
 
+    }
+    private void testAllResponses() {
+        for (QuestionAnswer qa: primaryBids) {
+            testResponses(qa);
+        }
+    }
+    private void testResponses(QuestionAnswer qa) {
+        List<QuestionAnswer> allResponses = bridgeQuiz.getPossibleResponses(qa);
+        if (allResponses.size() == 0) {
+            System.out.println("no responses to " + qa);
+            return;
+        }
+        for (QuestionAnswer qa2: allResponses) {
+            if (qa2 == null) {
+                System.out.println("null response to " + qa);
+            } else if (qa2.question.endsWith("Pass")) {
+                System.out.println("pass response to " + qa);
+            } else {
+                testResponses(qa2);
+            }
+        }
     }
     private void testPage50() {
         System.out.println("testPage50");

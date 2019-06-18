@@ -44,10 +44,12 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 public class DealFragment extends Fragment implements OnClickListener {
     public interface Bridgeable {
         BridgeQuiz getBridgeQuiz();
+        void setStatusMessage(String message);
     }
-    private final static int SHOW_ME = 0;
-    private final static int SHOW_US = 1;
-    private final static int SHOW_ALL = 2;
+    private static final int SHOW_ME = 0;
+    private static final int SHOW_US = 1;
+    private static final int SHOW_ALL = 2;
+    private static final int MAX_BIDS = 24;
 
     private FragmentManager fragmentManager;
     /*
@@ -70,14 +72,13 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private Player partnerPlayer = Player.East;
 	private TextView suggestedBidTextView;
 	private FragmentActivity activity;
+	private Bridgeable bridgeable;
 	private BluetoothService bluetoothService;
     private TextView[] bidTextViews;
 
 	private CardPack cardPack;
     private QuestionAnswer lastQA;
 	private boolean westDeal;
-	private int bidNumber;
-	private int consecutivePasses;
 	private boolean biddingOver;
     private boolean shuffled = false;
     private boolean twoPlayer = false;
@@ -106,17 +107,19 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.bidButton.setEnabled(!twoPlayer);
         bidButton.setOnClickListener(this);
 		this.suggestedBidTextView = view.findViewById(R.id.suggestedBidtextView);
-        LinearLayout[] bidLayouts = new LinearLayout[4];
+        LinearLayout[] bidLayouts = new LinearLayout[6];
 		bidLayouts[0] = view.findViewById(R.id.bid1Layout);
 		bidLayouts[1] = view.findViewById(R.id.bid2Layout);
 		bidLayouts[2] = view.findViewById(R.id.bid3Layout);
 		bidLayouts[3] = view.findViewById(R.id.bid4Layout);
-		bidTextViews = new TextView[16];
+        bidLayouts[4] = view.findViewById(R.id.bid5Layout);
+        bidLayouts[5] = view.findViewById(R.id.bid6Layout);
+		bidTextViews = new TextView[MAX_BIDS];
 		TextView bidTextView;
 		LinearLayout.LayoutParams layoutParams =
 				new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT);
 		layoutParams.weight = 1;
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < MAX_BIDS; i++) {
 			bidTextView = new TextView(activity);
 			bidTextView.setLayoutParams(layoutParams);
 			bidTextView.setTextAppearance(activity, android.R.style.TextAppearance_Medium);
@@ -171,7 +174,8 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	private void getNextBid(Player player) {
         Hand hand = cardPack.getHand(player);
-        boolean openingBid = (lastQA == OPENING_BIDS);
+        QuestionAnswer previousQA = lastQA;
+        boolean openerPassed = false;
         try {
             lastQA = bridgeQuiz.getNextBid(hand, lastQA);
         } catch (BadBridgeTokenException e) {
@@ -179,23 +183,39 @@ public class DealFragment extends Fragment implements OnClickListener {
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
         }
         if (lastQA == null) {
-            biddingOver = true;
-            bidButton.setEnabled(false);
-            Toast.makeText(activity, "no bid; bidding over", Toast.LENGTH_LONG).show();
-        } else {
-            showBids();
-            if (openingBid && bridgeQuiz.isPassBid(lastQA)) {
-                if (firstBidPass) {
-                    // must be 3 consecutive passes
-                    biddingOver = true;
-                    bidButton.setEnabled(false);
-                } else {
-                    // if first bid is a pass, partner's bid is counted as opening bid
-                    firstBidPass = true;
-                    lastQA = OPENING_BIDS;
-                }
+            if (BuildConfig.DEBUG) Log.d(TAG, "null response from getNextBid(); hand=" + hand +
+                    " previousQA=" + previousQA);
+            // convert it into Pass!
+            lastQA = new QuestionAnswer(previousQA.question + ", Pass", previousQA.answer);
+        }
+        if (lastQA.question.endsWith("Pass")) {
+            if ((previousQA == OPENING_BIDS) && !firstBidPass) {
+                openerPassed = true;
+            }
+            else {
+                biddingOver = true;
+                bidButton.setEnabled(false);
+                bridgeable.setStatusMessage("bidding over");
             }
         }
+        showBids();
+        if (openerPassed) {
+            lastQA = OPENING_BIDS;
+            firstBidPass = true;
+        }
+    }
+    private void showBids() {
+        String[] bids = lastQA.question.split("[ ,;]+");
+        int j = westDeal ? 0: 2;
+        if (firstBidPass) {
+            bidTextViews[j++].setText("Pass");
+            bidTextViews[j++].setText("-");
+        }
+        for (String bid: bids) {
+            bidTextViews[j++].setText(bid);
+            bidTextViews[j++].setText("-");
+        }
+        if (!biddingOver) bidTextViews[j].setText("?");
     }
 	public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
@@ -214,12 +234,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.westDeal = !this.westDeal;
         firstBidPass = false;
         cardPack.deal(true); // i.e. dealShow with bias in our favour
+        bridgeable.setStatusMessage("");
         resetBidList();
         lastQA = OPENING_BIDS;
         handsButton.setText("Us");
         this.handToShow = SHOW_ME;
         // game ends after 3 consecutive passes, or first 4
-        this.consecutivePasses = -1;
         this.biddingOver = false;
         this.bidButton.setEnabled(!twoPlayer);
         this.shuffled = true;
@@ -276,21 +296,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         ft.commit();
     }
-	private void showBids() {
-        String[] bids = lastQA.question.split("[ ,;]+");
-        boolean theyBid = lastQA.question.contains("(");
-        boolean theyBidFirst = bids[0].charAt(0) == '(';
-        int j = theyBidFirst ? (westDeal ? 3: 1) : (westDeal ? 0: 2);
-        if (firstBidPass) {
-            bidTextViews[j++].setText("Pass");
-            bidTextViews[j++].setText("Pass");
-        }
-        for (String bid: bids) {
-            bidTextViews[j++].setText(bid);
-            if (!theyBid) bidTextViews[j++].setText("Pass");
-        }
-        bidTextViews[j].setText("?");
-    }
 	public void setClientMode(boolean clientMode) {
         if(BuildConfig.DEBUG) {
         	Log.i(TAG, "DealFragment.setClientMode(" +
@@ -312,8 +317,8 @@ public class DealFragment extends Fragment implements OnClickListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Bridgeable bridgeableActivity = (Bridgeable) getActivity();
-        this.bridgeQuiz = bridgeableActivity.getBridgeQuiz();
+        bridgeable = (Bridgeable) getActivity();
+        this.bridgeQuiz = bridgeable.getBridgeQuiz();
     }
 	@Override
 	public void onAttach(Context context) {

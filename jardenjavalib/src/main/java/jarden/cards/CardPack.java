@@ -112,11 +112,6 @@ public class CardPack {
 				hands[3] = temp;
 			}
 		}
-		/*!!
-		for (int i = 0; i < PLAYER_CT; i++) {
-			hands[i].setPartner(hands[(i+2)%4]);
-		}
-		*/
 	}
 	public Hand getHand(Player player) {
 		return hands[player.ordinal()];

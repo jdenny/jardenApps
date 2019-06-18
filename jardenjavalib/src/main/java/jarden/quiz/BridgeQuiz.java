@@ -52,8 +52,8 @@ public class BridgeQuiz extends PresetQuiz {
             String question = targetQA.question;
             possibleResponses = new ArrayList<>();
             for (QuestionAnswer qa : qaList) {
-                if (qa.question.startsWith(question + ", ") ||
-                        qa.question.startsWith(question + "; ")) {
+                if (!qa.question.contains("(") && (qa.question.startsWith(question + ", ") ||
+                        qa.question.startsWith(question + "; "))) {
                     String response = qa.question.substring(question.length() + 2);
                     if (!(response.contains(",") || response.contains(";"))) {
                         possibleResponses.add(qa);
