@@ -177,14 +177,17 @@ public class DealFragment extends Fragment implements OnClickListener {
         QuestionAnswer previousQA = lastQA;
         boolean openerPassed = false;
         boolean noResponseFound = false;
+        String lastBid = null;
         try {
             lastQA = bridgeQuiz.getNextBid(hand, lastQA);
         } catch (BadBridgeTokenException e) {
             // treat as no bid!
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
+            lastBid = "exception";
         }
         if (lastQA == null) {
             noResponseFound = true;
+            lastBid = "null";
             if (BuildConfig.DEBUG) Log.d(TAG, "null response from getNextBid(); hand=" + hand +
                     " previousQA=" + previousQA);
             // convert it into Pass!
@@ -197,7 +200,9 @@ public class DealFragment extends Fragment implements OnClickListener {
             else {
                 biddingOver = true;
                 bidButton.setEnabled(false);
-                bridgeable.setStatusMessage("bidding over");
+                String status = "biddingOver";
+                if (lastBid != null) status = lastBid + " from last bid; " + status;
+                bridgeable.setStatusMessage(status);
             }
         }
         showBids();
