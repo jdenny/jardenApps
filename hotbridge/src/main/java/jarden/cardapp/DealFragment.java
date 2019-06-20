@@ -3,6 +3,7 @@ package jarden.cardapp;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +29,9 @@ import com.jardenconsulting.cardapp.R;
 import jarden.cards.BadBridgeTokenException;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
+import jarden.cards.ParsedAnswer;
 import jarden.cards.Player;
+import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -87,8 +90,8 @@ public class DealFragment extends Fragment implements OnClickListener {
 
     // @SuppressWarnings("deprecation")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onCreateView()");
         // get previous state of handsButton if fragment already exists:
         String handsButtonText = null;
@@ -176,17 +179,32 @@ public class DealFragment extends Fragment implements OnClickListener {
         Hand hand = cardPack.getHand(player);
         QuestionAnswer previousQA = lastQA;
         boolean openerPassed = false;
-        boolean noResponseFound = false;
         String lastBid = null;
         try {
             lastQA = bridgeQuiz.getNextBid(hand, lastQA);
+            if (lastQA != null) {
+                ParsedAnswer pa = lastQA.getParsedAnswer();
+                Suit trumpSuit = pa.getTrumpSuit();
+                if (trumpSuit != null) {
+                    Player partner = (player == Player.West ? Player.East : Player.West);
+                    Hand partnerHand = cardPack.getHand(partner);
+                    if (pa.isSuitSetter()) {
+                        hand.setTrumpSuit(trumpSuit, true);
+                        partnerHand.setTrumpSuit(trumpSuit, false);
+                    } else {
+                        hand.setTrumpSuit(trumpSuit, false);
+                        partnerHand.setTrumpSuit(trumpSuit, true);
+                    }
+                    eastFragment.showHCP();
+                    westFragment.showHCP();
+                }
+            }
         } catch (BadBridgeTokenException e) {
             // treat as no bid!
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
             lastBid = "exception";
         }
         if (lastQA == null) {
-            noResponseFound = true;
             lastBid = "null";
             if (BuildConfig.DEBUG) Log.d(TAG, "null response from getNextBid(); hand=" + hand +
                     " previousQA=" + previousQA);

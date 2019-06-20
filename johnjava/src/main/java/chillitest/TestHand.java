@@ -10,7 +10,9 @@ import java.util.List;
 
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
+import jarden.cards.ParsedAnswer;
 import jarden.cards.Player;
+import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -97,8 +99,10 @@ public class TestHand {
         boolean testAll = false;
         System.out.println("start of test");
         TestHand testHand = new TestHand();
-        testHand.testQueenAsk();
+        testHand.testFitAuction2Hands();
         if (testAll) {
+            testHand.testFitAuction();
+            testHand.testQueenAsk();
             testHand.parseAllBids();
             testHand.testPage50();
             testHand.testPage56();
@@ -486,6 +490,69 @@ public class TestHand {
                 if (match != matches[hands.length * a + h]) {
                     System.out.println("*****hand[" + h + "] " + hand + " did" +
                             (match ? "" : " not") + " match " + qa.answer);
+                }
+            }
+        }
+    }
+    private void testFitAuction2Hands() {
+        System.out.println("\ntestFitAuction2Hands()");
+        Hand handWest = new Hand(new CardPack.CardEnum[] { // 20pp, 13HCP, 3-4-3-3
+                CQ, CT, C9, D6, D5, D4, HA, HK, H7, H4, SK, SJ, S7
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[] { // 16pp, 7HCP, 4-5-2-2
+                C7, C5, DQ, D9, HQ, HJ, H5, H3, H2, SQ, ST, S8, S3
+        });
+        QuestionAnswer qa = OPENING_BIDS;
+        boolean west = true;
+        Hand hand;
+        System.out.println("West: " + handWest);
+        System.out.println("East: " + handEast);
+        for (int i = 0; i < 2 && qa != null; i++) {
+            hand = west ? handWest : handEast;
+            qa = bridgeQuiz.getNextBid(hand, qa);
+            west = !west;
+            System.out.println(qa);
+        }
+
+    }
+    private void testFitAuction() {
+        String fitClubs = "3+ clubs, trumps-clubs";
+        String fitDiamonds = "4+ diamonds, trumps-diamonds";
+        String fitHearts = "5+ heart-winners, suit-setter, trumps-hearts";
+        String twoHearts = "6 hearts, <20 pp, 6+ HCP"; // i.e. not a fit
+        String fitSpades = "5+ spades, trumps-spades";
+        String[] answers = {
+                fitClubs, fitDiamonds, fitHearts, twoHearts, fitSpades
+        };
+        Hand[] hands = {
+                hand13Hcp3145, hand14Hcp3343, hand14Hcp2542, hand14Hcp4540
+        };
+        int[] expectedDiffs = {
+                2, 0, 1, 4, // trumps-clubs
+                0, 0, 2, 5, // trumps-diamonds
+                3, 0, 2, 4, // trumps-hearts
+                0, 0, 0, 0, // trumps not set
+                3, 0, 1, 0  // trumps-spades
+        };
+        QuestionAnswer qa;
+        for (int a = 0; a < answers.length; a++) {
+            qa = new QuestionAnswer("qa", answers[a]);
+            ParsedAnswer pa = qa.getParsedAnswer();
+            Hand hand;
+            int hcp, newHcp, actualDiff, expectedDiff;
+            for (int h = 0; h < hands.length; h++) {
+                hand = hands[h];
+                // i.e. assuming it matched handWest, now apply suit to handEast:
+                hcp = hand.getHighCardPoints();
+                Suit trumpSuit = pa.getTrumpSuit();
+                hand.setTrumpSuit(trumpSuit, false);
+                newHcp = hand.getHighCardPoints();
+                actualDiff = newHcp - hcp;
+                expectedDiff = expectedDiffs[hands.length * a + h];
+                if (actualDiff != expectedDiff) {
+                    System.out.println("*****hand[" + h + "], answers[" + a +
+                            "]; newHcp-hcp: expected=" + expectedDiff +
+                            ", actual=" + actualDiff);
                 }
             }
         }

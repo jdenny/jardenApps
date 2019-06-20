@@ -29,16 +29,13 @@ import jarden.quiz.BridgeQuiz;
 /**
  * Shuffle and deal a pack of cards, showing my hand (Me), or
  * my and partner's hand (Us) or All hands. Can be played with
- * one player, but is most useful when played on two devices
- * linked via bluetooth.
+ * one player or on two devices linked via bluetooth.
  * 
  * Android app version of jarden.cards in Java course.
  *
  * @author john.denny@gmail.com
  *
  * TODO following:
-Factor-in hand evaluation, including re-evaluate when suit agreed
-Show HCP on screen; add new tokens "agreed-clubs" etc; callback interface to DealFragment which passes it on to hand
 
 change all multi-word terms to use _ instead of -
 

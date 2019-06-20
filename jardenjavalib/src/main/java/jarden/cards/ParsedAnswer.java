@@ -48,15 +48,21 @@ public class ParsedAnswer {
     private int keyCardsDiamonds = -1;
     private int keyCardsHearts = -1;
     private int keyCardsSpades = -1;
+    private Suit trumpSuit = null;
+    /*
+    if suitSetter: current hand is declarer
+    else: current hand is dummy (i.e. current hand must have supported declarer's suit
+     */
+    private boolean suitSetter = false;
     private ParsedAnswer orParsedAnswer;
-    private ParsedAnswer notParsedAnswer; // i.e. tokens within {...}
+    private ParsedAnswer notParsedAnswer; // i.e. tokens within not {...}
     private final String[] ignoredWords = {
             "", // empty token
             "&", // same as ','
             "in", "both", // readability
             // notes to reader:
             "autofit", "compelling-relay", "invitational-relay", "keycard-ask", "limited",
-            "spade-queen-ask", "suit-setter", "to-play", "values-for-5", "waiting"
+            "spade-queen-ask", "to-play", "values-for-5", "waiting"
     };
 
     public ParsedAnswer(String answer) throws BadBridgeTokenException {
@@ -304,6 +310,16 @@ public class ParsedAnswer {
                 allSuitsGuarded = true;
             } else if (token.equals("balanced")) {
                 balanced = true;
+            } else  if (token.equals("suit-setter")){
+                suitSetter = true;
+            } else  if (token.equals("trumps-clubs")){
+                trumpSuit = Suit.Club;
+            } else  if (token.equals("trumps-diamonds")){
+                trumpSuit = Suit.Diamond;
+            } else  if (token.equals("trumps-hearts")){
+                trumpSuit = Suit.Heart;
+            } else  if (token.equals("trumps-spades")){
+                trumpSuit = Suit.Spade;
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
@@ -353,6 +369,17 @@ public class ParsedAnswer {
             }
         }
     }
+    /*
+    Note, west can unilaterally set trumps with suit-setter - east is supporting trumps
+    or west can agree to east's bid of trumps - west is now supporting trumps
+    re-evaluate when suit agreed; show HCP on screen
+
+    west: 1H; 20-22 pp etc
+    east: 2H; 8-10 HCP, 4 hearts, trumps-hearts
+        if pa.heartsTrumps: test pa.hcp against HCP + hand.getSuitAdjustment(Suit.heart)
+        if response is match, hand.setTrumps(Suit.heart)
+
+     */
     public boolean doesMatchHand(Hand hand) {
         return doesHandMatch2(hand, this);
     }
@@ -368,6 +395,10 @@ public class ParsedAnswer {
         if (pa.minPP >= 0 && handPP < pa.minPP) return false;
         if (pa.maxPP >= 0 && handPP > pa.maxPP) return false;
         int handHCP = hand.getHighCardPoints();
+        if (trumpSuit != null) {
+            // i.e. what would be hcp if agreed or set trumps on this bid
+            handHCP += hand.getAdjustmentForTrumps(trumpSuit, suitSetter);
+        }
         if (pa.minHCP >= 0 && handHCP < pa.minHCP) return false;
         if (pa.maxHCP >= 0 && handHCP > pa.maxHCP) return false;
         if (pa.minMajor >= 0 && suitLengths[2] < pa.minMajor &&
@@ -482,5 +513,11 @@ public class ParsedAnswer {
             notPA = notPA.notParsedAnswer;
         }
         return true;
+    }
+    public Suit getTrumpSuit() {
+        return trumpSuit;
+    }
+    public boolean isSuitSetter() {
+        return suitSetter;
     }
 }

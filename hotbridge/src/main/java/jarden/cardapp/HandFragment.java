@@ -21,20 +21,22 @@ import jarden.cards.Player;
 import jarden.cards.Suit;
 
 public class HandFragment extends Fragment {
-	private Player player;
-	private CardPack cardPack;
+    private CardPack cardPack;
+    private Player player;
 	private TextView playerTitle;
+	private TextView playerHCP;
 	private TextView spadeValues;
 	private TextView heartValues;
 	private TextView diamondValues;
 	private TextView clubValues;
 
-	@Override
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.hand_layout, container, false);
 
 		playerTitle = view.findViewById(R.id.playerTitle);
+        playerHCP = view.findViewById(R.id.playerHCP);
 		spadeValues = view.findViewById(R.id.spades);
 		heartValues = view.findViewById(R.id.hearts);
 		diamondValues = view.findViewById(R.id.diamonds);
@@ -54,12 +56,12 @@ public class HandFragment extends Fragment {
         setRetainInstance(true);
     }
 	public void setData(Player player, CardPack cardPack) {
-		this.player = player;
-		this.cardPack = cardPack;
+        this.playerTitle.setText(player.toString());
+        this.player = player;
+        this.cardPack = cardPack;
 	}
 	public void showHand() {
-		Hand hand = cardPack.getHand(player);
-		this.playerTitle.setText(player.toString());
+        Hand hand = cardPack.getHand(player);
 		ArrayList<Card> cards = hand.getCards();
 		StringBuilder sb = new StringBuilder();
 		int index = 0;
@@ -96,6 +98,10 @@ public class HandFragment extends Fragment {
 			++index;
 		}
 		spadeValues.setText(sb.toString());
+		showHCP();
 	}
-
+	public void showHCP() {
+        int hcp = cardPack.getHand(player).getHighCardPoints();
+	    playerHCP.setText(" " + hcp + "hcp");
+    }
 }

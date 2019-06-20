@@ -18,8 +18,9 @@ public class Hand {
 	private boolean[] kings = new boolean[4];
     private boolean[] queens = new boolean[4];
 	private boolean balanced;
+    private Suit trumpSuit = null;
 
-	public Hand(ArrayList<Card> cards) {
+    public Hand(ArrayList<Card> cards) {
 		this.cards = cards;
 	}
 	public Hand(CardEnum[] cardEnums) {
@@ -145,5 +146,43 @@ public class Hand {
     }
     public boolean hasQueen(int suitOrdinal) {
         return queens[suitOrdinal];
+    }
+
+    /**
+     * Re-evaluate hand now we've agreed trump suit
+     * @param trumpSuit
+     * @param declarer, else dummy
+     */
+    public void setTrumpSuit(Suit trumpSuit, boolean declarer) {
+        this.trumpSuit = trumpSuit;
+        this.highCardPoints += getAdjustmentForTrumps(trumpSuit, declarer);
+    }
+    /**
+     * Add for shortages in non-trump suits:
+     *    for doubleton: add 1
+     *    for singleton: add 2 or with 4+ trumps add 3
+     *    for void, add the number of trumps in hand
+     */
+    public int getAdjustmentForTrumps(Suit trumpSuit, boolean declarer) {
+        int adjustment = 0;
+        if (!declarer) {
+            if (trumpSuit != null) {
+                int trumpCt = suitLengths[trumpSuit.ordinal()];
+                for (int s = 0; s < 4; s++) {
+                    int suitLength;
+                    if (s != trumpSuit.ordinal()) {
+                        suitLength = suitLengths[s];
+                        if (suitLength == 0) {
+                            adjustment += trumpCt;
+                        } else if (suitLength == 1) {
+                            adjustment += ((trumpCt >= 4) ? 3 : 2);
+                        } else if (suitLength == 2) {
+                            ++adjustment;
+                        }
+                    }
+                }
+            }
+        }
+        return adjustment;
     }
 }
