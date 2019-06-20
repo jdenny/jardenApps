@@ -17,6 +17,7 @@ public class ParsedAnswer {
     private int minSuit = -1, maxSuit = -1;
     private int minMajor = -1;
     private int minMinor = -1, maxMinor = -1;
+    private int minMinors1 = -1, minMinors2 = -1;
     private int minClubWinners = -1;
     private int minDiamondWinners = -1;
     private int minHeartWinners = -1;
@@ -195,11 +196,11 @@ public class ParsedAnswer {
                 }
             } else if (token.equals("minors")) {
                 // usage of minors:
-                //      not 5+/4+ in minors (put values in minMinor and maxMinor)
+                //      not 5+/4+ in minors (put values in minMinors1 and minMinors2)
                 //      [not] <n>+ in [both] minors
                 if (previousMin > 0 && previousMax > 0) { // i.e. first usage
-                    maxMinor = previousMax;
-                    minMinor = previousMin;
+                    minMinors1 = previousMin;
+                    minMinors2 = previousMax;
                     previousMin = -1;
                     previousMax = -1;
                 } else {
@@ -403,11 +404,10 @@ public class ParsedAnswer {
         if (pa.maxHCP >= 0 && handHCP > pa.maxHCP) return false;
         if (pa.minMajor >= 0 && suitLengths[2] < pa.minMajor &&
                 suitLengths[3] < pa.minMajor) return false;
-        if (pa.minMinor >= 0 && pa.maxMinor >= 0) {
-            // special case (bodge!) to cater for:
-            //      not 5+/4+ in minors (put values in minMinor and maxMinor)
-            if (suitLengths[0] > pa.minMinor && suitLengths[1] > pa.maxMinor ||
-                    suitLengths[1] > pa.minMinor && suitLengths[0] > pa.maxMinor) {
+        if (pa.minMinors1 >= 0 && pa.minMinors2 >= 0) {
+            // to cater for: "not 5+/4+ in minors"
+            if ((suitLengths[0] >= pa.minMinors1) && (suitLengths[1] >= pa.minMinors2) ||
+                    (suitLengths[1] >= pa.minMinors1 && suitLengths[0] >= pa.minMinors2)) {
                 return false;
             }
         }

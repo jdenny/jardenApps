@@ -95,38 +95,8 @@ public class TestHand {
     private CardPack cardPack;
 
     public static void main(String[] args) throws IOException {
-        boolean verbose = false;
-        boolean testAll = false;
-        System.out.println("start of test");
-        TestHand testHand = new TestHand();
-        testHand.testFitAuction2Hands();
-        if (testAll) {
-            testHand.testFitAuction();
-            testHand.testQueenAsk();
-            testHand.parseAllBids();
-            testHand.testPage50();
-            testHand.testPage56();
-            testHand.testPage56B();
-            testHand.testOneBid();
-            testHand.testKeycards();
-            testHand.testHcpOrSkew();
-            testHand.testHcpOrSkewWith4PlusMinor();
-            testHand.testBiddableSuits();
-            testHand.testSuitWinners();
-            testHand.testMyPrimaryBids();
-            testHand.testRandomPrimaryBids();
-            testHand.test2Hands1H1S();
-            testHand.testOrs();
-            testHand.testNots();
-            testHand.testRandomNBids(10, 2);
-            testHand.testRandomSecondBids();
-            testHand.testAllSecondBids();
-            testHand.testMySecondBids();
-            testHand.testAllResponses(verbose);
-        }
-        System.out.println("end of test");
+        new TestHand();
     }
-
     private TestHand() throws IOException {
         File file = new File("./hotbridge/src/main/res/raw/reviseit.txt");
         InputStream is = new FileInputStream(file);
@@ -135,6 +105,38 @@ public class TestHand {
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
 
+        boolean verbose = false;
+        boolean testAll = false;
+        boolean bookTests = true;
+        System.out.println("start of test");
+        if (testAll || bookTests) {
+            testPage50();
+            testPage56();
+            testPage56B();
+        }
+        if (testAll) {
+            testHandEvaluation();
+            testQueenAsk();
+            parseAllBids();
+            testOneBid();
+            testKeycards();
+            testHcpOrSkew();
+            testMinors();
+            testHcpOrSkewWith4PlusMinor();
+            testBiddableSuits();
+            testSuitWinners();
+            testMyPrimaryBids();
+            testRandomPrimaryBids();
+            test2Hands1H1S();
+            testOrs();
+            testNots();
+            testRandomNBids(10, 2);
+            testRandomSecondBids();
+            testAllSecondBids();
+            testMySecondBids();
+            testAllResponses(verbose);
+        }
+        System.out.println("end of test");
     }
     private void testAllResponses(boolean verbose) {
         System.out.println("\ntestAllResponses()");
@@ -225,13 +227,13 @@ public class TestHand {
         QuestionAnswer qa = OPENING_BIDS;
         boolean west = true;
         Hand hand;
-        System.out.println("West: " + handWest);
-        System.out.println("East: " + handEast);
-        for (int i = 0; i < 6 && qa != null; i++) {
+        for (int i = 0; i < 6 && !qa.question.endsWith("Pass"); i++) {
             hand = west ? handWest : handEast;
             qa = bridgeQuiz.getNextBid(hand, qa);
             west = !west;
-            System.out.println(qa);
+        }
+        if (!qa.question.equals("1NT, 2D; 2S, 3S; 4S, Pass")) {
+            System.out.println("*****qa.question=" + qa.question);
         }
     }
     private void testPage56() {
@@ -245,13 +247,13 @@ public class TestHand {
         QuestionAnswer qa = OPENING_BIDS;
         boolean west = true;
         Hand hand;
-        System.out.println("West: " + handWest);
-        System.out.println("East: " + handEast);
-        for (int i = 0; i < 6 && qa != null; i++) {
+        for (int i = 0; i < 6 && !qa.question.endsWith("Pass"); i++) {
             hand = west ? handWest : handEast;
             qa = bridgeQuiz.getNextBid(hand, qa);
             west = !west;
-            System.out.println(qa);
+        }
+        if (!qa.question.equals("1D, 1S; 2D, 3NT; Pass")) {
+            System.out.println("*****qa.question=" + qa.question);
         }
     }
     private void testPage56B() {
@@ -401,6 +403,41 @@ public class TestHand {
             }
         }
     }
+    private void testMinors() {
+        System.out.println("\ntestMinors()");
+        Hand hand45 = new Hand(new CardPack.CardEnum[] { // 24pp, 15HCP, 4-5-3-1
+                CK, CQ, CJ, C9, DA, DK, D8, D6, D5, HQ, H8, H2, S8
+        });
+        Hand hand54 = new Hand(new CardPack.CardEnum[] { // 24pp, 15HCP, 5-4-3-1
+                CK, CQ, CJ, C9, C4, DA, DK, D8, D6, HQ, H8, H2, S8
+        });
+        Hand hand44 = new Hand(new CardPack.CardEnum[] { // 24pp, 15HCP, 4-4-3-2
+                CK, CQ, CJ, C9, DA, DK, D8, D6, HA, HQ, H8, S9, S8
+        });
+        Hand[] hands = {
+                hand45, hand54, hand44
+        };
+        boolean[] respond1NT = {
+                false, false, true
+        };
+        QuestionAnswer qa = new QuestionAnswer("1D, 1S", "hello");
+        QuestionAnswer qa2;
+        Hand hand;
+        boolean endswith1NT;
+        for (int h = 0; h < hands.length; h++) {
+            hand = hands[h];
+            qa2 = bridgeQuiz.getNextBid(hand, qa);
+            endswith1NT = qa2.question.endsWith("1NT");
+            if (endswith1NT != respond1NT[h]) {
+                System.out.println();
+                System.out.println("*****hand[" + h + "] " + hand +
+                        " unexpected response: " + qa2.question);
+
+            }
+        }
+    }
+
+
     private void testHcpOrSkewWith4PlusMinor() {
         System.out.println("\ntestHcpOrSkewWith4PlusMinor()");
         CardPack.CardEnum[] cards13Hcp3343 = { // 20pp, 13HCP, 3-3-4-3
@@ -494,28 +531,8 @@ public class TestHand {
             }
         }
     }
-    private void testFitAuction2Hands() {
-        System.out.println("\ntestFitAuction2Hands()");
-        Hand handWest = new Hand(new CardPack.CardEnum[] { // 20pp, 13HCP, 3-4-3-3
-                CQ, CT, C9, D6, D5, D4, HA, HK, H7, H4, SK, SJ, S7
-        });
-        Hand handEast = new Hand(new CardPack.CardEnum[] { // 16pp, 7HCP, 4-5-2-2
-                C7, C5, DQ, D9, HQ, HJ, H5, H3, H2, SQ, ST, S8, S3
-        });
-        QuestionAnswer qa = OPENING_BIDS;
-        boolean west = true;
-        Hand hand;
-        System.out.println("West: " + handWest);
-        System.out.println("East: " + handEast);
-        for (int i = 0; i < 2 && qa != null; i++) {
-            hand = west ? handWest : handEast;
-            qa = bridgeQuiz.getNextBid(hand, qa);
-            west = !west;
-            System.out.println(qa);
-        }
-
-    }
-    private void testFitAuction() {
+    private void testHandEvaluation() {
+        System.out.println("\ntestHandEvaluation");
         String fitClubs = "3+ clubs, trumps-clubs";
         String fitDiamonds = "4+ diamonds, trumps-diamonds";
         String fitHearts = "5+ heart-winners, suit-setter, trumps-hearts";
@@ -524,37 +541,80 @@ public class TestHand {
         String[] answers = {
                 fitClubs, fitDiamonds, fitHearts, twoHearts, fitSpades
         };
+        Hand handA = new Hand(new CardPack.CardEnum[] { // 33pp, 18+2+2+0+1HCP, 2-1-5-5
+                CA, CT, DA, HK, HT, H9, H5, H2, SA, SK, ST, S4, S3
+        });
+        Hand handB = new Hand(new CardPack.CardEnum[] { // 15pp, 10-2-0-1HCP, 4-2-4-3
+                CQ, CJ, C9, C4, DQ, DJ, HQ, HJ, H9, H8, SJ, S7, S6
+        });
+        Hand handC = new Hand(new CardPack.CardEnum[] { // 31pp, 22+0+3-3+1HCP, 2-2-2-7
+                CA, CJ, DK, DQ, HK, HJ, SA, SK, SJ, ST, S7, S6, S5
+        });
+        Hand handD = new Hand(new CardPack.CardEnum[] { // 29pp, 14+0+3-2+1HCP, 4-7-1-1
+                CA, CT, C9, C7, DK, DQ, DJ, D7, D6, D4, D2, HK, SJ
+        });
+        Hand handE = new Hand(new CardPack.CardEnum[] { // 23pp, 13+0+6-2+1HCP, 10-1-0-2
+                CA, CK, CQ, CJ, CT, C9, C8, C7, C6, C4, DQ, SJ, S6
+        });
         Hand[] hands = {
-                hand13Hcp3145, hand14Hcp3343, hand14Hcp2542, hand14Hcp4540
+                handA, handB, handC, handD, handE
         };
-        int[] expectedDiffs = {
-                2, 0, 1, 4, // trumps-clubs
-                0, 0, 2, 5, // trumps-diamonds
-                3, 0, 2, 4, // trumps-hearts
-                0, 0, 0, 0, // trumps not set
-                3, 0, 1, 0  // trumps-spades
+        int[] expectedHCPs = {
+                23, 7, 23, 16, 18
         };
+        int[] expectedDiffsDeclarer = {
+                4, 1, 2, 5, 11, // trumps-clubs
+                2, 2, 2, 7, 5, // trumps-diamonds
+                3, 1, 2, 4, 0, // trumps-hearts
+                0, 0, 0, 0, 0, // trumps not set
+                3, 2, 3, 4, 7  // trumps-spades
+        };
+        int[] expectedDiffsDummy = {
+                2, 1, 2, 6, 14, // trumps-clubs
+                1, 0, 2, 6, 2, // trumps-diamonds
+                4, 1, 2, 2, 0, // trumps-hearts
+                0, 0, 0, 0, 0, // trumps not set
+                4, 1, 3, 2, 4  // trumps-spades
+        };
+        int actualHCP, expectedHCP;
+        Hand hand;
+        for (int h = 0; h < hands.length; h++) {
+            hand = hands[h];
+            actualHCP = hand.getHighCardPoints();
+            expectedHCP = expectedHCPs[h];
+            if (actualHCP != expectedHCP) {
+                System.out.println("actual[" + h + "]=" + actualHCP + "; expected=" + expectedHCP);
+            }
+        }
         QuestionAnswer qa;
         for (int a = 0; a < answers.length; a++) {
             qa = new QuestionAnswer("qa", answers[a]);
             ParsedAnswer pa = qa.getParsedAnswer();
-            Hand hand;
+            // Hand hand;
             int hcp, newHcp, actualDiff, expectedDiff;
             for (int h = 0; h < hands.length; h++) {
                 hand = hands[h];
                 // i.e. assuming it matched handWest, now apply suit to handEast:
                 hcp = hand.getHighCardPoints();
                 Suit trumpSuit = pa.getTrumpSuit();
+                actualDiff = hand.getAdjustmentForTrumps(trumpSuit, true);
+                expectedDiff = expectedDiffsDeclarer[hands.length * a + h];
+                if (actualDiff != expectedDiff) {
+                    System.out.println("*****declarer hand[" + h + "], answers[" + a +
+                            "]; newHcp-hcp: expected=" + expectedDiff +
+                            ", actual=" + actualDiff);
+                }
                 hand.setTrumpSuit(trumpSuit, false);
                 newHcp = hand.getHighCardPoints();
                 actualDiff = newHcp - hcp;
-                expectedDiff = expectedDiffs[hands.length * a + h];
+                expectedDiff = expectedDiffsDummy[hands.length * a + h];
                 if (actualDiff != expectedDiff) {
-                    System.out.println("*****hand[" + h + "], answers[" + a +
+                    System.out.println("*****dummy hand[" + h + "], answers[" + a +
                             "]; newHcp-hcp: expected=" + expectedDiff +
                             ", actual=" + actualDiff);
                 }
             }
+            // getAdjustmentForTrumps
         }
     }
     private void testMultipleNotClauses() {

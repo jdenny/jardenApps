@@ -808,12 +808,13 @@ Q: 1S, 2C; 2H, 2NT
 F1: although limited, [a]strong_fit[/a], as now [a]compelled[/a]. Alert: artificial
 A: 5+ hearts, trumps-hearts
 # page 50
-Q: 1NT, 2D; 2S, 4D
-F1: [a]suit_setter[/a]
-A: 5+ diamond-winners, suit-setter, trumps-diamonds
-Q: 1NT, 2D; 2S, 4D; 4S
+Q: 1NT, 2D; 2S, 3S
+A: 5+ spades, trumps-spades
+Q: 1NT, 2D; 2S, 3S; 4S
 F1: [a]to_play[/a]
 A: to-play
+Q: 1NT, 2D; 2S, 3S; 4S, Pass
+A: <15 HCP
 # page 52
 Q: 1NT, 2D; 2H, 2NT
 F1: [a]strong_fit[/a], stronger than 3H. Alert: artificial
@@ -824,7 +825,9 @@ A: club-guard, diamond-guard, spade-guard
 # page 56
 Q: 1D, 1S; 2D, 3NT
 F1: [a]threeNT|3NT[/a], all suits guarded, 25 TP
-A: 13+ HCP, heart-guard
+A: 10+ HCP, heart-guard
+Q: 1D, 1S; 2D, 3NT; Pass
+A: 1+ spades, 3+ hearts
 Q: 1D, 1S; 2S, 3D
 F1: exploring game or more
 A: 4+ diamonds

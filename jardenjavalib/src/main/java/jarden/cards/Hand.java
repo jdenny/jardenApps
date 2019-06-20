@@ -9,13 +9,20 @@ public class Hand {
     public final static int D = 1;
     public final static int H = 2;
     public final static int S = 3;
+
 	private ArrayList<Card> cards;
-	private int[] suitLengths = new int[4]; // c, d, h, s
-	private int[] suitValues = new int[4]; // c, d, h, s; A=4, K=3, Q=2, J=1
+	// all 4-element arrays for suits in order: c, d, h, s
+	private int[] suitLengths = new int[4];
+	private int[] suitValues = new int[4]; // A=4, K=3, Q=2, J=1
+    private int[] honoursCt = new int[4]; // how many out of top 5 honours: AKQJ10
 	private int highCardPoints;
 	private int playingPoints;
 	private int aceCt = 0;
-	private boolean[] kings = new boolean[4];
+    private int queenCt = 0;
+	private int jackCt = 0;
+    private int tenCt = 0;
+    private boolean[] aces = new boolean[4];
+    private boolean[] kings = new boolean[4];
     private boolean[] queens = new boolean[4];
 	private boolean balanced;
     private Suit trumpSuit = null;
@@ -82,22 +89,28 @@ public class Hand {
 			suitLengths[suitOrdinal]++;
 			Rank rank = card.getRank();
 			int hcp = rank.ordinal() - Rank.R10.ordinal();
-			if (hcp > 0)
-				highCardPoints += hcp;
+			if (hcp > 0) highCardPoints += hcp;
 			if (rank == Rank.Ace) {
 			    suitValues[suitOrdinal] += 4;
-			    ++aceCt;
-            }
-			else if (rank == Rank.King) {
+			    honoursCt[suitOrdinal] += 1;
+                aces[suitOrdinal] = true;
+                ++aceCt;
+            } else if (rank == Rank.King) {
 			    suitValues[suitOrdinal] += 3;
+                honoursCt[suitOrdinal] += 1;
 			    kings[suitOrdinal] = true;
-            }
-			if (rank == Rank.Queen) {
+            } else if (rank == Rank.Queen) {
 			    suitValues[suitOrdinal] += 2;
+                honoursCt[suitOrdinal] += 1;
+			    ++queenCt;
 			    queens[suitOrdinal] = true;
-            }
-			if (rank == Rank.Jack) {
+            } else if (rank == Rank.Jack) {
 			    suitValues[suitOrdinal] += 1;
+                honoursCt[suitOrdinal] += 1;
+                ++jackCt;
+            } else if (rank == Rank.R10) {
+                honoursCt[suitOrdinal] += 1;
+			    ++tenCt;
             }
 		}
 		// find 2 longest suits:
@@ -120,9 +133,34 @@ public class Hand {
 		} else if (suitLengths[S] > high2) {
 			high2 = suitLengths[S];
 		}
+		refineHCP();
 		playingPoints = highCardPoints + high1 + high2;
 		this.balanced = getBalanced();
 	}
+	private void refineHCP() {
+        // over- or under-valued cards:
+        highCardPoints += ((aceCt + tenCt - queenCt - jackCt) / 3);
+        for (int s = 0; s < 4; s++) {
+            int suitLength = suitLengths[s];
+            int suitValue = suitValues[s];
+            /*
+            // extra length: add 1 for each card in each suit 5+
+            int lengthGT4 = suitLength - 4;
+            if (lengthGT4 > 0) highCardPoints += lengthGT4;
+            */
+            // unsupported honours: subtract 1 for each singleton K, Q, J
+            if ((suitLength == 1) &&
+                    suitValue > 0 && suitValue < 4) highCardPoints -= 1;
+            // subtract 1 for each doubleton: AJ, KQ, KJ, QJ, Qx, Jx
+            if ((suitLength == 2) && suitValue > 0 && suitValue < 6 &&
+                    !(aces[s] && suitValue == 4) && // i.e. ignore Ax
+                    !(kings[s] && suitValue == 3)) { // i.e. ignore Kx
+                highCardPoints -= 1;
+            }
+            // quality suits: add 1 for each suit with 3+ of top 5 honours
+            if (honoursCt[s] >= 3) highCardPoints += 1;
+        }
+    }
 	private boolean getBalanced() {
 		boolean doubleton = false;
 		for (int suitLen : suitLengths) {
@@ -165,19 +203,41 @@ public class Hand {
      */
     public int getAdjustmentForTrumps(Suit trumpSuit, boolean declarer) {
         int adjustment = 0;
-        if (!declarer) {
-            if (trumpSuit != null) {
-                int trumpCt = suitLengths[trumpSuit.ordinal()];
-                for (int s = 0; s < 4; s++) {
-                    int suitLength;
-                    if (s != trumpSuit.ordinal()) {
-                        suitLength = suitLengths[s];
-                        if (suitLength == 0) {
-                            adjustment += trumpCt;
-                        } else if (suitLength == 1) {
-                            adjustment += ((trumpCt >= 4) ? 3 : 2);
-                        } else if (suitLength == 2) {
-                            ++adjustment;
+        if (trumpSuit != null) {
+            int trumpCt = suitLengths[trumpSuit.ordinal()];
+            if (trumpCt > 0) {
+                if (declarer) {
+                    // extra trumps: add 1 for each trump 6+
+                    int doubletonCt = 0;
+                    int trumpsExtra = trumpCt - 5;
+                    if (trumpsExtra > 0) adjustment += trumpsExtra;
+                    for (int s = 0; s < 4; s++) {
+                        int suitLength;
+                        // process side-suits
+                        if (s != trumpSuit.ordinal()) {
+                            suitLength = suitLengths[s];
+                            // add 4 for each side-suit void
+                            if (suitLength == 0) adjustment += 4;
+                                // add 2 for each side-suit singleton
+                            else if (suitLength == 1) adjustment += 2;
+                            else if (suitLength == 2) ++doubletonCt;
+                                // add 1 for each side-suit length 4+
+                            else if (suitLength > 3) adjustment += 1;
+                        }
+                    }
+                    if (doubletonCt > 1) adjustment += 1;
+                } else {
+                    for (int s = 0; s < 4; s++) {
+                        int suitLength;
+                        if (s != trumpSuit.ordinal()) {
+                            suitLength = suitLengths[s];
+                            if (suitLength == 0) {
+                                adjustment += trumpCt;
+                            } else if (suitLength == 1) {
+                                adjustment += ((trumpCt >= 4) ? 3 : 2);
+                            } else if (suitLength == 2) {
+                                ++adjustment;
+                            }
                         }
                     }
                 }
