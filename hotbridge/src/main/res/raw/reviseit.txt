@@ -968,6 +968,14 @@ A: 4 hearts, 3 spades
 Q: 1C, 1H; 1S, 2D; 2H, 2S; 2NT
 F1: [a]strong_fit[/a] (already shown 25 TP). Alert: artificial
 A: 5+ spades, trumps-spades
+Q: 1C, 1H; 1S, 2D; 2S
+F1: forcing
+A: 5+ spades
+Q: 1C, 1H; 1S, 2D; 2S, 2NT
+F1: [a]strong_fit[/a] (already shown 25 TP). Alert: artificial
+A: 11+ HCP, 5+ spades, trumps-spades
+Q: 1C, 1H; 1S, 2D; 2S, 3S
+A: <11 HCP, 5+ spades, trumps-spades
 Q: 1C, 1NT; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
 A: 21+ HCP, compelling-relay
