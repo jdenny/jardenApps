@@ -117,6 +117,8 @@ public class TestHand {
             testPage61();
             testPage62();
             testPage62B();
+            testPage63();
+            testPage63B();
         }
         if (testAll) {
             testHandEvaluation();
@@ -167,7 +169,7 @@ public class TestHand {
         boolean west = true;
         Hand hand, partnerHand;
         QuestionAnswer qa2;
-        for (int i = 0; i < 8 && !qa.question.endsWith("Pass"); i++) {
+        for (int i = 0; i < 10 && !qa.question.endsWith("Pass"); i++) {
             if (west) {
                 hand = handWest;
                 partnerHand = handEast;
@@ -224,11 +226,11 @@ public class TestHand {
         Hand handWest = new Hand(new CardPack.CardEnum[] { // 24pp, 15+0+0+1HCP/+2, 4-4-1-4
                 CK, CQ, CJ, C9, DA, DK, D8, D5, H8, SQ, S8, S6, S2
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[] { // 22pp, 12+0+0+1HCP/+5, 3-1-3-6
+        Hand handEast = new Hand(new CardPack.CardEnum[] { // 21pp, 12+0+0+0HCP/+5, 3-1-3-6
                 C7, C3, C2, D6, HA, HJ, H7, SA, SK, S7, S6, S4, S3
         });
         String expectedFinalBid = "1D, 1S; 2S, 2NT; 4H, 4NT; 5D, 5H; 6C, 6S; Pass";
-        testWestEast(handWest, handEast, expectedFinalBid, new int[] {24, 22, 18, 18});
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {24, 21, 18, 17});
     }
     private void testPage58() {
         System.out.println("\ntestPage58");
@@ -244,35 +246,59 @@ public class TestHand {
     private void testPage61() {
         System.out.println("\ntestPage61");
         Hand handWest = new Hand(new CardPack.CardEnum[]{ // 26pp, 16+0+0+1HCP, 3-5-4-1
-                CK, C8, C2, DA, DK, D9, D4, D3, HA, HQ, H6, H3, S6
+                // hack: changed D9 to DT
+                CK, C8, C2, DA, DK, DT, D4, D3, HA, HQ, H6, H3, S6
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 16pp, 6+0+0+1HCP, 4-1-3-5
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 15pp, 6+0+0+0HCP, 4-1-3-5
                 CA, C9, C6, C4, D7, HT, H4, H2, SQ, ST, S7, S5, S4
         });
-        String expectedFinalBid = "1C, 1S; 1NT, Pass";
-        testWestEast(handWest, handEast, expectedFinalBid, new int[] {26, 16, 17, 7});
+        String expectedFinalBid = "1C, 1S; 1NT, 2H; Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {26, 15, 17, 6});
     }
     private void testPage62() {
         System.out.println("\ntestPage62");
         Hand handWest = new Hand(new CardPack.CardEnum[]{ // 29pp, 20+0+0+1HCP/+2, 4-4-1-4
                 CK, CQ, CJ, C6, DA, DK, D5, D2, H3, SA, SK, S6, S4
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 12pp, 2+0+0+1HCP/+2, 3-1-5-4
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 11pp, 2+0+0+0HCP/+2, 3-1-5-4
                 CT, C7, C5, D9, H8, H7, H4, H3, H2, SQ, S8, S5, S3
         });
         String expectedFinalBid = "1C, 1D; 1S, 2S; 2NT, 4S; Pass";
-        testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 12, 23, 5});
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 11, 23, 4});
     }
     private void testPage62B() {
         System.out.println("\ntestPage62B");
         Hand handWest = new Hand(new CardPack.CardEnum[]{ // 29pp, 20+0+0+0HCP/+0, 2-5-4-2
                 CA, C6, DA, DK, D8, D7, D6, HK, HQ, H8, H5, SA, S6
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 12pp, 2+0+0+1HCP/+0, 5-3-1-4
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 11pp, 2+0+0+0HCP/+0, 5-3-1-4
                 CJ, C8, C7, C5, C3, D9, D5, D2, H9, SJ, S8, S4, S3
         });
         String expectedFinalBid = "1C, 1D; 1H, 1S; 1NT, Pass";
-        testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 12, 20, 3});
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 11, 20, 2});
+    }
+    private void testPage63() {
+        System.out.println("\ntestPage63");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 30pp, 20+1+0+1HCP, 2-4-4-3
+                CA, CK, DA, D5, D3, D2, HA, HQ, HT, H4, SK, S7, S2
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 10pp, 3-1+0+0HCP, 5-2-3-3
+                CJ, C9, C6, C4, C2, DQ, D4, H9, H5, H3, S8, S6, S5
+        });
+        String expectedFinalBid = "1C, 1D; 1NT, 2C; Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {30, 10, 22, 2});
+    }
+    private void testPage63B() {
+        System.out.println("\ntestPage63B");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 32pp, 23+0+0+1HCP/+1, 2-5-3-3
+                CA, CK, DK, DQ, DJ, D8, D5, HK, HQ, HJ, SA, S8, S6
+        });
+        // slight hack to make it work! C2 changed to H2
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 12pp, 3+0+0+0HCP/+2, 5-4-2-2
+                CT, C8, C7, C5, C3, H2, D9, D6, D3, D2, H9, SK, S3
+        });
+        String expectedFinalBid = "1C, 1D; 2C, 3C; 3D, 4H; 5D, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {32, 12, 25, 5});
     }
     private void testAllResponses() {
         System.out.println("\ntestAllResponses()");

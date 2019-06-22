@@ -384,7 +384,8 @@ A: 23+ HCP, waiting
 Q: 1C, 1D; 1H, 2S; 2NT, 4S
 A: 2+ HCP, to-play
 Q: 1C, 1D; 1H, 2S; 2NT, 4S; Pass
-A: <31 HCPQ: 1C, 1D; 1S
+A: <31 HCP
+Q: 1C, 1D; 1S
 F1: Forcing. Alert: denies 4+ hearts; may not be longest suit
 A: 4+ spades, <4 hearts
 Q: 1C, 1D; 1S, 1NT
@@ -403,6 +404,30 @@ A: <23 HCP, no 4+ major, not 5+ in both minors, no 6+ minor
 Q: 1C, 1D; 2C
 F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
 A: 23-24 HCP, no 4+ major, invitational-relay
+Q: 1C, 1D; 2C, 2D
+F1: [a]responses_to_relay[/a]. Alert: artificial
+A: 0-1 HCP
+Q: 1C, 1D; 2C, 2H
+A: 2-3 HCP, 5+ hearts
+Q: 1C, 1D; 2C, 2S
+A: 2-3 HCP, <5 hearts, 5+ spades
+Q: 1C, 1D; 2C, 2NT
+F1: [a]responses_to_relay[/a]. Alert: artificial
+A: 2-3 HCP, no 5+ major, not 2+ HCP-or-skew-with-4+minor
+Q: 1C, 1D; 2C, 3C
+A: no 5+ major, 4+ clubs, 2+ HCP-or-skew
+Q: 1C, 1D; 2C, 3C; 3D
+A: <4 clubs, 4+ diamonds
+Q: 1C, 1D; 2C, 3C; 3D, 4H
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 5+ HCP, 4+ diamonds, autofit, values-for-5, trumps-diamonds
+Q: 1C, 1D; 2C, 3C; 3D, 4H; 5D
+A: to-play
+Q: 1C, 1D; 2C, 3C; 3D, 4H; 5D, Pass
+A: to-play
+Q: 1C, 1D; 2C, 3D
+A: no 5+ major, <4 clubs, 4+ diamonds, 2+ HCP-or-skew
+
 Q: 1C, 1D; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
 A: 25+ HCP, no 4+ major, compelling-relay
@@ -714,7 +739,7 @@ Q: 1H, 2S; 3D
 A: 7+ diamonds, 0 spades
 
 Q: 1H, 2NT; 4D
-F1: [a]keycard_ask[/a] as agreed hearts
+F1: [a]keycard_ask[/a] as agreed hearts. Alert: artificial
 A: 22+ HCP, keycard-ask
 
 # 2 bids after 1S
@@ -773,7 +798,7 @@ Q: 2D, 2S; 4D
 F1: [a]suit_setter[/a]
 A: 5+ diamond-winners, suit-setter, trumps-diamonds
 Q: 2D, 2NT; 4C
-F1: [a]values_for_5[/a] already agreed diamonds
+F1: [a]values_for_5[/a] already agreed diamonds. Alert: artificial
 A: 18+ HCP, values-for-5
 
 # responses to 1NT
@@ -856,19 +881,19 @@ Q: 2D, 4C
 F1: [a]suit_setter[/a]
 A: 5+ club-winners, suit-setter, trumps-clubs
 Q: 1H, 2NT; 4C
-F1: [a]values_for_5[/a]; already agreed hearts
+F1: [a]values_for_5[/a]; already agreed hearts. Alert: artificial
 A: 18+ HCP, values-for-5
 Q: 2C, 2S; 4C
 F1: [a]suit_setter[/a]
 A: 5+ club-winners, suit-setter, trumps-clubs
 Q: 1H, 2NT; 3D, 4C
-F1: [a]values_for_5[/a]
+F1: [a]values_for_5[/a]. Alert: artificial
 A: 15+ HCP, values-for-5
 Q: 1C, 1H; 2NT, 3D
 F1: enough for game
 A: 6+ HCP, 4+ diamonds
 Q: 1C, 1H; 2NT, 3D; 4D
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 27+ HCP, keycard-ask
 
 # page 39
@@ -890,10 +915,10 @@ Q: 1NT, 2D; 2S, 3S; 4S
 F1: [a]to_play[/a]
 A: to-play
 Q: 1NT, 2D; 2S, 3S; 4S, 4NT
-F1: [a]values_for_5[/a]
+F1: [a]values_for_5[/a]. Alert: artificial
 A: 17+ HCP, values-for-5
 Q: 1NT, 2D; 2S, 3S; 4S, 4NT
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 21+ HCP, keycard-ask
 Q: 1NT, 2D; 2S, 3S; 4S, Pass
 A: <17 HCP
@@ -922,7 +947,7 @@ A: 8+ HCP, 4+ diamonds
 Q: 1D, 1S; 2S, Pass
 A: <8 HCP
 Q: 1D, 1S; 2S, 3D; 4D
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 23+ HCP, keycard-ask
 Q: 1D, 1S; 2S, 3D; 4D, 4NT
 A: 2-or-5 keycards-spades
@@ -956,6 +981,10 @@ A: 9+ HCP, compelling-relay
 Q: 1C, 1S; 1NT, 2H
 F1: with 7+ HCP bid [a]relay[/a]
 A: 4-6 HCP, 3 hearts
+Q: 1C, 1S; 1NT, 2H; Pass
+A: 4 hearts
+Q: 1C, 1S; 1NT, 2H; 3H
+A: 5+ hearts
 Q: 1C, 1S; 1NT, Pass
 A: 4-6 HCP, <3 hearts, no 6+ suit, not 4+ in both minors
 
@@ -967,8 +996,8 @@ Q: 1C, 1D; 2D, 3C; 3D
 F1: forcing
 A: 4+ diamonds, <4 clubs
 Q: 1C, 1D; 2D, 3C; 3D, 4H
-F1: [a]autofit[/a], [a]values_for_5[/a]
-A: 4+ HCP, 4+ diamonds, autofit, values-for-5
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 4+ HCP, 4+ diamonds, autofit, values-for-5, trumps-diamonds
 
 # page 66
 Q: 1S, 2C; 2NT
@@ -997,10 +1026,10 @@ Q: 1C, 2D; 3C, 4C
 F1: [a]to_play[/a]
 A: 4+ clubs
 Q: 1C, 2D; 3C, 4C; 4H
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 24+ HCP, keycard-ask
 Q: 1C, 2D; 3C, 4C; 4H, 4S
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-clubs
 Q: 1C, 2D; 3C, 4C; 4H, 4S; 4NT
 F1: partner has no keycards; 4NT in minor fit is always natural
@@ -1011,15 +1040,15 @@ Q: 1NT, 2D; 2H, 3C
 F1: [a]responses_to_relay[/a]
 A: no 5+ major, 4+ clubs, 15+ HCP-or-skew
 Q: 1NT, 2D; 2H, 3C; 4D
-F1: [a]autofit[/a], [a]values_for_5[/a]
-A: 16+ HCP, 4+ clubs, autofit, values-for-5
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 16+ HCP, 4+ clubs, autofit, values-for-5, trumps-clubs
 
 # page 72
 Q: 1H, 1S; 1NT, 2D; 3D, 4S
-F1: [a]autofit[/a], [a]keycard_ask[/a]
-A: 4+ diamonds, autofit, keycard-ask
+F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
+A: 4+ diamonds, autofit, keycard-ask, trumps-diamonds
 Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-diamonds
 Q: 1H, 1S; 1NT, 2D; 2NT
 F1: [a]responses_to_relay[/a]. Alert: artificial
@@ -1028,13 +1057,13 @@ Q: 1H, 1S; 1NT, 2D; 2NT, 3C
 F1: [a]responses_to_relay[/a]
 A: 4+ clubs, 15+ HCP-or-skew
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
-F1: [a]autofit[/a], [a]values_for_5[/a]
-A: 16+ HCP, 4+ clubs, autofit, values-for-5
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 16+ HCP, 4+ clubs, autofit, values-for-5, trumps-clubs
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: keycard-ask
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-clubs
 
 # page 76
@@ -1070,8 +1099,8 @@ Q: 2D, 2S; 3D
 F1: decline invitation
 A: <14 HCP
 Q: 2D, 2S; 3D, 4S
-F1: [a]autofit[/a], [a]keycard_ask[/a]. 25 TP
-A: 3+ diamonds, autofit, keycard-ask
+F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
+A: 3+ diamonds, autofit, keycard-ask, trumps-diamonds
 
 # page 84
 Q: 2C, 2S; 3S
@@ -1194,13 +1223,13 @@ A: 3 hearts, trumps-hearts
 
 # page 125
 Q: 1C, 1S; 2S, 4C
-F1: [a]values_for_5[/a], already agreed spades
+F1: [a]values_for_5[/a], already agreed spades. Alert: artificial
 A: 13+ HCP, values-for-5
 Q: 1C, 2D; 2S, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
 A: 3 spades, trumps-spades
 Q: 1C, 2D; 2S, 2NT; 4D
-F1: [a]keycard_ask[/a], already agreed spades
+F1: [a]keycard_ask[/a], already agreed spades. Alert: artificial
 A: keycard-ask
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
@@ -1217,10 +1246,10 @@ Q: 1H, 2NT; 3D, 3NT
 F1: [a]threeNT|3NT[/a]; all suits guarded; partner can return to hearts
 A: club-guard, spade-guard
 Q: 1H, 2NT; 3D, 4C
-F1: [a]values_for_5[/a]
+F1: [a]values_for_5[/a]. Alert: artificial
 A: 15+ HCP, values-for-5
 Q: 1H, 2NT; 3D, 4D
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: keycard-ask
 Q: 1H, 2NT; 3D, 4H
 F1: [a]to_play[/a]
@@ -1235,10 +1264,10 @@ Q: 1H, 2D; 2S, 3C; 3NT, 4C
 F1: [a]suit_setter[/a]; forcing as unlimited
 A: 5+ club-winners, suit-setter, trumps-clubs
 Q: 1H, 2D; 2S, 3C; 3NT, 4C; 4D
-F1: [a]values_for_5[/a]
+F1: [a]values_for_5[/a]. Alert: artificial
 A: 16+ HCP, values-for-5
 Q: 1H, 2D; 2S, 3C; 3NT, 4C; 4H
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: keycard-ask
 
 # page 130
@@ -1246,19 +1275,19 @@ Q: 1C, 1S; 2NT, 4S
 F1: [a]to_play[/a]
 A: to-play
 Q: 1C, 1S; 2NT, 4S; 4NT
-F1: [a]keycard_ask[/a]; only side suit available
+F1: [a]keycard_ask[/a]; only side suit available. Alert: artificial
 A: keycard-ask
 Q: 1H, (1S) 2NT
 F1: [a]strong_fit[/a]; not affected by their bid. Alert: artificial
 A: 11+ HCP, 4+ hearts, trumps-hearts
 Q: 1H, (1S) 2NT; (4S) 4NT
-F1: [a]keycard_ask[/a]; only side suit available
+F1: [a]keycard_ask[/a]; only side suit available. Alert: artificial
 A: keycard-ask
 Q: 1C, 1H; 2H, 3C
 F1: [a]side_suit[/a]
 A: 4+ clubs
 Q: 1C, 1H; 2H, 3C; 4C
-F1: [a]values_for_5[/a]
+F1: [a]values_for_5[/a]. Alert: artificial
 A: 20+ HCP, values-for-5
 
 # page 131
@@ -1269,15 +1298,15 @@ Q: 1NT, 2D; 2S, 3C; 4C
 F1: limited, else would bid [a]autofit[/a]
 A: 4+ clubs, limited
 Q: 1NT, 2D; 2S, 3C; 4C, 4D
-F1: [a]values_for_5[/a]
+F1: [a]values_for_5[/a]. Alert: artificial
 A: 17+ HCP, values-for-5
 
 # page 132
 Q: 1C, 1H; 2H, 3C; 4C, 4D
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: keycard-ask
 Q: 1C, 1H; 2H, 3C; 4C, 4D; 4H
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-hearts
 
 #page 133
@@ -1285,10 +1314,10 @@ Q: 2C, 2NT; 3H
 F1: [a]side_suit[/a]
 A: heart-guard
 Q: 2C, 2NT; 3H, 4H
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: keycard-ask
 Q: 2C, 2NT; 3H, 4H; 4S
-F1: [a]keycard_ask[/a]
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-clubs
 
 # page 148
