@@ -176,10 +176,6 @@ public class Hand {
                     !(kings[s] && suitValue == 3)) { // i.e. ignore Kx
                 --highCardPoints;
             }
-            /*
-            // add 1 if suit is skew
-            if (suitLength < 2) ++highCardPoints;
-            */
             // quality suits: if suit has 3+ of top 5 honours and 4+ cards, add 1
             if (honoursCt[s] >= 3 && suitLength > 3) ++highCardPoints;
         }

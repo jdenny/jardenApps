@@ -175,8 +175,8 @@
     <string name="threeNT">
         3NT is always [a]to_play[/a], and is bid when we have at least
         one [a]guard[/a] in every suit, not 8-cards in a major between us,
-        enough points for game
-        but not enough to explore a slam - so 25-27 TP. If we don\'t have
+        enough points for game, but not enough to explore a slam -
+        so 25-27 TP. If we don\'t have
         9 winners off the top, and they have bid a suit, we need 2 guards
         in that suit. Partner may choose to return to a previously agreed
         suit, or with extra values explore a slam.

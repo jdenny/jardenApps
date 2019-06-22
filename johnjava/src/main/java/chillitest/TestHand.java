@@ -75,7 +75,7 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
  */
 public class TestHand {
     private final Hand hand1C = new Hand(new CardPack.CardEnum[] { // 25pp, 5 hearts
-            CK, CQ, CJ, C8, DK, DQ, D4, HA, H6, H5, H4, H3, SJ
+            CK, CQ, C9, C8, DA, DQ, D4, HA, HJ, H5, H4, H3, ST
     });
     private final Hand hand13Hcp3145 = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 3-1-4-5
             CA, CJ, C9, DK, HK, HJ, H9, H5, SJ, S6, S5, S4, S3 // skew but no 4+ minor
@@ -106,8 +106,8 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = false;
-        boolean bookTests = true;
+        boolean testAll = true;
+        boolean bookTests = false;
         System.out.println("start of test");
         if (testAll || bookTests) {
             testPage50();
@@ -119,6 +119,8 @@ public class TestHand {
             testPage62B();
             testPage63();
             testPage63B();
+            testPage67();
+            testPage67B();
         }
         if (testAll) {
             testHandEvaluation();
@@ -299,6 +301,29 @@ public class TestHand {
         });
         String expectedFinalBid = "1C, 1D; 2C, 3C; 3D, 4H; 5D, Pass";
         testWestEast(handWest, handEast, expectedFinalBid, new int[] {32, 12, 25, 5});
+    }
+    private void testPage67() {
+        System.out.println("\ntestPage67");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 22pp, 14+0+0+0HCP, 2-3-4-4
+                // hack: change HT to H9
+                CK, C7, DA, D6, D4, HK, HQ, H9, H3, SQ, S9, S4, S3
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 23pp, 13+0+0+1HCP, 4-5-1-3
+                CQ, CT, C6, C5, DK, DJ, DT, D5, D3, H7, SA, SK, S5
+        });
+        String expectedFinalBid = "1H, 2D, 3NT, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {22, 23, 14, 14});
+    }
+    private void testPage67B() {
+        System.out.println("\ntestPage67B");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 29pp, 22+0+0+0HCP, 4-3-3-3
+                CA, CK, C8, C4, DK, DJ, D7, HK, HQ, H5, SA, SQ, S4
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 14pp, 6+0+0+0HCP, 4-4-1-4
+                CQ, C9, C5, C2, D8, D6, D5, D3, H7, SK, SJ, S5, S3
+        });
+        String expectedFinalBid = "1C, 1S; 2D, 3C; 3NT, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 14, 22, 6});
     }
     private void testAllResponses() {
         System.out.println("\ntestAllResponses()");
@@ -719,7 +744,6 @@ public class TestHand {
                             ", actual=" + actualDiff);
                 }
             }
-            // getAdjustmentForTrumps
         }
     }
     private void testMultipleNotClauses() {
@@ -730,8 +754,8 @@ public class TestHand {
         CardPack.CardEnum[] cards1Cb = { // 26pp
                 CA, CK, CQ, CJ, C8, DK, D8, D4, HA, H6, H5, H4, S3
         };
-        CardPack.CardEnum[] cards1D = { // 25pp, 5-4-2-2
-                CA, CK, CQ, CJ, C8, DA, DQ, D5, D4, H5, H4, S5, S4
+        CardPack.CardEnum[] cards1D = { // 25pp, 16HCP, 5-4-2-2
+                CA, CQ, C9, C8, C7, DQ, DJ, D7, D4, HA, HK, S6, S4
         };
         CardPack.CardEnum[] cards1H = { // 21pp, 4 hearts
                 CJ, C8, DK, DQ, D5, D4, HA, HK, H5, H4, S5, S4, S3
@@ -740,7 +764,7 @@ public class TestHand {
                 CQ, C8, DK, DQ, D5, D4, HA, HK, H5, H4, H3, S4, S3
         };
         CardPack.CardEnum[] cards1Hc = { // 24pp, 4 hearts, 5 spades
-                CK, CJ, C7, C6, HA, HJ, HT, H5, SA, SQ, S8, S3, S2
+                CK, CJ, C7, C6, HA, HJ, H9, H5, SA, SQ, S8, S3, S2
         };
         CardPack.CardEnum[] cards1S = { // 22pp, 4 spades, <4 hearts
                 CJ, C8, DK, DQ, D5, D4, HA, HK, HJ, S8, S5, S4, S3
@@ -760,14 +784,14 @@ public class TestHand {
         CardPack.CardEnum[] cards2H = { // 19pp, 1-5-6-1
                 CJ, D8, D7, D6, D5, D4, HA, HK, H5, H4, H3, H2, S3
         };
-        CardPack.CardEnum[] cards2S = { // 15pp, 3-2-2-6
-                C9, C8, C5, DQ, D5, H9, H8, SK, SJ, S8, S5, S4, S3
+        CardPack.CardEnum[] cards2S = { // 15pp, 3-3-1-6
+                C9, C8, C5, DQ, D5, D4, H8, SK, SJ, S8, S5, S4, S3
         };
         CardPack.CardEnum[] cards2NT = { // 22pp, 5-6-1-1
                 CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7
         };
-        CardPack.CardEnum[] cards3C = { // 16pp, 7-1-2-3
-                CK, C9, C8, C6, C5, C4, C2, DK, H9, H8, S5, S4, S3
+        CardPack.CardEnum[] cards3C = { // 17pp, 7-1-2-3
+                CK, CQ, C8, C6, C5, C4, C2, DK, H9, H8, S5, S4, S3
         };
         CardPack.CardEnum[] cards4D = { // 17pp, 0-8-2-3
                 DK, DQ, DT, D9, D8, D7, D6, D5, HJ, H8, S5, S4, S3
@@ -810,6 +834,7 @@ public class TestHand {
         int headerSize = initialBlank.length();
         System.out.print(initialBlank);
         for (QuestionAnswer qa: primaryBids) {
+            if (qa.question.length() == 2) System.out.print(" ");
             System.out.print(" " + qa.question);
         }
         System.out.println();
@@ -824,7 +849,7 @@ public class TestHand {
             for (QuestionAnswer qa : primaryBids) {
                 boolean match = qa.getParsedAnswer().doesMatchHand(hand);
                 if (match) ++matchCt;
-                System.out.print("  " + (match ? "T" : "."));
+                System.out.print("   " + (match ? "T" : "."));
             }
             if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
             System.out.println();
@@ -917,8 +942,8 @@ public class TestHand {
     }
     private void testNots() {
         System.out.println("\ntestNots()");
-        CardPack.CardEnum[] cards6C = { // 10 HCP, 6-1-2-4
-                CA, CK, CQ, CJ, CT, C9, D8, H7, H6, S5, S4, S3, S2
+        CardPack.CardEnum[] cards6C = { // 10+0-1+1 HCP, 6-1-2-4
+                CA, CK, CQ, CT, C9, C8, DJ, H7, H6, S5, S4, S3, S2
         };
         CardPack.CardEnum[] cards6D = { // 10 HCP, 3-6-0-4
                 CA, CK, CQ, DJ, DT, D9, D8, D7, D6, S5, S4, S3, S2
@@ -927,7 +952,7 @@ public class TestHand {
                 CA, CK, CQ, CJ, DT, H9, H8, H7, H6, H5, H4, S3, S2
         };
         CardPack.CardEnum[] cards6S = { // 10 HCP, 4-3-0-6
-                CA, CK, CQ, CJ, DT, D9, D8, S7, S6, S5, S4, S3, S2
+                CA, CK, CQ, C9, DT, D9, D8, S7, S6, S5, S4, S3, S2
         };
         Hand[] hands = {
                 new Hand(cards6C), new Hand(cards6D), new Hand(cards6H), new Hand(cards6S)
@@ -937,10 +962,10 @@ public class TestHand {
         };
         QuestionAnswer qa = new QuestionAnswer(
                 "nots", "not {10 HCP, 6 clubs}, not {10 HCP, 6 diamonds}, not {10 HCP, 6 spades}");
-        for (int i = 0; i < hands.length; i++) {
-            boolean match = qa.getParsedAnswer().doesMatchHand(hands[i]);
+        for (int h = 0; h < hands.length; h++) {
+            boolean match = qa.getParsedAnswer().doesMatchHand(hands[h]);
             System.out.print(match);
-            if (match != expectedResults[i]) System.out.print(" *** wrong!");
+            if (match != expectedResults[h]) System.out.print(" *** wrong!");
             System.out.println();
         }
     }
