@@ -83,6 +83,30 @@ public class Hand {
                 suitLengths[0] + "-" + suitLengths[1] + "-" +
                 suitLengths[2] + "-" + suitLengths[3];
     }
+    private boolean getBalanced() {
+        boolean doubleton = false;
+        for (int suitLen : suitLengths) {
+            if (suitLen < 2)
+                return false;
+            if (suitLen == 2) {
+                if (doubleton)
+                    return false; // i.e. 2 doubletons
+                else
+                    doubleton = true;
+            }
+        }
+        return true;
+    }
+    public int getKeyCardCt(Suit suit) {
+        int suitOrdinal = suit.ordinal();
+        return aceCt + (kings[suitOrdinal] ? 1 : 0);
+    }
+    public boolean hasKing(int suitOrdinal) {
+        return kings[suitOrdinal];
+    }
+    public boolean hasQueen(int suitOrdinal) {
+        return queens[suitOrdinal];
+    }
     private void evaluateHand() {
 		for (Card card : cards) {
 			int suitOrdinal = card.getSuit().ordinal();
@@ -145,42 +169,21 @@ public class Hand {
             int suitValue = suitValues[s];
             // unsupported honours: subtract 1 for each singleton K, Q, J
             if ((suitLength == 1) &&
-                    suitValue > 0 && suitValue < 4) highCardPoints -= 1;
+                    suitValue > 0 && suitValue < 4) --highCardPoints;
             // subtract 1 for each doubleton: AJ, KQ, KJ, QJ, Qx, Jx
             if ((suitLength == 2) && suitValue > 0 && suitValue < 6 &&
                     !(aces[s] && suitValue == 4) && // i.e. ignore Ax
                     !(kings[s] && suitValue == 3)) { // i.e. ignore Kx
-                highCardPoints -= 1;
+                --highCardPoints;
             }
-            // quality suits: add 1 for each suit with 3+ of top 5 honours
-            if (honoursCt[s] >= 3) highCardPoints += 1;
+            // add 1 if suit is skew
+            if (suitLength < 2) ++highCardPoints;
+            /*??
+            // quality suits: if suit has 3+ of top 5 honours and 4+ cards, add 1
+            if (honoursCt[s] >= 3 && suitLength > 3) ++highCardPoints;
+            */
         }
     }
-	private boolean getBalanced() {
-		boolean doubleton = false;
-		for (int suitLen : suitLengths) {
-			if (suitLen < 2)
-				return false;
-			if (suitLen == 2) {
-				if (doubleton)
-					return false; // i.e. 2 doubletons
-				else
-					doubleton = true;
-			}
-		}
-		return true;
-	}
-    public int getKeyCardCt(Suit suit) {
-	    int suitOrdinal = suit.ordinal();
-	    return aceCt + (kings[suitOrdinal] ? 1 : 0);
-    }
-    public boolean hasKing(int suitOrdinal) {
-	    return kings[suitOrdinal];
-    }
-    public boolean hasQueen(int suitOrdinal) {
-        return queens[suitOrdinal];
-    }
-
     /**
      * Re-evaluate hand now we've agreed trump suit
      * @param trumpSuit
@@ -191,12 +194,47 @@ public class Hand {
         this.highCardPoints += getAdjustmentForTrumps(trumpSuit, declarer);
     }
     /**
+     * After finding fit in trumps, make adjustments to HCP
+     * This is John's version!
+     * add 2 for each trump after 5
+     * for each void: add 3 + extra 1 if trumpct > 5
+     * for each singleton: add 2 + extra 1 if trumpct > 5
+     * for each doubleton: add 1 + extra 1 if trumpct > 5
+     */
+    public int getAdjustmentForTrumps(Suit trumpSuit, boolean declarer) {
+        int adjustment = 0;
+        if (trumpSuit != null) {
+            int trumpCt = suitLengths[trumpSuit.ordinal()];
+            if (trumpCt > 0) {
+                int trumpsAdjust = 0;
+                int trumpsOver5 = trumpCt - 5;
+                if (trumpsOver5 > 0) {
+                    trumpsAdjust = 1;
+                    // extra trumps: add 2 for each trump after 5
+                    adjustment += (trumpsOver5 * 2);
+                }
+                for (int s = 0; s < 4; s++) {
+                    int suitLength;
+                    // process side-suits
+                    if (s != trumpSuit.ordinal()) {
+                        suitLength = suitLengths[s];
+                        // add for side-suit shortages
+                        if (suitLength == 0) adjustment += (3 + trumpsAdjust);
+                        else if (suitLength == 1) adjustment += (2 + trumpsAdjust);
+                        else if (suitLength == 2) adjustment += (1 + trumpsAdjust);
+                    }
+                }
+            }
+        }
+        return adjustment;
+    }
+    /**
      * Add for shortages in non-trump suits:
      *    for doubleton: add 1
      *    for singleton: add 2 or with 4+ trumps add 3
      *    for void, add the number of trumps in hand
      */
-    public int getAdjustmentForTrumps(Suit trumpSuit, boolean declarer) {
+    public int getAdjustmentForTrumpsBergen(Suit trumpSuit, boolean declarer) {
         int adjustment = 0;
         if (trumpSuit != null) {
             int trumpCt = suitLengths[trumpSuit.ordinal()];
@@ -216,12 +254,14 @@ public class Hand {
                                 // add 2 for each side-suit singleton
                             else if (suitLength == 1) adjustment += 2;
                             else if (suitLength == 2) ++doubletonCt;
+                            /*??
                                 // add 1 for each side-suit length 4+
                             else if (suitLength > 3) adjustment += 1;
+                            */
                         }
                     }
                     if (doubletonCt > 1) adjustment += 1;
-                } else {
+                } else { // dummy
                     for (int s = 0; s < 4; s++) {
                         int suitLength;
                         if (s != trumpSuit.ordinal()) {

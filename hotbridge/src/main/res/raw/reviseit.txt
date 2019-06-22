@@ -364,9 +364,40 @@ A: 5+ club-winners, suit-setter, trumps-clubs
 Q: 1C, 1D; 1H
 F1: Forcing. Alert: may not be longest suit
 A: 4+ hearts
-Q: 1C, 1D; 1S
+Q: 1C, 1D; 1H, 1S
+A: <4 hearts, 4+ spades
+Q: 1C, 1D; 1H, 1S; 1NT
+A: <4 spades, no 6+ suit
+Q: 1C, 1D; 1H, 1S; 1NT, Pass
+A: no 6+ suit
+Q: 1C, 1D; 1H, 1NT
+A: no 4+ major, not 5+ in both minors, no 6+ minor
+Q: 1C, 1D; 1H, 2C
+A: no 4+ major, 6+ clubs
+Q: 1C, 1D; 1H, 2D
+A: no 4+ major, 6+ diamonds
+Q: 1C, 1D; 1H, 2H
+A: 4+ hearts
+Q: 1C, 1D; 1H, 2S; 2NT
+F1: [a]waiting[/a]. Alert: artificial
+A: 23+ HCP, waiting
+Q: 1C, 1D; 1H, 2S; 2NT, 4S
+A: 2+ HCP, to-play
+Q: 1C, 1D; 1H, 2S; 2NT, 4S; Pass
+A: <31 HCPQ: 1C, 1D; 1S
 F1: Forcing. Alert: denies 4+ hearts; may not be longest suit
 A: 4+ spades, <4 hearts
+Q: 1C, 1D; 1S, 1NT
+A: <4 spades, no 6+ suit
+Q: 1C, 1D; 1S, 2S
+A: 4+ spades, trumps-spades
+Q: 1C, 1D; 1S, 2S; 2NT
+F1: [a]waiting[/a]. Alert: artificial
+A: 23+ HCP, waiting
+Q: 1C, 1D; 1S, 2S; 2NT, 4S
+A: 2+ HCP, to-play
+Q: 1C, 1D; 1S, 2S; 2NT, 4S; Pass
+A: <31 HCP
 Q: 1C, 1D; 1NT
 A: <23 HCP, no 4+ major, not 5+ in both minors, no 6+ minor
 Q: 1C, 1D; 2C
@@ -858,8 +889,14 @@ A: 5+ spades, trumps-spades
 Q: 1NT, 2D; 2S, 3S; 4S
 F1: [a]to_play[/a]
 A: to-play
+Q: 1NT, 2D; 2S, 3S; 4S, 4NT
+F1: [a]values_for_5[/a]
+A: 17+ HCP, values-for-5
+Q: 1NT, 2D; 2S, 3S; 4S, 4NT
+F1: [a]keycard_ask[/a]
+A: 21+ HCP, keycard-ask
 Q: 1NT, 2D; 2S, 3S; 4S, Pass
-A: <15 HCP
+A: <17 HCP
 # page 52
 Q: 1NT, 2D; 2H, 2NT
 F1: [a]strong_fit[/a], stronger than 3H. Alert: artificial
@@ -910,9 +947,18 @@ A: 5+ spades, trumps-spades
 Q: 1C, 1NT; 2D
 F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
 A: 21+ HCP, compelling-relay
+Q: 1C, 1S; 1NT, 2C
+F1: invitational [a]relay[/a]. 23 TP. Alert: artificial
+A: 7-8 HCP, invitational-relay
+Q: 1C, 1S; 1NT, 2D
+F1: compelling [a]relay[/a]. 25 TP. Alert: artificial
+A: 9+ HCP, compelling-relay
 Q: 1C, 1S; 1NT, 2H
 F1: with 7+ HCP bid [a]relay[/a]
 A: 4-6 HCP, 3 hearts
+Q: 1C, 1S; 1NT, Pass
+A: 4-6 HCP, <3 hearts, no 6+ suit, not 4+ in both minors
+
 # page 63
 Q: 1C, 1D; 2D, 3C
 F1: [a]responses_to_relay[/a]
