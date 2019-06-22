@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jarden.cards.Hand;
+import jarden.cards.ParsedAnswer;
+import jarden.cards.Suit;
 
 /**
  * Created by john.denny@gmail.com on 2019-06-11.
@@ -20,6 +22,23 @@ public class BridgeQuiz extends PresetQuiz {
     }
     public QuestionAnswer getPrimaryBid(Hand hand) {
         return getNextBid(hand, OPENING_BIDS);
+    }
+    public QuestionAnswer getNextBid(Hand hand, QuestionAnswer targetQA, Hand partnerHand) {
+        QuestionAnswer qa = getNextBid(hand, targetQA);
+        if (qa != null) {
+            ParsedAnswer pa = qa.getParsedAnswer();
+            Suit trumpSuit = pa.getTrumpSuit();
+            if (trumpSuit != null) {
+                if (pa.isSuitSetter()) {
+                    hand.setTrumpSuit(trumpSuit, true);
+                    partnerHand.setTrumpSuit(trumpSuit, false);
+                } else {
+                    hand.setTrumpSuit(trumpSuit, false);
+                    partnerHand.setTrumpSuit(trumpSuit, true);
+                }
+            }
+        }
+        return qa;
     }
     public QuestionAnswer getNextBid(Hand hand, QuestionAnswer targetQA) {
         List<QuestionAnswer> possibleResponses = getPossibleResponses(targetQA);

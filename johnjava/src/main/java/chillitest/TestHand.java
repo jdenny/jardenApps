@@ -93,6 +93,8 @@ public class TestHand {
     private BridgeQuiz bridgeQuiz;
     private List<QuestionAnswer> primaryBids;
     private CardPack cardPack;
+    private boolean verbose = true;
+    private int noResponseCt = 0;
 
     public static void main(String[] args) throws IOException {
         new TestHand();
@@ -104,15 +106,15 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-
-        boolean verbose = false;
-        boolean testAll = false;
+        boolean testAll = true;
         boolean bookTests = true;
         System.out.println("start of test");
         if (testAll || bookTests) {
             testPage50();
             testPage56();
             testPage56B();
+            testPage58();
+            testPage61();
         }
         if (testAll) {
             testHandEvaluation();
@@ -134,32 +136,35 @@ public class TestHand {
             testRandomSecondBids();
             testAllSecondBids();
             testMySecondBids();
-            testAllResponses(verbose);
+            testAllResponses();
         }
         System.out.println("end of test");
     }
-    private void testAllResponses(boolean verbose) {
+    private void testAllResponses() {
         System.out.println("\ntestAllResponses()");
         for (QuestionAnswer qa: primaryBids) {
             if (qa.question.equals("Pass")) {
                 System.out.println("about to do Pass");
             }
-            testResponses(qa, verbose);
+            testResponses(qa);
         }
+        // on 21st June, noResponseCt=271
+        System.out.println("noResponseCt=" + noResponseCt);
     }
-    private void testResponses(QuestionAnswer qa, boolean verbose) {
+    private void testResponses(QuestionAnswer qa) {
         List<QuestionAnswer> allResponses = bridgeQuiz.getPossibleResponses(qa);
         if (allResponses.size() == 0) {
-            System.out.println("no responses to " + qa);
-            return;
-        }
-        for (QuestionAnswer qa2: allResponses) {
-            if (qa2 == null) {
-                System.out.println("null response to " + qa);
-            } else if (qa2.question.endsWith("Pass")) {
-                if (verbose) System.out.println("pass response to " + qa);
-            } else {
-                testResponses(qa2, verbose);
+            if (verbose) System.out.println("no responses to " + qa);
+            ++noResponseCt;
+        } else {
+            for (QuestionAnswer qa2 : allResponses) {
+                if (qa2 == null) {
+                    if (verbose) System.out.println("null response to " + qa);
+                } else if (qa2.question.endsWith("Pass")) {
+                    if (verbose) System.out.println("pass response to " + qa);
+                } else {
+                    testResponses(qa2);
+                }
             }
         }
     }
@@ -218,63 +223,113 @@ public class TestHand {
     }
     private void testPage50() {
         System.out.println("\ntestPage50");
-        Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 22pp, 13-1+0+1HCP/+4, 4-5-1-3
                 CA, CQ, C6, C5, DK, DQ, DJ, D8, D6, H6, SJ, S7, S4
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[] { // 23pp, 12HCP, 2-0-6-5
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 24pp, 12+0+0+1HCP/+6, 2-0-6-5
                 CK, C7, HA, H9, H7, H5, H4, H3, SK, SQ, ST, S6, S5
         });
+        String expectedFinalBid = "1NT, 2D; 2S, 3S; 4S, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {22, 24, 17, 19});
+    }
+    /**
+     *
+     * @param handWest
+     * @param handEast
+     * @param expectedFinalBid
+     * @param counts int[] = { westPP, eastPP, westFinalHCP, eastFinalHCP }
+     */
+    private void testWestEast(Hand handWest, Hand handEast, String expectedFinalBid,
+                              int[] counts) {
+        if (counts.length != 4) throw new IllegalArgumentException(
+                "counts.length should 4 but it is " + counts.length);
+        int westPP = handWest.getPlayingPoints();
+        int eastPP = handEast.getPlayingPoints();
+        if (verbose) {
+            System.out.println("handWest=" + handWest);
+            System.out.println("handEast=" + handEast);
+        }
+        if (westPP != counts[0]) System.out.println("****westPP=" + westPP + "," +
+                " expected=" + counts[0]);
+        if (eastPP != counts[1]) System.out.println("****eastPP=" + eastPP + "," +
+                " expected=" + counts[1]);
         QuestionAnswer qa = OPENING_BIDS;
         boolean west = true;
-        Hand hand;
+        Hand hand, partnerHand;
+        QuestionAnswer qa2;
         for (int i = 0; i < 6 && !qa.question.endsWith("Pass"); i++) {
-            hand = west ? handWest : handEast;
-            qa = bridgeQuiz.getNextBid(hand, qa);
+            if (west) {
+                hand = handWest;
+                partnerHand = handEast;
+            } else {
+                hand = handEast;
+                partnerHand = handWest;
+            }
+            qa2 = bridgeQuiz.getNextBid(hand, qa, partnerHand);
+            if (qa2 == null) {
+                System.out.println("****null response to: " + qa);
+                break;
+            }
+            qa = qa2;
             west = !west;
         }
-        if (!qa.question.equals("1NT, 2D; 2S, 3S; 4S, Pass")) {
-            System.out.println("*****qa.question=" + qa.question);
+        if (!qa.question.equals(expectedFinalBid)) {
+            System.out.println("****qa.question=" + qa.question);
         }
+        int westFinalHCP = handWest.getHighCardPoints();
+        int eastFinalHCP = handEast.getHighCardPoints();
+        if (verbose) {
+            System.out.println("westFinalHCP=" + westFinalHCP);
+            System.out.println("eastFinalHCP=" + eastFinalHCP);
+        }
+        if (westFinalHCP != counts[2]) System.out.println("****westFinalHCP=" +
+                westFinalHCP + "," + " expected=" + counts[2]);
+        if (eastFinalHCP != counts[3]) System.out.println("****eastFinalHCP=" +
+                eastFinalHCP + "," + " expected=" + counts[3]);
     }
     private void testPage56() {
         System.out.println("\ntestPage56");
-        Hand handWest = new Hand(new CardPack.CardEnum[] { // 24pp, 15HCP, 4-5-3-1
+        Hand handWest = new Hand(new CardPack.CardEnum[] { // 25pp, 15+0-0+1HCP/+0, 4-5-3-1
                 CK, CQ, CJ, C9, DA, DK, D8, D6, D5, HQ, H8, H2, S8
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[] { // 21pp, 12HCP, 3-1-3-6
+        Hand handEast = new Hand(new CardPack.CardEnum[] { // 21pp, 12+0-0+0HCP/+0, 3-1-3-6
                 C7, C3, C2, D6, HA, HJ, H7, SA, SK, S7, S6, S4, S3
         });
-        QuestionAnswer qa = OPENING_BIDS;
-        boolean west = true;
-        Hand hand;
-        for (int i = 0; i < 6 && !qa.question.endsWith("Pass"); i++) {
-            hand = west ? handWest : handEast;
-            qa = bridgeQuiz.getNextBid(hand, qa);
-            west = !west;
-        }
-        if (!qa.question.equals("1D, 1S; 2D, 3NT; Pass")) {
-            System.out.println("*****qa.question=" + qa.question);
-        }
+        String expectedFinalBid = "1D, 1S; 2D, 3NT; Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {25, 21, 16, 12});
     }
     private void testPage56B() {
         System.out.println("\ntestPage56B");
-        Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
-                CK, CQ, CJ, C9, DA, DK, D8, D6, D5, H8, SQ, S8, S2
+        Hand handWest = new Hand(new CardPack.CardEnum[] { // 24pp, 15+0+0+1HCP/+3, 4-4-1-4
+                CK, CQ, CJ, C9, DA, DK, D8, D5, H8, SQ, S8, S6, S2
         });
-        Hand handEast = new Hand(new CardPack.CardEnum[] { // 23pp, 12HCP, 2-0-6-5
+        Hand handEast = new Hand(new CardPack.CardEnum[] { // 21pp, 12+0+0+0HCP/+3, 3-1-3-6
                 C7, C3, C2, D6, HA, HJ, H7, SA, SK, S7, S6, S4, S3
         });
-        QuestionAnswer qa = OPENING_BIDS;
-        boolean west = true;
-        Hand hand;
-        System.out.println("West: " + handWest);
-        System.out.println("East: " + handEast);
-        for (int i = 0; i < 6 && qa != null; i++) {
-            hand = west ? handWest : handEast;
-            qa = bridgeQuiz.getNextBid(hand, qa);
-            west = !west;
-            System.out.println(qa);
-        }
+        String expectedFinalBid = "1D, 1S; 2S, 2NT; 4H, 4NT; 5D, 5H; 6C, 6S; Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {24, 21, 19, 15});
+    }
+    private void testPage58() {
+        System.out.println("\ntestPage58");
+        Hand handWest = new Hand(new CardPack.CardEnum[] { // 24pp, 16HCP, 4-3-2-4
+                CQ, C8, C7, C4, DK, DQ, DT, HA, H8, SK, SJ, S7, S3
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[] { // 8pp, 0HCP, 2-4-3-4
+                C6, C3, D9, D8, D5, D2, HT, H7, H3, S8, S6, S5, S2
+        });
+        String expectedFinalBid = "1D, 1S; 2S, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {24, 8, 16, 0});
+    }
+    private void testPage61() {
+        System.out.println("\ntestPage61");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 25pp, 16HCP, 3-5-4-1
+                CK, C8, C2, DA, DK, D9, D4, D3, HA, HQ, H6, H3, S6
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 15pp, 6HCP, 4-1-3-5
+                CA, C9, C6, C4, D7, HT, H4, H2, SQ, ST, S7, S5, S4
+        });
+        String expectedFinalBid = "1C, 1S; 1NT, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {25, 15, 16, 6});
     }
     private void testOneBid() {
         System.out.println("\ntestOneBid()");

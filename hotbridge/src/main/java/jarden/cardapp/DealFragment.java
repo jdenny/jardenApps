@@ -29,9 +29,7 @@ import com.jardenconsulting.cardapp.R;
 import jarden.cards.BadBridgeTokenException;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
-import jarden.cards.ParsedAnswer;
 import jarden.cards.Player;
-import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -177,11 +175,15 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	private void getNextBid(Player player) {
         Hand hand = cardPack.getHand(player);
+        Player partner = (player == Player.West ? Player.East : Player.West);
+        Hand partnerHand = cardPack.getHand(partner);
         QuestionAnswer previousQA = lastQA;
         boolean openerPassed = false;
         String lastBid = null;
         try {
-            lastQA = bridgeQuiz.getNextBid(hand, lastQA);
+            // TODO: move hcp adjustment logic into bridgeQuiz
+            lastQA = bridgeQuiz.getNextBid(hand, lastQA, partnerHand);
+            /*!!
             if (lastQA != null) {
                 ParsedAnswer pa = lastQA.getParsedAnswer();
                 Suit trumpSuit = pa.getTrumpSuit();
@@ -199,6 +201,10 @@ public class DealFragment extends Fragment implements OnClickListener {
                     westFragment.showHCP();
                 }
             }
+            */
+            eastFragment.showHCP();
+            westFragment.showHCP();
+
         } catch (BadBridgeTokenException e) {
             // treat as no bid!
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());

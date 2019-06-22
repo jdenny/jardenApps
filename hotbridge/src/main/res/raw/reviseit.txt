@@ -464,18 +464,57 @@ F1: [a]suit_setter[/a]
 A: 5+ diamond-winners, suit-setter, trumps-diamonds
 
 # (page 66)
+Q: 1C, 2C; 2D
+F1: [a]responses_to_relay[/a]
+A: <18 HCP
+Q: 1C, 2C; 2H
+F1: [a]responses_to_relay[/a]
+A: 18+ HCP, 5+ hearts
+Q: 1C, 2C; 2S
+F1: [a]responses_to_relay[/a]
+A: 18+ HCP, <5 hearts, 5+ spades
+Q: 1C, 2C; 2NT
+F1: [a]responses_to_relay[/a]
+A: 18+ HCP, no 5+ major, not 20+ HCP-or-skew-with-4+minor
 Q: 1C, 2C; 3C
 F1: [a]responses_to_relay[/a]
 A: 18+ HCP, no 5+ major, 4+ clubs, 20+ HCP-or-skew
+Q: 1C, 2C; 3D
+F1: [a]responses_to_relay[/a]
+A: 18+ HCP, no 5+ major, <4 clubs, 4+ diamonds, 20+ HCP-or-skew
+Q: 1C, 2C; 3H
+F1: [a]suit_setter[/a]
+A: 18+ HCP, 5+ heart-winners, suit-setter, trumps-hearts
+Q: 1C, 2C; 3S
+F1: [a]suit_setter[/a]
+A: 18+ HCP, 5+ spade-winners, suit-setter, trumps-spades
+Q: 1C, 2C; 3NT
+F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]
+A: 18+ HCP, no 5+ major, no 4+ minor, all-suits-guarded
+Q: 1C, 2C; 4C
+F1: [a]suit_setter[/a]
+A: 18+ HCP, 5+ club-winners, suit-setter, trumps-clubs
+Q: 1C, 2C; 4D
+F1: [a]suit_setter[/a]
+A: 18+ HCP, 5+ diamond-winners, suit-setter, trumps-diamonds
 
 # page 125
+Q: 1C, 2D; 2H
+F1: [a]responses_to_relay[/a]
+A: 5+ hearts
 Q: 1C, 2D; 2S
 F1: [a]responses_to_relay[/a]
 A: 5+ spades, <5 hearts
+Q: 1C, 2D; 2NT
+F1: [a]responses_to_relay[/a]
+A: no 5+ major, not 20+ HCP-or-skew-with-4+minor
 # (page 68)
 Q: 1C, 2D; 3C
 F1: [a]responses_to_relay[/a]
 A: no 5+ major, 4+ clubs, 18+ HCP-or-skew
+Q: 1C, 2D; 3D
+F1: [a]responses_to_relay[/a]
+A: no 5+ major, <4 clubs, 4+ diamonds, 18+ HCP-or-skew
 # (page 75)
 Q: 1C, 2D; 3H
 F1: [a]suit_setter[/a]
@@ -483,9 +522,15 @@ A: 5+ heart-winners, suit-setter, trumps-hearts
 Q: 1C, 2D; 3S
 F1: [a]suit_setter[/a]
 A: 5+ spade-winners, suit-setter, trumps-spades
+Q: 1C, 2D; 3NT
+F1: [a]threeNT|3NT[/a]; [a]responses_to_relay[/a]
+A: no 5+ major, no 4+ minor, all-suits-guarded
 Q: 1C, 2D; 4C
 F1: [a]suit_setter[/a]
 A: 5+ club-winners, suit-setter, trumps-clubs
+Q: 1C, 2D; 4D
+F1: [a]suit_setter[/a]
+A: 5+ diamond-winners, suit-setter, trumps-diamonds
 
 # 2 bids after 1D
 Q: 1D, 1H; 1S
@@ -828,9 +873,17 @@ F1: [a]threeNT|3NT[/a], all suits guarded, 25 TP
 A: 10+ HCP, heart-guard
 Q: 1D, 1S; 2D, 3NT; Pass
 A: 1+ spades, 3+ hearts
+Q: 1D, 1S; 2S, 2NT
+F1: exploring game or more
+A: 8+ HCP, no 4+ minor
+Q: 1D, 1S; 2S, 3C
+F1: exploring game or more
+A: 8+ HCP, 4+ clubs
 Q: 1D, 1S; 2S, 3D
 F1: exploring game or more
-A: 4+ diamonds
+A: 8+ HCP, 4+ diamonds
+Q: 1D, 1S; 2S, Pass
+A: <8 HCP
 Q: 1D, 1S; 2S, 3D; 4D
 F1: [a]keycard_ask[/a]
 A: 23+ HCP, keycard-ask

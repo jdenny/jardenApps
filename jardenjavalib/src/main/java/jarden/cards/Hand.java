@@ -78,7 +78,7 @@ public class Hand {
     }
 
 	public String toString() {
-        if (this.playingPoints == 0) evaluateHand();
+        if (this.playingPoints == 0) return super.toString();
         return playingPoints + "pp " + highCardPoints + "HCP " +
                 suitLengths[0] + "-" + suitLengths[1] + "-" +
                 suitLengths[2] + "-" + suitLengths[3];
@@ -143,11 +143,6 @@ public class Hand {
         for (int s = 0; s < 4; s++) {
             int suitLength = suitLengths[s];
             int suitValue = suitValues[s];
-            /*
-            // extra length: add 1 for each card in each suit 5+
-            int lengthGT4 = suitLength - 4;
-            if (lengthGT4 > 0) highCardPoints += lengthGT4;
-            */
             // unsupported honours: subtract 1 for each singleton K, Q, J
             if ((suitLength == 1) &&
                     suitValue > 0 && suitValue < 4) highCardPoints -= 1;
