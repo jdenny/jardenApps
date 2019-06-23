@@ -535,6 +535,8 @@ A: 18+ HCP, no 5+ major, not 20+ HCP-or-skew-with-4+minor
 Q: 1C, 2C; 3C
 F1: [a]responses_to_relay[/a]
 A: 18+ HCP, no 5+ major, 4+ clubs, 20+ HCP-or-skew
+Q: 1C, 2C; 3C, 4C
+A: 4+ clubs
 Q: 1C, 2C; 3D
 F1: [a]responses_to_relay[/a]
 A: 18+ HCP, no 5+ major, <4 clubs, 4+ diamonds, 20+ HCP-or-skew
@@ -857,18 +859,27 @@ A: 3 hearts
 Q: 1S, 2C; 2S
 F1: [a]responses_to_relay[/a]
 A: 14+ HCP, <3 hearts, 5+ spades
-Q: 1S, 2C; 3NT
-F1: [a]threeNT|3NT[/a], all suits guarded, [a]responses_to_relay[/a]. 25 TP
-A: 14+ HCP, <3 hearts, 4 spades, club-guard, diamond-guard, spade-guard
+Q: 1S, 2D; 2NT
+F1: <2 hearts would be skew, so would bid 3C/3D as must have 4+ minor; [a]responses_to_relay[/a]. Alert
+A: 4 spades, 2 hearts, not 14+ HCP-or-skew-with-4+minor
+Q: 1S, 2D; 2NT, 3C
+A: 4+ clubs
+Q: 1S, 2D; 2NT, 3C; 3D
+A: <4 clubs, 4+ diamonds
+Q: 1S, 2D; 2NT, 3C; 3D, 4D
+F1: not enough for [a]autofit[/a]
+A: <17 HCP, 4+ diamonds, trumps-diamonds
+Q: 1S, 2D; 2NT, 3C; 3D, 4D; Pass
+A: <16 HCP, to-play
 Q: 1S, 2D; 3C
 F1: [a]responses_to_relay[/a]
 A: <3 hearts, 4 spades, 4+ clubs, 14+ HCP-or-skew
 Q: 1S, 2C; 3D
 F1: [a]responses_to_relay[/a]
 A: <3 hearts, 4 spades, 4+ diamonds, 16+ HCP-or-skew, <4 clubs
-Q: 1S, 2D; 2NT
-F1: <2 hearts would be skew, so would bid 3C/3D as must have 4+ minor; [a]responses_to_relay[/a]. Alert
-A: 4 spades, 2 hearts, not 14+ HCP-or-skew-with-4+minor
+Q: 1S, 2C; 3NT
+F1: [a]threeNT|3NT[/a], all suits guarded, [a]responses_to_relay[/a]. 25 TP
+A: 14+ HCP, <3 hearts, 4 spades, club-guard, diamond-guard, spade-guard
 
 # meaning of 4C/4D
 Q: 4C
@@ -1034,16 +1045,18 @@ Q: 1H, 1S; 1NT, 2D; 3D
 F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H; [a]responses_to_relay[/a]
 A: 4 hearts, <3 spades, 4+ diamonds, 14+ HCP-or-skew, <4 clubs
 Q: 1C, 2D; 3C, 4C
-F1: [a]to_play[/a]
-A: 4+ clubs
+F1: [a]to_play[/a], not enough for autofit
+A: <13 HCP, 4+ clubs, trumps-clubs
 Q: 1C, 2D; 3C, 4C; 4H
 F1: [a]keycard_ask[/a]. Alert: artificial
-A: 24+ HCP, keycard-ask
+A: 22+ HCP, keycard-ask
 Q: 1C, 2D; 3C, 4C; 4H, 4S
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-clubs
 Q: 1C, 2D; 3C, 4C; 4H, 4S; 4NT
 F1: partner has no keycards; 4NT in minor fit is always natural
+A: to-play
+Q: 1C, 2D; 3C, 4C; 4H, 4S; 4NT, Pass
 A: to-play
 
 # page 71

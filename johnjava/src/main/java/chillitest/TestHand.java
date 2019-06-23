@@ -106,8 +106,8 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = true;
-        boolean bookTests = false;
+        boolean testAll = false;
+        boolean bookTests = true;
         System.out.println("start of test");
         if (testAll || bookTests) {
             testPage50();
@@ -121,6 +121,8 @@ public class TestHand {
             testPage63B();
             testPage67();
             testPage67B();
+            testPage69();
+            testPage70();
         }
         if (testAll) {
             testHandEvaluation();
@@ -324,6 +326,30 @@ public class TestHand {
         });
         String expectedFinalBid = "1C, 1S; 2D, 3C; 3NT, Pass";
         testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 14, 22, 6});
+    }
+    private void testPage69() {
+        System.out.println("\ntestPage69");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 29pp, 21+0+0+0HCP/+1, 4-2-3-4
+                CA, CK, C4, C2, DK, D7, HK, HQ, H6, SA, SQ, S8, S5
+        });
+        // hack: changed east's D6 to DT
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 17pp, 10-1-1+1HCP/+1, 4-4-2-3
+                CQ, CJ, C8, C6, DQ, DJ, DT, D5, HJ, H3, SK, S9, S4
+        });
+        String expectedFinalBid = "1C, 2D; 3C, 4C; 4H, 4S; 4NT, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {29, 17, 22, 10});
+    }
+    private void testPage70() {
+        System.out.println("\ntestPage70");
+        // west and east swapped over
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 20pp, 12+0+0+0HCP/+1, 3-4-2-4
+                CA, C5, C4, DK, D8, D7, D2, H9, H6, SK, SQ, S8, S5
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 22pp, 14-1+0+1HCP/+1, 4-4-3-2
+                CK, CQ, CJ, C7, DA, DQ, D5, D3, HQ, H8, H4, S9, S2
+        });
+        String expectedFinalBid = "1S, 2D; 2NT, 3C; 3D, 4D; Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {20, 22, 13, 15});
     }
     private void testAllResponses() {
         System.out.println("\ntestAllResponses()");
