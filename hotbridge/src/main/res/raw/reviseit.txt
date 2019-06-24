@@ -60,7 +60,7 @@ Q: 5D
 F1: [a]preempt[/a], [a]raw[/a]
 A: 9+ diamonds, <20 pp
 Q: Pass
-A: <20 pp, not {6+ major, 6+ HCP}, not {7+ minor, 6+ HCP}
+A: <20 pp, not {6+ major & 6+ HCP}, not {7+ minor & 6+ HCP}
 
 # 1 bid after 1C
 Q: 1C, 1D
@@ -327,6 +327,8 @@ A: 5+ diamond-winners, suit-setter, trumps-diamonds
 Q: 2C, 3NT
 F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
 A: 13-15 HCP, <3 clubs, diamond-guard, heart-guard, spade-guard
+Q: 2C, Pass
+A: <11 HCP, not {8-10 HCP & 3+ clubs}
 
 # 1 bid after 2D
 Q: 2D, 2H
@@ -358,6 +360,8 @@ A: 5+ spade-winners, suit-setter, trumps-spades
 Q: 2D, 4C
 F1: [a]suit_setter[/a]
 A: 5+ club-winners, suit-setter, trumps-clubs
+Q: 2D, Pass
+A: <11 HCP, not {8-10 HCP & 3+ diamonds}
 
 # 2 bids after 1C
 # (page 62)
@@ -640,9 +644,125 @@ Q: 1D, 1S; 3D
 F1: [a]raw[/a]; with 4 clubs bid 2NT
 A: <4 spades, 6+ diamonds, <4 clubs
 
-# 2 bids after 1H
+# multiple bids after 1H
 Q: 1H, 1S; 1NT
 A: <4 spades, not {5+ hearts & 4+ minor}, not 4+ in both minors, no 6+ suit
+Q: 1H, 1S; 1NT, 2C
+F1: invitational [a]relay[/a]. Alert: artificial
+A: 11-12 HCP, invitational-relay
+Q: 1H, 1S; 1NT, 2C; 2D
+F1: [a]responses_to_relay[/a]. Alert: artificial
+A: <14 HCP
+Q: 1H, 1S; 1NT, 2C; 2H
+F1: [a]responses_to_relay[/a]
+A: 14+ HCP, 5+ hearts
+Q: 1H, 1S; 1NT, 2C; 2H, 2S
+A: <3 hearts, 5+ spades
+Q: 1H, 1S; 1NT, 2C; 2H, 2S; 3S
+A: 3+ spades, trumps-spades
+Q: 1H, 1S; 1NT, 2C; 2H, 2S; 3S, 4S
+A: to-play
+Q: 1H, 1S; 1NT, 2C; 2H, 2S; 3S, 4S; Pass
+A: to-play
+Q: 1H, 1S; 1NT, 2C; 2H, 3H
+A: 3 hearts, trumps-hearts
+Q: 1H, 1S; 1NT, 2C; 2H, 3H; 4H
+A: to-play
+Q: 1H, 1S; 1NT, 2C; 2H, 3H; 4H, Pass
+A: to-play
+
+A: 3 hearts, trumps-hearts
+Q: 1H, 1S; 1NT, 2C; 2S
+F1: [a]responses_to_relay[/a]
+A: 14+ HCP, 4 hearts, 3 spades
+Q: 1H, 1S; 1NT, 2C; 2S, 3S
+A: 5+ spades, trumps-spades
+Q: 1H, 1S; 1NT, 2C; 2S, 3S; 4S
+A: to-play
+Q: 1H, 1S; 1NT, 2C; 2S, 3S; 4S, Pass
+A: to-play
+
+Q: 1H, 1S; 1NT, 2C; 2S
+F1: [a]responses_to_relay[/a]
+A: 14+ HCP, 4 hearts, 3 spades
+Q: 1H, 1S; 1NT, 2C; 2NT
+F1: [a]responses_to_relay[/a]. Alert: artificial
+A: 14+ HCP, 4 hearts, 2 spades, not 14+ HCP-or-skew-with-4+minor
+Q: 1H, 1S; 1NT, 2C; 3C
+F1: [a]responses_to_relay[/a]
+A: 14+ HCP, 4 hearts, <3 spades, 4+ clubs, 16+ HCP-or-skew
+Q: 1H, 1S; 1NT, 2C; 3D
+F1: [a]responses_to_relay[/a]
+A: 14+ HCP, 4 hearts, <3 spades, <4 clubs, 4+ diamonds, 16+ HCP-or-skew
+Q: 1H, 1S; 1NT, 2D
+F1: compelling [a]relay[/a]. Alert: artificial
+A: 13+ HCP, compelling-relay
+Q: 1H, 1S; 1NT, 2D; 2H
+F1: [a]responses_to_relay[/a]
+A: 5+ hearts
+Q: 1H, 1S; 1NT, 2D; 2S
+F1: [a]responses_to_relay[/a]
+A: 4 hearts, 3 spades
+Q: 1H, 1S; 1NT, 2D; 2NT
+F1: [a]responses_to_relay[/a]. Alert: artificial
+A: 4 hearts, 2 spades, not 14+ HCP-or-skew-with-4+minor
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C
+F1: [a]responses_to_relay[/a]
+A: 4+ clubs, 15+ HCP-or-skew
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 16-19 HCP, 4+ clubs, autofit, values-for-5, trumps-clubs
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 17+ HCP, keycard-ask
+Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 2-or-5 keycards-clubs
+Q: 1H, 1S; 1NT, 2D; 3C
+F1: [a]responses_to_relay[/a]
+A: 4 hearts, <3 spades, 4+ clubs, 14+ HCP-or-skew
+Q: 1H, 1S; 1NT, 2D; 3C, 4C
+F1: not enough for [a]autofit[/a]
+A: <17 HCP, 4+ clubs, trumps-clubs
+Q: 1H, 1S; 1NT, 2D; 3C, 4D
+F1: [a]autofit[/a] [a]values_for-5[/a]
+A: 17-20 HCP, 4+ clubs, trumps-clubs, values-for-5
+Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H
+F1: [a]keycard_ask[/a]
+A: 15+ HCP
+Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 2-or-5 keycards-clubs
+Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C; 6C
+A: to-play
+Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C; 6C, pass
+A: to-play
+Q: 1H, 1S; 1NT, 2D; 3C, 4H
+F1: [a]autofit[/a] [a]keycard_ask[/a]
+A: 21+ HCP, 4+ clubs, trumps-clubs, keycard-ask
+Q: 1H, 1S; 1NT, 2D; 3D
+F1: [a]responses_to_relay[/a]
+A: 4 hearts, <3 spades, <4 clubs, 4+ diamonds, 14+ HCP-or-skew
+Q: 1H, 1S; 1NT, 2D; 3D
+F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H; [a]responses_to_relay[/a]
+A: 4 hearts, <3 spades, 4+ diamonds, 14+ HCP-or-skew, <4 clubs
+Q: 1H, 1S; 1NT, 2D; 3D, 4S
+F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
+A: 21+ HCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
+Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 2-or-5 keycards-diamonds
+Q: 1H, 1S; 1NT, Pass
+A: <11 HCP, no 6+ suit
+
+
+Q: 1C, 1S; 2D, 3C
+F1: [a]responses_to_relay[/a]
+A: <3 hearts, 4 spades, 4+ clubs, 6+ HCP-or-skew
+Q: 1C, 1S; 2D, 3C; 3NT
+A: 21-23 HCP, heart-guard, club-guard, diamond-guard
+Q: 1C, 1S; 2D, 3C; 3NT, Pass
+A: 4-6 HCP
 Q: 1H, 1S; 2C
 F1: [a]raw[/a]
 A: <4 spades, 5+ hearts, 4+ clubs
@@ -666,16 +786,13 @@ F1: [a]raw[/a]
 A: <4 spades, diamonds
 # (page 76)
 Q: 1H, 1S; 3H
-F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
+F1: [a]suit_setter[/a]
 A: 5+ heart-winners, suit-setter, trumps-hearts
 Q: 1H, 1S; 3S
 A: 5 spades, trumps-spades
 Q: 1H, 1S; 3NT
 F1: [a]threeNT[/a], all suits guarded, 25 TP
 A: 17+ HCP, <4 spades, club-guard, diamond-guard
-Q: 1H, 1S; 3H
-F1: [a]suit_setter[/a]
-A: 5+ heart-winners, suit-setter, trumps-hearts
 Q: 1H, 1S; 4C
 F1: [a]suit_setter[/a]
 A: 5+ club-winners, suit-setter, trumps-clubs
@@ -1020,32 +1137,13 @@ A: 4+ HCP, 4+ diamonds, autofit, values-for-5, trumps-diamonds
 # page 66
 Q: 1S, 2C; 2NT
 F1: <2 hearts would be skew, so would bid 3C/3D; [a]responses_to_relay[/a]. 25 TP. Alert: artificial
-A: 14+ HCP, 2 hearts, 4 spades, not 15+ HCP-or-skew-with-4+minor
+A: 14+ HCP, 2 hearts, 4 spades, not 16+ HCP-or-skew-with-4+minor
 Q: 1C, 2C; 2NT
 F1: [a]responses_to_relay[/a]. 25 TP. Alert: artificial
-A: 18+ HCP, <5 spades, <5 hearts, not 11+ HCP-or-skew-with-4+minor
+A: 18+ HCP, <5 spades, <5 hearts, not 20+ HCP-or-skew-with-4+minor
 
-# page 67
-Q: 1H, 1S; 1NT, 2D
-F1: compelling [a]relay[/a]. Alert: artificial
-A: 13+ HCP, compelling-relay
-Q: 1H, 1S; 1NT, 2D; 2NT
-F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 4 hearts, 2 spades, not 14+ HCP-or-skew-with-4+minor
-Q: 1C, 1S; 2D, 3C
-F1: [a]responses_to_relay[/a]
-A: <3 hearts, 4 spades, 4+ clubs, 6+ HCP-or-skew
-Q: 1C, 1S; 2D, 3C; 3NT
-A: 21-23 HCP, heart-guard, club-guard, diamond-guard
-Q: 1C, 1S; 2D, 3C; 3NT, Pass
-A: 4-6 HCP
-
-# page 68
-Q: 1H, 1S; 1NT, 2D; 3D
-F1: with 3 spades, would bid 2S, as already denied 4 spades; with 5 hearts would bid 2H; [a]responses_to_relay[/a]
-A: 4 hearts, <3 spades, 4+ diamonds, 14+ HCP-or-skew, <4 clubs
 Q: 1C, 2D; 3C, 4C
-F1: [a]to_play[/a], not enough for autofit
+F1: [a]to_play[/a], not enough for [a]autofit[/a]
 A: <13 HCP, 4+ clubs, trumps-clubs
 Q: 1C, 2D; 3C, 4C; 4H
 F1: [a]keycard_ask[/a]. Alert: artificial
@@ -1066,29 +1164,16 @@ A: no 5+ major, 4+ clubs, 15+ HCP-or-skew
 Q: 1NT, 2D; 2H, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
 A: 16-19 HCP, 4+ clubs, autofit, values-for-5, trumps-clubs
-
-# page 72
-Q: 1H, 1S; 1NT, 2D; 3D, 4S
-F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
-A: 21+ HCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
-Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
-F1: [a]keycard_ask[/a]. Alert: artificial
-A: 2-or-5 keycards-diamonds
-Q: 1H, 1S; 1NT, 2D; 2NT
-F1: [a]responses_to_relay[/a]. Alert: artificial
-A: 4 hearts, 2 spades, not 14+ HCP-or-skew-with-4+minor
-Q: 1H, 1S; 1NT, 2D; 2NT, 3C
-F1: [a]responses_to_relay[/a]
-A: 4+ clubs, 15+ HCP-or-skew
-Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D
-F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
-A: 16-19 HCP, 4+ clubs, autofit, values-for-5, trumps-clubs
-Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H
-F1: [a]keycard_ask[/a]. Alert: artificial
-A: 17+ HCP, keycard-ask
-Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
-F1: [a]keycard_ask[/a]. Alert: artificial
-A: 2-or-5 keycards-clubs
+Q: 1NT, 2NT; 2C
+A: 4+ clubs
+Q: 1NT, 2NT; 2C, 3C
+F1: enough for game; exploring 3NT or 5C
+A: 13+ HCP, 4+ clubs, trumps-clubs
+Q: 1NT, 2NT; 2C, 3C; 4D
+F1: [a]values_for_5[/a]. Alert: artificial
+A: 16+ HCP
+Q: 1NT, 2NT; 2D
+A: <4 clubs, 4+ diamonds
 
 # page 76
 Q: 1H, 2D; 2H
