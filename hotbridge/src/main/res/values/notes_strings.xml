@@ -162,7 +162,8 @@
     </string>
     <string name="strong_fit">
         2NT opposite natural suit bid and unlimited or [a]compelled[/a].
-        [b]Meaning[/b]: 8 trumps between us, 23 TP; forcing
+        [b]Meaning[/b]: 8+ trumps between us, 23 TP; forcing
+        If already compelled, then 27 TP, i.e. stronger than simple raise.
     </string>
     <string name="suit_setter">
         Long, strong suit, not needing support from partner; usually at least

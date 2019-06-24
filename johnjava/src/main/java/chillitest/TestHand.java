@@ -72,6 +72,8 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
  * Created by john.denny@gmail.com on 08/06/2019.
+ * TODO:
+ * add new test, where handWest opens 1H, and handEast is random
  */
 public class TestHand {
     private final Hand hand1C = new Hand(new CardPack.CardEnum[] { // 25pp, 5 hearts
@@ -106,7 +108,7 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = false;
+        boolean testAll = true;
         boolean bookTests = true;
         System.out.println("start of test");
         if (testAll || bookTests) {
@@ -126,11 +128,13 @@ public class TestHand {
             testPage71();
             testPage72();
             testPage72B();
+            testPage77();
         }
         if (testAll) {
+            parseAllBids();
+            test1HResponses();
             testHandEvaluation();
             testQueenAsk();
-            parseAllBids();
             testOneBid();
             testKeycards();
             testHcpOrSkew();
@@ -384,8 +388,19 @@ public class TestHand {
         Hand handEast = new Hand(new CardPack.CardEnum[]{ // 25pp, 14+0+0+2HCP/+2, 4-1-3-5
                 CA, CQ, CT, C6, D7, HJ, H8, H4, SA, SQ, SJ, S7, S6
         });
-        String expectedFinalBid = "1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C, 6C;Pass";
+        String expectedFinalBid = "1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C, 6C; Pass";
         testWestEast(handWest, handEast, expectedFinalBid, new int[] {22, 25, 15, 18});
+    }
+    private void testPage77() {
+        System.out.println("\ntestPage77");
+        Hand handWest = new Hand(new CardPack.CardEnum[]{ // 22pp, 13+0+0+1HCP/+1, 3-4-4-2
+                CA, CQ, C4, DK, DJ, D6, D3, HQ, HJ, HT, H5, S8, S5
+        });
+        Hand handEast = new Hand(new CardPack.CardEnum[]{ // 22pp, 13+0+0+1HCP/+1, 3-5-3-2
+                C7, C5, C2, DA, DQ, DT, D5, D2, HA, HK, H4, S7, S3
+        });
+        String expectedFinalBid = "1H, 2D; 3D, 3H; 4H, Pass";
+        testWestEast(handWest, handEast, expectedFinalBid, new int[] {22, 22, 15, 15});
     }
     private void testAllResponses() {
         System.out.println("\ntestAllResponses()");
@@ -398,15 +413,23 @@ public class TestHand {
         // on 21st June, noResponseCt=271
         System.out.println("noResponseCt=" + noResponseCt);
     }
+    private void test1HResponses() {
+        System.out.println("\ntest1HResponses()");
+        for (QuestionAnswer qa: primaryBids) {
+            if (qa.question.equals("1H")) testResponses(qa);
+        }
+        // on 21st June, noResponseCt=271
+        System.out.println("noResponseCt=" + noResponseCt);
+    }
     private void testResponses(QuestionAnswer qa) {
         List<QuestionAnswer> allResponses = bridgeQuiz.getPossibleResponses(qa);
         if (allResponses.size() == 0) {
-            if (verbose) System.out.println("no responses to " + qa);
+            System.out.println("no responses to " + qa);
             ++noResponseCt;
         } else {
             for (QuestionAnswer qa2 : allResponses) {
                 if (qa2 == null) {
-                    if (verbose) System.out.println("null response to " + qa);
+                    System.out.println("null response to " + qa);
                 } else if (qa2.question.endsWith("Pass")) {
                     if (verbose) System.out.println("pass response to " + qa);
                 } else {

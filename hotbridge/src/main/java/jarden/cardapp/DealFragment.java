@@ -183,25 +183,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         try {
             // TODO: move hcp adjustment logic into bridgeQuiz
             lastQA = bridgeQuiz.getNextBid(hand, lastQA, partnerHand);
-            /*!!
-            if (lastQA != null) {
-                ParsedAnswer pa = lastQA.getParsedAnswer();
-                Suit trumpSuit = pa.getTrumpSuit();
-                if (trumpSuit != null) {
-                    Player partner = (player == Player.West ? Player.East : Player.West);
-                    Hand partnerHand = cardPack.getHand(partner);
-                    if (pa.isSuitSetter()) {
-                        hand.setTrumpSuit(trumpSuit, true);
-                        partnerHand.setTrumpSuit(trumpSuit, false);
-                    } else {
-                        hand.setTrumpSuit(trumpSuit, false);
-                        partnerHand.setTrumpSuit(trumpSuit, true);
-                    }
-                    eastFragment.showHCP();
-                    westFragment.showHCP();
-                }
-            }
-            */
             eastFragment.showHCP();
             westFragment.showHCP();
 
