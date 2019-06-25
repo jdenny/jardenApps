@@ -30,6 +30,7 @@ import jarden.cards.BadBridgeTokenException;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
 import jarden.cards.Player;
+import jarden.cards.BookHand;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -78,6 +79,9 @@ public class DealFragment extends Fragment implements OnClickListener {
     private TextView[] bidTextViews;
 
 	private CardPack cardPack;
+	private boolean useBookHands = false;
+	private BookHand[] bookHands = BookHand.getBookHands();
+	private int bookHandsIndex = -1;
     private QuestionAnswer lastQA;
 	private boolean westDeal;
 	private boolean biddingOver;
@@ -86,7 +90,6 @@ public class DealFragment extends Fragment implements OnClickListener {
     private boolean firstBidPass;
     private BridgeQuiz bridgeQuiz;
 
-    // @SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -143,6 +146,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 		super.onResume();
         if (shuffled) showHands();
         else shuffleDealShow();
+        if (lastQA != null) showBids();
 	}
 	@Override
 	public void onClick(View view) {
@@ -173,7 +177,13 @@ public class DealFragment extends Fragment implements OnClickListener {
 			throw new RuntimeException("unrecognised view clicked: " + view);
 		}
 	}
-	private void getNextBid(Player player) {
+    public void setUseBookHands(boolean useBookHands) {
+	    this.useBookHands = useBookHands;
+    }
+    public boolean isUseBookHands() {
+	    return useBookHands;
+    }
+    private void getNextBid(Player player) {
         Hand hand = cardPack.getHand(player);
         Player partner = (player == Player.West ? Player.East : Player.West);
         Hand partnerHand = cardPack.getHand(partner);
@@ -181,7 +191,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         boolean openerPassed = false;
         String lastBid = null;
         try {
-            // TODO: move hcp adjustment logic into bridgeQuiz
             lastQA = bridgeQuiz.getNextBid(hand, lastQA, partnerHand);
             eastFragment.showHCP();
             westFragment.showHCP();
@@ -231,7 +240,13 @@ public class DealFragment extends Fragment implements OnClickListener {
     }
 	public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
-        cardPack.shuffle();
+        if (useBookHands) {
+            ++bookHandsIndex;
+            if (bookHandsIndex >= bookHands.length) bookHandsIndex = 0;
+            cardPack.setEastWest(bookHands[bookHandsIndex]);
+        } else {
+            cardPack.shuffle();
+        }
         if (twoPlayer) {
             if (bluetoothService != null && bluetoothService.getState() == BTState.connected) {
                 byte[] data = cardPack.getDealAsBytes();
@@ -243,9 +258,13 @@ public class DealFragment extends Fragment implements OnClickListener {
         dealAndShow();
     }
     private void dealAndShow() {
-        this.westDeal = !this.westDeal;
         firstBidPass = false;
-        cardPack.deal(true); // i.e. dealShow with bias in our favour
+        if (useBookHands) {
+            this.westDeal = !bookHands[bookHandsIndex].dealerEast;
+        } else {
+            cardPack.dealAndSort(true); // i.e. dealShow with bias in our favour
+            this.westDeal = !this.westDeal;
+        }
         bridgeable.setStatusMessage("");
         resetBidList();
         lastQA = OPENING_BIDS;
@@ -267,8 +286,10 @@ public class DealFragment extends Fragment implements OnClickListener {
     }
 	public void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
-        northFragment.showHand();
-        southFragment.showHand();
+        if (!useBookHands) {
+            northFragment.showHand();
+            southFragment.showHand();
+        }
         eastFragment.showHand();
         westFragment.showHand();
         showSelectedHands();
@@ -301,8 +322,10 @@ public class DealFragment extends Fragment implements OnClickListener {
                 ft.hide(westFragment);
             }
         } else { // defaults to All
-            ft.show(northFragment);
-            ft.show(southFragment);
+            if (!useBookHands) {
+                ft.show(northFragment);
+                ft.show(southFragment);
+            }
             ft.show(westFragment);
             ft.show(eastFragment);
         }

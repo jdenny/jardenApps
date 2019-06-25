@@ -1,6 +1,8 @@
 package com.jardenconsulting.cardapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
@@ -27,7 +29,7 @@ import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
 
 /**
- * Shuffle and deal a pack of cards, showing my hand (Me), or
+ * Shuffle and dealAndSort a pack of cards, showing my hand (Me), or
  * my and partner's hand (Us) or All hands. Can be played with
  * one player or on two devices linked via bluetooth.
  * 
@@ -38,8 +40,6 @@ import jarden.quiz.BridgeQuiz;
  * TODO following:
 
 change all multi-word terms to use _ instead of -
-
-testPage50, 56, 56B not fully working; add more hand-pairs from book
 
 Show qa.helpText under qa.answer on screen; make hypertext life, as in ReviseQuiz
 
@@ -63,6 +63,7 @@ public class HotBridgeActivity extends AppCompatActivity
     private static final String quizFileName = "reviseit.txt";
     // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
+    private static final String USE_BOOK_HANDS_KEY = "useBookHandsKey";
     private String appName;
 	private FragmentManager fragmentManager;
 	private BluetoothFragment bluetoothFragment;
@@ -70,6 +71,8 @@ public class HotBridgeActivity extends AppCompatActivity
 	private TextView statusText;
 	private boolean closing = false;
     private BridgeQuiz bridgeQuiz;
+    private SharedPreferences sharedPreferences;
+    private boolean useBookHands;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,15 +103,18 @@ public class HotBridgeActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             this.bluetoothFragment = (BluetoothFragment) fragmentManager.findFragmentByTag(BLUETOOTH);
         }
+        this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        useBookHands = sharedPreferences.getBoolean(USE_BOOK_HANDS_KEY, true);
+        dealFragment.setUseBookHands(useBookHands);
     }
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
+		MenuItem item = menu.findItem(R.id.bookHandsButton);
+        item.setChecked(useBookHands);
 		return true;
 	}
-	
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
@@ -123,6 +129,11 @@ public class HotBridgeActivity extends AppCompatActivity
                 showDealFragment();
             }
             return true; // menu item dealt with
+        } else if (id == R.id.bookHandsButton) {
+            boolean bookHands = !item.isChecked(); // isChecked returns old state!
+            item.setChecked(bookHands); // do what Android should do for us!
+            this.dealFragment.setUseBookHands(bookHands);
+		    return true;
         } else if (id == R.id.reviseButton) {
             Intent intent = new Intent(this, ReviseQuizActivity.class);
             startActivity(intent);
@@ -131,6 +142,14 @@ public class HotBridgeActivity extends AppCompatActivity
 			return super.onOptionsItemSelected(item);
 		}
 	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.onPause()");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(USE_BOOK_HANDS_KEY, dealFragment.isUseBookHands());
+        editor.apply();
+    }
 
     @Override
     public void onDestroy() {

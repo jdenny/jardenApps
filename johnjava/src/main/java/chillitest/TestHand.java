@@ -12,6 +12,7 @@ import jarden.cards.CardPack;
 import jarden.cards.Hand;
 import jarden.cards.ParsedAnswer;
 import jarden.cards.Player;
+import jarden.cards.BookHand;
 import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
@@ -108,9 +109,11 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = true;
-        boolean bookTests = true;
+        boolean testAll = false;
+        boolean bookTests = false;
         System.out.println("start of test");
+        testBookTests();
+        /*
         if (testAll || bookTests) {
             testPage50();
             testPage56();
@@ -130,6 +133,7 @@ public class TestHand {
             testPage72B();
             testPage77();
         }
+        */
         if (testAll) {
             parseAllBids();
             test1HResponses();
@@ -159,34 +163,35 @@ public class TestHand {
      *
      * @param handWest
      * @param handEast
-     * @param expectedFinalBid
+     * @param expectedBidSequence
      * @param counts int[] = { westPP, eastPP, westFinalHCP, eastFinalHCP }
      */
-    private void testWestEast(Hand handWest, Hand handEast, String expectedFinalBid,
-                              int[] counts) {
+    private void testWestEast(Hand handWest, Hand handEast, String expectedBidSequence,
+                              int[] counts, boolean dealerEast) {
         if (counts.length != 4) throw new IllegalArgumentException(
                 "counts.length should 4 but it is " + counts.length);
-        int westPP = handWest.getPlayingPoints();
-        int eastPP = handEast.getPlayingPoints();
         if (verbose) {
             System.out.println("handWest=" + handWest);
             System.out.println("handEast=" + handEast);
+            System.out.println("estimated bid: " + handWest.getEstimateBid(handEast));
+            System.out.println("expected bid sequence:" + expectedBidSequence);
         }
+        int westPP = handWest.getPlayingPoints();
+        int eastPP = handEast.getPlayingPoints();
         if (westPP != counts[0]) System.out.println("****westPP=" + westPP + "," +
                 " expected=" + counts[0]);
         if (eastPP != counts[1]) System.out.println("****eastPP=" + eastPP + "," +
                 " expected=" + counts[1]);
         QuestionAnswer qa = OPENING_BIDS;
-        boolean west = true;
         Hand hand, partnerHand;
         QuestionAnswer qa2;
         for (int i = 0; i < 10 && !qa.question.endsWith("Pass"); i++) {
-            if (west) {
-                hand = handWest;
-                partnerHand = handEast;
-            } else {
+            if (dealerEast) {
                 hand = handEast;
                 partnerHand = handWest;
+            } else {
+                hand = handWest;
+                partnerHand = handEast;
             }
             qa2 = bridgeQuiz.getNextBid(hand, qa, partnerHand);
             if (qa2 == null) {
@@ -194,9 +199,9 @@ public class TestHand {
                 break;
             }
             qa = qa2;
-            west = !west;
+            dealerEast = !dealerEast;
         }
-        if (!qa.question.equals(expectedFinalBid)) {
+        if (!qa.question.equals(expectedBidSequence)) {
             System.out.println("****qa.question=" + qa.question);
         }
         int westFinalHCP = handWest.getHighCardPoints();
@@ -210,6 +215,19 @@ public class TestHand {
         if (eastFinalHCP != counts[3]) System.out.println("****eastFinalHCP=" +
                 eastFinalHCP + "," + " expected=" + counts[3]);
     }
+    private void testBookTests() {
+        BookHand[] bookHands = BookHand.getBookHands();
+        for (BookHand bookHand: bookHands) {
+            testSetHand(bookHand);
+        }
+    }
+    private void testSetHand(BookHand setHand) {
+        System.out.println(setHand.name);
+        testWestEast(setHand.handWest, setHand.handEast,
+                setHand.expectedBidSequence, setHand.pointCounts, setHand.dealerEast);
+        System.out.println();
+    }
+    /*
     private void testPage50() {
         System.out.println("\ntestPage50");
         Hand handWest = new Hand(new CardPack.CardEnum[]{ // 22pp, 13-1+0+1HCP/+4, 4-5-1-3
@@ -402,6 +420,7 @@ public class TestHand {
         String expectedFinalBid = "1H, 2D; 3D, 3H; 4H, Pass";
         testWestEast(handWest, handEast, expectedFinalBid, new int[] {22, 22, 15, 15});
     }
+    */
     private void testAllResponses() {
         System.out.println("\ntestAllResponses()");
         for (QuestionAnswer qa: primaryBids) {
@@ -940,12 +959,12 @@ public class TestHand {
             System.out.println();
         }
     }
-    // deal random hands, and check that each one matches exactly 1 primary bid
+    // dealAndSort random hands, and check that each one matches exactly 1 primary bid
     private void testRandomPrimaryBids() {
         System.out.println("\ntestRandomPrimaryBids()");
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
-            cardPack.deal(true);
+            cardPack.dealAndSort(true);
             Hand hand = cardPack.getHand(Player.West);
             System.out.print(hand);
             int matchCt = 0;
@@ -1061,7 +1080,7 @@ public class TestHand {
         System.out.println("\ntestRandomNBids()");
         for (int j = 0; j < dealCt; j++) {
             cardPack.shuffle();
-            cardPack.deal(true);
+            cardPack.dealAndSort(true);
             Hand handWest = cardPack.getHand(Player.West);
             Hand handEast = cardPack.getHand(Player.East);
             System.out.println("West: " + handWest);
@@ -1078,14 +1097,14 @@ public class TestHand {
             System.out.println();
         }
     }
-    // deal random hands
+    // dealAndSort random hands
     // for each primary bid:
     //      check that randomEast matches exactly 1 second bid
     private void testAllSecondBids() {
         System.out.println("\ntestAllSecondBids()");
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
-            cardPack.deal(true);
+            cardPack.dealAndSort(true);
             Hand handEast = cardPack.getHand(Player.East);
             List<QuestionAnswer> matches = new ArrayList<>();
 
@@ -1126,12 +1145,12 @@ public class TestHand {
         }
         if (matchCt != 1) System.out.print(" *** matchCt=" + matchCt);
     }
-    // deal random hands and check that each one matches exactly 1 primary bid
+    // dealAndSort random hands and check that each one matches exactly 1 primary bid
     private void testRandomSecondBids() {
         System.out.println("\ntestRandomSecondBids()");
         for (int i = 0; i < 50; i++) {
             cardPack.shuffle();
-            cardPack.deal(true);
+            cardPack.dealAndSort(true);
             Hand handWest = cardPack.getHand(Player.West);
             Hand handEast = cardPack.getHand(Player.East);
 

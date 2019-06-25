@@ -18,6 +18,7 @@ public class Hand {
 	private int highCardPoints;
 	private int playingPoints;
 	private int aceCt = 0;
+	private int kingCt = 0;
     private int queenCt = 0;
 	private int jackCt = 0;
     private int tenCt = 0;
@@ -122,6 +123,7 @@ public class Hand {
             } else if (rank == Rank.King) {
 			    suitValues[suitOrdinal] += 3;
                 honoursCt[suitOrdinal] += 1;
+                ++kingCt;
 			    kings[suitOrdinal] = true;
             } else if (rank == Rank.Queen) {
 			    suitValues[suitOrdinal] += 2;
@@ -275,5 +277,80 @@ public class Hand {
             }
         }
         return adjustment;
+    }
+    public String getEstimateBid(Hand partnerHand) {
+        Suit suit = null;
+        int level = 0;
+        int teamHCP = getHighCardPoints() + partnerHand.getHighCardPoints();
+        int[] suitLengthsBoth = new int[4];
+        /*
+        Suit choice:
+            4+ hearts in both
+            4+ spades in both
+            3 and 5+ hearts
+            3 and 5+ spades
+            suit-setter in hearts
+            suit-setter in spades
+            same for minors; if all suits guarded: no trumps
+            no trumps
+         */
+        int longestSuitCt = 0;
+        for (int i = 0; i < 4; i++) {
+            int s = (i + 2) % 4; // i.e. H, S, C, D
+            suitLengthsBoth[s] = suitLengths[s] + partnerHand.suitLengths[s];
+            if (suitLengthsBoth[s] > longestSuitCt) {
+                longestSuitCt = suitLengthsBoth[s];
+                suit = Suit.values()[s];
+            }
+        }
+        // 4+ spades in both?
+        if (suitLengths[2] >= 4 && partnerHand.suitLengths[2] >= 4) {
+            suit = Suit.Heart;
+        } else if (suitLengths[3] >= 4 && partnerHand.suitLengths[3] >= 4) {
+            suit = Suit.Spade;
+        } else if (partnerHand.suitLengths[2] ==3 && suitLengths[2] >= 5 ||
+                suitLengths[2] ==3 && partnerHand.suitLengths[2] >= 5) {
+            suit = Suit.Heart;
+        } else if (partnerHand.suitLengths[3] ==3 && suitLengths[3] >= 5 ||
+                suitLengths[3] ==3 && partnerHand.suitLengths[3] >= 5) {
+            suit = Suit.Spade;
+        } else if (longestSuitCt < 8) {
+            suit = null; // no trumps
+        }
+        int keyCardCt;
+        if (suit != null) {
+            teamHCP += getAdjustmentForTrumps(suit, true);
+            teamHCP += partnerHand.getAdjustmentForTrumps(suit, false);
+            keyCardCt = getKeyCardCt(suit) + partnerHand.getKeyCardCt(suit);
+        } else {
+            keyCardCt = aceCt + partnerHand.aceCt;
+            if (kingCt + partnerHand.kingCt >= 3) ++keyCardCt;
+        }
+        /*
+        point-count table:
+        0
+        1 21
+        2
+        3
+        4 25
+        5 29
+        6 33 missing 1 keycard or void
+        7 37 & void or ace in each suit, K trumps
+         */
+        boolean minorSuit = (suit == Suit.Club || suit == Suit.Diamond);
+        if (teamHCP >= 37) {
+            level = keyCardCt == 5 ? 7 : 6;
+        } else if (teamHCP >= 33) {
+            level = keyCardCt == 4 ? 6 : (minorSuit ? 5 : 4);
+        } else if (teamHCP >= 29 && minorSuit) {
+            level = 5;
+        } else if (teamHCP >= 25) {
+            level = (suit == null) ? 3 : 4;
+        } else if (teamHCP >= 21) {
+            level = minorSuit ? 2 : 1;
+        };
+        String suitStr = (suit == null ? "NT" : suit.name().substring(0, 1));
+        return (level == 0) ? "Pass" : (level + suitStr);
+
     }
 }

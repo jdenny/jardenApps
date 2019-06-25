@@ -43,7 +43,7 @@ on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
 
 TODO:
 * replace calculated bids in deals with lookup based on reviseit.txt
-    for each deal:
+    for each dealAndSort:
         get list of next bids (based on bidding so far)
         for each response: match hand against criteria of each
         add bid to bidList

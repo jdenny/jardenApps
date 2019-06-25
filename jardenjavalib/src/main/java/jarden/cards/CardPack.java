@@ -79,12 +79,12 @@ public class CardPack {
 		}
 	}
 	/**
-	 * Actually, deal and sort. We're good like that.
+	 * Actually, dealAndSort and sort. We're good like that.
 	 * If biased is true, make sure East/West have got the best hand!
 	 * In reality, if East and West both have less than 18 playing points,
 	 * swap them both with North/South.
 	 */
-	public void deal(boolean biased) {
+	public void dealAndSort(boolean biased) {
 		hands = new Hand[PLAYER_CT];
 		ArrayList<Card> cardList;
 		Card card;
@@ -113,7 +113,12 @@ public class CardPack {
 			}
 		}
 	}
-	public Hand getHand(Player player) {
+    public void setEastWest(BookHand bookHand) {
+        hands = new Hand[PLAYER_CT];
+	    hands[0] = bookHand.handWest;
+	    hands[2] = bookHand.handEast;
+    }
+    public Hand getHand(Player player) {
 		return hands[player.ordinal()];
 	}
 	public void setPackFromBytes(byte[] data) {

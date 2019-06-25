@@ -6,6 +6,11 @@
         android:checkable="true"
         android:checked="false"/>
     <item
+        android:id="@+id/bookHandsButton"
+        android:title="@string/bookHands"
+        android:checkable="true"
+        android:checked="false"/>
+    <item
         android:id="@+id/reviseButton"
         android:title="@string/biddingQuiz" />
 </menu>
