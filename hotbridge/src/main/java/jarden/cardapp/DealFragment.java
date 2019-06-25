@@ -61,7 +61,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         2-player:
             server:   West         false
             client:   East         true
-         */
+     */
 	private boolean btClientMode = false; // turned on if we connect to remote server
 	private HandFragment northFragment;
 	private HandFragment southFragment;
@@ -79,7 +79,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     private TextView[] bidTextViews;
 
 	private CardPack cardPack;
-	private boolean useBookHands = false;
+	private boolean randomDeals = false;
 	private BookHand[] bookHands = BookHand.getBookHands();
 	private int bookHandsIndex = -1;
     private QuestionAnswer lastQA;
@@ -177,13 +177,16 @@ public class DealFragment extends Fragment implements OnClickListener {
 			throw new RuntimeException("unrecognised view clicked: " + view);
 		}
 	}
-    public void setUseBookHands(boolean useBookHands) {
-	    this.useBookHands = useBookHands;
+    public void setRandomDeals(boolean randomDeals) {
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.setRandomDeals(" +
+                randomDeals + ")");
+        this.randomDeals = randomDeals;
     }
-    public boolean isUseBookHands() {
-	    return useBookHands;
+    public boolean isRandomDeals() {
+	    return randomDeals;
     }
     private void getNextBid(Player player) {
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.getNextBid(" + player + ")");
         Hand hand = cardPack.getHand(player);
         Player partner = (player == Player.West ? Player.East : Player.West);
         Hand partnerHand = cardPack.getHand(partner);
@@ -226,24 +229,29 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
     }
     private void showBids() {
-        String[] bids = lastQA.question.split("[ ,;]+");
-        int j = westDeal ? 0: 2;
-        if (firstBidPass) {
-            bidTextViews[j++].setText("Pass");
-            bidTextViews[j++].setText("-");
-        }
-        for (String bid: bids) {
-            bidTextViews[j++].setText(bid);
-            bidTextViews[j++].setText("-");
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showBids(); lastQA=" + lastQA);
+        int j = westDeal ? 0 : 2;
+	    if (lastQA != null && lastQA != OPENING_BIDS) {
+            String[] bids = lastQA.question.split("[ ,;]+");
+            if (firstBidPass) {
+                bidTextViews[j++].setText("Pass");
+                bidTextViews[j++].setText("-");
+            }
+            for (String bid : bids) {
+                bidTextViews[j++].setText(bid);
+                bidTextViews[j++].setText("-");
+            }
         }
         if (!biddingOver) bidTextViews[j].setText("?");
     }
 	public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
-        if (useBookHands) {
+        if (!randomDeals) {
             ++bookHandsIndex;
             if (bookHandsIndex >= bookHands.length) bookHandsIndex = 0;
-            cardPack.setEastWest(bookHands[bookHandsIndex]);
+            BookHand bookHand = bookHands[bookHandsIndex];
+            cardPack.setEastWest(bookHand);
+            bridgeable.setStatusMessage(bookHand.name);
         } else {
             cardPack.shuffle();
         }
@@ -258,15 +266,17 @@ public class DealFragment extends Fragment implements OnClickListener {
         dealAndShow();
     }
     private void dealAndShow() {
+        if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.dealAndShow()");
         firstBidPass = false;
-        if (useBookHands) {
-            this.westDeal = !bookHands[bookHandsIndex].dealerEast;
-        } else {
+        if (randomDeals) {
             cardPack.dealAndSort(true); // i.e. dealShow with bias in our favour
             this.westDeal = !this.westDeal;
+        } else {
+            this.westDeal = !bookHands[bookHandsIndex].dealerEast;
         }
         bridgeable.setStatusMessage("");
-        resetBidList();
+        //!! resetBidList();
+        for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
         lastQA = OPENING_BIDS;
         handsButton.setText("Us");
         this.handToShow = SHOW_ME;
@@ -279,14 +289,17 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         showHands();
 	}
+	/*!!
     private void resetBidList() {
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.resetBidList()");
         for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
         int firstBidPos = westDeal ? 0 : 2;
         bidTextViews[firstBidPos].setText("?");
     }
+    */
 	public void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
-        if (!useBookHands) {
+        if (randomDeals) {
             northFragment.showHand();
             southFragment.showHand();
         }
@@ -322,7 +335,7 @@ public class DealFragment extends Fragment implements OnClickListener {
                 ft.hide(westFragment);
             }
         } else { // defaults to All
-            if (!useBookHands) {
+            if (randomDeals) {
                 ft.show(northFragment);
                 ft.show(southFragment);
             }

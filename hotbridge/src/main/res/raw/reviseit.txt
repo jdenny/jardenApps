@@ -1157,13 +1157,13 @@ A: 5+ hearts, trumps-hearts
 Q: 1NT, 2D; 2S, 3S
 A: 5+ spades, trumps-spades
 Q: 1NT, 2D; 2S, 3S; 4S
-F1: [a]to_play[/a]
-A: to-play
+F1: [a]to_play[/a]; with 20+ HCP: bid keycard-ask
+A: <16 HCP, to-play
 Q: 1NT, 2D; 2S, 3S; 4S, 4NT
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 21+ HCP, keycard-ask
 Q: 1NT, 2D; 2S, 3S; 4S, Pass
-A: <17 HCP
+A: <21 HCP
 # page 52
 Q: 1NT, 2D; 2H, 2NT
 F1: [a]strong_fit[/a], stronger than 3H. Alert: artificial
@@ -1178,8 +1178,32 @@ A: 10+ HCP, heart-guard
 Q: 1D, 1S; 2D, 3NT; Pass
 A: 1+ spades, 3+ hearts
 Q: 1D, 1S; 2S, 2NT
-F1: exploring game or more
+F1: 8+ HCP, exploring game or more
 A: 8+ HCP, no 4+ minor
+Q: 1D, 1S; 2S, 2NT; 3C
+A: 17+ HCP, 4+ clubs
+Q: 1D, 1S; 2S, 2NT; 3C, 4H
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 16+ HCP, keycard-ask
+Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C
+A: 1-or-4 keycards-spades
+Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D
+F1: [a]queen_ask[/a]. Alert: Artificial
+A: spade-queen-ask
+Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 5S
+A: not spade-queen
+Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 6C
+A: spade-queen, club-king
+Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 6C, 6S
+A: to-play
+Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 6C, 6S; Pass
+A: to-play
+Q: 1D, 1S; 2S, 2NT; 3H
+A: 17+ HCP, 4+ hearts
+Q: 1D, 1S; 2S, 2NT; 3S
+A: <17 HCP
+Q: 1D, 1S; 2S, 2NT; 3S, Pass
+A: <10 HCP
 Q: 1D, 1S; 2S, 3C
 F1: exploring game or more
 A: 8+ HCP, 4+ clubs
@@ -1194,9 +1218,10 @@ A: 25+ HCP, keycard-ask
 Q: 1D, 1S; 2S, 3D; 4D, 4NT
 A: 2-or-5 keycards-spades
 Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C
-F1: [a]queen_ask[/a]
+F1: [a]queen_ask[/a]. Alert: Artificial
 A: spade-queen-ask
 Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C, 6C
+F1: Alert: Artificial
 A: spade-queen, club-king
 # page 61
 Q: 1C, 1H; 1S, 2D

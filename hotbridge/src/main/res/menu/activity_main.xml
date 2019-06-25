@@ -6,8 +6,8 @@
         android:checkable="true"
         android:checked="false"/>
     <item
-        android:id="@+id/bookHandsButton"
-        android:title="@string/bookHands"
+        android:id="@+id/randomDealButton"
+        android:title="@string/randomDeal"
         android:checkable="true"
         android:checked="false"/>
     <item

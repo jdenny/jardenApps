@@ -63,7 +63,7 @@ public class HotBridgeActivity extends AppCompatActivity
     private static final String quizFileName = "reviseit.txt";
     // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
-    private static final String USE_BOOK_HANDS_KEY = "useBookHandsKey";
+    private static final String RANDOM_DEALS_KEY = "randomDealsKey";
     private String appName;
 	private FragmentManager fragmentManager;
 	private BluetoothFragment bluetoothFragment;
@@ -72,7 +72,7 @@ public class HotBridgeActivity extends AppCompatActivity
 	private boolean closing = false;
     private BridgeQuiz bridgeQuiz;
     private SharedPreferences sharedPreferences;
-    private boolean useBookHands;
+    private boolean randomDeals;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,15 +104,15 @@ public class HotBridgeActivity extends AppCompatActivity
             this.bluetoothFragment = (BluetoothFragment) fragmentManager.findFragmentByTag(BLUETOOTH);
         }
         this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-        useBookHands = sharedPreferences.getBoolean(USE_BOOK_HANDS_KEY, true);
-        dealFragment.setUseBookHands(useBookHands);
+        randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, true);
+        dealFragment.setRandomDeals(randomDeals);
     }
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
-		MenuItem item = menu.findItem(R.id.bookHandsButton);
-        item.setChecked(useBookHands);
+		MenuItem item = menu.findItem(R.id.randomDealButton);
+        item.setChecked(randomDeals);
 		return true;
 	}
     @Override
@@ -129,10 +129,10 @@ public class HotBridgeActivity extends AppCompatActivity
                 showDealFragment();
             }
             return true; // menu item dealt with
-        } else if (id == R.id.bookHandsButton) {
-            boolean bookHands = !item.isChecked(); // isChecked returns old state!
-            item.setChecked(bookHands); // do what Android should do for us!
-            this.dealFragment.setUseBookHands(bookHands);
+        } else if (id == R.id.randomDealButton) {
+            boolean randomDeal = !item.isChecked(); // isChecked returns old state!
+            item.setChecked(randomDeal); // do what Android should do for us!
+            this.dealFragment.setRandomDeals(randomDeal);
 		    return true;
         } else if (id == R.id.reviseButton) {
             Intent intent = new Intent(this, ReviseQuizActivity.class);
@@ -147,7 +147,7 @@ public class HotBridgeActivity extends AppCompatActivity
         super.onPause();
         if (BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.onPause()");
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(USE_BOOK_HANDS_KEY, dealFragment.isUseBookHands());
+        editor.putBoolean(RANDOM_DEALS_KEY, dealFragment.isRandomDeals());
         editor.apply();
     }
 
