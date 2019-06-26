@@ -474,10 +474,10 @@ public class ParsedAnswer {
                 if (suitValues[i] < 4) return false;
             }
         }
-        if (pa.clubGuard && suitValues[0] < 4) return false;
-        if (pa.diamondGuard && suitValues[1] < 4) return false;
-        if (pa.heartGuard && suitValues[2] < 4) return false;
-        if (pa.spadeGuard && suitValues[3] < 4) return false;
+        if (pa.clubGuard && (suitValues[0] + suitLengths[0]) < 6) return false;
+        if (pa.diamondGuard && (suitValues[1] + suitLengths[1]) < 6) return false;
+        if (pa.heartGuard && (suitValues[2] + suitLengths[2]) < 6) return false;
+        if (pa.spadeGuard && (suitValues[3] + suitLengths[3]) < 6) return false;
         if (pa.balanced && !hand.isBalanced()) return false;
         if (pa.clubKing != null && (hand.hasKing(C) != pa.clubKing)) return false;
         if (pa.diamondKing != null && (hand.hasKing(D) != pa.diamondKing)) return false;

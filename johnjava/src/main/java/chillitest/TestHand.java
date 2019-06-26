@@ -110,32 +110,10 @@ public class TestHand {
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
         boolean testAll = false;
-        boolean bookTests = false;
         System.out.println("start of test");
+        parseAllBids();
         testBookTests();
-        /*
-        if (testAll || bookTests) {
-            testPage50();
-            testPage56();
-            testPage56B();
-            testPage58();
-            testPage61();
-            testPage62();
-            testPage62B();
-            testPage63();
-            testPage63B();
-            testPage67();
-            testPage67B();
-            testPage69();
-            testPage70();
-            testPage71();
-            testPage72();
-            testPage72B();
-            testPage77();
-        }
-        */
         if (testAll) {
-            parseAllBids();
             test1HResponses();
             testHandEvaluation();
             testQueenAsk();

@@ -47,7 +47,7 @@ public class BookHand {
                     // hack: changed D9 to DT
                     CK, C8, C2, DA, DK, DT, D4, D3, HA, HQ, H6, H3, S6 }),
             "1C, 1S; 1NT, 2H; Pass",
-            new int[] {26, 15, 17, 6}, true);
+            new int[] {15, 26, 6, 17}, true);
     private static final BookHand page62 = new BookHand(
             "Page62",
             new Hand(new CardPack.CardEnum[] { // 29pp, 20+0+0+1HCP/+2, 4-4-1-4
@@ -70,17 +70,17 @@ public class BookHand {
                     CA, CK, DA, D5, D3, D2, HA, HQ, HT, H4, SK, S7, S2 }),
             new Hand(new CardPack.CardEnum[]{ // 10pp, 3-1+0+0HCP, 5-2-3-3
                     CJ, C9, C6, C4, C2, DQ, D4, H9, H5, H3, S8, S6, S5 }),
-            "1C, 1D; 1NT, 2C; Pass",
+            // book version: "1C, 1D; 1NT, 2C; Pass",
+            "1C, 1D; 1H, 1NT; Pass",
             new int[] {30, 10, 22, 2}, false);
     private static final BookHand page63B = new BookHand(
             "Page63B",
             new Hand(new CardPack.CardEnum[] { // 32pp, 23+0+0+1HCP/+1, 2-5-3-3
                     CA, CK, DK, DQ, DJ, D8, D5, HK, HQ, HJ, SA, S8, S6 }),
-            new Hand(new CardPack.CardEnum[]{ // 12pp, 3+0+0+0HCP/+2, 5-4-2-2
-                    // hack: C2 changed to H2
-                    CT, C8, C7, C5, C3, H2, D9, D6, D3, D2, H9, SK, S3 }),
+            new Hand(new CardPack.CardEnum[]{ // 12pp, 3+0+0+0HCP/+3, 6-4-1-2
+                    CT, C8, C7, C5, C3, C2, D9, D6, D3, D2, H9, SK, S3 }),
             "1C, 1D; 2C, 3C; 3D, 4H; 5D, Pass",
-            new int[] {32, 12, 25, 5}, false);
+            new int[] {32, 13, 25, 6}, false);
     private static final BookHand page67 = new BookHand(
             "Page67",
             new Hand(new CardPack.CardEnum[] { // 22pp, 14+0+0+0HCP, 2-3-4-4
@@ -88,7 +88,8 @@ public class BookHand {
                     CK, C7, DA, D6, D4, HK, HQ, H9, H3, SQ, S9, S4, S3 }),
             new Hand(new CardPack.CardEnum[]{ // 23pp, 13+0+0+1HCP, 4-5-1-3
                     CQ, CT, C6, C5, DK, DJ, DT, D5, D3, H7, SA, SK, S5 }),
-            "1H, 2D, 3NT, Pass",
+            // book sequence: 1H, 2D; 3NT, Pass
+            "1H, 2D; 2NT, 3NT; Pass",
             new int[] {22, 23, 14, 14}, false);
     private static final BookHand page67B = new BookHand(
             "Page67B",
@@ -114,23 +115,27 @@ public class BookHand {
             new Hand(new CardPack.CardEnum[] { // 20pp, 12+0+0+0HCP/+1, 3-4-2-4
                     CA, C5, C4, DK, D8, D7, D2, H9, H6, SK, SQ, S8, S5 }),
             "1S, 2D; 2NT, 3C; 3D, 4D; Pass",
-            new int[] {20, 22, 13, 15}, true);
+            new int[] {22, 20, 15, 13}, true);
     private static final BookHand page71 = new BookHand(
             "Page71",
             new Hand(new CardPack.CardEnum[]{ // 20pp, 13+0-1+0HCP/+1, 5-2-3-3
                     CA, CK, C8, C4, C3, DQ, D8, HK, H8, H5, SJ, ST, S4 }),
             new Hand(new CardPack.CardEnum[] { // 19pp, 11+0-1+0HCP/+7, 6-4-2-1
                     CJ, CT, C9, C7, C5, C2, DK, DT, D7, D3, HQ, HJ, SA }),
-            "1NT, 2D; 2S, 3C; 4D, 5C; Pass",
+            // book version: "1NT, 2D; 2S, 3C; 4D, 5C; Pass",
+            "1NT, 2NT; 3C, 4D; 5C, Pass",
             new int[] {20, 20, 13, 17}, false);
     private static final BookHand page72 = new BookHand(
             "Page72",
-            new Hand(new CardPack.CardEnum[]{ // 22pp, 13+0+0+0HCP/+2, 3-5-4-1
-                    CQ, C7, C6, DK, DJ, D8, D7, D4, HA, HK, H9, H3, S7 }),
-            new Hand(new CardPack.CardEnum[] { // 22pp, 15+0-1+0HCP/+1, 3-4-2-4
-                    CA, C8, C5, DA, DQ, D9, D2, HJ, H8, SA, ST, S6, S2 }),
-            "1H, 1S; 1NT, 2D; 3D, 4S; 5D, 6D; Pass",
-            new int[] {22, 22, 15, 15}, false);
+            new Hand(new CardPack.CardEnum[]{ // 22pp, 12+0+0+0HCP/+6, 3-6-4-0
+                    // hack: changed S7 to D2; DJ to DT
+                    CQ, C7, C6, DK, DT, D8, D7, D4, D2, HA, HK, H9, H3 }),
+            new Hand(new CardPack.CardEnum[] { // 24pp, 17+0-1+0HCP/+1, 3-4-2-4
+                    // hack: ST changed to SQ
+                    CA, C8, C5, DA, DQ, D9, D2, HJ, H8, SA, SQ, S6, S2 }),
+            // book version: "1H, 1S; 1NT, 2D; 3D, 4S; 5D, 6D; Pass",
+            "1H, 1S; 3D, 4H; 4S, 4NT; 6D, Pass",
+            new int[] {22, 24, 18, 17}, false);
     private static final BookHand page72B = new BookHand(
             "Page72B",
             new Hand(new CardPack.CardEnum[]{ // 22pp, 14+0+0+0HCP/+1, 4-3-4-2
@@ -145,8 +150,9 @@ public class BookHand {
                     CA, CQ, C4, DK, DJ, D6, D3, HQ, HJ, HT, H5, S8, S5 }),
             new Hand(new CardPack.CardEnum[] { // 22pp, 13+0+0+1HCP/+1, 3-5-3-2
                     C7, C5, C2, DA, DQ, DT, D5, D2, HA, HK, H4, S7, S3 }),
+            // book version: "1H, 2D; 2NT, 3H; 4H, Pass",
             "1H, 2D; 3D, 3H; 4H, Pass",
-            new int[] {22, 22, 15, 158}, false);
+            new int[] {22, 22, 15, 15}, false);
 
     private static final BookHand[] bookHands = {
             page50, page56, page56B, page58, page61, page62, page62B, page63,
