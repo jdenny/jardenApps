@@ -142,7 +142,8 @@ public class BookHand {
                     CK, C8, C5, C4, DJ, D8, D3, HA, HK, H7, H5, SK, S8 }),
             new Hand(new CardPack.CardEnum[] { // 25pp, 14+0+0+2HCP/+2, 4-1-3-5
                     CA, CQ, CT, C6, D7, HJ, H8, H4, SA, SQ, SJ, S7, S6 }),
-            "1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C, 6C; Pass",
+            // book version: "1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C, 6C; Pass",
+            "1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C; 6C, Pass",
             new int[] {22, 25, 15, 18}, false);
     private static final BookHand page77 = new BookHand(
             "Page77",

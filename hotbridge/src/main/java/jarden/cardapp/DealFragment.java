@@ -81,6 +81,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private CardPack cardPack;
 	private boolean randomDeals = false;
 	private BookHand[] bookHands = BookHand.getBookHands();
+	private BookHand bookHand;
 	private int bookHandsIndex = -1;
     private QuestionAnswer lastQA;
 	private boolean westDeal;
@@ -249,9 +250,8 @@ public class DealFragment extends Fragment implements OnClickListener {
         if (!randomDeals) {
             ++bookHandsIndex;
             if (bookHandsIndex >= bookHands.length) bookHandsIndex = 0;
-            BookHand bookHand = bookHands[bookHandsIndex];
+            bookHand = bookHands[bookHandsIndex];
             cardPack.setEastWest(bookHand);
-            bridgeable.setStatusMessage(bookHand.name);
         } else {
             cardPack.shuffle();
         }
@@ -271,11 +271,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         if (randomDeals) {
             cardPack.dealAndSort(true); // i.e. dealShow with bias in our favour
             this.westDeal = !this.westDeal;
+            bridgeable.setStatusMessage("");
         } else {
-            this.westDeal = !bookHands[bookHandsIndex].dealerEast;
+            bridgeable.setStatusMessage(bookHand.name);
+            this.westDeal = !bookHand.dealerEast;
         }
-        bridgeable.setStatusMessage("");
-        //!! resetBidList();
+        //?? resetBidList();
         for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
         lastQA = OPENING_BIDS;
         handsButton.setText("Us");
@@ -286,10 +287,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.shuffled = true;
         if (!westDeal && !twoPlayer) { // TODO: same as in showHands()
             getNextBid(partnerPlayer);
+        } else {
+            bidTextViews[0].setText("?");
         }
         showHands();
 	}
-	/*!!
+	/*??
     private void resetBidList() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.resetBidList()");
         for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
