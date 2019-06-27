@@ -2,6 +2,7 @@ package jarden.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 // TODO: hold cards as byte[], to indicate which player has this card!
@@ -69,6 +70,8 @@ public class CardPack {
 		return cards;
 	}
 	public void shuffle() {
+	    shuffle2(cards);
+	    /*!!
 		Random random = new Random();
 		Card swap;
 		for (int i = 0; i < DECK_SIZE; i++) {
@@ -77,7 +80,19 @@ public class CardPack {
 			cards[j] = cards[i];
 			cards[i] = swap;
 		}
+		*/
 	}
+	private static void shuffle2(Card[] cards2) {
+        Random random = new Random();
+        int length = cards2.length;
+        Card swap;
+        for (int i = 0; i < length; i++) {
+            int j = random.nextInt(length);
+            swap = cards2[j];
+            cards2[j] = cards2[i];
+            cards2[i] = swap;
+        }
+    }
 	/**
 	 * Actually, dealAndSort and sort. We're good like that.
 	 * If biased is true, make sure East/West have got the best hand!
@@ -113,7 +128,7 @@ public class CardPack {
 			}
 		}
 	}
-    public void setEastWest(BookHand bookHand) {
+    public void setBookHand(BookHand bookHand) {
         hands = new Hand[PLAYER_CT];
 	    hands[0] = bookHand.handWest;
 	    hands[2] = bookHand.handEast;
@@ -121,34 +136,133 @@ public class CardPack {
     public Hand getHand(Player player) {
 		return hands[player.ordinal()];
 	}
-	public void setPackFromBytes(byte[] data) {
-		int rankNum;
+	public void setDealFromBytes(byte[] data, boolean randomDeal) {
+        hands = new Hand[PLAYER_CT];
+        int index = 0;
+        hands[0] = new Hand(getCardsFromData(data, index));
+        if (randomDeal) {
+            index += 13;
+            hands[1] = new Hand(getCardsFromData(data, index));
+        }
+        index += 13;
+        hands[2] = new Hand(getCardsFromData(data, index));
+        if (randomDeal) {
+            index += 13;
+            hands[3] = new Hand(getCardsFromData(data, index));
+        }
+        /*!!
+        int rankNum;
 		int suitNum;
 		byte cardData;
+		int dataLength = data.length;
 		Rank[] rankValues = Rank.values();
 		Suit[] suitValues = Suit.values();
-		for (int i = 0; i < DECK_SIZE; i++) {
-			cardData = data[i];
-			rankNum = cardData % 16;
-			suitNum = cardData / 16;
-			cards[i] = new Card(suitValues[suitNum], rankValues[rankNum]);
-		}
+        ArrayList<Card> cardList = new ArrayList<>();
+        if (dataLength == 26) {
+            // i.e. just West and East hands
+            hands = new Hand[PLAYER_CT];
+            for (int i = 0; i < 13; i++) {
+                cardData = data[i];
+                rankNum = cardData % 16;
+                suitNum = cardData / 16;
+                cardList.add(new Card(suitValues[suitNum], rankValues[rankNum]));
+            }
+            hands[0] = new Hand(cardList);
+            cardList = new ArrayList<>();
+            for (int i = 13; i < 26; i++) {
+                cardData = data[i];
+                rankNum = cardData % 16;
+                suitNum = cardData / 16;
+                cardList.add(new Card(suitValues[suitNum], rankValues[rankNum]));
+            }
+            hands[2] = new Hand(cardList);
+        } else {
+            for (int i = 0; i < DECK_SIZE; i++) {
+                cardData = data[i];
+                rankNum = cardData % 16;
+                suitNum = cardData / 16;
+                cards[i] = new Card(suitValues[suitNum], rankValues[rankNum]);
+            }
+        }
+        */
 	}
+	private static List<Card> getCardsFromData(byte[] data, int index) {
+        ArrayList<Card> cardList = new ArrayList<>();
+        int rankNum;
+        int suitNum;
+        byte cardData;
+        Rank[] rankValues = Rank.values();
+        Suit[] suitValues = Suit.values();
+        for (int c = 0; c < 13; c++) {
+            cardData = data[c + index];
+            rankNum = cardData % 16;
+            suitNum = cardData / 16;
+            cardList.add(new Card(suitValues[suitNum], rankValues[rankNum]));
+        }
+        return cardList;
+    }
 	/**
 	 * Use one byte to encode each card: suitNum and rankNum.
 	 * @return byte[] to be sent across network
 	 */
-	public byte[] getDealAsBytes() {
-		byte[] data = new byte[DECK_SIZE];
-		Card card;
-		int rankNum;
-		int suitNum;
-		for (int i = 0; i < DECK_SIZE; i++) {
-			card = cards[i];
-			rankNum = card.getRank().ordinal();
-			suitNum = card.getSuit().ordinal();
-			data[i] = (byte) (suitNum * 16 + rankNum);
-		}
+	public byte[] getDealAsBytes(boolean randomDeals) {
+	    int dataLength = randomDeals ? 52 : 26;
+        byte[] data = new byte[dataLength];
+        int index = 0;
+        addHandToData(hands[0], data, index);
+        if (randomDeals) {
+            index += 13;
+            addHandToData(hands[1], data, index);
+        }
+        index += 13;
+        addHandToData(hands[2], data, index);
+        if (randomDeals) {
+            index += 13;
+            addHandToData(hands[3], data, index);
+        }
+        /*!!
+	    if (!randomDeals) {
+            Card card;
+            int rankNum;
+            int suitNum;
+            ArrayList<Card> cards = hands[0].getCards();
+            for (int c = 0; c < 13; c++) {
+                card = cards.get(c);
+                rankNum = card.getRank().ordinal();
+                suitNum = card.getSuit().ordinal();
+                data[c] = (byte) (suitNum * 16 + rankNum);
+            }
+            cards = hands[2].getCards();
+            for (int c = 0; c < 13; c++) {
+                card = cards.get(c);
+                rankNum = card.getRank().ordinal();
+                suitNum = card.getSuit().ordinal();
+                data[c + 13] = (byte) (suitNum * 16 + rankNum);
+            }
+        } else {
+            Card card;
+            int rankNum;
+            int suitNum;
+            for (int i = 0; i < DECK_SIZE; i++) {
+                card = cards[i];
+                rankNum = card.getRank().ordinal();
+                suitNum = card.getSuit().ordinal();
+                data[i] = (byte) (suitNum * 16 + rankNum);
+            }
+        }
+        */
 		return data;
 	}
+	private static void addHandToData(Hand hand, byte[] data, int index) {
+        Card card;
+        int rankNum;
+        int suitNum;
+        List<Card> cards = hand.getCards();
+        for (int c = 0; c < 13; c++) {
+            card = cards.get(c);
+            rankNum = card.getRank().ordinal();
+            suitNum = card.getSuit().ordinal();
+            data[index + c] = (byte) (suitNum * 16 + rankNum);
+        }
+    }
 }

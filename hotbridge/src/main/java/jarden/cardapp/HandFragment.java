@@ -12,7 +12,7 @@ import com.jardenconsulting.cardapp.BuildConfig;
 import com.jardenconsulting.cardapp.HotBridgeActivity;
 import com.jardenconsulting.cardapp.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import jarden.cards.Card;
 import jarden.cards.CardPack;
@@ -62,7 +62,7 @@ public class HandFragment extends Fragment {
 	}
 	public void showHand() {
         Hand hand = cardPack.getHand(player);
-		ArrayList<Card> cards = hand.getCards();
+		List<Card> cards = hand.getCards();
 		StringBuilder sb = new StringBuilder();
 		int index = 0;
 		int handSize = cards.size();

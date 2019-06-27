@@ -109,7 +109,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             handsButton.setText(handsButtonText);
         }
 		bidButton = view.findViewById(R.id.bidButton);
-        this.bidButton.setEnabled(!twoPlayer);
+        //!! this.bidButton.setEnabled(!twoPlayer);
         bidButton.setOnClickListener(this);
 		this.suggestedBidTextView = view.findViewById(R.id.suggestedBidtextView);
         LinearLayout[] bidLayouts = new LinearLayout[6];
@@ -251,13 +251,15 @@ public class DealFragment extends Fragment implements OnClickListener {
             ++bookHandsIndex;
             if (bookHandsIndex >= bookHands.length) bookHandsIndex = 0;
             bookHand = bookHands[bookHandsIndex];
-            cardPack.setEastWest(bookHand);
+            cardPack.setBookHand(bookHand);
         } else {
             cardPack.shuffle();
+            // TODO: incorporate dealAndSort into shuffle
+            cardPack.dealAndSort(true); // i.e. dealShow with bias in our favour
         }
         if (twoPlayer) {
             if (bluetoothService != null && bluetoothService.getState() == BTState.connected) {
-                byte[] data = cardPack.getDealAsBytes();
+                byte[] data = cardPack.getDealAsBytes(randomDeals);
                 bluetoothService.write(data);
             } else {
                 Toast.makeText(activity, "Not connected", Toast.LENGTH_LONG).show();
@@ -269,7 +271,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.dealAndShow()");
         firstBidPass = false;
         if (randomDeals) {
-            cardPack.dealAndSort(true); // i.e. dealShow with bias in our favour
             this.westDeal = !this.westDeal;
             bridgeable.setStatusMessage("");
         } else {
@@ -283,7 +284,8 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.handToShow = SHOW_ME;
         // game ends after 3 consecutive passes, or first 4
         this.biddingOver = false;
-        this.bidButton.setEnabled(!twoPlayer);
+        //!! this.bidButton.setEnabled(!twoPlayer);
+        this.bidButton.setEnabled(true);
         this.shuffled = true;
         if (!westDeal && !twoPlayer) { // TODO: same as in showHands()
             getNextBid(partnerPlayer);
@@ -421,7 +423,8 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	public void onMessageRead(byte[] data) {
 		if (cardPack != null) {
-			cardPack.setPackFromBytes(data);
+		    randomDeals = (data.length == 52);
+			cardPack.setDealFromBytes(data, randomDeals);
 			dealAndShow();
 		} else {
             Toast.makeText(activity, "message read, but no card pack!", Toast.LENGTH_LONG).show();

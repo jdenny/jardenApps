@@ -1,6 +1,7 @@
 package jarden.cards;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jarden.cards.CardPack.CardEnum;
 
@@ -10,7 +11,7 @@ public class Hand {
     public final static int H = 2;
     public final static int S = 3;
 
-	private ArrayList<Card> cards;
+	private List<Card> cards;
 	// all 4-element arrays for suits in order: c, d, h, s
 	private int[] suitLengths = new int[4];
 	private int[] suitValues = new int[4]; // A=4, K=3, Q=2, J=1
@@ -28,7 +29,7 @@ public class Hand {
 	private boolean balanced;
     private Suit trumpSuit = null;
 
-    public Hand(ArrayList<Card> cards) {
+    public Hand(List<Card> cards) {
 		this.cards = cards;
 	}
 	public Hand(CardEnum[] cardEnums) {
@@ -37,7 +38,7 @@ public class Hand {
 			cards.add(CardPack.SORTED_CARDS[cardEnum.ordinal()]);
 		}
 	}
-	public ArrayList<Card> getCards() {
+	public List<Card> getCards() {
 		return this.cards;
 	}
 	public String cardsAsString() {

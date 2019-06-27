@@ -104,7 +104,7 @@ public class HotBridgeActivity extends AppCompatActivity
             this.bluetoothFragment = (BluetoothFragment) fragmentManager.findFragmentByTag(BLUETOOTH);
         }
         this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-        randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, true);
+        randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, false);
         dealFragment.setRandomDeals(randomDeals);
     }
 	@Override
