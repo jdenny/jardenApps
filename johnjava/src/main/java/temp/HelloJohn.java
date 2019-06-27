@@ -15,7 +15,13 @@ public class HelloJohn {
 
     public static void main(String[] args) {
         System.out.println("hello John");
-        testGetBidsFromSequence();
+        // testGetBidsFromSequence();
+        int number = 175;
+        byte bye = (byte) number;
+        int number2 = bye;
+        int number3 = Byte.toUnsignedInt(bye);
+        System.out.println("number2=" + number2);
+        System.out.println("number3=" + number3);
         System.out.println("adios amigo");
     }
 

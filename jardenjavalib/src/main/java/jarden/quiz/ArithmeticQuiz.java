@@ -47,7 +47,7 @@ public class ArithmeticQuiz extends Quiz {
 		default:
 			// assert opCode == 3: "unexpected opCode=" + opCode;
 			op = '/';
-			// shuffle the values a bit, so that the answer is an integer
+			// shuffleAndDeal the values a bit, so that the answer is an integer
 			correctAnswer = a;
 			a = a * b;
 			break;

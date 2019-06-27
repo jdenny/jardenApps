@@ -90,6 +90,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     private boolean twoPlayer = false;
     private boolean firstBidPass;
     private BridgeQuiz bridgeQuiz;
+    private String dealName;
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -245,65 +246,67 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         if (!biddingOver) bidTextViews[j].setText("?");
     }
-	public void shuffleDealShow() {
+
+    /**
+     * if randomDeals: shuffle and deal the cards
+     * else: get next book-hand (preset hands)
+     */
+    public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
         if (!randomDeals) {
             ++bookHandsIndex;
             if (bookHandsIndex >= bookHands.length) bookHandsIndex = 0;
             bookHand = bookHands[bookHandsIndex];
             cardPack.setBookHand(bookHand);
+            dealName = "book hand " + (bookHandsIndex + 1);
+            this.westDeal = !bookHand.dealerEast;
         } else {
-            cardPack.shuffle();
-            // TODO: incorporate dealAndSort into shuffle
-            cardPack.dealAndSort(true); // i.e. dealShow with bias in our favour
+            cardPack.shuffleAndDeal(true); // i.e. dealShow with bias in our favour
+            this.westDeal = !this.westDeal;
+            dealName = "random deal";
         }
         if (twoPlayer) {
             if (bluetoothService != null && bluetoothService.getState() == BTState.connected) {
-                byte[] data = cardPack.getDealAsBytes(randomDeals);
+                // boolean randomDeals, boolean westDeal, int dealNumber
+                byte[] prefix = new byte[3];
+                if (randomDeals) {
+                    prefix[0] = 1;
+                    prefix[2] = 0;
+                } else {
+                    prefix[0] = 0;
+                    prefix[2] = (byte)(bookHandsIndex + 1);
+                }
+                if (westDeal) prefix[1] = 1;
+                else prefix[1] = 0;
+                byte[] data = cardPack.getDealAsBytes(randomDeals, prefix);
                 bluetoothService.write(data);
             } else {
                 Toast.makeText(activity, "Not connected", Toast.LENGTH_LONG).show();
             }
         }
-        dealAndShow();
+        showDeal();
     }
-    private void dealAndShow() {
-        if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.dealAndShow()");
+    private void showDeal() {
+        if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showDeal()");
         firstBidPass = false;
-        if (randomDeals) {
-            this.westDeal = !this.westDeal;
-            bridgeable.setStatusMessage("");
-        } else {
-            bridgeable.setStatusMessage(bookHand.name);
-            this.westDeal = !bookHand.dealerEast;
-        }
-        //?? resetBidList();
         for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
         lastQA = OPENING_BIDS;
         handsButton.setText("Us");
         this.handToShow = SHOW_ME;
         // game ends after 3 consecutive passes, or first 4
         this.biddingOver = false;
-        //!! this.bidButton.setEnabled(!twoPlayer);
         this.bidButton.setEnabled(true);
         this.shuffled = true;
-        if (!westDeal && !twoPlayer) { // TODO: same as in showHands()
+        if (!westDeal && !twoPlayer) {
             getNextBid(partnerPlayer);
         } else {
             bidTextViews[0].setText("?");
         }
         showHands();
 	}
-	/*??
-    private void resetBidList() {
-        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.resetBidList()");
-        for (TextView bidTextView: this.bidTextViews) bidTextView.setText("");
-        int firstBidPos = westDeal ? 0 : 2;
-        bidTextViews[firstBidPos].setText("?");
-    }
-    */
 	public void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
+        bridgeable.setStatusMessage(this.dealName);
         if (randomDeals) {
             northFragment.showHand();
             southFragment.showHand();
@@ -311,15 +314,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         eastFragment.showHand();
         westFragment.showHand();
         showSelectedHands();
-        /*!!
-        if (!twoPlayer) {
-            // bidding doesn't yet work on twoPlayer; TODO: fix it!
-            for (int i = 0; i < bidList.size(); i++) {
-                this.bidTextViews[i].setText(bidList.get(i).toString());
-            }
-            indicateNextBid();
-        }
-        */
 	}
     private void showSelectedHands() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showSelectedHands()");
@@ -421,11 +415,21 @@ public class DealFragment extends Fragment implements OnClickListener {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onStop()");
 		super.onStop();
 	}
+
+    /**
+     * @param data Expected structure:
+     *      0   boolean randomDeals
+     *      1   boolean westDeal
+     *      2   int dealNumber
+     *      3+  26 or 52 cards
+     */
 	public void onMessageRead(byte[] data) {
-		if (cardPack != null) {
-		    randomDeals = (data.length == 52);
-			cardPack.setDealFromBytes(data, randomDeals);
-			dealAndShow();
+        if (cardPack != null) {
+            randomDeals = (data[0] == 1);
+            westDeal = (data[1] == 1);
+            dealName = "book hand " + data[2];
+			cardPack.setDealFromBytes(data, randomDeals, 3);
+			showDeal();
 		} else {
             Toast.makeText(activity, "message read, but no card pack!", Toast.LENGTH_LONG).show();
 		}

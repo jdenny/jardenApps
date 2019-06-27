@@ -744,8 +744,7 @@ public class TestHand {
     private void testRandomPrimaryBids() {
         System.out.println("\ntestRandomPrimaryBids()");
         for (int i = 0; i < 50; i++) {
-            cardPack.shuffle();
-            cardPack.dealAndSort(true);
+            cardPack.shuffleAndDeal(true);
             Hand hand = cardPack.getHand(Player.West);
             System.out.print(hand);
             int matchCt = 0;
@@ -860,8 +859,7 @@ public class TestHand {
     private void testRandomNBids(int dealCt, int bidCt) {
         System.out.println("\ntestRandomNBids()");
         for (int j = 0; j < dealCt; j++) {
-            cardPack.shuffle();
-            cardPack.dealAndSort(true);
+            cardPack.shuffleAndDeal(true);
             Hand handWest = cardPack.getHand(Player.West);
             Hand handEast = cardPack.getHand(Player.East);
             System.out.println("West: " + handWest);
@@ -884,8 +882,7 @@ public class TestHand {
     private void testAllSecondBids() {
         System.out.println("\ntestAllSecondBids()");
         for (int i = 0; i < 50; i++) {
-            cardPack.shuffle();
-            cardPack.dealAndSort(true);
+            cardPack.shuffleAndDeal(true);
             Hand handEast = cardPack.getHand(Player.East);
             List<QuestionAnswer> matches = new ArrayList<>();
 
@@ -930,8 +927,7 @@ public class TestHand {
     private void testRandomSecondBids() {
         System.out.println("\ntestRandomSecondBids()");
         for (int i = 0; i < 50; i++) {
-            cardPack.shuffle();
-            cardPack.dealAndSort(true);
+            cardPack.shuffleAndDeal(true);
             Hand handWest = cardPack.getHand(Player.West);
             Hand handEast = cardPack.getHand(Player.East);
 
