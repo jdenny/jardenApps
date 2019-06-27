@@ -753,7 +753,7 @@ Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 17+ HCP, keycard-ask
 Q: 1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-clubs
 Q: 1H, 1S; 1NT, 2D; 3C
 F1: [a]responses_to_relay[/a]
@@ -768,14 +768,14 @@ Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H
 F1: [a]keycard_ask[/a]
 A: 15+ HCP
 Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-clubs
 Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C; 6C
 A: to-play
 Q: 1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C; 6C, Pass
 A: to-play
 Q: 1H, 1S; 1NT, 2D; 3C, 4H
-F1: [a]autofit[/a] [a]keycard_ask[/a]
+F1: [a]autofit[/a] [a]keycard_ask[/a]. Alert: artificial
 A: 21+ HCP, 4+ clubs, trumps-clubs, keycard-ask
 Q: 1H, 1S; 1NT, 2D; 3D
 F1: [a]responses_to_relay[/a]
@@ -792,7 +792,7 @@ Q: 1H, 1S; 1NT, 2D; 3D, 4H; 4S
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 16+ HCP, keycard-ask
 Q: 1H, 1S; 1NT, 2D; 3D, 4H; 4S, 4NT
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-diamonds
 Q: 1H, 1S; 1NT, 2D; 3D, 4H; 4S, 4NT; 6D
 A: to-play
@@ -802,7 +802,7 @@ Q: 1H, 1S; 1NT, 2D; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
 A: 21+ HCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
 Q: 1H, 1S; 1NT, 2D; 3D, 4S; 5D
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-diamonds
 Q: 1H, 1S; 1NT, Pass
 A: <11 HCP, no 6+ suit
@@ -870,7 +870,7 @@ Q: 1H, 1S; 3D, 4H; 4S
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 16+ HCP, keycard-ask
 Q: 1H, 1S; 3D, 4H; 4S, 4NT
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-diamonds
 Q: 1H, 1S; 3D, 4H; 4S, 4NT; 6D
 A: to-play
@@ -880,7 +880,7 @@ Q: 1H, 1S; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
 A: 21+ HCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
 Q: 1H, 1S; 3D, 4S; 5D
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-diamonds
 Q: 1H, 1S; 3D, 4S; 5D, 6D
 A: to-play
@@ -1058,7 +1058,6 @@ Q: 1H, 2NT; 4D
 F1: [a]keycard_ask[/a] as agreed hearts. Alert: artificial
 A: 22+ HCP, keycard-ask
 
-
 # 2 bids after 1S
 Q: 1S, 1NT; 2C
 F1: [a]raw[/a]
@@ -1226,21 +1225,22 @@ F1: 8+ HCP, exploring game or more
 A: 8+ HCP, no 4+ minor
 Q: 1D, 1S; 2S, 2NT; 3C
 A: 17+ HCP, 4+ clubs
-Q: 1D, 1S; 2S, 2NT; 3C, 4H
+Q: 1D, 1S; 2S, 2NT; 3C, 4D
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 16+ HCP, keycard-ask
-Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 1-or-4 keycards-spades
-Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C
 F1: [a]queen_ask[/a]. Alert: Artificial
 A: spade-queen-ask
-Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 5S
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 5S
 A: not spade-queen
-Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 6C
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C
 A: spade-queen, club-king
-Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 6C, 6S
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C, 6S
 A: to-play
-Q: 1D, 1S; 2S, 2NT; 3C, 4H; 5C, 5D; 6C, 6S; Pass
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C, 6S; Pass
 A: to-play
 Q: 1D, 1S; 2S, 2NT; 3H
 A: 17+ HCP, 4+ hearts
@@ -1260,6 +1260,7 @@ Q: 1D, 1S; 2S, 3D; 4D
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 25+ HCP, keycard-ask
 Q: 1D, 1S; 2S, 3D; 4D, 4NT
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-spades
 Q: 1D, 1S; 2S, 3D; 4D, 4NT; 5C
 F1: [a]queen_ask[/a]. Alert: Artificial
@@ -1333,7 +1334,7 @@ Q: 1C, 2D; 3C, 4C; 4H
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 22+ HCP, keycard-ask
 Q: 1C, 2D; 3C, 4C; 4H, 4S
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-clubs
 Q: 1C, 2D; 3C, 4C; 4H, 4S; 4NT
 F1: partner has no keycards; 4NT in minor fit is always natural
@@ -1538,7 +1539,7 @@ Q: 1C, 1H; 2H, 3C; 4C, 4D
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: 13+ HCP, keycard-ask
 Q: 1C, 1H; 2H, 3C; 4C, 4D; 4H
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-hearts
 
 #page 133
@@ -1549,7 +1550,7 @@ Q: 2C, 2NT; 3H, 4H
 F1: [a]keycard_ask[/a]. Alert: artificial
 A: keycard-ask
 Q: 2C, 2NT; 3H, 4H; 4S
-F1: [a]keycard_ask[/a]. Alert: artificial
+F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-clubs
 
 # page 148

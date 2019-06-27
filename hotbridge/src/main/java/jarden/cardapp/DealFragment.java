@@ -110,7 +110,6 @@ public class DealFragment extends Fragment implements OnClickListener {
             handsButton.setText(handsButtonText);
         }
 		bidButton = view.findViewById(R.id.bidButton);
-        //!! this.bidButton.setEnabled(!twoPlayer);
         bidButton.setOnClickListener(this);
 		this.suggestedBidTextView = view.findViewById(R.id.suggestedBidtextView);
         LinearLayout[] bidLayouts = new LinearLayout[6];
@@ -199,7 +198,6 @@ public class DealFragment extends Fragment implements OnClickListener {
             lastQA = bridgeQuiz.getNextBid(hand, lastQA, partnerHand);
             eastFragment.showHCP();
             westFragment.showHCP();
-
         } catch (BadBridgeTokenException e) {
             // treat as no bid!
             if (BuildConfig.DEBUG) Log.e(TAG, e.toString());
@@ -297,10 +295,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.biddingOver = false;
         this.bidButton.setEnabled(true);
         this.shuffled = true;
-        if (!westDeal && !twoPlayer) {
-            getNextBid(partnerPlayer);
+        boolean iAmWest = (mePlayer == Player.West);
+        if (iAmWest == westDeal) {
+            int bidPos = westDeal ? 0 : 2;
+            bidTextViews[bidPos].setText("?");
         } else {
-            bidTextViews[0].setText("?");
+            getNextBid(partnerPlayer);
         }
         showHands();
 	}
@@ -427,7 +427,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         if (cardPack != null) {
             randomDeals = (data[0] == 1);
             westDeal = (data[1] == 1);
-            dealName = "book hand " + data[2];
+            dealName = (data[2] == 0) ? "random deal" : "book hand " + data[2];
 			cardPack.setDealFromBytes(data, randomDeals, 3);
 			showDeal();
 		} else {

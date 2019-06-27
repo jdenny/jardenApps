@@ -13,7 +13,7 @@ public class CardPack {
 		H2, H3, H4, H5, H6, H7, H8, H9, HT, HJ, HQ, HK, HA,
 		S2, S3, S4, S5, S6, S7, S8, S9, ST, SJ, SQ, SK, SA
 	}
-	/*!!
+	/*
 	public enum BidEnum {
 		BPass(null, "pass"), NONE(null, "-"),
 		B1C(Club, "1C"), B1D(Diamond, "1D"), B1H(Heart, "1H"), B1S(Spade, "1S"), B1N(null, "1NT"),

@@ -101,7 +101,9 @@ public class HandFragment extends Fragment {
 		showHCP();
 	}
 	public void showHCP() {
-        int hcp = cardPack.getHand(player).getHighCardPoints();
-	    playerHCP.setText(" " + hcp + "hcp");
+        Hand hand = cardPack.getHand(player);
+        if (hand != null) {
+            playerHCP.setText(" " + hand.getHighCardPoints() + "hcp");
+        }
     }
 }

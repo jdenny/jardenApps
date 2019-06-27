@@ -38,12 +38,17 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
+need to alert before bidding (as in bridj)
+
+verbose mode to show meaning of partner's bid; could be hypertext on bids in table
+
+swap east-west for bookHands
+
+keep track of failed deals, current deals, as in quiz
 
 change all multi-word terms to use _ instead of -
 
-Show qa.helpText under qa.answer on screen; make hypertext life, as in ReviseQuiz
-
-add bidding to 2-player
+Show qa.helpText under qa.answer on screen; make hypertext live, as in ReviseQuiz
 
 Devise a way to share BridgeQuiz between 2 parts of app
 
