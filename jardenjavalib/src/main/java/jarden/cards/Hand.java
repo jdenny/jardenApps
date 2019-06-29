@@ -103,11 +103,11 @@ public class Hand {
         int suitOrdinal = suit.ordinal();
         return aceCt + (kings[suitOrdinal] ? 1 : 0);
     }
-    public boolean hasKing(int suitOrdinal) {
-        return kings[suitOrdinal];
+    public boolean hasKing(Suit suit) {
+        return kings[suit.ordinal()];
     }
-    public boolean hasQueen(int suitOrdinal) {
-        return queens[suitOrdinal];
+    public boolean hasQueen(Suit suit) {
+        return queens[suit.ordinal()];
     }
     private void evaluateHand() {
 		for (Card card : cards) {
@@ -306,15 +306,15 @@ public class Hand {
         }
         // 4+ spades in both?
         if (suitLengths[2] >= 4 && partnerHand.suitLengths[2] >= 4) {
-            suit = Suit.Heart;
+            suit = Suit.hearts;
         } else if (suitLengths[3] >= 4 && partnerHand.suitLengths[3] >= 4) {
-            suit = Suit.Spade;
+            suit = Suit.spades;
         } else if (partnerHand.suitLengths[2] ==3 && suitLengths[2] >= 5 ||
                 suitLengths[2] ==3 && partnerHand.suitLengths[2] >= 5) {
-            suit = Suit.Heart;
+            suit = Suit.hearts;
         } else if (partnerHand.suitLengths[3] ==3 && suitLengths[3] >= 5 ||
                 suitLengths[3] ==3 && partnerHand.suitLengths[3] >= 5) {
-            suit = Suit.Spade;
+            suit = Suit.spades;
         } else if (longestSuitCt < 8) {
             suit = null; // no trumps
         }
@@ -338,7 +338,7 @@ public class Hand {
         6 33 missing 1 keycard or void
         7 37 & void or ace in each suit, K trumps
          */
-        boolean minorSuit = (suit == Suit.Club || suit == Suit.Diamond);
+        boolean minorSuit = (suit == Suit.clubs || suit == Suit.diamonds);
         if (teamHCP >= 37) {
             level = keyCardCt == 5 ? 7 : 6;
         } else if (teamHCP >= 33) {

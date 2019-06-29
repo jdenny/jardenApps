@@ -1,7 +1,5 @@
 package jarden.cards;
 
-import static jarden.cards.Hand.*;
-
 /**
  * Created by john.denny@gmail.com on 08/06/2019.
  * Example parsing:
@@ -10,18 +8,32 @@ import static jarden.cards.Hand.*;
  *    5+       5          -1
  *    <5      -1           4
  *    5-6      5           6
+ *    tokens:
+ *    pp - number of playing points
  */
 public class ParsedAnswer {
+    /*
+    TODO: refactor Suit to use these values
+    add logic in ParsedAnswer to test how many keycards in hand doing keycard-ask
+    1-or-4 keycards-diamonds -> trumpSuit = Suit.diamonds, keycardsMin = 1, keycardsMax = 4
+    <2 keycards-diamonds -> trumpSuit = Suit.diamonds, keycardsMax = 1, keycardsMin = -1
+    2+ keycards-diamonds -> trumpSuit = Suit.diamonds, keycardsMin = 2, keycardsMax = -1
+
+    tokens using suit:
+    winners-clubs   Suit trumpSuit
+    trumps-clubs    Suit trumpSuit, boolean setTrumps
+    guard-clubs     boolean guardClubs - one per suit
+    keycards-clubs  trumpSuit, minKeycards, maxKeycards
+    king-clubs      kingSuit, boolean hasKing
+    queen-clubs     boolean trumpQueen, trumpSuit
+     */
     private int minPP = -1, maxPP = -1;
     private int minHCP = -1, maxHCP = -1;
     private int minSuit = -1, maxSuit = -1;
     private int minMajor = -1;
     private int minMinor = -1, maxMinor = -1;
     private int minMinors1 = -1, minMinors2 = -1;
-    private int minClubWinners = -1;
-    private int minDiamondWinners = -1;
-    private int minHeartWinners = -1;
-    private int minSpadeWinners = -1;
+    private int minWinnersInSuit = -1;
     private int minClubs = -1, maxClubs = -1;
     private int minDiamonds = -1, maxDiamonds = -1;
     private int minHearts = -1, maxHearts = -1;
@@ -35,21 +47,17 @@ public class ParsedAnswer {
     private boolean heartGuard = false;
     private boolean spadeGuard = false;
     private boolean balanced = false;
-    private Boolean clubKing = null;
-    private Boolean diamondKing = null;
-    private Boolean heartKing = null;
-    private Boolean spadeKing = null;
-    private Boolean clubQueen = null;
-    private Boolean diamondQueen = null;
-    private Boolean heartQueen = null;
-    private Boolean spadeQueen = null;
+    private boolean hasKing;
+    private boolean trumpQueen;
+    private Suit kingSuit = null;
+    private Suit queenSuit = null;
     private int hcpOrSkew = -1;
     private int hcpOrSkewWith4PlusMinor = -1;
-    private int keyCardsClubs = -1;
-    private int keyCardsDiamonds = -1;
-    private int keyCardsHearts = -1;
-    private int keyCardsSpades = -1;
+    private int minKeycards = -1;
+    private int maxKeycards = -1;
+    private boolean setTrumps = false;
     private Suit trumpSuit = null;
+    private Suit suit = null;
     /*
     if suitSetter: current hand is declarer
     else: current hand is dummy (i.e. current hand must have supported declarer's suit
@@ -63,7 +71,7 @@ public class ParsedAnswer {
             "in", "both", // readability
             // notes to reader:
             "autofit", "compelling-relay", "invitational-relay", "keycard-ask", "limited",
-            "spade-queen-ask", "to-play", "values-for-5", "waiting"
+            "queen-ask", "to-play", "values-for-5", "waiting"
     };
 
     public ParsedAnswer(String answer) throws BadBridgeTokenException {
@@ -75,7 +83,6 @@ public class ParsedAnswer {
         String[] tokens = answer.split("[ ,;]+");
         int previousMin = -1;
         int previousMax = -1;
-        int orNumber = -1;
         boolean isNegative = false;
         for (int tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
             String token = tokens[tokenIndex];
@@ -90,14 +97,14 @@ public class ParsedAnswer {
 
             if (token.equals("pp")) {
                 // usage of pp: <20 pp, 26+ pp, 25 pp, 20-22 pp
-                if (previousMax > 0) {
+                //!! if (previousMax > 0) { // TODO: etc!
                     maxPP = previousMax;
                     previousMax = -1;
-                }
-                if (previousMin > 0) {
+                //!!}
+                //!! if (previousMin > 0) {
                     minPP = previousMin;
                     previousMin = -1;
-                }
+                //!! }
             } else if (token.equals("HCP")) {
                 // usage of HCP: 6+ HCP, 11-15 HCP
                 if (previousMax > 0) {
@@ -217,24 +224,10 @@ public class ParsedAnswer {
                         }
                     }
                 }
-            } else if (token.equals("club-winners")) {
+            } else if (token.startsWith("winners-")) {
                 if (previousMin > 0) {
-                    minClubWinners = previousMin;
-                    previousMin = -1;
-                }
-            } else if (token.equals("diamond-winners")) {
-                if (previousMin > 0) {
-                    minDiamondWinners = previousMin;
-                    previousMin = -1;
-                }
-            } else if (token.equals("heart-winners")) {
-                if (previousMin > 0) {
-                    minHeartWinners = previousMin;
-                    previousMin = -1;
-                }
-            } else if (token.equals("spade-winners")) {
-                if (previousMin > 0) {
-                    minSpadeWinners = previousMin;
+                    suit = Suit.valueOf(token.substring(8));
+                    minWinnersInSuit = previousMin;
                     previousMin = -1;
                 }
             } else if (token.equals("biddable-suits")) {
@@ -255,72 +248,39 @@ public class ParsedAnswer {
                     previousMin = -1;
                     isNegative = false;
                 }
-            } else if (token.equals("keycards-clubs")) {
-                keyCardsClubs = previousMin;
+            } else if (token.startsWith("keycards-")) {
+                trumpSuit = Suit.valueOf(token.substring(9));
+                minKeycards = previousMin;
+                maxKeycards = previousMax;
+                //!! keyCardsClubs = previousMin;
                 // previousMax not needed to keycards
                 previousMin = -1;
                 previousMax = -1;
-            } else if (token.equals("keycards-diamonds")) {
-                keyCardsDiamonds = previousMin;
-                // previousMax not needed to keycards
-                previousMin = -1;
-                previousMax = -1;
-            } else if (token.equals("keycards-hearts")) {
-                keyCardsHearts = previousMin;
-                // previousMax not needed to keycards
-                previousMin = -1;
-                previousMax = -1;
-            } else if (token.equals("keycards-spades")) {
-                keyCardsSpades = previousMin;
-                // previousMax not needed to keycards
-                previousMin = -1;
-                previousMax = -1;
-            } else if (token.equals("club-guard")) {
+            } else if (token.equals("guard-clubs")) {
                 clubGuard = true;
-            } else if (token.equals("diamond-guard")) {
+            } else if (token.equals("guard-diamonds")) {
                 diamondGuard = true;
-            } else if (token.equals("heart-guard")) {
+            } else if (token.equals("guard-hearts")) {
                 heartGuard = true;
-            } else if (token.equals("spade-guard")) {
+            } else if (token.equals("guard-spades")) {
                 spadeGuard = true;
-            } else if (token.equals("club-king")) {
-                clubKing = !isNegative;
+            } else if (token.startsWith("king-")) {
+                kingSuit = Suit.valueOf(token.substring(5));
+                hasKing = !isNegative;
                 isNegative = false;
-            } else if (token.equals("diamond-king")) {
-                diamondKing = !isNegative;
-                isNegative = false;
-            } else if (token.equals("heart-king")) {
-                heartKing = !isNegative;
-                isNegative = false;
-            } else if (token.equals("spade-king")) {
-                spadeKing = !isNegative;
-                isNegative = false;
-            } else if (token.equals("club-queen")) {
-                clubQueen = !isNegative;
-                isNegative = false;
-            } else if (token.equals("diamond-queen")) {
-                diamondQueen = !isNegative;
-                isNegative = false;
-            } else if (token.equals("heart-queen")) {
-                heartQueen = !isNegative;
-                isNegative = false;
-            } else if (token.equals("spade-queen")) {
-                spadeQueen = !isNegative;
+            } else if (token.startsWith("queen-")) {
+                queenSuit = Suit.valueOf(token.substring(6));
+                trumpQueen = !isNegative;
                 isNegative = false;
             } else if (token.equals("all-suits-guarded")) {
                 allSuitsGuarded = true;
             } else if (token.equals("balanced")) {
                 balanced = true;
-            } else  if (token.equals("suit-setter")){
+            } else  if (token.equals("suit-setter")) {
                 suitSetter = true;
-            } else  if (token.equals("trumps-clubs")){
-                trumpSuit = Suit.Club;
-            } else  if (token.equals("trumps-diamonds")){
-                trumpSuit = Suit.Diamond;
-            } else  if (token.equals("trumps-hearts")){
-                trumpSuit = Suit.Heart;
-            } else  if (token.equals("trumps-spades")){
-                trumpSuit = Suit.Spade;
+            } else if (token.startsWith("trumps-")) {
+                trumpSuit = Suit.valueOf(token.substring(7));
+                setTrumps = true;
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
@@ -351,7 +311,7 @@ public class ParsedAnswer {
             } else if (token.contains("-or-")) {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
-                orNumber = Integer.parseInt(token.substring(indexMinus + 4));
+                previousMax = Integer.parseInt(token.substring(indexMinus + 4));
             } else if (token.contains("-")) {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
@@ -396,7 +356,7 @@ public class ParsedAnswer {
         if (pa.minPP >= 0 && handPP < pa.minPP) return false;
         if (pa.maxPP >= 0 && handPP > pa.maxPP) return false;
         int handHCP = hand.getHighCardPoints();
-        if (trumpSuit != null) {
+        if (setTrumps) {
             // i.e. what would be hcp if agreed or set trumps on this bid
             handHCP += hand.getAdjustmentForTrumps(trumpSuit, suitSetter);
         }
@@ -442,14 +402,10 @@ public class ParsedAnswer {
                 suitLengths[3] > pa.maxSpades) return false;
         if (pa.heartsWithHonours >= 0 &&
                 suitLengths[2] < pa.heartsWithHonours && suitValues[2] < 7) return false;
-        if (pa.minClubWinners > 0 &&
-                (suitLengths[0] + suitValues[0] < pa.minClubWinners * 3)) return false;
-        if (pa.minDiamondWinners > 0 &&
-                (suitLengths[1] + suitValues[1] < pa.minDiamondWinners * 3)) return false;
-        if (pa.minHeartWinners > 0 &&
-                (suitLengths[2] + suitValues[2] < pa.minHeartWinners * 3)) return false;
-        if (pa.minSpadeWinners > 0 &&
-                (suitLengths[3] + suitValues[3] < pa.minSpadeWinners * 3)) return false;
+        if (pa.minWinnersInSuit > 0) {
+            int suitNum = suit.ordinal();
+            if ((suitLengths[suitNum] + suitValues[suitNum]) < pa.minWinnersInSuit) return false;
+        }
         if (pa.hcpOrSkew >= 0 && handHCP < pa.hcpOrSkew && !hand.isSkew()) return false;
         if (pa.hcpOrSkewWith4PlusMinor >= 0) {
             /*
@@ -479,33 +435,20 @@ public class ParsedAnswer {
         if (pa.heartGuard && (suitValues[2] + suitLengths[2]) < 6) return false;
         if (pa.spadeGuard && (suitValues[3] + suitLengths[3]) < 6) return false;
         if (pa.balanced && !hand.isBalanced()) return false;
-        if (pa.clubKing != null && (hand.hasKing(C) != pa.clubKing)) return false;
-        if (pa.diamondKing != null && (hand.hasKing(D) != pa.diamondKing)) return false;
-        if (pa.heartKing != null && (hand.hasKing(H) != pa.heartKing)) return false;
-        if (pa.spadeKing != null && (hand.hasKing(S) != pa.spadeKing)) return false;
-        if (pa.clubQueen != null && (hand.hasQueen(C) != pa.clubQueen)) return false;
-        if (pa.diamondQueen != null && (hand.hasQueen(D) != pa.diamondQueen)) return false;
-        if (pa.heartQueen != null && (hand.hasQueen(H) != pa.heartQueen)) return false;
-        if (pa.spadeQueen != null && (hand.hasQueen(S) != pa.spadeQueen)) return false;
-        if (pa.keyCardsClubs > -1) {
-            int keycardCt = hand.getKeyCardCt(Suit.Club);
-            if ((keycardCt != pa.keyCardsClubs) &&
-                    (keycardCt != pa.keyCardsClubs + 3)) return false;
-        }
-        if (pa.keyCardsDiamonds > -1) {
-            int keycardCt = hand.getKeyCardCt(Suit.Diamond);
-            if ((keycardCt != pa.keyCardsDiamonds) &&
-                    (keycardCt != pa.keyCardsDiamonds + 3)) return false;
-        }
-        if (pa.keyCardsHearts > -1) {
-            int keycardCt = hand.getKeyCardCt(Suit.Heart);
-            if ((keycardCt != pa.keyCardsHearts) &&
-                    (keycardCt != pa.keyCardsHearts + 3)) return false;
-        }
-        if (pa.keyCardsSpades > -1) {
-            int keycardCt = hand.getKeyCardCt(Suit.Spade);
-            if ((keycardCt != pa.keyCardsSpades) &&
-                    (keycardCt != pa.keyCardsSpades + 3)) return false;
+        if (pa.kingSuit != null && hand.hasKing(kingSuit) != pa.hasKing) return false;
+        if (pa.queenSuit != null && hand.hasQueen(queenSuit) != pa.trumpQueen) return false;
+        if (pa.minKeycards > -1 || pa.maxKeycards > -1) {
+            int keycardCt = hand.getKeyCardCt(trumpSuit);
+            if (pa.minKeycards > -1 && pa.maxKeycards > -1) {
+                // e.g. 1-or-4 keycards
+                if (keycardCt != minKeycards && keycardCt != maxKeycards) return false;
+            } else if (pa.minKeycards > -1) {
+                // e.g. <1 keycards
+                if (keycardCt < minKeycards) return false;
+            } else {
+                // e.g. 2+ keycards
+                if (keycardCt > maxKeycards) return false;
+            }
         }
         ParsedAnswer notPA = pa.notParsedAnswer;
         while (notPA != null) {

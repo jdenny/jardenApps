@@ -16,13 +16,13 @@ public class CardPack {
 	/*
 	public enum BidEnum {
 		BPass(null, "pass"), NONE(null, "-"),
-		B1C(Club, "1C"), B1D(Diamond, "1D"), B1H(Heart, "1H"), B1S(Spade, "1S"), B1N(null, "1NT"),
-		B2C(Club, "2C"), B2D(Diamond, "2D"), B2H(Heart, "2H"), B2S(Spade, "2S"), B2N(null, "2NT"),
-		B3C(Club, "3C"), B3D(Diamond, "3D"), B3H(Heart, "3H"), B3S(Spade, "3S"), B3N(null, "3NT"),
-		B4C(Club, "4C"), B4D(Diamond, "4D"), B4H(Heart, "4H"), B4S(Spade, "4S"), B4N(null, "4NT"),
-		B5C(Club, "5C"), B5D(Diamond, "5D"), B5H(Heart, "5H"), B5S(Spade, "5S"), B5N(null, "5NT"),
-		B6C(Club, "6C"), B6D(Diamond, "6D"), B6H(Heart, "6H"), B6S(Spade, "6S"), B6N(null, "6NT"),
-		B7C(Club, "7C"), B7D(Diamond, "7D"), B7H(Heart, "7H"), B7S(Spade, "7S"), B7N(null, "7NT");
+		B1C(clubs, "1C"), B1D(diamonds, "1D"), B1H(hearts, "1H"), B1S(spades, "1S"), B1N(null, "1NT"),
+		B2C(clubs, "2C"), B2D(diamonds, "2D"), B2H(hearts, "2H"), B2S(spades, "2S"), B2N(null, "2NT"),
+		B3C(clubs, "3C"), B3D(diamonds, "3D"), B3H(hearts, "3H"), B3S(spades, "3S"), B3N(null, "3NT"),
+		B4C(clubs, "4C"), B4D(diamonds, "4D"), B4H(hearts, "4H"), B4S(spades, "4S"), B4N(null, "4NT"),
+		B5C(clubs, "5C"), B5D(diamonds, "5D"), B5H(hearts, "5H"), B5S(spades, "5S"), B5N(null, "5NT"),
+		B6C(clubs, "6C"), B6D(diamonds, "6D"), B6H(hearts, "6H"), B6S(spades, "6S"), B6N(null, "6NT"),
+		B7C(clubs, "7C"), B7D(diamonds, "7D"), B7H(hearts, "7H"), B7S(spades, "7S"), B7N(null, "7NT");
 		
 		public Suit suit;
 		public String text;

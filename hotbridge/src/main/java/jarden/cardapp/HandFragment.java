@@ -69,7 +69,7 @@ public class HandFragment extends Fragment {
 		Card card;
 		while (index < handSize) {
 			card = cards.get(index);
-			if (!card.getSuit().equals(Suit.Club)) break;
+			if (!card.getSuit().equals(Suit.clubs)) break;
 			sb.append(card.getShortRank() + " ");
 			++index;
 		}
@@ -77,7 +77,7 @@ public class HandFragment extends Fragment {
 		sb.setLength(0);
 		while (index < handSize) {
 			card = cards.get(index);
-			if (!card.getSuit().equals(Suit.Diamond)) break;
+			if (!card.getSuit().equals(Suit.diamonds)) break;
 			sb.append(card.getShortRank() + " ");
 			++index;
 		}
@@ -85,7 +85,7 @@ public class HandFragment extends Fragment {
 		sb.setLength(0);
 		while (index < handSize) {
 			card = cards.get(index);
-			if (!card.getSuit().equals(Suit.Heart)) break;
+			if (!card.getSuit().equals(Suit.hearts)) break;
 			sb.append(card.getShortRank() + " ");
 			++index;
 		}
@@ -93,7 +93,7 @@ public class HandFragment extends Fragment {
 		sb.setLength(0);
 		while (index < handSize) {
 			card = cards.get(index);
-			if (!card.getSuit().equals(Suit.Spade)) break;
+			if (!card.getSuit().equals(Suit.spades)) break;
 			sb.append(card.getShortRank() + " ");
 			++index;
 		}

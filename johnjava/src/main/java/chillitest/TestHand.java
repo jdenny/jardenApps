@@ -109,24 +109,25 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = false;
+        boolean testAll = true;
         System.out.println("start of test");
-        parseAllBids();
-        testBookTests();
+        // parseAllBids();
+        // testBookTests();
         if (testAll) {
+            parseAllBids();
             test1HResponses();
-            testHandEvaluation();
-            testQueenAsk();
-            testOneBid();
-            testKeycards();
-            testHcpOrSkew();
-            testMinors();
-            testHcpOrSkewWith4PlusMinor();
-            testBiddableSuits();
-            testSuitWinners();
-            testMyPrimaryBids();
-            testRandomPrimaryBids();
             test2Hands1H1S();
+            testBiddableSuits();
+            testHandEvaluation();
+            testHcpOrSkew();
+            testHcpOrSkewWith4PlusMinor();
+            testKeycards();
+            testMinors();
+            testMyPrimaryBids();
+            testOneBid();
+            testQueenAsk();
+            testRandomPrimaryBids();
+            testSuitWinners();
             testOrs();
             testNots();
             testRandomNBids(10, 2);
@@ -134,6 +135,7 @@ public class TestHand {
             testAllSecondBids();
             testMySecondBids();
             testAllResponses();
+            testBookTests();
         }
         System.out.println("end of test");
     }
@@ -193,13 +195,18 @@ public class TestHand {
     private void testBookTests() {
         BookHand[] bookHands = BookHand.getBookHands();
         for (BookHand bookHand: bookHands) {
-            testSetHand(bookHand);
+            testSetHand(bookHand, false);
+        }
+        for (BookHand bookHand: bookHands) {
+            testSetHand(bookHand, true);
         }
     }
-    private void testSetHand(BookHand setHand) {
+    private void testSetHand(BookHand setHand, boolean reverseDealer) {
         System.out.println(setHand.name);
+        boolean dealerEast = setHand.dealerEast;
+        if (reverseDealer) dealerEast = !dealerEast;
         testWestEast(setHand.handWest, setHand.handEast,
-                setHand.expectedBidSequence, setHand.pointCounts, setHand.dealerEast);
+                setHand.expectedBidSequence, setHand.pointCounts, dealerEast);
         System.out.println();
     }
     private void testAllResponses() {
@@ -241,14 +248,14 @@ public class TestHand {
     private void testQueenAsk() {
         System.out.println("\ntestQueenAsk()");
         QuestionAnswer[] answers = {
-                new QuestionAnswer("qa", "spade-queen, club-king"),
-                new QuestionAnswer("qa", "heart-queen, diamond-king"),
-                new QuestionAnswer("qa", "diamond-queen, heart-king"),
-                new QuestionAnswer("qa", "club-queen, spade-king"),
-                new QuestionAnswer("qa", "no spade-queen, club-king"),
-                new QuestionAnswer("qa", "no heart-queen"),
-                new QuestionAnswer("qa", "no spade-queen, diamond-king"),
-                new QuestionAnswer("qa", "no club-queen, diamond-king")
+                new QuestionAnswer("qa", "queen-spades, king-clubs"),
+                new QuestionAnswer("qa", "queen-hearts, king-diamonds"),
+                new QuestionAnswer("qa", "queen-diamonds, king-hearts"),
+                new QuestionAnswer("qa", "queen-clubs, king-spades"),
+                new QuestionAnswer("qa", "no queen-spades, king-clubs"),
+                new QuestionAnswer("qa", "no queen-hearts"),
+                new QuestionAnswer("qa", "no queen-spades, king-diamonds"),
+                new QuestionAnswer("qa", "no queen-clubs, king-diamonds")
         };
         Hand[] hands = {
                 new Hand(new CardPack.CardEnum[] { // SQ, CK
@@ -518,10 +525,10 @@ public class TestHand {
         Hand[] hands = {
                 hand11Hcp6025, hand17Hcp2623, hand15Hcp2074, hand16Hcp1138
         };
-        String suitSetterClubs = "5+ club-winners, suit-setter";
-        String suitSetterDiamonds = "5+ diamond-winners, suit-setter";
-        String suitSetterHearts = "5+ heart-winners";
-        String suitSetterSpades = "5+ spade-winners, suit-setter";
+        String suitSetterClubs = "5+ winners-clubs, suit-setter";
+        String suitSetterDiamonds = "5+ winners-diamonds, suit-setter";
+        String suitSetterHearts = "5+ winners-hearts";
+        String suitSetterSpades = "5+ winners-spades, suit-setter";
         String[] answers = {
                 suitSetterClubs, suitSetterDiamonds, suitSetterHearts, suitSetterSpades
         };
@@ -550,32 +557,32 @@ public class TestHand {
         System.out.println("\ntestHandEvaluation");
         String fitClubs = "3+ clubs, trumps-clubs";
         String fitDiamonds = "4+ diamonds, trumps-diamonds";
-        String fitHearts = "5+ heart-winners, suit-setter, trumps-hearts";
+        String fitHearts = "5+ winners-hearts, suit-setter, trumps-hearts";
         String twoHearts = "6 hearts, <20 pp, 6+ HCP"; // i.e. not a fit
         String fitSpades = "5+ spades, trumps-spades";
         String[] answers = {
                 fitClubs, fitDiamonds, fitHearts, twoHearts, fitSpades
         };
-        Hand handA = new Hand(new CardPack.CardEnum[] { // 33pp, 18+2+2+0+1HCP, 2-1-5-5
+        Hand handA = new Hand(new CardPack.CardEnum[] { // 31pp, 18+2+0+1HCP, 2-1-5-5
                 CA, CT, DA, HK, HT, H9, H5, H2, SA, SK, ST, S4, S3
         });
-        Hand handB = new Hand(new CardPack.CardEnum[] { // 15pp, 10-2-0-1HCP, 4-2-4-3
+        Hand handB = new Hand(new CardPack.CardEnum[] { // 15pp, 10-2-1HCP, 4-2-4-3
                 CQ, CJ, C9, C4, DQ, DJ, HQ, HJ, H9, H8, SJ, S7, S6
         });
-        Hand handC = new Hand(new CardPack.CardEnum[] { // 31pp, 22+0+3-3+1HCP, 2-2-2-7
+        Hand handC = new Hand(new CardPack.CardEnum[] { // 29pp, 22+0-3+1HCP, 2-2-2-7
                 CA, CJ, DK, DQ, HK, HJ, SA, SK, SJ, ST, S7, S6, S5
         });
-        Hand handD = new Hand(new CardPack.CardEnum[] { // 29pp, 14+0+3-2+1HCP, 4-7-1-1
+        Hand handD = new Hand(new CardPack.CardEnum[] { // 24pp, 14+0-2+1HCP, 4-7-1-1
                 CA, CT, C9, C7, DK, DQ, DJ, D7, D6, D4, D2, HK, SJ
         });
-        Hand handE = new Hand(new CardPack.CardEnum[] { // 23pp, 13+0+6-2+1HCP, 10-1-0-2
+        Hand handE = new Hand(new CardPack.CardEnum[] { // 17pp, 13+0-2+1HCP, 10-1-0-2
                 CA, CK, CQ, CJ, CT, C9, C8, C7, C6, C4, DQ, SJ, S6
         });
         Hand[] hands = {
                 handA, handB, handC, handD, handE
         };
         int[] expectedHCPs = {
-                23, 7, 23, 16, 18
+                21, 7, 20, 13, 12
         };
         int[] expectedDiffsDeclarer = {
                 4, 1, 2, 5, 11, // trumps-clubs
