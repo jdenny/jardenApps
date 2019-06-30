@@ -13,19 +13,13 @@ package jarden.cards;
  */
 public class ParsedAnswer {
     /*
-    TODO: refactor Suit to use these values
-    add logic in ParsedAnswer to test how many keycards in hand doing keycard-ask
-    1-or-4 keycards-diamonds -> trumpSuit = Suit.diamonds, keycardsMin = 1, keycardsMax = 4
-    <2 keycards-diamonds -> trumpSuit = Suit.diamonds, keycardsMax = 1, keycardsMin = -1
-    2+ keycards-diamonds -> trumpSuit = Suit.diamonds, keycardsMin = 2, keycardsMax = -1
-
-    tokens using suit:
-    winners-clubs   Suit trumpSuit
-    trumps-clubs    Suit trumpSuit, boolean setTrumps
-    guard-clubs     boolean guardClubs - one per suit
-    keycards-clubs  trumpSuit, minKeycards, maxKeycards
+    tokens using a suit:
+    winners-clubs   suit, minWinnersInSuit
+    trumps-clubs    trumpSuit, boolean setTrumps
+    guard-clubs     boolean clubGuard - one per suit
+    keycards-clubs  trumpSuit, minKeycards, maxKeycards, int orValue
     king-clubs      kingSuit, boolean hasKing
-    queen-clubs     boolean trumpQueen, trumpSuit
+    queen-clubs     queenSuit, boolean trumpQueen
      */
     private int minPP = -1, maxPP = -1;
     private int minHCP = -1, maxHCP = -1;
@@ -55,6 +49,7 @@ public class ParsedAnswer {
     private int hcpOrSkewWith4PlusMinor = -1;
     private int minKeycards = -1;
     private int maxKeycards = -1;
+    private int orValue = -1;
     private boolean setTrumps = false;
     private Suit trumpSuit = null;
     private Suit suit = null;
@@ -83,6 +78,7 @@ public class ParsedAnswer {
         String[] tokens = answer.split("[ ,;]+");
         int previousMin = -1;
         int previousMax = -1;
+        int previousOrValue = -1;
         boolean isNegative = false;
         for (int tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
             String token = tokens[tokenIndex];
@@ -252,10 +248,10 @@ public class ParsedAnswer {
                 trumpSuit = Suit.valueOf(token.substring(9));
                 minKeycards = previousMin;
                 maxKeycards = previousMax;
-                //!! keyCardsClubs = previousMin;
-                // previousMax not needed to keycards
+                orValue = previousOrValue;
                 previousMin = -1;
                 previousMax = -1;
+                previousOrValue = -1;
             } else if (token.equals("guard-clubs")) {
                 clubGuard = true;
             } else if (token.equals("guard-diamonds")) {
@@ -311,7 +307,7 @@ public class ParsedAnswer {
             } else if (token.contains("-or-")) {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
-                previousMax = Integer.parseInt(token.substring(indexMinus + 4));
+                previousOrValue = Integer.parseInt(token.substring(indexMinus + 4));
             } else if (token.contains("-")) {
                 int indexMinus = token.indexOf('-');
                 previousMin = Integer.parseInt(token.substring(0, indexMinus));
@@ -402,9 +398,12 @@ public class ParsedAnswer {
                 suitLengths[3] > pa.maxSpades) return false;
         if (pa.heartsWithHonours >= 0 &&
                 suitLengths[2] < pa.heartsWithHonours && suitValues[2] < 7) return false;
+        if (pa.spadesWithHonours >= 0 &&
+                suitLengths[3] < pa.spadesWithHonours && suitValues[3] < 7) return false;
         if (pa.minWinnersInSuit > 0) {
             int suitNum = suit.ordinal();
-            if ((suitLengths[suitNum] + suitValues[suitNum]) < pa.minWinnersInSuit) return false;
+            if ((suitLengths[suitNum] + suitValues[suitNum]) <
+                    pa.minWinnersInSuit * 3) return false;
         }
         if (pa.hcpOrSkew >= 0 && handHCP < pa.hcpOrSkew && !hand.isSkew()) return false;
         if (pa.hcpOrSkewWith4PlusMinor >= 0) {
@@ -439,14 +438,17 @@ public class ParsedAnswer {
         if (pa.queenSuit != null && hand.hasQueen(queenSuit) != pa.trumpQueen) return false;
         if (pa.minKeycards > -1 || pa.maxKeycards > -1) {
             int keycardCt = hand.getKeyCardCt(trumpSuit);
-            if (pa.minKeycards > -1 && pa.maxKeycards > -1) {
+            if (pa.minKeycards > -1 && pa.orValue > -1) {
                 // e.g. 1-or-4 keycards
-                if (keycardCt != minKeycards && keycardCt != maxKeycards) return false;
+                if (keycardCt != minKeycards && keycardCt != orValue) return false;
+            } else if (pa.minKeycards > -1 && pa.maxKeycards > -1) {
+                // e.g. 2 keycards
+                if (keycardCt != minKeycards) return false;
             } else if (pa.minKeycards > -1) {
-                // e.g. <1 keycards
+                // e.g. 2+ keycards
                 if (keycardCt < minKeycards) return false;
             } else {
-                // e.g. 2+ keycards
+                // e.g. <2 keycards
                 if (keycardCt > maxKeycards) return false;
             }
         }
@@ -456,6 +458,9 @@ public class ParsedAnswer {
             notPA = notPA.notParsedAnswer;
         }
         return true;
+    }
+    public boolean isSetTrumps() {
+        return setTrumps;
     }
     public Suit getTrumpSuit() {
         return trumpSuit;

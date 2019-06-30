@@ -1,5 +1,7 @@
 package temp;
 
+import jarden.cards.Card;
+
 /**
  * Created by john.denny@gmail.com on 22/06/2018.
  */
@@ -16,12 +18,8 @@ public class HelloJohn {
     public static void main(String[] args) {
         System.out.println("hello John");
         // testGetBidsFromSequence();
-        int number = 175;
-        byte bye = (byte) number;
-        int number2 = bye;
-        int number3 = Byte.toUnsignedInt(bye);
-        System.out.println("number2=" + number2);
-        System.out.println("number3=" + number3);
+        System.out.println(Card.ICON_SPADE + " A K 9 7");
+        System.out.println(Card.ICON_HEART + " Q J 10 5 2");
         System.out.println("adios amigo");
     }
 

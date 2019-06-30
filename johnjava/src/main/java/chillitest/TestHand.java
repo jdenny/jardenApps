@@ -73,8 +73,6 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
  * Created by john.denny@gmail.com on 08/06/2019.
- * TODO:
- * add new test, where handWest opens 1H, and handEast is random
  */
 public class TestHand {
     private final Hand hand1C = new Hand(new CardPack.CardEnum[] { // 25pp, 5 hearts
@@ -96,7 +94,7 @@ public class TestHand {
     private BridgeQuiz bridgeQuiz;
     private List<QuestionAnswer> primaryBids;
     private CardPack cardPack;
-    private boolean verbose = true;
+    private boolean verbose = false;
     private int noResponseCt = 0;
 
     public static void main(String[] args) throws IOException {
@@ -112,11 +110,15 @@ public class TestHand {
         boolean testAll = true;
         System.out.println("start of test");
         // parseAllBids();
-        // testBookTests();
+        // testBookHands();
+
         if (testAll) {
             parseAllBids();
             test1HResponses();
             test2Hands1H1S();
+            testAllResponses();
+            testAllSecondBids();
+            testBookHands();
             testBiddableSuits();
             testHandEvaluation();
             testHcpOrSkew();
@@ -124,18 +126,15 @@ public class TestHand {
             testKeycards();
             testMinors();
             testMyPrimaryBids();
-            testOneBid();
-            testQueenAsk();
-            testRandomPrimaryBids();
-            testSuitWinners();
-            testOrs();
-            testNots();
-            testRandomNBids(10, 2);
-            testRandomSecondBids();
-            testAllSecondBids();
             testMySecondBids();
-            testAllResponses();
-            testBookTests();
+            testNots();
+            testOneBid();
+            testOrs();
+            testQueenAsk();
+            testRandomNBids(10, 2);
+            testRandomPrimaryBids();
+            testRandomSecondBids();
+            testSuitWinners();
         }
         System.out.println("end of test");
     }
@@ -192,21 +191,22 @@ public class TestHand {
         if (eastFinalHCP != counts[3]) System.out.println("****eastFinalHCP=" +
                 eastFinalHCP + "," + " expected=" + counts[3]);
     }
-    private void testBookTests() {
+    private void testBookHands() {
+        System.out.println("\ntestBookHands()");
         BookHand[] bookHands = BookHand.getBookHands();
         for (BookHand bookHand: bookHands) {
-            testSetHand(bookHand, false);
+            testBookHand(bookHand, false);
         }
         for (BookHand bookHand: bookHands) {
-            testSetHand(bookHand, true);
+            testBookHand(bookHand, true);
         }
     }
-    private void testSetHand(BookHand setHand, boolean reverseDealer) {
-        System.out.println(setHand.name);
-        boolean dealerEast = setHand.dealerEast;
+    private void testBookHand(BookHand bookHand, boolean reverseDealer) {
+        System.out.println(bookHand.name);
+        boolean dealerEast = bookHand.dealerEast;
         if (reverseDealer) dealerEast = !dealerEast;
-        testWestEast(setHand.handWest, setHand.handEast,
-                setHand.expectedBidSequence, setHand.pointCounts, dealerEast);
+        testWestEast(bookHand.handWest, bookHand.handEast,
+                bookHand.expectedBidSequence, bookHand.pointCounts, dealerEast);
         System.out.println();
     }
     private void testAllResponses() {
@@ -217,7 +217,7 @@ public class TestHand {
             }
             testResponses(qa);
         }
-        // on 21st June, noResponseCt=271
+        // on 30th June, noResponseCt=384
         System.out.println("noResponseCt=" + noResponseCt);
     }
     private void test1HResponses() {
@@ -225,13 +225,13 @@ public class TestHand {
         for (QuestionAnswer qa: primaryBids) {
             if (qa.question.equals("1H")) testResponses(qa);
         }
-        // on 21st June, noResponseCt=271
+        // on 30th June, noResponseCt=80
         System.out.println("noResponseCt=" + noResponseCt);
     }
     private void testResponses(QuestionAnswer qa) {
         List<QuestionAnswer> allResponses = bridgeQuiz.getPossibleResponses(qa);
         if (allResponses.size() == 0) {
-            System.out.println("no responses to " + qa);
+            if (verbose) System.out.println("no responses to " + qa);
             ++noResponseCt;
         } else {
             for (QuestionAnswer qa2 : allResponses) {
@@ -316,22 +316,22 @@ public class TestHand {
     private void testKeycards() {
         System.out.println("\ntestKeycards()");
         CardPack.CardEnum[] cards0KeycardsClubs = { // 17pp, 6HCP, 5-6-1-1
-                CQ, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7 // D=1, H=0, S=0
+                CQ, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7 // C=0, D=1, H=0, S=0
         };
         CardPack.CardEnum[] cards1KeycardsClubs = { // 19pp, 8HCP, 5-6-1-1
-                CA, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7 // D=2, H=1, S=1
+                CA, CT, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, S7 // C=1, D=2, H=1, S=1
         };
         CardPack.CardEnum[] cards2KeycardsClubs = { // 22pp, 12 HCP, 5-5-2-1
-                CA, CT, C9, C8, C5, DJ, DT, D9, D8, D6, HA, HK, S7 // D=2, H=3, S=2
+                CA, CT, C9, C8, C5, DJ, DT, D9, D8, D6, HA, HK, S7 // C=2, D=2, H=3, S=2
         };
         CardPack.CardEnum[] cards3KeycardsClubs = { // 26pp, 15HCP, 5-6-1-1
-                CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, SA // D=3, H=2, S=2
+                CA, CK, C9, C8, C5, DK, DJ, D9, D8, D6, D5, H9, SA // C=3, D=3, H=2, S=2
         };
         CardPack.CardEnum[] cards4KeycardsClubs = { // 27pp, 16HCP, 5-6-1-1
-                CA, CK, C9, C8, C5, DA, DJ, D9, D8, D6, D5, HA, SK // D=3, H3=3, S=4
+                CA, CK, C9, C8, C5, DA, DJ, D9, D8, D6, D5, HA, SK // C=4, D=3, H3=3, S=4
         };
         CardPack.CardEnum[] cards5KeycardsClubs = { // 31pp, 20HCP, 5-6-1-1
-                CA, CK, C9, C8, C5, DA, DJ, D9, D8, D6, D5, HA, SA // D=4, H=4, S=4
+                CA, CK, C9, C8, C5, DA, DJ, D9, D8, D6, D5, HA, SA // C=5, D=4, H=4, S=4
         };
         Hand[] hands = {
                 new Hand(cards0KeycardsClubs), new Hand(cards1KeycardsClubs),
@@ -350,8 +350,22 @@ public class TestHand {
         String[] answersSpades = {
                 "0-or-3 keycards-spades", "1-or-4 keycards-spades", "2-or-5 keycards-spades"
         };
+        // responses from next bid, i.e. from player who has done keycard-ask:
+        String[] answersClubsNext = {
+                "1+ keycards-clubs", "2+ keycards-clubs", "<2 keycards-clubs"
+        };
+        String[] answersDiamondsNext = {
+                "1+ keycards-diamonds", "2+ keycards-diamonds", "<2 keycards-diamonds"
+        };
+        String[] answersHeartsNext = {
+                "1+ keycards-hearts", "2+ keycards-hearts", "<2 keycards-hearts"
+        };
+        String[] answersSpadesNext = {
+                "1+ keycards-spades", "2+ keycards-spades", "<2 keycards-spades"
+        };
         String[][] allAnswers = {
-                answersClubs, answersDiamonds, answersHearts, answersSpades
+                answersClubs, answersDiamonds, answersHearts, answersSpades,
+                answersClubsNext, answersDiamondsNext, answersHeartsNext, answersSpadesNext
         };
         boolean[] keycardClubsMatch = {
                 true, false, false, true, false, false, // 0-or-3
@@ -373,8 +387,30 @@ public class TestHand {
                 false, true, false, false, true, true,   // 1-or-4
                 false, false, true, true, false, false   // 2-or-5
         };
+        boolean[] keycardClubsNextMatch = {
+                false, true, true, true, true, true, // 1+
+                false, false, true, true, true, true, // 2+
+                true, true, false, false, false, false  // <2
+        };
+        boolean[] keycardDiamondsNextMatch = {
+                true, true, true, true, true, true, // 1+
+                false, true, true, true, true, true, // 2+
+                true, false, false, false, false, false  // <2
+        };
+        boolean[] keycardHeartsNextMatch = {
+                false, true, true, true, true, true,  // 1+
+                false, false, true, true, true, true, // 2+
+                true, true, false, false, false, false // <2
+        };
+        boolean[] keycardSpadesNextMatch = {
+                false, true, true, true, true, true, // 1+
+                false, false, true, true, true, true,   // 2+
+                true, true, false, false, false, false   // <2
+        };
         boolean[][] suitMatches = {
-                keycardClubsMatch, keycardDiamondsMatch, keycardHeartsMatch, keycardSpadesMatch
+                keycardClubsMatch, keycardDiamondsMatch, keycardHeartsMatch, keycardSpadesMatch,
+                keycardClubsNextMatch, keycardDiamondsNextMatch, keycardHeartsNextMatch,
+                keycardSpadesNextMatch
         };
         for (int s = 0; s < suitMatches.length; s++) {
             QuestionAnswer qa;
@@ -585,18 +621,11 @@ public class TestHand {
                 21, 7, 20, 13, 12
         };
         int[] expectedDiffsDeclarer = {
-                4, 1, 2, 5, 11, // trumps-clubs
-                2, 2, 2, 7, 5, // trumps-diamonds
-                3, 1, 2, 4, 0, // trumps-hearts
+                2, 1, 2, 4, 19, // trumps-clubs
+                1, 0, 2, 10, 4, // trumps-diamonds
+                3, 1, 2, 2, 0, // trumps-hearts
                 0, 0, 0, 0, 0, // trumps not set
-                3, 2, 3, 4, 7  // trumps-spades
-        };
-        int[] expectedDiffsDummy = {
-                2, 1, 2, 6, 14, // trumps-clubs
-                1, 0, 2, 6, 2, // trumps-diamonds
-                4, 1, 2, 2, 0, // trumps-hearts
-                0, 0, 0, 0, 0, // trumps not set
-                4, 1, 3, 2, 4  // trumps-spades
+                3, 1, 10, 2, 5  // trumps-spades
         };
         int actualHCP, expectedHCP;
         Hand hand;
@@ -623,13 +652,13 @@ public class TestHand {
                 expectedDiff = expectedDiffsDeclarer[hands.length * a + h];
                 if (actualDiff != expectedDiff) {
                     System.out.println("*****declarer hand[" + h + "], answers[" + a +
-                            "]; newHcp-hcp: expected=" + expectedDiff +
+                            "]; newHcp - hcp: expected=" + expectedDiff +
                             ", actual=" + actualDiff);
                 }
                 hand.setTrumpSuit(trumpSuit, false);
                 newHcp = hand.getHighCardPoints();
                 actualDiff = newHcp - hcp;
-                expectedDiff = expectedDiffsDummy[hands.length * a + h];
+                expectedDiff = expectedDiffsDeclarer[hands.length * a + h];
                 if (actualDiff != expectedDiff) {
                     System.out.println("*****dummy hand[" + h + "], answers[" + a +
                             "]; newHcp-hcp: expected=" + expectedDiff +
@@ -894,6 +923,9 @@ public class TestHand {
             List<QuestionAnswer> matches = new ArrayList<>();
 
             for (QuestionAnswer qa1 : primaryBids) {
+                if (!verbose && (qa1.question.equals("2H") ||
+                        qa1.question.equals("2S"))) continue;
+                if (!verbose && qa1.question.equals("3C")) break;
                 matches.clear();
                 List<QuestionAnswer> qa2List = bridgeQuiz.getPossibleResponses(qa1);
                 for (QuestionAnswer qa2 : qa2List) {
@@ -906,9 +938,9 @@ public class TestHand {
                     System.out.println(handEast.cardsAsString());
                     for (QuestionAnswer qaMatch: matches) System.out.println("matched: " + qaMatch);
                     // put breakpoint at next line to debug problem
-                    bridgeQuiz.getPrimaryBid(handEast);
+                    // bridgeQuiz.getPrimaryBid(handEast);
+                    System.out.println();
                 }
-                System.out.println();
             }
         }
     }

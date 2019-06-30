@@ -6,12 +6,15 @@ import java.util.List;
 import jarden.cards.CardPack.CardEnum;
 
 public class Hand {
-	public final static int C = 0;
-    public final static int D = 1;
-    public final static int H = 2;
-    public final static int S = 3;
+	public static final int C = 0;
+    public static final int D = 1;
+    public static final int H = 2;
+    public static final int S = 3;
+    private static final char[] icons = {
+            Card.ICON_CLUB, Card.ICON_DIAMOND, Card.ICON_HEART, Card.ICON_SPADE
+    };
 
-	private List<Card> cards;
+    private List<Card> cards;
 	// all 4-element arrays for suits in order: c, d, h, s
 	private int[] suitLengths = new int[4];
 	private int[] suitValues = new int[4]; // A=4, K=3, Q=2, J=1
@@ -43,9 +46,15 @@ public class Hand {
 	}
 	public String cardsAsString() {
 	    StringBuilder builder = new StringBuilder();
-	    for (Card card: cards) {
-	        builder.append(card);
-	        builder.append(", ");
+        Suit currentSuit = null;
+        for (Card card: cards) {
+            Suit suit = card.getSuit();
+            if (suit != currentSuit) {
+                if (currentSuit != null) builder.append("  ");
+                builder.append(icons[suit.ordinal()]);
+                currentSuit = suit;
+            }
+            builder.append(" " + card.getShortRank());
         }
 	    return builder.toString();
     }

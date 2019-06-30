@@ -22,7 +22,8 @@ public class Card implements Comparable<Card> {
 		} else {
 			shortRank = rankStr.substring(0, 1);
 		}
-		shortString = suit.toString().substring(0, 1) + shortRank;
+//		shortString = // suit.toString().substring(0, 1) + shortRank;
+        shortString = Character.toUpperCase(suit.toString().charAt(0)) + shortRank;
 	}
 	public Suit getSuit() {
 		return this.suit;

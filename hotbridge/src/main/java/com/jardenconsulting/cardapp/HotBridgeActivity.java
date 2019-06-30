@@ -38,6 +38,8 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
+if no response, but previous bid contained "to-play", count no response as pass
+
 need to alert before bidding (as in bridj)
 
 verbose mode to show meaning of partner's bid; could be hypertext on bids in table

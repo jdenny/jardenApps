@@ -27,8 +27,8 @@ public class BridgeQuiz extends PresetQuiz {
         QuestionAnswer qa = getNextBid(hand, targetQA);
         if (qa != null) {
             ParsedAnswer pa = qa.getParsedAnswer();
-            Suit trumpSuit = pa.getTrumpSuit();
-            if (trumpSuit != null) {
+            if (pa.isSetTrumps()) {
+                Suit trumpSuit = pa.getTrumpSuit();
                 if (pa.isSuitSetter()) {
                     hand.setTrumpSuit(trumpSuit, true);
                     partnerHand.setTrumpSuit(trumpSuit, false);
