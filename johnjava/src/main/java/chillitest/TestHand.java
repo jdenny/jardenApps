@@ -100,6 +100,7 @@ public class TestHand {
     public static void main(String[] args) throws IOException {
         new TestHand();
     }
+    // provide GUI, to allow me to choose tests
     private TestHand() throws IOException {
         File file = new File("./hotbridge/src/main/res/raw/reviseit.txt");
         InputStream is = new FileInputStream(file);
@@ -107,10 +108,11 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = true;
+        boolean testAll = false;
         System.out.println("start of test");
         // parseAllBids();
         // testBookHands();
+        testAllSecondBids();
 
         if (testAll) {
             parseAllBids();

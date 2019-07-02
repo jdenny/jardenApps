@@ -23,6 +23,7 @@ public class ParsedAnswer {
      */
     private int minPP = -1, maxPP = -1;
     private int minHCP = -1, maxHCP = -1;
+    private int minFitHCP = -1, maxFitHCP = -1;
     private int minSuit = -1, maxSuit = -1;
     private int minMajor = -1;
     private int minMinor = -1, maxMinor = -1;
@@ -109,6 +110,16 @@ public class ParsedAnswer {
                 }
                 if (previousMin > 0) {
                     minHCP = previousMin;
+                    previousMin = -1;
+                }
+            } else if (token.equals("fitHCP")) {
+                // usage of fitHCP: 6+ HCP, 11-15 HCP
+                if (previousMax > 0) {
+                    maxFitHCP = previousMax;
+                    previousMax = -1;
+                }
+                if (previousMin > 0) {
+                    minFitHCP = previousMin;
                     previousMin = -1;
                 }
             } else if (token.equals("clubs")) {
@@ -352,12 +363,15 @@ public class ParsedAnswer {
         if (pa.minPP >= 0 && handPP < pa.minPP) return false;
         if (pa.maxPP >= 0 && handPP > pa.maxPP) return false;
         int handHCP = hand.getHighCardPoints();
+        int fitHCP = handHCP;
         if (setTrumps) {
             // i.e. what would be hcp if agreed or set trumps on this bid
-            handHCP += hand.getAdjustmentForTrumps(trumpSuit, suitSetter);
+            fitHCP += hand.getAdjustmentForTrumps(trumpSuit, suitSetter);
         }
         if (pa.minHCP >= 0 && handHCP < pa.minHCP) return false;
         if (pa.maxHCP >= 0 && handHCP > pa.maxHCP) return false;
+        if (pa.minFitHCP >= 0 && fitHCP < pa.minFitHCP) return false;
+        if (pa.maxFitHCP >= 0 && fitHCP > pa.maxFitHCP) return false;
         if (pa.minMajor >= 0 && suitLengths[2] < pa.minMajor &&
                 suitLengths[3] < pa.minMajor) return false;
         if (pa.minMinors1 >= 0 && pa.minMinors2 >= 0) {

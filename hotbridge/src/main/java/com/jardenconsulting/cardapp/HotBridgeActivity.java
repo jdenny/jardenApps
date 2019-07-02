@@ -38,6 +38,46 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
+MAJOR
+fix re-evaluation problem!
+partner opens 2D; I have:
+    ♣ 9 5  ♦ Q 8 6 3  ♥ 7  ♠ A Q J 7 3 2
+    10 HCP
+    13 fitHCP
+
+current:
+Q: 2D, 2NT
+F1: [a]strong_fit[/a]. Alert: artificial
+A: 11+ HCP, 3+ diamonds, no 5+ major, trumps-diamonds
+
+proposed:
+Q: 2D, 2NT
+A: 11+ fitHCP, 3+ diamonds, not {5+ major & 11+ HCP}, trumps-diamonds
+
+with 11 HCP I would bid 2S, but I haven't got 11 HCP
+I can support diamonds, so hand re-evaluation takes me past 11 HCP, so
+I can bid 2NT; but I can't do that because I have a 5+ major!
+
+Read book page 110!
+add new token longest-minor-[suit]:
+    Q: 2NT, 3C
+    A: <11 fitHCP, 4+ clubs or <11 fitHCP, 3 clubs, <4 diamonds
+becomes:
+    Q: 2NT, 3C
+    A: <11 fitHCP, longest-minor-clubs
+
+add more hands from book
+
+currently if both hands have 5 hearts, nothing added to hcp; can we
+calculate extra trumps? e.g. bidding says 4+ and we have 5, so one extra trump
+examples:
+A: 4+ hearts
+    I have extras if >4 hearts
+    send message to partner assuming she has 4 hearts, so any more are extras
+A: 3 hearts
+    partnerHand.assumeTrumps(5);
+
+
 if no response, but previous bid contained "to-play", count no response as pass
 
 need to alert before bidding (as in bridj)
@@ -48,6 +88,7 @@ swap east-west for bookHands
 
 keep track of failed deals, current deals, as in quiz
 
+MINOR
 change all multi-word terms to use _ instead of -
 
 Show qa.helpText under qa.answer on screen; make hypertext live, as in ReviseQuiz
@@ -59,10 +100,10 @@ Possibly change PresetQuiz to use generics?
 Check that other uses of PresetQuiz are okay
 if so, remove commented-out getNextQuestion(int level)
 
-Investigate illegalstateexception: cannot perform this action after onSaveInstanceState, after closing one of two-player devices; stack trace: bluetoothHandler.java:42 -> HotBridgeAtivity.onConnectionList -> showBlueToothFragment (HotBrigeActivity.java:130)
-
-reviseit.txt***
-
+Investigate illegalstateexception: cannot perform this action after onSaveInstanceState,
+after closing one of two-player devices; stack trace:
+    bluetoothHandler.java:42 -> HotBridgeAtivity.onConnectionList ->
+    showBlueToothFragment (HotBrigeActivity.java:130)
  */
 public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener, DealFragment.Bridgeable {
