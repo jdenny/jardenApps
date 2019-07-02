@@ -110,6 +110,7 @@ public class ReviseQuizFragment extends FreakWizFragment
         String bidSequence = this.questionTextView.getText().toString();
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
+        bidListAdapter.add(OPENING_BIDS);
         List<String> bidList = BridgeQuiz.getBidItems(bidSequence);
         QuestionAnswer nextQA;
         for (String bid: bidList) {

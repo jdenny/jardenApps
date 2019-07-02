@@ -58,13 +58,12 @@ with 11 HCP I would bid 2S, but I haven't got 11 HCP
 I can support diamonds, so hand re-evaluation takes me past 11 HCP, so
 I can bid 2NT; but I can't do that because I have a 5+ major!
 
-Read book page 110!
-add new token longest-minor-[suit]:
+add new token two-choice-[suit]:
     Q: 2NT, 3C
     A: <11 fitHCP, 4+ clubs or <11 fitHCP, 3 clubs, <4 diamonds
 becomes:
     Q: 2NT, 3C
-    A: <11 fitHCP, longest-minor-clubs
+    A: <11 fitHCP, two-choice-clubs
 
 add more hands from book
 

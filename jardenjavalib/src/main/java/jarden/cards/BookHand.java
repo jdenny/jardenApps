@@ -30,7 +30,7 @@ public class BookHand {
             new Hand(new CardPack.CardEnum[]{ // 21pp, 12+0+0+0HCP/+5, 3-1-3-6
                     C7, C3, C2, D6, HA, HJ, H7, SA, SK, S7, S6, S4, S3 }),
             // book version: "1D, 1S; 2S, 2NT; 4H, 4NT; 5D, 5H; 6C, 6S; Pass";
-            "1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C, 6S; Pass",
+            "1D, 1S; 2S, 2NT; 3C, 4D; 4S, 4NT; 6C, 6S; Pass",
             new int[] {24, 21, 18, 17}, false);
     private static final BookHand page58 = new BookHand(
             "hand 4",

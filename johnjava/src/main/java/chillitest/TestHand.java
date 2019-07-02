@@ -108,11 +108,13 @@ public class TestHand {
         bridgeQuiz = new BridgeQuiz(isr);
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
-        boolean testAll = false;
+        boolean testAll = true;
         System.out.println("start of test");
-        // parseAllBids();
-        // testBookHands();
+        /*
+        parseAllBids();
+        testBookHands();
         testAllSecondBids();
+        */
 
         if (testAll) {
             parseAllBids();

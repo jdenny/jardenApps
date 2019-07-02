@@ -820,16 +820,16 @@ A: 16+ HCP, keycard-ask
 Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S
 F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 1-or-4 keycards-spades
-Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 4NT
 F1: [a]queen_ask[/a]. Alert: Artificial
 A: queen-ask
-Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 5S
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 4NT; 5S
 A: not queen-spades
-Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 4NT; 6C
 A: queen-spades, king-clubs
-Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C, 6S
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 4NT; 6C, 6S
 A: to-play
-Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 5C; 6C, 6S; Pass
+Q: 1D, 1S; 2S, 2NT; 3C, 4D; 4S, 4NT; 6C, 6S; Pass
 A: to-play
 Q: 1D, 1S; 2S, 2NT; 3H
 A: 17+ HCP, 4+ hearts
