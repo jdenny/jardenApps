@@ -54,6 +54,7 @@ public class ParsedAnswer {
     private boolean setTrumps = false;
     private Suit trumpSuit = null;
     private Suit suit = null;
+    private Suit twoChoiceSuit = null;
     /*
     if suitSetter: current hand is declarer
     else: current hand is dummy (i.e. current hand must have supported declarer's suit
@@ -288,6 +289,8 @@ public class ParsedAnswer {
             } else if (token.startsWith("trumps-")) {
                 trumpSuit = Suit.valueOf(token.substring(7));
                 setTrumps = true;
+            } else if (token.startsWith("two-choice-")) {
+                twoChoiceSuit = Suit.valueOf(token.substring(11));
             } else if (token.equals("no") || token.equals("not")) {
                 isNegative = true;
             } else if (token.startsWith("{")) {
@@ -450,6 +453,13 @@ public class ParsedAnswer {
         if (pa.balanced && !hand.isBalanced()) return false;
         if (pa.kingSuit != null && hand.hasKing(kingSuit) != pa.hasKing) return false;
         if (pa.queenSuit != null && hand.hasQueen(queenSuit) != pa.trumpQueen) return false;
+        if (pa.twoChoiceSuit != null) {
+            if (pa.twoChoiceSuit == Suit.clubs) {
+                if (suitLengths[0] < suitLengths[1]) return false;
+            } else { // must be diamonds
+                if (suitLengths[1] <= suitLengths[0]) return false;
+            }
+        }
         if (pa.minKeycards > -1 || pa.maxKeycards > -1) {
             int keycardCt = hand.getKeyCardCt(trumpSuit);
             if (pa.minKeycards > -1 && pa.orValue > -1) {

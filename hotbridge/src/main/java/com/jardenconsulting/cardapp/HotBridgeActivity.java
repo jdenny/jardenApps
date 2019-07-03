@@ -38,25 +38,6 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
-MAJOR
-fix re-evaluation problem!
-partner opens 2D; I have:
-    ♣ 9 5  ♦ Q 8 6 3  ♥ 7  ♠ A Q J 7 3 2
-    10 HCP
-    13 fitHCP
-
-current:
-Q: 2D, 2NT
-F1: [a]strong_fit[/a]. Alert: artificial
-A: 11+ HCP, 3+ diamonds, no 5+ major, trumps-diamonds
-
-proposed:
-Q: 2D, 2NT
-A: 11+ fitHCP, 3+ diamonds, not {5+ major & 11+ HCP}, trumps-diamonds
-
-with 11 HCP I would bid 2S, but I haven't got 11 HCP
-I can support diamonds, so hand re-evaluation takes me past 11 HCP, so
-I can bid 2NT; but I can't do that because I have a 5+ major!
 
 add new token two-choice-[suit]:
     Q: 2NT, 3C
@@ -64,6 +45,7 @@ add new token two-choice-[suit]:
 becomes:
     Q: 2NT, 3C
     A: <11 fitHCP, two-choice-clubs
+or preference-clubs or clubs>diamonds
 
 add more hands from book
 

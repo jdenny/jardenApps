@@ -198,7 +198,7 @@ F1: [a]raw[/a]. 20 TP
 A: 8-10 fitHCP, 6+ hearts, trumps-hearts
 Q: 1H, Pass
 F1: with 6+ spades and 5-7 HCP, bid 2S
-A: 0-7 fitHCP, not {6+ spades & 5-7 HCP}
+A: 0-7 HCP, not {6+ spades & 5-7 HCP}
 
 # 1 bid after 1S
 Q: 1S, 1NT
@@ -324,9 +324,10 @@ A: 5+ winners-spades, suit-setter, trumps-spades
 Q: 2C, 4D
 F1: [a]suit_setter[/a]
 A: 5+ winners-diamonds, suit-setter, trumps-diamonds
-Q: 2C, 3NT
-F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
-A: 13-15 HCP, <3 clubs, guard-diamonds, guard-hearts, guard-spades
+#Q: 2C, 3NT
+#F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
+#A: 13-15 HCP, <3 clubs, guard-diamonds, guard-hearts, guard-spades
+#A: 13-15 HCP, <3 clubs, guard-diamonds, guard-hearts, guard-spades
 Q: 2C, Pass
 A: <11 HCP, not {8-10 HCP & 3+ clubs}
 
@@ -368,9 +369,9 @@ A: <11 HCP, not {8-10 HCP & 3+ diamonds}
 
 # 1 bid after 2NT
 Q: 2NT, 3C
-A: <11 fitHCP, 4+ clubs or <11 fitHCP, 3 clubs, <4 diamonds
+A: <11 fitHCP, two-choice-clubs, trumps-clubs
 Q: 2NT, 3D
-A: <11 fitHCP, <4 clubs, 4+ diamonds or <11 HCP, <3 clubs, 3 diamonds
+A: <11 fitHCP, two-choice-diamonds, trumps-diamonds
 Q: 2NT, 3H
 A: 11+ HCP, 5+ hearts, no 4+ minor
 Q: 2NT, 3S
