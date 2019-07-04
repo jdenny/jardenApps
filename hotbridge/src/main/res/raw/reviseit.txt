@@ -107,9 +107,15 @@ F1: [a]suit_setter[/a]
 A: 5+ winners-diamonds, suit-setter, trumps-diamonds
 
 # 1 bid after 1D
+Q: 1D, 2H
+F1: [a]responses_to_1D[/a]
+A: 0-4 HCP, 6+ hearts
 Q: 1D, 1H
 F1: [a]responses_to_1D[/a]. 15 TP. Alert: may not be longest suit
 A: 0+ HCP, 4+ hearts
+Q: 1D, 2S
+F1: [a]responses_to_1D[/a]
+A: 0-4 HCP, 6+ spades
 Q: 1D, 1S
 F1: [a]responses_to_1D[/a]. 15 TP. Alert: denies 4+ hearts; may not be longest suit
 A: 0+ HCP, <4 hearts, 4+ spades
@@ -122,12 +128,6 @@ A: 8-9 HCP, no 4+ major, invitational-relay
 Q: 1D, 2D
 F1: compelling [a]relay[/a]; [a]responses_to_1D[/a]. 25 TP. Alert: artificial
 A: 10+ HCP, no 4+ major, compelling-relay
-Q: 1D, 2H
-F1: [a]responses_to_1D[/a]
-A: 0-4 HCP, 6+ hearts
-Q: 1D, 2S
-F1: [a]responses_to_1D[/a]
-A: 0-4 HCP, 6+ spades
 Q: 1D, 2NT
 F1: [a]two_choice[/a]. Alert: artificial)
 A: 5-7 HCP, 5+ in both minors
@@ -321,15 +321,14 @@ A: 5+ winners-hearts, suit-setter, trumps-hearts
 Q: 2C, 3S
 F1: [a]suit_setter[/a]
 A: 5+ winners-spades, suit-setter, trumps-spades
+Q: 2C, 3NT
+F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
+A: 13+ HCP, <3 clubs, guard-diamonds, guard-hearts, guard-spades
 Q: 2C, 4D
 F1: [a]suit_setter[/a]
 A: 5+ winners-diamonds, suit-setter, trumps-diamonds
-#Q: 2C, 3NT
-#F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
-#A: 13-15 HCP, <3 clubs, guard-diamonds, guard-hearts, guard-spades
-#A: 13-15 HCP, <3 clubs, guard-diamonds, guard-hearts, guard-spades
 Q: 2C, Pass
-A: <11 HCP, not {8-10 HCP & 3+ clubs}
+A: <13 HCP
 
 # 1 bid after 2D
 Q: 2D, 2H
@@ -361,27 +360,30 @@ A: 5+ winners-hearts, suit-setter, trumps-hearts
 Q: 2D, 3S
 F1: [a]suit_setter[/a]
 A: 5+ winners-spades, suit-setter, trumps-spades
+Q: 2D, 3NT
+F1: [a]threeNT|3NT[/a] All suits guarded. 25 TP
+A: 13+ HCP, <3 diamonds, guard-clubs, guard-hearts, guard-spades
 Q: 2D, 4C
 F1: [a]suit_setter[/a]
 A: 5+ winners-clubs, suit-setter, trumps-clubs
 Q: 2D, Pass
-A: <11 HCP, not {8-10 HCP & 3+ diamonds}
+A: <13 HCP
 
 # 1 bid after 2NT
-Q: 2NT, 3C
-A: <11 fitHCP, two-choice-clubs, trumps-clubs
-Q: 2NT, 3D
-A: <11 fitHCP, two-choice-diamonds, trumps-diamonds
 Q: 2NT, 3H
-A: 11+ HCP, 5+ hearts, no 4+ minor
+A: 13+ HCP, 5+ hearts
 Q: 2NT, 3S
-A: 11+ HCP, 5+ spades, no 4+ minor
+A: 13+ HCP, 5+ spades
+Q: 2NT, 4C
+A: 13+ fitHCP, 4+ clubs, trumps-clubs
+Q: 2NT, 4D
+A: 13+ fitHCP, <4 clubs, 4+ diamonds, trumps-diamonds
 Q: 2NT, 3NT
 A: 13+ HCP, no 5+ major, no 4+ minor, guard-hearts, guard-spades
-Q: 2NT, 4C
-A: 13+ HCP, 4+ clubs
-Q: 2NT, 4D
-A: 13+ HCP, <4 clubs, 4+ diamonds
+Q: 2NT, 3C
+A: two-choice-clubs, trumps-clubs
+Q: 2NT, 3D
+A: two-choice-diamonds, trumps-diamonds
 
 # multiple bids after 1C
 # (page 62)

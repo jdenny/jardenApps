@@ -110,10 +110,10 @@ public class TestHand {
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
         boolean testAll = false;
         System.out.println("start of test");
-        parseAllBids();
+        // parseAllBids();
         // testBookHands();
         testAllSecondBids();
-        // test1HPass();
+        // testOneBid();
 
         if (testAll) {
             parseAllBids();
@@ -141,11 +141,12 @@ public class TestHand {
         }
         System.out.println("end of test");
     }
-    private void test1HPass() {
+    private void testOneBid() {
+        System.out.println("\ntestOneBid()");
         Hand hand = new Hand(new CardPack.CardEnum[] {
-                C9, C5, C4, DK, D9, D7, HK, HJ, H8, H7, H5, H2, S8
+                CK, C7, C2, DK, DJ, D7, D6, HK, HQ, H9, H8, H4, S3
         });
-        QuestionAnswer qa = new QuestionAnswer("1H", "4+ hearts");
+        QuestionAnswer qa = new QuestionAnswer("2NT", "hello John");
         testSecondBid(hand, qa);
     }
     /**
@@ -307,14 +308,6 @@ public class TestHand {
 
             }
         }
-    }
-    private void testOneBid() {
-        System.out.println("\ntestOneBid()");
-        Hand handWest = new Hand(new CardPack.CardEnum[] { // 22pp, 13HCP, 4-5-1-3
-                C7, C5, DA, DK, D9, D4, HK, HT, H3, SK, S5, S3, S2
-        });
-        QuestionAnswer qa = bridgeQuiz.getNextBid(handWest, OPENING_BIDS);
-        System.out.println(qa);
     }
     private void parseAllBids() {
         System.out.println("\nparseAllBids()");
