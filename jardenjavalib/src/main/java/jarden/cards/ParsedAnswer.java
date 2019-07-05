@@ -37,10 +37,10 @@ public class ParsedAnswer {
     private int spadesWithHonours = -1;
     private int minBiddableSuits = -1;
     private boolean allSuitsGuarded = false;
-    private boolean clubGuard = false;
-    private boolean diamondGuard = false;
-    private boolean heartGuard = false;
-    private boolean spadeGuard = false;
+    private Boolean clubGuard = null;
+    private Boolean diamondGuard = null;
+    private Boolean heartGuard = null;
+    private Boolean spadeGuard = null;
     private boolean balanced = false;
     private boolean hasKing;
     private boolean trumpQueen;
@@ -265,13 +265,17 @@ public class ParsedAnswer {
                 previousMax = -1;
                 previousOrValue = -1;
             } else if (token.equals("guard-clubs")) {
-                clubGuard = true;
+                clubGuard = !isNegative;
+                isNegative = false;
             } else if (token.equals("guard-diamonds")) {
-                diamondGuard = true;
+                diamondGuard = !isNegative;
+                isNegative = false;
             } else if (token.equals("guard-hearts")) {
-                heartGuard = true;
+                heartGuard = !isNegative;
+                isNegative = false;
             } else if (token.equals("guard-spades")) {
-                spadeGuard = true;
+                spadeGuard = !isNegative;
+                isNegative = false;
             } else if (token.startsWith("king-")) {
                 kingSuit = Suit.valueOf(token.substring(5));
                 hasKing = !isNegative;
@@ -369,7 +373,7 @@ public class ParsedAnswer {
         int fitHCP = handHCP;
         if (setTrumps) {
             // i.e. what would be hcp if agreed or set trumps on this bid
-            fitHCP += hand.getAdjustmentForTrumps(trumpSuit, suitSetter);
+            fitHCP += hand.getAdjustmentForTrumps(trumpSuit);
         }
         if (pa.minHCP >= 0 && handHCP < pa.minHCP) return false;
         if (pa.maxHCP >= 0 && handHCP > pa.maxHCP) return false;
@@ -446,10 +450,10 @@ public class ParsedAnswer {
                 if (suitValues[i] < 4) return false;
             }
         }
-        if (pa.clubGuard && (suitValues[0] + suitLengths[0]) < 6) return false;
-        if (pa.diamondGuard && (suitValues[1] + suitLengths[1]) < 6) return false;
-        if (pa.heartGuard && (suitValues[2] + suitLengths[2]) < 6) return false;
-        if (pa.spadeGuard && (suitValues[3] + suitLengths[3]) < 6) return false;
+        if (pa.clubGuard != null && hand.hasSuitGuard(0) != pa.clubGuard) return false;
+        if (pa.diamondGuard != null && hand.hasSuitGuard(1) != pa.diamondGuard) return false;
+        if (pa.heartGuard != null && hand.hasSuitGuard(2) != pa.heartGuard) return false;
+        if (pa.spadeGuard != null && hand.hasSuitGuard(3) != pa.spadeGuard) return false;
         if (pa.balanced && !hand.isBalanced()) return false;
         if (pa.kingSuit != null && hand.hasKing(kingSuit) != pa.hasKing) return false;
         if (pa.queenSuit != null && hand.hasQueen(queenSuit) != pa.trumpQueen) return false;

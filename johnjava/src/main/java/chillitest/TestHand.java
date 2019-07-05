@@ -110,9 +110,9 @@ public class TestHand {
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
         boolean testAll = false;
         System.out.println("start of test");
-        // parseAllBids();
-        // testBookHands();
-        testAllSecondBids();
+        parseAllBids();
+        testBookHands();
+        // testAllSecondBids();
         // testOneBid();
 
         if (testAll) {
@@ -162,7 +162,6 @@ public class TestHand {
         if (verbose) {
             System.out.println("handWest=" + handWest);
             System.out.println("handEast=" + handEast);
-            System.out.println("estimated bid: " + handWest.getEstimateBid(handEast));
             System.out.println("expected bid sequence:" + expectedBidSequence);
         }
         if (westPP != counts[0]) System.out.println("****westPP=" + westPP + "," +
@@ -193,14 +192,17 @@ public class TestHand {
         }
         int westFinalHCP = handWest.getHighCardPoints();
         int eastFinalHCP = handEast.getHighCardPoints();
-        if (verbose) {
-            System.out.println("westFinalHCP=" + westFinalHCP);
-            System.out.println("eastFinalHCP=" + eastFinalHCP);
-        }
         if (westFinalHCP != counts[2]) System.out.println("****westFinalHCP=" +
                 westFinalHCP + "," + " expected=" + counts[2]);
         if (eastFinalHCP != counts[3]) System.out.println("****eastFinalHCP=" +
                 eastFinalHCP + "," + " expected=" + counts[3]);
+        if (verbose) {
+            System.out.println("westFinalHCP=" + westFinalHCP);
+            System.out.println("eastFinalHCP=" + eastFinalHCP);
+            handWest.reset();
+            handEast.reset();
+            System.out.println("estimated bid: " + handWest.getEstimateBid(handEast));
+        }
     }
     private void testBookHands() {
         System.out.println("\ntestBookHands()");
@@ -651,14 +653,14 @@ public class TestHand {
                 // i.e. assuming it matched handWest, now apply suit to handEast:
                 hcp = hand.getHighCardPoints();
                 Suit trumpSuit = pa.getTrumpSuit();
-                actualDiff = hand.getAdjustmentForTrumps(trumpSuit, true);
+                actualDiff = hand.getAdjustmentForTrumps(trumpSuit);
                 expectedDiff = expectedDiffsDeclarer[hands.length * a + h];
                 if (actualDiff != expectedDiff) {
                     System.out.println("*****declarer hand[" + h + "], answers[" + a +
                             "]; newHcp - hcp: expected=" + expectedDiff +
                             ", actual=" + actualDiff);
                 }
-                hand.setTrumpSuit(trumpSuit, false);
+                hand.setTrumpSuit(trumpSuit);
                 newHcp = hand.getHighCardPoints();
                 actualDiff = newHcp - hcp;
                 expectedDiff = expectedDiffsDeclarer[hands.length * a + h];

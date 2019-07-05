@@ -118,6 +118,16 @@ public class Hand {
     public boolean hasQueen(Suit suit) {
         return queens[suit.ordinal()];
     }
+    // TODO: add method has SuitHalfGuard, replacing 6 with 5
+    public boolean hasSuitGuard(int suitOrdinal) {
+        return (suitValues[suitOrdinal] + suitLengths[suitOrdinal]) >= 6;
+    }
+    public void reset() {
+        if (trumpSuit != null) {
+            trumpSuit = null;
+            evaluateHand();
+        }
+    }
     private void evaluateHand() {
 		for (Card card : cards) {
 			int suitOrdinal = card.getSuit().ordinal();
@@ -195,11 +205,10 @@ public class Hand {
     /**
      * Re-evaluate hand now we've agreed trump suit
      * @param trumpSuit
-     * @param declarer, else dummy
      */
-    public void setTrumpSuit(Suit trumpSuit, boolean declarer) {
+    public void setTrumpSuit(Suit trumpSuit) {
         this.trumpSuit = trumpSuit;
-        this.highCardPoints += getAdjustmentForTrumps(trumpSuit, declarer);
+        this.highCardPoints += getAdjustmentForTrumps(trumpSuit);
     }
     /**
      * After finding fit in trumps, make adjustments to HCP
@@ -209,17 +218,17 @@ public class Hand {
      * for each singleton: add 2 + extra 1 if trumpct > 5
      * for each doubleton: add 1 + extra 1 if trumpct > 5
      */
-    public int getAdjustmentForTrumps(Suit trumpSuit, boolean declarer) {
-        int adjustment = 0;
+    public int getAdjustmentForTrumps(Suit trumpSuit) {
+        int adjustmentForTrumps = 0;
         if (trumpSuit != null) {
             int trumpCt = suitLengths[trumpSuit.ordinal()];
             if (trumpCt > 0) {
-                int trumpsAdjust = 0;
+                int longTrumpsAdjust = 0;
                 int trumpsOver5 = trumpCt - 5;
                 if (trumpsOver5 > 0) {
-                    trumpsAdjust = 1;
+                    longTrumpsAdjust = 1;
                     // extra trumps: add 2 for each trump after 5
-                    adjustment += (trumpsOver5 * 2);
+                    adjustmentForTrumps += (trumpsOver5 * 2);
                 }
                 for (int s = 0; s < 4; s++) {
                     int suitLength;
@@ -227,14 +236,14 @@ public class Hand {
                     if (s != trumpSuit.ordinal()) {
                         suitLength = suitLengths[s];
                         // add for side-suit shortages
-                        if (suitLength == 0) adjustment += (3 + trumpsAdjust);
-                        else if (suitLength == 1) adjustment += (2 + trumpsAdjust);
-                        else if (suitLength == 2) adjustment += (1 + trumpsAdjust);
+                        if (suitLength == 0) adjustmentForTrumps += (3 + longTrumpsAdjust);
+                        else if (suitLength == 1) adjustmentForTrumps += (2 + longTrumpsAdjust);
+                        else if (suitLength == 2) adjustmentForTrumps += (1 + longTrumpsAdjust);
                     }
                 }
             }
         }
-        return adjustment;
+        return adjustmentForTrumps;
     }
     /**
      * Add for shortages in non-trump suits:
@@ -329,8 +338,8 @@ public class Hand {
         }
         int keyCardCt;
         if (suit != null) {
-            teamHCP += getAdjustmentForTrumps(suit, true);
-            teamHCP += partnerHand.getAdjustmentForTrumps(suit, false);
+            teamHCP += getAdjustmentForTrumps(suit);
+            teamHCP += partnerHand.getAdjustmentForTrumps(suit);
             keyCardCt = getKeyCardCt(suit) + partnerHand.getKeyCardCt(suit);
         } else {
             keyCardCt = aceCt + partnerHand.aceCt;

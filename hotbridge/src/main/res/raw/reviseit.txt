@@ -1226,7 +1226,7 @@ Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4S
 F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 1-or-4 keycards-spades
 Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4S; Pass
-A: <2 keycards-spades, to-play
+A: <3 keycards-spades, to-play
 Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4NT
 F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 2-or-5 keycards-spades
@@ -1429,6 +1429,14 @@ A: 14+ HCP, <3 hearts, 4 spades, guard-clubs, guard-diamonds, guard-spades
 Q: 1S, 2D; 2H
 F1: may have 5+ spades; [a]responses_to_relay[/a]
 A: 3 hearts
+Q: 1S, 2D; 2H, 3H
+A: 5+ hearts
+Q: 1S, 2D; 2H, 3S
+A: <5 hearts, 3 spades
+Q: 1S, 2D; 2H, 3NT
+A: <5 hearts, <3 spades, guard-clubs, guard-diamonds
+Q: 1S, 2D; 2H, 3NT; Pass
+A: to-play
 Q: 1S, 2D; 2NT
 F1: <2 hearts would be skew, so would bid 3C/3D as must have 4+ minor; [a]responses_to_relay[/a]. Alert
 A: 4 spades, 2 hearts, not 14+ HCP-or-skew-with-4+minor
@@ -1482,7 +1490,7 @@ A: 21+ HCP, keycard-ask
 Q: 1NT, 2D; 2S, 3S; 4S, Pass
 A: <21 HCP
 Q: 1NT, 2NT; 3C
-A: 4+ clubs, trumps-clubs
+A: two-choice-clubs, trumps-clubs
 Q: 1NT, 2NT; 3C, Pass
 A: <17 HCP, to-play
 Q: 1NT, 2NT; 3C, 4D
@@ -1492,10 +1500,22 @@ Q: 1NT, 2NT; 3C, 4D; 5C
 A: <16 HCP, to-play
 Q: 1NT, 2NT; 3C, 4D; 5C, Pass
 A: to-play
+Q: 1NT, 2NT; 3D
+A: two-choice-diamonds, trumps-diamonds
+Q: 1NT, 2NT; 3D, 3H
+A: guard-hearts
 
 # multiple bids after 2C
+Q: 2C, 2S; 2NT
+A: 14+ HCP, 3 spades, trumps-spades
 Q: 2C, 2S; 3S
-A: 3 spades
+A: <14 HCP, 3 spades, trumps-spades
+Q: 2C, 2S; 3S, 4S
+A: 13+ HCP
+Q: 2C, 2S; 3S, 4S; Pass
+A: to-play
+Q: 2C, 2S; 3S, Pass
+A: <13 HCP
 Q: 2C, 2S; 4C
 F1: [a]suit_setter[/a]
 A: 5+ winners-clubs, suit-setter, trumps-clubs
@@ -1511,6 +1531,14 @@ A: keycard-ask
 Q: 2C, 2NT; 3H, 4H; 4S
 F1: response to [a]keycard_ask[/a]. Alert: artificial
 A: 0-or-3 keycards-clubs
+Q: 2C, 3C; 3D
+A: guard-diamonds
+Q: 2C, 3C; 3D, 3S
+A: guard-spades
+Q: 2C, 3C; 3D, 3S; 4C
+A: no guard-hearts, to-play
+Q: 2C, 3C; 3D, 3S; 4C, Pass
+A: to-play
 
 # multiple bids after 2D
 Q: 2D, 2S; 3D
@@ -1519,6 +1547,13 @@ A: <14 HCP
 Q: 2D, 2S; 3D, 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
 A: 21+ fitHCP, 3+ diamonds, autofit, keycard-ask, trumps-diamonds
+Q: 2D, 2S; 3D, 4S; 5D
+F1: response to [a]keycard_ask[/a]. Alert: artificial
+A: 2-or-5 keycards-diamonds
+Q: 2D, 2S; 3D, 4S; 5D, 6D
+A: to-play
+Q: 2D, 2S; 3D, 4S; 5D, 6D; Pass
+A: to-play
 Q: 2D, 2S; 4D
 F1: [a]suit_setter[/a]
 A: 5+ winners-diamonds, suit-setter, trumps-diamonds

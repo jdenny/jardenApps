@@ -38,15 +38,6 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
-
-add new token two-choice-[suit]:
-    Q: 2NT, 3C
-    A: <11 fitHCP, 4+ clubs or <11 fitHCP, 3 clubs, <4 diamonds
-becomes:
-    Q: 2NT, 3C
-    A: <11 fitHCP, two-choice-clubs
-or preference-clubs or clubs>diamonds
-
 add more hands from book
 
 currently if both hands have 5 hearts, nothing added to hcp; can we
@@ -57,7 +48,6 @@ A: 4+ hearts
     send message to partner assuming she has 4 hearts, so any more are extras
 A: 3 hearts
     partnerHand.assumeTrumps(5);
-
 
 if no response, but previous bid contained "to-play", count no response as pass
 
