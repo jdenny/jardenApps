@@ -7,7 +7,7 @@ import static jarden.cards.CardPack.CardEnum.*;
  */
 public class BookHand {
     private static final BookHand page50 = new BookHand(
-            "hand 1",
+            "page50",
             new Hand(new CardPack.CardEnum[]{ // 22pp, 13-1+0+1HCP/+4, 4-5-1-3
                     CA, CQ, C6, C5, DK, DQ, DJ, D8, D6, H6, SJ, S7, S4 }),
             new Hand(new CardPack.CardEnum[]{ // 24pp, 12+0+0+1HCP/+6, 2-0-6-5
@@ -16,7 +16,7 @@ public class BookHand {
             "1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4S; Pass",
             new int[] {22, 24, 15, 17}, false);
     private static final BookHand page56 = new BookHand(
-            "hand 2",
+            "page56",
             new Hand(new CardPack.CardEnum[]{ // 25pp, 15+0-0+1HCP/+0, 4-5-3-1
                     CK, CQ, CJ, C9, DA, DK, D8, D6, D5, HQ, H8, H2, S8 }),
             new Hand(new CardPack.CardEnum[]{ // 21pp, 12+0-0+0HCP/+0, 3-1-3-6
@@ -135,7 +135,8 @@ public class BookHand {
             new Hand(new CardPack.CardEnum[]{ // 20pp, 13+0-1+0HCP/+1, 5-2-3-3
                     CA, CK, C8, C4, C3, DQ, D8, HK, H8, H5, SJ, ST, S4 }),
             new Hand(new CardPack.CardEnum[] { // 19pp, 11+0-1+0HCP/+7, 6-4-2-1
-                    CJ, CT, C9, C7, C5, C2, DK, DT, D7, D3, HQ, HJ, SA }),
+                    // hack: replace DT with DJ
+                    CJ, CT, C9, C7, C5, C2, DK, DJ, D7, D3, HQ, HJ, SA }),
             // book version: "1NT, 2D; 2S, 3C; 4D, 5C; Pass",
             "1NT, 2NT; 3C, 4D; 5C, Pass",
             "",
@@ -203,22 +204,34 @@ public class BookHand {
             "2C, 2S; 3S, Pass",
             "",
             new int[] {20, 19, 13, 12}, false);
+    // TODO: after agreeing trumps, revert to 3NT, so shortages no longer count!
+    // by mutually compensating errors it works, but misleading
+    // when this is fixed, add hand page 124
     private static final BookHand page113 = new BookHand(
             "hand 21",
-            new Hand(new CardPack.CardEnum[]{ // 20pp, 12+0+0+0HCP/+0, 3-5-2-3
+            new Hand(new CardPack.CardEnum[]{ // 22pp, 15+0-1+0HCP/+0, 3-5-2-3
                     // hack: replace CT with CK
                     CK, C7, C5, DK, DJ, D9, D7, D4, HJ, H3, SA, SK, S4 }),
-            new Hand(new CardPack.CardEnum[] { // 21pp, 12+0+0+0HCP/+0, 4-5-3-1
+            new Hand(new CardPack.CardEnum[] { // 18pp, 9+0+0+0HCP/+0, 4-5-3-1
                     // hack: CK with CT
                     CT, C8, C6, C4, DA, DT, D8, D3, D2, HK, HQ, H4, S5 }),
             "1NT, 2NT; 3D, 3H; 3NT, Pass",
             "",
-            new int[] {20, 21, 12, 12}, false);
+            new int[] {22, 18, 14, 9}, false);
+    private static final BookHand page125 = new BookHand(
+            "hand 22",
+            new Hand(new CardPack.CardEnum[]{ // 22pp, 12+0+0+1HCP/+6, 2-6-3-2
+                    CA, C4, DK, DJ, DT, D9, D7, D4, HA, H5, H3, S9, S5 }),
+            new Hand(new CardPack.CardEnum[] { // 18pp, 11+0-1+0HCP/+1, 4-4-2-3
+                    CK, C8, C7, C5, DA, DQ, D8, D2, HQ, H6, S8, S4, S2 }),
+            "2D, 2NT; 3H, 4D; Pass",
+            "",
+            new int[] {22, 18, 19, 11}, false);
 
     private static final BookHand[] bookHands = {
             page50, page56, page56B, page58, page61, page62, page62B, page63,
             page63B, page67, page67B, page69, page70, page71, page72, page72B,
-            page77, page82, page82B, page84, page113
+            page77, page82, page82B, page84, page113, page125
     };
 
     public String name;

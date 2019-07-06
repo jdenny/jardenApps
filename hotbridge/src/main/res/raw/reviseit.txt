@@ -1503,7 +1503,11 @@ A: to-play
 Q: 1NT, 2NT; 3D
 A: two-choice-diamonds, trumps-diamonds
 Q: 1NT, 2NT; 3D, 3H
-A: guard-hearts
+A: 11+ HCP, guard-hearts
+Q: 1NT, 2NT; 3D, 3H; 3NT
+A: 14+ HCP, guard-spades
+Q: 1NT, 2NT; 3D, 3H; 3NT, Pass
+A: to-play
 
 # multiple bids after 2C
 Q: 2C, 2S; 2NT
@@ -1559,7 +1563,14 @@ F1: [a]suit_setter[/a]
 A: 5+ winners-diamonds, suit-setter, trumps-diamonds
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
-A: guard-hearts
+A: 14+ HCP, guard-hearts
+Q: 2D, 2NT; 3H, 4C
+F1: [a]values_for_5[/a] already agreed diamonds. Alert: artificial
+A: 15-18 HCP, values-for-5
+Q: 2D, 2NT; 3H, 4D
+A: <15 HCP, no guard-spades
+Q: 2D, 2NT; 3H, 4D; Pass
+A: <18 HCP, to-play
 Q: 2D, 2NT; 4C
 F1: [a]values_for_5[/a] already agreed diamonds. Alert: artificial
 A: 21-24 HCP, values-for-5

@@ -238,7 +238,7 @@ public class Hand {
                         // add for side-suit shortages
                         if (suitLength == 0) adjustmentForTrumps += (3 + longTrumpsAdjust);
                         else if (suitLength == 1) adjustmentForTrumps += (2 + longTrumpsAdjust);
-                        else if (suitLength == 2) adjustmentForTrumps += (1 + longTrumpsAdjust);
+                        else if (suitLength == 2) adjustmentForTrumps += 1;
                     }
                 }
             }
