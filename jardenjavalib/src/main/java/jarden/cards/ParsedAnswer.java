@@ -52,6 +52,7 @@ public class ParsedAnswer {
     private int maxKeycards = -1;
     private int orValue = -1;
     private boolean setTrumps = false;
+    private boolean noTrumps = false;
     private Suit trumpSuit = null;
     private Suit suit = null;
     private Suit twoChoiceSuit = null;
@@ -293,6 +294,8 @@ public class ParsedAnswer {
             } else if (token.startsWith("trumps-")) {
                 trumpSuit = Suit.valueOf(token.substring(7));
                 setTrumps = true;
+            } else if (token.equals("no-trumps")) {
+                noTrumps = true;
             } else if (token.startsWith("two-choice-")) {
                 twoChoiceSuit = Suit.valueOf(token.substring(11));
             } else if (token.equals("no") || token.equals("not")) {
@@ -364,6 +367,7 @@ public class ParsedAnswer {
         return match;
     }
     private boolean doesHandMatch3(Hand hand, ParsedAnswer pa) {
+        if (noTrumps) hand.setTrumpSuit(null);
         int handPP = hand.getPlayingPoints();
         int[] suitLengths = hand.getSuitLengths();
         int[] suitValues = hand.getSuitValues();
@@ -488,7 +492,7 @@ public class ParsedAnswer {
         return true;
     }
     public boolean isSetTrumps() {
-        return setTrumps;
+        return setTrumps || noTrumps;
     }
     public Suit getTrumpSuit() {
         return trumpSuit;

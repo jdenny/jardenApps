@@ -1086,6 +1086,10 @@ F1: Artificial: [a]strong_fit[/a]
 A: 11+ fitHCP, <3 hearts, <4 clubs, 4+ diamonds, trumps-diamonds
 Q: 1H, 1S; 2D, 3D
 A: <11 fitHCP, <3 hearts, <4 clubs, 4+ diamonds, trumps-diamonds
+Q: 1H, 1S; 2D, 3NT
+A: 13+ HCP, <4 diamonds, guard-clubs
+Q: 1H, 1S; 2D, 3NT; Pass
+A: to-play
 Q: 1H, 1S; 2H
 F1: [a]raw[/a]
 A: <4 spades, 6+ hearts
@@ -1321,7 +1325,7 @@ F1: [a]to_play[/a]
 A: to-play
 Q: 1H, 2NT; 3D, 3NT
 F1: [a]threeNT|3NT[/a]; all suits guarded; partner can return to hearts
-A: guard-clubs, guard-spades
+A: guard-clubs, guard-spades, no-trumps
 Q: 1H, 2NT; 3D, 4C
 F1: [a]values_for_5[/a]. Alert: artificial
 A: 15-18 HCP, values-for-5
@@ -1454,6 +1458,19 @@ F1: [a]responses_to_relay[/a]
 A: <3 hearts, 4 spades, 4+ clubs, 14+ HCP-or-skew
 
 # multiple bids after 1NT
+Q: 1NT, 2C; 2H
+F1: [a]responses_to_relay[/a]
+A: 14+ HCP, 3 hearts
+Q: 1NT, 2C; 2H, 3C
+F1: [a]responses_to_relay[/a]
+A: no 5+ major, 4+ clubs, 15+ HCP-or-skew
+Q: 1NT, 2C; 2H, 3C; 4D
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 14-17 fitHCP, 4+ clubs, autofit, values-for-5, trumps-clubs
+Q: 1NT, 2C; 2H, 3C; 4D, 5C
+A: <19 HCP, to-play
+Q: 1NT, 2C; 2H, 3C; 4D, 5C; Pass
+A: to-play
 Q: 1NT, 2D; 2H
 A: 3 hearts
 Q: 1NT, 2D; 2H, 2NT
@@ -1467,7 +1484,9 @@ F1: [a]responses_to_relay[/a]
 A: no 5+ major, 4+ clubs, 15+ HCP-or-skew
 Q: 1NT, 2D; 2H, 3C; 4D
 F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
-A: 16-19 fitHCP, 4+ clubs, autofit, values-for-5, trumps-clubs
+A: 14-17 fitHCP, 4+ clubs, autofit, values-for-5, trumps-clubs
+Q: 1NT, 2D; 2H, 3C; 4D, 5C
+A: <19 HCP, to-play
 Q: 1NT, 2D; 2S
 A: 3 spades, <3 hearts
 Q: 1NT, 2D; 2S, 3C
@@ -1505,7 +1524,7 @@ A: two-choice-diamonds, trumps-diamonds
 Q: 1NT, 2NT; 3D, 3H
 A: 11+ HCP, guard-hearts
 Q: 1NT, 2NT; 3D, 3H; 3NT
-A: 14+ HCP, guard-spades
+A: 14+ HCP, guard-spades, no-trumps
 Q: 1NT, 2NT; 3D, 3H; 3NT, Pass
 A: to-play
 

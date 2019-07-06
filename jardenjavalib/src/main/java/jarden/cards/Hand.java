@@ -20,6 +20,7 @@ public class Hand {
 	private int[] suitValues = new int[4]; // A=4, K=3, Q=2, J=1
     private int[] honoursCt = new int[4]; // how many out of top 5 honours: AKQJ10
 	private int highCardPoints;
+	private int adjustmentForTrumps = 0;
 	private int playingPoints;
 	private int aceCt = 0;
 	private int kingCt = 0;
@@ -60,8 +61,8 @@ public class Hand {
     }
 
 	public int getHighCardPoints() {
-		if (this.playingPoints == 0) evaluateHand();
-		return this.highCardPoints;
+		if (playingPoints == 0) evaluateHand();
+		return highCardPoints + adjustmentForTrumps;
 	}
 
 	public int getPlayingPoints() {
@@ -121,12 +122,6 @@ public class Hand {
     // TODO: add method has SuitHalfGuard, replacing 6 with 5
     public boolean hasSuitGuard(int suitOrdinal) {
         return (suitValues[suitOrdinal] + suitLengths[suitOrdinal]) >= 6;
-    }
-    public void reset() {
-        if (trumpSuit != null) {
-            trumpSuit = null;
-            evaluateHand();
-        }
     }
     private void evaluateHand() {
 		for (Card card : cards) {
@@ -207,8 +202,15 @@ public class Hand {
      * @param trumpSuit
      */
     public void setTrumpSuit(Suit trumpSuit) {
-        this.trumpSuit = trumpSuit;
-        this.highCardPoints += getAdjustmentForTrumps(trumpSuit);
+        if (trumpSuit == null) reset(); // i.e. no trumps
+        else {
+            this.trumpSuit = trumpSuit;
+            adjustmentForTrumps = getAdjustmentForTrumps(trumpSuit);
+        }
+    }
+    public void reset() {
+        trumpSuit = null;
+        adjustmentForTrumps = 0;
     }
     /**
      * After finding fit in trumps, make adjustments to HCP
@@ -219,31 +221,27 @@ public class Hand {
      * for each doubleton: add 1 + extra 1 if trumpct > 5
      */
     public int getAdjustmentForTrumps(Suit trumpSuit) {
-        int adjustmentForTrumps = 0;
+        int trumpAdjust = 0;
         if (trumpSuit != null) {
             int trumpCt = suitLengths[trumpSuit.ordinal()];
             if (trumpCt > 0) {
-                int longTrumpsAdjust = 0;
-                int trumpsOver5 = trumpCt - 5;
-                if (trumpsOver5 > 0) {
-                    longTrumpsAdjust = 1;
-                    // extra trumps: add 2 for each trump after 5
-                    adjustmentForTrumps += (trumpsOver5 * 2);
-                }
+                int longTrumpsAdjust = trumpCt > 5 ? 1 : 0;
+                // +2 for each trump after 5
+                if (trumpCt > 5) trumpAdjust += (trumpCt - 5) * 2;
                 for (int s = 0; s < 4; s++) {
                     int suitLength;
                     // process side-suits
                     if (s != trumpSuit.ordinal()) {
                         suitLength = suitLengths[s];
                         // add for side-suit shortages
-                        if (suitLength == 0) adjustmentForTrumps += (3 + longTrumpsAdjust);
-                        else if (suitLength == 1) adjustmentForTrumps += (2 + longTrumpsAdjust);
-                        else if (suitLength == 2) adjustmentForTrumps += 1;
+                        if (suitLength == 0) trumpAdjust += (3 + longTrumpsAdjust);
+                        else if (suitLength == 1) trumpAdjust += (2 + longTrumpsAdjust);
+                        else if (suitLength == 2) trumpAdjust += 1;
                     }
                 }
             }
         }
-        return adjustmentForTrumps;
+        return trumpAdjust;
     }
     /**
      * Add for shortages in non-trump suits:

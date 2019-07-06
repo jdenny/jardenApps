@@ -110,7 +110,7 @@ public class TestHand {
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
         boolean testAll = false;
         System.out.println("start of test");
-        parseAllBids();
+        // parseAllBids();
         testBookHands();
         // testAllSecondBids();
         // testOneBid();
