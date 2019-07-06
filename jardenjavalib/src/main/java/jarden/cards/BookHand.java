@@ -236,11 +236,21 @@ public class BookHand {
             "2D, 2NT; 3H, 4D; Pass",
             "",
             new int[] {21, 18, 16, 11}, false);
+    private static final BookHand page137 = new BookHand(
+            "page137",
+            new Hand(new CardPack.CardEnum[] { // 20pp, 9+0+0+1HCP/+3, 2-7-1-3
+                    C8, C7, DA, DQ, DJ, D8, D5, D3, D2, H4, SQ, S7, S3 }),
+            new Hand(new CardPack.CardEnum[] { // 31pp, 21+0+0+1HCP/+5, 3-1-3-6
+                    CA, CK, CQ, D6, HA, H6, H2, SA, SK, SJ, ST, S6, S2 }),
+            // book version: "3D, 3S; 4H, 4NT; 5D, 5H; 5NT, 7S; Pass",
+            "2D, 2S; 3S, 4D; 4S, 4NT; 5NT, 7S; Pass",
+            "",
+            new int[] {20, 31, 13, 27}, false);
 
     private static final BookHand[] bookHands = {
             page50, page56, page56B, page58, page61, page62, page62B, page63,
             page63B, page67, page67B, page69, page70, page71, page72, page72B,
-            page77, page82, page82B, page84, page113, page124, page125
+            page77, page82, page82B, page84, page113, page124, page125, page137
     };
 
     public String name;
