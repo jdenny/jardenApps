@@ -17,6 +17,7 @@ import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
+import static jarden.cards.BookHand.page56B;
 import static jarden.cards.CardPack.CardEnum.C2;
 import static jarden.cards.CardPack.CardEnum.C3;
 import static jarden.cards.CardPack.CardEnum.C4;
@@ -100,7 +101,7 @@ public class TestHand {
     public static void main(String[] args) throws IOException {
         new TestHand();
     }
-    // provide GUI, to allow me to choose tests
+    // TODO: provide GUI, to allow me to choose tests
     private TestHand() throws IOException {
         File file = new File("./hotbridge/src/main/res/raw/reviseit.txt");
         InputStream is = new FileInputStream(file);
@@ -114,6 +115,7 @@ public class TestHand {
         testBookHands();
         // testAllSecondBids();
         // testOneBid();
+        // testOneHand();
 
         if (testAll) {
             parseAllBids();
@@ -214,12 +216,22 @@ public class TestHand {
             testBookHand(bookHand, true);
         }
     }
+    private void testOneHand() {
+        System.out.println("\ntestOneHand()");
+        BookHand bookHand = page56B;
+        testBookHand(bookHand, false);
+        testBookHand(bookHand, true);
+//        testWestEast(bookHand.handWest, bookHand.handEast,
+//                bookHand.expectedReverseSequence,
+//                bookHand.pointCounts, true);
+    }
     private void testBookHand(BookHand bookHand, boolean reverseDealer) {
         System.out.println(bookHand.name);
         boolean dealerEast = bookHand.dealerEast;
         if (reverseDealer) dealerEast = !dealerEast;
         testWestEast(bookHand.handWest, bookHand.handEast,
-                bookHand.expectedBidSequence, bookHand.pointCounts, dealerEast);
+                reverseDealer ? bookHand.expectedReverseSequence : bookHand.expectedBidSequence,
+                bookHand.pointCounts, dealerEast);
         System.out.println();
     }
     private void testAllResponses() {

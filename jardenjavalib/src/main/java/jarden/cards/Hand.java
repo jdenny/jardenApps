@@ -91,7 +91,7 @@ public class Hand {
 
 	public String toString() {
         if (this.playingPoints == 0) return super.toString();
-        return playingPoints + "pp " + highCardPoints + "HCP " +
+        return playingPoints + "pp " + getHighCardPoints() + "HCP " +
                 suitLengths[0] + "-" + suitLengths[1] + "-" +
                 suitLengths[2] + "-" + suitLengths[3];
     }
