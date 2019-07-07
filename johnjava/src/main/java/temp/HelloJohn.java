@@ -1,7 +1,5 @@
 package temp;
 
-import jarden.cards.Card;
-
 /**
  * Created by john.denny@gmail.com on 22/06/2018.
  */
@@ -18,9 +16,56 @@ public class HelloJohn {
     public static void main(String[] args) {
         System.out.println("hello John");
         // testGetBidsFromSequence();
-        System.out.println(Card.ICON_SPADE + " A K 9 7");
-        System.out.println(Card.ICON_HEART + " Q J 10 5 2");
+        version2();
+        if (true) return;
+        System.out.println("version 1");
+        boolean bookHandWest = true;
+        boolean westDeal = true;
+        boolean westDealHand1 = true;
+        boolean part2 = false;
+        int bookHandsIndex = -1;
+        int handCt = 5;
+        for (int i = 0; i < (handCt * 4); i++) {
+            if (++bookHandsIndex >= handCt) {
+                bookHandsIndex = 0;
+                bookHandWest = !bookHandWest;
+                if (part2) westDealHand1 = !westDealHand1;
+                part2 = !part2;
+                westDeal = westDealHand1;
+            }
+            System.out.println((bookHandsIndex + 1) +
+                    " " + (bookHandWest ? "W" : "E") +
+                    " " + (westDeal ? "W" : "E"));
+            westDeal = !westDeal;
+        }
         System.out.println("adios amigo");
+    }
+    private static void version2() {
+        System.out.println("version 2");
+        int bookHandsIndex = -1;
+        int handCt = 4;
+        boolean bookHandWest = true;
+        boolean westDeal = true;
+        // lap 0 is W W
+        //  (I am West for this lap; dealer alternates, but starts with West)
+        // lap 1 is E W
+        // lap 2 is W E
+        // lap 3 is E E
+        int lap = 0;
+
+        for (int i = 0; i < (handCt * 8); i++) {
+            if (++bookHandsIndex >= handCt) {
+                bookHandsIndex = 0;
+                if (++lap >= 4) lap = 0;
+                bookHandWest = (lap % 2 == 0);
+                westDeal = (lap < 2);
+            }
+            System.out.println((bookHandsIndex + 1) +
+                    " " + (bookHandWest ? "W" : "E") +
+                    " " + (westDeal ? "W" : "E"));
+            westDeal = !westDeal;
+        }
+
     }
 
     private static void testGetBidsFromSequence() {

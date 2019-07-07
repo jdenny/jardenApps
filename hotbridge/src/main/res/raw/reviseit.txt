@@ -830,13 +830,19 @@ Q: 1D, 1H; 1S, 2D; 2NT, 3D; 4D, 4S; 4NT, 6D
 A: <22 HCP, to-play
 Q: 1D, 1H; 1S, 2D; 2NT, 3D; 4D, 4S; 4NT, 6D; Pass
 A: <19 HCP, to-play
-
 Q: 1D, 1H; 1S, 2D; 2NT, 3D; 4H
 F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
 A: 19-22 HCP, 4+ diamonds, autofit, values-for-5, trumps-diamonds
 Q: 1D, 1H; 1S, 2D; 2NT, 3D; 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
 A: 22+ HCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
+Q: 1D, 1H; 1S, 2D; 2NT, 3H
+A: 6+ hearts
+Q: 1D, 1H; 1S, 2D; 2NT, 3H; 3NT
+A: guard-diamonds, guard-clubs
+Q: 1D, 1H; 1S, 2D; 2NT, 3H; 3NT, Pass
+A: to-play
+
 Q: 1D, 1H; 1S, 2D; 3C
 A: <3 hearts, 4 spades, 4+ clubs, 17+ HCP-or-skew
 Q: 1D, 1H; 1S, 2D; 3D
@@ -1203,6 +1209,10 @@ A: to-play
 Q: 1H, 1S; 2H
 F1: [a]raw[/a]
 A: <4 spades, 6+ hearts
+Q: 1H, 1S; 2H, 3NT
+A: 13+ HCP, guard-diamonds, guard-clubs
+Q: 1H, 1S; 2H, 3NT; Pass
+A: to-play
 Q: 1H, 1S; 2S
 A: 4 spades, trumps-spades
 Q: 1H, 1S; 2S, 2NT

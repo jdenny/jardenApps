@@ -117,10 +117,15 @@ public class CardPack {
             cards2[i] = swap;
         }
     }
-    public void setBookHand(BookHand bookHand) {
+    public void setBookHand(BookHand bookHand, boolean bookHandWest) {
         hands = new Hand[PLAYER_CT];
-	    hands[0] = bookHand.handWest;
-	    hands[2] = bookHand.handEast;
+        if (bookHandWest) {
+            hands[0] = bookHand.handWest;
+            hands[2] = bookHand.handEast;
+        } else {
+            hands[0] = bookHand.handEast;
+            hands[2] = bookHand.handWest;
+        }
     }
     public Hand getHand(Player player) {
 		return hands[player.ordinal()];

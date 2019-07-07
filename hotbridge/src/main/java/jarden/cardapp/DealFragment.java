@@ -47,6 +47,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     public interface Bridgeable {
         BridgeQuiz getBridgeQuiz();
         void setStatusMessage(String message);
+        void setTitle(String message);
     }
     private static final int SHOW_ME = 0;
     private static final int SHOW_US = 1;
@@ -83,8 +84,25 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private BookHand[] bookHands = BookHand.getBookHands();
 	private BookHand bookHand;
 	private int bookHandsIndex = -1;
+	/*
+	    used to control the bookHands; we go through all the hands
+	    4 times (4 laps): first with me having bookHand.handWest (i.e. bookHandWest = true)
+	    and dealer alternating but starting with me (i.e. westDeal = true);
+	    then me having bookHand.handEast (even though from a UI point of view I am West!
+	    then the next two laps similar to the first, except that the
+	    dealer is switched
+	    in summary:
+	    lap myHand dealer for 1st hand in lap (then alternates for each hand)
+	      0   West   West
+	      1   East   West
+	      2   West   East
+	      3   East   East
+	 */
+	private int bookHandsLap = 0;
+	private boolean bookHandWest = true;
+    private boolean westDeal = true;
+
     private QuestionAnswer lastQA;
-	private boolean westDeal;
 	private boolean biddingOver;
     private boolean shuffled = false;
     private boolean twoPlayer = false;
@@ -252,17 +270,19 @@ public class DealFragment extends Fragment implements OnClickListener {
     public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
         if (!randomDeals) {
-            ++bookHandsIndex;
-            if (bookHandsIndex >= bookHands.length) bookHandsIndex = 0;
+            if (++bookHandsIndex >= bookHands.length) {
+                bookHandsIndex = 0;
+                if (++bookHandsLap >= 4) bookHandsLap = 0;
+                bookHandWest = (bookHandsLap % 2 == 0);
+                westDeal = (bookHandsLap < 2);
+            }
             bookHand = bookHands[bookHandsIndex];
-            cardPack.setBookHand(bookHand);
+            cardPack.setBookHand(bookHand, bookHandWest);
             // TODO: test this: (only applies to one doing deal, not other player)
             // book hand 21 (page 113)
             dealName = "book hand " + (bookHandsIndex + 1) + " (" + bookHand.name + ")";
-            this.westDeal = !bookHand.dealerEast;
         } else {
             cardPack.shuffleAndDeal(true); // i.e. dealShow with bias in our favour
-            this.westDeal = !this.westDeal;
             dealName = "random deal";
         }
         if (twoPlayer) {
@@ -285,6 +305,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             }
         }
         showDeal();
+        this.westDeal = !this.westDeal;
     }
     private void showDeal() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showDeal()");
@@ -308,7 +329,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	public void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
-        bridgeable.setStatusMessage(this.dealName);
+        bridgeable.setTitle(this.dealName);
         if (randomDeals) {
             northFragment.showHand();
             southFragment.showHand();

@@ -38,8 +38,6 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
-add more hands from book
-
 currently if both hands have 5 hearts, nothing added to hcp; can we
 calculate extra trumps? e.g. bidding says 4+ and we have 5, so one extra trump
 examples:
@@ -268,5 +266,10 @@ public class HotBridgeActivity extends AppCompatActivity
     @Override // Bridgeable
     public BridgeQuiz getBridgeQuiz() {
         return bridgeQuiz;
+    }
+
+    @Override // Bridgeable
+    public void setTitle(String message) {
+        super.setTitle(message);
     }
 }

@@ -211,11 +211,13 @@ public class TestHand {
     private void testBookHands() {
         System.out.println("\ntestBookHands()");
         BookHand[] bookHands = BookHand.getBookHands();
-        for (BookHand bookHand: bookHands) {
-            testBookHand(bookHand, false);
-        }
-        for (BookHand bookHand: bookHands) {
-            testBookHand(bookHand, true);
+        boolean dealerEast = false;
+        // test all the hands twice, each time with different dealer
+        for (int i = 0; i < 2; i++) {
+            for (BookHand bookHand : bookHands) {
+                testBookHand(bookHand, dealerEast);
+                dealerEast = !dealerEast;
+            }
         }
     }
     private void testOneHand(BookHand bookHand) {
@@ -223,12 +225,10 @@ public class TestHand {
         testBookHand(bookHand, false);
         testBookHand(bookHand, true);
     }
-    private void testBookHand(BookHand bookHand, boolean reverseDealer) {
+    private void testBookHand(BookHand bookHand, boolean dealerEast) {
         System.out.println(bookHand.name);
-        boolean dealerEast = bookHand.dealerEast;
-        if (reverseDealer) dealerEast = !dealerEast;
         testWestEast(bookHand.handWest, bookHand.handEast,
-                reverseDealer ? bookHand.expectedReverseSequence : bookHand.expectedBidSequence,
+                dealerEast ? bookHand.expectedReverseSequence : bookHand.expectedBidSequence,
                 bookHand.pointCounts, dealerEast);
         System.out.println();
     }
