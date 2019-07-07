@@ -163,7 +163,7 @@ public class BookHand {
                     CA, CQ, CT, C6, D7, HJ, H8, H4, SA, SQ, SJ, S7, S6 }),
             // book version: "1H, 1S; 1NT, 2D; 2NT, 3C; 4D, 4H; 5C, 6C; Pass",
             "1H, 1S; 1NT, 2D; 3C, 4D; 4H, 5C; 6C, Pass",
-            "",
+            "1C, 1H; 1S, 2D; 2H, 3C; 4C, 4D; 5C, Pass",
             new int[] {22, 25, 15, 18}, false);
     private static final BookHand page77 = new BookHand(
             "page77",
@@ -173,7 +173,7 @@ public class BookHand {
                     C7, C5, C2, DA, DQ, DT, D5, D2, HA, HK, H4, S7, S3 }),
             // book version: "1H, 2D; 2NT, 3H; 4H, Pass",
             "1H, 2D; 3D, 3H; 4H, Pass",
-            "",
+            "1NT, 2D; 2H, 3D; 4D, Pass",
             new int[] {22, 22, 15, 15}, false);
     private static final BookHand page82 = new BookHand(
             "page82",
