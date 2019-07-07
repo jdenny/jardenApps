@@ -100,7 +100,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	 */
 	private int bookHandsLap = 0;
 	private boolean bookHandWest = true;
-    private boolean westDeal = true;
+    private boolean westDeal = false;
 
     private QuestionAnswer lastQA;
 	private boolean biddingOver;
@@ -274,7 +274,8 @@ public class DealFragment extends Fragment implements OnClickListener {
                 bookHandsIndex = 0;
                 if (++bookHandsLap >= 4) bookHandsLap = 0;
                 bookHandWest = (bookHandsLap % 2 == 0);
-                westDeal = (bookHandsLap < 2);
+                westDeal = !(bookHandsLap < 2); // the opposite of what you would think,
+                    // because it's about to be reversed, as part of alternating the dealer
             }
             bookHand = bookHands[bookHandsIndex];
             cardPack.setBookHand(bookHand, bookHandWest);
@@ -285,6 +286,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             cardPack.shuffleAndDeal(true); // i.e. dealShow with bias in our favour
             dealName = "random deal";
         }
+        this.westDeal = !this.westDeal;
         if (twoPlayer) {
             if (bluetoothService != null && bluetoothService.getState() == BTState.connected) {
                 // boolean randomDeals, boolean westDeal, int dealNumber
@@ -305,7 +307,6 @@ public class DealFragment extends Fragment implements OnClickListener {
             }
         }
         showDeal();
-        this.westDeal = !this.westDeal;
     }
     private void showDeal() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showDeal()");
