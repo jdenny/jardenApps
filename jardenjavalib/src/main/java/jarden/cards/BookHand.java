@@ -193,7 +193,7 @@ public class BookHand {
                     // hack: replace C9 with CA and H7 with HJ
                     CA, DQ, DJ, D8, HA, HJ, H5, SA, SK, S9, S7, S6, S4 }),
             "2D, 2S; 3D, 4S; 5D, 6D; Pass",
-            "",
+            "1C, 2D; 2S, 3D; 3S, 4D; 5D, Pass",
             new int[] {21, 28, 17, 21}, false);
     private static final BookHand page84 = new BookHand(
             "page84",
@@ -225,7 +225,7 @@ public class BookHand {
                     CK, CQ, CT, C6, DK, D7, D6, HA, H3, SJ, S7, S6, S3 }),
             // book version: "1H, 1S; 2S, 2NT; 3D, 3NT; Pass",
             "1H, 1S; 2D, 3NT; Pass",
-            "",
+            "1S, 2D; 3C, 3NT; Pass",
             new int[] {22, 22, 13, 14}, false);
     private static final BookHand page125 = new BookHand(
             "page125",
@@ -245,7 +245,7 @@ public class BookHand {
                     CA, CK, CQ, D6, HA, H6, H2, SA, SK, SJ, ST, S6, S2 }),
             // book version: "3D, 3S; 4H, 4NT; 5D, 5H; 5NT, 7S; Pass",
             "2D, 2S; 3S, 4D; 4S, 4NT; 5NT, 7S; Pass",
-            "",
+            "1C, 2D; 2S, 2NT; 4D, 4S; 4NT, 5NT; 7S, Pass",
             new int[] {20, 31, 13, 27}, false);
 
     private static final BookHand[] bookHands = {

@@ -706,13 +706,46 @@ F1: [a]responses_to_relay[/a]
 A: 5+ hearts
 Q: 1C, 2D; 2S
 F1: [a]responses_to_relay[/a]
-A: 5+ spades, <5 hearts
+A: <5 hearts, 5+ spades
 Q: 1C, 2D; 2S, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
 A: 3 spades, trumps-spades
 Q: 1C, 2D; 2S, 2NT; 4D
 F1: [a]keycard_ask[/a], already agreed spades. Alert: artificial
 A: 24+ HCP, keycard-ask
+Q: 1C, 2D; 2S, 2NT; 4D, 4S
+F1: response to [a]keycard_ask[/a]. Alert: artificial
+A: 1-or-4 keycards-spades
+Q: 1C, 2D; 2S, 2NT; 4D, 4S; 4NT
+F1: [a]queen_ask[/a]. Alert: Artificial
+A: queen-ask
+Q: 1C, 2D; 2S, 2NT; 4D, 4S; 4NT, 5NT
+A: queen-spades, not king-hearts, not king-diamonds, not king-clubs
+Q: 1C, 2D; 2S, 2NT; 4D, 4S; 4NT, 5NT; 7S
+A: to-play
+Q: 1C, 2D; 2S, 2NT; 4D, 4S; 4NT, 5NT; 7S, Pass
+A: to-play
+
+Q: 1C, 2D; 2S, 3C
+A: <3 spades, 4+ clubs
+Q: 1C, 2D; 2S, 3D
+A: <3 spades, <4 clubs, 4+ diamonds
+Q: 1C, 2D; 2S, 3D; 3S
+A: <4 diamonds, 6+ spades
+Q: 1C, 2D; 2S, 3D; 3S, 4D
+A: <3 spades, 6+ diamonds
+Q: 1C, 2D; 2S, 3D; 3S, 4D; 5D
+A: 20+ fitHCP, 3 diamonds, trumps-diamonds
+Q: 1C, 2D; 2S, 3D; 3S, 4D; 5D, Pass
+A: to-play
+Q: 1C, 2D; 2S, 3D; 4D
+A: <20 fitHCP, 4+ diamonds, trumps-diamonds
+Q: 1C, 2D; 2S, 3D; 4H
+F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
+A: 20-23 fitHCP, 4+ diamonds, autofit, values-for-5, trumps-diamonds
+Q: 1C, 2D; 2S, 3D; 4S
+F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
+A: 24+ fitHCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
 Q: 1C, 2D; 2NT
 F1: [a]responses_to_relay[/a]
 A: no 5+ major, not 20+ HCP-or-skew-with-4+minor
@@ -1567,6 +1600,10 @@ A: <16 HCP, to-play
 Q: 1S, 2D; 3C
 F1: [a]responses_to_relay[/a]
 A: <3 hearts, 4 spades, 4+ clubs, 14+ HCP-or-skew
+Q: 1S, 2D; 3C, 3NT
+A: guard-diamonds, guard-hearts
+Q: 1S, 2D; 3C, 3NT; Pass
+A: to-play
 
 # multiple bids after 1NT
 Q: 1NT, 2C; 2H
