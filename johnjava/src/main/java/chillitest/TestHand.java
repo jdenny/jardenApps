@@ -8,16 +8,15 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import jarden.cards.BookHand;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
 import jarden.cards.ParsedAnswer;
 import jarden.cards.Player;
-import jarden.cards.BookHand;
 import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.cards.BookHand.page56B;
 import static jarden.cards.CardPack.CardEnum.C2;
 import static jarden.cards.CardPack.CardEnum.C3;
 import static jarden.cards.CardPack.CardEnum.C4;
@@ -115,7 +114,7 @@ public class TestHand {
         testBookHands();
         // testAllSecondBids();
         // testOneBid();
-        // testOneHand();
+        // testOneHand(page62);
 
         if (testAll) {
             parseAllBids();
@@ -188,6 +187,7 @@ public class TestHand {
             }
             qa = qa2;
             dealerEast = !dealerEast;
+            if (qa.question.equals("Pass")) qa = OPENING_BIDS;
         }
         if (!qa.question.equals(expectedBidSequence)) {
             System.out.println("****qa.question=" + qa.question);
@@ -201,8 +201,10 @@ public class TestHand {
         if (verbose) {
             System.out.println("westFinalHCP=" + westFinalHCP);
             System.out.println("eastFinalHCP=" + eastFinalHCP);
-            handWest.reset();
-            handEast.reset();
+        }
+        handWest.reset();
+        handEast.reset();
+        if (verbose) {
             System.out.println("estimated bid: " + handWest.getEstimateBid(handEast));
         }
     }
@@ -216,14 +218,10 @@ public class TestHand {
             testBookHand(bookHand, true);
         }
     }
-    private void testOneHand() {
+    private void testOneHand(BookHand bookHand) {
         System.out.println("\ntestOneHand()");
-        BookHand bookHand = page56B;
         testBookHand(bookHand, false);
         testBookHand(bookHand, true);
-//        testWestEast(bookHand.handWest, bookHand.handEast,
-//                bookHand.expectedReverseSequence,
-//                bookHand.pointCounts, true);
     }
     private void testBookHand(BookHand bookHand, boolean reverseDealer) {
         System.out.println(bookHand.name);

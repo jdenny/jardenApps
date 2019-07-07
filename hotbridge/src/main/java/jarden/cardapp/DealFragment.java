@@ -258,7 +258,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             cardPack.setBookHand(bookHand);
             // TODO: test this: (only applies to one doing deal, not other player)
             // book hand 21 (page 113)
-            dealName = "book hand " + (bookHandsIndex + 1) + "(" + bookHand.name + ")";
+            dealName = "book hand " + (bookHandsIndex + 1) + " (" + bookHand.name + ")";
             this.westDeal = !bookHand.dealerEast;
         } else {
             cardPack.shuffleAndDeal(true); // i.e. dealShow with bias in our favour

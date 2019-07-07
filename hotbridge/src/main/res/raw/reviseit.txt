@@ -765,6 +765,10 @@ A: no 4+ major, 5+ clubs, 4 diamonds
 Q: 1D, 1H; 2D
 F1: [a]raw[/a]
 A: no 4+ major, 5+ diamonds, 4 clubs
+Q: 1D, 1H; 2D, 3NT
+A: 10+ HCP, guard-spades
+Q: 1D, 1H; 2D, 3NT; Pass
+A: to-play
 Q: 1D, 1H; 2H
 A: 4+ hearts
 Q: 1D, 1H; 2NT
@@ -784,6 +788,9 @@ A: 8-9 HCP, invitational-relay
 Q: 1D, 1S; 1NT, 2D
 F1: [a]responses_to_1NT[/a], compelling [a]relay[/a]; may have 5+ major. Alert: artificial
 A: 10+ HCP, compelling-relay
+Q: 1D, 1S; 1NT, 2D; 3D
+F1: [a]responses_to_relay[/a]
+A: <5 hearts, <4 clubs, 4+ diamonds, 19+ HCP-or-skew
 Q: 1D, 1S; 1NT, 2S
 A: 0-7 HCP, 6+ spades
 Q: 1D, 1S; 1NT, 2NT
@@ -1495,6 +1502,13 @@ A: <3 hearts, 4 spades, 4+ clubs, 14+ HCP-or-skew
 Q: 1NT, 2C; 2H
 F1: [a]responses_to_relay[/a]
 A: 14+ HCP, 3 hearts
+Q: 1NT, 2C; 2H, 2NT
+F1: [a]responses_to_relay[/a]
+A: no 5+ major, not 15+ HCP-or-skew-with-4+minor
+Q: 1NT, 2C; 2H, 2NT; 3D
+F1: [a]responses_to_relay[/a]
+A: 4+ diamonds, 15+ HCP-or-skew
+
 Q: 1NT, 2C; 2H, 3C
 F1: [a]responses_to_relay[/a]
 A: no 5+ major, 4+ clubs, 15+ HCP-or-skew
@@ -1505,6 +1519,9 @@ Q: 1NT, 2C; 2H, 3C; 4D, 5C
 A: <19 HCP, to-play
 Q: 1NT, 2C; 2H, 3C; 4D, 5C; Pass
 A: to-play
+Q: 1NT, 2C; 2H, 3D
+F1: [a]responses_to_relay[/a]
+A: no 5+ major, 4+ diamonds, 15+ HCP-or-skew
 Q: 1NT, 2D; 2H
 A: 3 hearts
 Q: 1NT, 2D; 2H, 2NT
