@@ -52,8 +52,7 @@ if no response, but previous bid contained "to-play", count no response as pass
 need to alert before bidding (as in bridj)
 
 verbose mode to show meaning of partner's bid; could be hypertext on bids in table
-
-swap east-west for bookHands
+go further and show each bid with meaning, as in quiz
 
 keep track of failed deals, current deals, as in quiz
 

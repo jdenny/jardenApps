@@ -237,7 +237,8 @@ public class DealFragment extends Fragment implements OnClickListener {
                 bidButton.setEnabled(false);
                 String status = "biddingOver";
                 if (lastBid != null) status = lastBid + " from last bid; " + status;
-                bridgeable.setStatusMessage(status);
+                // bridgeable.setStatusMessage(status);
+                Toast.makeText(getContext(), status, Toast.LENGTH_LONG).show();
             }
         }
         showBids();
@@ -278,6 +279,8 @@ public class DealFragment extends Fragment implements OnClickListener {
                     // because it's about to be reversed, as part of alternating the dealer
             }
             bookHand = bookHands[bookHandsIndex];
+            bookHand.handWest.reset();
+            bookHand.handEast.reset();
             cardPack.setBookHand(bookHand, bookHandWest);
             // TODO: test this: (only applies to one doing deal, not other player)
             // book hand 21 (page 113)
