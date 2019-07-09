@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 
 import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
+import jarden.quiz.QuestionAnswer;
 
 /**
  * Shuffle and dealAndSort a pack of cards, showing my hand (Me), or
@@ -38,23 +39,28 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
+need to alert before bidding (as in bridj)
+
+verbose mode to show meaning of partner's bid; could be hypertext on bids in table
+go further and show each bid with meaning, as in quiz; or even open quiz on that
+QA! (Send QA index)
+
+keep track of failed deals, current deals, as in quiz
+
+Fix crash shown in pre-launch report
+
+"About Hot Chilli" menu item which shows version
+
 currently if both hands have 5 hearts, nothing added to hcp; can we
 calculate extra trumps? e.g. bidding says 4+ and we have 5, so one extra trump
 examples:
 A: 4+ hearts
-    I have extras if >4 hearts
-    send message to partner assuming she has 4 hearts, so any more are extras
+I have extras if >4 hearts
+send message to partner assuming she has 4 hearts, so any more are extras
 A: 3 hearts
-    partnerHand.assumeTrumps(5);
+partnerHand.assumeTrumps(5);
 
 if no response, but previous bid contained "to-play", count no response as pass
-
-need to alert before bidding (as in bridj)
-
-verbose mode to show meaning of partner's bid; could be hypertext on bids in table
-go further and show each bid with meaning, as in quiz
-
-keep track of failed deals, current deals, as in quiz
 
 MINOR
 change all multi-word terms to use _ instead of -
@@ -76,6 +82,8 @@ after closing one of two-player devices; stack trace:
 public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener, DealFragment.Bridgeable {
     public static final String TAG = "hotbridge";
+    public static final String LAST_QA_QUESTION_KEY = "lastQAQuestionKey";
+    public static final String LAST_QA_ANSWER_KEY = "lastQAAnswerKey";
     private static final String quizFileName = "reviseit.txt";
     // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
@@ -152,6 +160,13 @@ public class HotBridgeActivity extends AppCompatActivity
 		    return true;
         } else if (id == R.id.reviseButton) {
             Intent intent = new Intent(this, ReviseQuizActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.dealDetailButton) {
+            QuestionAnswer lastQA = dealFragment.getLastQA();
+            Intent intent = new Intent(this, ReviseQuizActivity.class);
+            intent.putExtra(LAST_QA_QUESTION_KEY, lastQA.question);
+            intent.putExtra(LAST_QA_ANSWER_KEY, lastQA.answer);
             startActivity(intent);
             return true;
 		} else {

@@ -470,4 +470,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     public void setTwoPlayer(boolean twoPlayer) {
         this.twoPlayer = twoPlayer;
     }
+    public QuestionAnswer getLastQA() {
+        return lastQA;
+    }
 }

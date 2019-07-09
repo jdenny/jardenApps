@@ -13,4 +13,7 @@
     <item
         android:id="@+id/reviseButton"
         android:title="@string/biddingQuiz" />
+    <item
+        android:id="@+id/dealDetailButton"
+        android:title="@string/dealDetail" />
 </menu>

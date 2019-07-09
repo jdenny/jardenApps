@@ -29,5 +29,6 @@
     <string name="west">West</string>
     <string name="equalsStr">=</string>
     <string name="setTargetCorrects">Set Target Corrects</string>
+    <string name="dealDetail">Deal Detail</string>
 
 </resources>

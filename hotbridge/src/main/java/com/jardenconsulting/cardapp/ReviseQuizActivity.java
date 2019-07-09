@@ -2,6 +2,7 @@ package com.jardenconsulting.cardapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ import java.util.Set;
 
 import jarden.app.dialog.IntegerDialog;
 import jarden.app.revisequiz.FreakWizFragment;
+import jarden.app.revisequiz.ReviseQuizFragment;
 import jarden.quiz.BridgeQuiz;
+import jarden.quiz.QuestionAnswer;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
@@ -154,6 +157,13 @@ public class ReviseQuizActivity extends AppCompatActivity
             setLearnMode();
         } else {
             setPracticeMode();
+        }
+        Intent intent = getIntent();
+        String qaQuestion = intent.getStringExtra(HotBridgeActivity.LAST_QA_QUESTION_KEY);
+        String qaAnswer = intent.getStringExtra(HotBridgeActivity.LAST_QA_ANSWER_KEY);
+        if (qaQuestion != null && qaAnswer != null) {
+            QuestionAnswer qa = new QuestionAnswer(qaQuestion, qaAnswer);
+            ((ReviseQuizFragment)freakWizFragment).setDetailQA(qa);
         }
     }
     @Override

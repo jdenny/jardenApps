@@ -41,6 +41,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "FreakWizFragment";
 
+    private QuestionAnswer detailQA; // passed within intent from ReviseQuizActivity
     private TextView statsTextView;
     private Button goButton;
 
@@ -74,7 +75,21 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
                 getActivity().getApplicationContext(),
                 notesTextView, reviseActivity.getNotesResIds(),
                 true, null, false);
-        askQuestion();
+        // alternatively: bridgeQuiz.setDetailQA(detailQA);
+        if (detailQA != null) {
+            this.questionTextView.setText(detailQA.question);
+            this.answerTextView.setText(detailQA.answer);
+            this.notesTextView.setText("");
+            resetListView();
+            showSelfMarkLayout();
+            setListView();
+            detailQA = null;
+        } else {
+            askQuestion();
+        }
+    }
+    public void setDetailQA(QuestionAnswer detailQA) {
+        this.detailQA = detailQA;
     }
     @Override
     public void onClick(View view) {
