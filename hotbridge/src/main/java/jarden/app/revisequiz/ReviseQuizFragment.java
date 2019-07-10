@@ -2,6 +2,9 @@ package jarden.app.revisequiz;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +16,7 @@ import com.jardenconsulting.cardapp.R;
 
 import java.util.List;
 
+import jarden.app.dialog.IntegerDialog;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -22,18 +26,27 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
  * Created by john.denny@gmail.com on 15/10/2018.
  */
 public class ReviseQuizFragment extends FreakWizFragment
-        implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+        implements AdapterView.OnItemClickListener, IntegerDialog.IntValueListener,
+        AdapterView.OnItemLongClickListener {
+
+    public interface Reviseable {
+        void setLearnMode();
+        void setPracticeMode();
+    }
 
     private CheckBox notesCheckBox;
     private ListView bidListView;
     private BidListAdapter bidListAdapter;
     private List<QuestionAnswer> qaList;
+    private Reviseable reviseable;
+    private boolean changingQuestionIndex;
+    private IntegerDialog integerDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
+        setHasOptionsMenu(true);
         this.notesCheckBox = new CheckBox(getContext());
         notesCheckBox.setText(R.string.notes);
         selfMarkLayout.addView(notesCheckBox, -1);
@@ -53,6 +66,57 @@ public class ReviseQuizFragment extends FreakWizFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         qaList = bridgeQuiz.getQuestionAnswerList();
+        reviseable = (Reviseable) getActivity();
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.revise, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.learnModeButton) {
+            reviseable.setLearnMode();
+            askQuestion();
+        } else if (id == R.id.practiceModeButton) {
+            reviseable.setPracticeMode();
+            askQuestion();
+        } else if (id == R.id.setCurrentIndexButton) {
+            // if we add more ints for the user to update, then
+            // change this boolean to an enum
+            changingQuestionIndex = true;
+            showIntegerDialog("Change Current Index",
+                    bridgeQuiz.getQuestionIndex() + 1,
+                    "UserLevelDialog");
+        } else if (id == R.id.setTargetCorrectsButton) {
+            changingQuestionIndex = false;
+            showIntegerDialog("Change Target Correct",
+                    bridgeQuiz.getTargetCorrectCt(),
+                    "TargetCorrectsDialog");
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+    private void showIntegerDialog(String title, int value, String tag) {
+        if (integerDialog == null) {
+            integerDialog = new IntegerDialog();
+            integerDialog.setIntValueListener(this);
+        }
+        this.integerDialog.setTitle(title);
+        this.integerDialog.setIntValue(value);
+        this.integerDialog.show(getActivity().getSupportFragmentManager(), tag);
+    }
+    @Override // IntValueListener
+    public void onUpdateIntValue(int intValue) {
+        if (changingQuestionIndex) {
+            // to people, ordinals start from 1; to computers, they start from 0
+            this.bridgeQuiz.setQuestionIndex(intValue - 1);
+            askQuestion();
+        } else {
+            this.bridgeQuiz.setTargetCorrectCt(intValue);
+        }
     }
     @Override
     public void onClick(View view) {

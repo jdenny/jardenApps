@@ -1,7 +1,6 @@
 package com.jardenconsulting.cardapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,8 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,48 +126,6 @@ public class HotBridgeActivity extends AppCompatActivity
         randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, false);
         dealFragment.setRandomDeals(randomDeals);
     }
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		MenuItem item = menu.findItem(R.id.randomDealButton);
-        item.setChecked(randomDeals);
-		return true;
-	}
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.twoPlayerButton) {
-            boolean twoPlayer = !item.isChecked(); // isChecked returns old state!
-            item.setChecked(twoPlayer); // do what Android should do for us!
-            this.dealFragment.setTwoPlayer(twoPlayer);
-            if (twoPlayer) {
-                showBluetoothFragment();
-            } else {
-                dealFragment.setClientMode(false);
-                showDealFragment();
-            }
-            return true; // menu item dealt with
-        } else if (id == R.id.randomDealButton) {
-            boolean randomDeal = !item.isChecked(); // isChecked returns old state!
-            item.setChecked(randomDeal); // do what Android should do for us!
-            this.dealFragment.setRandomDeals(randomDeal);
-		    return true;
-        } else if (id == R.id.reviseButton) {
-            Intent intent = new Intent(this, ReviseQuizActivity.class);
-            startActivity(intent);
-            return true;
-//        } else if (id == R.id.dealDetailButton) {
-//            QuestionAnswer lastQA = dealFragment.getLastQA();
-//            Intent intent = new Intent(this, ReviseQuizActivity.class);
-//            intent.putExtra(LAST_QA_QUESTION_KEY, lastQA.question);
-//            intent.putExtra(LAST_QA_ANSWER_KEY, lastQA.answer);
-//            startActivity(intent);
-//            return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-	}
     @Override
     protected void onPause() {
         super.onPause();
@@ -285,4 +240,13 @@ public class HotBridgeActivity extends AppCompatActivity
         super.setTitle(message);
     }
 
+    @Override
+    public void setTwoPlayer(boolean twoPlayer) {
+        if (twoPlayer) {
+            showBluetoothFragment();
+        } else {
+            dealFragment.setClientMode(false);
+            showDealFragment();
+        }
+    }
 }

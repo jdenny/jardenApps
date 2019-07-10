@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         BridgeQuiz getBridgeQuiz();
         void setStatusMessage(String message);
         void setTitle(String message);
+        void setTwoPlayer(boolean twoPlayer);
     }
     private static final int SHOW_ME = 0;
     private static final int SHOW_US = 1;
@@ -122,6 +124,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         String handsButtonText = null;
         if (this.handsButton != null) handsButtonText = handsButton.getText().toString();
         View view = inflater.inflate(R.layout.deal_layout, container, false);
+        setHasOptionsMenu(true);
 		this.activity = getActivity();
         this.fragmentManager = getChildFragmentManager();
         Button dealButton = view.findViewById(R.id.dealButton);
@@ -164,7 +167,38 @@ public class DealFragment extends Fragment implements OnClickListener {
 		westFragment.setData(Player.West, cardPack);
 		return view;
 	}
-	@Override
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity_main, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+        MenuItem item = menu.findItem(R.id.randomDealButton);
+        item.setChecked(randomDeals);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.twoPlayerButton) {
+            boolean twoPlayer = !item.isChecked(); // isChecked returns old state!
+            item.setChecked(twoPlayer); // do what Android should do for us!
+            setTwoPlayer(twoPlayer);
+            bridgeable.setTwoPlayer(twoPlayer);
+            return true; // menu item dealt with
+        } else if (id == R.id.randomDealButton) {
+            boolean randomDeal = !item.isChecked(); // isChecked returns old state!
+            item.setChecked(randomDeal); // do what Android should do for us!
+            setRandomDeals(randomDeal);
+            return true;
+        } else if (id == R.id.reviseButton) {
+            Intent intent = new Intent(getContext(), ReviseQuizActivity.class);
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
 	public void onResume() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onResume()");
 		super.onResume();
@@ -428,11 +462,6 @@ public class DealFragment extends Fragment implements OnClickListener {
         setRetainInstance(true);
         cardPack = new CardPack();
         setClientMode(false); // because initially single user
-	}
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onCreateOptionsMenu()");
-		super.onCreateOptionsMenu(menu, inflater);
 	}
 	@Override
 	public void onDestroy() {

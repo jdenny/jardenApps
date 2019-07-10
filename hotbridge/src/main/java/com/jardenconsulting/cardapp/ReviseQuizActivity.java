@@ -11,9 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.io.File;
@@ -23,8 +20,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
 
-import jarden.app.dialog.IntegerDialog;
 import jarden.app.revisequiz.FreakWizFragment;
+import jarden.app.revisequiz.ReviseQuizFragment;
 import jarden.quiz.BridgeQuiz;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
@@ -56,7 +53,7 @@ TODO:
 * mark all the raw bids
  */
 public class ReviseQuizActivity extends AppCompatActivity
-        implements FreakWizFragment.Quizable, IntegerDialog.IntValueListener {
+        implements FreakWizFragment.Quizable, ReviseQuizFragment.Reviseable {
     public static final String TAG = "ReviseIt";
     private static final String quizFileName = "reviseit.txt";
         // "reviseitmini.txt"; // ***also change name of resource file***
@@ -95,12 +92,8 @@ public class ReviseQuizActivity extends AppCompatActivity
     };
 
     private BridgeQuiz bridgeQuiz;
-    private boolean changingQuestionIndex;
     private FreakWizFragment freakWizFragment;
     private SharedPreferences sharedPreferences;
-    private IntegerDialog integerDialog;
-    // new way of calculating bid
-    private boolean dataDrivenBidding = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,44 +150,6 @@ public class ReviseQuizActivity extends AppCompatActivity
         }
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.revise, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.learnModeButton) {
-            setLearnMode();
-            this.freakWizFragment.askQuestion();
-        } else if (id == R.id.practiceModeButton) {
-            setPracticeMode();
-            this.freakWizFragment.askQuestion();
-        } else if (id == R.id.setCurrentIndexButton) {
-            // if we add more ints for the user to update, then
-            // change this boolean to an enum
-            changingQuestionIndex = true;
-            if (this.integerDialog == null) {
-                this.integerDialog = new IntegerDialog();
-            }
-            this.integerDialog.setTitle("Change Current Index");
-            this.integerDialog.setIntValue(bridgeQuiz.getQuestionIndex() + 1);
-            this.integerDialog.show(getSupportFragmentManager(), "UserLevelDialog");
-        } else if (id == R.id.setTargetCorrectsButton) {
-            changingQuestionIndex = false;
-            if (this.integerDialog == null) {
-                this.integerDialog = new IntegerDialog();
-            }
-            this.integerDialog.setTitle("Change Target Corrects");
-            this.integerDialog.setIntValue(bridgeQuiz.getTargetCorrectCt());
-            this.integerDialog.show(getSupportFragmentManager(), "TargetCorrectsDialog");
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-    @Override
     protected void onPause() {
         super.onPause();
         if (BuildConfig.DEBUG) Log.d(TAG, "ReviseQuizActivity.onPause()");
@@ -228,22 +183,13 @@ public class ReviseQuizActivity extends AppCompatActivity
     public int[] getNotesResIds() {
         return notesResIds;
     }
-
-    @Override // IntValueListener
-    public void onUpdateIntValue(int intValue) {
-        if (changingQuestionIndex) {
-            // to people, ordinals start from 1; to computers, they start from 0
-            this.bridgeQuiz.setQuestionIndex(intValue - 1);
-            this.freakWizFragment.askQuestion();
-        } else {
-            this.bridgeQuiz.setTargetCorrectCt(intValue);
-        }
-    }
-    private void setLearnMode() {
+    @Override // Reviseable
+    public void setLearnMode() {
         bridgeQuiz.setQuizMode(LEARN);
         setTitle(R.string.learnMode);
     }
-    private void setPracticeMode() {
+    @Override // Reviseable
+    public void setPracticeMode() {
         bridgeQuiz.setQuizMode(PRACTICE);
         setTitle(R.string.practiceMode);
     }

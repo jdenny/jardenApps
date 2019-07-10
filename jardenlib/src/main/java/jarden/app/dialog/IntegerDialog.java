@@ -3,7 +3,6 @@ package jarden.app.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -31,12 +30,9 @@ public class IntegerDialog extends DialogFragment
 	public void setIntValue(int intValue) {
 	    this.intValue = intValue;
     }
-
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		this.intValueListener = (IntValueListener) context;
-	}
+    public void setIntValueListener(IntValueListener listener) {
+        intValueListener = listener;
+    }
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
