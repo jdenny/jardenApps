@@ -1514,7 +1514,7 @@ F1: [a]suit_setter[/a]; not forcing as limited and not [a]compelled[/a]
 A: suit-setter-diamonds
 Q: 1S, 1NT; 4S
 F1: [a]to_play[/a]
-A: to-play
+A: 20-24 fitHCP, 6+ spades, trumps-spades, to-play
 Q: 1S, 1NT; 5C
 F1: [a]to_play[/a]
 A: to-play

@@ -278,6 +278,12 @@ public class PresetQuiz extends Quiz {
                 this.currentQA = this.qaList.get(currentQAIndex);
             }
         }
+        return useCurrentQA();
+    }
+    public void setCurrentQA(QuestionAnswer qa) {
+        this.currentQA = qa;
+    }
+    public String useCurrentQA() {
         String question = this.currentQA.question;
         if (questionTemplate != null) {
             question = questionTemplate.replace("{}", question);

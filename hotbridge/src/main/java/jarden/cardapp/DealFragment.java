@@ -1,6 +1,7 @@
 package jarden.cardapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,12 +26,13 @@ import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 import com.jardenconsulting.cardapp.BuildConfig;
 import com.jardenconsulting.cardapp.R;
+import com.jardenconsulting.cardapp.ReviseQuizActivity;
 
 import jarden.cards.BadBridgeTokenException;
+import jarden.cards.BookHand;
 import jarden.cards.CardPack;
 import jarden.cards.Hand;
 import jarden.cards.Player;
-import jarden.cards.BookHand;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -78,8 +80,10 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private Bridgeable bridgeable;
 	private BluetoothService bluetoothService;
     private TextView[] bidTextViews;
+    private String detailStr;
 
-	private CardPack cardPack;
+
+    private CardPack cardPack;
 	private boolean randomDeals = false;
 	private BookHand[] bookHands = BookHand.getBookHands();
 	private BookHand bookHand;
@@ -128,6 +132,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             handsButton.setText(handsButtonText);
         }
 		bidButton = view.findViewById(R.id.bidButton);
+        detailStr = getResources().getString(R.string.detail);
         bidButton.setOnClickListener(this);
 		this.suggestedBidTextView = view.findViewById(R.id.suggestedBidtextView);
         LinearLayout[] bidLayouts = new LinearLayout[6];
@@ -172,6 +177,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 		int id = view.getId();
 		if (id == R.id.dealButton) {
 			this.suggestedBidTextView.setText("");
+			bidButton.setText(R.string.bid);
 			shuffleDealShow();
 		} else if (id == R.id.handsButton) {
 			String handsText = this.handsButton.getText().toString();
@@ -187,10 +193,17 @@ public class DealFragment extends Fragment implements OnClickListener {
 			}
 			showSelectedHands();
 		} else if (id == R.id.bidButton) {
-			getNextBid(this.mePlayer);
-            if (!this.biddingOver) {
-                this.suggestedBidTextView.setText(lastQA.answer);
-                getNextBid(partnerPlayer);
+		    String buttonText = bidButton.getText().toString();
+		    if (buttonText.equals(detailStr)) {
+		        bridgeQuiz.setDetailQA(lastQA);
+                Intent intent = new Intent(getContext(), ReviseQuizActivity.class);
+                startActivity(intent);
+            } else {
+                getNextBid(this.mePlayer);
+                if (!this.biddingOver) {
+                    this.suggestedBidTextView.setText(lastQA.answer);
+                    getNextBid(partnerPlayer);
+                }
             }
 		} else {
 			throw new RuntimeException("unrecognised view clicked: " + view);
@@ -234,10 +247,9 @@ public class DealFragment extends Fragment implements OnClickListener {
             }
             else {
                 biddingOver = true;
-                bidButton.setEnabled(false);
+                bidButton.setText(getString(R.string.detail));
                 String status = "biddingOver";
                 if (lastBid != null) status = lastBid + " from last bid; " + status;
-                // bridgeable.setStatusMessage(status);
                 Toast.makeText(getContext(), status, Toast.LENGTH_LONG).show();
             }
         }

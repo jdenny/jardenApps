@@ -12,6 +12,7 @@
     <string name="biddingQuiz">Bidding Quiz</string>
     <string name="bidSearch">Bid Search</string>
     <string name="deal">Deal</string>
+    <string name="detail">Detail</string>
     <string name="east">East</string>
     <string name="iconClub">\u2663</string>
     <string name="iconDiamond">\u2662</string>
@@ -24,11 +25,9 @@
     <string name="randomDeal">Random Deal</string>
     <string name="reviseQuizActivity">ReviseQuizActivity</string>
     <string name="setCurrentIndex">Set Current Index</string>
+    <string name="setTargetCorrects">Set Target Corrects</string>
     <string name="south">South</string>
     <string name="us">Us</string>
     <string name="west">West</string>
-    <string name="equalsStr">=</string>
-    <string name="setTargetCorrects">Set Target Corrects</string>
-    <string name="dealDetail">Deal Detail</string>
 
 </resources>

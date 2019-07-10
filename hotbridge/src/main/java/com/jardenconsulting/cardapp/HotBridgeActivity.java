@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 
 import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
-import jarden.quiz.QuestionAnswer;
 
 /**
  * Shuffle and dealAndSort a pack of cards, showing my hand (Me), or
@@ -43,7 +42,7 @@ need to alert before bidding (as in bridj)
 
 verbose mode to show meaning of partner's bid; could be hypertext on bids in table
 go further and show each bid with meaning, as in quiz; or even open quiz on that
-QA! (Send QA index)
+QA! (Send QA index); get both activities to share BridgeQuiz, so that this HotBridge calls bridgeQuiz.setDetailQA() and Quiz then proceeds as normal, calling getNextQuestion
 
 keep track of failed deals, current deals, as in quiz
 
@@ -82,8 +81,6 @@ after closing one of two-player devices; stack trace:
 public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener, DealFragment.Bridgeable {
     public static final String TAG = "hotbridge";
-    public static final String LAST_QA_QUESTION_KEY = "lastQAQuestionKey";
-    public static final String LAST_QA_ANSWER_KEY = "lastQAAnswerKey";
     private static final String quizFileName = "reviseit.txt";
     // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
@@ -112,7 +109,8 @@ public class HotBridgeActivity extends AppCompatActivity
             } else {
                 inputStream = getResources().openRawResource(R.raw.reviseit);
             }
-            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
+//            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
+            this.bridgeQuiz = BridgeQuiz.getInstance(new InputStreamReader(inputStream));
         } catch (IOException e) {
             showMessage("unable to load quiz: " + e);
             return;
@@ -162,13 +160,13 @@ public class HotBridgeActivity extends AppCompatActivity
             Intent intent = new Intent(this, ReviseQuizActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.dealDetailButton) {
-            QuestionAnswer lastQA = dealFragment.getLastQA();
-            Intent intent = new Intent(this, ReviseQuizActivity.class);
-            intent.putExtra(LAST_QA_QUESTION_KEY, lastQA.question);
-            intent.putExtra(LAST_QA_ANSWER_KEY, lastQA.answer);
-            startActivity(intent);
-            return true;
+//        } else if (id == R.id.dealDetailButton) {
+//            QuestionAnswer lastQA = dealFragment.getLastQA();
+//            Intent intent = new Intent(this, ReviseQuizActivity.class);
+//            intent.putExtra(LAST_QA_QUESTION_KEY, lastQA.question);
+//            intent.putExtra(LAST_QA_ANSWER_KEY, lastQA.answer);
+//            startActivity(intent);
+//            return true;
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
@@ -286,4 +284,5 @@ public class HotBridgeActivity extends AppCompatActivity
     public void setTitle(String message) {
         super.setTitle(message);
     }
+
 }
