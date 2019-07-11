@@ -24,6 +24,7 @@
     <string name="fail">wrong! the right answer is: </string>
     <string name="goStr">Go</string>
     <string name="incorrect">wrong; try again</string>
+    <string name="intValue">int value</string>
     <string name="learning_level">Learning Level</string>
     <string name="learnMode">Learn Mode</string>
     <string name="notes">Notes</string>
@@ -33,11 +34,12 @@
     <string name="qaStyle">Question Style</string>
     <string name="right">Right</string>
     <string name="selectTopic">Topic Mode</string>
+    <string name="setCurrentIndex">Set Current Index</string>
+    <string name="setTargetCorrects">Set Target Corrects</string>
     <string name="update">Update</string>
     <string name="wordLookup">Word Lookup</string>
     <string name="wrong">Wrong</string>
     <string name="yesStr">Yes</string>
-    <string name="intValue">int value</string>
 
 
 </resources>

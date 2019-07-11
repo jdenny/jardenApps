@@ -1,13 +1,9 @@
 package jarden.app.revisequiz;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,9 +16,7 @@ import com.jardenconsulting.cardapp.HotBridgeActivity;
 import com.jardenconsulting.cardapp.R;
 
 import java.util.List;
-import java.util.Set;
 
-import jarden.app.dialog.IntegerDialog;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
@@ -45,22 +39,14 @@ TODO:
 * mark all the raw bids
  */
 public class ReviseQuizFragment extends FreakWizFragment
-        implements AdapterView.OnItemClickListener, IntegerDialog.IntValueListener,
+        implements AdapterView.OnItemClickListener, /*!!IntegerDialog.IntValueListener,*/
         AdapterView.OnItemLongClickListener {
-
-    private static final String QUESTION_INDEX_KEY = "questionIndexKey";
-    private static final String TARGET_CORRECTS_KEY = "targetCorrectsKey";
-    private static final String FAIL_INDICES_KEY = "failIndicesKey";
-    private static final String LEARN_MODE_KEY = "learnModeKey";
 
     private CheckBox notesCheckBox;
     private ListView bidListView;
     private BidListAdapter bidListAdapter;
-    private boolean changingQuestionIndex;
-    private IntegerDialog integerDialog;
 
     private BridgeQuiz bridgeQuiz;
-    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +54,6 @@ public class ReviseQuizFragment extends FreakWizFragment
         if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG,
                 "ReviseQuizFragment.onCreateView()");
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        setHasOptionsMenu(true);
         this.notesCheckBox = new CheckBox(getContext());
         notesCheckBox.setText(R.string.notes);
         selfMarkLayout.addView(notesCheckBox, -1);
@@ -84,23 +69,6 @@ public class ReviseQuizFragment extends FreakWizFragment
         this.notesTextView = rootView.findViewById(R.id.notesTextView);
         bridgeQuiz = (BridgeQuiz) reviseQuiz;
 
-        this.sharedPreferences = getActivity().getSharedPreferences(HotBridgeActivity.TAG,
-                Context.MODE_PRIVATE);
-        boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
-        int savedQuestionIndex = sharedPreferences.getInt(QUESTION_INDEX_KEY, -1);
-        if (savedQuestionIndex > 0) {
-            bridgeQuiz.setQuestionIndex(savedQuestionIndex);
-        }
-        int savedTargetsCorrect = sharedPreferences.getInt(TARGET_CORRECTS_KEY, -1);
-        if (savedTargetsCorrect > 0) {
-            bridgeQuiz.setTargetCorrectCt(savedTargetsCorrect);
-        }
-        String failIndexStr = sharedPreferences.getString(FAIL_INDICES_KEY, "");
-        if (failIndexStr.length() > 0) {
-            String[] failIndices = failIndexStr.split(",");
-            bridgeQuiz.setFailIndices(failIndices);
-        }
-        setLearnMode(learnMode);
         return rootView;
     }
     @Override
@@ -116,44 +84,6 @@ public class ReviseQuizFragment extends FreakWizFragment
         super.onAttach(context);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.revise, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.learnModeButton) {
-            setLearnMode(true);
-            askQuestion();
-        } else if (id == R.id.practiceModeButton) {
-            setLearnMode(false);
-            askQuestion();
-        } else if (id == R.id.setCurrentIndexButton) {
-            // if we add more ints for the user to update, then
-            // change this boolean to an enum
-            changingQuestionIndex = true;
-            showIntegerDialog("Change Current Index",
-                    reviseQuiz.getQuestionIndex() + 1,
-                    "UserLevelDialog");
-        } else if (id == R.id.setTargetCorrectsButton) {
-            changingQuestionIndex = false;
-            showIntegerDialog("Change Target Correct",
-                    reviseQuiz.getTargetCorrectCt(),
-                    "TargetCorrectsDialog");
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-    private void setLearnMode(boolean learnMode) {
-        bridgeQuiz.setLearnMode(learnMode);
-        getActivity().setTitle(getQuizTitleId());
-    }
-    public int getQuizTitleId() {
-        return bridgeQuiz.isLearnMode() ? R.string.learnMode : R.string.practiceMode;
-    }
     public void onResume() {
         if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG, "ReviseQuizFragment.onResume()");
         super.onResume();
@@ -162,44 +92,6 @@ public class ReviseQuizFragment extends FreakWizFragment
     public void onPause() {
         super.onPause();
         if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG, "ReviseQuizFragment.onPause()");
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        int questionIndex = bridgeQuiz.getQuestionIndex();
-        editor.putInt(QUESTION_INDEX_KEY, questionIndex);
-        int targetCorrectCt = bridgeQuiz.getTargetCorrectCt();
-        editor.putInt(TARGET_CORRECTS_KEY, targetCorrectCt);
-        editor.putBoolean(LEARN_MODE_KEY, bridgeQuiz.isLearnMode());
-        Set<Integer> failedIndexSet = bridgeQuiz.getFailedIndexSet();
-        String failStr;
-        if (failedIndexSet.size() == 0) {
-            failStr = "";
-        } else {
-            StringBuilder sBuilder = new StringBuilder();
-            for (int failIndex : failedIndexSet) {
-                sBuilder.append(failIndex).append(",");
-            }
-            failStr = sBuilder.substring(0, sBuilder.length() - 1);
-        }
-        editor.putString(FAIL_INDICES_KEY, failStr);
-        editor.apply();
-    }
-    private void showIntegerDialog(String title, int value, String tag) {
-        if (integerDialog == null) {
-            integerDialog = new IntegerDialog();
-            integerDialog.setIntValueListener(this);
-        }
-        this.integerDialog.setTitle(title);
-        this.integerDialog.setIntValue(value);
-        this.integerDialog.show(getActivity().getSupportFragmentManager(), tag);
-    }
-    @Override // IntValueListener
-    public void onUpdateIntValue(int intValue) {
-        if (changingQuestionIndex) {
-            // to people, ordinals start from 1; to computers, they start from 0
-            this.reviseQuiz.setQuestionIndex(intValue - 1);
-            askQuestion();
-        } else {
-            this.reviseQuiz.setTargetCorrectCt(intValue);
-        }
     }
     @Override
     public void onClick(View view) {
