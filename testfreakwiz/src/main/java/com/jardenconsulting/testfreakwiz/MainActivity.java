@@ -15,8 +15,6 @@ import java.io.InputStreamReader;
 import jarden.app.revisequiz.FreakWizFragment;
 import jarden.quiz.PresetQuiz;
 
-import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
-
 
 /**
  * Create a Quiz class based on Q-A text file called <i>quizFileName</i>.
@@ -56,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements FreakWizFragment.
                 inputStream = getResources().openRawResource(R.raw.quiz);
             }
             this.presetQuiz = new PresetQuiz(new InputStreamReader(inputStream));
-            this.presetQuiz.setQuizMode(LEARN);
+            //!! this.presetQuiz.setQuizMode(LEARN);
+            presetQuiz.setLearnMode(true);
         } catch (IOException e) {
             showMessage("unable to load quiz: " + e);
             return;

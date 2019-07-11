@@ -30,8 +30,6 @@ import jarden.quiz.PresetQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
-keep track of failed deals, current deals, as in quiz
-
 need to alert before bidding (as in bridj)
 
 Fix crash shown in pre-launch report
@@ -171,8 +169,9 @@ public class HotBridgeActivity extends AppCompatActivity
         }
         ft.commit();
         quizFragmentShowing = true;
+        int titleId = bridgeQuiz.isLearnMode() ? R.string.learnMode : R.string.practiceMode;
+        setTitle(titleId);
     }
-
 	private void showBluetoothFragment() {
  		FragmentTransaction ft = fragmentManager.beginTransaction();
  		ft.hide(dealFragment);

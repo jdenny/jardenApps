@@ -27,8 +27,6 @@ import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
 import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
-import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
-import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
 
 /*
  * Created by john.denny@gmail.com on 15/10/2018.
@@ -67,6 +65,8 @@ public class ReviseQuizFragment extends FreakWizFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG,
+                "ReviseQuizFragment.onCreateView()");
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
         this.notesCheckBox = new CheckBox(getContext());
@@ -82,12 +82,8 @@ public class ReviseQuizFragment extends FreakWizFragment
         this.bidListView.setOnItemClickListener(this);
         this.bidListView.setOnItemLongClickListener(this);
         this.notesTextView = rootView.findViewById(R.id.notesTextView);
-        return rootView;
-    }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         bridgeQuiz = (BridgeQuiz) reviseQuiz;
+
         this.sharedPreferences = getActivity().getSharedPreferences(HotBridgeActivity.TAG,
                 Context.MODE_PRIVATE);
         boolean learnMode = sharedPreferences.getBoolean(LEARN_MODE_KEY, true);
@@ -105,7 +101,21 @@ public class ReviseQuizFragment extends FreakWizFragment
             bridgeQuiz.setFailIndices(failIndices);
         }
         setLearnMode(learnMode);
+        return rootView;
     }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG,
+                "ReviseQuizFragment.onActivityCreated()");
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG, "ReviseQuizFragment.onAttach()");
+        super.onAttach(context);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.revise, menu);
@@ -138,13 +148,15 @@ public class ReviseQuizFragment extends FreakWizFragment
         return true;
     }
     private void setLearnMode(boolean learnMode) {
-        if (learnMode) {
-            bridgeQuiz.setQuizMode(LEARN);
-            getActivity().setTitle(R.string.learnMode);
-        } else {
-            bridgeQuiz.setQuizMode(PRACTICE);
-            getActivity().setTitle(R.string.practiceMode);
-        }
+        bridgeQuiz.setLearnMode(learnMode);
+        getActivity().setTitle(getQuizTitleId());
+    }
+    public int getQuizTitleId() {
+        return bridgeQuiz.isLearnMode() ? R.string.learnMode : R.string.practiceMode;
+    }
+    public void onResume() {
+        if (BuildConfig.DEBUG) Log.d(HotBridgeActivity.TAG, "ReviseQuizFragment.onResume()");
+        super.onResume();
     }
     @Override
     public void onPause() {
@@ -155,8 +167,7 @@ public class ReviseQuizFragment extends FreakWizFragment
         editor.putInt(QUESTION_INDEX_KEY, questionIndex);
         int targetCorrectCt = bridgeQuiz.getTargetCorrectCt();
         editor.putInt(TARGET_CORRECTS_KEY, targetCorrectCt);
-        BridgeQuiz.QuizMode quizMode = bridgeQuiz.getQuizMode();
-        editor.putBoolean(LEARN_MODE_KEY, quizMode == LEARN);
+        editor.putBoolean(LEARN_MODE_KEY, bridgeQuiz.isLearnMode());
         Set<Integer> failedIndexSet = bridgeQuiz.getFailedIndexSet();
         String failStr;
         if (failedIndexSet.size() == 0) {

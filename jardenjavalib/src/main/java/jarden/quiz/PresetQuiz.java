@@ -26,11 +26,8 @@ public class PresetQuiz extends Quiz {
 	private String heading = null;
 
     // added for ReviseItQuiz:
-    public enum QuizMode {
-        LEARN, PRACTICE
-    }
     private int targetCorrectCt = 5;
-    private QuizMode quizMode = QuizMode.PRACTICE;
+    private boolean learnMode = true;
     private Set<Integer> failedIndexSet = new HashSet<>();
     private QuestionAnswer currentQA;
     private int consecutiveCorrects = 0;
@@ -253,7 +250,8 @@ public class PresetQuiz extends Quiz {
      */
     public String getNextQuestion(int level) throws EndOfQuestionsException {
         int failCt = getFailedCount();
-        if (this.quizMode == QuizMode.LEARN) {
+//        if (this.quizMode == QuizMode.LEARN) {
+        if (learnMode) {
             int currentCt = getToDoCount();
             if (failCt == 0 && currentCt == 0) {
                 this.qaListIndex = -1;
@@ -266,7 +264,7 @@ public class PresetQuiz extends Quiz {
                 this.currentQA = this.qaList.get(qaListIndex);
                 this.currentQAIndex = qaListIndex;
             }
-        } else { // must be PRACTICE mode
+        } else { // must be practice mode
             if (this.consecutiveCorrects >= targetCorrectCt && failCt > 0) {
                 this.currentQA = getNextFail();
             } else {
@@ -307,14 +305,14 @@ public class PresetQuiz extends Quiz {
         this.currentQAIndex = index;
         return this.qaList.get(currentQAIndex);
     }
-    public int getQuestionIndex() {
-        return qaListIndex;
+    public QuestionAnswer getCurrentQuestionAnswer() {
+        return currentQA;
     }
     public Set<Integer> getFailedIndexSet() {
         return failedIndexSet;
     }
-    public QuestionAnswer getCurrentQuestionAnswer() {
-        return currentQA;
+    public int getQuestionIndex() {
+        return qaListIndex;
     }
     public void setQuestionIndex(int qaListIndex) {
         // subtract 1, to repeat most recent question, not yet answered:
@@ -328,11 +326,11 @@ public class PresetQuiz extends Quiz {
             failedIndexSet.add(Integer.parseInt(failIndex));
         }
     }
-    public void setQuizMode(QuizMode quizMode) {
-        this.quizMode = quizMode;
+    public boolean isLearnMode() {
+        return learnMode;
     }
-    public QuizMode getQuizMode() {
-        return this.quizMode;
+    public void setLearnMode(boolean learnMode) {
+        this.learnMode = learnMode;
     }
     public int getToDoCount() {
         return this.qaList.size() - this.qaListIndex - 1;

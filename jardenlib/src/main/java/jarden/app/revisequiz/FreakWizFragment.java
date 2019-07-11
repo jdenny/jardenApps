@@ -21,9 +21,6 @@ import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.PresetQuiz;
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
-import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
-
 public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public interface Quizable {
         PresetQuiz getReviseQuiz();
@@ -129,7 +126,8 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         this.documentTextView.showPageText(qa.notes, "Notes");
     }
     private void setPracticeMode() {
-        reviseQuiz.setQuizMode(PRACTICE);
+        //!! reviseQuiz.setQuizMode(PRACTICE);
+        reviseQuiz.setLearnMode(false);
         getActivity().setTitle(R.string.practiceMode);
     }
     private void showSelfMarkLayout() {
@@ -148,7 +146,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         // humans count from 1, machines from 0
         int humanIndex = reviseQuiz.getCurrentQAIndex() + 1;
         String stats = "Current=" + humanIndex;
-        if (reviseQuiz.getQuizMode() == LEARN) {
+        if (reviseQuiz.isLearnMode()) {
             stats += ", ToDo=" + reviseQuiz.getToDoCount();
         }
         stats += ", Fails=" + reviseQuiz.getFailedCount();
