@@ -20,10 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ReviseQuizActivity"
-            android:label="@string/reviseQuizActivity">
-        </activity>
     </application>
 
 </manifest>

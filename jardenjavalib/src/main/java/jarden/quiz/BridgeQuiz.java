@@ -15,17 +15,17 @@ import jarden.cards.Suit;
 public class BridgeQuiz extends PresetQuiz {
     public static final QuestionAnswer OPENING_BIDS = new QuestionAnswer("Opening bids", " ");
     private static final int OPENING_BID_CT = 21;
-    private static BridgeQuiz instance = null;
+//    private static BridgeQuiz instance = null;
 
     private List<QuestionAnswer> primaryBids;
     private QuestionAnswer detailQA = null;
 
-    public static BridgeQuiz getInstance(InputStreamReader is) throws IOException {
-        if (instance == null) {
-            instance = new BridgeQuiz(is);
-        }
-        return instance;
-    }
+//    public static BridgeQuiz getInstance(InputStreamReader is) throws IOException {
+//        if (instance == null) {
+//            instance = new BridgeQuiz(is);
+//        }
+//        return instance;
+//    }
 
     public BridgeQuiz(InputStreamReader is) throws IOException {
         super(is);

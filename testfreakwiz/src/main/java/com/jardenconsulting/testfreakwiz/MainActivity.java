@@ -18,6 +18,16 @@ import jarden.quiz.PresetQuiz;
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 
 
+/**
+ * Create a Quiz class based on Q-A text file called <i>quizFileName</i>.
+ * Get text file from downloads directory; this allows a user of the app
+ * to supply their own Q-A file, called <i>quizFileName</i>, and download
+ * it onto their device.
+ * If it doesn't exists, we use file in res/raw
+ *
+ * https://sites.google.com/site/amazequiz/home/problems/reviseit.txt
+ * on moto g5, downloaded to file:///storage/emulated/0/Download/reviseit.txt
+ */
 public class MainActivity extends AppCompatActivity implements FreakWizFragment.Quizable {
     public static final String TAG = "TestFreakWiz";
     private static final String quizFileName = "quiz.txt";

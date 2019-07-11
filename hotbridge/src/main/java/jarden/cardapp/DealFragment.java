@@ -1,7 +1,7 @@
 package jarden.cardapp;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,7 +27,6 @@ import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 import com.jardenconsulting.cardapp.BuildConfig;
 import com.jardenconsulting.cardapp.R;
-import com.jardenconsulting.cardapp.ReviseQuizActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,13 +50,17 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
  *
  */
 public class DealFragment extends Fragment implements OnClickListener {
+
     public interface Bridgeable {
-        BridgeQuiz getBridgeQuiz();
         void setStatusMessage(String message);
         void showMessage(String message);
-        void setTitle(String message);
         void setTwoPlayer(boolean twoPlayer);
+        void showReviseQuizFragment();
     }
+    private static final String BOOK_HANDS_INDEX_KEY = "bookHandsIndexKey";
+    private static final String BOOK_HANDS_LAP_KEY = "bookHandsLapKey";
+    private static final String RANDOM_DEALS_KEY = "randomDealsKey";
+
     private static final int SHOW_ME = 0;
     private static final int SHOW_US = 1;
     private static final int SHOW_ALL = 2;
@@ -109,7 +112,8 @@ public class DealFragment extends Fragment implements OnClickListener {
 	      2   West   East
 	      3   East   East
 	 */
-	private int bookHandsLap = 0;
+    private SharedPreferences sharedPreferences;
+    private int bookHandsLap = 0;
 	private boolean bookHandWest = true;
     private boolean westDeal = false;
 
@@ -195,12 +199,21 @@ public class DealFragment extends Fragment implements OnClickListener {
             setRandomDeals(randomDeal);
             return true;
         } else if (id == R.id.reviseButton) {
-            Intent intent = new Intent(getContext(), ReviseQuizActivity.class);
-            startActivity(intent);
+            bridgeable.showReviseQuizFragment();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+    @Override
+    public void onPause() {
+        if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onPause()");
+        super.onPause();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(RANDOM_DEALS_KEY, randomDeals);
+        editor.putInt(BOOK_HANDS_INDEX_KEY, bookHandsIndex);
+        editor.putInt(BOOK_HANDS_LAP_KEY, bookHandsLap);
+        editor.apply();
     }
 
     @Override
@@ -235,8 +248,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 		    String buttonText = bidButton.getText().toString();
 		    if (buttonText.equals(detailStr)) {
 		        bridgeQuiz.setDetailQA(lastQA);
-                Intent intent = new Intent(getContext(), ReviseQuizActivity.class);
-                startActivity(intent);
+                bridgeable.showReviseQuizFragment();
             } else {
                 getNextBid(this.mePlayer);
                 if (!this.biddingOver) {
@@ -248,13 +260,14 @@ public class DealFragment extends Fragment implements OnClickListener {
 			throw new RuntimeException("unrecognised view clicked: " + view);
 		}
 	}
+    public String getDealName() {
+	    return dealName;
+    }
+
     public void setRandomDeals(boolean randomDeals) {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.setRandomDeals(" +
                 randomDeals + ")");
         this.randomDeals = randomDeals;
-    }
-    public boolean isRandomDeals() {
-	    return randomDeals;
     }
     private void getNextBid(Player player) {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.getNextBid(" + player + ")");
@@ -286,7 +299,11 @@ public class DealFragment extends Fragment implements OnClickListener {
             }
             else {
                 biddingOver = true;
-                bidButton.setText(getString(R.string.detail));
+                if (randomDeals) {
+                    bidButton.setEnabled(false);
+                } else {
+                    bidButton.setText(getString(R.string.detail));
+                }
                 String status = "biddingOver";
                 if (lastBid != null) status = lastBid + " from last bid; " + status;
                 Toast.makeText(getContext(), status, Toast.LENGTH_LONG).show();
@@ -333,8 +350,6 @@ public class DealFragment extends Fragment implements OnClickListener {
             bookHand.handWest.reset();
             bookHand.handEast.reset();
             cardPack.setBookHand(bookHand, bookHandWest);
-            // TODO: test this: (only applies to one doing deal, not other player)
-            // book hand 21 (page 113)
             dealName = "book hand " + (bookHandsIndex + 1) + " (" + bookHand.name + ")";
         } else {
             cardPack.shuffleAndDeal(true); // i.e. dealShow with bias in our favour
@@ -384,7 +399,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
 	public void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
-        bridgeable.setTitle(this.dealName);
+        activity.setTitle(dealName);
         if (randomDeals) {
             northFragment.showHand();
             southFragment.showHand();
@@ -446,7 +461,11 @@ public class DealFragment extends Fragment implements OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bridgeable = (Bridgeable) getActivity();
-//        this.bridgeQuiz = bridgeable.getBridgeQuiz();
+        this.sharedPreferences = getActivity().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, false);
+        setRandomDeals(randomDeals);
+        bookHandsIndex = sharedPreferences.getInt(BOOK_HANDS_INDEX_KEY, -1);
+        bookHandsLap = sharedPreferences.getInt(BOOK_HANDS_LAP_KEY, 0);
     }
 	@Override
 	public void onAttach(Context context) {
@@ -472,26 +491,18 @@ public class DealFragment extends Fragment implements OnClickListener {
         setClientMode(false); // because initially single user
         try {
             InputStream inputStream = getResources().openRawResource(R.raw.reviseit);
-            // TODO: revert to normal constructor for BridgeQuiz
-//            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
-            this.bridgeQuiz = BridgeQuiz.getInstance(new InputStreamReader(inputStream));
+            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
         } catch (IOException e) {
             bridgeable.showMessage("unable to load quiz: " + e);
             return;
         }
-
     }
 	@Override
 	public void onDestroy() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onDestroy()");
 		super.onDestroy();
 	}
-	@Override
-	public void onPause() {
-        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onPause()");
-		super.onPause();
-	}
-	@Override
+    @Override
 	public void onStart() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onStart()");
 		super.onStart();
@@ -528,8 +539,5 @@ public class DealFragment extends Fragment implements OnClickListener {
     }
     public void setTwoPlayer(boolean twoPlayer) {
         this.twoPlayer = twoPlayer;
-    }
-    public QuestionAnswer getLastQA() {
-        return lastQA;
     }
 }

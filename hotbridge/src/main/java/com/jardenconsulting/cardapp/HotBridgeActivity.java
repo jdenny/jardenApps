@@ -1,13 +1,12 @@
 package com.jardenconsulting.cardapp;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jardenconsulting.bluetooth.BluetoothFragment;
@@ -15,8 +14,11 @@ import com.jardenconsulting.bluetooth.BluetoothListener;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 
+import jarden.app.revisequiz.FreakWizFragment;
+import jarden.app.revisequiz.ReviseQuizFragment;
 import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
+import jarden.quiz.PresetQuiz;
 
 /**
  * Shuffle and dealAndSort a pack of cards, showing my hand (Me), or
@@ -28,13 +30,9 @@ import jarden.quiz.BridgeQuiz;
  * @author john.denny@gmail.com
  *
  * TODO following:
-need to alert before bidding (as in bridj)
-
-verbose mode to show meaning of partner's bid; could be hypertext on bids in table
-go further and show each bid with meaning, as in quiz; or even open quiz on that
-QA! (Send QA index); get both activities to share BridgeQuiz, so that this HotBridge calls bridgeQuiz.setDetailQA() and Quiz then proceeds as normal, calling getNextQuestion
-
 keep track of failed deals, current deals, as in quiz
+
+need to alert before bidding (as in bridj)
 
 Fix crash shown in pre-launch report
 
@@ -69,69 +67,90 @@ after closing one of two-player devices; stack trace:
     showBlueToothFragment (HotBrigeActivity.java:130)
  */
 public class HotBridgeActivity extends AppCompatActivity
-		implements BluetoothListener, DealFragment.Bridgeable {
+		implements BluetoothListener, DealFragment.Bridgeable,
+        FreakWizFragment.Quizable {
     public static final String TAG = "hotbridge";
-//    private static final String quizFileName = "reviseit.txt";
-//    // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
-    private static final String RANDOM_DEALS_KEY = "randomDealsKey";
+    private static final String REVISE_QUIZ = "reviseQuiz";
+    private static final int[] notesResIds = {
+            R.string.autofit,
+            R.string.balanced,
+            R.string.compelled,
+            R.string.disturbed,
+            R.string.Double,
+            R.string.guard,
+            R.string.help,
+            R.string.invitational_plus,
+            R.string.keycard_ask,
+            R.string.preempt,
+            R.string.queen_ask,
+            R.string.raw,
+            R.string.relay,
+            R.string.responses_to_relay,
+            R.string.responses_to_1D,
+            R.string.responses_to_1NT,
+            R.string.sandpit,
+            R.string.side_suit,
+            R.string.skew,
+            R.string.strong_fit,
+            R.string.strong_or_skew,
+            R.string.suit_setter,
+            R.string.threeNT,
+            R.string.to_play,
+            R.string.two_choice,
+            R.string.values_for_5,
+            R.string.waiting
+    };
+
     private String appName;
 	private FragmentManager fragmentManager;
 	private BluetoothFragment bluetoothFragment;
 	private DealFragment dealFragment;
-	private TextView statusText;
+    private ReviseQuizFragment reviseQuizFragment;
 	private boolean closing = false;
-//    private BridgeQuiz bridgeQuiz;
+    private BridgeQuiz bridgeQuiz;
     private SharedPreferences sharedPreferences;
     private boolean randomDeals;
+    private boolean quizFragmentShowing;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//        try {
-//            File publicDirectory = Environment.getExternalStoragePublicDirectory(
-//                    Environment.DIRECTORY_DOWNLOADS);
-//            File file = new File(publicDirectory, quizFileName);
-//            if (BuildConfig.DEBUG) Log.d(TAG, file.getAbsolutePath());
-//            InputStream inputStream;
-//            if (file.canRead()) {
-//                inputStream = new FileInputStream(file);
-//            } else {
-//                inputStream = getResources().openRawResource(R.raw.reviseit);
-//            }
-//            InputStream inputStream = getResources().openRawResource(R.raw.reviseit);
-//            // TODO: revert to normal constructor for BridgeQuiz
-//            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
-//            this.bridgeQuiz = BridgeQuiz.getInstance(new InputStreamReader(inputStream));
-//        } catch (IOException e) {
-//            showMessage("unable to load quiz: " + e);
-//            return;
-//        }
-        // TODO: check backstack for returning from quiz to deals
-        // see https://developer.android.com/training/basics/fragments/fragment-ui
         // TODO: does the app survive screen rotation?
-        // should bridgeQuiz be saved in DealFragment, so that it is retained?
         setContentView(R.layout.activity_main);
 		this.appName = getResources().getString(R.string.app_name);
-		this.statusText = findViewById(R.id.statusText);
 		this.fragmentManager = getSupportFragmentManager();
 		this.dealFragment = (DealFragment) fragmentManager.findFragmentById(R.id.dealFragment);
 		showDealFragment();
+		bridgeQuiz = dealFragment.getBridgeQuiz();
 		// see if bluetoothFragment has been retained from previous creation
         if (savedInstanceState != null) {
-            this.bluetoothFragment = (BluetoothFragment) fragmentManager.findFragmentByTag(BLUETOOTH);
+            this.bluetoothFragment =
+                    (BluetoothFragment) fragmentManager.findFragmentByTag(BLUETOOTH);
+            this.reviseQuizFragment =
+                    (ReviseQuizFragment) fragmentManager.findFragmentByTag(REVISE_QUIZ);
         }
-        this.sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-        randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, false);
-        dealFragment.setRandomDeals(randomDeals);
     }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.onPause()");
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(RANDOM_DEALS_KEY, dealFragment.isRandomDeals());
-        editor.apply();
+
+    @Override // Activity
+    public void onBackPressed() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "onBackPressed()");
+        if (quizFragmentShowing) {
+            showDealFragment();
+        } else if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+        } else {
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit",
+                    Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }
     }
 
     @Override
@@ -139,6 +158,19 @@ public class HotBridgeActivity extends AppCompatActivity
         super.onDestroy();
         if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.onDestroy()");
         this.closing = true;
+    }
+    @Override // Bridgeable
+    public void showReviseQuizFragment() {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.hide(dealFragment);
+        if (this.reviseQuizFragment == null) {
+            reviseQuizFragment = new ReviseQuizFragment();
+            ft.add(R.id.fragmentContainer2, reviseQuizFragment, REVISE_QUIZ);
+        } else {
+            ft.show(this.reviseQuizFragment);
+        }
+        ft.commit();
+        quizFragmentShowing = true;
     }
 
 	private void showBluetoothFragment() {
@@ -153,27 +185,20 @@ public class HotBridgeActivity extends AppCompatActivity
 		ft.commit();
 		setTitle(this.appName + " - not connected");
 	}
-	public void setConnected(boolean clientMode) {
+	private void showDealFragment() {
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		if (this.bluetoothFragment != null) ft.hide(bluetoothFragment);
+		if (this.reviseQuizFragment != null) ft.hide(reviseQuizFragment);
+		ft.show(dealFragment);
+		ft.commit();
+		quizFragmentShowing = false;
+		setTitle(dealFragment.getDealName());
+	}
+    public void setConnected(boolean clientMode) {
         if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.setConnected()");
         dealFragment.setClientMode(clientMode);
         showDealFragment();
-		setStatusMessage("");
-	}
-	private void showDealFragment() {
-        String title;
-        if (dealFragment.isTwoPlayer()) {
-            title = "two player " + (dealFragment.isClientMode() ? "(C)" : "(S)");
-        } else {
-            title = "single player";
-        }
-		setTitle(this.appName + " - " + title);
-		FragmentTransaction ft = fragmentManager.beginTransaction();
-		if (this.bluetoothFragment != null) {
-			ft.hide(bluetoothFragment);
-		}
-		ft.show(dealFragment);
-		ft.commit();
-	}
+    }
 	@Override // BluetoothListener
 	public void onStateChange(BTState state) {
 		Toast.makeText(this, state.toString(), Toast.LENGTH_LONG).show();
@@ -221,18 +246,8 @@ public class HotBridgeActivity extends AppCompatActivity
 	}
 	@Override // BluetoothListener, Bridgeable
 	public void setStatusMessage(String message) {
-		this.statusText.setText(message);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
-
-    @Override // Bridgeable
-    public BridgeQuiz getBridgeQuiz() {
-        return dealFragment.getBridgeQuiz();
-    }
-
-    @Override // Bridgeable
-    public void setTitle(String message) {
-        super.setTitle(message);
-    }
 
     @Override // Bridgeable
     public void setTwoPlayer(boolean twoPlayer) {
@@ -247,5 +262,14 @@ public class HotBridgeActivity extends AppCompatActivity
     public void showMessage(String message) {
         if (BuildConfig.DEBUG) Log.d(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    @Override // Quizable
+    public PresetQuiz getReviseQuiz() {
+        return bridgeQuiz;
+    }
+
+    @Override // Quizable
+    public int[] getNotesResIds() {
+        return notesResIds;
     }
 }

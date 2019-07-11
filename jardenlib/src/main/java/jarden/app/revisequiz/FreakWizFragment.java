@@ -24,9 +24,6 @@ import jarden.quiz.QuestionAnswer;
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public interface Quizable {
         PresetQuiz getReviseQuiz();
@@ -36,7 +33,6 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     protected TextView questionTextView;
     protected TextView answerTextView;
     protected TextView notesTextView;
-    // protected BridgeQuiz bridgeQuiz;
     protected PresetQuiz reviseQuiz;
     protected ViewGroup selfMarkLayout;
 
