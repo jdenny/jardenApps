@@ -29,6 +29,10 @@ import com.jardenconsulting.cardapp.BuildConfig;
 import com.jardenconsulting.cardapp.R;
 import com.jardenconsulting.cardapp.ReviseQuizActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import jarden.cards.BadBridgeTokenException;
 import jarden.cards.BookHand;
 import jarden.cards.CardPack;
@@ -50,6 +54,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     public interface Bridgeable {
         BridgeQuiz getBridgeQuiz();
         void setStatusMessage(String message);
+        void showMessage(String message);
         void setTitle(String message);
         void setTwoPlayer(boolean twoPlayer);
     }
@@ -433,12 +438,15 @@ public class DealFragment extends Fragment implements OnClickListener {
 	public boolean isClientMode() {
         return btClientMode;
     }
-	// Fragment lifecycle methods:
+    public BridgeQuiz getBridgeQuiz() {
+        return bridgeQuiz;
+    }
+    // Fragment lifecycle methods:
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bridgeable = (Bridgeable) getActivity();
-        this.bridgeQuiz = bridgeable.getBridgeQuiz();
+//        this.bridgeQuiz = bridgeable.getBridgeQuiz();
     }
 	@Override
 	public void onAttach(Context context) {
@@ -462,7 +470,17 @@ public class DealFragment extends Fragment implements OnClickListener {
         setRetainInstance(true);
         cardPack = new CardPack();
         setClientMode(false); // because initially single user
-	}
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.reviseit);
+            // TODO: revert to normal constructor for BridgeQuiz
+//            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
+            this.bridgeQuiz = BridgeQuiz.getInstance(new InputStreamReader(inputStream));
+        } catch (IOException e) {
+            bridgeable.showMessage("unable to load quiz: " + e);
+            return;
+        }
+
+    }
 	@Override
 	public void onDestroy() {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onDestroy()");

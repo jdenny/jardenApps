@@ -3,7 +3,6 @@ package com.jardenconsulting.cardapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +14,6 @@ import com.jardenconsulting.bluetooth.BluetoothFragment;
 import com.jardenconsulting.bluetooth.BluetoothListener;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
@@ -78,8 +71,8 @@ after closing one of two-player devices; stack trace:
 public class HotBridgeActivity extends AppCompatActivity
 		implements BluetoothListener, DealFragment.Bridgeable {
     public static final String TAG = "hotbridge";
-    private static final String quizFileName = "reviseit.txt";
-    // "reviseitmini.txt"; // ***also change name of resource file***
+//    private static final String quizFileName = "reviseit.txt";
+//    // "reviseitmini.txt"; // ***also change name of resource file***
     private static final String BLUETOOTH = "bluetooth";
     private static final String RANDOM_DEALS_KEY = "randomDealsKey";
     private String appName;
@@ -88,35 +81,41 @@ public class HotBridgeActivity extends AppCompatActivity
 	private DealFragment dealFragment;
 	private TextView statusText;
 	private boolean closing = false;
-    private BridgeQuiz bridgeQuiz;
+//    private BridgeQuiz bridgeQuiz;
     private SharedPreferences sharedPreferences;
     private boolean randomDeals;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        try {
-            File publicDirectory = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(publicDirectory, quizFileName);
-            if (BuildConfig.DEBUG) Log.d(TAG, file.getAbsolutePath());
-            InputStream inputStream;
-            if (file.canRead()) {
-                inputStream = new FileInputStream(file);
-            } else {
-                inputStream = getResources().openRawResource(R.raw.reviseit);
-            }
+//        try {
+//            File publicDirectory = Environment.getExternalStoragePublicDirectory(
+//                    Environment.DIRECTORY_DOWNLOADS);
+//            File file = new File(publicDirectory, quizFileName);
+//            if (BuildConfig.DEBUG) Log.d(TAG, file.getAbsolutePath());
+//            InputStream inputStream;
+//            if (file.canRead()) {
+//                inputStream = new FileInputStream(file);
+//            } else {
+//                inputStream = getResources().openRawResource(R.raw.reviseit);
+//            }
+//            InputStream inputStream = getResources().openRawResource(R.raw.reviseit);
+//            // TODO: revert to normal constructor for BridgeQuiz
 //            this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
-            this.bridgeQuiz = BridgeQuiz.getInstance(new InputStreamReader(inputStream));
-        } catch (IOException e) {
-            showMessage("unable to load quiz: " + e);
-            return;
-        }
+//            this.bridgeQuiz = BridgeQuiz.getInstance(new InputStreamReader(inputStream));
+//        } catch (IOException e) {
+//            showMessage("unable to load quiz: " + e);
+//            return;
+//        }
+        // TODO: check backstack for returning from quiz to deals
+        // see https://developer.android.com/training/basics/fragments/fragment-ui
+        // TODO: does the app survive screen rotation?
+        // should bridgeQuiz be saved in DealFragment, so that it is retained?
         setContentView(R.layout.activity_main);
 		this.appName = getResources().getString(R.string.app_name);
 		this.statusText = findViewById(R.id.statusText);
 		this.fragmentManager = getSupportFragmentManager();
-		this.dealFragment = (DealFragment) fragmentManager.findFragmentById(R.id.cardFragment);
+		this.dealFragment = (DealFragment) fragmentManager.findFragmentById(R.id.dealFragment);
 		showDealFragment();
 		// see if bluetoothFragment has been retained from previous creation
         if (savedInstanceState != null) {
@@ -175,11 +174,6 @@ public class HotBridgeActivity extends AppCompatActivity
 		ft.show(dealFragment);
 		ft.commit();
 	}
-    private void showMessage(String message) {
-        if (BuildConfig.DEBUG) Log.d(TAG, message);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
 	@Override // BluetoothListener
 	public void onStateChange(BTState state) {
 		Toast.makeText(this, state.toString(), Toast.LENGTH_LONG).show();
@@ -232,7 +226,7 @@ public class HotBridgeActivity extends AppCompatActivity
 
     @Override // Bridgeable
     public BridgeQuiz getBridgeQuiz() {
-        return bridgeQuiz;
+        return dealFragment.getBridgeQuiz();
     }
 
     @Override // Bridgeable
@@ -240,7 +234,7 @@ public class HotBridgeActivity extends AppCompatActivity
         super.setTitle(message);
     }
 
-    @Override
+    @Override // Bridgeable
     public void setTwoPlayer(boolean twoPlayer) {
         if (twoPlayer) {
             showBluetoothFragment();
@@ -248,5 +242,10 @@ public class HotBridgeActivity extends AppCompatActivity
             dealFragment.setClientMode(false);
             showDealFragment();
         }
+    }
+    @Override // Bridgeable
+    public void showMessage(String message) {
+        if (BuildConfig.DEBUG) Log.d(TAG, message);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

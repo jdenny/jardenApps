@@ -17,8 +17,8 @@ import com.jardenconsulting.jardenlib.BuildConfig;
 import com.jardenconsulting.jardenlib.R;
 
 import jarden.document.DocumentTextView;
-import jarden.quiz.BridgeQuiz;
 import jarden.quiz.EndOfQuestionsException;
+import jarden.quiz.PresetQuiz;
 import jarden.quiz.QuestionAnswer;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
@@ -29,14 +29,15 @@ import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
  */
 public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public interface Quizable {
-        BridgeQuiz getBridgeQuiz();
+        PresetQuiz getReviseQuiz();
         int[] getNotesResIds();
     }
     protected DocumentTextView documentTextView;
     protected TextView questionTextView;
     protected TextView answerTextView;
     protected TextView notesTextView;
-    protected BridgeQuiz bridgeQuiz;
+    // protected BridgeQuiz bridgeQuiz;
+    protected PresetQuiz reviseQuiz;
     protected ViewGroup selfMarkLayout;
 
     private static final String TAG = "FreakWizFragment";
@@ -69,7 +70,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Quizable reviseActivity = (Quizable) getActivity();
-        this.bridgeQuiz = reviseActivity.getBridgeQuiz();
+        this.reviseQuiz = reviseActivity.getReviseQuiz();
         this.documentTextView = new DocumentTextView(
                 getActivity().getApplicationContext(),
                 notesTextView, reviseActivity.getNotesResIds(),
@@ -90,12 +91,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public void askQuestion() {
         String question;
         try {
-            question = bridgeQuiz.getNextQuestion(1);
+            question = reviseQuiz.getNextQuestion(1);
         } catch (EndOfQuestionsException e) {
             showMessage("end of questions! starting practice mode");
             setPracticeMode();
             try {
-                question = bridgeQuiz.getNextQuestion(1);
+                question = reviseQuiz.getNextQuestion(1);
             } catch (EndOfQuestionsException e1) {
                 showMessage("exception: " + e);
                 return;
@@ -117,12 +118,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     public void resetListView() {
     }
     private void selfMarkButton(boolean isCorrect) {
-        this.bridgeQuiz.setCorrect(isCorrect);
+        this.reviseQuiz.setCorrect(isCorrect);
         showButtonLayout();
         askQuestion();
     }
     private void goPressed() {
-        QuestionAnswer currentQA = bridgeQuiz.getCurrentQuestionAnswer();
+        QuestionAnswer currentQA = reviseQuiz.getCurrentQuestionAnswer();
         showAnswer(currentQA);
         showSelfMarkLayout();
         setListView();
@@ -132,7 +133,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
         this.documentTextView.showPageText(qa.notes, "Notes");
     }
     private void setPracticeMode() {
-        bridgeQuiz.setQuizMode(PRACTICE);
+        reviseQuiz.setQuizMode(PRACTICE);
         getActivity().setTitle(R.string.practiceMode);
     }
     private void showSelfMarkLayout() {
@@ -149,12 +150,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener {
     }
     private void showStats() {
         // humans count from 1, machines from 0
-        int humanIndex = bridgeQuiz.getCurrentQAIndex() + 1;
+        int humanIndex = reviseQuiz.getCurrentQAIndex() + 1;
         String stats = "Current=" + humanIndex;
-        if (bridgeQuiz.getQuizMode() == LEARN) {
-            stats += ", ToDo=" + bridgeQuiz.getToDoCount();
+        if (reviseQuiz.getQuizMode() == LEARN) {
+            stats += ", ToDo=" + reviseQuiz.getToDoCount();
         }
-        stats += ", Fails=" + bridgeQuiz.getFailedCount();
+        stats += ", Fails=" + reviseQuiz.getFailedCount();
         this.statsTextView.setText(stats);
     }
 }

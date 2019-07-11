@@ -1,10 +1,13 @@
 package com.jardenconsulting.testfreakwiz;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +20,8 @@ import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 
 public class MainActivity extends AppCompatActivity implements FreakWizFragment.Quizable {
     public static final String TAG = "TestFreakWiz";
+    private static final String quizFileName = "quiz.txt";
+
     private static final int[] notesResIds = {
             R.string.Philippians4_6
     };
@@ -26,8 +31,20 @@ public class MainActivity extends AppCompatActivity implements FreakWizFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
-            InputStream inputStream = getResources().openRawResource(R.raw.quiz);
+            // see if there is a file <quizFileName> in device downloads folder,
+            // and if so use that; otherwise use res/raw/quiz.txt
+            File publicDirectory = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS);
+            File file = new File(publicDirectory, quizFileName);
+            if (BuildConfig.DEBUG) Log.d(TAG, file.getAbsolutePath());
+            InputStream inputStream;
+            if (file.canRead()) {
+                inputStream = new FileInputStream(file);
+            } else {
+                inputStream = getResources().openRawResource(R.raw.quiz);
+            }
             this.presetQuiz = new PresetQuiz(new InputStreamReader(inputStream));
             this.presetQuiz.setQuizMode(LEARN);
         } catch (IOException e) {
@@ -42,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements FreakWizFragment.
     }
 
     @Override
-    public PresetQuiz getBridgeQuiz() {
+    public PresetQuiz getReviseQuiz() {
         return presetQuiz;
     }
 

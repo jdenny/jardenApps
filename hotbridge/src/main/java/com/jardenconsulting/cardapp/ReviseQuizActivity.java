@@ -23,6 +23,7 @@ import java.util.Set;
 import jarden.app.revisequiz.FreakWizFragment;
 import jarden.app.revisequiz.ReviseQuizFragment;
 import jarden.quiz.BridgeQuiz;
+import jarden.quiz.PresetQuiz;
 
 import static jarden.quiz.PresetQuiz.QuizMode.LEARN;
 import static jarden.quiz.PresetQuiz.QuizMode.PRACTICE;
@@ -175,7 +176,7 @@ public class ReviseQuizActivity extends AppCompatActivity
         editor.apply();
     }
     @Override // Quizable
-    public BridgeQuiz getBridgeQuiz() {
+    public PresetQuiz getReviseQuiz() {
         return this.bridgeQuiz;
     }
 

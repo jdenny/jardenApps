@@ -11,7 +11,7 @@
 	    android:orientation="vertical" >
 
 	    <fragment
-            android:id="@+id/cardFragment"
+            android:id="@+id/dealFragment"
             android:name="jarden.cardapp.DealFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

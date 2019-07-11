@@ -42,6 +42,8 @@ public class ReviseQuizFragment extends FreakWizFragment
     private boolean changingQuestionIndex;
     private IntegerDialog integerDialog;
 
+    private BridgeQuiz bridgeQuiz;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,8 +67,9 @@ public class ReviseQuizFragment extends FreakWizFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        qaList = bridgeQuiz.getQuestionAnswerList();
+        qaList = reviseQuiz.getQuestionAnswerList();
         reviseable = (Reviseable) getActivity();
+        bridgeQuiz = (BridgeQuiz) reviseQuiz;
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -87,12 +90,12 @@ public class ReviseQuizFragment extends FreakWizFragment
             // change this boolean to an enum
             changingQuestionIndex = true;
             showIntegerDialog("Change Current Index",
-                    bridgeQuiz.getQuestionIndex() + 1,
+                    reviseQuiz.getQuestionIndex() + 1,
                     "UserLevelDialog");
         } else if (id == R.id.setTargetCorrectsButton) {
             changingQuestionIndex = false;
             showIntegerDialog("Change Target Correct",
-                    bridgeQuiz.getTargetCorrectCt(),
+                    reviseQuiz.getTargetCorrectCt(),
                     "TargetCorrectsDialog");
         } else {
             return super.onOptionsItemSelected(item);
@@ -112,10 +115,10 @@ public class ReviseQuizFragment extends FreakWizFragment
     public void onUpdateIntValue(int intValue) {
         if (changingQuestionIndex) {
             // to people, ordinals start from 1; to computers, they start from 0
-            this.bridgeQuiz.setQuestionIndex(intValue - 1);
+            this.reviseQuiz.setQuestionIndex(intValue - 1);
             askQuestion();
         } else {
-            this.bridgeQuiz.setTargetCorrectCt(intValue);
+            this.reviseQuiz.setTargetCorrectCt(intValue);
         }
     }
     @Override
