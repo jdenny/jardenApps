@@ -106,11 +106,13 @@ public class DealFragment extends Fragment implements OnClickListener {
 	    then the next two laps similar to the first, except that the
 	    dealer is switched
 	    in summary:
-	    lap myHand dealer for 1st hand in lap (then alternates for each hand)
+	    lap myHand dealer (see key to headings below)
 	      0   West   West
 	      1   East   West
 	      2   West   East
 	      3   East   East
+	      lap is bookHandsLap; myHand based on bookHandWest, i.e. true means I am West
+	      dealer, based on westDeal, if true means I deal for the 1st hand, then it alternates
 	 */
     private SharedPreferences sharedPreferences;
     private int bookHandsLap = 0;
@@ -342,9 +344,7 @@ public class DealFragment extends Fragment implements OnClickListener {
             if (++bookHandsIndex >= bookHands.length) {
                 bookHandsIndex = 0;
                 if (++bookHandsLap >= 4) bookHandsLap = 0;
-                bookHandWest = (bookHandsLap % 2 == 0);
-                westDeal = !(bookHandsLap < 2); // the opposite of what you would think,
-                    // because it's about to be reversed, as part of alternating the dealer
+                evaluateBookHandsLap();
             }
             bookHand = bookHands[bookHandsIndex];
             bookHand.handWest.reset();
@@ -377,6 +377,13 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         showDeal();
     }
+
+    private void evaluateBookHandsLap() {
+        bookHandWest = (bookHandsLap % 2 == 0);
+        westDeal = !(bookHandsLap < 2); // the opposite of what you would think,
+        // because it's about to be reversed, as part of alternating the dealer
+    }
+
     private void showDeal() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showDeal()");
         firstBidPass = false;
@@ -464,8 +471,12 @@ public class DealFragment extends Fragment implements OnClickListener {
         this.sharedPreferences = getActivity().getSharedPreferences(TAG, Context.MODE_PRIVATE);
         randomDeals = sharedPreferences.getBoolean(RANDOM_DEALS_KEY, false);
         setRandomDeals(randomDeals);
-        bookHandsIndex = sharedPreferences.getInt(BOOK_HANDS_INDEX_KEY, -1);
+        int index = sharedPreferences.getInt(BOOK_HANDS_INDEX_KEY, -1);
+        --index; // subtract 1, to repeat most recent deal
+        if (index < -1) index = -1;
+        bookHandsIndex = index;
         bookHandsLap = sharedPreferences.getInt(BOOK_HANDS_LAP_KEY, 0);
+        evaluateBookHandsLap();
     }
 	@Override
 	public void onAttach(Context context) {
@@ -480,10 +491,8 @@ public class DealFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         if(BuildConfig.DEBUG) {
-        	Log.i(TAG,
-        			"DealFragment.onCreate(savedInstanceState=" +
-        			(savedInstanceState==null?"null":"not null") +
-        			")");
+        	Log.i(TAG, "DealFragment.onCreate(savedInstanceState=" +
+        			(savedInstanceState==null?"null":"not null") + ")");
         }
 		super.onCreate(savedInstanceState);
         setRetainInstance(true);

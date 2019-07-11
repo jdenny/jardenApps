@@ -1,6 +1,5 @@
 package com.jardenconsulting.cardapp;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -107,8 +106,6 @@ public class HotBridgeActivity extends AppCompatActivity
     private ReviseQuizFragment reviseQuizFragment;
 	private boolean closing = false;
     private BridgeQuiz bridgeQuiz;
-    private SharedPreferences sharedPreferences;
-    private boolean randomDeals;
     private boolean quizFragmentShowing;
     private boolean doubleBackToExitPressedOnce = false;
 
