@@ -24,21 +24,12 @@ public class GridBag extends GridBagConstraints {
 		gbLayout = new GridBagLayout();
 		container.setLayout(gbLayout);
 	}
-	/**
-	 * @deprecated  Replaced by {@link #add(Component, int, int)}
-	 */
-	public void addItem(Component component, int x, int y) {
-		add(component, x, y);
-	}
 	public void add(Component component, int x, int y) {
 		gridx = x;
 		gridy = y;
 		gbLayout.setConstraints(component, this);
 		container.add(component);
 	}
-	/**
-	 * @deprecated  Replaced by {@link #add(Component, int, int, int, int)}
-	 */
 	public void addItem(Component component, int gx, int gy, int gw, int gh) {
 		add(component, gx, gy, gw, gh);
 	}

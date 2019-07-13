@@ -52,7 +52,6 @@ import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 public class DealFragment extends Fragment implements OnClickListener {
 
     public interface Bridgeable {
-        void setStatusMessage(String message);
         void showMessage(String message);
         void setTwoPlayer(boolean twoPlayer);
         void showReviseQuizFragment();
@@ -95,8 +94,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 
     private CardPack cardPack;
 	private boolean randomDeals = false;
-	private BookHand[] bookHands = BookHand.getBookHands();
-	private BookHand bookHand;
+	private final BookHand[] bookHands = BookHand.getBookHands();
 	private int bookHandsIndex = -1;
 	/*
 	    used to control the bookHands; we go through all the hands
@@ -190,9 +188,8 @@ public class DealFragment extends Fragment implements OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.twoPlayerButton) {
-            boolean twoPlayer = !item.isChecked(); // isChecked returns old state!
+            twoPlayer = !item.isChecked(); // isChecked returns old state!
             item.setChecked(twoPlayer); // do what Android should do for us!
-            setTwoPlayer(twoPlayer);
             bridgeable.setTwoPlayer(twoPlayer);
             return true; // menu item dealt with
         } else if (id == R.id.randomDealButton) {
@@ -266,7 +263,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	    return dealName;
     }
 
-    public void setRandomDeals(boolean randomDeals) {
+    private void setRandomDeals(boolean randomDeals) {
         if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.setRandomDeals(" +
                 randomDeals + ")");
         this.randomDeals = randomDeals;
@@ -346,7 +343,7 @@ public class DealFragment extends Fragment implements OnClickListener {
                 if (++bookHandsLap >= 4) bookHandsLap = 0;
                 evaluateBookHandsLap();
             }
-            bookHand = bookHands[bookHandsIndex];
+            BookHand bookHand = bookHands[bookHandsIndex];
             bookHand.handWest.reset();
             bookHand.handEast.reset();
             cardPack.setBookHand(bookHand, bookHandWest);
@@ -362,13 +359,13 @@ public class DealFragment extends Fragment implements OnClickListener {
                 byte[] prefix = new byte[3];
                 if (randomDeals) {
                     prefix[0] = 1;
-                    prefix[2] = 0;
+                    // prefix[2] = 0; // i.e. already set to zero!
                 } else {
-                    prefix[0] = 0;
+                    // prefix[0] = 0;
                     prefix[2] = (byte)(bookHandsIndex + 1);
                 }
                 if (westDeal) prefix[1] = 1;
-                else prefix[1] = 0;
+                // else prefix[1] = 0;
                 byte[] data = cardPack.getDealAsBytes(randomDeals, prefix);
                 bluetoothService.write(data);
             } else {
@@ -404,7 +401,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         showHands();
 	}
-	public void showHands() {
+	private void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
         activity.setTitle(dealName);
         if (randomDeals) {
@@ -503,7 +500,6 @@ public class DealFragment extends Fragment implements OnClickListener {
             this.bridgeQuiz = new BridgeQuiz(new InputStreamReader(inputStream));
         } catch (IOException e) {
             bridgeable.showMessage("unable to load quiz: " + e);
-            return;
         }
     }
 	@Override
@@ -545,8 +541,5 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
     public boolean isTwoPlayer() {
         return this.twoPlayer;
-    }
-    public void setTwoPlayer(boolean twoPlayer) {
-        this.twoPlayer = twoPlayer;
     }
 }

@@ -1,15 +1,15 @@
 package jarden.explorer;
 
-import java.io.File;
-
-import com.jardenconsulting.explorer.R;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.jardenconsulting.explorer.R;
+
+import java.io.File;
 
 public class TextFileFragment extends Fragment {
 
@@ -20,7 +20,7 @@ public class TextFileFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_text,
 				container, false);
-		this.textView = (TextView) rootView.findViewById(R.id.textView);
+		this.textView = rootView.findViewById(R.id.textView);
 		return rootView;
 	}
 

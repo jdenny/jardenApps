@@ -29,5 +29,7 @@
     <string name="south">South</string>
     <string name="us">Us</string>
     <string name="west">West</string>
+    <string name="question">question</string>
+    <string name="answer">answer</string>
 
 </resources>

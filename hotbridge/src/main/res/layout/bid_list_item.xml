@@ -9,7 +9,7 @@
         android:id="@+id/question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="question"
+        android:text="@string/question"
         android:textSize="@dimen/list_text_size"
         android:textColor="@color/spanishBlue"
         />
@@ -17,7 +17,7 @@
         android:id="@+id/answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="answer"
+        android:text="@string/answer"
         android:textSize="@dimen/list_text_size"
         android:textColor="@color/spanishRed"
         />

@@ -1,11 +1,5 @@
 package jarden.explorer;
 
-import java.io.File;
-
-import com.jardenconsulting.explorer.BuildConfig;
-import com.jardenconsulting.explorer.ExplorerActivity;
-import com.jardenconsulting.explorer.R;
-
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.jardenconsulting.explorer.BuildConfig;
+import com.jardenconsulting.explorer.ExplorerActivity;
+import com.jardenconsulting.explorer.R;
+
+import java.io.File;
 
 public class ImageFragment extends Fragment {
 
@@ -41,7 +41,7 @@ public class ImageFragment extends Fragment {
 		}
 		View rootView = inflater.inflate(R.layout.fragment_image,
 				container, false);
-		this.imageView = (ImageView) rootView.findViewById(R.id.imageView);
+		this.imageView = rootView.findViewById(R.id.imageView);
 		if (this.filePath != null) { // i.e. resumed
 			setImage();
 		}

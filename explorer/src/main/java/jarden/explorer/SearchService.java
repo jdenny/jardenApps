@@ -1,11 +1,5 @@
 package jarden.explorer;
 
-import java.io.File;
-
-import com.jardenconsulting.explorer.BuildConfig;
-import com.jardenconsulting.explorer.ExplorerActivity;
-import com.jardenconsulting.explorer.R;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,6 +7,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.jardenconsulting.explorer.BuildConfig;
+import com.jardenconsulting.explorer.ExplorerActivity;
+
+import java.io.File;
 
 public class SearchService extends IntentService {
 	private static final int SEARCH_NOTIFICATION_ID = 1;
@@ -42,7 +41,7 @@ public class SearchService extends IntentService {
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(this)
 				.setContentIntent(pendingIntent)
-				.setSmallIcon(R.drawable.abc_ic_search_api_mtrl_alpha)
+//				.setSmallIcon(R.drawable.abc_ic_search_api_mtrl_alpha)
 				.setAutoCancel(true)
 				.setDefaults(Notification.DEFAULT_SOUND)
 				.setContentTitle("Explorer Search")

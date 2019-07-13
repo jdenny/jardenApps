@@ -120,7 +120,7 @@ public class ReviseQuizFragment extends FreakWizFragment
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         QuestionAnswer qa = bidListAdapter.getItem(position);
-        if (qa != OPENING_BIDS) {
+        if (qa != null && qa != OPENING_BIDS) {
             this.questionTextView.setText(qa.question);
             this.answerTextView.setText(qa.answer);
             this.documentTextView.showPageText(qa.notes, "Notes");
@@ -195,7 +195,7 @@ public class ReviseQuizFragment extends FreakWizFragment
             opening bids
             (1S) double, (pass) 2NT
      */
-    public void loadBidList(QuestionAnswer targetQA) {
+    private void loadBidList(QuestionAnswer targetQA) {
         this.bidListAdapter.setNotifyOnChange(false);
         this.bidListAdapter.clear();
         if (targetQA != OPENING_BIDS) {

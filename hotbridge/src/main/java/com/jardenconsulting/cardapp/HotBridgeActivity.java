@@ -51,8 +51,6 @@ change all multi-word terms to use _ instead of -
 
 Show qa.helpText under qa.answer on screen; make hypertext live, as in ReviseQuiz
 
-Devise a way to share BridgeQuiz between 2 parts of app
-
 Possibly change PresetQuiz to use generics?
 
 Check that other uses of PresetQuiz are okay
@@ -190,7 +188,7 @@ public class HotBridgeActivity extends AppCompatActivity
 		quizFragmentShowing = false;
 		setTitle(dealFragment.getDealName());
 	}
-    public void setConnected(boolean clientMode) {
+    private void setConnected(boolean clientMode) {
         if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.setConnected()");
         dealFragment.setClientMode(clientMode);
         showDealFragment();
@@ -240,8 +238,8 @@ public class HotBridgeActivity extends AppCompatActivity
 			this.dealFragment.setBluetoothService(bluetoothService);
 		}
 	}
-	@Override // BluetoothListener, Bridgeable
-	public void setStatusMessage(String message) {
+	@Override // BluetoothListener
+    public void setStatusMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 

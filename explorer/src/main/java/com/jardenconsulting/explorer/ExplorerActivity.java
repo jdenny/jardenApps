@@ -1,26 +1,27 @@
 package com.jardenconsulting.explorer;
 
-import java.io.File;
-
-import jarden.explorer.ExplorerFragment;
-import jarden.explorer.ImageFragment;
-import jarden.explorer.OnFileSelectedListener;
-import jarden.explorer.SearchDialog;
-import jarden.explorer.SearchService;
-import jarden.explorer.TextFileFragment;
-import jarden.explorer.MediaFragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.io.File;
+
+import jarden.explorer.ExplorerFragment;
+import jarden.explorer.ImageFragment;
+import jarden.explorer.MediaFragment;
+import jarden.explorer.OnFileSelectedListener;
+import jarden.explorer.SearchDialog;
+import jarden.explorer.SearchService;
+import jarden.explorer.TextFileFragment;
 
 /* TODO:
 resume playback after screen rotation
@@ -60,8 +61,8 @@ implements DialogInterface.OnClickListener, OnFileSelectedListener  {
 	public static final String FILE_NAMES_TAG = "fileNames";
 	public static final String DIRECTORY_TAG = "directory";
 	public static final String SEARCH_EXPR_TAG = "searchExpr";
-	public static final String FRAGMENT_INDEX_TAG = "currentFragmentIndex";
 
+	private static final String FRAGMENT_INDEX_TAG = "currentFragmentIndex";
 	private static final String SEARCH_DIALOG = "jarden.explorer.SearchDialog";
 
 	private FragmentManager fragmentManager;

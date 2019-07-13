@@ -16,13 +16,6 @@ import java.util.Properties;
  * 
  * Using google, e.g. "https://sites.google.com/site/amazequiz/home/problems/colores.properties"
  * 
- * When the server was Peet's apache/tomcat
- * ----------------------------------------
- * To add another file based quiz, add file to server:
- * 		PuTTy to 31.222.178.42:22 john/<Myguitar>
- * 		files in /home/john/projects/JohnPyWeb/src/JohnPyWeb/quizmaze/static/problem
- * 		then run python manage.py collectstatic --settings=peetSettings
- * 		which copies files to /home/john/www/static
  * either file.txt: Q: question / A: answer
  * or file.properties: question=answer
  * or file.eng: English spelling word,
@@ -30,11 +23,6 @@ import java.util.Properties;
  * 
  * To add another maths based quiz, hard code it as per ArithmeticQuiz
  * 
- * Note: for manual administration of high scores:
- * http://john.jardenconsulting.com/admin/quizmaze/highscore/
- * 		john/<insecure>
- * Similarly, for manual administration of EngSpa database
- * http://john.jardenconsulting.com/admin/spanish/engspa/
  * @author john.denny@gmail.com
  * 
  */
@@ -48,8 +36,6 @@ public abstract class QuizCache {
 	private final static String[] mathsSubtypeNames = { "Arithmetic", "Algebra",
 			"Powers", "Areas", "Series", "Fractions", "Times", "Numbers" };
 	public final static String serverUrlStr =
-			// "http://johnsT500/"; // test URL
-			// "http://john.jardenconsulting.com/"; // 31.222.178.42
 			"https://sites.google.com/site/amazequiz/home/problems/";
 	private final static String fileNamesUrlStr = 
 			// "static/problem/fileList.dat";

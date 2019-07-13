@@ -1,8 +1,5 @@
 package jarden.explorer;
 
-import java.io.File;
-import java.util.Arrays;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -23,13 +20,15 @@ import com.jardenconsulting.explorer.BuildConfig;
 import com.jardenconsulting.explorer.ExplorerActivity;
 import com.jardenconsulting.explorer.R;
 
+import java.io.File;
+import java.util.Arrays;
+
 public class ExplorerFragment extends Fragment implements OnItemClickListener {
     private static final String TAG = "ExplorerFragment";
     // if we don't have read access to root directory, try "/sdcard"
 	private static final File ROOT_DIR = new File("/");
 
-	private ListView fileListView;
-	private File currentDir;
+    private File currentDir;
 	private ArrayAdapter<String> fileListAdapter;
 	
 	public ExplorerFragment() {
@@ -78,9 +77,9 @@ public class ExplorerFragment extends Fragment implements OnItemClickListener {
 		}
 		View rootView = inflater.inflate(R.layout.fragment_explorer,
 				container, false);
-		this.fileListAdapter = new ArrayAdapter<String>(
+		this.fileListAdapter = new ArrayAdapter<>(
 				getActivity(), android.R.layout.simple_list_item_1);
-		this.fileListView = (ListView) rootView.findViewById(R.id.fileListView);
+        ListView fileListView = rootView.findViewById(R.id.fileListView);
 		fileListView.setAdapter(fileListAdapter);
 		fileListView.setOnItemClickListener(this);
 		showDirectory(this.currentDir);

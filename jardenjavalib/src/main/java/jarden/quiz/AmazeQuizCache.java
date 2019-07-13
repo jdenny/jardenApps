@@ -5,10 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import jarden.quiz.QuizCache;
-
 public class AmazeQuizCache extends QuizCache {
-	private final static String localDirName = "/temp/amazeQuizCache";
+	private final static String localDirName = "/Users/john/temp/amazeQuizCache";
 	private String[] localFileNames = null;
 	private File localDir;
 	private QuizCacheListener quizCacheListener;

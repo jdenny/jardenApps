@@ -1,7 +1,5 @@
 package jarden.explorer;
 
-import java.io.File;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +12,8 @@ import android.widget.VideoView;
 import com.jardenconsulting.explorer.BuildConfig;
 import com.jardenconsulting.explorer.ExplorerActivity;
 import com.jardenconsulting.explorer.R;
+
+import java.io.File;
 
 public class MediaFragment extends Fragment {
 
@@ -43,13 +43,13 @@ public class MediaFragment extends Fragment {
 		}
 		View rootView = inflater.inflate(R.layout.fragment_media,
 				container, false);
-		this.videoView = (VideoView) rootView.findViewById(R.id.videoView);
+		this.videoView = rootView.findViewById(R.id.videoView);
 		return rootView;
 	}
 	
 	@Override
 	public void onStart() {
-		super.onResume();
+		super.onStart();
 		if (BuildConfig.DEBUG) {
 			Log.d(ExplorerActivity.TAG, "MediaFragment.onStart()");
 		}
@@ -88,7 +88,7 @@ public class MediaFragment extends Fragment {
 	
 	@Override
 	public void onDestroy() {
-		super.onResume();
+		super.onDestroy();
 		if (BuildConfig.DEBUG) {
 			Log.d(ExplorerActivity.TAG, "MediaFragment.onDestroy()");
 		}
