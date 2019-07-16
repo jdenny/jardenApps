@@ -39,7 +39,7 @@ TODO:
 * mark all the raw bids
  */
 public class ReviseQuizFragment extends FreakWizFragment
-        implements AdapterView.OnItemClickListener, /*!!IntegerDialog.IntValueListener,*/
+        implements AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
 
     private CheckBox notesCheckBox;

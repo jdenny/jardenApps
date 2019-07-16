@@ -369,6 +369,12 @@ A: suit-setter-clubs
 Q: 2D, Pass
 A: <13 HCP
 
+# 1 bid after 2S
+Q: 2S, 2NT
+A: 3+ spades, 17+ fitHCP, trumps-spades
+Q: 2S, Pass
+A: <3 spades, <15 HCP
+
 # 1 bid after 2NT
 Q: 2NT, 3H
 A: 13+ HCP, 5+ hearts
@@ -1196,7 +1202,9 @@ A: 13-17 HCP, to-play
 Q: 1H, 1S; 2D, 2H; 3H, 4H; Pass
 A: to-play
 Q: 1H, 1S; 2D, 2S
-A: 6+ spades
+A: <3 hearts, 6+ spades, <4 diamonds
+Q: 1H, 1S; 2D, 2S; Pass
+A: <3 spades
 Q: 1H, 1S; 2D, 2NT
 F1: Artificial: [a]strong_fit[/a]
 A: 11+ fitHCP, <3 hearts, <4 clubs, 4+ diamonds, trumps-diamonds
@@ -1337,38 +1345,13 @@ F1: [a]responses_to_relay[/a]
 A: 5+ hearts
 Q: 1H, 2D; 2H, 2S
 A: <3 hearts, 3 spades
-Q: 1H, 2D; 2H, 2S; 2NT
-F1: [a]strong_fit[/a]. Alert: artificial
-A: 14+ fitHCP, 5+ spades, trumps-spades
-Q: 1H, 2D; 2H, 2S; 2NT, 4C
-F1: [a]values_for_5[/a]. Alert: artificial
-A: 15-18 HCP, values-for-5
-Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D
-F1: [a]keycard_ask[/a]. Alert: artificial
-A: 18+ HCP, keycard-ask
-Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4S
-F1: response to [a]keycard_ask[/a]. Alert: artificial
-A: 1-or-4 keycards-spades
-Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4S; Pass
-A: <3 keycards-spades, to-play
-Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4D, 4NT
-F1: response to [a]keycard_ask[/a]. Alert: artificial
-A: 2-or-5 keycards-spades
-Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4S
-A: <18 HCP
-Q: 1H, 2D; 2H, 2S; 2NT, 4C; 4S, Pass
-A: to-play
-Q: 1H, 2D; 2H, 2S; 2NT, 4D
-F1: [a]keycard_ask[/a]. Alert: artificial
-A: 19+ HCP, keycard-ask
-Q: 1H, 2D; 2H, 2S; 2NT, 4D; 4S
-F1: response to [a]keycard_ask[/a]. Alert: artificial
-A: 1-or-4 keycards-spades
-Q: 1H, 2D; 2H, 2S; 2NT, 4D; 4NT
-F1: response to [a]keycard_ask[/a]. Alert: artificial
-A: 2-or-5 keycards-spades
 Q: 1H, 2D; 2H, 2S; 3S
-A: <14 fitHCP, 5+ spades, trumps-spades
+F1: [a]strong_fit[/a]. Alert: artificial
+A: 5+ spades, trumps-spades
+Q: 1H, 2D; 2H, 2S; 3S, 4S
+A: to-play
+Q: 1H, 2D; 2H, 2S; 3S, 4S; Pass
+A: to-play
 
 Q: 1H, 2D; 2H, 2NT
 F1: [a]strong_fit[/a]. Alert: artificial
@@ -1648,7 +1631,7 @@ F1: [a]autofit[/a], [a]values_for_5[/a]. Alert: artificial
 A: 18-21 fitHCP, 4+ diamonds, autofit, values-for-5, trumps-diamonds
 Q: 1NT, 2C; 2H, 3D; 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
-A: 22+ fitHCP, 4+ diamonds, autofit, keycard_ask, trumps-diamonds
+A: 22+ fitHCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
 Q: 1NT, 2D; 2H
 A: 3 hearts
 Q: 1NT, 2D; 2H, 2NT

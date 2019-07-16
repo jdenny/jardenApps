@@ -55,6 +55,7 @@ public class DealFragment extends Fragment implements OnClickListener {
         void showMessage(String message);
         void setTwoPlayer(boolean twoPlayer);
         void showReviseQuizFragment();
+        void showDetailQA(QuestionAnswer detailQA);
     }
     private static final String BOOK_HANDS_INDEX_KEY = "bookHandsIndexKey";
     private static final String BOOK_HANDS_LAP_KEY = "bookHandsLapKey";
@@ -246,8 +247,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 		} else if (id == R.id.bidButton) {
 		    String buttonText = bidButton.getText().toString();
 		    if (buttonText.equals(detailStr)) {
-		        bridgeQuiz.setDetailQA(lastQA);
-                bridgeable.showReviseQuizFragment();
+		        bridgeable.showDetailQA(lastQA);
             } else {
                 getNextBid(this.mePlayer);
                 if (!this.biddingOver) {

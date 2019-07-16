@@ -18,6 +18,7 @@ import jarden.app.revisequiz.ReviseQuizFragment;
 import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.PresetQuiz;
+import jarden.quiz.QuestionAnswer;
 
 /**
  * Shuffle and dealAndSort a pack of cards, showing my hand (Me), or
@@ -167,7 +168,15 @@ public class HotBridgeActivity extends AppCompatActivity
         int titleId = bridgeQuiz.isLearnMode() ? R.string.learnMode : R.string.practiceMode;
         setTitle(titleId);
     }
-	private void showBluetoothFragment() {
+
+    @Override
+    public void showDetailQA(QuestionAnswer detailQA) {
+        showReviseQuizFragment();
+        reviseQuizFragment.showDetailQA(detailQA);
+        setTitle(dealFragment.getDealName());
+    }
+
+    private void showBluetoothFragment() {
  		FragmentTransaction ft = fragmentManager.beginTransaction();
  		ft.hide(dealFragment);
  		if (this.bluetoothFragment == null) {

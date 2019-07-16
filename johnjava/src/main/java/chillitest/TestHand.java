@@ -17,58 +17,8 @@ import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.cards.CardPack.CardEnum.C2;
-import static jarden.cards.CardPack.CardEnum.C3;
-import static jarden.cards.CardPack.CardEnum.C4;
-import static jarden.cards.CardPack.CardEnum.C5;
-import static jarden.cards.CardPack.CardEnum.C6;
-import static jarden.cards.CardPack.CardEnum.C7;
-import static jarden.cards.CardPack.CardEnum.C8;
-import static jarden.cards.CardPack.CardEnum.C9;
-import static jarden.cards.CardPack.CardEnum.CA;
-import static jarden.cards.CardPack.CardEnum.CJ;
-import static jarden.cards.CardPack.CardEnum.CK;
-import static jarden.cards.CardPack.CardEnum.CQ;
-import static jarden.cards.CardPack.CardEnum.CT;
-import static jarden.cards.CardPack.CardEnum.D2;
-import static jarden.cards.CardPack.CardEnum.D3;
-import static jarden.cards.CardPack.CardEnum.D4;
-import static jarden.cards.CardPack.CardEnum.D5;
-import static jarden.cards.CardPack.CardEnum.D6;
-import static jarden.cards.CardPack.CardEnum.D7;
-import static jarden.cards.CardPack.CardEnum.D8;
-import static jarden.cards.CardPack.CardEnum.D9;
-import static jarden.cards.CardPack.CardEnum.DA;
-import static jarden.cards.CardPack.CardEnum.DJ;
-import static jarden.cards.CardPack.CardEnum.DK;
-import static jarden.cards.CardPack.CardEnum.DQ;
-import static jarden.cards.CardPack.CardEnum.DT;
-import static jarden.cards.CardPack.CardEnum.H2;
-import static jarden.cards.CardPack.CardEnum.H3;
-import static jarden.cards.CardPack.CardEnum.H4;
-import static jarden.cards.CardPack.CardEnum.H5;
-import static jarden.cards.CardPack.CardEnum.H6;
-import static jarden.cards.CardPack.CardEnum.H7;
-import static jarden.cards.CardPack.CardEnum.H8;
-import static jarden.cards.CardPack.CardEnum.H9;
-import static jarden.cards.CardPack.CardEnum.HA;
-import static jarden.cards.CardPack.CardEnum.HJ;
-import static jarden.cards.CardPack.CardEnum.HK;
-import static jarden.cards.CardPack.CardEnum.HQ;
-import static jarden.cards.CardPack.CardEnum.HT;
-import static jarden.cards.CardPack.CardEnum.S2;
-import static jarden.cards.CardPack.CardEnum.S3;
-import static jarden.cards.CardPack.CardEnum.S4;
-import static jarden.cards.CardPack.CardEnum.S5;
-import static jarden.cards.CardPack.CardEnum.S6;
-import static jarden.cards.CardPack.CardEnum.S7;
-import static jarden.cards.CardPack.CardEnum.S8;
-import static jarden.cards.CardPack.CardEnum.S9;
-import static jarden.cards.CardPack.CardEnum.SA;
-import static jarden.cards.CardPack.CardEnum.SJ;
-import static jarden.cards.CardPack.CardEnum.SK;
-import static jarden.cards.CardPack.CardEnum.SQ;
-import static jarden.cards.CardPack.CardEnum.ST;
+import static jarden.cards.BookHand.page43;
+import static jarden.cards.CardPack.CardEnum.*;
 import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
@@ -111,10 +61,10 @@ public class TestHand {
         boolean testAll = false;
         System.out.println("start of test");
         // parseAllBids();
-        testBookHands();
+        // testBookHands();
         // testAllSecondBids();
         // testOneBid();
-        // testOneHand(page62);
+        testOneHand(page43);
 
         if (testAll) {
             parseAllBids();
@@ -138,7 +88,7 @@ public class TestHand {
             testRandomNBids(10, 2);
             testRandomPrimaryBids();
             testRandomSecondBids();
-            testSuitWinners();
+            testSuitSetters();
         }
         System.out.println("end of test");
     }
@@ -558,9 +508,9 @@ public class TestHand {
             }
         }
     }
-    private void testSuitWinners() {
-        System.out.println("\ntestSuitWinners()");
-        // suitLength + suitValues >= minWinners * 3
+    private void testSuitSetters() {
+        System.out.println("\ntestSuitSetters()");
+        // suitLength + suitValues >= 15
         Hand hand11Hcp6025 = new Hand(new CardPack.CardEnum[] { // 22pp, 11HCP, 6-0-2-5
                 CA, CK, CQ, CJ, C9, C8, H9, H5, SJ, S6, S5, S4, S3
         });
@@ -576,18 +526,18 @@ public class TestHand {
         Hand[] hands = {
                 hand11Hcp6025, hand17Hcp2623, hand15Hcp2074, hand16Hcp1138
         };
-        String suitSetterClubs = "5+ winners-clubs, suit-setter";
-        String suitSetterDiamonds = "5+ winners-diamonds, suit-setter";
-        String suitSetterHearts = "5+ winners-hearts";
-        String suitSetterSpades = "5+ winners-spades, suit-setter";
+        String suitSetterClubs = "suit-setter-clubs";
+        String suitSetterDiamonds = "suit-setter-diamonds";
+        String suitSetterHearts = "suit-setter-hearts";
+        String suitSetterSpades = "suit-setter-spades";
         String[] answers = {
                 suitSetterClubs, suitSetterDiamonds, suitSetterHearts, suitSetterSpades
         };
         boolean[] matches = {
-                true, false, false, false, // club-winners
-                false, true, false, false, // diamond-winners
-                false, false, true, false, // heart-winners
-                false, false, false, true  // spade-winners
+                true, false, false, false, // clubs
+                false, true, false, false, // diamonds
+                false, false, true, false, // hearts
+                false, false, false, true  // spades
         };
         QuestionAnswer qa;
         for (int a = 0; a < answers.length; a++) {
@@ -608,7 +558,7 @@ public class TestHand {
         System.out.println("\ntestHandEvaluation");
         String fitClubs = "3+ clubs, trumps-clubs";
         String fitDiamonds = "4+ diamonds, trumps-diamonds";
-        String fitHearts = "5+ winners-hearts, suit-setter, trumps-hearts";
+        String fitHearts = "suit-setter-hearts";
         String twoHearts = "6 hearts, <20 pp, 6+ HCP"; // i.e. not a fit
         String fitSpades = "5+ spades, trumps-spades";
         String[] answers = {

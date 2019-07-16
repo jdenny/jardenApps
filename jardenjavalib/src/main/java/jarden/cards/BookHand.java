@@ -15,6 +15,15 @@ public class BookHand {
             "1D, 1H; 1S, 2D; 2NT, 3H; 3NT, Pass",
             "1H, 1S; 2H, 3NT; Pass",
             new int[] {23, 22, 15, 13});
+    public static final BookHand page43 = new BookHand(
+            "page43",
+            new Hand(new CardPack.CardEnum[] { // 21pp, 11+0+0+1HCP/+0, 2-4-5-2
+                    C7, C2, DK, DJ, D8, D2, HA, HQ, HJ, H5, H3, S8, S6 }),
+            new Hand(new CardPack.CardEnum[] { // 19pp, 10+0+0+0HCP/+0, 3-2-2-6
+                    CK, CQ, C3, DT, D7, HT, H9, SK, SQ, S9, S5, S4, S3 }),
+            "1H, 1S; 2D, 2S; Pass",
+            "2S, Pass",
+            new int[] {21, 19, 12, 10});
     private static final BookHand page50 = new BookHand(
             "page50",
             new Hand(new CardPack.CardEnum[] { // 22pp, 13-1+0+1HCP/+2, 4-5-1-3
@@ -22,7 +31,7 @@ public class BookHand {
             new Hand(new CardPack.CardEnum[] { // 24pp, 12+0+0+1HCP/+4, 2-0-6-5
                     CK, C7, HA, H9, H7, H5, H4, H3, SK, SQ, ST, S6, S5 }),
             "1NT, 2D; 2S, 3S; 4S, Pass",
-            "1H, 2D; 2H, 2S; 2NT, 4C; 4S, Pass",
+            "1H, 2D; 2H, 2S; 3S, 4S; Pass",
             new int[] {22, 24, 15, 17});
     private static final BookHand page56 = new BookHand(
             "page56",
@@ -258,9 +267,10 @@ public class BookHand {
             new int[] {20, 31, 13, 27});
 
     private static final BookHand[] bookHands = {
-            page23, page50, page56, page56B, page58, page61, page62, page62B, page63,
-            page63B, page67, page67B, page69, page70, page71, page72, page72B,
-            page77, page82, page82B, page84, page113, page124, page125, page137
+            page23,  page43,  page50,  page56, page56B, page58, page61,  page62,
+            page62B, page63,  page63B, page67, page67B, page69, page70,  page71,
+            page72,  page72B, page77,  page82, page82B, page84, page113, page124,
+            page125, page137
     };
 
     public String name;

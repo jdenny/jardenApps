@@ -31,6 +31,7 @@ import jarden.quiz.QuestionAnswer;
 
 public class FreakWizFragment extends Fragment implements View.OnClickListener,
         IntegerDialog.IntValueListener {
+
     public interface Quizable {
         PresetQuiz getReviseQuiz();
         int[] getNotesResIds();
@@ -54,6 +55,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener,
     private boolean changingQuestionIndex;
     private IntegerDialog integerDialog;
     private SharedPreferences sharedPreferences;
+    private QuestionAnswer detailQA;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,7 +107,12 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        askQuestion();
+        if (detailQA == null) {
+            askQuestion();
+        } else {
+            showDetailQA(detailQA);
+            detailQA = null;
+        }
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -140,7 +147,7 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener,
     }
     private void setLearnMode(boolean learnMode) {
         reviseQuiz.setLearnMode(learnMode);
-        getActivity().setTitle(getQuizTitleId());
+        if (detailQA == null) getActivity().setTitle(getQuizTitleId());
     }
     public int getQuizTitleId() {
         return reviseQuiz.isLearnMode() ? R.string.learnMode : R.string.practiceMode;
@@ -219,8 +226,21 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener,
         showButtonLayout();
         showStats();
         resetListView();
+        getActivity().setTitle(getQuizTitleId());
     }
-
+    public void showDetailQA(QuestionAnswer detailQA) {
+        // taken from askQuestion():
+        if (questionTextView == null) {
+            this.detailQA = detailQA; // i.e. save it until UI has been created
+        } else {
+            questionTextView.setText(detailQA.question);
+            resetListView();
+            // taken from goPressed():
+            showAnswer(detailQA);
+            showSelfMarkLayout();
+            setListView();
+        }
+    }
     /**
      * Override these two methods subclasses if necessary
      */
@@ -244,7 +264,6 @@ public class FreakWizFragment extends Fragment implements View.OnClickListener,
         this.documentTextView.showPageText(qa.notes, "Notes");
     }
     private void setPracticeMode() {
-        //!! reviseQuiz.setQuizMode(PRACTICE);
         reviseQuiz.setLearnMode(false);
         getActivity().setTitle(R.string.practiceMode);
     }
