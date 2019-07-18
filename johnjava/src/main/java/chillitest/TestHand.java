@@ -17,7 +17,7 @@ import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.cards.BookHand.edwards1;
+import static jarden.cards.BookHand.edwards2;
 import static jarden.cards.CardPack.CardEnum.*;
 import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
@@ -60,11 +60,11 @@ public class TestHand {
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
         boolean testAll = false;
         System.out.println("start of test");
-        // parseAllBids();
+        parseAllBids();
         // testBookHands();
         // testAllSecondBids();
         // testOneBid();
-        testOneHand(edwards1);
+        testOneHand(edwards2);
 
         if (testAll) {
             parseAllBids();

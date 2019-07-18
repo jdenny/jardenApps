@@ -726,6 +726,16 @@ A: suit-setter-diamonds
 Q: 1C, 2D; 2H
 F1: [a]responses_to_relay[/a]
 A: 5+ hearts
+Q: 1C, 2D; 2H, 3C
+A: <3 hearts, <3 spades, 4+ clubs
+Q: 1C, 2D; 2H, 3C; 3NT
+A: guard-diamonds, guard-spades
+Q: 1C, 2D; 2H, 3C; 3NT, 4NT
+A: 14+ HCP
+Q: 1C, 2D; 2H, 3C; 3NT, 4NT; 6NT
+A: 19+ HCP
+Q: 1C, 2D; 2H, 3C; 3NT, 4NT; 6NT, Pass
+A: to-play
 Q: 1C, 2D; 2S
 F1: [a]responses_to_relay[/a]
 A: <5 hearts, 5+ spades
@@ -917,6 +927,10 @@ A: 0-7 HCP, no 6+ major, not 4+ in both minors, not {6+ minor & 5-7 HCP}
 Q: 1D, 1H; 2C
 F1: [a]raw[/a]
 A: no 4+ major, 5+ clubs, 4 diamonds
+Q: 1D, 1H; 2C, 6NT
+A: 18+ HCP, guard-hearts, guard-spades
+Q: 1D, 1H; 2C, 6NT; Pass
+A: to-play
 Q: 1D, 1H; 2D
 F1: [a]raw[/a]
 A: no 4+ major, 5+ diamonds, 4 clubs

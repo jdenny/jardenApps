@@ -171,10 +171,13 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(BuildConfig.DEBUG) Log.i(TAG, "DealFragment.onCreateOptionsMenu(...)");
         inflater.inflate(R.menu.activity_main, menu);
         super.onCreateOptionsMenu(menu,inflater);
         MenuItem item = menu.findItem(R.id.randomDealButton);
         item.setChecked(randomDeals);
+        item = menu.findItem(R.id.twoPlayerButton);
+        item.setChecked(twoPlayer);
     }
 
     @Override

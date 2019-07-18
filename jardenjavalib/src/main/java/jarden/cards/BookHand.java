@@ -274,12 +274,21 @@ public class BookHand {
             "1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5D; 6D, Pass",
             "2D, 2NT; 3D, 4S; 5D, 6D; Pass",
             new int[] {30, 20, 23, 16});
+    public static final BookHand edwards2 = new BookHand(
+            "edwards2",
+            new Hand(new CardPack.CardEnum[] { // 30pp, 19+1+0+1HCP/+0, 2-2-5-4
+                    CA, C8, DA, D5, HA, HQ, H7, H5, H4, SA, SJ, ST, S9 }),
+            new Hand(new CardPack.CardEnum[] { // 23pp, 16-1-1+0HCP/+0, 5-4-2-2
+                    CK, CJ, C9, C3, C2, DK, DQ, D8, D4, HK, HJ, SK, S6 }),
+            "1C, 2D; 2H, 3C; 3NT, 4NT; 6NT, Pass",
+            "1D, 1H; 2C, 6NT; Pass",
+            new int[] {30, 23, 21, 14});
 
     private static final BookHand[] bookHands = {
             page23,  page43,  page50,  page56, page56B, page58, page61,  page62,
             page62B, page63,  page63B, page67, page67B, page69, page70,  page71,
             page72,  page72B, page77,  page82, page82B, page84, page113, page124,
-            page125, page137, edwards1
+            page125, page137, edwards1, edwards2
     };
 
     public String name;
