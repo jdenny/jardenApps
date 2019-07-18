@@ -67,8 +67,10 @@ public class BluetoothFragment extends Fragment
 		View view = inflater.inflate(R.layout.btfragment_layout, container, false);
 		Button connectButton = view.findViewById(R.id.connectButton);
 		Button discoverableButton = view.findViewById(R.id.discoverableButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
 		connectButton.setOnClickListener(this);
 		discoverableButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
 		TextView helpTextView = view.findViewById(R.id.helpText);
 		String helpString = bluetoothListener.getHelpString();
 		helpTextView.setText(helpString);
@@ -134,6 +136,8 @@ public class BluetoothFragment extends Fragment
 		} else if (id == R.id.discoverableButton) {
             // Ensure this device is discoverable by others
             ensureDiscoverable();
+        } else if (id == R.id.cancelButton) {
+		    bluetoothListener.onError("Bluetooth cancelled by user");
 		} else {
 			throw new IllegalStateException("unrecognised button clicked: " + view);
 		}

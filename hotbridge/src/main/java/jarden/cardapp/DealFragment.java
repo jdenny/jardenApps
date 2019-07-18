@@ -53,8 +53,9 @@ public class DealFragment extends Fragment implements OnClickListener {
 
     public interface Bridgeable {
         void showMessage(String message);
-        void setTwoPlayer(boolean twoPlayer);
         void showReviseQuizFragment();
+        void showBluetoothFragment();
+        void stopBluetooth();
         void showDetailQA(QuestionAnswer detailQA);
     }
     private static final String BOOK_HANDS_INDEX_KEY = "bookHandsIndexKey";
@@ -67,16 +68,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     private static final int MAX_BIDS = 24;
 
     private FragmentManager fragmentManager;
-    /*
-                      mePlayer     btClientMode
-                      --------     ----------
-        single user   West         false
-        2-player:
-            server:   West         false
-            client:   East         true
-     */
-	private boolean btClientMode = false; // turned on if we connect to remote server
-	private HandFragment northFragment;
+    private HandFragment northFragment;
 	private HandFragment southFragment;
 	private HandFragment eastFragment;
 	private HandFragment westFragment;
@@ -98,7 +90,7 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private final BookHand[] bookHands = BookHand.getBookHands();
 	private int bookHandsIndex = -1;
 	/*
-	    used to control the bookHands; we go through all the hands
+	    bookHandsLap used to control the bookHands; we go through all the hands
 	    4 times (4 laps): first with me having bookHand.handWest (i.e. bookHandWest = true)
 	    and dealer alternating but starting with me (i.e. westDeal = true);
 	    then me having bookHand.handEast (even though from a UI point of view I am West!
@@ -113,10 +105,10 @@ public class DealFragment extends Fragment implements OnClickListener {
 	      lap is bookHandsLap; myHand based on bookHandWest, i.e. true means I am West
 	      dealer, based on westDeal, if true means I deal for the 1st hand, then it alternates
 	 */
-    private SharedPreferences sharedPreferences;
     private int bookHandsLap = 0;
 	private boolean bookHandWest = true;
     private boolean westDeal = false;
+    private SharedPreferences sharedPreferences;
 
     private QuestionAnswer lastQA;
 	private boolean biddingOver;
@@ -191,12 +183,20 @@ public class DealFragment extends Fragment implements OnClickListener {
         if (id == R.id.twoPlayerButton) {
             twoPlayer = !item.isChecked(); // isChecked returns old state!
             item.setChecked(twoPlayer); // do what Android should do for us!
-            bridgeable.setTwoPlayer(twoPlayer);
+            // if turning on twoPlayer, clientMode will be set depending
+            // on result of bluetooth connection
+            if (twoPlayer) {
+                bridgeable.showBluetoothFragment();
+            } else {
+                setClientMode(false);
+                bridgeable.stopBluetooth();
+            }
             return true; // menu item dealt with
         } else if (id == R.id.randomDealButton) {
             boolean randomDeal = !item.isChecked(); // isChecked returns old state!
             item.setChecked(randomDeal); // do what Android should do for us!
             setRandomDeals(randomDeal);
+            shuffleDealShow();
             return true;
         } else if (id == R.id.reviseButton) {
             bridgeable.showReviseQuizFragment();
@@ -228,8 +228,6 @@ public class DealFragment extends Fragment implements OnClickListener {
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.dealButton) {
-			this.suggestedBidTextView.setText("");
-			bidButton.setText(R.string.bid);
 			shuffleDealShow();
 		} else if (id == R.id.handsButton) {
 			String handsText = this.handsButton.getText().toString();
@@ -337,6 +335,8 @@ public class DealFragment extends Fragment implements OnClickListener {
      */
     public void shuffleDealShow() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.shuffleDealShow()");
+        this.suggestedBidTextView.setText("");
+        bidButton.setText(R.string.bid);
         if (!randomDeals) {
             if (++bookHandsIndex >= bookHands.length) {
                 bookHandsIndex = 0;
@@ -404,12 +404,12 @@ public class DealFragment extends Fragment implements OnClickListener {
 	private void showHands() {
         if (BuildConfig.DEBUG) Log.i(TAG, "DealFragment.showHands()");
         activity.setTitle(dealName);
+        westFragment.showHand();
+        eastFragment.showHand();
         if (randomDeals) {
             northFragment.showHand();
             southFragment.showHand();
         }
-        eastFragment.showHand();
-        westFragment.showHand();
         showSelectedHands();
 	}
     private void showSelectedHands() {
@@ -440,13 +440,23 @@ public class DealFragment extends Fragment implements OnClickListener {
         }
         ft.commit();
     }
+
+    /**
+     *               mePlayer     clientMode
+     *               --------     ----------
+     * single user   West         false
+     * 2-player:
+     *      server   West         false
+     *      client   East         true
+     *
+     * @param clientMode true if we are connected to remote server
+     */
 	public void setClientMode(boolean clientMode) {
         if(BuildConfig.DEBUG) {
         	Log.i(TAG, "DealFragment.setClientMode(" +
         			clientMode + ")");
         }
-		this.btClientMode = clientMode;
-		if (this.btClientMode) {
+		if (clientMode) {
 			this.mePlayer = Player.East;
 			this.partnerPlayer = Player.West;
 		} else {
@@ -454,9 +464,6 @@ public class DealFragment extends Fragment implements OnClickListener {
 			this.partnerPlayer = Player.East;
 		}
 	}
-	public boolean isClientMode() {
-        return btClientMode;
-    }
     public BridgeQuiz getBridgeQuiz() {
         return bridgeQuiz;
     }
@@ -541,5 +548,9 @@ public class DealFragment extends Fragment implements OnClickListener {
 	}
     public boolean isTwoPlayer() {
         return this.twoPlayer;
+    }
+    public void setSinglePlayer() {
+	    this.twoPlayer = false;
+	    setClientMode(false);
     }
 }

@@ -1,4 +1,4 @@
-package jarden.app.revisequiz;
+package jarden.cardapp;
 
 import android.content.Context;
 import android.view.LayoutInflater;

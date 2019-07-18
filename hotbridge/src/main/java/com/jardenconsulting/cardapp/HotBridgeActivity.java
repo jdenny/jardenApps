@@ -14,7 +14,7 @@ import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 
 import jarden.app.revisequiz.FreakWizFragment;
-import jarden.app.revisequiz.ReviseQuizFragment;
+import jarden.cardapp.ReviseQuizFragment;
 import jarden.cardapp.DealFragment;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.PresetQuiz;
@@ -31,8 +31,6 @@ import jarden.quiz.QuestionAnswer;
  *
  * TODO following:
 need to alert before bidding (as in bridj)
-
-Fix crash shown in pre-launch report
 
 "About Hot Chilli" menu item which shows version
 
@@ -169,14 +167,15 @@ public class HotBridgeActivity extends AppCompatActivity
         setTitle(titleId);
     }
 
-    @Override
+    @Override // Bridgeable
     public void showDetailQA(QuestionAnswer detailQA) {
         showReviseQuizFragment();
         reviseQuizFragment.showDetailQA(detailQA);
         setTitle(dealFragment.getDealName());
     }
 
-    private void showBluetoothFragment() {
+    @Override // Bridgeable
+    public void showBluetoothFragment() {
  		FragmentTransaction ft = fragmentManager.beginTransaction();
  		ft.hide(dealFragment);
  		if (this.bluetoothFragment == null) {
@@ -222,13 +221,16 @@ public class HotBridgeActivity extends AppCompatActivity
 	@Override // BluetoothListener
 	public void onConnectionLost() {
         if(BuildConfig.DEBUG) Log.d(TAG, "HotBridgeActivity.handleConnectionLost()");
-        if (this.closing || !this.dealFragment.isTwoPlayer()) return;
-        showBluetoothFragment();
-		setStatusMessage("other device has disconnected; waiting for another player");
+        if (!this.closing && this.dealFragment.isTwoPlayer()) {
+            showBluetoothFragment();
+            setStatusMessage("other device has disconnected; waiting for another player");
+        }
 	}
 	@Override // BluetoothListener
 	public void onError(String message) {
     	setStatusMessage(message);
+    	dealFragment.setSinglePlayer();
+        showDealFragment();
     }
 	@Override // BluetoothListener
 	public void onMessageToast(String string) {
@@ -236,7 +238,7 @@ public class HotBridgeActivity extends AppCompatActivity
 	}
 	@Override // BluetoothListener
 	public String getHelpString() {
-		return "some useful help text!";
+		return "Use Bluetooth to connect to another device running HotBridge";
 	}
 	@Override // BluetoothListener
 	public void setBluetoothService(BluetoothService bluetoothService) {
@@ -253,13 +255,8 @@ public class HotBridgeActivity extends AppCompatActivity
 	}
 
     @Override // Bridgeable
-    public void setTwoPlayer(boolean twoPlayer) {
-        if (twoPlayer) {
-            showBluetoothFragment();
-        } else {
-            dealFragment.setClientMode(false);
-            showDealFragment();
-        }
+    public void stopBluetooth() {
+        if (bluetoothFragment != null) bluetoothFragment.close();
     }
     @Override // Bridgeable
     public void showMessage(String message) {

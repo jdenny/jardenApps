@@ -17,6 +17,7 @@
     <string name="button_scan">Scan for devices</string>
     
     <!-- Options Menu -->
+    <string name="cancel">Cancel</string>
     <string name="connect">Connect</string>
     <string name="discoverable">Discoverable</string>
     
@@ -24,5 +25,5 @@
     <string name="myNameStr">My name</string>
     <string name="myNameHint">Shown on other device</string>
     <string name="updateStr">Update</string>
-    
+
 </resources>

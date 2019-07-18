@@ -1,4 +1,4 @@
-package jarden.app.revisequiz;
+package jarden.cardapp;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.jardenconsulting.cardapp.R;
 
 import java.util.List;
 
+import jarden.app.revisequiz.FreakWizFragment;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 

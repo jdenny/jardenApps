@@ -1,12 +1,5 @@
 package com.jardenconsulting.bluetooth;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.UUID;
-
-import com.jardenconsulting.bluetoothapplib.BuildConfig;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -16,6 +9,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.jardenconsulting.bluetoothapplib.BuildConfig;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
+
 /**
  * This class does all the work for setting up and managing Bluetooth
  * connections with other devices. It has a thread that listens for
@@ -24,7 +24,7 @@ import android.util.Log;
  */
 public class BluetoothService {
 
-	public static enum BTState {
+	public enum BTState {
 		none,       // doing nothing
 		listening,  // listening for incoming connections, using AcceptThread
 		connecting, // initiating an outgoing connection, using ConnectThread
