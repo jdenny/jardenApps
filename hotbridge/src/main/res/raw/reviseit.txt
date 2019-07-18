@@ -683,6 +683,22 @@ A: 18+ HCP, <5 hearts, 5+ spades
 Q: 1C, 2C; 2NT
 F1: [a]responses_to_relay[/a], 25 TP. Alert: artificial
 A: 18+ HCP, no 5+ major, waiting, not 20+ HCP-or-skew-with-4+minor
+Q: 1C, 2C; 2NT, 3D
+A: 4+ diamonds
+Q: 1C, 2C; 2NT, 3D; 3NT
+A: all-suits-guarded
+Q: 1C, 2C; 2NT, 3D; 3NT, 4D
+A: 11+ fitHCP, suit-setter-diamonds
+Q: 1C, 2C; 2NT, 3D; 3NT, 4D; 4S
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 22+ HCP, keycard-ask
+Q: 1C, 2C; 2NT, 3D; 3NT, 4D; 4S, 5C
+F1: response to [a]keycard_ask[/a]. Alert: artificial
+A: 1-or-4 keycards-diamonds
+Q: 1C, 2C; 2NT, 3D; 3NT, 4D; 4S, 5C; 6D
+A: 3+ keycards-diamonds
+Q: 1C, 2C; 2NT, 3D; 3NT, 4D; 4S, 5C; 6D, Pass
+A: to-play
 
 Q: 1C, 2C; 3C
 F1: [a]responses_to_relay[/a]
@@ -753,8 +769,32 @@ Q: 1C, 2D; 2S, 3D; 4S
 F1: [a]autofit[/a], [a]keycard_ask[/a]. Alert: artificial
 A: 24+ fitHCP, 4+ diamonds, autofit, keycard-ask, trumps-diamonds
 Q: 1C, 2D; 2NT
-F1: [a]responses_to_relay[/a]
+F1: [a]responses_to_relay[/a]. Alert: artificial
 A: no 5+ major, not 20+ HCP-or-skew-with-4+minor
+Q: 1C, 2D; 2NT, 3D
+A: 4+ diamonds
+Q: 1C, 2D; 2NT, 3D; 3NT
+A: guard-spades, guard-hearts, guard-clubs
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D
+A: 11+ fitHCP, suit-setter-diamonds
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 22+ HCP, keycard-ask
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5C
+F1: response to [a]keycard_ask[/a]. Alert: artificial
+A: 1-or-4 keycards-diamonds
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5C; 6D
+A: 3+ keycards-diamonds
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5C; 6D, Pass
+A: to-play
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5D
+F1: response to [a]keycard_ask[/a]. Alert: artificial
+A: 2-or-5 keycards-diamonds
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5D; 6D
+A: 2+ keycards-diamonds
+Q: 1C, 2D; 2NT, 3D; 3NT, 4D; 4S, 5D; 6D, Pass
+A: to-play
+
 Q: 1C, 2D; 3C
 F1: [a]responses_to_relay[/a]
 A: no 5+ major, 4+ clubs, 18+ HCP-or-skew
@@ -1448,7 +1488,7 @@ Q: 1H, 2NT; 4C
 F1: [a]values_for_5[/a]. Alert: artificial
 A: 18-21 HCP, values-for-5
 Q: 1H, 2NT; 4C, 4D
-F1: [a]keycard_ask[/a] (12, 11; 18, 15). Alert: artificial
+F1: [a]keycard_ask[/a]. Alert: artificial
 A: 15+ HCP, keycard-ask
 Q: 1H, 2NT; 4C, 4D; 4NT
 A: 2-or-5 keycards-hearts
@@ -1781,6 +1821,18 @@ A: to-play
 Q: 2D, 2S; 4D
 F1: [a]suit_setter[/a]
 A: suit-setter-diamonds
+Q: 2D, 2NT; 3D
+A: <18 fitHCP
+Q: 2D, 2NT; 3D, 4S
+F1: [a]keycard_ask[/a]. Alert: artificial
+A: 21+ HCP, keycard-ask
+Q: 2D, 2NT; 3D, 4S; 5D
+F1: response to [a]keycard_ask[/a]. Alert: artificial
+A: 2-or-5 keycards-diamonds
+Q: 2D, 2NT; 3D, 4S; 5D, 6D
+A: 2+ keycards-diamonds
+Q: 2D, 2NT; 3D, 4S; 5D, 6D; Pass
+A: to-play
 Q: 2D, 2NT; 3H
 F1: [a]side_suit[/a]
 A: 14+ HCP, guard-hearts

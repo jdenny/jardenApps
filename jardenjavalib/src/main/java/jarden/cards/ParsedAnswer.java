@@ -417,6 +417,7 @@ public class ParsedAnswer {
         if (pa.suitSetter) {
             int suitNum = trumpSuit.ordinal();
             if ((suitLengths[suitNum] + suitValues[suitNum]) < 15) return false;
+            //?? if (suitLengths[suitNum] < 6 || suitValues[suitNum] < 5) return false;
         }
         if (pa.hcpOrSkew >= 0 && handHCP < pa.hcpOrSkew && !hand.isSkew()) return false;
         if (pa.hcpOrSkewWith4PlusMinor >= 0) {

@@ -17,7 +17,7 @@ import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.cards.BookHand.page43;
+import static jarden.cards.BookHand.edwards1;
 import static jarden.cards.CardPack.CardEnum.*;
 import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
@@ -64,7 +64,7 @@ public class TestHand {
         // testBookHands();
         // testAllSecondBids();
         // testOneBid();
-        testOneHand(page43);
+        testOneHand(edwards1);
 
         if (testAll) {
             parseAllBids();
