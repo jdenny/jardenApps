@@ -17,8 +17,58 @@ import jarden.cards.Suit;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.QuestionAnswer;
 
-import static jarden.cards.BookHand.edwards2;
-import static jarden.cards.CardPack.CardEnum.*;
+import static jarden.cards.CardPack.CardEnum.C2;
+import static jarden.cards.CardPack.CardEnum.C3;
+import static jarden.cards.CardPack.CardEnum.C4;
+import static jarden.cards.CardPack.CardEnum.C5;
+import static jarden.cards.CardPack.CardEnum.C6;
+import static jarden.cards.CardPack.CardEnum.C7;
+import static jarden.cards.CardPack.CardEnum.C8;
+import static jarden.cards.CardPack.CardEnum.C9;
+import static jarden.cards.CardPack.CardEnum.CA;
+import static jarden.cards.CardPack.CardEnum.CJ;
+import static jarden.cards.CardPack.CardEnum.CK;
+import static jarden.cards.CardPack.CardEnum.CQ;
+import static jarden.cards.CardPack.CardEnum.CT;
+import static jarden.cards.CardPack.CardEnum.D2;
+import static jarden.cards.CardPack.CardEnum.D3;
+import static jarden.cards.CardPack.CardEnum.D4;
+import static jarden.cards.CardPack.CardEnum.D5;
+import static jarden.cards.CardPack.CardEnum.D6;
+import static jarden.cards.CardPack.CardEnum.D7;
+import static jarden.cards.CardPack.CardEnum.D8;
+import static jarden.cards.CardPack.CardEnum.D9;
+import static jarden.cards.CardPack.CardEnum.DA;
+import static jarden.cards.CardPack.CardEnum.DJ;
+import static jarden.cards.CardPack.CardEnum.DK;
+import static jarden.cards.CardPack.CardEnum.DQ;
+import static jarden.cards.CardPack.CardEnum.DT;
+import static jarden.cards.CardPack.CardEnum.H2;
+import static jarden.cards.CardPack.CardEnum.H3;
+import static jarden.cards.CardPack.CardEnum.H4;
+import static jarden.cards.CardPack.CardEnum.H5;
+import static jarden.cards.CardPack.CardEnum.H6;
+import static jarden.cards.CardPack.CardEnum.H7;
+import static jarden.cards.CardPack.CardEnum.H8;
+import static jarden.cards.CardPack.CardEnum.H9;
+import static jarden.cards.CardPack.CardEnum.HA;
+import static jarden.cards.CardPack.CardEnum.HJ;
+import static jarden.cards.CardPack.CardEnum.HK;
+import static jarden.cards.CardPack.CardEnum.HQ;
+import static jarden.cards.CardPack.CardEnum.HT;
+import static jarden.cards.CardPack.CardEnum.S2;
+import static jarden.cards.CardPack.CardEnum.S3;
+import static jarden.cards.CardPack.CardEnum.S4;
+import static jarden.cards.CardPack.CardEnum.S5;
+import static jarden.cards.CardPack.CardEnum.S6;
+import static jarden.cards.CardPack.CardEnum.S7;
+import static jarden.cards.CardPack.CardEnum.S8;
+import static jarden.cards.CardPack.CardEnum.S9;
+import static jarden.cards.CardPack.CardEnum.SA;
+import static jarden.cards.CardPack.CardEnum.SJ;
+import static jarden.cards.CardPack.CardEnum.SK;
+import static jarden.cards.CardPack.CardEnum.SQ;
+import static jarden.cards.CardPack.CardEnum.ST;
 import static jarden.quiz.BridgeQuiz.OPENING_BIDS;
 
 /**
@@ -61,10 +111,11 @@ public class TestHand {
         boolean testAll = false;
         System.out.println("start of test");
         parseAllBids();
-        // testBookHands();
+        testBookHands();
         // testAllSecondBids();
         // testOneBid();
-        testOneHand(edwards2);
+        // testOneHand(edwards1);
+        // testSuitSetters();
 
         if (testAll) {
             parseAllBids();
@@ -510,21 +561,75 @@ public class TestHand {
     }
     private void testSuitSetters() {
         System.out.println("\ntestSuitSetters()");
-        // suitLength + suitValues >= 15
-        Hand hand11Hcp6025 = new Hand(new CardPack.CardEnum[] { // 22pp, 11HCP, 6-0-2-5
-                CA, CK, CQ, CJ, C9, C8, H9, H5, SJ, S6, S5, S4, S3
+        Hand handAKQJT = new Hand(new CardPack.CardEnum[] { // suit-setter-clubs
+                CA, CK, CQ, CJ, CT, D5, D4, H9, H5, SJ, S6, S5, S4
         });
-        Hand hand17Hcp2623 = new Hand(new CardPack.CardEnum[] { // 26pp, 17HCP, 2-6-2-3
-                CA, CK, DA, DK, DQ, DT, D9, D8, H9, H5, SJ, S6, S5
+        Hand handAKQJx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, CQ, CJ, C9, D5, D4, H9, H5, SJ, S6, S5, S4
         });
-        Hand hand15Hcp2074 = new Hand(new CardPack.CardEnum[] { // 26pp, 15HCP, 2-0-7-4
-                CA, CK, HA, HK, HJ, HT, H9, H8, H4, S8, S7, S6, S5
+        Hand handAKQxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, CQ, C9, C8, D5, D4, H9, H5, SJ, S6, S5, S4
         });
-        Hand hand16Hcp1138 = new Hand(new CardPack.CardEnum[] { // 27pp, 16HCP, 1-1-3-8
-                CA, D4, HA, HK, HJ, SA, SK, ST, S9, S8, S7, S6, S5
+        Hand handKQJT98 = new Hand(new CardPack.CardEnum[] { // diamonds
+                CA, CK, DK, DQ, DJ, DT, D9, D8, H9, H5, SJ, S6, S5
+        });
+        Hand handAKQJxx = new Hand(new CardPack.CardEnum[] { // diamonds
+                CA, CK, DA, DK, DQ, DJ, D4, D3, H9, H5, SJ, S6, S5
+        });
+        Hand handAKQxxx_KQJT9x = new Hand(new CardPack.CardEnum[] { // diamonds & clubs
+                CA, CK, CQ, C5, C4, C3, DK, DQ, DJ, DT, D9, D3, H9
+        });
+        Hand handKQJTxx = new Hand(new CardPack.CardEnum[] { // diamonds
+                CA, CK, DK, DQ, DJ, DT, D4, D3, H9, H5, SJ, S6, S5
+        });
+        Hand handAKxxxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, DA, DK, D6, D5, D4, D3, H9, H5, SJ, S6, S5
+        });
+        Hand handKQJxxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, DK, DQ, DJ, D5, D4, D3, H9, H5, SJ, S6, S5
+        });
+        Hand handAKQxxxx = new Hand(new CardPack.CardEnum[] { // hearts
+                CA, CK, HA, HK, HQ, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handAKxxxxx = new Hand(new CardPack.CardEnum[] { // hearts
+                CA, CK, HA, HK, H6, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handKQJxxxx = new Hand(new CardPack.CardEnum[] { // hearts
+                CA, CK, HK, HQ, HJ, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handQJT9xxx = new Hand(new CardPack.CardEnum[] { // hearts
+                CA, CK, HQ, HJ, HT, H9, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handKQxxxxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, HK, HQ, H6, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handAxxxxxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, HA, H7, H6, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handQJTxxxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, HQ, HJ, HT, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handKxxxxxx = new Hand(new CardPack.CardEnum[] { // none
+                CA, CK, HK, H7, H6, H5, H4, H3, H2, S8, S7, S6, S5
+        });
+        Hand handAxxxxxxx = new Hand(new CardPack.CardEnum[] { // spades
+                CA, D4, HA, HK, HJ, SA, S8, S7, S6, S5, S4, S3, S2
+        });
+        Hand handKQxxxxxx = new Hand(new CardPack.CardEnum[] { // spades
+                CA, D4, HA, HK, HJ, SK, SQ, S7, S6, S5, S4, S3, S2
+        });
+        Hand handxxxxxxxx = new Hand(new CardPack.CardEnum[] { // spades
+                CA, D4, HA, HK, HJ, S9, S8, S7, S6, S5, S4, S3, S2
+        });
+        Hand handxxxxxxxxx = new Hand(new CardPack.CardEnum[] { // spades
+                CA, D4, HA, HK, ST, S9, S8, S7, S6, S5, S4, S3, S2
         });
         Hand[] hands = {
-                hand11Hcp6025, hand17Hcp2623, hand15Hcp2074, hand16Hcp1138
+                handAKQJT, handAKQJx, handAKQxx, handKQJT98, handAKQJxx,
+                handAKQxxx_KQJT9x, handKQJTxx, handAKxxxx, handKQJxxx,
+                handAKQxxxx, handAKxxxxx, handKQJxxxx, handQJT9xxx,
+                handKQxxxxx, handAxxxxxx, handQJTxxxx, handKxxxxxx,
+                handAxxxxxxx, handKQxxxxxx, handxxxxxxxx, handxxxxxxxxx
         };
         String suitSetterClubs = "suit-setter-clubs";
         String suitSetterDiamonds = "suit-setter-diamonds";
@@ -534,10 +639,14 @@ public class TestHand {
                 suitSetterClubs, suitSetterDiamonds, suitSetterHearts, suitSetterSpades
         };
         boolean[] matches = {
-                true, false, false, false, // clubs
-                false, true, false, false, // diamonds
-                false, false, true, false, // hearts
-                false, false, false, true  // spades
+            true, false, false, false, false, true, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, // clubs
+            false, false, false, true, true, true, true, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, // diamonds
+            false, false, false, false, false, false, false, false, false, true, true, true,
+            true, false, false, false, false, false, false, false, false, // hearts
+            false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, true, true, true, true, // spades
         };
         QuestionAnswer qa;
         for (int a = 0; a < answers.length; a++) {

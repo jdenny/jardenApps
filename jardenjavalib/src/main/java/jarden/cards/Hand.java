@@ -30,6 +30,8 @@ public class Hand {
     private boolean[] aces = new boolean[4];
     private boolean[] kings = new boolean[4];
     private boolean[] queens = new boolean[4];
+    private boolean[] nines = new boolean[4];
+    private boolean[] eights = new boolean[4];
 	private boolean balanced;
     private Suit trumpSuit = null;
 
@@ -113,6 +115,9 @@ public class Hand {
         int suitOrdinal = suit.ordinal();
         return aceCt + (kings[suitOrdinal] ? 1 : 0);
     }
+    public int getAceCt() {
+        return aceCt;
+    }
     public boolean hasKing(Suit suit) {
         return kings[suit.ordinal()];
     }
@@ -122,6 +127,36 @@ public class Hand {
     // TODO: add method has SuitHalfGuard, replacing 6 with 5
     public boolean hasSuitGuard(int suitOrdinal) {
         return (suitValues[suitOrdinal] + suitLengths[suitOrdinal]) >= 6;
+    }
+    /**
+     * return true is suit contains 5+ winners.
+     *  5 cards: top 5 cards
+     *  6 cards: top 3, or 4 of top 5, or 5 of top 6, or 6 of top 7
+     *  7 cards: top 2, or 3 of top 4, or 4 of top 6
+     *  8+ cards
+     */
+    public boolean isSuitSetter(int suitOrdinal) {
+        boolean suitSetter = false;
+        if (suitLengths[suitOrdinal] >= 5) {
+            if (suitLengths[suitOrdinal] == 5) {
+                if (honoursCt[suitOrdinal] == 5) suitSetter = true;
+            } else if (suitLengths[suitOrdinal] == 6) {
+                if (suitValues[suitOrdinal] >= 9 || // AKQ
+                        honoursCt[suitOrdinal] >= 4 || // 4 of top 5
+                        (honoursCt[suitOrdinal] + (nines[suitOrdinal]?1:0)) >= 5 || // 5 of top 6
+                        (honoursCt[suitOrdinal] + (nines[suitOrdinal]?1:0) +
+                                (eights[suitOrdinal]?1:0)) >= 6) { // 6 of top 7
+                    suitSetter = true;
+                }
+            } else if (suitLengths[suitOrdinal] == 7) {
+                if (suitValues[suitOrdinal] >= 7 || // AK, AKQ, AKJ, AQJ
+                        (suitValues[suitOrdinal] >= 6 && kings[suitOrdinal]) || // KQJ
+                        (honoursCt[suitOrdinal] + (nines[suitOrdinal]?1:0)) >= 4) { // 4 of top 6
+                    suitSetter = true;
+                }
+            } else suitSetter = true; // length is 8+
+        }
+        return suitSetter;
     }
     private void evaluateHand() {
 		for (Card card : cards) {
@@ -152,6 +187,10 @@ public class Hand {
             } else if (rank == Rank.R10) {
                 honoursCt[suitOrdinal] += 1;
 			    ++tenCt;
+            } else if (rank == Rank.R9) {
+			    nines[suitOrdinal] = true;
+            } else if (rank == Rank.R8) {
+                eights[suitOrdinal] = true;
             }
 		}
 		// find 2 longest suits:

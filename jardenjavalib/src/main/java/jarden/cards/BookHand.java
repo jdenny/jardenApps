@@ -193,6 +193,24 @@ public class BookHand {
             "1H, 2D; 3D, 3H; 4H, Pass",
             "1NT, 2D; 2H, 3D; 4D, Pass",
             new int[] {22, 22, 15, 15});
+    public static final BookHand page80 = new BookHand(
+            "page80",
+            new Hand(new CardPack.CardEnum[] { // 29pp, 16+0+0+2HCP/+0, 1-6-1-5
+                    C8, DK, DQ, DJ, DT, D7, D5, H3, SA, SK, SQ, SJ, S2 }),
+            new Hand(new CardPack.CardEnum[] { // 22pp, 16+0+0+1HCP/+0, 3-3-5-2
+                    CK, CJ, C2, DA, D9, D6, HA, HK, HJ, HT, H4, S7, S3 }),
+            "1C, 1H; 1S, 2D; 2S, Pass",
+            "1NT, 2D; 2H, 3D; 4D, Pass",
+            new int[] {29, 22, 18, 15});
+    private static final BookHand page80B = new BookHand(
+            "page80B",
+            new Hand(new CardPack.CardEnum[] { // 29pp, 16+0+0+2HCP/+0, 1-6-1-5
+                    C8, DK, DQ, DJ, DT, D7, D5, H3, SA, SK, SQ, SJ, S2 }),
+            new Hand(new CardPack.CardEnum[] { // 24pp, 15+0+0+1HCP/+0, 3-3-5-2
+                    CA, C5, C2, DA, D9, D6, HA, HK, H9, H8, H4, S7, S3 }),
+            "1C, 1H; 1S, 2D; 2S, 4NT; 5C, 5D; 7NT, Pass",
+            "1H, 1S; 1NT, 2D; 2H, 2S; 3NT, 4D; 4H, 4S; 4NT, 7D",
+            new int[] {29, 24, 18, 16});
     private static final BookHand page82 = new BookHand(
             "page82",
             new Hand(new CardPack.CardEnum[] { // 22pp, 13+0+0+0HCP/+5, 6-3-1-3
@@ -245,7 +263,7 @@ public class BookHand {
             "1H, 1S; 2D, 3NT; Pass",
             "1S, 2D; 3C, 3NT; Pass",
             new int[] {22, 22, 13, 14});
-    private static final BookHand page125 = new BookHand(
+    public static final BookHand page125 = new BookHand(
             "page125",
             new Hand(new CardPack.CardEnum[] { // 21pp, 11+0+0+1HCP/+4, 2-6-3-2
                     // hack: replace DJ with D6
@@ -287,7 +305,7 @@ public class BookHand {
     private static final BookHand[] bookHands = {
             page23,  page43,  page50,  page56, page56B, page58, page61,  page62,
             page62B, page63,  page63B, page67, page67B, page69, page70,  page71,
-            page72,  page72B, page77,  page82, page82B, page84, page113, page124,
+            page72,  page72B, page77, page80B, page82, page82B, page84, page113, page124,
             page125, page137, edwards1, edwards2
     };
 

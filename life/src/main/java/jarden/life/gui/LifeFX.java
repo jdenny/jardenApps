@@ -50,9 +50,7 @@ public class LifeFX extends Application implements CellListener, CellEnvironment
             Color.web("green"),
             Color.web("yellow"),
             Color.web("orange"),
-            Color.web("red")
-    };
-
+            Color.web("red") };
     private Text statusText;
     private ListView<CellShortData> cellListView;
     private ObservableList<CellShortData> cellObservableList;

@@ -65,7 +65,7 @@ public class DealFragment extends Fragment implements OnClickListener {
     private static final int SHOW_ME = 0;
     private static final int SHOW_US = 1;
     private static final int SHOW_ALL = 2;
-    private static final int MAX_BIDS = 24;
+    private static final int MAX_BIDS = 28;
 
     private FragmentManager fragmentManager;
     private HandFragment northFragment;
@@ -140,13 +140,14 @@ public class DealFragment extends Fragment implements OnClickListener {
         detailStr = getResources().getString(R.string.detail);
         bidButton.setOnClickListener(this);
 		this.suggestedBidTextView = view.findViewById(R.id.suggestedBidtextView);
-        LinearLayout[] bidLayouts = new LinearLayout[6];
+        LinearLayout[] bidLayouts = new LinearLayout[7];
 		bidLayouts[0] = view.findViewById(R.id.bid1Layout);
 		bidLayouts[1] = view.findViewById(R.id.bid2Layout);
 		bidLayouts[2] = view.findViewById(R.id.bid3Layout);
 		bidLayouts[3] = view.findViewById(R.id.bid4Layout);
         bidLayouts[4] = view.findViewById(R.id.bid5Layout);
         bidLayouts[5] = view.findViewById(R.id.bid6Layout);
+        bidLayouts[6] = view.findViewById(R.id.bid7Layout);
 		bidTextViews = new TextView[MAX_BIDS];
 		TextView bidTextView;
 		LinearLayout.LayoutParams layoutParams =

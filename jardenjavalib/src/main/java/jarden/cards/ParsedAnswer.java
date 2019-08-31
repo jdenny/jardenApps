@@ -49,6 +49,8 @@ public class ParsedAnswer {
     private int hcpOrSkewWith4PlusMinor = -1;
     private int minKeycards = -1;
     private int maxKeycards = -1;
+    private int minAces = -1;
+    private int maxAces = -1;
     private int orValue = -1;
     private boolean setTrumps = false;
     private boolean noTrumps = false;
@@ -62,8 +64,8 @@ public class ParsedAnswer {
             "&", // same as ','
             "in", "both", // readability
             // notes to reader:
-            "autofit", "compelling-relay", "invitational-relay", "keycard-ask", "limited",
-            "queen-ask", "to-play", "values-for-5", "waiting"
+            "ace-ask", "autofit", "compelling-relay", "invitational-relay", "keycard-ask",
+            "limited", "queen-ask", "to-play", "values-for-5", "waiting"
     };
 
     public ParsedAnswer(String answer) throws BadBridgeTokenException {
@@ -109,7 +111,7 @@ public class ParsedAnswer {
                     previousMin = -1;
                 }
             } else if (token.equals("fitHCP")) {
-                // usage of fitHCP: 6+ HCP, 11-15 HCP
+                // usage of fitHCP: 6+ fitHCP, 11-15 fitHCP
                 if (previousMax > 0) {
                     maxFitHCP = previousMax;
                     previousMax = -1;
@@ -249,6 +251,13 @@ public class ParsedAnswer {
                 trumpSuit = Suit.valueOf(token.substring(9));
                 minKeycards = previousMin;
                 maxKeycards = previousMax;
+                orValue = previousOrValue;
+                previousMin = -1;
+                previousMax = -1;
+                previousOrValue = -1;
+            } else if (token.equals("aces")) {
+                minAces = previousMin;
+                maxAces = previousMax;
                 orValue = previousOrValue;
                 previousMin = -1;
                 previousMax = -1;
@@ -415,9 +424,7 @@ public class ParsedAnswer {
         if (pa.spadesWithHonours >= 0 &&
                 suitLengths[3] < pa.spadesWithHonours && suitValues[3] < 7) return false;
         if (pa.suitSetter) {
-            int suitNum = trumpSuit.ordinal();
-            if ((suitLengths[suitNum] + suitValues[suitNum]) < 15) return false;
-            //?? if (suitLengths[suitNum] < 6 || suitValues[suitNum] < 5) return false;
+            if (!hand.isSuitSetter(trumpSuit.ordinal())) return false;
         }
         if (pa.hcpOrSkew >= 0 && handHCP < pa.hcpOrSkew && !hand.isSkew()) return false;
         if (pa.hcpOrSkewWith4PlusMinor >= 0) {
@@ -471,6 +478,22 @@ public class ParsedAnswer {
             } else {
                 // e.g. <2 keycards
                 if (keycardCt > maxKeycards) return false;
+            }
+        }
+        if (pa.minAces > -1 || pa.maxAces > -1) {
+            int aceCt = hand.getAceCt();
+            if (pa.minAces > -1 && pa.orValue > -1) {
+                // e.g. 1-or-4 aces
+                if (aceCt != minAces && aceCt != orValue) return false;
+            } else if (pa.minAces > -1 && pa.maxAces > -1) {
+                // e.g. 2 aces
+                if (aceCt != minAces) return false;
+            } else if (pa.minAces > -1) {
+                // e.g. 2+ aces
+                if (aceCt < minAces) return false;
+            } else {
+                // e.g. <2 aces
+                if (aceCt > maxAces) return false;
             }
         }
         ParsedAnswer notPA = pa.notParsedAnswer;
