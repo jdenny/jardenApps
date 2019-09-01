@@ -1,7 +1,5 @@
 package thread.demo.boxes;
 
-import jarden.gui.GridBag;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,14 +8,16 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import jarden.gui.GridBag;
+
 /**
  * Sample application to show the use of threads, synchronization
  * and wait/notify.
  * @author john.denny@gmail.com, October 1998.
- * @see thread.demo.BoxCanvas.
- * @see thread.demo.StackJPanel.
- * @see thread.demo.FillBoxThread.
- * @see thread.demo.EmptyBoxThread.
+ * @see thread.demo.boxes.BoxCanvas
+ * @see thread.demo.boxes.StackJPanel
+ * @see thread.demo.boxes.FillBoxThread
+ * @see thread.demo.boxes.EmptyBoxThread
  */
 public class BoxesJPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;

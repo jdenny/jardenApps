@@ -2,11 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/jardenlib/src/main/res/raw/engspa.txt" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/jardenprovider/src/main/res/raw/engspatest.txt" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/javacourse/src/main/java/demo/generics/MyCollections.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/javacourse/src/main/java/demo/jdk5/Formatting.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/javacourse/src/main/java/demo/jdk5/MyIterable.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/javacourse/src/main/java/sales/SalesUnit.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/javacourse/src/main/java/solution/CoreLibraries.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/knowme/src/main/res/raw/other_questions.txt" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

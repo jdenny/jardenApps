@@ -109,37 +109,37 @@ public class TestHand {
         cardPack = new CardPack();
         primaryBids = bridgeQuiz.getPossibleResponses(OPENING_BIDS);
         boolean testAll = false;
+        boolean runMainTests = false;
         System.out.println("start of test");
-        parseAllBids();
-        testBookHands();
-        // testAllSecondBids();
-        // testOneBid();
         // testOneHand(edwards1);
-        // testSuitSetters();
+        testRandom2Bids(20);
 
-        if (testAll) {
+        if (runMainTests || testAll) {
             parseAllBids();
-            test1HResponses();
-            test2Hands1H1S();
-            testAllResponses();
-            testAllSecondBids();
             testBookHands();
-            testBiddableSuits();
             testHandEvaluation();
+            testBiddableSuits();
             testHcpOrSkew();
             testHcpOrSkewWith4PlusMinor();
             testKeycards();
             testMinors();
-            testMyPrimaryBids();
-            testMySecondBids();
             testNots();
-            testOneBid();
             testOrs();
             testQueenAsk();
+            testSuitSetters();
+        }
+
+        if (testAll) {
+            testAllSecondBids(10);
+            test1HResponses();
+            test2Hands1H1S();
+            testAllResponses();
+            testMyPrimaryBids();
+            testMySecondBids();
+            testOneBid();
             testRandomNBids(10, 2);
             testRandomPrimaryBids();
             testRandomSecondBids();
-            testSuitSetters();
         }
         System.out.println("end of test");
     }
@@ -149,7 +149,7 @@ public class TestHand {
                 CK, C7, C2, DK, DJ, D7, D6, HK, HQ, H9, H8, H4, S3
         });
         QuestionAnswer qa = new QuestionAnswer("2NT", "hello John");
-        testSecondBid(hand, qa);
+        testExactlyOneBid(hand, qa);
     }
     /**
      *
@@ -986,12 +986,33 @@ public class TestHand {
             System.out.println();
         }
     }
-    // dealAndSort random hands
-    // for each primary bid:
-    //      check that randomEast matches exactly 1 second bid
-    private void testAllSecondBids() {
+    /*
+     dealAndSort random hands
+     randomWest and randomEast match exactly 1 bid each
+     */
+    private void testRandom2Bids(int dealCt) {
+        System.out.println("\ntestRandom2Bids(" + dealCt + ")");
+        for (int i = 0; i < dealCt; i++) {
+            cardPack.shuffleAndDeal(true);
+            Hand handWest = cardPack.getHand(Player.West);
+            Hand handEast = cardPack.getHand(Player.East);
+            QuestionAnswer qa = testExactlyOneBid(handWest, OPENING_BIDS);
+            if (qa != null) {
+                if (qa.question.equals("Pass")) {
+                    qa = OPENING_BIDS;
+                }
+                testExactlyOneBid(handEast, qa);
+            }
+        }
+    }
+    /*
+     dealAndSort random hands
+     for each primary bid:
+          check that randomEast matches exactly 1 second bid
+     */
+    private void testAllSecondBids(int dealCt) {
         System.out.println("\ntestAllSecondBids()");
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < dealCt; i++) {
             cardPack.shuffleAndDeal(true);
             Hand handEast = cardPack.getHand(Player.East);
 
@@ -999,11 +1020,14 @@ public class TestHand {
                 if (!verbose && (qa1.question.equals("2H") ||
                         qa1.question.equals("2S"))) continue;
                 if (!verbose && qa1.question.equals("3C")) break;
-                testSecondBid(handEast, qa1);
+                testExactlyOneBid(handEast, qa1);
             }
         }
     }
-    private void testSecondBid(Hand hand, QuestionAnswer qa) {
+    /*
+     test that <hand> matches exactly 1 response to bid <qa>
+     */
+    private QuestionAnswer testExactlyOneBid(Hand hand, QuestionAnswer qa) {
         List<QuestionAnswer> matches = new ArrayList<>();
         List<QuestionAnswer> qa2List = bridgeQuiz.getPossibleResponses(qa);
         for (QuestionAnswer qa2 : qa2List) {
@@ -1019,7 +1043,7 @@ public class TestHand {
             // bridgeQuiz.getPrimaryBid(handEast);
             System.out.println();
         }
-
+        return matches.size() == 1 ? matches.get(0) : null;
     }
     private void testMySecondBids() { // 2 matches for 1C; 3 for 1D
         System.out.println("\ntestMySecondBids()");
