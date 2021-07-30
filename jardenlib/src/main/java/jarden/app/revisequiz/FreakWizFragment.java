@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import com.jardenconsulting.jardenlib.R;
 
 import java.util.Set;
 
+import androidx.fragment.app.Fragment;
 import jarden.app.dialog.IntegerDialog;
 import jarden.document.DocumentTextView;
 import jarden.quiz.EndOfQuestionsException;

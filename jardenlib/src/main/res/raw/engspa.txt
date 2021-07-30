@@ -135,7 +135,7 @@ play,tocar,verb,transIntrans,music,1
 hear,oír,verb,transIntrans,n_a,1
 make,hacer,verb,transitive,n_a,1
 can,poder,verb,transitive,n_a,1
-lie down and go back to sleep,acuéstese y volver a dormir,phrase,n_a,person,1
+lie down and go back to sleep,acuéstate y vuelve a dormir,phrase,n_a,person,1
 colour,color,noun,masculine,colour,1
 black,negro,adjective,n_a,colour,1
 white,blanco,adjective,n_a,colour,1
@@ -589,7 +589,7 @@ between,entre,preposition,n_a,place,1
 down,abajo,preposition,n_a,place,1
 outside,fuera de,preposition,n_a,place,1
 over,encima de,preposition,n_a,place,1
-since,desde,preposition,n_a,place,1
+since,desde,preposition,n_a,time,1
 within,dentro de,preposition,n_a,place,1
 door,puerta,noun,feminine,home,1
 bitter,amargo,adjective,n_a,food,1
@@ -1728,3 +1728,13 @@ still water,agua sin gas,phrase,n_a,drink,1
 ice,hielo,noun,masculine,mineral,1
 honey,miel,noun,feminine,food,1
 tomato sauce,salsa de tomate,phrase,n_a,food,1
+owe,deber,verb,transitive,n_a,1
+goat,cabra,noun,feminine,animal,1
+ram,carnero,noun,masculine,animal,1
+shall we play guitars?,¿tocamos las guitarras?,phrase,n_a,music,1
+would you like a cup of tea?,¿te gustaría una taza de té?,phrase,n_a,drink,1
+paper,papel,noun,masculine,home,1
+printer,impresora,noun,feminine,technology,1
+the printer needs more paper,la impresora necesita más papel,phrase,n_a,technology,1
+when is breakfast served?,¿cúando se sirve el desayno?,phrase,n_a,food,1
+when does the museum open?,¿cúando abre el museo?,phrase,n_a,time,1
