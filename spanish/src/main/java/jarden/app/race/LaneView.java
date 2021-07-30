@@ -1,7 +1,5 @@
 package jarden.app.race;
 
-import com.jardenconsulting.spanishapp.R;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.jardenconsulting.spanishapp.R;
 
 public class LaneView extends View {
 	private int cellSize;
@@ -88,4 +88,5 @@ public class LaneView extends View {
 			canvas.drawLine(tx - radius, ty + radius, tx + radius, ty - radius, gridPaint);
 		}
 	}
+
 }

@@ -7,14 +7,14 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;

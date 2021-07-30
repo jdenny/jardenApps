@@ -6,17 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
@@ -28,12 +17,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import jarden.app.race.RaceFragment;
 import jarden.document.DocumentTextView;
 import jarden.engspa.EngSpa;
@@ -346,10 +346,10 @@ public class MainActivity extends AppCompatActivity
 		this.alertDialog.show();
 
 	}
-    @Override
     /**
      * Set help views visible if not already so.
      */
+    @Override
     public void showHelp() {
         if (this.helpTextView.getVisibility() != View.VISIBLE) {
             this.showHelpCheckBox.setChecked(true);

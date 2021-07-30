@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 
+import androidx.fragment.app.Fragment;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaQuiz.QuizMode;
@@ -439,6 +439,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		switch button layout to selfMark (yes, no)
 		display correctAnswer in answer field
 		if spokenSpaToSpa also show English
+		if writtenEngToSpa also speak Spanish
 	 */
 	private void goPressed() {
         this.clearAnswerButton.setVisibility(View.GONE);
@@ -446,8 +447,12 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (suppliedAnswer.length() == 0) {
 			showSelfMarkLayout();
 			this.answerEditText.setText(this.correctAnswer);
+            if (this.currentQAStyle == QAStyle.writtenEngToSpa) {
+                // speak Spanish answer
+                this.engSpaActivity.speakSpanish(this.correctAnswer);
+            }
 			if (this.currentQAStyle.voiceText == VoiceText.voice) {
-				// if question was spoken only, user may want to see the translated word
+				// if question was spoken only, user may want to see the question
 				String translated = this.currentQAStyle.spaAnswer ? engSpaQuiz
 						.getEnglish() : engSpaQuiz.getSpanish();
 				this.questionTextView.setText(translated);

@@ -1,7 +1,6 @@
 package com.jardenconsulting.spanishapp;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.VerbUtils;
@@ -30,7 +30,6 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
 
 	private EditText spanishLookupEditText;
 	private EditText englishLookupEditText;
-	private ListView conjugationListView;
     private EngSpaDAO engSpaDAO;
 	private ArrayAdapter<String> conjugateListAdapter;
 	private EngSpaActivity engSpaActivity;
@@ -57,10 +56,11 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
         button.setOnClickListener(this);
         this.spanishLookupEditText.setOnEditorActionListener(this);
 		this.englishLookupEditText.setOnEditorActionListener(this);
-		this.conjugationListView = rootView.findViewById(R.id.conjugationListView);
+        ListView conjugationListView;
+		conjugationListView = rootView.findViewById(R.id.conjugationListView);
 		this.conjugateListAdapter = new ArrayAdapter<>(
 				getActivity(), android.R.layout.simple_list_item_1);
-		this.conjugationListView.setAdapter(conjugateListAdapter);
+		conjugationListView.setAdapter(conjugateListAdapter);
 
 		return rootView;
 	}
@@ -124,9 +124,15 @@ public class WordLookupFragment extends Fragment implements OnEditorActionListen
                             conjugateListAdapter.add(line);
                         }
                     } else {
-                        line = tense + ": " +
-                                VerbUtils.conjugateSpanishVerb(spanish, tense, null) + "; " +
-                                VerbUtils.conjugateEnglishVerb(english, tense, null);
+                        String spa = VerbUtils.conjugateSpanishVerb(spanish, tense, null);
+                        String eng = VerbUtils.conjugateEnglishVerb(english, tense, null);
+                        if (tense == Tense.imperative) {
+                            line = tense + ": ¡" + spa + "!; " + eng + "!";
+                        } else if (tense == Tense.noImperative) {
+                            line = tense + ": ¡no " + spa + "!; don't " + eng + "!";
+                        } else {
+                            line = tense + ": " + spa + "; " + eng;
+                        }
                         conjugateListAdapter.add(line);
                     }
                 }
