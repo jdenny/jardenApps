@@ -2,9 +2,6 @@ package com.jardenconsulting.cardapp;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,9 +10,12 @@ import com.jardenconsulting.bluetooth.BluetoothListener;
 import com.jardenconsulting.bluetooth.BluetoothService;
 import com.jardenconsulting.bluetooth.BluetoothService.BTState;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import jarden.app.revisequiz.FreakWizFragment;
-import jarden.cardapp.ReviseQuizFragment;
 import jarden.cardapp.DealFragment;
+import jarden.cardapp.ReviseQuizFragment;
 import jarden.quiz.BridgeQuiz;
 import jarden.quiz.PresetQuiz;
 import jarden.quiz.QuestionAnswer;
@@ -31,6 +31,7 @@ import jarden.quiz.QuestionAnswer;
  *
  * TODO following:
 need to alert before bidding (as in bridj)
+add 'alert' and 'forcing-artificial' and 'forcing-compelled' to reviseit.txt
 
 "About Hot Chilli" menu item which shows version
 

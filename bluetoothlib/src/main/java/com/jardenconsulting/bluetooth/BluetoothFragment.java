@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,8 @@ import android.widget.TextView;
 
 import com.jardenconsulting.bluetoothapplib.BuildConfig;
 import com.jardenconsulting.bluetoothapplib.R;
+
+import androidx.fragment.app.Fragment;
 
 public class BluetoothFragment extends Fragment
 		implements OnClickListener, DeviceListListener {

@@ -398,7 +398,7 @@ chop,chuleta,noun,feminine,food,1
 cider,sidra,noun,feminine,drink,1
 delicious,delicioso,adjective,n_a,food,1
 dessert,postre,noun,masculine,food,1
-dining room,comedor,noun,masculine,food,1
+dining room,comedor,noun,masculine,home,1
 dish of the day,plato del día,phrase,n_a,food,1
 enjoy your meal,buen provecho,phrase,n_a,food,1
 fixed price menu,menú a precio fijo,phrase,n_a,food,1
@@ -740,7 +740,7 @@ love,amar,verb,transitive,person,1
 manage,dirigir,verb,transIntrans,n_a,1
 meet,encontrar,verb,transIntrans,n_a,1
 throw,echar,verb,transIntrans,n_a,1
-miss,faltar,verb,transIntrans,n_a,1
+lack,faltar,verb,transIntrans,n_a,1
 need,necesitar,verb,transIntrans,n_a,1
 order,pedir,verb,transitive,food,1
 pass,pasar,verb,transIntrans,n_a,1
@@ -798,7 +798,7 @@ difficult,difícil,adjective,n_a,n_a,1
 disgusting,asqueroso,adjective,n_a,n_a,1
 dynamic,dinámico,adjective,n_a,n_a,1
 easy,fácil,adjective,n_a,n_a,1
-excited,entusiasmado,adjective,n_a,n_a,1
+enthusiastic,entusiasmado,adjective,n_a,n_a,1
 exciting,emocionante,adjective,n_a,n_a,1
 false,falso,adjective,n_a,n_a,1
 fast,rápido,adjective,n_a,n_a,1
@@ -1738,3 +1738,33 @@ printer,impresora,noun,feminine,technology,1
 the printer needs more paper,la impresora necesita más papel,phrase,n_a,technology,1
 when is breakfast served?,¿cúando se sirve el desayno?,phrase,n_a,food,1
 when does the museum open?,¿cúando abre el museo?,phrase,n_a,time,1
+I realised,me di cuenta,phrase,n_a,n_a,1
+achievement,logro,noun,masculine,n_a,1
+achieve,lograr,verb,transIntrans,n_a,1
+Pablo took advantage of the opportunities he had,Pablo aprovechó las oportunidades que tuvo,phrase,n_a,n_a,1
+it is never too late,nunca es demasiado tarde,phrase,n_a,n_a,1
+grain of sand,granito de arena,phrase,n_a,n_a,1
+occur,ocurrir,verb,intransitive,n_a,1
+I would not have believed it,no me lo habría creído,phrase,n_a,n_a,1
+have fun!,pásatelo bien,phrase,n_a,n_a,1
+I know you would love it,sé que te encantaría,phrase,n_a,n_a,1
+think about it!,¡piénsatelo!,phrase,n_a,n_a,1
+frighten,asustar,verb,transitive,n_a,1
+well done,bien hecho,phrase,n_a,n_a,1
+out of my comfort zone,fuera de mi zona de confort,phrase,n_a,n_a,1
+I wouldn't even know where to start,ni siquiera sabría por dónde empezar,phrase,n_a,n_a,1
+I am pleased to see you,me alegro de verte,phrase,n_a,n_a,1
+don't be so lazy!,¡no seas tan perezoso!,phrase,n_a,n_a,1
+do you do any sport?,¿practicas algún deporte?,phrase,n_a,sport,1
+do you have a hobby?,¿tienes un pasatiempo?,phrase,n_a,hobby,1
+I'd like a loaf of bread please,quisiera una barra de pan por favor,phrase,n_a,food,1
+pencil,lápiz,noun,masculine,n_a,1
+point of view,punto de vista,phrase,n_a,n_a,1
+donkey,burro,noun,masculine,n_a,1
+stop,parar,verb,transIntrans,n_a,1
+snatch,arrebatar,verb,transitive,n_a,1
+I'd like a pair of blue trousers,quisiera unos pantalones azules,phrase,n_a,clothing,1
+I like this shoe,me gusta este zapato,phrase,n_a,clothing,1
+there's a sale on in the supermarket,hay rebajas en el supermercado,phrase,n_a,n_a,1
+I get five pounds pocket money a week,recibo cinco libras de dinero de bolsillo por semana,phrase,n_a,n_a,1
+tell me about yourself,háblame de ti,phrase,n_a,n_a,1

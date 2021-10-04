@@ -481,9 +481,11 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public List<EngSpa> findWordsByTopic(String topic) {
 		Cursor cursor = null;
+		String field = ATTRIBUTE;
+		if (topic.equals("phrase")) field = WORD_TYPE;
 		try {
 			cursor = getCursor(PROJECTION_ALL_FIELDS,
-					ATTRIBUTE + "=?", // selection
+					field + "=?", // selection
 					new String[] { topic }, // selectionArgs
 					null, // groupBy
 					null, // having,

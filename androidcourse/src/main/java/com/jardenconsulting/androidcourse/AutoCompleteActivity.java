@@ -1,10 +1,11 @@
 package com.jardenconsulting.androidcourse;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class AutoCompleteActivity extends AppCompatActivity {
 

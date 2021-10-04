@@ -223,10 +223,10 @@ create john's private key and public certificate:
 	
 in Android Studio
 	Build, Generate Signed APK...
-	for Spanish:
+	old version of Spanish(?):
 	    keystore: /Users/john/jarden.jks, alias jarden
-	for HotBridge:
-	    keystore: /Users/john/Documents/johnIdentity2.jks, alias john2, p/w = old insecure
+	for HotBridge & Spanish:
+	    keystore: /Users/john/Documents/johnIdentity2.jks, alias john2, p/w = happy2
 
 open Android developer console:
 	https://play.google.com/apps/publish/

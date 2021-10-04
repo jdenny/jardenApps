@@ -20,12 +20,9 @@ possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
 SPANISH
 engspa.txt
 	remove hockey?
-	guitar, qualifier from time to music
-	comedor shouldn't be food
-	in the morning?
-	more phrases
-	get rid of obvious words; add words from GCSE book
-	Should faltar be lack rather than miss?
+	more phrases; use phrases from GCSE book
+	get rid of obvious words
+	add words from GCSE book
 	are we using gustar correctly?
 	sort words in engspa.txt, to reflect school words; complete GCSE words
 	split big topics into 2 or 3 groups, e.g. building, building1, building2;

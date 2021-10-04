@@ -1,15 +1,14 @@
 package com.jardenconsulting.androidcourse;
 
-import com.jardenconsulting.androidcourse.R;
-
-import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.core.app.NavUtils;
 
 public class DisplayMessageActivity extends Activity {
 

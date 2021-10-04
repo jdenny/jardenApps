@@ -2,25 +2,25 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/androidcourse/androidcourse.iml" filepath="$PROJECT_DIR$/androidcourse/androidcourse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bluetoothlib/bluetoothlib.iml" filepath="$PROJECT_DIR$/bluetoothlib/bluetoothlib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chameleon/chameleon.iml" filepath="$PROJECT_DIR$/chameleon/chameleon.iml" />
-      <module fileurl="file://$PROJECT_DIR$/documentation/documentation.iml" filepath="$PROJECT_DIR$/documentation/documentation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/explorer/explorer.iml" filepath="$PROJECT_DIR$/explorer/explorer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hotbridge/hotbridge.iml" filepath="$PROJECT_DIR$/hotbridge/hotbridge.iml" />
       <module fileurl="file://$PROJECT_DIR$/jardenApps.iml" filepath="$PROJECT_DIR$/jardenApps.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jardenjavalib/jardenjavalib.iml" filepath="$PROJECT_DIR$/jardenjavalib/jardenjavalib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jardenlib/jardenlib.iml" filepath="$PROJECT_DIR$/jardenlib/jardenlib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jardenprovider/jardenprovider.iml" filepath="$PROJECT_DIR$/jardenprovider/jardenprovider.iml" />
-      <module fileurl="file://$PROJECT_DIR$/javacourse/javacourse.iml" filepath="$PROJECT_DIR$/javacourse/javacourse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/johnjava/johnjava.iml" filepath="$PROJECT_DIR$/johnjava/johnjava.iml" />
-      <module fileurl="file://$PROJECT_DIR$/knowme/knowme.iml" filepath="$PROJECT_DIR$/knowme/knowme.iml" />
-      <module fileurl="file://$PROJECT_DIR$/life/life.iml" filepath="$PROJECT_DIR$/life/life.iml" />
-      <module fileurl="file://$PROJECT_DIR$/music/music.iml" filepath="$PROJECT_DIR$/music/music.iml" />
-      <module fileurl="file://$PROJECT_DIR$/quizmaze/quizmaze.iml" filepath="$PROJECT_DIR$/quizmaze/quizmaze.iml" />
-      <module fileurl="file://$PROJECT_DIR$/spanish/spanish.iml" filepath="$PROJECT_DIR$/spanish/spanish.iml" />
-      <module fileurl="file://$PROJECT_DIR$/testfreakwiz/testfreakwiz.iml" filepath="$PROJECT_DIR$/testfreakwiz/testfreakwiz.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wifidirect/wifidirect.iml" filepath="$PROJECT_DIR$/wifidirect/wifidirect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.iml" filepath="$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bluetoothlib/jardenApps.bluetoothlib.iml" filepath="$PROJECT_DIR$/.idea/modules/bluetoothlib/jardenApps.bluetoothlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chameleon/jardenApps.chameleon.iml" filepath="$PROJECT_DIR$/.idea/modules/chameleon/jardenApps.chameleon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.iml" filepath="$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hotbridge/jardenApps.hotbridge.iml" filepath="$PROJECT_DIR$/.idea/modules/hotbridge/jardenApps.hotbridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenprovider/jardenApps.jardenprovider.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenprovider/jardenApps.jardenprovider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.iml" filepath="$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.iml" filepath="$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.iml" filepath="$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/life/jardenApps.life.iml" filepath="$PROJECT_DIR$/.idea/modules/life/jardenApps.life.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/music/jardenApps.music.iml" filepath="$PROJECT_DIR$/.idea/modules/music/jardenApps.music.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.iml" filepath="$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.iml" filepath="$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.iml" filepath="$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.iml" filepath="$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.iml" />
     </modules>
   </component>
 </project>
