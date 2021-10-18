@@ -54,6 +54,12 @@
             android:id="@+id/playButton"/>
 
         <Button
+            android:text="@string/repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/repeatButton"/>
+
+        <Button
             android:text="@string/c1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -6,7 +6,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.SoundPool;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import androidx.appcompat.app.AppCompatActivity;
 import jarden.music.StaveView;
 
 /*
@@ -73,6 +73,8 @@ public class MusicActivity extends AppCompatActivity
         button.setOnClickListener(this);
         button = findViewById(R.id.playButton);
         button.setOnClickListener(this);
+        button = findViewById(R.id.repeatButton);
+        button.setOnClickListener(this);
         button = findViewById(R.id.cButton);
         button.setOnClickListener(this);
         this.upButton = findViewById(R.id.plusButton);
@@ -122,6 +124,8 @@ public class MusicActivity extends AppCompatActivity
             newNotes();
         } else if (id == R.id.playButton) {
             playNext();
+        } else if (id == R.id.repeatButton) {
+            playCurrent();
         } else if (id == R.id.cButton) {
             playC();
         } else if (id == R.id.minusButton) {
@@ -160,6 +164,9 @@ public class MusicActivity extends AppCompatActivity
     public void playNext() {
         if (++highlightedNote >= noteCt) highlightedNote = 0;
         staveView.setHighlightedNote(highlightedNote);
+        playCurrent();
+    }
+    public void playCurrent() {
         this.soundPool.play(guitarSounds[notePitches[highlightedNote]], 1.0f, 1.0f, 0, 0, 1.0f);
     }
     public void playC() {
