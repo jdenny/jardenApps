@@ -140,13 +140,28 @@ public class MusicActivity extends AppCompatActivity
     }
     private void newNotes() {
         if (BuildConfig.DEBUG) Log.d(TAG, "newNotes()");
-        for (int i = 0; i < MAX_NOTE_CT; i++) {
-            int newPitch = random.nextInt(maxPitch);
-            // don't have same note 3 times in succession
-            if (i >= 2 && newPitch == notePitches[i-1] && newPitch == notePitches[i-2]) {
-                if (++newPitch >= maxPitch) newPitch = 0;
+        int[] chosenPitches = new int[maxPitch];
+        if (maxPitch < 5) {
+            chosenPitches[0] = 0; // i.e. root
+            chosenPitches[1] = 4; // i.e. fifth
+            if (maxPitch > 2) {
+                chosenPitches[2] = 2; // i.e. third
+                if (maxPitch > 3) {
+                    chosenPitches[3] = 7; // i.e. octave
+                }
             }
-            notePitches[i] = newPitch;
+        } else {
+            for (int i = 0; i < maxPitch; i++) {
+                chosenPitches[i] = i;
+            }
+        }
+        for (int i = 0; i < MAX_NOTE_CT; i++) {
+            int newPitchIndex = random.nextInt(maxPitch);
+            // don't have same note 3 times in succession
+            if (i >= 2 && newPitchIndex == notePitches[i-1] && newPitchIndex == notePitches[i-2]) {
+                if (++newPitchIndex >= maxPitch) newPitchIndex = 0;
+            }
+            notePitches[i] = chosenPitches[newPitchIndex];
         }
         noteCt = MAX_NOTE_CT;
         setNotesText();
