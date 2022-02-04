@@ -47,6 +47,15 @@ sout<tab>		System.out.println()
 
 git
 ---
+Generate Personal Access Token for github
+See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+Grant access: repo, gist, read:org
+Token created 5th October (valid till 5/10/2022)
+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
+
+In Android Studio -> Preferences -> Version Control -> GitHub
++ (add) -> Use Token -> [paste in token]
+
 https://github.com/jdenny/Jarden.git
 
 WorkingDirectory	   LocalRepository

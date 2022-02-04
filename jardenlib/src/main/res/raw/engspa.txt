@@ -387,7 +387,7 @@ bill,cuenta,noun,feminine,food,1
 bean,alubia,noun,feminine,food,1
 biscuit,galleta,noun,feminine,food,1
 bottle,botella,noun,feminine,drink,1
-Brussels sprout,cole de Bruselas,noun,feminine,food,1
+Brussels sprout,col de Bruselas,noun,feminine,food,1
 butter,mantequilla,noun,feminine,food,1
 café,cafetería,noun,feminine,building,1
 cake,pastel,noun,masculine,food,1
@@ -1053,7 +1053,7 @@ fashion,moda,noun,feminine,clothing,1
 fashionable,a la moda,phrase,n_a,clothing,1
 glove,guante,noun,masculine,clothing,1
 handbag,bolso,noun,masculine,clothing,1
-it fits,te va bien,phrase,n_a,clothing,1
+that dress is too expensive,ese vestido es demasiado caro,phrase,n_a,clothing,1
 it suits you,te queda bien,phrase,n_a,clothing,1
 jacket,chaqueta,noun,feminine,clothing,1
 the jeans,los vaqueros,phrase,n_a,clothing,1
@@ -1231,7 +1231,7 @@ collect,coleccionar,verb,transitive,hobby,1
 collection,colección,noun,feminine,hobby,1
 comic,tebeo,noun,masculine,hobby,1
 competition,concurso,noun,masculine,hobby,1
-computer game,videojuego,noun,masculine,hobby,1
+video game,videojuego,noun,masculine,hobby,1
 concert,concierto,noun,masculine,music,1
 cycling,ciclismo,noun,masculine,sport,1
 dance,baile,noun,masculine,hobby,1
@@ -1259,7 +1259,7 @@ handball,balonmano,noun,masculine,sport,1
 happy birthday,feliz cumpleaños,phrase,n_a,n_a,1
 happy new year,feliz año nuevo,phrase,n_a,n_a,1
 hobby,pasatiempo,noun,masculine,hobby,1
-hockey,hockey,noun,masculine,sport,1
+what do you do in your free time?,¿qué haces in tus ratos libres?,phrase,n_a,sport,1
 horror film,película de horror,noun,feminine,culture,1
 skating,patinaje,noun,masculine,sport,1
 judo,judo,noun,masculine,sport,1
@@ -1293,7 +1293,7 @@ roller blading,patinaje en línea,phrase,n_a,sport,1
 romantic,romántico,adjective,n_a,n_a,1
 romantic film,película romántica,noun,feminine,culture,1
 rugby,rugby,noun,masculine,sport,1
-sailing,vela,noun,feminine,sport,1
+sail,vela,noun,feminine,sport,1
 saxophone,saxofón,noun,masculine,music,1
 science fiction film,película de ciencia ficción,noun,feminine,culture,1
 series,serie,noun,feminine,culture,1
@@ -1647,7 +1647,7 @@ our son lives in Canada,nuestro hijo vive en Canadá,phrase,n_a,person,1
 he came here last week,él vino aquí la semana pasada,phrase,n_a,person,1
 Canada is too cold for us,Canadá es demasiado frío para nosotros,phrase,n_a,travel,1
 is there a good restaurant near here?,¿hay un buen restaurante cerca de aquí?,phrase,n_a,travel,1
-where do you normally go to eat lunch?,¿a dónde van normalmente a almorzar?,phrase,n_a,travel,1
+where do you normally go to eat lunch?,¿a dónde vas normalmente a almorzar?,phrase,n_a,travel,1
 chest,pecho,noun,masculine,body,1
 skin,piel,noun,feminine,body,1
 shoulder,hombro,noun,masculine,body,1
@@ -1714,8 +1714,8 @@ I'm sad,estoy triste,phrase,n_a,person,1
 not bad at all,nada mal,phrase,n_a,person,1
 very well - and you?,muy bien - y tú,phrase,n_a,person,1
 backpack,mochila,noun,masculine,travel,1
-you don't say!,¡no me diga!,phrase,n_a,n_a,1
-what do you do on weekends?,¿qué hacen los fines de semana?,phrase,n_a,n_a,1
+you don't say!,¡no me digas!,phrase,n_a,n_a,1
+what do you do on weekends?,¿qué haces los fines de semana?,phrase,n_a,n_a,1
 we go to our beach house,vamos a la casa que tenemos en la playa,phrase,n_a,n_a,1
 job,trabajo,noun,masculine,n_a,1
 gym,gimnasio,noun,masculine,building,1

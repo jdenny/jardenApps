@@ -487,7 +487,6 @@ public class VerbUtils {
 		{"p", encontrarPresent},
 		{"si", "encuentra"}, {"no", "encuentres"}
 	};
-	
 	private static String[][] ejercerPresent = {
 		{"yo", "ejerzo"}
 	};
@@ -510,6 +509,13 @@ public class VerbUtils {
 	private static Object[][] enviarTenses = {
 		{"p", enviarPresent}, {"si", "envía"}, {"no", "envíes"}
 	};
+
+    private static String[][] escogerPresent = {
+            {"yo", "escojo"}
+    };
+    private static Object[][] escogerTenses = {
+            {"p", escogerPresent}, {"no", "escojas"}
+    };
 
 	private static String[][] estarPresent = {
 		{"yo", "estoy"}, {"tu", "estás"}, {"el", "está"},
@@ -961,6 +967,7 @@ public class VerbUtils {
 		{"doler", dolerTenses}, {"dormir", dormirTenses},
 		{"descargar", descargarTenses},{"ejercer", ejercerTenses},
 		{"encontrar", encontrarTenses}, {"estar", estarTenses},
+        {"escoger", escogerTenses},
 		{"helar", entenderTenses}, {"enviar", enviarTenses},
 		{"haber", haberTenses}, {"hacer", hacerTenses},
 		{"helar", helarTenses}, {"ir", irTenses},

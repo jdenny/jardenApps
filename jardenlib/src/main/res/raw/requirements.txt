@@ -1,3 +1,12 @@
+AMAZEQUIZ
+merge in QuizRace:
+	add AnagramQuiz; sort out why Files not working; option with no race!
+	input type to be text or number; don't throw any exceptions!
+	add 'Go' button to keyboard; delete QuizRace
+	try out wi-fi direct: http://developer.android.com/guide/topics/connectivity/wifip2p.html
+possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
+	as done by EngSpaQuiz2
+
 CARDS
 To Test
 	bluetooth still works - but how is it to be used now?
@@ -8,22 +17,18 @@ To-Do:
 		track of 3 consecutive passes
 	align east to right of screen
 
-AMAZEQUIZ
-merge in QuizRace:
-	add AnagramQuiz; sort out why Files not working; option with no race!
-	input type to be text or number; don't throw any exceptions!
-	add 'Go' button to keyboard; delete QuizRace
-	try out wi-fi direct: http://developer.android.com/guide/topics/connectivity/wifip2p.html
-possibly move QuestionStyle and AnswerStyle out of Quiz and put into User,
-	as done by EngSpaQuiz2
+MUSIC
+Different keys
+Save patterns to file
+Alternate from c to random note within range; then choose base note
+Change notation from C to c5, c3 etc; accept c for c4, middle c
+Scroll for large number of notes
+Button to repeat current note
+Button for each note, C to B; ideally to look like a piano keyboard!
+
 
 SPANISH
 engspa.txt
-	remove hockey?
-	more phrases; use phrases from GCSE book
-	get rid of obvious words
-	add words from GCSE book
-	are we using gustar correctly?
 	sort words in engspa.txt, to reflect school words; complete GCSE words
 	split big topics into 2 or 3 groups, e.g. building, building1, building2;
 		for hint, remove number at end
@@ -47,6 +52,7 @@ small changes
 * rename numbers game to gato y ratón?
 
 big changes
+Add past participle and present participle (gerund) to word lookup
 * levels of verb tenses in Spanish; ideally, move to next level (e.g. future)
 	when mastered previous (e.g. present)
 * phrase generator: "the [noun] is in the [building or place]"
