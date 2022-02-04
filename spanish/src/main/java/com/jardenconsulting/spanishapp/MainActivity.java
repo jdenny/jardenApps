@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 		setSupportActionBar(toolbar);
 		this.helpTextView = findViewById(R.id.helpTextView);
 		this.statusTextView = findViewById(R.id.statusTextView);
-        this.statusTextView.setVisibility(View.GONE); // hidden if no message is shown
+        this.statusTextView.setVisibility(View.GONE); // hidden if no message shown
 		this.showHelpCheckBox = findViewById(R.id.showHelpCheckBox);
 		this.showHelpCheckBox.setOnClickListener(this);
 		helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
