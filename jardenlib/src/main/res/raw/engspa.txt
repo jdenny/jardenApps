@@ -159,7 +159,7 @@ as,como,adverb,n_a,n_a,1
 than,que,conjunction,n_a,n_a,1
 because,porque,conjunction,n_a,n_a,1
 nor,ni,conjunction,n_a,n_a,1
-but,sino,conjunction,n_a,n_a,1
+otherwise,sino,conjunction,n_a,n_a,1
 while,mientras,conjunction,n_a,n_a,1
 against,contra,preposition,n_a,n_a,1
 among,entre,preposition,n_a,place,1
@@ -579,7 +579,7 @@ marvellous,maravilloso,adjective,n_a,n_a,1
 bad,malo,adjective,n_a,n_a,1
 awful,horrible,adjective,n_a,n_a,1
 boring,aburrido,adjective,n_a,n_a,1
-kind,agradable,adjective,n_a,n_a,1
+agreeable,agradable,adjective,n_a,n_a,1
 terrible,terrible,adjective,n_a,n_a,1
 after,tras,preposition,n_a,place,1
 around,alrededor de,preposition,n_a,place,1
@@ -670,7 +670,7 @@ bring,traer,verb,transIntrans,n_a,1
 bag,bolsa,noun,feminine,n_a,1
 home,hogar,noun,masculine,place,1
 wood for the fire,leña para el fuego,phrase,n_a,home,1
-fly off the handle,perder los estribos,phrase,n_a,n_a,1
+don't lose your temper!,Áno pierdas los estribos!,phrase,n_a,n_a,1
 son-in-law,yerno,noun,masculine,person,1
 accept,aceptar,verb,transIntrans,n_a,1
 accompany,acompañar,verb,transitive,n_a,1
@@ -1008,7 +1008,7 @@ in winter,en invierno,phrase,n_a,time,1
 where to?,¿adónde?,adverb,n_a,interrogative,1
 all the better,todo lo mejor,phrase,n_a,n_a,1
 good luck,buena suerte,phrase,n_a,n_a,1
-here you are,aquí lo tienes,phrase,n_a,n_a,1
+here you have it,aquí lo tienes,phrase,n_a,n_a,1
 how do you spell that?,¿cómo se escribe?,phrase,n_a,n_a,1
 I don't mind,me da igual,phrase,n_a,n_a,1
 I've had enough,he tenido bastante,phrase,n_a,n_a,1
@@ -1424,7 +1424,7 @@ farm,granja,noun,feminine,place,1
 fishmonger's,pescadería,noun,feminine,place,1
 apartment,apartamento,noun,masculine,place,1
 forbidden,prohibido,adjective,n_a,n_a,1
-foreigner,extranjero,adjective,n_a,n_a,1
+foreign,extranjero,adjective,n_a,n_a,1
 fruit shop,frutería,noun,feminine,place,1
 full board,pensión completa,noun,feminine,place,1
 games room,sala de juegos,noun,feminine,place,1
@@ -1675,7 +1675,7 @@ do you need help?,¿necesitas ayuda?,phrase,n_a,person,1
 can you help me?,¿me puede ayudar?,phrase,n_a,person,1
 don't worry,no te preocupes,phrase,n_a,person,1
 I don't know,no lo sé,phrase,n_a,person,1
-to do the laundry,lavar la ropa,phrase,n_a,home,1
+to wash the clothes,lavar la ropa,phrase,n_a,home,1
 to make the bed,hacer la cama,phrase,n_a,home,1
 to wash the dishes,lavar los platos,phrase,n_a,home,1
 spicey,picante,adjective,n_a,food,1
@@ -1760,7 +1760,7 @@ do you have a hobby?,¿tienes un pasatiempo?,phrase,n_a,hobby,1
 I'd like a loaf of bread please,quisiera una barra de pan por favor,phrase,n_a,food,1
 pencil,lápiz,noun,masculine,n_a,1
 point of view,punto de vista,phrase,n_a,n_a,1
-donkey,burro,noun,masculine,n_a,1
+donkey,burro,noun,masculine,animal,1
 stop,parar,verb,transIntrans,n_a,1
 snatch,arrebatar,verb,transitive,n_a,1
 I'd like a pair of blue trousers,quisiera unos pantalones azules,phrase,n_a,clothing,1
@@ -1768,3 +1768,13 @@ I like this shoe,me gusta este zapato,phrase,n_a,clothing,1
 there's a sale on in the supermarket,hay rebajas en el supermercado,phrase,n_a,n_a,1
 I get five pounds pocket money a week,recibo cinco libras de dinero de bolsillo por semana,phrase,n_a,n_a,1
 tell me about yourself,háblame de ti,phrase,n_a,n_a,1
+we live on the ground floor,vivimos en la planta baja,phrase,n_a,n_a,1
+amazing,asombroso,adjective,n_a,n_a,1
+what do you mean?,¿qué quieres decir?,phrase,n_a,n_a,1
+purpose,propósito,noun,masculine,n_a,1
+chapter,capítulo,noun,masculine,n_a,1
+return,regresar,verb,transIntrans,n_a,1
+I still have so much work to do,todavía tengo tanto trabajo para hacer,phrase,n_a,n_a,1
+peace,paz,noun,feminine,n_a,1
+war,guerra,noun,feminine,n_a,1
+who will save the planet,¿quién salvará el planeta?,phrase,n_a,n_a,1

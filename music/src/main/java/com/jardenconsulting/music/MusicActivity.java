@@ -165,6 +165,7 @@ public class MusicActivity extends AppCompatActivity
         }
         noteCt = MAX_NOTE_CT;
         setNotesText();
+        highlightedNote = -1;
         staveView.setNotePitches(notePitches, noteCt);
         staveView.setHighlightedNote(-1);
     }

@@ -870,7 +870,7 @@ Q: 1D, 1H; 1S, 1NT
 F1: with 8+ HCP bid relay;
 A: <8 HCP, <4 spades, no 6+ suit
 Q: 1D, 1H; 1S, 1NT; 2C
-A: 5+ spades, 4+ clubs
+A: 4+ clubs
 Q: 1D, 1H; 1S, 2D
 F1: compelling [a]relay[/a]. Alert: artificial
 A: 10+ HCP, <4 spades
