@@ -56,7 +56,7 @@ Token stored in MySettings2.txt
 In Android Studio -> Preferences -> Version Control -> GitHub
 + (add) -> Use Token -> [paste in token]
 
-https://github.com/jdenny/Jarden.git
+https://github.com/jdenny/jardenApps
 
 WorkingDirectory	   LocalRepository
 		  StagingArea(index)
