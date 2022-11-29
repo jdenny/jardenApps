@@ -11,8 +11,8 @@ android {
         applicationId "com.jardenconsulting.spanishapp"
         minSdkVersion 14
         targetSdkVersion 32
-        versionCode 38
-        versionName "2.15"
+        versionCode 39
+        versionName "2.16"
     }
     buildTypes {
         release {

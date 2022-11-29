@@ -889,7 +889,7 @@ very,muy,adverb,n_a,n_a,1
 at the end of,al final de,preposition,n_a,n_a,1
 because of,a causa de,preposition,n_a,n_a,1
 behind,detrás,preposition,n_a,n_a,1
-everywhere,por todas partes,preposition,n_a,n_a,1
+everywhere,en todas partes,adverb,n_a,n_a,1
 except,salvo,preposition,n_a,n_a,1
 far,lejos,preposition,n_a,n_a,1
 in order to,para,conjunction,n_a,n_a,1
@@ -1784,26 +1784,26 @@ I'm going to call you a little later,voy a llamarle un poco más tarde,phrase,n_a
 what time are you going to call me?,¿a qué hora va a llamarme?,phrase,n_a,n_a,1
 can you come and see it with me tonight?,¿puede venir a verlo conmigo esta noche?,phrase,n_a,n_a,1
 are you ready?,¿estás listo?,phrase,n_a,n_a,1
-I'm busy,estoy ocupardo,phrase,n_a,n_a,1
+I'm busy,estoy ocupado,phrase,n_a,n_a,1
 will you be ready tomorrow?,¿va a estar listo mañana?,phrase,n_a,n_a,1
 I will be busy tomorrow,voy a estar ocupado mañana,phrase,n_a,n_a,1
 I'm sorry but I cannot see you today,lo siento pero no puedo verle hoy,phrase,n_a,n_a,1
 I must buy it,tengo que comprarlo,phrase,n_a,n_a,1
-where is it?,¿donde está?,phrase,n_a,n_a,1
-how much is it?,¿quanto es?,phrase,n_a,n_a,1
+where is it?,¿dónde está?,phrase,n_a,n_a,1
+how much is it?,¿cuánto es?,phrase,n_a,n_a,1
 I don't understand you,no le comprendo,phrase,n_a,n_a,1
 I like to see it but I don't like to do it,me gusta verlo pero no me gusta hacerlo,phrase,n_a,n_a,1
 I don't understand what you're saying,no comprendo lo qué dice,phrase,n_a,n_a,1
 I'm not selling it because I don't want to sell it,no lo vendo porque no quiero venderlo,phrase,n_a,n_a,1
 why don't you speak Spanish with me?,¿por qué no hablas español conmigo?,phrase,n_a,n_a,1
 there are many people here,hay mucha gente aquí,phrase,n_a,n_a,1
-how long we're going to stay here,cuanto tiempo vamos a quedarnos aquí,phrase,n_a,n_a,1
+I don't know how long we're going to stay here,no sé cuanto tiempo vamos a quedarnos aquí,phrase,n_a,n_a,1
 I would like to go and see it with you,me gustaría ir a verlo contigo,phrase,n_a,n_a,1
 I can't find it,no puedo encontrarlo,phrase,n_a,n_a,1
 I don't know where it is,no sé donde está,phrase,n_a,n_a,1
 do you know where it is?,¿sabe donde está?,phrase,n_a,n_a,1
 I want to have it,quiero tenerlo,phrase,n_a,n_a,1
-when are you going to do it?,¿quando va a hacerlo?,phrase,n_a,n_a,1
+when are you going to do it?,¿cuándo va a hacerlo?,phrase,n_a,n_a,1
 why don't you understand me?,¿por qué no me comprende?,phrase,n_a,n_a,1
 what time are you leaving?,¿a qué hora sale?,phrase,n_a,n_a,1
 what are you doing today?,¿qué hace hoy?,phrase,n_a,n_a,1
@@ -1812,51 +1812,51 @@ I am speaking,estoy hablando,phrase,n_a,n_a,1
 what are you saying?,¿qué dice?,phrase,n_a,n_a,1
 what do you mean?,¿qué quiere decir?,phrase,n_a,n_a,1
 do you speak Spanish?,¿habla español?,phrase,n_a,n_a,1
-eat it! it's very good,¡comalo! es muy bueno,phrase,n_a,n_a,1
+eat it! it's very good,¡cómalo! es muy bueno,phrase,n_a,n_a,1
 we're going to leave soon,vamos a salir pronto,phrase,n_a,n_a,1
 I come I have I put I leave,vengo tengo pongo salgo,phrase,n_a,n_a,1
-where are you putting it?,¿donde lo pone?,phrase,n_a,n_a,1
-put it here!,¡ponalo aqui!,phrase,n_a,n_a,1
-say it in Spanish!,¡digalo en español!,phrase,n_a,n_a,1
-do it! I'm doing it,¡hagalo! lo hago,phrase,n_a,n_a,1
-what time are you starting?,¿a qué hora comienca?,phrase,n_a,n_a,1
+where are you putting it?,¿dónde lo pone?,phrase,n_a,n_a,1
+put it here!,¡ponlo aquí!,phrase,n_a,n_a,1
+say it in Spanish!,¡dígalo en español!,phrase,n_a,n_a,1
+do it! I'm doing it,¡hágalo! lo hago,phrase,n_a,n_a,1
+what time does it start?,¿a qué hora empieza?,phrase,n_a,n_a,1
 what do you think?,¿qué piensa?,phrase,n_a,n_a,1
 I'm thinking of leaving soon,pienso salir pronto,phrase,n_a,n_a,1
-when do you plan to leave?,¿quando piensa salir?,phrase,n_a,n_a,1
+when do you plan to leave?,¿cuándo piensa salir?,phrase,n_a,n_a,1
 we want it,lo queremos,phrase,n_a,n_a,1
 what time are you coming back?,¿a qué hora vuelven?,phrase,n_a,n_a,1
-we're coming back soon,volvemos pronto,phrase,n_a,n_a,1
-I'm getting up,me levanto,phrase,n_a,n_a,1
-we're getting up,nos levantamos,phrase,n_a,n_a,1
+we're coming back the day after tomorrow,volvemos pasado mañana,phrase,n_a,n_a,1
+I'm getting up later,me levanto mas tarde,phrase,n_a,n_a,1
+we're getting up soon,nos levantamos pronto,phrase,n_a,n_a,1
 what time are you getting up?,¿a qué hora se levanta?,phrase,n_a,n_a,1
-I'm going to get up soon,voy a levantar me pronto,phrase,n_a,n_a,1
-I have to get up,tengo que levantar me,phrase,n_a,n_a,1
-we are going to get up,vamos a levantar nos,phrase,n_a,n_a,1
-what time do we have to get up?,¿a qué hora tenemos que levantar nos?,phrase,n_a,n_a,1
+I'm going to get up soon,voy a levantarme pronto,phrase,n_a,n_a,1
+I have to get up,tengo que levantarme,phrase,n_a,n_a,1
+we are going to get up,vamos a levantarnos,phrase,n_a,n_a,1
+what time do we have to get up?,¿a qué hora tenemos que levantarnos?,phrase,n_a,n_a,1
 I don't know how long I'm staying,no sé cuanto tiempo me quedo,phrase,n_a,n_a,1
-we're going to stay for a few days,vamos a quedar nos unos días,phrase,n_a,n_a,1
-what's going on,¿qué hay?,phrase,n_a,n_a,1
+we're going to stay a few days,vamos a quedarnos unos días,phrase,n_a,n_a,1
+what's up?,¿qué hay?,phrase,n_a,n_a,1
 there's no problem,no hay problema,phrase,n_a,n_a,1
-I don't know yet,todavía no sé,phrase,n_a,n_a,1
-when do we meet?,¿quando nos vemos?,phrase,n_a,n_a,1
+I don't know yet,no lo sé todavía,phrase,n_a,n_a,1
+when will we meet?,¿cuándo nos vemos?,phrase,n_a,n_a,1
 I will call you tomorrow,le llamo mañana,phrase,n_a,n_a,1
-we're staying a few days,nos quedamos unos dias,phrase,n_a,n_a,1
+we're staying a few days,nos quedamos unos días,phrase,n_a,n_a,1
 let's wait,esperemos,phrase,n_a,n_a,1
 let's sell the house,vendamos la casa,phrase,n_a,n_a,1
 I have not understood what you were saying,no he comprendido lo que decía,phrase,n_a,n_a,1
-we did it every day,lo hacíamos todos los dias,phrase,n_a,n_a,1
+we did it every day,lo hacíamos todos los días,phrase,n_a,n_a,1
 wait a minute!,¡espere un minuto!,phrase,n_a,n_a,1
-I won't forget you,no le olbidaré,phrase,n_a,n_a,1
+I won't forget you,no le olvidaré,phrase,n_a,n_a,1
 are you sure?,¿estás seguro?,phrase,n_a,n_a,1
 what a good idea!,¡qué buena idea!,phrase,n_a,n_a,1
 that's not a bad idea,no eso es una mala idea,phrase,n_a,n_a,1
-how long do you plan to stay?,¿quanto tiempo piensa quedar se?,phrase,n_a,n_a,1
-take it!,¡tomelo!,phrase,n_a,n_a,1
-eat it!,¡comalo!,phrase,n_a,n_a,1
+how long do you plan to stay?,¿cuánto tiempo piensa quedarse?,phrase,n_a,n_a,1
+take it!,¡tómelo!,phrase,n_a,n_a,1
+eat it!,¡cómalo!,phrase,n_a,n_a,1
 I have just seen it,acabo de verlo,phrase,n_a,n_a,1
 we have just arrived,acabamos de llegar,phrase,n_a,n_a,1
-where have you put it?,¿donde lo ha puesta?,phrase,n_a,n_a,1
-I feel like staying here with all of you,tengo ganas de quedarme aqui con ustedes,phrase,n_a,n_a,1
+where have you put it?,¿dónde lo ha puesta?,phrase,n_a,n_a,1
+I feel like staying here with all of you,tengo ganas de quedarme aquí con ustedes,phrase,n_a,n_a,1
 I prefer to go out,prefiero salir,phrase,n_a,n_a,1
 who's that?,¿quién es ese?,phrase,n_a,n_a,1
 nobody,nadie,pronoun,n_a,n_a,1
@@ -1864,7 +1864,7 @@ everyone,todo el mundo,pronoun,n_a,n_a,1
 you're driving too slowly,está conduciendo demasiado despacio,phrase,n_a,n_a,1
 wood,madera,noun,feminine,n_a,1
 firewood,leña,noun,feminine,n_a,1
-we should go out,nosotros deberiamos salir,phrase,n_a,n_a,1
-we could go for a walk,nosotros podriamos ir de paseo,phrase,n_a,n_a,1
+we should go out,nosotros deberíamos salir,phrase,n_a,n_a,1
+we could go for a walk,nosotros podríamos ir de paseo,phrase,n_a,n_a,1
 apology,disculpa,noun,feminine,n_a,1
 if it is too good to be true it is not true,si es demasiado bueno para ser verdad no es verdad,phrase,n_a,n_a,1
