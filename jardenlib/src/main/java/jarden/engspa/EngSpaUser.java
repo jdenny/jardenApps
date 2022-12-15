@@ -121,7 +121,7 @@ public class EngSpaUser {
     public String getTopic() {
         if (this.topic == null) {
             this.topic = sharedPreferences.getString(TOPIC_KEY,
-                    EngSpaContract.Attribute.colour.toString());
+                    EngSpaContract.Topic.colour.toString());
         }
         return topic;
     }

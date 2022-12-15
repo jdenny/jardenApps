@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.jardenconsulting.cardapp"
         minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 42
-        versionName "7.9"
+        targetSdkVersion 33
+        versionCode 43
+        versionName "7.10"
     }
     buildTypes {
         release {
@@ -16,14 +16,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.jardenconsulting.cardapp'
 }
 
 dependencies {
     implementation project(':jardenlib')
     implementation project(':bluetoothlib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
 }

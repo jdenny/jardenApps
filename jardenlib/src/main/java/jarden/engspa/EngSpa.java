@@ -1,6 +1,6 @@
 package jarden.engspa;
 
-import jarden.provider.engspa.EngSpaContract.Attribute;
+import jarden.provider.engspa.EngSpaContract.Topic;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.WordType;
 
@@ -15,18 +15,18 @@ public class EngSpa extends UserWord {
 	private String spanish;
 	private WordType wordType;
 	private Qualifier qualifier;
-	private Attribute attribute;
+	private Topic topic;
 	private int level;
 
 	public EngSpa(int id, String english, String spanish,
-			WordType wordType, Qualifier qualifier, Attribute attribute, int level) {
+                  WordType wordType, Qualifier qualifier, Topic topic, int level) {
 		super(-1, id);
 		this.id = id;
 		this.english = english;
 		this.spanish = spanish;
 		this.wordType = wordType;
 		this.qualifier = qualifier;
-		this.attribute = attribute;
+		this.topic = topic; // also known as hint
 		this.level = level;
 	}
 	@Override
@@ -44,20 +44,7 @@ public class EngSpa extends UserWord {
 		return id;
 	}
 	public String getDictionaryString() {
-		return english + ": " + spanish + ", " + wordType + ", " + qualifier + ", " + attribute;
-	}
-	/**
-	 * Used to disambiguate words.
-	 * @return
-	 */
-	public String getHint() {
-		if (attribute == Attribute.n_a) {
-			if (wordType != WordType.noun &&
-					wordType != WordType.verb &&
-					wordType != WordType.phrase) {
-				return wordType.toString();
-			} else return "";
-		} else return attribute.toString();
+		return english + ": " + spanish + ", " + wordType + ", " + qualifier + ", " + topic;
 	}
 	public int getId() {
 		return id;
@@ -80,20 +67,11 @@ public class EngSpa extends UserWord {
 	public WordType getWordType() {
 		return wordType;
 	}
-	public void setWordType(WordType wordType) {
-		this.wordType = wordType;
-	}
 	public Qualifier getQualifier() {
 		return qualifier;
 	}
-	public void setQualifier(Qualifier qualifier) {
-		this.qualifier = qualifier;
-	}
-	public Attribute getAttribute() {
-		return attribute;
-	}
-	public void setAttribute(Attribute attribute) {
-		this.attribute = attribute;
+	public Topic getTopic() {
+		return topic;
 	}
 	public int getLevel() {
 		return level;

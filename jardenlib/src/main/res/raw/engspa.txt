@@ -33,7 +33,7 @@ woman,mujer,noun,feminine,person,1
 child,niño,noun,mf,person,1
 apple,manzana,noun,feminine,food,1
 bread,pan,noun,masculine,food,1
-be,ser,verb,transIntrans,n_a,1
+be,ser,verb,permanent,n_a,1
 water,agua,noun,masculine,drink,1
 good morning,buenos días,phrase,n_a,n_a,1
 good afternoon,buenas tardes,phrase,n_a,n_a,1
@@ -135,7 +135,7 @@ play,tocar,verb,transIntrans,music,1
 hear,oír,verb,transIntrans,n_a,1
 make,hacer,verb,transitive,n_a,1
 can,poder,verb,transitive,n_a,1
-lie down and go back to sleep,acuéstate y vuelve a dormir,phrase,n_a,person,1
+lie down and go back to sleep,acuéstate y vuelve a dormir,phrase,familiar,person,1
 colour,color,noun,masculine,colour,1
 black,negro,adjective,n_a,colour,1
 white,blanco,adjective,n_a,colour,1
@@ -665,12 +665,12 @@ inform,enterar,verb,transitive,n_a,1
 smile,sonrisa,noun,feminine,person,1
 despite,a pesar de,preposition,n_a,n_a,1
 he is afraid,él tiene miedo,phrase,n_a,n_a,1
-sit here my friend,siéntate aquí mi amigo,phrase,n_a,n_a,1
+sit here my friend,siéntate aquí mi amigo,phrase,familiar,n_a,1
 bring,traer,verb,transIntrans,n_a,1
 bag,bolsa,noun,feminine,n_a,1
 home,hogar,noun,masculine,place,1
 wood for the fire,leña para el fuego,phrase,n_a,home,1
-don't lose your temper!,¡no pierdas los estribos!,phrase,n_a,n_a,1
+don't lose your temper!,¡no pierdas los estribos!,phrase,familiar,n_a,1
 son-in-law,yerno,noun,masculine,person,1
 accept,aceptar,verb,transIntrans,n_a,1
 accompany,acompañar,verb,transitive,n_a,1
@@ -683,7 +683,7 @@ argue,discutir,verb,transIntrans,n_a,1
 arrive,llegar,verb,transIntrans,n_a,1
 ask,preguntar,verb,transIntrans,n_a,1
 avoid,evitar,verb,transIntrans,n_a,1
-be,estar,verb,transIntrans,n_a,1
+be,estar,verb,temporary,n_a,1
 call,llamar,verb,transIntrans,n_a,1
 break,romper,verb,transitive,n_a,1
 buy,comprar,verb,transitive,n_a,1
@@ -1008,7 +1008,7 @@ in winter,en invierno,phrase,n_a,time,1
 where to?,¿adónde?,adverb,n_a,interrogative,1
 all the better,todo lo mejor,phrase,n_a,n_a,1
 good luck,buena suerte,phrase,n_a,n_a,1
-here you have it,aquí lo tienes,phrase,n_a,n_a,1
+here you have it,aquí lo tienes,phrase,familiar,n_a,1
 how do you spell that?,¿cómo se escribe?,phrase,n_a,n_a,1
 I don't mind,me da igual,phrase,n_a,n_a,1
 I've had enough,he tenido bastante,phrase,n_a,n_a,1
@@ -1020,7 +1020,7 @@ of course,por supuesto,phrase,n_a,n_a,1
 I agree,de acuerdo,phrase,n_a,n_a,1
 too bad,demasiado mal,phrase,n_a,n_a,1
 usually,normalmente,adverb,n_a,n_a,1
-what a shame,qué lástima,phrase,n_a,n_a,1
+what a pity,qué lástima,phrase,n_a,n_a,1
 everybody,todos,pronoun,n_a,n_a,1
 figure,cifra,noun,feminine,person,1
 for example,por ejemplo,phrase,n_a,n_a,1
@@ -1044,7 +1044,7 @@ bra,sostén,noun,masculine,clothing,1
 bracelet,brazalete,noun,masculine,clothing,1
 cap,gorra,noun,feminine,clothing,1
 changing room,probador,noun,masculine,clothing,1
-the clothes,la ropa,phrase,feminine,clothing,1
+I need to buy new clothes for the trip,necesito comprar ropa nueva para el viaje,phrase,n_a,clothing,1
 clothes shop,tienda de ropa,noun,feminine,building,1
 cotton,algodón,noun,masculine,clothing,1
 dressed in,vestido de,phrase,n_a,clothing,1
@@ -1054,7 +1054,7 @@ fashionable,a la moda,phrase,n_a,clothing,1
 glove,guante,noun,masculine,clothing,1
 handbag,bolso,noun,masculine,clothing,1
 that dress is too expensive,ese vestido es demasiado caro,phrase,n_a,clothing,1
-it suits you,te queda bien,phrase,n_a,clothing,1
+it suits you,te queda bien,phrase,familiar,clothing,1
 jacket,chaqueta,noun,feminine,clothing,1
 the jeans,los vaqueros,phrase,n_a,clothing,1
 jeweller's,joyería,noun,feminine,building,1
@@ -1201,7 +1201,7 @@ untidy,desordenado,adjective,n_a,n_a,1
 visit,visita,noun,feminine,place,1
 well behaved,que se porta bien,adjective,n_a,n_a,1
 rock climbing,escalada en roca,phrase,n_a,sport,1
-to score a goal,marcar un gol,phrase,n_a,sport,1
+he scored a goal,marcó un gol,phrase,n_a,sport,1
 a television programme,un programa de televisión,phrase,n_a,culture,1
 to go horse riding,hacer la equitación,phrase,n_a,sport,1
 kiss,besar,verb,transIntrans,n_a,1
@@ -1259,7 +1259,7 @@ handball,balonmano,noun,masculine,sport,1
 happy birthday,feliz cumpleaños,phrase,n_a,n_a,1
 happy new year,feliz año nuevo,phrase,n_a,n_a,1
 hobby,pasatiempo,noun,masculine,hobby,1
-what do you do in your free time?,¿qué haces in tus ratos libres?,phrase,n_a,sport,1
+what do you do in your free time?,¿qué haces in tus ratos libres?,phrase,familiar,sport,1
 horror film,película de horror,noun,feminine,culture,1
 skating,patinaje,noun,masculine,sport,1
 judo,judo,noun,masculine,sport,1
@@ -1625,17 +1625,17 @@ windy,ventoso,adjective,n_a,weather,1
 I arrive on the third of October,yo llego el tres de octubre,phrase,n_a,time,1
 fifth of March 2016,cinco de marzo de 2016,phrase,n_a,time,1
 in the year 2012,en el año dos mil doce,phrase,n_a,time,1
-what are you doing tonight?,¿qué haces esta noche?,phrase,n_a,time,1
+what are you doing tonight?,¿qué haces esta noche?,phrase,familiar,time,1
 tomorrow morning,mañana por la mañana,phrase,n_a,time,1
 last week,la semana pasada,phrase,n_a,time,1
 every fortnight,cada quince días,phrase,n_a,time,1
 I would like an orange juice,quisiera un jugo de naranja,phrase,n_a,n_a,1
 I would like to talk,quisiera hablar,phrase,n_a,n_a,1
 it was nothing,de nada,phrase,n_a,n_a,1
-where do you come from?,¿de dónde eres?,phrase,n_a,n_a,1
-where do you live?,¿dónde vives?,phrase,n_a,n_a,1
+where do you come from?,¿de dónde eres?,phrase,familiar,n_a,1
+where do you live?,¿dónde vives?,phrase,familiar,n_a,1
 I live in England,vivo en Inglaterra,phrase,n_a,n_a,1
-how do you get there?,¿cómo vas?,phrase,n_a,travel,1
+how do you get there?,¿cómo vas?,phrase,familiar,travel,1
 I go on foot,voy a pie,phrase,n_a,travel,1
 my name is Julie,me llamo Julie,phrase,n_a,person,1
 my husband is called John,mi esposo se llama John,phrase,n_a,person,1
@@ -1647,7 +1647,7 @@ our son lives in Canada,nuestro hijo vive en Canadá,phrase,n_a,person,1
 he came here last week,él vino aquí la semana pasada,phrase,n_a,person,1
 Canada is too cold for us,Canadá es demasiado frío para nosotros,phrase,n_a,travel,1
 is there a good restaurant near here?,¿hay un buen restaurante cerca de aquí?,phrase,n_a,travel,1
-where do you normally go to eat lunch?,¿a dónde vas normalmente a almorzar?,phrase,n_a,travel,1
+where do you normally go to eat lunch?,¿a dónde vas normalmente a almorzar?,phrase,familiar,travel,1
 chest,pecho,noun,masculine,body,1
 skin,piel,noun,feminine,body,1
 shoulder,hombro,noun,masculine,body,1
@@ -1671,9 +1671,9 @@ microwave,microonda,noun,feminine,home,1
 where I can find ...?,¿dónde puedo encontrar ...?,phrase,n_a,travel,1
 I do not feel well,no me siento bien,phrase,n_a,person,1
 what time is it?,¿qué hora es?,phrase,n_a,time,1
-do you need help?,¿necesitas ayuda?,phrase,n_a,person,1
+do you need help?,¿necesitas ayuda?,phrase,familiar,person,1
 can you help me?,¿me puede ayudar?,phrase,n_a,person,1
-don't worry,no te preocupes,phrase,n_a,person,1
+don't worry,no te preocupes,phrase,familiar,person,1
 I don't know,no lo sé,phrase,n_a,person,1
 to wash the clothes,lavar la ropa,phrase,n_a,home,1
 to make the bed,hacer la cama,phrase,n_a,home,1
@@ -1712,10 +1712,10 @@ I think I'm sick,creo que estoy enfermo,phrase,n_a,person,1
 I'm tired,estoy cansado,phrase,n_a,person,1
 I'm sad,estoy triste,phrase,n_a,person,1
 not bad at all,nada mal,phrase,n_a,person,1
-very well - and you?,muy bien - y tú,phrase,n_a,person,1
+very well - and you?,muy bien - y tú,phrase,familiar,person,1
 backpack,mochila,noun,masculine,travel,1
-you don't say!,¡no me digas!,phrase,n_a,n_a,1
-what do you do on weekends?,¿qué haces los fines de semana?,phrase,n_a,n_a,1
+you don't say!,¡no me digas!,phrase,familiar,n_a,1
+what do you do on weekends?,¿qué haces los fines de semana?,phrase,familiar,n_a,1
 we go to our beach house,vamos a la casa que tenemos en la playa,phrase,n_a,n_a,1
 job,trabajo,noun,masculine,n_a,1
 gym,gimnasio,noun,masculine,building,1
@@ -1732,7 +1732,7 @@ owe,deber,verb,transitive,n_a,1
 goat,cabra,noun,feminine,animal,1
 ram,carnero,noun,masculine,animal,1
 shall we play guitars?,¿tocamos las guitarras?,phrase,n_a,music,1
-would you like a cup of tea?,¿te gustaría una taza de té?,phrase,n_a,drink,1
+would you like a cup of tea?,¿te gustaría una taza de té?,phrase,familiar,drink,1
 paper,papel,noun,masculine,home,1
 printer,impresora,noun,feminine,technology,1
 the printer needs more paper,la impresora necesita más papel,phrase,n_a,technology,1
@@ -1747,16 +1747,16 @@ grain of sand,granito de arena,phrase,n_a,n_a,1
 occur,ocurrir,verb,intransitive,n_a,1
 I would not have believed it,no me lo habría creído,phrase,n_a,n_a,1
 have fun!,pásatelo bien,phrase,n_a,n_a,1
-I know you would love it,sé que te encantaría,phrase,n_a,n_a,1
-think about it!,¡piénsatelo!,phrase,n_a,n_a,1
+I know you would love it,sé que te encantaría,phrase,familiar,n_a,1
+think about it!,¡piénsatelo!,phrase,familiar,n_a,1
 frighten,asustar,verb,transitive,n_a,1
 well done,bien hecho,phrase,n_a,n_a,1
 out of my comfort zone,fuera de mi zona de confort,phrase,n_a,n_a,1
 I wouldn't even know where to start,ni siquiera sabría por dónde empezar,phrase,n_a,n_a,1
-I am pleased to see you,me alegro de verte,phrase,n_a,n_a,1
-don't be so lazy!,¡no seas tan perezoso!,phrase,n_a,n_a,1
-do you do any sport?,¿practicas algún deporte?,phrase,n_a,sport,1
-do you have a hobby?,¿tienes un pasatiempo?,phrase,n_a,hobby,1
+I am pleased to see you,me alegro de verte,phrase,familiar,n_a,1
+don't be so lazy!,¡no seas tan perezoso!,phrase,familiar,n_a,1
+do you do any sport?,¿practicas algún deporte?,phrase,familiar,sport,1
+do you have a hobby?,¿tienes un pasatiempo?,phrase,familiar,hobby,1
 I'd like a loaf of bread please,quisiera una barra de pan por favor,phrase,n_a,food,1
 pencil,lápiz,noun,masculine,n_a,1
 point of view,punto de vista,phrase,n_a,n_a,1
@@ -1767,10 +1767,10 @@ I'd like a pair of blue trousers,quisiera unos pantalones azules,phrase,n_a,clot
 I like this shoe,me gusta este zapato,phrase,n_a,clothing,1
 there's a sale on in the supermarket,hay rebajas en el supermercado,phrase,n_a,n_a,1
 I get five pounds pocket money a week,recibo cinco libras de dinero de bolsillo por semana,phrase,n_a,n_a,1
-tell me about yourself,háblame de ti,phrase,n_a,n_a,1
+tell me about yourself,háblame de ti,phrase,familiar,n_a,1
 we live on the ground floor,vivimos en la planta baja,phrase,n_a,n_a,1
 amazing,asombroso,adjective,n_a,n_a,1
-what do you mean?,¿qué quieres decir?,phrase,n_a,n_a,1
+what do you mean?,¿qué quieres decir?,phrase,familiar,n_a,1
 purpose,propósito,noun,masculine,n_a,1
 chapter,capítulo,noun,masculine,n_a,1
 return,regresar,verb,transIntrans,n_a,1
@@ -1783,7 +1783,7 @@ I'm not going to do it now,no voy a hacerlo ahora,phrase,n_a,n_a,1
 I'm going to call you a little later,voy a llamarle un poco más tarde,phrase,n_a,n_a,1
 what time are you going to call me?,¿a qué hora va a llamarme?,phrase,n_a,n_a,1
 can you come and see it with me tonight?,¿puede venir a verlo conmigo esta noche?,phrase,n_a,n_a,1
-are you ready?,¿estás listo?,phrase,n_a,n_a,1
+are you ready?,¿estás listo?,phrase,familiar,n_a,1
 I'm busy,estoy ocupado,phrase,n_a,n_a,1
 will you be ready tomorrow?,¿va a estar listo mañana?,phrase,n_a,n_a,1
 I will be busy tomorrow,voy a estar ocupado mañana,phrase,n_a,n_a,1
@@ -1795,10 +1795,10 @@ I don't understand you,no le comprendo,phrase,n_a,n_a,1
 I like to see it but I don't like to do it,me gusta verlo pero no me gusta hacerlo,phrase,n_a,n_a,1
 I don't understand what you're saying,no comprendo lo qué dice,phrase,n_a,n_a,1
 I'm not selling it because I don't want to sell it,no lo vendo porque no quiero venderlo,phrase,n_a,n_a,1
-why don't you speak Spanish with me?,¿por qué no hablas español conmigo?,phrase,n_a,n_a,1
+why don't you speak Spanish with me?,¿por qué no hablas español conmigo?,phrase,familiar,n_a,1
 there are many people here,hay mucha gente aquí,phrase,n_a,n_a,1
 I don't know how long we're going to stay here,no sé cuanto tiempo vamos a quedarnos aquí,phrase,n_a,n_a,1
-I would like to go and see it with you,me gustaría ir a verlo contigo,phrase,n_a,n_a,1
+I would like to go and see it with you,me gustaría ir a verlo contigo,phrase,familiar,n_a,1
 I can't find it,no puedo encontrarlo,phrase,n_a,n_a,1
 I don't know where it is,no sé donde está,phrase,n_a,n_a,1
 do you know where it is?,¿sabe donde está?,phrase,n_a,n_a,1
@@ -1807,7 +1807,7 @@ when are you going to do it?,¿cuándo va a hacerlo?,phrase,n_a,n_a,1
 why don't you understand me?,¿por qué no me comprende?,phrase,n_a,n_a,1
 what time are you leaving?,¿a qué hora sale?,phrase,n_a,n_a,1
 what are you doing today?,¿qué hace hoy?,phrase,n_a,n_a,1
-what are you doing?,¿qué estás haciendo?,phrase,n_a,n_a,1
+what are you doing?,¿qué estás haciendo?,phrase,familiar,n_a,1
 I am speaking,estoy hablando,phrase,n_a,n_a,1
 what are you saying?,¿qué dice?,phrase,n_a,n_a,1
 what do you mean?,¿qué quiere decir?,phrase,n_a,n_a,1
@@ -1816,15 +1816,15 @@ eat it! it's very good,¡cómalo! es muy bueno,phrase,n_a,n_a,1
 we're going to leave soon,vamos a salir pronto,phrase,n_a,n_a,1
 I come I have I put I leave,vengo tengo pongo salgo,phrase,n_a,n_a,1
 where are you putting it?,¿dónde lo pone?,phrase,n_a,n_a,1
-put it here!,¡ponlo aquí!,phrase,n_a,n_a,1
-say it in Spanish!,¡dígalo en español!,phrase,n_a,n_a,1
+put it here!,¡ponlo aquí!,phrase,familiar,n_a,1
+say it in Spanish!,¡dígalo en español!,phrase,familiar,n_a,1
 do it! I'm doing it,¡hágalo! lo hago,phrase,n_a,n_a,1
 what time does it start?,¿a qué hora empieza?,phrase,n_a,n_a,1
 what do you think?,¿qué piensa?,phrase,n_a,n_a,1
 I'm thinking of leaving soon,pienso salir pronto,phrase,n_a,n_a,1
 when do you plan to leave?,¿cuándo piensa salir?,phrase,n_a,n_a,1
-we want it,lo queremos,phrase,n_a,n_a,1
-what time are you coming back?,¿a qué hora vuelven?,phrase,n_a,n_a,1
+we've never seen anything like this,nunca hemos visto nada así,phrase,n_a,n_a,1
+what time are you coming back?,¿a qué hora vuelven?,phrase,plural,n_a,1
 we're coming back the day after tomorrow,volvemos pasado mañana,phrase,n_a,n_a,1
 I'm getting up later,me levanto mas tarde,phrase,n_a,n_a,1
 we're getting up soon,nos levantamos pronto,phrase,n_a,n_a,1
@@ -1847,16 +1847,16 @@ I have not understood what you were saying,no he comprendido lo que decía,phrase
 we did it every day,lo hacíamos todos los días,phrase,n_a,n_a,1
 wait a minute!,¡espere un minuto!,phrase,n_a,n_a,1
 I won't forget you,no le olvidaré,phrase,n_a,n_a,1
-are you sure?,¿estás seguro?,phrase,n_a,n_a,1
+are you sure?,¿estás seguro?,phrase,familiar,n_a,1
 what a good idea!,¡qué buena idea!,phrase,n_a,n_a,1
-that's not a bad idea,no eso es una mala idea,phrase,n_a,n_a,1
+that's not a bad idea,eso no es una mala idea,phrase,n_a,n_a,1
 how long do you plan to stay?,¿cuánto tiempo piensa quedarse?,phrase,n_a,n_a,1
 take it!,¡tómelo!,phrase,n_a,n_a,1
 eat it!,¡cómalo!,phrase,n_a,n_a,1
 I have just seen it,acabo de verlo,phrase,n_a,n_a,1
 we have just arrived,acabamos de llegar,phrase,n_a,n_a,1
 where have you put it?,¿dónde lo ha puesta?,phrase,n_a,n_a,1
-I feel like staying here with all of you,tengo ganas de quedarme aquí con ustedes,phrase,n_a,n_a,1
+I feel like staying here with you,tengo ganas de quedarme aquí con ustedes,phrase,plural,n_a,1
 I prefer to go out,prefiero salir,phrase,n_a,n_a,1
 who's that?,¿quién es ese?,phrase,n_a,n_a,1
 nobody,nadie,pronoun,n_a,n_a,1

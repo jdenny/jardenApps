@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.jardenconsulting.jardenprovider"
-          android:installLocation="preferExternal" >
+    android:installLocation="preferExternal" >
 
 <permission
     android:name="com.jardenconsulting.permission.ENGSPA_READ"

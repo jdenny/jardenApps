@@ -5,14 +5,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.jardenconsulting.spanishapp"
         minSdkVersion 14
-        targetSdkVersion 32
-        versionCode 39
-        versionName "2.16"
+        targetSdkVersion 33
+        versionCode 41
+        versionName "2.18"
     }
     buildTypes {
         release {
@@ -20,13 +20,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.jardenconsulting.spanishapp'
 }
 
 dependencies {
     implementation project(':jardenlib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.7.0'
 }

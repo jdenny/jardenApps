@@ -83,14 +83,18 @@ public final class EngSpaContract {
 		n_a, // not applicable
 		masculine, feminine, // for nouns
 		transitive, intransitive, transIntrans, auxiliary, // for verbs
+        // added 6.12.2022:
+        permanent, temporary, // for ser and estar
 		// added 16.2.2016:
-		mf, mpl, fpl, mfpl; // for nouns; masculine or feminine, then plurals
+		mf, mpl, fpl, mfpl, // for nouns; masculine or feminine, then plurals
+        // added 6.12.2022:
+        familiar, plural; // for phrases containing 'you'
 	}
 	
-	public enum Attribute {
-		animal, body, building, clothing, colour, culture, drink, food,
+	public enum Topic { // also known as hint
+		animal, body, building, clothing, colour, culture, drink, familiar, food,
 		hobby, home, interrogative, language, mineral, money, music, n_a,
-		number, person, phrase, place, size, sport, technology, time,
+		number, person, phrase, place, plural, size, sport, technology, time,
 		travel, weather
 	}
 	public static final String[] wordTypeNames;
@@ -109,10 +113,10 @@ public final class EngSpaContract {
 		for (int i = 0; i < qualifiers.length; i++) {
 			qualifierNames[i] = qualifiers[i].name();
 		}
-		Attribute[] attributes = Attribute.values();
-		attributeNames = new String[attributes.length];
-		for (int i = 0; i < attributes.length; i++) {
-			attributeNames[i] = attributes[i].name();
+		Topic[] topics = Topic.values();
+		attributeNames = new String[topics.length];
+		for (int i = 0; i < topics.length; i++) {
+			attributeNames[i] = topics[i].name();
 		}
 		QAStyle[] qaStyles = QAStyle.values();
 		qaStyleNames = new String[qaStyles.length];

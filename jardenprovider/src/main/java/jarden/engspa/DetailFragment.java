@@ -1,7 +1,7 @@
 package jarden.engspa;
 
 import jarden.provider.engspa.EngSpaContract;
-import jarden.provider.engspa.EngSpaContract.Attribute;
+import jarden.provider.engspa.EngSpaContract.Topic;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.WordType;
 
@@ -159,7 +159,7 @@ public class DetailFragment extends Fragment implements OnClickListener {
 			this.qualifierSpinner.setSelection(position);
 			
 			String attribute = cursor.getString(5);
-			position = Attribute.valueOf(attribute).ordinal();
+			position = Topic.valueOf(attribute).ordinal();
 			this.attributeSpinner.setSelection(position);
 			
 			String level = cursor.getString(6);

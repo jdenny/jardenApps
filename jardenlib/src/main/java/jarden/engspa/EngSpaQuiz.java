@@ -9,6 +9,7 @@ import java.util.Set;
 
 import jarden.engspa.VerbUtils.Person;
 import jarden.engspa.VerbUtils.Tense;
+import jarden.provider.engspa.EngSpaContract.Topic;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.WordType;
@@ -38,6 +39,7 @@ public class EngSpaQuiz extends Quiz {
 	
 	private String spanish;
 	private String english;
+	private Person person;
 
 	private Random random = new Random();
 	private static final Person[] persons;
@@ -157,17 +159,19 @@ public class EngSpaQuiz extends Quiz {
 			int verbLevel = this.engSpaUser.getLearnLevel() / 5 + 1;
 			if (verbLevel > tenseSize) verbLevel = tenseSize;
 			Tense tense = tenses[random.nextInt(verbLevel)];
-			Person person = persons[random.nextInt(personSize)];
+			person = persons[random.nextInt(personSize)];
 			String spaVerb = VerbUtils.conjugateSpanishVerb(
 					spa, tense, person);
 			String engVerb = VerbUtils.conjugateEnglishVerb(
 					eng, tense, person);
 			if (tense == Tense.imperative) {
-				this.spanish = spaVerb + "!";
+				this.spanish = "¡" + spaVerb + "!";
 				this.english = engVerb + "!";
+                this.person = Person.tu;
 			} else if (tense == Tense.noImperative) {
-				this.spanish = "no " + spaVerb + "!";
+				this.spanish = "¡no " + spaVerb + "!";
 				this.english = "don't " + engVerb + "!";
+                this.person = Person.tu;
 			} else {
 				this.spanish = person.getSpaPronoun() + " " + spaVerb;
 				this.english = person.getEngPronoun() + " " + engVerb;
@@ -309,18 +313,32 @@ public class EngSpaQuiz extends Quiz {
 	}
 	/**
 	 * get hint from current word; make a special case
-	 * for ser and estar if question is in English.
-	 * @param englishQuestion true means question is English
+	 * for ser and estar if question is in English;
+     * for phrases, add qualifier (e.g. 'familiar' an 'plural' for 'you' phrases).
+	 * @param englishQuestion true means question is English to Spanish
 	 */
 	public String getHint(boolean englishQuestion) {
-		String hint = this.currentWord.getHint();
-		if (hint.length() == 0 && englishQuestion) {
-			if (this.currentWord.getSpanish().equals("ser")) {
-				hint = "permanent";
-			} if (this.currentWord.getSpanish().equals("estar")) {
-				hint = "temporary";
-			}
-		}
+        Topic topic = this.currentWord.getTopic();
+        String hint = (topic == Topic.n_a) ? "" : topic.toString();
+        WordType wordType = this.currentWord.getWordType();
+        if (englishQuestion && wordType == WordType.phrase) {
+            Qualifier qualifier = this.currentWord.getQualifier();
+            if (qualifier != Qualifier.n_a) {
+                hint = qualifier.toString() + " " + hint;
+            }
+        } else if (hint.length() == 0 && (wordType != WordType.noun &&
+                wordType != WordType.verb && wordType != WordType.phrase)) {
+            hint = wordType.toString();
+        }
+        if (wordType == WordType.verb && englishQuestion) {
+            if (this.currentWord.getSpanish().equals("ser")) {
+                hint = "permanent " + hint;
+            } if (this.currentWord.getSpanish().equals("estar")) {
+                hint = "temporary " + hint;
+            }
+            if (this.person == Person.tu) hint = "familiar " + hint;
+            else if (this.person == Person.ustedes) hint = "plural " + hint;
+        }
 		return hint;
 	}
 	private EngSpa getCurrentLevelWord() {

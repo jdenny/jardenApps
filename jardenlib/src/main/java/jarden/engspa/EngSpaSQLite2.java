@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import jarden.provider.engspa.EngSpaContract.Attribute;
+import jarden.provider.engspa.EngSpaContract.Topic;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.WordType;
@@ -200,7 +200,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		try {
 			WordType.valueOf((String) values.get(WORD_TYPE));
 			Qualifier.valueOf((String) values.get(QUALIFIER));
-			Attribute.valueOf((String) values.get(ATTRIBUTE));
+			Topic.valueOf((String) values.get(ATTRIBUTE));
 			return true;
 		} catch(Exception ex) {
 			Log.e(TAG, "exception in validateValues(" + values + "): " + ex);
@@ -394,10 +394,10 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		String attributeStr = cursor.getString(5);
 		WordType wordType = WordType.valueOf(wordTypeStr);
 		Qualifier qualifier = Qualifier.valueOf(qualifierStr);
-		Attribute attribute = Attribute.valueOf(attributeStr);
+		Topic topic = Topic.valueOf(attributeStr);
 		int level = cursor.getInt(6);
 		return new EngSpa(id, english, spanish,
-				wordType, qualifier, attribute, level);
+				wordType, qualifier, topic, level);
 	}
 	
 	@Override // EngSpaDAO
