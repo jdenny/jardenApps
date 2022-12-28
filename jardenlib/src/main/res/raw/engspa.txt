@@ -669,7 +669,7 @@ sit here my friend,siéntate aquí mi amigo,phrase,familiar,n_a,1
 bring,traer,verb,transIntrans,n_a,1
 bag,bolsa,noun,feminine,n_a,1
 home,hogar,noun,masculine,place,1
-wood for the fire,leña para el fuego,phrase,n_a,home,1
+enjoy your walk!,¡disfruta tu paseo!,phrase,familiar,n_a,1
 don't lose your temper!,¡no pierdas los estribos!,phrase,familiar,n_a,1
 son-in-law,yerno,noun,masculine,person,1
 accept,aceptar,verb,transIntrans,n_a,1
@@ -1019,7 +1019,7 @@ mine,mío,pronoun,n_a,n_a,1
 of course,por supuesto,phrase,n_a,n_a,1
 I agree,de acuerdo,phrase,n_a,n_a,1
 too bad,demasiado mal,phrase,n_a,n_a,1
-usually,normalmente,adverb,n_a,n_a,1
+normally,normalmente,adverb,n_a,n_a,1
 what a pity,qué lástima,phrase,n_a,n_a,1
 everybody,todos,pronoun,n_a,n_a,1
 figure,cifra,noun,feminine,person,1
@@ -1086,7 +1086,7 @@ sweatshirt,sudadera,noun,feminine,clothing,1
 swimming costume,traje de baño,noun,masculine,clothing,1
 the tights,las medias,phrase,n_a,clothing,1
 tracksuit,chandal,noun,masculine,clothing,1
-the trainers,las zapatillas de deportes,phrase,n_a,clothing,1
+the trainers,las zapatillas de deporte,phrase,n_a,clothing,1
 watch,reloj,noun,masculine,clothing,1
 wool,lana,noun,feminine,clothing,1
 adolescent,adolescente,adjective,n_a,person,1
@@ -1746,7 +1746,7 @@ it is never too late,nunca es demasiado tarde,phrase,n_a,n_a,1
 grain of sand,granito de arena,phrase,n_a,n_a,1
 occur,ocurrir,verb,intransitive,n_a,1
 I would not have believed it,no me lo habría creído,phrase,n_a,n_a,1
-have fun!,pásatelo bien,phrase,n_a,n_a,1
+have fun!,¡pásatelo bien!,phrase,familiar,n_a,1
 I know you would love it,sé que te encantaría,phrase,familiar,n_a,1
 think about it!,¡piénsatelo!,phrase,familiar,n_a,1
 frighten,asustar,verb,transitive,n_a,1
@@ -1817,7 +1817,7 @@ we're going to leave soon,vamos a salir pronto,phrase,n_a,n_a,1
 I come I have I put I leave,vengo tengo pongo salgo,phrase,n_a,n_a,1
 where are you putting it?,¿dónde lo pone?,phrase,n_a,n_a,1
 put it here!,¡ponlo aquí!,phrase,familiar,n_a,1
-say it in Spanish!,¡dígalo en español!,phrase,familiar,n_a,1
+say it in Spanish!,¡dígalo en español!,phrase,n_a,n_a,1
 do it! I'm doing it,¡hágalo! lo hago,phrase,n_a,n_a,1
 what time does it start?,¿a qué hora empieza?,phrase,n_a,n_a,1
 what do you think?,¿qué piensa?,phrase,n_a,n_a,1
