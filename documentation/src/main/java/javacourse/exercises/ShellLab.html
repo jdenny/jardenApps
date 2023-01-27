@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>ShellLab</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Compiling and Running Java from a DOS command shell</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Simplest Java Program</h4>
+<p>create the following folder:</p><pre>
+c:\temp\myjava</pre>
+
+<p>inside <code>\temp\myjava</code>, create text file:
+<code>Hello.java</code></p>
+
+<p>in a text editor, edit <code>Hello.java</code> to contain the following:</p>
+<pre>
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello and welcome to Java");
+    }
+}
+</pre>
+
+<p>open DOS prompt and compile classes; if the javac command if not found,
+you may need to add the java development kit (jdk) to the path, e.g.</p>
+<pre>
+c:\>cd \temp\myjava
+c:\temp\myjava>javac *.java
+'javac' not recognised...
+c:\temp\myjava>set path="C:\Program Files\Java\jdk7\bin";%path%
+c:\temp\myjava>javac *.java
+</pre>
+
+<p>if you have compilation errors, fix them!</p>
+
+<p>check to see the class file has been produced:</p>
+<pre>
+c:\temp\myjava\Hello.class
+</pre>
+
+<p>run the java program:</p>
+<pre>
+c:\temp\myjava>java Hello
+</pre>
+
+<p>you should see some output!</p>
+
+<h4>Slightly less simple Java Program</h4>
+
+<p>create the following folders:</p><pre>
+c:\temp\myjava\src\simple
+c:\temp\myjava\bin</pre>
+
+<p>inside <code>\temp\myjava\src\simple</code>, create text files:
+<code>Greet.java</code> and <code>Main.java</code></p>
+
+<p>in a text editor, edit <code>Greet.java</code> to contain the following:</p>
+<pre>
+package simple;
+public class Greet {
+    public String hello(String name) {
+        return "hello " + name;
+    }
+}
+</pre>
+
+<p>edit <code>Main.java</code> as follows:</p>
+<pre>
+package simple;
+public class Main {
+    public static void main(String[] args) {
+        Greet greet = new Greet();
+        System.out.println("received message: " + greet.hello("John"));
+    }
+}
+</pre>
+
+<p>open DOS prompt, add jdk to path (if not already added), and compile classes, e.g.</p>
+<pre>
+c:\>cd \temp\myjava
+c:\temp\myjava>set path="C:\Program Files\Java\jdk7\bin";%path%
+c:\temp\myjava>javac -d bin src/simple/*.java
+</pre>
+
+<p>if you have compilation errors, fix them!</p>
+
+<p>check to see the class files have been produced:</p>
+<pre>
+c:\temp\myjava\bin\simple\Greet.class
+c:\temp\myjava\bin\simple\Main.class
+</pre>
+
+<p>run the java program:</p>
+<pre>
+c:\temp\myjava>cd bin
+c:\temp\myjava\bin\>java simple.Main
+</pre>
+
+<p>you should see some output!</p>
+
+<p>change to another directory and try again</p>
+<pre>
+...>cd \
+c:\>java simple.Main
+</pre>
+
+<p>it doesn't find the class!</p>
+
+<p>set the classpath and try again</p>
+<pre>
+c:\>set classpath=c:/temp/myjava/bin
+c:\>java simple.Main
+</pre>
+
+<p>this time it should work</p>
+
+<p>now create a jar file; first we need a manifest file:</p>
+<pre>
+c:\temp\myjava\manifest.txt</pre>
+
+<p>which contains:</p>
+<pre>
+Main-Class: simple.Main
+
+</pre>
+(make sure you have a new line at the end)<br/>
+
+<p>now build and run the jar file (note the full-stop at the end of the jar command):</p><pre>
+c:\temp\myjava\bin>jar cfm hello.jar ../manifest.txt .
+c:\temp\myjava\bin>java -jar hello.jar
+</pre>
+
+<p>you should see the same output!</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

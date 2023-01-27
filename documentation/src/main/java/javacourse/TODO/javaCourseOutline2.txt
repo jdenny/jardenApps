@@ -1,0 +1,34 @@
+Pre-course setup - see docs/exercises/Setup.html
+
+Course Topics
+-------------
+(**means not yet written)
+01_JavaIntroduction.ppt
+02_JavaLanguage.ppt: data types, expressions, flow control, arrays, methods
+03_OOP.ppt: encapsulation, inheritance, polymorphism, class definition
+04_ClassesPart2.ppt: packages, abstract classes, interfaces
+05_Exceptions.ppt: Exceptions and Assertions
+06_LanguagePart2.ppt: overloaded methods, varargs, documentation,
+	casting, static & final
+07_CoreLibraries.ppt: String, StringBuilder, StringBuffer,
+	MessageFormatter and Formatter, Scanner
+08_CollectionsAndGenerics.ppt
+09_Enums.ppt:
+10_Swing.ppt: Introduction to Swing
+11_Streams.ppt: read & write data and text to files
+12_JUnit.ppt:
+**Inner classes; see demo.language.InnerClasses
+13_Threads.ppt:
+**Introduction to design patterns: Singleton, DAO, MVC
+14_JDBC.ppt: Introduction to JDBC
+**Annotations
+**Introduction to Localization: Dates, Currencies - see demo.i18n 
+15_Sockets.ppt: simple networking with sockets
+**Preview of Enterprise Java
+
+typical timetable:
+Mon: intro, language, oop (1)
+Tues: oop (2), classesPart2, Exceptions
+Wed: (finish labs) LanguagePart2, CoreLibraries, CollectionsAndGenerics, Enums
+Thurs: Swing, Streams, JUnit, Threads
+Fri: JDBC, Sockets

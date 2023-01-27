@@ -1,0 +1,25 @@
+To produce and print a PDF file of the slides
+---------------------------------------------
+merge the slides, in the following order:
+	01_JavaIntroduction.ppt
+	02_JavaLanguage.ppt
+	03_OOP.ppt
+	04_ClassesPart2.ppt
+	05_Exceptions
+	06_LanguagePart2.ppt
+	07_CoreLibraries.ppt
+	08_CollectionsAndGenerics.ppt
+	09_Enums.ppt
+	10_Swing.ppt
+	11_Streams.ppt
+	12_JUnit.ppt
+	13_Threads.ppt
+	14_JDBC.ppt
+	15_Sockets.ppt
+	16_Lambdas.ppt
+	
+export as PDF
+
+open PDF in Adobe Reader, and print as follows:
+	2 pages per sheet
+	orientation: landscape

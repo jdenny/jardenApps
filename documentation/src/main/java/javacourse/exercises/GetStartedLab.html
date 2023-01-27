@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>UseEclipseLab</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Getting started with Eclipse</div>
+
+<p>create Eclipse Java Project:</p>
+
+<p class='indent'>File, New, Java Project. <a href='EclipseHelp.html#newProject'>More detail?</a></p>
+
+<p>create package named 'first':</p>
+
+<p class='indent'>right-click on src, New, Package. <a href='EclipseHelp.html#newPackage'>More detail?</a></p> 
+
+<p>create class <code>HelloJava</code>; add main method to output "Hello Java World"</p><pre>
+package first;
+
+public class HelloJava {
+    public static void main(String[] args) {
+        System.out.println("Hello Java World");
+    }
+}
+</pre>
+
+<p>run code:</p>
+
+<p class='indent'>right-click on file-name in Package Explorer, Run As,
+Java Application. In the Console, you should see:<code>
+Hello Java World</code></p>
+
+<p>Sample Solution: first.HelloJava</p>
+
+<p>As a further optional step, let's create a jar file from Eclipse, and run it by double-clicking it.
+For HelloJava this won't be very interesting, because it won't run it within a console, and so we won't
+see anything happen. More interesting is to run an application that has a graphical user interface; we
+will use a simple application called HelloSwing.</p><ul>
+	<li>right-click on src/swing/HelloSwing.java and select Export from the drop-down menu; this should
+	 open the Export wizard</li>
+	<li><i>Select</i>: Java/JAR file, Next</li>
+	<li><i>JAR File Specification</i>: set JAR file, e.g. /temp/HelloSwing.jar, Next</li>
+	<li><i>JAR Packaging Options</i>: Next</li>
+	<li><i>JAR Manifest Specification</i>: Use existing manifest from workspace;
+	 Manifest file: /JavaCourse/src/swing/manifest.txt, Finish</li>
+</ul>
+
+<p>Now go to your file explorer, find /temp/HelloSwing.jar, and double-click;
+this should run the HelloSwing application.</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

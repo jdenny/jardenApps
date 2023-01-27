@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>DesignClassSol</title>
+</head>
+<body>
+<div class='banner'>Designing Classes - Sample Solution</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<pre>
+<b>Booking</b>
+    attributes: personCount, startDate
+    methods: reserve(), cancel(), confirm(), revise(), checkOut()
+
+<b>HotelBooking</b> extends Booking
+    attributes: endDate, roomType
+    methods: checkOut() - take payment
+
+<b>SportsBooking</b> extends Booking
+    activityType (pool, tennis, sauna, massage, gym), time
+    methods: checkOut() - some activities may be free;
+        for those charged, put on room bill
+
+<b>RestaurantBooking</b> extends Booking
+    attributes: time
+    methods: checkOut() - could pay now or put on room bill
+</pre>
+
+<a href='DesignClassLab.html'>Back to Designing Classes Exercise</a>
+
+</body>
+</html>

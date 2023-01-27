@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>ClassDefLab2</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Class Definition Part 2</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>This exercise is to try out some more features of defining classes:<ul>
+	<li>interfaces</li>
+	<li>packages</li>
+	<li>initialising arrays</li>
+	<li><code>instanceof</code> operator</li>
+	<li>abstract classes</li>
+</ul>
+
+<p>To see your Sales classes in a Swing GUI, change your classes to implement
+the following interfaces:<ul>
+	<li>SalesUnit should implement jarden.gui.SalesUnitIF</li>
+	<li>SalesPerson should implement jarden.gui.SalesPersonIF</li>
+	<li>SalesTeam should implement jarden.gui.SalesTeamIF</li>
+</ul>
+<p>Now, in your SalesTest class, pass your top-level team to the constructor
+of the jarden.gui.SalesSwing class.</p>
+
+<p>This illustrates one of the functions of interfaces: we can plug different
+classes together, without knowing what they are called or how they are coded,
+so long as they implement the agreed interfaces.</p>
+
+<p>Solution in package sales</p>
+
+<p>The theme chosen for the rest of this exercise is chess, using a very simple
+implementation of some of the pieces
+and their moves. If the thought of writing classes for chess fills you with horror,
+just use the classes in package solution.chess, and in a different package define
+a class with a <code>main()</code> method; most of the learning points are contained
+in this <code>main()</code> method.</p>
+
+<p>Define an abstract class ChessPiece:<ul>
+	<li>name - a string, e.g. "Rook"</li>
+	<li>white - a boolean</li>
+	<li>xPos, yPos - integers, with values from 1 to 8</li>
+	<li>a constructor</li>
+	<li>toString() - e.g. "White Rook(1, 1)"</li>
+	<li>move(x, y) - call validateMove(), and update xPos and yPos</li>
+	<li>validateMove(x, y) - abstract method</li>
+	<li>getName()</li>
+	<li>getShortName() - a String; defaults to 1st char of name</li>
+</ul>
+
+<p>Define a class Rook as subclass of ChessPiece; overwrite method
+<code>validateMove(x, y)</code> to check that it is a valid move for a rook
+ - either x or y must stay the same.</p>
+
+<p>Create a Rook instance; print it; move it; print it again</p>
+
+<p>Similarly define a class King, which can only move 1 square in any direction.
+<i title='Math.abs(currentX - newX) <= 1, and same for Y'>Hover for hint</i></p>
+
+<p>Now put ChessPiece, Rook and King into package chess, and put the main method
+into a class Main, in another package. See what happens with and without the
+<code>import</code> statements.</p>
+
+<p>Define a method which accepts an array of ChessPieces and prints them.
+Keep a check on the number of kings, using <code>instanceof</code> operator.
+At the end of printing the pieces, print the number of kings.</p>
+
+<p>Within <code>main()</code>, define an array of ChessPieces, and initialise it
+with different types of pieces. Pass this array to your new method to print the
+pieces and count the kings.</p>
+
+<p>Solution: solution.ClassDefinition2 and classes in package solution.chess</p>
+
+<p>You can try your classes with a Swing graphical user interface that we have
+provided. To use this:<ul>
+	<li>to make sure your classes are properly defined, specify that your
+	ChessPiece class implements interface jarden.gui.Chess</li>
+	<li>in your <code>main</code> method, create an array of Chess, containing
+	an object of each Chess class you have defined.</li>
+	<li>create an object of type jarden.gui.ChessSwing, passing your chess
+	array to the constructor, e.g.<pre>
+public static void main(String[] args) {
+    Chess[] chessPieces = {
+        new King(true, 5, 1),
+        new Rook(true, 1, 1),
+        new Knight(true, 2, 1)
+    };
+    new ChessSwing(chessPieces);
+}</pre></li>
+</ul>
+Now you should see your Chess pieces in action!
+
+<p>An abstract class is used in the Quiz Project:
+ see <a href='QuizProject.html#Inheritance'>Quiz Inheritance</a></p>
+
+<p>Later we will see Interfaces used extensively in Swing</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+/* AUTOMATICALLY GENERATED ON Sun Jun 29 20:27:16 BST 2014*/
+/* DO NOT EDIT */
+
+keystore "file:/c:/temp/mycerts.jks", "jks";
+
+grant signedBy "john" {
+  // permission java.net.SocketPermission "sites.google.com:443", "connect, resolve";
+  // permission java.net.SocketPermission "*.googlegroups.com:443", "connect, resolve";
+  // don't know why the above 2 don't work, but the following one does
+  // see javadocs for java.net.SocketPermission for syntax
+  permission java.net.SocketPermission "*", "connect, resolve";
+};
+

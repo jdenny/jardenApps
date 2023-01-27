@@ -1,0 +1,68 @@
+Q: rain
+A: lluvia
+Q: a cloud
+A: una nube
+Q: fog
+A: niebla
+Q: storm
+A: tormenta
+Q: wind
+A: viento
+Q: thunder
+A: trueno
+Q: the snow
+A: la nieve
+Q: clear (adj)
+A: despejado
+Q: what's the weather like
+A: qué tiempo hace
+Q: it's raining
+A: está lloviendo
+Q: it's snowing
+A: está nevando
+Q: the sky is clear
+A: está despejado
+Q: it's cloudy
+A: está nublado
+Q: it's foggy
+A: hay niebla
+Q: it's stormy
+A: hay tormenta
+Q: it's cold
+A: hace frío
+Q: it's warm
+A: hace calor
+Q: it's windy
+A: hace viento
+Q: it's sunny
+A: hace sol
+Q: it's hot
+A: hace mucho calor
+Q: it's nice
+A: hace buen tiempo
+Q: it's bad
+A: hace mal tiempo
+Q: what will the weather be like tomorrow
+A: qué tiempo hará mañana
+Q: it will rain tomorrow
+A: mañana lloverá
+Q: it's going to rain next week
+A: la semana próxima va a llover
+Q: it's going to snow on Tuesday
+A: el martes va a nevar
+Q: it will thunder on Friday
+A: el viernes habrán truenos
+Q: it will be hot on Thursday
+A: el jueves hará mucho calor
+Q: it will be cold on Wednesday
+A: el miércoles hará frío
+Q: it will be windy on Saturday
+A: el sábado hará viento
+Q: it will be cloudy on Sunday
+A: el domingo estará nublado
+Q: what was the weather like
+A: qué tiempo hacía
+Q: it was warm
+A: hacía calor
+Q: it was raining
+A: llovía

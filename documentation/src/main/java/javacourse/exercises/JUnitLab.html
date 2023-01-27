@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>JUnitLab</title>
+</head>
+<body>
+<div class='banner'>JUnit Testing</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>We're going to write a test method for an algorithm to sort an array of integers.
+Then we're going to write the algorithm, and test if it works.
+Yes, we're writing the test first - which should fail - then we'll write the sort code.</p>
+
+<p>Create a new package (e.g. myjunit). In that package create class MySort,
+containing skeletal versions of the sort methods:<pre>
+public static void sort(int[] numbers)
+public static void reverseSort(int[] numbers)</pre>
+The methods are static because they don't use any instance data.
+For now the methods do nothing.
+
+<p>Create new JUnit Test Case:<ul>
+	<li>right click on your package, New, New JUnit Test Case</li>
+	<li>call the class SortTest</li>
+	<li>Class under test (of course) is MySort</li>
+</ul>
+In the generated source, notice Eclipse has done some of the housekeeping for us.
+
+<p>Write a <code>before</code> method to create an integer array,
+as an instance variable.</p>
+
+<p>Code the 2 test methods to call MySort, then assert that the values
+are as expected. For simplicity, only test 2 or 3 values in the array.</p>
+
+<p>Run the JUnit tests, and confirm that they fail.</p>
+
+<p>Now implement the 2 sort methods, until they pass the test.</p>
+
+<p>Sample Solution: package solution.junit</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

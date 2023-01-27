@@ -1,0 +1,239 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>QuizProject</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+
+<div class='banner'>Java Programming Course - Quiz Project</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Overview</h4>
+This is a project to ask quiz questions and check the supplied answers. The questions can
+be of various types:<ul>
+	<li>generated mathematics questions, e.g. arithmetic, algebra, series</li>
+	<li>pre-defined text-based questions; the questions and answers can be
+	obtained from various sources, e.g. hard-coded in the program, or held in a
+	file or on a database.</li>
+</ul>
+The project is well suited to an object-oriented design, as all these question-types
+share certain data and methods, but also have variations. The project should illustrate
+two basic advantages of developing in an object-oriented style:<ul>
+	<li>new question types can be added without affecting existing code;</li>
+	<li>new functionality - e.g. repeating questions incorrectly answered - can be
+	added in a single superclass, and automatically incorporated into all the
+	subclasses.</li>
+</ul>
+
+<a id="ArithmeticClass"></a>
+<h4>Arithmetic Class</h4><ul>
+	<li>create class Arithmetic with method <code>main()</code></li>
+	<li>generate 2 random integers</li>
+	<li>prompt user to supply sum of 2 integers, e.g.<br/>
+		5 + 3 =</li>
+	<li>output supplied answer plus correct answer, e.g.<br/>
+		your answer: 8; correct answer: 8</li>
+</ul>
+<p>Sample Solution: quiz1.Arithmetic</p>
+
+<a id="ArithmeticClass2"></a>
+<h4>Revised Arithmetic class</h4>
+Update Arithmetic class as follows<ul>
+	<li>tell user if right; if wrong print correct answer</li>
+	<li>Test the code so far</li>
+	<li>ask if user wants another; repeat while user types in "y" or "yes"</li>
+	<li>Test the code so far</li>
+	<li>Now extend arithmetic quiz to include other arithmetic operations: - * /<ul>
+	<li>generate random operator index (i.e. number from 1 to 4, to correspond to 4
+	 arithmetic operators +, -, *, /)</li>
+	<li>prompts should now be something like:<br/>
+	5 * 4 =<br/>
+	12 / 4 =</li></ul>
+</ul>
+<p>Sample Solution: quiz1.Arithmetic2</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+<a id="ArithmeticQuiz"></a>
+<h4>ArithmeticQuiz Class</h4>
+Create class ArithmeticQuiz, with public methods:<pre>
+String getNextQuestion()
+String getCurrentQuestion()
+boolean isCorrect(int answer)
+String getAnswer()</pre>
+base these methods on the code in Arithmetic.<br/>
+<br/>
+Create a class Main which:<ul>
+	<li>creates an object of type ArithmeticQuiz, and invokes its methods</li>
+	<li>includes the input/output code previously used in Arithmetic</li>
+</ul>
+Test that Main works the same as Arithmetic.<br/>
+
+<p>Sample solution in package quiz2</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+<a id="CapitalsQuiz"></a>
+<h4>CapitalsQuiz Class</h4>
+
+<p>Define class CapitalsQuiz, which asks the user to supply the capital of a country,
+where the names of the countries and capitals are held in 2 arrays. E.g. the 2 arrays
+could contain:</p><code>
+<b>Countries</b><br/>
+"Norway", "England", "France", "Italy", "Sweden", "Denmark", "Finland",
+"Netherlands", "Germany", "Spain", "Ireland", "Belgium", "Greece", "Portugal"<br>
+<b>Capitals</b><br/>
+"Oslo", "London", "Paris", "Rome", "Stockholm", "Copenhagen", "Helsinki",
+"Amsterdam", "Berlin", "Madrid", "Dublin", "Brussels", "Athens", "Lisbon"
+</code>
+<p>Provide similar methods as for ArithmeticQuiz, except that isCorrect() should take
+a parameter of type String, rather than int.</p>
+
+<p>Note: either serially go through all the elements of the arrays, or randomly choose
+an index each time.</p>
+
+<p>Add a <code>main()</code> method in CapitalsQuiz, which creates an object of
+type CapitalsQuiz and invokes its methods, similar to the code previously used
+in class Main.</p>
+
+<p>Test CapitalsQuiz</p>
+
+<p>Sample Solution: quiz2.CapitalsQuiz</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+<a id="Inheritance"></a>
+<h4>Inheritance</h4>
+
+<p>Separate CapitalsQuiz into two classes: Quiz and CapitalsQuiz (subclass of
+Quiz), so that CapitalsQuiz contains only 1 method, <code>getNextQuestion()</code>,
+which overrides the abstract method in Quiz. All the other methods become part of
+Quiz. Also, add the following public method to Quiz:<pre>
+void setQuestionAnswer(String question, String answer)</pre>
+which is called from CapitalsQuiz.getNextQuestion</p>
+
+<p>Check CapitalsQuiz still works.</p>
+
+<p>Define ArithmeticQuiz as a subclass of Quiz</p><ul>
+	<li>As with CapitalsQuiz, we override the abstract method <code>getNextQuestion()</code>.</li>
+	<li>We also have to cater for the fact that the answer to this quiz is an integer,
+	 rather than a string. There are a number of ways of coping with this, and this
+	 is our suggestion:<ul>
+	<li>in Quiz, add 2 new methods:<pre>
+/**
+ * save the answer as corectIntAnswer:int,
+ * plus convert it to a string and save as
+ * correctAnswer:String
+ */
+setQuestionAnswer(String question, int answer)
+boolean isCorrect(int answer)</pre></li>
+	<li>in ArithmeticQuiz override the method <code>isCorrect(String answer)</code><br>
+	to convert answer to a string, and call the superclass method isCorrect(int)</li>
+</ul></li></ul>
+
+<p>In the <code>main()</code> method of class Main, allow the user to choose between
+the two types of quiz. Depending on the choice, create a Quiz object of
+the appropriate class; from then on the code should be the same for both
+types of Quiz (or indeed any other type of Quiz that we will later invent).</p>
+
+<p>Optional: keep a track of how many right and wrong answers, and display
+this at the end of the questions.</p>
+
+<p>Sample solution in package quiz3</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+<a id="isCorrect"></a>
+<h4>Object Orientation at Work in Quiz Classes</h4>
+
+<p>So far, we have had some practice with the grammar of defining classes,
+but you may be wondering what we have gained by adopting an 
+object-oriented design. When we pass an object of type Quiz to
+askQuestions, we can pass an object of any subclass of Quiz.
+Effectively we can invent new types of questions (e.g. algebra,
+multi-choice) and slot them into the infrastructure we have built,
+without having to change the existing classes. Also, if we extend
+the functionality in class Quiz, it is automatically inherited by
+the subclasses. Let's try one such extension.</p>
+
+<p>Update the method <code>isCorrect</code> within base class Quiz, to return
+3 possible values:<ul>
+	<li>1: correct</li>
+	<li>0: incorrect</li>
+	<li>-1: fail, i.e. 3 wrong attempts at the same question</li>
+</ul>
+You will also need to update <code>setQuestionAnswer()</code> to reset the
+number of attempts at answering the question.
+
+<p>Now update the loop where you ask questions to check the return value as
+follows:<ul>
+	<li>correct: go on to next question</li>
+	<li>incorrect: prompt the user to try again with the same question</li>
+	<li>fail: tell the user the correct answer, and go to the next question</li>
+</ul>
+
+<p>These changes should be inherited by all the sub-classes. Test by running
+Arithmetic Quiz and Capitals Quiz.</p>
+
+<p>Sample solution in package quiz4</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+<a id="levels"></a>
+<h4>Right-first-time enhancement to Quiz Classes</h4>
+
+<p>For text-based questions: if right first time, remove question from set.
+For generated mathematical questions: if 3 consecutive answers right
+first time then increment difficulty level.</p>
+
+An outline implementation of both cases is shown below:<ul>
+	<li>in Quiz class:<ul>
+		<li>in constructor: set <code>level</code> to 1, and
+		 	<code>consecutiveRights</code> to 0</li>
+	    <li>define a new method <code>notifyRightFirstTime()</code> which
+			increments <code>consecutiveRights</code>;
+			if <code>consecutiveRights</code>
+			now greater than 2 then increment <code>level</code> and reset
+			<code>consecutiveRights</code> to 0</li>
+	    <li>in <code>isCorrect()</code> method:
+	        if right on first attempt, call <code>notifyRightFirstTime</code><br/>
+	        if wrong, reset <code>consecutiveRights</code> to 0</li>
+	    <li>define new method <code>getMaxInt()</code>:
+	        return <code>baseMax * (1.2 ** level)</code> as an integer;
+	        default value of <code>baseMax</code> is 20; the library method
+	        <code>Math.pow()</code> can be used to calculate a power.</li></ul>
+
+	<li>in CapitalsQuiz class:
+    define new method <code>notifyRightFirstTime()</code> to override base
+    class: delete current entry in question list</li>
+
+	<li>in Arithmetic class:
+    at beginning of <code>getNextQuestion()</code>,
+        call superclass method <code>getMaxInt()</code> to get maximum based
+        on level</li>
+</ul>
+
+<p>Sample solution in package quiz</p>
+
+<a id="file"></a>
+<h4>Quiz from File</h4>
+Define class FileQuiz, which gets its questions and answers from a text file
+or a properties file. The name of the file is passed as a parameter to the
+FileQuiz constructor.
+
+<h4>Random order for text-based questions</h4>
+
+<p>Update text-based Quiz types to randomise the order of the questions. This applies,
+to CapitalsQuiz and FileQuiz.</p>
+
+<a id="database"></a>
+<h4>Quiz from Database</h4>
+Define class DBQuiz, which gets its questions and answers from database ENGSPA.
+The name of the CATEGORY is passed as a parameter to the DBQuiz constructor.
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+Login {
+	// com.sun.security.auth.module.NTLoginModule required;
+	demo.security.UserLoginModule required;
+};

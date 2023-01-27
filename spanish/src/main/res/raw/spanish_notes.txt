@@ -1,0 +1,203 @@
+first occurrence of getxxxableDatabase()
+	if no db exists: call onCreate
+	if exists, but newer version: call onUpgrade
+onCreate:
+	create tables
+	populateDatabase() // remove?
+onUpgrade:
+	delete tables
+	call onCreate
+
+newDictionary(contentValues)
+	delete all engSpa
+	populateDatabase()
+updateDictionary(updateLines)
+	update or insert engSpa rows
+populateDatabase:
+	getContentValues from engspa.txt
+	bulkInsert(contentValues)
+	
+a. 1st ever run of app
+	create tables
+b. DB schema version updated
+	drop tables; call a
+c. dictionary version updated
+	delete all rows; populateDB
+b & c
+	
+*******************************************************
+basic logic
+onCreate
+	setup DAO, User, Quiz
+onCreateView
+	create views!
+onResume
+	if no current question:
+		nextQuestion
+	ask question
+	show stats (currents & fails)
+setIsCorrect
+	if correct:
+		nextQuestion
+	ask question
+	show stats
+
+	private void setIsCorrect(boolean isCorrect) {
+		setIsCorrect(isCorrect, "Wrong!");
+	}
+	private void setIsCorrect(boolean isCorrect, String responseIfWrong) {
+		engSpaQuiz.setCorrect(isCorrect);
+		if (isCorrect) {
+			this.statusTextView.setText(this.responseIfCorrect);
+			//!! nextQuestion();
+		} else {
+			this.statusTextView.setText(responseIfWrong);
+			/*!!
+			if (this.currentQAStyle.voiceText != VoiceText.text) {
+				speakQuestion();
+			}
+			*/
+		}
+		askQuestion(isCorrect);
+		//!! showStats();
+	}
+	private void askQuestion(boolean getNext) {
+		if (getNext || this.question == null) {
+			nextQuestion();
+		}
+		askQuestion();
+		showStats();
+	}
+
+
+issues
+------
+if revise userLevel lower, may get failed words in current
+	see engspaquiz line 262; perhaps clear all fails if
+	revise level lower?
+also topic do words - that may produce fails - above current level
+need function to remove all fails? or amending userLevel to
+lower value automatically removes fails?
+
+required logic of failed words
+something that will cope with topic-mode or level-mode, and user randomly flitting from topic to topic, and sometimes manually changing levels;
+so should fails be independent of level or topic?
+
+4 categories of words:
+1. words answered and always right (rights)
+2. words got wrong, and not right enough to pass (current wrongs)
+3. words got wrong and got right enough to pass (past wrongs)
+4. words not tried yet (futures)
+
+currentWords: based on selected topic or current userLevel
+passedWord: random from previous level
+
+logic as of now:
+	to pass, word must have number of consecutive rights:
+		1 if never wrong
+		2 if wrong once
+		3 if wrong more than once
+	wrong word is carried to next level;
+	if wrong at next level, carried to next 2 levels
+options:
+	don't carry forward past wrongs, i.e. once passed remove fail from DB
+		so if the user moves to new topic or level, current wrongs
+		are still asked
+	leave as above, but get it working somehow!
+	on next level or topic, add previous fail, without any baggage
+	could go to next level before
+
+Current Proposal
+----------------
+failList is always in sync with and same as DB
+no endOfLevel logic, except increment level
+if word wrong, ask again after gaps of 3, 3 & 10 words
+still have these groups:
+	fails: failList, always in sync with DB
+		if consecRights < 2
+			can't be one of previous 3 words
+		else
+			can't be one of previous 10 words
+	current: level or topic
+		can't be one of previous 3 words
+	random directly from DB
+		can't be one of previous 3 words
+
+UserWord: (no wrongCt or levelsWrongCt)
+	consecutiveRights
+	previousTimeUsed // questionSequence or time
+
+design documentation
+--------------------
+when is currentCtTextView updated? in showStats(), called from:
+
+loadDB() - called once at startup
+	showUserValues()
+		showStats()
+	nextQuestion()
+		askQuestion()
+
+onResume()
+	askQuestion()
+	showStats()
+
+onNewLevel()
+	nextQuestion()
+		askQuestion
+	showUserValues()
+		showStats()
+	
+selfMarkButton()
+	showStats()
+	nextQuestion()
+		askQuestion
+
+setIsCorrect()
+	nextQuestion()
+		askQuestion
+
+new design*********************
+loadDB() - called once at startup
+	showUserValues()
+		//!! showStats()
+	nextQuestion()
+		askQuestion()
+		showStats()
+
+onResume()
+	askQuestion()
+	showStats()
+
+onNewLevel()
+	nextQuestion()
+		askQuestion
+		showStats()
+	showUserValues()
+		//!! showStats()
+	
+selfMarkButton()
+	//!! showStats()
+	nextQuestion()
+		askQuestion
+		showStats()
+
+setIsCorrect()
+	nextQuestion()
+		askQuestion
+		showStats()
+
+onTopicComplete()
+	showUserLevel()
+setTopic()
+	showUserLevel() - if topic == null
+onNewLevel()
+	showUserValues()
+		showUserLevel()
+showStats()
+	showUserLevel()
+	
+animal - 21
+body - 28
+building - 64
+clothing - 65
+colour - 16

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>PolymorphismLab</title>
+</head>
+<body>
+<div class='banner'>Polymorphism</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Add method getSales() to SalesUnit; for now, this should simply return zero.</p>
+
+<p>Change SalesTeam to hold a set of SalesUnit objects, rather than SalesPerson objects.
+</p>
+
+<table>
+	<tr><td align="center">
+	<table border="1" >
+	<tr><td align="left"><code>SalesUnit</code></td></tr>
+	<tr><td align="left"><code>String name<br/>
+		double salesTarget<br/>
+		Date dateCreated</code></td></tr>
+	<tr><td align="left"><code>SalesUnit(String name, double salesTarget)<br/>
+		String getName()<br/>
+		String getSalesTarget()<br/>
+		<b>double getSales()</b><br/>
+		String toString()</code></td></tr>
+	</table>
+	</td></tr>
+	
+	<tr><td align="center">
+	<table>
+	<tr><td>&nbsp;</td>
+	<td style="border-left:1px solid black;">&nbsp;</td></tr>
+	<tr><td style="border-left:1px solid black; border-top:1px solid black;">
+		<code>&nbsp; &nbsp; &nbsp; &nbsp;</code></td>
+	<td style="border-right:1px solid black; border-top:1px solid black;">
+		<code>&nbsp; &nbsp; &nbsp; &nbsp;</code></td></tr>
+	</table>
+	</td></tr>
+	
+	<tr><td>
+	<table><tr><td>
+		<table border="1" >
+		<tr><td><code>SalesPerson</code></td></tr>
+		<tr><td><code>String photoFile<br/>
+			double sales</code></td></tr>
+		<tr><td><code>SalesPerson(String name, double target,<br/>
+			&nbsp;&nbsp;String photo)<br/>
+			String getPhotoFile()<br/>
+			double addSales(double sale)<br/>
+			double getSales()<br/>
+			String toString()</code></td></tr>
+		</table>
+	</td><td valign="top">
+		<table border="1" >
+		<tr><td><code>SalesTeam</code></td></tr>
+		<tr><td><code><b>SalesUnit[] members</b><br/>
+			int memberCt</code></td></tr>
+		<tr><td><code>SalesTeam(String name, double target)<br/>
+			double getSales()<br/>
+			void addMember(<b>SalesUnit</b> member)<br/>
+			int getMemberCt()<br/>
+			<b>SalesUnit</b> getMember(int index)</code></td></tr>
+		</table>
+	</td></tr></table>
+	</td></tr>
+</table>
+
+<p>The existing code in <code>main()</code> should work as before - check
+that it does. However, now you can make a more extended sales structure,
+where some of the members of a team should themselves be other teams. If so,
+the <code>SalesTeam getSales()</code> method will now return the total sales
+figure for every SalesPerson directly or indirectly reporting to this team
+(if you have coded it correctly!). Edit SalesTest to test your code with a
+more extended team structure.</p>
+
+<p>Suggestion: copy the method <code>printTeam()</code> from sales3.SalesTest
+into your own sales test, and use this to print out your sales unit hierarchy.
+</p>
+
+<p>Sample solution in package sales3</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

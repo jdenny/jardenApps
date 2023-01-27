@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>InheritanceLab</title>
+</head>
+<body>
+<div class='banner'>Inheritance</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Define subclass SuppliedProduct - team exercise</h4>
+
+<p>Together, let's define a class SuppliedProduct, which should be the similar to Product,
+with the addition of members:<pre>
+String supplier;
+double cost;
+double getProfit();</pre>
+plus appropriate constructor and overridden version of <code>toString()</code>.
+</p>
+
+<p>Sample Solution: solution.SuppliedProduct</p>
+
+<h4>Define subclass SalesPerson</h4>
+
+<p>Extend SalesUnit to create a new class SalesPerson, as below.</p>
+
+<table>
+	<tr><td align="center">
+	<table border="1" >
+	<tr><td align="left"><code>SalesUnit</code></td></tr>
+	<tr><td align="left"><code>String name<br/>
+		double salesTarget<br/>
+		Date dateCreated</code></td></tr>
+	<tr><td align="left"><code>SalesUnit(String name, double salesTarget)<br/>
+		String getName()<br/>
+		String getSalesTarget()<br/>
+		String toString()</code></td></tr>
+	</table>
+	</td></tr>
+	
+	<tr><td align="center">
+	<table>
+	<tr><td>&nbsp;</td>
+	<td style="border-left:1px solid black;">&nbsp;</td></tr>
+	<tr><td style="border-left:1px solid black; border-top:1px solid black;">
+		<code>&nbsp; &nbsp; &nbsp; &nbsp;</code></td>
+	<td style="border-right:1px solid black; border-top:1px solid black;">
+		<code>&nbsp; &nbsp; &nbsp; &nbsp;</code></td></tr>
+	</table>
+	</td></tr>
+	
+	<tr><td>
+	<table><tr><td>
+		<table border="1" >
+		<tr><td><code>SalesPerson</code></td></tr>
+		<tr><td><code>String photoFile<br/>
+			double sales</code></td></tr>
+		<tr><td><code>SalesPerson(String name, double target,<br/>
+			&nbsp;&nbsp;String photo)<br/>
+			String getPhotoFile()<br/>
+			double addSales(double sale)<br/>
+			double getSales()<br/>
+			String toString()</code></td></tr>
+		</table>
+	</td><td valign="top">
+		<table border="1" >
+		<tr><td><code>SalesTeam</code></td></tr>
+		<tr><td><code>SalesPerson[] members<br/>
+			int memberCt</code></td></tr>
+		<tr><td><code>SalesTeam(String name, double target)<br/>
+			double getSales()<br/>
+			void addMember(SalesPerson member)<br/>
+			int getMemberCt()<br/>
+			SalesPerson getMember(int index)</code></td></tr>
+		</table>
+	</td></tr></table>
+	</td></tr>
+</table>
+<br/>
+<b>SalesPerson</b>
+<ul>
+<li><code>getPhotoFile()</code>
+	return the name of a file holding the sales person's photo</li>
+<li><code>addSales()</code>
+	increment sales by the value supplied</li>
+<li><code>getSales()</code>
+	return the value of sales (the value of the goods this salesman has sold so far)</li>
+<li><code>toString()</code>
+	return the name and salesTarget (using the superclass) plus the sales figure
+	 and the photo file name</li>
+</ul>
+
+<h4>Define subclass SalesTeam</h4>
+
+<p>Define a class SalesTeam, as a subclass of SalesUnit.</p>
+<ul>
+<li><code>addMember()</code>
+	add a SalesPerson to the set of sales people belonging to this team.</li>
+<li><code>getMember()</code>
+	return the SalesPerson held at the position in the array specified by index.
+	If index is out of bounds, return null.</li>
+<li><code>getMemberCt()</code>
+	return the number of sales people belonging to this team.</li>
+<li><code>getSales()</code>
+	return the total sales figure for the team, calculated by accumulating the
+	sales figure for each member of the team.</li>
+<li><code>toString()</code>
+	return the name and salesTarget and total sales figure for the team</li>
+</ul>
+
+<p>In <code>main()</code> of SalesTest, create a SalesTeam object with some team
+members, and invoke the SalesTeam methods, including getName(), defined in the
+superclass. Also obtain and print out the members of the team.</p>
+
+<p>Sample solution in package sales2</p>
+
+<p>Course Projects: <a href="QuizProject.html#Inheritance">Quiz Inheritance</a>
+and <a href="QuizProject.html#isCorrect">Quiz isCorrect</a> and
+<a href="QuizProject.html#levels">Quiz levels</a>
+</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

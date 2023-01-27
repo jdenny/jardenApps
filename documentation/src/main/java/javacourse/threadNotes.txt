@@ -1,0 +1,28 @@
+ask thread to perform task in background; what to do with the results?
+
+mainThread doing something		workerThread got some results
+
+1. workerThread updates shared variable (intrinsic threads)
+	problem: possible corruption if update or read interrupted by other thread
+	solution: use synchronisation techniques
+	impact: more programming; possible errors; performance impact
+
+2. mainThread polls shared variable, e.g. Java Futures
+	utility class updates shared variable in thread-safe way,
+	i.e. not available until the update complete
+	impact: mainThread doesn't know when the results are ready,
+	so has to periodically poll
+
+3. workerThread notifies mainThread via callBack, e.g. Scala Futures
+	(callback method invoked on workerThread)
+	impact: mainThread may still need to update variables in thread-safe way
+
+4. combination, where workerThread updates shared variable (as per option 2)
+	then pings mainThread to notify that the info is available when required
+
+How does this map to kitchen?
+
+Chief (chef) does the coordinating.
+1. Stops worker to give new instructions; could interrupt at critical time
+2. Sends then a text; worker hears ping; when free, looks at the text, does
+the task, send a message back with description of results.

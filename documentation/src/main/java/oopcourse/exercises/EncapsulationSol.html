@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>EncapsulationSol</title>
+</head>
+<body>
+<div class='banner'>Encapsulation - Sample Solution</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>All variables should be encapsulated!</p>
+
+<p>Encapsulation provides 2 main advantages:<ul>
+	<li>the methods that give access to the data can enforce validation
+	rules, e.g. speed of plane cannot be negative; only authorised
+	people can take money out of your bank account</li>
+	<li>the implementation can change over time - the way the data is
+	held and the rules for setting the data - without changing the program
+	interface; this means we can change the implementation without changing
+	the code that is using our class</li>
+</ul>
+
+<p>Some languages, e.g. Java, C++, have another level of visibility: protected.
+Protected means the attribute is visible to subclasses. Some people think this
+is a hack, a quick fix which comes back to bite you later.</p>
+
+<p>Constant values (static final in Java) are often public. Examples of
+constants in Quiz are:<ul>
+	<li>prompts - 'What is the capital of {}?'</li>
+	<li>public final static int BASE_MAX = 20<br/>
+	default maximum value of operands in arithmetic questions</li>
+	</ul>
+	
+
+<a href='EncapsulationLab.html'>Back to Encapsulation Exercise</a>
+
+</body>
+</html>

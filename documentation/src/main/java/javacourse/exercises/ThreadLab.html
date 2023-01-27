@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>ThreadLab</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Threads</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Run thread.exercise.StopWatchGUI</p>
+
+<p>Press the Go button - be patient with it, as nothing happens for about 8 seconds</p>
+
+<p>Now rewrite the StopWatch class to use threads, so that something happens as soon
+as you press Go. You shouldn't have to make any changes to the StopWatchGUI class.</p>
+
+<p>There are two ways of making a thread: passing a Runnable to the standard Thread
+class, or extending the Thread class. We prefer the first approach, but you can
+try both ways if you want.</p>
+
+<p/>Sample solutions:<ul>
+<li>thread.solution.StopWatchGUI (Runnable version)</li>
+<li>thread.solution.StopWatchGUI2 (Thread version)</li>
+</ul>
+
+<h3>Need a bit of help?</h3>
+
+<p>Then read on. Note: <b class='tip' title='hover over bold words to get tips!'>
+some text</b> has tooltips</p>
+
+<p>1. Make StopWatch a Runnable</p><ul>
+<li>1.1 Define StopWatch so that it implements the
+ <b class='tip' title='class StopWatch implements Runnable'>Runnable</b> interface.</li>
+
+<li>1.2 Rename <code>go()</code> to <code>run()</code>.</li>
+
+<li>1.3 In the StopWatch constructor, create a
+<b class='tip' title='Thread thread = new Thread(this);'>new Thread</b>, with the stopWatch
+object as the parameter to the constructor, then <b class='tip' title='thread.start();'>start</b>
+this thread.</li>
+</ul>
+
+<p>2. Make StopWatch a Thread<p><ul>
+
+<li>2.1 Define StopWatch so that it <b class='tip' title='class StopWatch extends Thread'>
+extends Thread</b>.</li>
+
+<li>1.2 Rename <code>go()</code> to <code>run()</code>.</li>
+
+<li>2.3 In the StopWatch constructor, <b class='tip' title='this.start()'>start</b> this thread.</li>
+</ul>
+
+<h3>How would you answer?</h3>
+
+<p>Threads with higher priority are executed in preference to threads with lower priority
+ - <b class='tip' title='true'>true/false</b></p>
+
+<p/>What is the default priority of a new Thread?<ul>
+<li>Thread.MAX_PRIORITY <b class='tip' title='false'>T/F?</b></li>
+<li>Thread.MIN_PRIORITY <b class='tip' title='false'>T/F?</b></li>
+<li>Thread.NORM_PRIORITY <b class='tip' title='false'>T/F?</b></li>
+<li>The same as the creating thread <b class='tip' title='true'>T/F?</b></li>
+</ul>
+
+<p/>What will cause the JVM to stop?<ul>
+<li>System.exit() <b class='tip' title='true'>T/F?</b></li>
+<li>All daemon threads have terminated <b class='tip' title='false'>T/F?</b></li>
+<li>All non-daemon threads have terminated <b class='tip' title='true'>T/F?</b></li>
+</ul>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

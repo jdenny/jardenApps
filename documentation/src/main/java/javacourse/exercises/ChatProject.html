@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>ChatProject</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+
+<div class='banner'>Java Programming Course - Chat Project</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Overview</h4>
+
+<p>This is quite an ambitious project, requiring substantial use of TCP/IP
+sockets and datagrams, thread handling, and Swing.</p>
+
+<p>The requirement is to allow each user to send each other messages over
+a local area network (LAN). This is similar in principle to Google chat and the
+like, except this only works locally, and there is no central server acting as a
+hub, which means messages go directly from the sender to the receiver.</p>
+
+<p>If you want to concentrate on the business logic rather than the user
+interface, we have provided a Swing front-end - see
+chat.swing.ChatSwing. If you use our ChatSwing, you need to build a class
+that implements chat.swing.ChatNetIF. When you receive a 'connect' message
+(see below) create
+a new User object, and pass this to ChatSwing.addUser(). When you receive
+any other message, pass this to ChatSwing.showMessage().</p>
+
+<h4>Logical steps</h4><ul>
+	<li>Send simple message from client to server; server sends a reply. This could
+	be done either with a Datagram or a Socket:<ul>
+		<li>Datagram: not reliable, but less resources</li>
+		<li>Socket: reliable, but more resources.</li></ul>
+	In reality, sockets hold open a connection at each end of the conversation,
+	and socket classes at each end
+	retry messages if no acknowledgement received. Datagram is like sending
+	letters to each other; Socket is more like a telephone call, so that the
+	line is busy, even if neither party happens to be talking.</li>
+
+	<li>Set up a simple user interface for both ends of the conversation; could be
+	using standard input/output; or better to use Swing; this makes it easier for
+	each party to type in the message to be sent, and select a destination.</li>
+
+	<li>As each user joins the conversation, add to the group, either manually
+	or automatically<ul>
+		<li>manual: verbally tell the others your IP address and listen port;
+		they add that user to the group, using a provided interface.</li>
+		<li>automatic: multicast your IP address and listen port. This requires
+		an extra thread listening to multicast broadcasts on a certain pre-agreed
+		port.</li>
+		</ul></li>
+</ul>
+<h4>Suggested Implementation</h4>
+<ul>
+	<li>ChatNet will announce its presence by constructing a connect-message containing
+	user name, host name and port, e.g.<br/><code>
+			connect::name=John::host=192.168.2.1::port=8002</code><br/>
+	and sending this as a multicast message to address 230.0.0.1, port 9002</li>
+	<li>ChatNet will continue listening to multicast messages on this address
+	plus it will listen to Datagrams sent to its own host address,
+	by default on port 8002.</li>
+	<li>Chat users can thus send messages to individual users, on their
+	announced address or send messages to all users on the multicast address.</li>
+	<li>On receiving a connect message from a new user, ChatNet will send a connect
+	message back, using unicast.</li>
+</ul>
+<b>Notes</b><ul>
+	<li>See classes in demo.net for examples of sending and receiving
+	datagrams, using point-to-point or multicast</li>
+	<li>multicast addresses are in the range 224.0.0.0 through 239.255.255.255</li>
+	<li>Note2: must make sure unicast listening thread is running before we send our
+	multicast connect message, or else we won't get the returning connect. Order of
+	events is:<ol>
+		<li>unicast listening thread running</li>
+		<li>multicast listening thread runing</li>
+		<li>send multicast connect message</li>
+	</ol>
+</li></ul>
+
+<p>See our implementation in packages solution.chat and chat.swing</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

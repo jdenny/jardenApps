@@ -1,0 +1,5 @@
+title banner
+	colour: 82, 178, 255
+	position: .3cm, .3, 27.4, 2.2
+	Text spacing: .25, .25, 013, .13
+	Font: Calibri, white, 36

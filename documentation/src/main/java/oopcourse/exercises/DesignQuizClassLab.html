@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>QuizDesignLab</title>
+</head>
+<body>
+<div class='banner'>Quiz Class Design</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h3>Redesign an existing application in an Object-Oriented way</h3>
+
+<p>Two programs have been written so far, and the outline of their <b>current logic</b> is as follows:<ul>
+<li>arithmetic quiz<pre>
+loop until user quits:
+	get 2 random numbers, a, b (from 1 to 10)
+	get random operator: +, -, *, /
+	prompt for user input: what is &lt;a> &lt;op> &lt;b>?
+	test input against correct answer
+	if wrong, print correct answer</pre></li>
+<li>text-based quiz<pre>
+define list of question/answer pairs (hard-coded in program)
+loop until end of list or user quits:
+	prompt user with next question
+	test input against correct answer
+	if wrong, print correct answer</pre></li>
+</ul>
+
+<p>The analysts have identified the following <b>requirements</b> to extend the application:<ul>
+<li>user interface is separate from business logic
+(so we can plug in different user interfaces: command-line, windows, web browser)</li>
+<li>easy to plug in different quiz types; generated: arithmetic, algebra, series,
+word anagrams; pre-defined questions/answers, read from file or database</li>
+<li>give the user 3 attempts to get the right answer; if fails after 3 attempts,
+ reveal the answer</li>
+<li>for generated questions (e.g. maths):<ul>
+	<li>if user gets 3 consecutive questions right on first attempt then increase level
+	 of difficulty</li></ul></li>
+<li>for pre-defined questions (e.g. general knowledge):<ul>
+	<li>if doesn't get it right first time, ask the same question again later</li></ul></li>
+</ul>
+
+<h3>Exercise - specify classes</h3>
+<p>Your mission (should you choose to accept it) is to decide what classes are required.
+Then, for each class, what attributes - data and functions - are required.</p>
+
+<p>What inheritance structure is appropriate? What factors determine inheritance?</p>
+
+<p>Sample Solution: The aim is to compare our solutions at the end of the course.</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>ConstructorsSol</title>
+</head>
+<body>
+<div class='banner'>Constructors - Sample Solution</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h3>Constructors - Hotel</h3>
+Probably 2 constructors for each type of booking:<ul>
+	<li>no parameters, in case the user interface creates the booking
+	then adds the data following further user interactions</li>
+	<li>all data, in case the user interface
+	captures the information, then creates the booking.</li>
+</ul>
+Examples in Java:<pre>
+public HotelBooking()
+public HotelBooking(Date startDate, int personCount,
+                    Date endDate, RoomType roomType)
+</pre><br/>
+Examples in Python:<pre>
+def __init__(self, startDate = None, personCount = 0, endDate=None, roomType=None)
+</pre>
+Note: Python and Java have different approaches to varying the parameters passed
+to a method: Java uses method overloading: multiple methods with the same name
+but different types of parameters; Python uses default parameter values.
+
+<h3>Constructors - Quiz</h3>
+<p>For the Quiz types that generate questions -  e.g. Arithmetic, Algebra -
+no parameters. All the variables used by the superclass Quiz - 
+e.g. level, attempts - can be initialised with default values.</p>
+
+<p>For Quiz types based on pre-defined questions, a parameter containing
+the data - a collection of question and answer pairs - or the location
+of the data, e.g. fileName or database table.
+
+<h3>Constructor Advantages</h3>
+Constructors ensure that any required initialisation is performed before
+any other methods are invoked. Would you want to book into a hotel before
+it was constructed?
+
+<h3>Objects</h3>
+<p><b>Hotel.</b> One object for each hotel booking.</p>
+
+<p><b>Quiz.</b> Two alternatives:<ul>
+	<li>Create object each time user selects new quiz type</li>
+	<li>Have a caching mechanism; if Quiz object already in
+		the cache, use this, otherwise create it. This requires
+		a reset() method to put the state back to the beginning.
+		Question: What should reset() do?</li>
+</ul>
+
+<a href='ConstructorsLab.html'>Back to Constructors Exercise</a>
+
+</body>
+</html>

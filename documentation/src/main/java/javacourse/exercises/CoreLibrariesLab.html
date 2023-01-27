@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>CoreLibrariesLab</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Core Java Libraries</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h3>Formatting Strings</h3>
+
+<p>Define a class to hold the details of a person:<ul>
+	<li>name</li>
+	<li>salary</li>
+	<li>friend-count</li>
+	<li>date-of-birth</li>
+</ul>
+<p>Define a constructor, and a <code>toString()</code> method, which should
+produce something like:<pre>
+name=Don Jenny; salary=£123.40; friends=4,455; DOB=Mon Apr 08 00:00:00 BST 1974</pre>
+Test the methods.
+
+<p>Rewrite <code>toString()</code> to use the String method:<pre>
+static String format(String pattern, Object... arguments)</pre>
+
+<p>The output should be something like:<pre>
+name=Don Jenny; salary=£123.40; friends=4,455; DOB=1974-04-08</pre>
+
+<p>Sample Solution: solution.CoreLibraries</p>
+
+<p>Optional: Update <code>SalesUnit.toString()</code> to use
+<code>String.format()</code>.</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>DerbyNotes</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>DERBY Relational Database</div>
+
+<h4>Derby Database Configuration</h4>
+
+<p>The following instructions assume a Windows environment; make suitable adjustments to
+paths for a Unix environment. You can edit the following sample batch files in folder
+<code>docs</code> of the JavaCourse project:<ul>
+	<li><code>startDerbyServer.bat</code></li>
+	<li><code>startIJ.bat</code></li>
+</ul>
+or you can use the detailed instructions below.
+
+<p>Open a command prompt (or shell window). If not already done, create an environment variable
+to point to the installation directory of Java, e.g.<pre>
+set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_51</pre></p>
+
+<p>Derby is installed as part of the JDK in <code>%JAVA_HOME%\db</code>. The scripts
+to run Derby are in <code>%JAVA_HOME%\db\bin</code></p>
+
+<p>Derby can be run as part of the JVM of the database client program, or it can be run
+as a network server, which can be accessed by multiple clients. These notes describe
+how to run the Derby network server.</p>
+
+<p>It may be useful to add the Derby scripts directory to the DOS path, e.g.<pre>
+set Path=%JAVA_HOME%\db\bin;%Path%</pre>
+
+<p>By default, the database files (tables etc.) are held in the directory from where
+Derby is started. To change this, define the Java property <code>derby.system.home</code>,
+e.g. edit <code>%JAVA_HOME%\db\bin\startNetworkServer.bat</code> to add the line:<pre>
+set DERBY_OPTS="-Dderby.system.home=c:\users\john\myderby"</pre>
+
+<h4>Derby Network Server</h4>
+
+<p>To run the Derby network server on Windows, open a DOS window and invoke the batch
+file<pre>startNetworkServer -noSecurityManager</pre>
+Note: if the command is not recognised, you need 
+either to <code>CD</code> to the Derby binary
+directory, or add the binary directory to the Path - see above.
+
+<h4>Database Tables</h4>
+
+<p>There are two ways to create the database and the tables we require, as
+described below. Whichever one you choose, ensure Derby network server is running first.<ol>
+<li>Using <code>ij</code>, which is an interactive SQL scripting tool that comes
+with Derby. From a DOS window:<pre>
+c:\users\john>ij
+ij>connect 'jdbc:derby://localhost:1527/javaprogdb;create=true';
+ij>run 'C:\eclipseworkspace\JavaCourse\docs\createTables.sql';
+ij>exit;
+</pre>where <code>eclipseworkspace</code> is the workspace folder you chose when you
+first opened eclipse. Tip: in Eclipse Package Explorer, right-click on createTables.sql,
+choose Properties, then select and copy the path from Location.</li>
+<li>Using Eclipse database connections, as follows.<ul>
+	<li>Show view Data Source explorer</li>
+	<li>create new connection:<br/>
+	right-click Database Connections, New, Derby, Next<br/>
+	New Derby Connection Profile: database = javaprogdb<br/>
+	make sure 'create database if required' is checked<br/>
+	Test Connection; should succeed!<br/>
+	Finish<br/></li>
+	<li>create tables, as follows<br/>
+	open data/createTables.sql (with SQL file editor)<br/>
+	select connection profile:<br/>
+	type=Derby, name=&lt;name you gave your connection above>,
+		database=javaprogdb<br/>
+	right-click in createTables.sql, execute all</li></ul></li>
+</ol>
+
+<h4>Derby in Eclipse Project</h4>
+
+<p>To use Derby from an Eclipse java project:<ul>
+	<li>project, properties, java build path, libraries</li>
+	<li>add external jar:<pre>
+&lt;JAVA_HOME>\db\lib\derbyclient.jar</pre></li>
+</ul>
+
+<h4>Notes</h4>
+
+<p>JDBC driver to use with network server:
+ <code>org.apache.derby.jdbc.ClientDriver</code></p>
+
+<p>Can access derby locally, within client's jvm, using url of
+<code>'jdbc:derby:mydatabase'</code>
+or can access the network server version, which needs to be running, which will allow
+multiple clients; use url of <code>'jdbc:derby://localhost:1527/javaprogdb'</code>.
+
+<p>Derby doesn't use password security, but does create a schema from the user name.</p>
+
+<p>The network server can support multiple databases, used by multiple clients.</p>
+
+<p>By default, derby only listens on localhost; to change this, and thus allowing
+remote users to access the database, add a hostname parameter, and optionally a
+port number, e.g.<pre>
+startNetworkServer.sh -h johnsT500 -p 1541</pre>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

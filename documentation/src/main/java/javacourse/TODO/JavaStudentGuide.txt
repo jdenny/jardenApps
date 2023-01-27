@@ -1,0 +1,275 @@
+Object-Oriented Programming in Java
+-----------------------------------
+
+
+Introduction to Java
+--------------------
+notes for ShellLab exercises
+	hello.jar can be run from Windows Explore, but in this case there is nothing to see; if the java
+	program created a graphical user interface (GUI) or wrote to a file, this would be useful.
+	
+	classpath is a standard environment variable used by java to locate the directories containing
+	the class files.
+	
+	from now on, the IDE will take care of compiling, setting classpath and running; sometimes we
+	want to run a java program without starting the IDE, so these skills may be useful.
+	
+	Although this is a simple program, it has used a number of words that may need explanation,
+	e.g. package, class, public, static, void, new. These things will be explained in due course
+	(if all goes well!)
+
+Brief overview of Eclipse
+	IDE - Integrated Development Environment
+	includes editing, compiling, running, debugging
+	Eclipse has plug-ins for various languages, including: Standard Java, Enterprise Java, C/C++,
+		Python
+	Show demo of views: moving, resizing, docking, closing, opening;
+		perspectives, editing, help, statement completion, compile, run
+		imports, sysout
+**Exercises: Getting Started in Eclipse
+	
+Java Language
+-------------
+variables - see JavaProg chapter 2
+primitive data types
+literals, expressions (operators)
+**Exercises: Variables
+Further notes on literals
+	binary literals (Java 7)
+	underscores in numeric literals (Java 7)
+	see demo.jdk7.LanguageTest
+flow control: if, for, while - see JavaProg chapter 3
+**Exercises: FlowControl
+arrays; length operator - see JavaProg chapter 4
+**Exercises: see Arrays
+Methods - see JavaProg chapter 5
+**Exercises: Methods
+
+Object-Oriented programming
+---------------------------
+(see JavaProg chapter 6)
+Encapsulation, inheritance, polymorphism
+Re-use of code
+**Exercises: Class Design
+
+Class definition
+----------------
+(see JavaProg chapter 7)
+member, attribute, method, private, public, constructor
+create objects; invoke methods
+**Exercises: Class Definition
+
+Inheritance and Polymorphism
+----------------------------
+inheritance - see JavaProg chapter 8
+**Exercises: Inheritance
+polymorphism - see JavaProg chapter 9
+**Exercises: Polymorphism
+
+Class definition part 2
+-----------------------
+package, import, recap of classpath from ShellLab - see JavaProg chapter 11
+protected, default
+	meaning: protected = visible to subclasses
+		default = visible to subclasses and classes in same package
+		recap: private = only this class; public = all classes
+	recommendations: if in doubt, don't use default or protected
+	by default: public methods, private fields;
+		some methods only used by this class: make private
+		constants - final static fields - can be made public
+	static - see JavaProg page 41
+instance and local variables
+	initialise variables: local, instance, arrays
+		see JavaProg page 40
+instanceof operator - not in JavaProg!
+
+**Exercise: Class Definition part 2
+	shows use of packages and import;
+	after exercise also point out:
+		use of 'this' keyword
+		advantage of move() calling abstract method validateMove()
+
+Core Library Classes
+--------------------
+String (discuss immutable), System, Math
+Console, Formatter, Scanner
+See http://docs.oracle.com/javase/tutorial/essential
+
+Summarise various format options:
+	System.out.format()
+	MessageFormet.format()
+	String.format()
+
+	java.util.Formatter
+	'b' boolean
+	's' String
+	'd' decimal integer
+	'e' floating point in scientific notation
+	'f' floating point as decimal
+	't' date/time
+	'%' percent
+	'n' platform-specific new-line
+
+StringBuilder, StringBuffer
+wrapper classes
+
+More language features
+----------------------
+multi-dimension arrays
+	code to copy between arrays
+casts and promotion; auto-boxing & unboxing
+do, switch statements; Strings in switch (Java 7)
+for each
+break, continue; labels
+variable number of arguments
+	see demo.jdk5.VarArgs
+**Exercises: More Language Features
+
+More class features
+-------------------
+method (including constructor) overloading
+method overriding; already used in BankAccount,
+	ChessPiece, Shape, SalesUnit;
+	demo use of @Override
+static variables, methods, and initializers
+final classes, methods, and variables
+static imports
+
+Interfaces and abstract classes
+-------------------------------
+see JavaProg page 39, and chapter 12
+annotations (e.g. @Override)
+invoke virtual methods
+see exercise 2, page 42, JavaProg
+
+Inner classes
+-------------
+see class demo.language.InnerClasses
+
+Exception handling
+------------------
+try, catch, finally - JavaProg chapter 10
+throwing and handling exceptions
+exception categories (Catchable, Exception, Runtime)
+user-defined exception classes
+assert; enable at runtime
+try with resources (Java 7)
+catching multiple exceptions (Java 7)
+
+JUnit testing
+-------------
+see package demo.junit
+
+Introduction to design patterns
+-------------------------------
+
+Code documentation
+------------------
+recap of comments: // and /*...*/
+javadoc comments: /**...*/
+use in standard libraries, and user code
+
+The Collections framework
+-------------------------
+JavaProg chapter 14
+lists, sets, maps
+thread-safe (introduction)
+ordered collections
+
+Generics
+--------
+e.g. without generics, etc.
+use of generics in Collections framework
+writing own generic methods, using wildcards
+writing own generic class
+
+See package demo.generics
+**Exercises: Collections and Generics labs
+
+Enums
+-----
+see demo.jdk5.MyEnums
+**Exercises: Enum Types
+
+Introduction to the Swing API
+-----------------------------
+JavaProg Part 5.
+core GUI components (e.g. buttons, text fields)
+layout managers
+handling events (e.g. button clicks)
+model, view, controller
+demo of menus, colours, fonts (drawing project)
+
+Annotations
+-----------
+demo of user-defined annotations
+
+Communicating with program
+--------------------------
+Command-line arguments and system properties
+Properties class
+
+I/O
+---
+like many programming languages, Java uses the idea of an I/O stream
+to represent flow of data from a source to a destination. The data can be
+simple bytes, primitive data types, localized characters or Java objects.
+
+Some streams represent a physical data resource, e.g. disk file, network
+keyboard/screen. Other streams, called filter streams, process the data
+in some way. By way of analogy, thing of making coffee, and imagine the
+liquid as the data stream. It starts off as cold water, fills a boiler,
+which heats the water, moves into a filter, which turns it into coffee,
+and is held in a coffee jug, acting as a kind of reservoir for people
+to take out a cup of coffee.
+
+tap 	-> boiler -> perculator  ->   jug    -> cup
+	coldWater	hotWater   coffeeReservoir	finalConsumption
+
+The tap represents a physical water resource; the cup represents the
+destination. The boiler, perculator and jug are each providing a
+kind of filter operation on the liquid: heating it, flavouring it
+or storing it.
+
+In a similar way we can do the same thing with data.
+
+file -> buffer -> localize -> consume
+	bytes byteReservoir readableChars
+						(Strings)
+
+read & write data and text to files
+serialization
+See demo.io
+NIO 2
+QuizProject: file-based Quiz, e.g. certification
+
+Introduction to threading
+-------------------------
+see JavaProg chapter 13
+serialVersionUID
+	"different JVMs may calculate different serialVersionUID for the same class
+	hence Sun recommend setting serialVersionUID explicitly, and changing manually
+	if we make a change to the interface."
+platform independence?
+demo of warehouse
+
+Introduction to JDBC
+--------------------
+JavaProg chapter 18
+drivers, queries, results
+PreparedStatement, CallableStatement
+transactions
+DAO pattern
+QuizProject: DB-based Quiz, e.g. glossary or design patterns or Spanish!
+see demo.database
+Exercises: Database access with JDBC 
+
+Introduction to Localization
+----------------------------
+format messages, dates, numbers
+resource bundles
+
+Preview of Enterprise Java
+--------------------------
+JavaProg part 6
+

@@ -1,0 +1,4 @@
+grant codeBase "file:/c:/Users/John/MyEclipse/JavaCourse/bin" {
+  permission java.util.PropertyPermission "user.home", "read";
+  permission java.util.PropertyPermission "java.home", "read";
+};

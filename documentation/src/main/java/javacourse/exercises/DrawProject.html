@@ -1,0 +1,70 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>DrawProject</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+
+<div class='banner'>Java Programming Course - Draw Project</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Overview</h4>
+
+<p>Training materials for Object-Oriented design and programming often use as examples
+drawing classes, e.g. Shape, Rectangle, Ellipse. This is because they well illustrate
+the advantages of an Object-Oriented approach, and most people have come across and
+probably used some kind of drawing package. This Java Programming course uses various
+drawing classes in the slides.</p>
+
+<p>What may not be clear from the slides is how these classes are used, which in
+practice would be with some kind of user interface. So this project is largely an
+exercise in Java's Swing user interface. Once this has been developed, it is easy
+to see how new shape classes can be added to the application, with very little
+impact on the user interface, other than adding a new shape type to the palette.</p>
+
+<p>If you want to have a go at this, please feel free. If you prefer to see how we
+have built a basic solution, run the class <code>jarden.draw.DrawingGUI</code>.</p>
+
+<h4>Shape Class</h4><ul>
+	<li>Define class MyShape, with following attributes<pre>
+int x, y, width, height;
+Color lineColour, fillColour;
+String text;</pre></li>
+	<li>Provide constructor, plus methods to access the attributes</li>
+	<li>Provide a method to display the attribute values</li>
+	<li>Create some MyShape objects, and display their attribute values</li>
+</ul>
+
+<p>Sample Solution: shape.MyShape</p>
+
+<h4>Inheritance</h4>
+
+<p>Define MyRectangle and MyEllipse as subclasses of MyShape.</p>
+
+<h4>Polyporphism</h4>
+
+<p>Define an array of MyShapes. Populated the array with different types of shape.
+Invoke the <code>toString()</code> method of each shape in the array.</p>
+
+<h4>User Interface</h4>
+
+<p>Create a simple Swing user interface to draw the shapes you have defined.
+See <code>demo.swing.ShapeSwing</code> to see how to draw basic shapes in a window.</p>
+
+<h4>Possible enhancements to the Shape classes</h4>
+
+<p>Other candidate shapes are MyLine, Disk (a vertical cylinder shape, used to
+represent a computer disk).</p>
+
+<p>If you are really ambitious, and keen to develop your Swing skills, provide the
+means to create shapes with the user interface, instead of hard-coding them. You could
+either use a mouse to click on one corner of the shape and drag to the opposite corner,
+as done with most drawing programs, or allow the user to type in values for the various
+fields. Our solution, in package jarden.draw, uses both.</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

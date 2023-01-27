@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>ExceptionLab</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Exceptions and Assertions</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Exceptions</h4>
+
+<p>Modify your method which prints a compass direction - see 
+<a href='MethodLab.html'>Methods</a> part 2, or solution.Methods
+if you didn't complete this exercise. In the method,
+throw an IllegalArgumentException if the value passed is invalid.
+At this point don't try to catch the exception.
+Test the code with some valid chars, then an invalid one. Run your code to
+confirm an exception is thrown.</p>
+
+<p>Now define a new exception called NoDirectionHomeException, which is a
+subclass of Exception.
+Throw NoDirectionHomeException instead of IllegalArgumentException. The
+compiler should now tell you that you have to declare this exception
+in the called method. Once you do that, the compiler should say you need to
+handle the exception in the calling method. Wrap the call in a try-catch
+block. Run your code to confirm that an exception is thrown and caught.</p>
+
+<h4>Assertions</h4>
+
+<p>Add an extra call to your method, with an invalid value,
+and <code>assert</code> that an exception is thrown. To do this:<ul>
+	<li>wrap the invalid call in a try-catch block</li>
+	<li>after the call, add <code>assert false</code>, i.e. fail
+		if the code reaches this point</li>
+	<li>in the catch block, report that the exception was thrown
+		as expected.</li>
+</ul>
+<p>Check the <code>assert false</code> is not reached. Now, to prove
+your code <b>would</b> pick up a programming error, introduce one by
+passing a valid direction and expecting it to fail.
+Don't forget to enable assertions!
+</p> 
+
+<p>Solution: solution.HandlingErrors</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>

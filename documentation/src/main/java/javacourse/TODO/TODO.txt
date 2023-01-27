@@ -1,0 +1,53 @@
+to do next:
+	design patterns: produce DAO class that gets data for JUnit;
+		initially hard-coded, then from properties, file or DB
+		explain object to db mapping; with annotations, basis for Hibernate
+		perhaps produce simple version of oo -> rdb mapping using @?
+		see demo.database.ProductDAO
+	finish off InterfaceLab.html: what should it do? build a solution
+	Inner Classes: only demo so far
+	add images to QuizSwing
+	change console to different style
+	Make it easier for students to do a part of the chat project: networking, thread-
+	handling or Swing.
+	Lab notes for Quiz: when we've done with QuizGui, turn it into a jar file,
+	with a start class, so that it can be double-clicked from explorer.
+	note: coding works, good; but what about:
+		unit-testing, documentation, security, fail-over (recover from errors)?
+
+Advanced topics, where we should at least include a demo
+	Encoding different character sets
+		see jarden.quiz.QuizCache in JardenAppLib.
+	Regular expressions
+ChatGUI
+	add new button: Refresh, which sends a multicast of it's address
+	on receiving multicast announcement, add if not in list, then
+	reply with unicast
+
+Teaching style (12 July 2012):
+	introduce 3 projects: draw, quiz, chat; give demos
+		at some point demo of QuizMaze (mention Java Web Start)
+		each project split into components (model, view, controller?)
+		students optionally choose a project, and build individual components
+			as they are able, as background activity
+			provide instructions for building each project
+	do OOP, including inheritance, as soon as possible
+	for each module
+		show slides
+		lab with recipe
+		similar lab without recipe; both these labs free-standing
+		review 2nd lab, against harder bits of slides
+		discuss patterns used, and why (this means reading
+			"effective java" and applying it!)
+		quiz for certification; may be too much to cover in class
+			see http://docs.oracle.com/javase/tutorial/java/generics/QandE/generics-questions.html
+
+input sources
+	peet's java course for ProgramUtvikling
+	Oracle java course
+	my object-oriented programming
+	my Python course
+	C:\downloads\EffectiveJava.pdf
+	Head First Java
+	c:\users\john\java\jarden\courseware
+	Information is Beautiful, David McCandless

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>IOLab</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>File Handling</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<h4>Read Question/Answer pairs from a file</h4>
+
+<p>Write a method to open a file, where the fileName is passed as a parameter,
+and read question/answer pairs from that file.</p>
+
+<p>One approach would be to use a properties file, e.g.:<pre>
+dog=perro
+cat=gato
+# note: space is a token separator
+good\ morning=buenos dias
+</pre>
+See the class java.util.Properties, and in particular its 'load' method.
+<p>
+Alternatively use a text file with prefixes on each line, e.g.<pre>
+Q: what is the Spanish for dog
+A: perro
+Q: cat
+A: gato
+# this is a comment
+Q: good morning
+A: buenos dias
+</pre>
+Use the Reader classes; see demo.io.BasicIO, in particular readTextFromFile.
+
+<p>Sample solution: quiz.QuestionsFromFile</p>
+
+<p>This can be used as the basis for FileQuiz in the Quiz Project:
+<a href="QuizProject.html#file">Quiz from File</a>
+
+<p>Extra lab especially for <b>Newcastle</b>: build a version of the chess JUnit test
+that gets its parameterized data from a file, instead of being hard-coded</p>
+
+<h4>Log Message to a file</h4>
+
+<p>Provide a class which can be used to append text messages to a log file.</p>
+
+<p>Sample solution: solutions.LogMessages</p>
+
+<a href='ExerciseContents.html'>Back to Exercise List</a>
+
+</body>
+</html>
