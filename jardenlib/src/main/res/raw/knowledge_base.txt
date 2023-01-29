@@ -51,7 +51,7 @@ Generate Personal Access Token for github
 See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 Grant access: repo, gist, read:org
 Token stored in MySettings2.txt
-
+renewed 29/1/2023
 
 In Android Studio -> Preferences -> Version Control -> GitHub
 + (add) -> Use Token -> [paste in token]
