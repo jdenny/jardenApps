@@ -463,6 +463,10 @@ public class EngSpaQuiz extends Quiz {
 		return (cfpChar == 'F') ? this.currentWord.getQaStyle() : null;
 	}
 
+    public List<EngSpa> getAllFails() {
+        return this.engSpaDAO.getFailedWordList();
+    }
+
 	/**
 	 * Used in an emergency! Deletes all fail words.
 	 */

@@ -383,7 +383,16 @@ public class MainActivity extends AppCompatActivity
 			}
 		} else if (id == R.id.deleteAllFails) {
 			this.viewlessFragment.getEngSpaQuiz().deleteAllFails();
-		} else {
+        } else if (id == R.id.listAllFails) {
+            List<EngSpa> allFails = this.viewlessFragment.getEngSpaQuiz().getAllFails();
+            StringBuilder strBuilder = new StringBuilder();
+            for (EngSpa fail: allFails) {
+                strBuilder.append(fail.getSpanish() + "," + fail.getEnglish() + "\n");
+                // strBuilder.append(fail.getDictionaryString()).append('\n');
+            }
+            this.helpTextView.setText(strBuilder.toString());
+            showHelp();
+        } else {
 			return super.onOptionsItemSelected(item);
 		}
 		return true;

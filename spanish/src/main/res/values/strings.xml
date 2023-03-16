@@ -65,4 +65,5 @@
     <string name="welcome"><b>¡Bienvenida! Welcome!</b> to Revise Spanish</string>
     <string name="wordLookup">Word Lookup</string>
     <string name="endOfPracticeSet">practice batch done - felicitaciones!</string>
+    <string name="listFailsStr">List all fails</string>
 </resources>

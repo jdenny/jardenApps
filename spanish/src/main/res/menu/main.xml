@@ -19,4 +19,9 @@
         android:title="@string/deleteFailsStr"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/listAllFails"
+        android:title="@string/listFailsStr"
+        app:showAsAction="never" />
+
 </menu>
