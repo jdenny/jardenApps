@@ -966,9 +966,9 @@ only,solamente,adverb,n_a,size,1
 several,varios,adjective,n_a,size,1
 also,también,adverb,n_a,n_a,1
 however,sin embargo,conjunction,n_a,n_a,1
-so,pues,conjunction,n_a,n_a,1
-afterwards,luego,conjunction,n_a,n_a,1
-then,entonces,conjunction,n_a,n_a,1
+then,pues,conjunction,n_a,n_a,1
+later,luego,adverb,n_a,time,1
+so,entonces,conjunction,n_a,n_a,1
 afternoon,tarde,noun,feminine,time,1
 ago,hace,adverb,n_a,time,1
 the day after tomorrow,pasado mañana,phrase,n_a,time,1
@@ -1868,3 +1868,23 @@ we should go out,nosotros deberíamos salir,phrase,n_a,n_a,1
 we could go for a walk,nosotros podríamos ir de paseo,phrase,n_a,n_a,1
 apology,disculpa,noun,feminine,n_a,1
 if it is too good to be true it is not true,si es demasiado bueno para ser verdad no es verdad,phrase,n_a,n_a,1
+eyelid,párpado,noun,masculine,body,1
+eyelash,pestaña,noun,feminine,body,1
+eyebrow,ceja,noun,feminine,body,1
+jaw,mandíbula,noun,feminine,body,1
+chin,barbilla,noun,feminine,body,1
+brain,cerebro,noun,masculine,body,1
+skull,cráneo,noun,masculine,body,1
+heart,corazón,noun,masculine,body,1
+lung,pulmón,noun,masculine,body,1
+muscle,músculo,noun,masculine,body,1
+bone,hueso,noun,masculine,body,1
+blood,sangre,noun,feminine,body,1
+palm,palma,noun,feminine,body,1
+thumb,pulga,noun,feminine,body,1
+hip,cadera,noun,feminine,body,1
+heel,talón,noun,feminine,body,1
+harvest,cosecha,noun,feminine,food,1
+olive,aceituna,noun,feminine,food,1
+fig tree,higuera,noun,feminine,food,1
+vine,vid,noun,feminine,food,1

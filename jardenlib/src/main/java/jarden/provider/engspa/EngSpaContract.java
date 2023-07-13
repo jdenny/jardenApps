@@ -91,7 +91,7 @@ public final class EngSpaContract {
         familiar, plural; // for phrases containing 'you'
 	}
 	
-	public enum Topic { // also known as hint
+	public enum Topic { // also known as hint, or attribute
 		animal, body, building, clothing, colour, culture, drink, familiar, food,
 		hobby, home, interrogative, language, mineral, money, music, n_a,
 		number, person, phrase, place, plural, size, sport, technology, time,

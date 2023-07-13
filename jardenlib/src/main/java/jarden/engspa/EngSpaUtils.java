@@ -1,6 +1,8 @@
 package jarden.engspa;
 
-import jarden.provider.engspa.EngSpaContract;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,9 +11,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
-import android.content.ContentValues;
-import android.util.Log;
+import jarden.provider.engspa.EngSpaContract;
 
 public class EngSpaUtils {
 	private final static String TAG = "EngSpaUtils";
@@ -63,7 +63,7 @@ public class EngSpaUtils {
 		String[] tokens = engSpaLine.split(",");
 		if (tokens.length == 6) {
 			ContentValues contentValues = new ContentValues();
-			contentValues = new ContentValues();
+			// !! contentValues = new ContentValues();
 			contentValues.put(EngSpaContract.ENGLISH, tokens[0]);
 			contentValues.put(EngSpaContract.SPANISH, tokens[1]);
 			contentValues.put(EngSpaContract.WORD_TYPE, tokens[2]);

@@ -44,6 +44,7 @@ cmd+P			parameters
 cmd+B			go to class def			ctrl+B
 ctrl+space		auto-complete
 sout<tab>		System.out.println()
+fn+cmd+right	go to end of file
 
 git
 ---
