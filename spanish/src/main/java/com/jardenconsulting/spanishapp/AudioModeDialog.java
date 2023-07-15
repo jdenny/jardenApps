@@ -87,7 +87,7 @@ public class AudioModeDialog extends DialogFragment
     }
     private void initNextQuestion() {
         EngSpa es = engSpaQuiz.getPassedWord();
-        this.spanish = engSpaQuiz.conjugateCurrentWord(es);
+        this.spanish = engSpaQuiz.inflectCurrentWord(es);
         this.english = engSpaQuiz.getEnglish();
     }
     @Override

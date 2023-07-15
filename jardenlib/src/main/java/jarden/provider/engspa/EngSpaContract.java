@@ -88,7 +88,8 @@ public final class EngSpaContract {
 		// added 16.2.2016:
 		mf, mpl, fpl, mfpl, // for nouns; masculine or feminine, then plurals
         // added 6.12.2022:
-        familiar, plural; // for phrases containing 'you'
+        familiar, plural, // for phrases containing 'you'
+        conjugate; // for phrases containing a verb to be conjugated
 	}
 	
 	public enum Topic { // also known as hint, or attribute

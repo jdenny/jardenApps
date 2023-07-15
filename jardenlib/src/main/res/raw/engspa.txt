@@ -488,7 +488,7 @@ shopping centre,centro comercial,noun,masculine,building,1
 where is the station please?,¿dónde está la estación por favor?,phrase,n_a,travel,1
 is there a chemist near here?,¿hay una farmacia por aquí?,phrase,n_a,travel,1
 is it far from here?,¿está lejos de aquí?,phrase,n_a,travel,1
-it's two kilometres away,está a dos kilómetros,phrase,n_a,travel,1
+<be> two kilometres away,<estar> a dos kilómetros,phrase,conjugate,travel,1
 how do I get to the bank?,¿para ir al banco?,phrase,n_a,travel,1
 go straight on,siga todo recto,phrase,n_a,travel,1
 go right,gire a la derecha,phrase,n_a,travel,1
@@ -664,7 +664,7 @@ happen,suceder,verb,intransitive,n_a,1
 inform,enterar,verb,transitive,n_a,1
 smile,sonrisa,noun,feminine,person,1
 despite,a pesar de,preposition,n_a,n_a,1
-he is afraid,él tiene miedo,phrase,n_a,n_a,1
+<be> afraid,<tener> miedo,phrase,conjugate,n_a,1
 sit here my friend,siéntate aquí mi amigo,phrase,familiar,n_a,1
 bring,traer,verb,transIntrans,n_a,1
 bag,bolsa,noun,feminine,n_a,1
@@ -1044,7 +1044,7 @@ bra,sostén,noun,masculine,clothing,1
 bracelet,brazalete,noun,masculine,clothing,1
 cap,gorra,noun,feminine,clothing,1
 changing room,probador,noun,masculine,clothing,1
-I need to buy new clothes for the trip,necesito comprar ropa nueva para el viaje,phrase,n_a,clothing,1
+<need> to buy new clothes for the trip,<necesitar> comprar ropa nueva para el viaje,phrase,conjugate,clothing,1
 clothes shop,tienda de ropa,noun,feminine,building,1
 cotton,algodón,noun,masculine,clothing,1
 dressed in,vestido de,phrase,n_a,clothing,1
@@ -1132,7 +1132,7 @@ half sister,hermanastra,noun,feminine,person,1
 hamster,hámster,noun,masculine,animal,1
 honest,honrado,adjective,n_a,person,1
 ideal,ideal,adjective,n_a,n_a,1
-in a good mood,de buen humor,phrase,n_a,person,1
+<be> in a good mood,<estar> de buen humor,phrase,conjugate,person,1
 in a bad mood,de mal humor,phrase,n_a,person,1
 in love,enamorado,adjective,n_a,person,1
 intelligent,inteligente,adjective,n_a,person,1
@@ -1201,9 +1201,9 @@ untidy,desordenado,adjective,n_a,n_a,1
 visit,visita,noun,feminine,place,1
 well behaved,que se porta bien,adjective,n_a,n_a,1
 rock climbing,escalada en roca,phrase,n_a,sport,1
-he scored a goal,marcó un gol,phrase,n_a,sport,1
+<score> a goal,<marcar> un gol,phrase,conjugate,sport,1
 a television programme,un programa de televisión,phrase,n_a,culture,1
-to go horse riding,hacer la equitación,phrase,n_a,sport,1
+<go> horse riding,<hacer> la equitación,phrase,conjugate,sport,1
 kiss,besar,verb,transIntrans,n_a,1
 activity,actividad,noun,feminine,n_a,1
 address,dirección,noun,feminine,place,1
@@ -1314,7 +1314,7 @@ table tennis,tenis de mesa,noun,masculine,sport,1
 team,equipo,noun,masculine,sport,1
 tennis,tenis,noun,masculine,sport,1
 thriller,novela de suspense,noun,feminine,culture,1
-to take the dog out for a walk,sacar a pasear el perro,phrase,n_a,n_a,1
+<take> the dog out for a walk,<sacar> a pasear el perro,phrase,conjugate,n_a,1
 toy,juguete,noun,masculine,n_a,1
 trampolining,trampolín,noun,masculine,sport,1
 trumpet,trompeta,noun,feminine,music,1
@@ -1328,12 +1328,12 @@ attend,asistir,verb,transitive,n_a,1
 to be a member of,ser miembro de,phrase,n_a,n_a,1
 congratulate,felicitar,verb,transitive,n_a,1
 to get married,casarse,phrase,n_a,culture,1
-to go bowling,ir a la bolera,phrase,n_a,sport,1
-to do sport,hacer deporte,phrase,n_a,sport,1
+<go> bowling,<ir> a la bolera,phrase,conjugate,sport,1
+<do> sport,<hacer> deporte,phrase,conjugate,sport,1
 to do gymnastics,hacer gimnasia,phrase,n_a,sport,1
 exercise,ejercer,verb,intransitive,n_a,1
 fish,pescar,verb,transIntrans,sport,1
-to go for a walk,ir de paseo,phrase,n_a,n_a,1
+<go> for a walk,<ir> de paseo,phrase,conjugate,n_a,1
 to roller-skate,patinar sobre ruedas,phrase,n_a,sport,1
 shoot,disparar,verb,transIntrans,sport,1
 train,entrenar,verb,intransitive,sport,1
@@ -1362,7 +1362,7 @@ delete,borrar,verb,transitive,technology,1
 load,cargar,verb,transitive,technology,1
 print,imprimir,verb,transitive,technology,1
 save,guardar,verb,transitive,technology,1
-he types,él escribe a máquina,phrase,n_a,technology,1
+<type>,<escribir> a máquina,phrase,conjugate,technology,1
 virus,virus,noun,masculine,technology,1
 web page,página web,noun,feminine,technology,1
 abroad,al extranjero,adverb,n_a,n_a,1
@@ -1439,7 +1439,7 @@ hardware shop,droguería,noun,feminine,building,1
 ice rink,pista de patinaje,noun,feminine,place,1
 identity card,carnet de identidad,noun,masculine,size,1
 in advance,por adelantado,phrase,n_a,n_a,1
-in the open air,al aire libre,phrase,n_a,n_a,1
+<play> in the open air,<jugar> al aire libre,phrase,conjugate,n_a,1
 included,incluido,adjective,n_a,n_a,1
 indoor swimming pool,piscina cubierta,noun,feminine,place,1
 industrial,industrial,adjective,n_a,n_a,1
@@ -1675,9 +1675,9 @@ do you need help?,¿necesitas ayuda?,phrase,familiar,person,1
 can you help me?,¿me puede ayudar?,phrase,n_a,person,1
 don't worry about it,no te preocupes por eso,phrase,familiar,person,1
 I don't know,no lo sé,phrase,n_a,person,1
-to wash the clothes,lavar la ropa,phrase,n_a,home,1
-to make the bed,hacer la cama,phrase,n_a,home,1
-to wash the dishes,lavar los platos,phrase,n_a,home,1
+<wash> the clothes in hot water,<lavar> la ropa en agua caliente,conjugate,n_a,home,1
+<make> the bed every morning,<hacer> la cama todas las mañanas,phrase,conjugate,home,1
+<wash> the dishes after dinner,<lavar> los platos después de la cena,phrase,conjugate,home,1
 spicey,picante,adjective,n_a,food,1
 on the way,en camino,phrase,n_a,travel,1
 the bill please,la cuenta por favor,phrase,n_a,food,1
@@ -1736,8 +1736,8 @@ would you like a cup of tea?,¿te gustaría una taza de té?,phrase,familiar,drink,
 paper,papel,noun,masculine,home,1
 printer,impresora,noun,feminine,technology,1
 the printer needs more paper,la impresora necesita más papel,phrase,n_a,technology,1
-when is breakfast served?,¿cúando se sirve el desayno?,phrase,n_a,food,1
 when does the museum open?,¿cúando abre el museo?,phrase,n_a,time,1
+when is breakfast served?,¿cúando se sirve el desayno?,phrase,n_a,food,1
 I realised,me di cuenta,phrase,n_a,n_a,1
 achievement,logro,noun,masculine,n_a,1
 achieve,lograr,verb,transIntrans,n_a,1
@@ -1888,3 +1888,23 @@ harvest,cosecha,noun,feminine,food,1
 olive,aceituna,noun,feminine,food,1
 fig tree,higuera,noun,feminine,food,1
 vine,vid,noun,feminine,food,1
+<hire> a car,<alquiler> un coche,phrase,conjugate,travel,1
+<take> the money,<tomar> el dinero,phrase,conjugate,n_a,1
+<have> a sense of humour,<tener> sentido del humor,phrase,conjugate,person,1
+<prefer> to travel on foot,<preferir> viajar a pie,phrase,conjugate,person,1
+<walk> too slowly,<caminar> demasiado despacio,phrase,conjugate,person,1
+<arrive> on Monday,<llegar> el lunes,phrase,conjugate,n_a,1
+<dance> on the beach,<bailar> en la playa,phrase,conjugate,person,1
+<live> in Spain,<vivir> en españa,phrase,conjugate,person,1
+<pay> the bill every time,<pagar> la cuenta cada vez,phrase,conjugate,food,1
+<have> so much work to do,<tener> tanto trabajo que hacer,phrase,conjugate,home,1
+<save> the planet,<salvar> el planeta,phrase,conjugate,n_a,1
+<know> where he lives,<saber> donde él vive,phrase,conjugate,person,1
+<sell> the house,<vender> la casa,phrase,conjugate,home,1
+on Sundays <eat> in the restaurant,las domingos <comer> en el restaurante,phrase,conjugate,food,1
+<drink> tea in the morning,<beber> té por la mañana,phrase,conjugate,drink,1
+<freeze> in winter,<helar> en invierno,phrase,conjugate,weather,1
+<owe> too much money,<deber> demasiado dinero,phrase,conjugate,money,1
+on holiday <speak> Spanish,en vacaciones <hablar> español,phrase,conjugate,language,1
+at school <read> aloud,en la escuela <leer> en voz alta,phrase,conjugate,n_a,1
+in the summer <cook> in the garden,en el verano cocinar en el jardín,phrase,conjugate,food,1

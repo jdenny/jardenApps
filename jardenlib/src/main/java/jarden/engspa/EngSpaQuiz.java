@@ -143,9 +143,40 @@ public class EngSpaQuiz extends Quiz {
             cfpChar = 'P';
             this.currentWord = getPassedWord2(this.engSpaUser.getLearnLevel() + 1);
         }
-        return conjugateCurrentWord(this.currentWord);
+        return inflectCurrentWord(this.currentWord);
     }
-    public String conjugateCurrentWord(EngSpa currentWord) {
+    private void conjugateVerb(String eng, String spa, boolean phrase) {
+        // choose tense based on user level:
+        int verbLevel = this.engSpaUser.getLearnLevel() / 5 + 1;
+        if (verbLevel > tenseSize) verbLevel = tenseSize;
+        // last 2 tenses are the imperatives; don't use these for verb phrases
+        if (phrase && (verbLevel > (tenseSize-2))) verbLevel = tenseSize-2;
+        Tense tense = tenses[random.nextInt(verbLevel)];
+        person = persons[random.nextInt(personSize)];
+        String spaVerb = VerbUtils.conjugateSpanishVerb(
+                spa, tense, person);
+        String engVerb = VerbUtils.conjugateEnglishVerb(
+                eng, tense, person);
+        if (tense == Tense.imperative) {
+            this.spanish = "¡" + spaVerb + "!";
+            this.english = engVerb + "!";
+            this.person = Person.tu;
+        } else if (tense == Tense.noImperative) {
+            this.spanish = "¡no " + spaVerb + "!";
+            this.english = "don't " + engVerb + "!";
+            this.person = Person.tu;
+        } else {
+            this.spanish = person.getSpaPronoun() + " " + spaVerb;
+            this.english = person.getEngPronoun() + " " + engVerb;
+        }
+    }
+
+    /**
+     * depending on wordType: conjugate a verb, decline a noun
+     * @param currentWord
+     * @return
+     */
+    public String inflectCurrentWord(EngSpa currentWord) {
 		recentWords[0] = recentWords[1];
 		recentWords[1] = recentWords[2];
 		recentWords[2] = currentWord;
@@ -155,55 +186,49 @@ public class EngSpaQuiz extends Quiz {
 		Qualifier qualifier = currentWord.getQualifier();
 		WordType wordType = currentWord.getWordType();
 		if (wordType == WordType.verb) {
-			// choose tense based on user level:
-			int verbLevel = this.engSpaUser.getLearnLevel() / 5 + 1;
-			if (verbLevel > tenseSize) verbLevel = tenseSize;
-			Tense tense = tenses[random.nextInt(verbLevel)];
-			person = persons[random.nextInt(personSize)];
-			String spaVerb = VerbUtils.conjugateSpanishVerb(
-					spa, tense, person);
-			String engVerb = VerbUtils.conjugateEnglishVerb(
-					eng, tense, person);
-			if (tense == Tense.imperative) {
-				this.spanish = "¡" + spaVerb + "!";
-				this.english = engVerb + "!";
-                this.person = Person.tu;
-			} else if (tense == Tense.noImperative) {
-				this.spanish = "¡no " + spaVerb + "!";
-				this.english = "don't " + engVerb + "!";
-                this.person = Person.tu;
-			} else {
-				this.spanish = person.getSpaPronoun() + " " + spaVerb;
-				this.english = person.getEngPronoun() + " " + engVerb;
-			}
+            conjugateVerb(eng, spa, false);
+        } else if (wordType == WordType.phrase && qualifier == Qualifier.conjugate) {
+            int lte = eng.indexOf('<');
+            int gte = eng.indexOf('>', lte);
+            String engVerb = eng.substring(lte+1, gte);
+            int lts = spa.indexOf('<');
+            int gts = spa.indexOf('>', lts);
+            String spaVerb = spa.substring(lts+1, gts);
+            conjugateVerb(engVerb, spaVerb, true);
+            StringBuffer sbe = new StringBuffer(eng);
+            sbe.replace(lte, gte+1, this.english);
+            this.english = sbe.toString();
+            StringBuffer sbs = new StringBuffer(spa);
+            sbs.replace(lts, gts+1, this.spanish);
+            this.spanish = sbs.toString();
 		} else if (wordType == WordType.noun) {
-			if (qualifier == Qualifier.mf) {
-				// randomly choose masculine or feminine:
-				qualifier = random.nextBoolean()?Qualifier.masculine:Qualifier.feminine;
-				if (qualifier == Qualifier.feminine && spa.endsWith("o")) {
-					// replace 'o' with 'a':
-					spa = spa.substring(0, spa.length() - 1) + 'a';
-				}
-			}
-			if (random.nextBoolean()) { // definite article?
-				this.english = "the " + eng;
-				if (qualifier == Qualifier.feminine) {
-					this.spanish = "la " + spa;
-				} else {
-					this.spanish = "el " + spa;
-				}
-			} else {
-				if ("AEIOUaeiou".indexOf(eng.charAt(0)) >= 0) {
-					this.english = "an " + eng;
-				} else {
-					this.english = "a " + eng;
-				}
-				if (qualifier == Qualifier.feminine) {
-					this.spanish = "una " + spa;
-				} else {
-					this.spanish = "un " + spa;
-				}
-			}
+            if (qualifier == Qualifier.mf) {
+                // randomly choose masculine or feminine:
+                qualifier = random.nextBoolean() ? Qualifier.masculine : Qualifier.feminine;
+                if (qualifier == Qualifier.feminine && spa.endsWith("o")) {
+                    // replace 'o' with 'a':
+                    spa = spa.substring(0, spa.length() - 1) + 'a';
+                }
+            }
+            if (random.nextBoolean()) { // definite article?
+                this.english = "the " + eng;
+                if (qualifier == Qualifier.feminine) {
+                    this.spanish = "la " + spa;
+                } else {
+                    this.spanish = "el " + spa;
+                }
+            } else {
+                if ("AEIOUaeiou".indexOf(eng.charAt(0)) >= 0) {
+                    this.english = "an " + eng;
+                } else {
+                    this.english = "a " + eng;
+                }
+                if (qualifier == Qualifier.feminine) {
+                    this.spanish = "una " + spa;
+                } else {
+                    this.spanish = "un " + spa;
+                }
+            }
 		} else {
 			this.spanish = spa;
 			this.english = eng;
@@ -321,23 +346,40 @@ public class EngSpaQuiz extends Quiz {
         Topic topic = this.currentWord.getTopic();
         String hint = (topic == Topic.n_a) ? "" : topic.toString();
         WordType wordType = this.currentWord.getWordType();
+        Qualifier qualifier = this.currentWord.getQualifier();
         if (englishQuestion && wordType == WordType.phrase) {
-            Qualifier qualifier = this.currentWord.getQualifier();
-            if (qualifier != Qualifier.n_a) {
+            if (qualifier != Qualifier.n_a && qualifier != Qualifier.conjugate) {
                 hint = qualifier.toString() + " " + hint;
             }
         } else if (hint.length() == 0 && (wordType != WordType.noun &&
                 wordType != WordType.verb && wordType != WordType.phrase)) {
             hint = wordType.toString();
         }
+        /*!!
         if (wordType == WordType.verb && englishQuestion) {
             if (this.currentWord.getSpanish().equals("ser")) {
                 hint = "permanent " + hint;
-            } if (this.currentWord.getSpanish().equals("estar")) {
+            }
+            if (this.currentWord.getSpanish().equals("estar")) {
                 hint = "temporary " + hint;
             }
             if (this.person == Person.tu) hint = "familiar " + hint;
             else if (this.person == Person.ustedes) hint = "plural " + hint;
+        }
+         */
+        if (englishQuestion) {
+            if (wordType == WordType.verb) {
+                if (this.currentWord.getSpanish().equals("ser")) {
+                    hint = "permanent " + hint;
+                }
+                if (this.currentWord.getSpanish().equals("estar")) {
+                    hint = "temporary " + hint;
+                }
+            }
+            if (wordType == WordType.verb || qualifier == Qualifier.conjugate) {
+                if (this.person == Person.tu) hint = "familiar " + hint;
+                else if (this.person == Person.ustedes) hint = "plural " + hint;
+            }
         }
 		return hint;
 	}
