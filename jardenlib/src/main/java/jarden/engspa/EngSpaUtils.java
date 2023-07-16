@@ -52,9 +52,6 @@ public class EngSpaUtils {
 			contentValues = getContentValues(engSpaLine);
 			if (contentValues != null) {
 				contentValuesList.add(contentValues);
-			} else {
-				Log.w(TAG, "engSpaLine from bulk update file in wrong format: " +
-						engSpaLine);
 			}
 		}
 		return contentValuesList.toArray(new ContentValues[contentValuesList.size()]);
@@ -63,7 +60,6 @@ public class EngSpaUtils {
 		String[] tokens = engSpaLine.split(",");
 		if (tokens.length == 6) {
 			ContentValues contentValues = new ContentValues();
-			// !! contentValues = new ContentValues();
 			contentValues.put(EngSpaContract.ENGLISH, tokens[0]);
 			contentValues.put(EngSpaContract.SPANISH, tokens[1]);
 			contentValues.put(EngSpaContract.WORD_TYPE, tokens[2]);
@@ -72,8 +68,8 @@ public class EngSpaUtils {
 			contentValues.put(EngSpaContract.LEVEL, tokens[5]);
 			return contentValues;
 		} else {
-			Log.w(TAG, "line from bulk update file in wrong format: " +
-					engSpaLine);
+            Log.e(TAG, "line from bulk update file doesn't contain 6 tokens: " +
+                    engSpaLine);
 			return null;
 		}
 	}

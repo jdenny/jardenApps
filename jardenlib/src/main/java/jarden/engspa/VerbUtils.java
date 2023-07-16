@@ -819,7 +819,20 @@ public class VerbUtils {
 		{"p", salirPresent}, {"f", "saldr"}, {"si", "sal"}, {"no", "salgas"}
 	};
 
-	private static final String[][] seguirPresent = {
+    private static final String[][] secarPreterite = { {"yo", "sequé"} };
+    private static final Object[][] secarTenses = {
+            {"r", secarPreterite}, {"no", "seques"}
+    };
+
+    private static final String[][] sembrarPresent = {
+            {"yo", "siembro"}, {"tu", "siembras"}, {"el", "siembra"}, {"e", "siembran"}
+    };
+    private static final Object[][] sembrarTenses = {
+            {"p", sembrarPresent},
+            {"si", "siembra"}, {"no", "siembres"}
+    };
+
+    private static final String[][] seguirPresent = {
 		{"yo", "sigo"}, {"tu", "sigues"}, {"el", "sigue"},
 		{"n", "seguimos"}, {"e", "siguen"}
 	};
@@ -984,6 +997,7 @@ public class VerbUtils {
 		{"querer", quererTenses}, {"recordar", recordarTenses},
 		{"reír", reirTenses},{"reñir", renirTenses},
 		{"saber", saberTenses}, {"salir", salirTenses},
+        {"secar", secarTenses}, {"sembrar", sembrarTenses},
 		{"seguir", seguirTenses}, {"sentar", sentarTenses},
 		{"ser", serTenses}, {"servir", servirTenses},
 		{"sonar", sonarTenses},

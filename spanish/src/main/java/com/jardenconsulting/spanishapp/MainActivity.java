@@ -540,9 +540,11 @@ public class MainActivity extends AppCompatActivity
 
 	private void showFragment(FragmentTag fragmentTag) {
 		if (this.currentFragmentTag != null && fragmentTag == this.currentFragmentTag) {
-			if (BuildConfig.DEBUG) Log.d(TAG,
-					"showFragment(" + fragmentTag +
-					"); already current fragment");
+			if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                        "showFragment(" + fragmentTag +
+                        "); already current fragment");
+            }
             if (fragmentTag == FragmentTag.ENGSPA) {
                 // could be different QuizMode (hence different title) of EngSpaFragment
                 setAppBarTitle();

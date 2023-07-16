@@ -1675,7 +1675,7 @@ do you need help?,¿necesitas ayuda?,phrase,familiar,person,1
 can you help me?,¿me puede ayudar?,phrase,n_a,person,1
 don't worry about it,no te preocupes por eso,phrase,familiar,person,1
 I don't know,no lo sé,phrase,n_a,person,1
-<wash> the clothes in hot water,<lavar> la ropa en agua caliente,conjugate,n_a,home,1
+<wash> the clothes in hot water,<lavar> la ropa en agua caliente,phrase,conjugate,home,1
 <make> the bed every morning,<hacer> la cama todas las mañanas,phrase,conjugate,home,1
 <wash> the dishes after dinner,<lavar> los platos después de la cena,phrase,conjugate,home,1
 spicey,picante,adjective,n_a,food,1
@@ -1895,7 +1895,7 @@ vine,vid,noun,feminine,food,1
 <walk> too slowly,<caminar> demasiado despacio,phrase,conjugate,person,1
 <arrive> on Monday,<llegar> el lunes,phrase,conjugate,n_a,1
 <dance> on the beach,<bailar> en la playa,phrase,conjugate,person,1
-<live> in Spain,<vivir> en españa,phrase,conjugate,person,1
+<live> in Spain,<vivir> en España,phrase,conjugate,person,1
 <pay> the bill every time,<pagar> la cuenta cada vez,phrase,conjugate,food,1
 <have> so much work to do,<tener> tanto trabajo que hacer,phrase,conjugate,home,1
 <save> the planet,<salvar> el planeta,phrase,conjugate,n_a,1
@@ -1907,4 +1907,14 @@ on Sundays <eat> in the restaurant,las domingos <comer> en el restaurante,phrase
 <owe> too much money,<deber> demasiado dinero,phrase,conjugate,money,1
 on holiday <speak> Spanish,en vacaciones <hablar> español,phrase,conjugate,language,1
 at school <read> aloud,en la escuela <leer> en voz alta,phrase,conjugate,n_a,1
-in the summer <cook> in the garden,en el verano cocinar en el jardín,phrase,conjugate,food,1
+in the summer <cook> in the garden,en el verano <cocinar> en el jardín,phrase,conjugate,food,1
+dry,secar,verb,transIntrans,n_a,1
+sow,sembrar,verb,transIntrans,food,1
+<dry> the dishes,<secar> los platos,phrase,conjugate,home,1
+<play> the guitar,<tocar> la guitarra,phrase,conjugate,music,1
+<respond> to my call,<responder> a mi llamada,phrase,conjugate,person,1
+<answer> the question,<contestar> la pregunta,phrase,conjugate,person,1
+<come> on the 9 o'clock flight,<venir> en el vuelo de las 9,phrase,conjugate,person,1
+<wear> boots in the snow,<llevar> botas en la nieva,phrase,conjugate,person,1
+<know> that the capital of Spain is Madrid,<saber> que la capital de España es Madrid,phrase,conjugate,travel,1
+<know> the English teacher,<conocer> a la profesora de ingles,phrase,conjugate,person,1

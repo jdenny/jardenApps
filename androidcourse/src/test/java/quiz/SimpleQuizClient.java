@@ -6,8 +6,14 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.Scanner;
 
+import jarden.quiz.AlgebraQuiz;
+import jarden.quiz.AnagramQuiz;
+import jarden.quiz.AreasQuiz;
+import jarden.quiz.ArithmeticQuiz;
+import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.FractionsQuiz;
 import jarden.quiz.PowersQuiz;
+import jarden.quiz.PresetQuiz;
 import jarden.quiz.Quiz;
 import jarden.quiz.SeriesQuiz;
 import jarden.quiz.TimesQuiz;

@@ -199,14 +199,26 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private boolean validateValues (ContentValues values) {
 		try {
 			WordType.valueOf((String) values.get(WORD_TYPE));
-			Qualifier.valueOf((String) values.get(QUALIFIER));
+			Qualifier qualifier = Qualifier.valueOf((String) values.get(QUALIFIER));
 			Topic.valueOf((String) values.get(ATTRIBUTE));
+            if (qualifier == Qualifier.conjugate) {
+                String english = (String) values.get(ENGLISH);
+                String spanish = (String) values.get(SPANISH);
+                checkEmbeddedToken(english);
+                checkEmbeddedToken(spanish);
+            }
 			return true;
 		} catch(Exception ex) {
 			Log.e(TAG, "exception in validateValues(" + values + "): " + ex);
 			return false;
 		}
 	}
+    private void checkEmbeddedToken(String str) throws IllegalArgumentException {
+        int index = str.indexOf('<');
+        if (index < 0) throw new IllegalArgumentException(str + " doesn't contain '<'");
+        index = str.indexOf('>', index);
+        if (index < 0) throw new IllegalArgumentException(str + " doesn't contain '>'");
+    }
 	private long insert(SQLiteDatabase engSpaDB, ContentValues values) {
 		if (validateValues(values)) {
 			return engSpaDB.insert(TABLE, null, values);
