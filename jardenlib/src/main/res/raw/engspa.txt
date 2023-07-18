@@ -548,7 +548,7 @@ Holland,Holanda,noun,feminine,place,1
 India,India,noun,feminine,place,1
 Ireland,Irlanda,noun,feminine,place,1
 Mexico,México,noun,masculine,place,1
-The Netherlands,Los Países Bajos,phrase,masculine,place,1
+The Netherlands,los Países Bajos,phrase,n_a,place,1
 Pakistan,Pakistán,noun,masculine,place,1
 Peru,Perú,noun,masculine,place,1
 Russia,Rusia,noun,feminine,place,1
@@ -556,7 +556,7 @@ Scotland,Escocia,noun,feminine,place,1
 Sweden,Suecia,noun,feminine,place,1
 Turkey,Turquía,noun,feminine,place,1
 Switzerland,Suiza,noun,feminine,place,1
-The United States,los Estados Unidos,phrase,masculine,place,1
+the United States,los Estados Unidos,phrase,n_a,place,1
 Wales,País de Gales,noun,masculine,place,1
 country,país,noun,masculine,place,1
 south,sur,noun,masculine,place,1
@@ -1305,7 +1305,7 @@ soap opera,telenovela,noun,feminine,culture,1
 song,canción,noun,feminine,hobby,1
 sports ground,campo de deportes,noun,masculine,sport,1
 sporty,deportista,adjective,n_a,sport,1
-spy story,cuento de espías,noun,masculine,culture,1
+spy story,historia de espías,noun,feminine,culture,1
 stage,escenario,noun,masculine,culture,1
 music centre,equipo de música,noun,masculine,music,1
 smooth,liso,adjective,n_a,n_a,1
@@ -1449,7 +1449,7 @@ inhabitant,habitante,noun,masculine,n_a,1
 island,isla,noun,feminine,place,1
 key,llave,noun,feminine,n_a,1
 lake,lago,noun,masculine,place,1
-launderette,lavandería automática,noun,feminine,building,1
+launderette,lavandería,noun,feminine,building,1
 sign,firmar,verb,transIntrans,n_a,1
 skate,patinar,verb,transIntrans,n_a,1
 smoke,fumar,verb,transIntrans,n_a,1
@@ -1856,7 +1856,7 @@ eat it!,¡cómalo!,phrase,n_a,n_a,1
 I have just seen it,acabo de verlo,phrase,n_a,n_a,1
 we have just arrived,acabamos de llegar,phrase,n_a,n_a,1
 where have you put it?,¿dónde lo ha puesta?,phrase,n_a,n_a,1
-I feel like staying here with you,tengo ganas de quedarme aquí con ustedes,phrase,plural,n_a,1
+I feel like staying here with you,tengo ganas de quedarme aquí contigo,phrase,familiar,n_a,1
 I prefer to go out,prefiero salir,phrase,n_a,n_a,1
 who's that?,¿quién es ese?,phrase,n_a,n_a,1
 nobody,nadie,pronoun,n_a,n_a,1
