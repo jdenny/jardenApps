@@ -39,7 +39,7 @@ option+F7		find usages
 F1				view javadoc
 F2				go to next error
 cmd+N			generate
-cmd+[,cmd+]		previous, next cursor history
+cmd+alt+left	previous cursor history
 cmd+P			parameters
 cmd+B			go to class def			ctrl+B
 ctrl+space		auto-complete
