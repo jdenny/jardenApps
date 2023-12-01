@@ -1,7 +1,7 @@
 package equidistance;
 
+import java.awt.Point;
 import java.util.Random;
-import java.util.logging.Logger;
 
 
 /**
@@ -11,22 +11,20 @@ import java.util.logging.Logger;
  * will have also moved.
  */
 public class Person {
-    private static Logger logger = Logger.getLogger("johnjava.equidistance");
-
-    private int number;
+    private final int number;
     private int x = -1, y = -1;
     private Person boda, bodb;
     private Group group;
     private int gridWidth, gridHeight;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public Person(int number) {
         this.number = number;
     }
     public String toString() {
         return "Person " + number + " (" + x + ", " + y + ") chosen: (" +
-                boda.number + ": " + getDistance(boda) + ", " +
-                bodb.number + ": " + getDistance(bodb) +")";
+                boda.number + ": " + String.format("%01.3f",getDistance(boda)) + ", " +
+                bodb.number + ": " + String.format("%01.3f",getDistance(bodb)) +")";
     }
     public void setGroup(Group group) {
         this.group = group;
@@ -34,29 +32,35 @@ public class Person {
         gridHeight = group.getGridHeight();
         this.x = random.nextInt(gridWidth);
         this.y = random.nextInt(gridHeight);
-        if (!this.isPositionFree()) {
-            moveToNextFreePosition();
+        if (this.isPositionTaken()) {
+            Point point = getNextFreePosition(this.x, this.y);
+            this.x = point.x;
+            this.y = point.y;
         }
         this.chooseTwo();
     }
-    private boolean moveToNextFreePosition() {
-        int oldX = x;
-        int oldY = y;
+    // starting from current (x, y), find next free position.
+    // Return null if no free positions - which should only happen if there are too many
+    // Persons for the size of the grid.
+    private Point getNextFreePosition(int currentX, int currentY) {
+        int nextX = currentX;
+        int nextY = currentY;
         do {
-            x++;
-            if (x >= gridWidth) {
-                x = 0;
-                y++;
-                if (y >= gridHeight) {
-                    y = 0;
+            nextX++;
+            if (nextX >= gridWidth) {
+                nextX = 0;
+                nextY++;
+                if (nextY >= gridHeight) {
+                    nextY = 0;
                 }
             }
-            if (x == oldX && y == oldY) {
+            if (nextX == this.x && nextY == this.y) {
                 System.out.println("no free positions found!");
-                return false;
+                return null;
             }
-        } while (!isPositionFree());
-        return true;
+        } while (isPositionTaken());
+        System.out.println("next free position for Person" + this.number + ": (" + nextX + ", " + nextY + ")");
+        return new Point(nextX, nextY);
     }
     /**
      * Choose two people who you are going to distance yourself from.
@@ -92,48 +96,56 @@ public class Person {
     /** Check there is no one currently in that position
      *  Return true if position is free, i.e no other persons at the same location as this.
      */
-    public boolean isPositionFree() {
+    public boolean isPositionTaken() {
         for (int i = 0; i < group.getLength(); i++) {
             Person bod = group.getPerson(i);
             if (bod != this && bod.x != -1 && bod.x == this.x && bod.y == this.y) {
                 System.out.println("someone already at (" + this.x + ", " + this.y + ")");
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
+    /**
+     find the next free space from
+     * @return
+     */
     public boolean moveIfNecessary() {
-        int distanceA = this.getDistance(boda);
-        int distanceB = this.getDistance(bodb);
+        double distanceA = this.getDistance(boda);
+        double distanceB = this.getDistance(bodb);
+        int bestX = this.x;
+        int bestY = this.y;
+        int currentX = this.x;
+        int currentY = this.y;
 
-        boolean moved;
-        int discrepancy;
-        int minDiscrepancy = Math.abs(distanceA - distanceB);
-        int oldX = x;
-        int oldY = y;
+        boolean moved = false;
+        double discrepancy; // difference between the 2 distances; the value we want to minimise
+        double bestDiscrepancy = Math.abs(distanceA - distanceB);
+        Point point;
 
-        while ((minDiscrepancy > 0) &&
-                (moved = moveToNextFreePosition())) { // returns false if no free position found
-            distanceA = this.getDistance(boda);
-            distanceB = this.getDistance(bodb);
+        while ((point = getNextFreePosition(currentX, currentY)) != null) { // returns false if no free position found
+            distanceA = this.getDistance(point.x, point.y, boda);
+            distanceB = this.getDistance(point.x, point.y, bodb);
             discrepancy = Math.abs(distanceA - distanceB);
-            if (discrepancy < minDiscrepancy) {
-                minDiscrepancy = discrepancy;
+            if (discrepancy < bestDiscrepancy) {
+                bestDiscrepancy = discrepancy;
+                bestX = point.x;
+                bestY = point.y;
+                moved = true;
             }
         }
-        moved = this.x != oldX || this.y != oldY;
-        if (moved) {
-            System.out.println("moved to (" + this.x + ", " + this.y + ")");
-        } else {
-            System.out.println("stayed in same place: (" + this.x + ", " + this.y + ")");
-        }
+        this.x = bestX;
+        this.y = bestY;
         return moved;
     }
-    public int getDistance(Person other) {
-        double xd = Math.abs(this.x - other.x);
-        double yd = Math.abs(this.y - other.y);
-        return (int)Math.sqrt(xd * xd + yd * yd);
+    public double getDistance(Person other) {
+        return getDistance(this.x, this.y, other);
+    }
+    public double getDistance(int thisX, int thisY, Person other) {
+        double xd = Math.abs(thisX - other.x);
+        double yd = Math.abs(thisY - other.y);
+        return Math.sqrt(xd * xd + yd * yd);
     }
     public static void main(String[] args) {
         Person[] people = {
@@ -157,29 +169,3 @@ public class Person {
     }
 }
 
-class Group {
-    private Person[] people;
-    private int gridX, gridY;
-    public Group(Person[] people, int gridX, int gridY) {
-        this.people = people;
-        this.gridX = gridX;
-        this.gridY = gridY;
-    }
-    private boolean checkPosition(Person person) {
-        return true;
-    }
-
-    public int getLength() {
-        return people.length;
-    }
-    public int getGridWidth() {
-        return this.gridX;
-    }
-    public int getGridHeight() {
-        return this.gridY;
-    }
-
-    public Person getPerson(int a) {
-        return people[a];
-    }
-}
