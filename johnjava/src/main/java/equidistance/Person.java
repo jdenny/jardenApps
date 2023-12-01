@@ -14,6 +14,7 @@ import java.util.Random;
  */
 public class Person {
     private final static boolean verbose = false;
+    private final static double discrepancyTolerance = 0.02f;
     private final int number;
     private int x = -1, y = -1;
     private Person boda, bodb;
@@ -90,7 +91,7 @@ public class Person {
                 newX = xincr + this.x;
                 newY = yincr + this.y;
                 if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight &&
-                        !(xincr==0 && yincr == 0)) {
+                        !(xincr==0 && yincr == 0) && !isPositionTaken(newX, newY)) {
                     listPoint.add(new Point(newX, newY));
                 }
             }
@@ -145,8 +146,8 @@ public class Person {
     public boolean isPositionTaken(int posX, int posY) {
         for (int i = 0; i < group.getLength(); i++) {
             Person bod = group.getPerson(i);
-            if (bod.x != -1 && bod.x == this.x && bod.y == this.y) {
-                if (verbose) System.out.println("someone already at (" + this.x + ", " + this.y + ")");
+            if (bod.x != -1 && bod.x == posX && bod.y == posY) {
+                if (verbose) System.out.println("someone already at (" + posX + ", " + posY + ")");
                 return true;
             }
         }
@@ -158,6 +159,36 @@ public class Person {
      * @return
      */
     public boolean moveIfNecessary() {
+        double distanceA = this.getDistance(boda);
+        double distanceB = this.getDistance(bodb);
+        int bestX = this.x;
+        int bestY = this.y;
+
+        boolean moved = false;
+        double discrepancy = Math.abs(distanceA - distanceB); // difference between the 2 distances; the value we want to minimise
+        if (discrepancy < discrepancyTolerance) {
+            if (verbose) System.out.println("discrepancy < " + discrepancyTolerance + ", so not moving");
+            return false; // that's close enough!
+        }
+        double bestDiscrepancy = discrepancy;
+        List<Point> freePoints = getAdjacentFreePositions();
+        for (Point point: freePoints) {
+            distanceA = this.getDistance(point.x, point.y, boda);
+            distanceB = this.getDistance(point.x, point.y, bodb);
+            discrepancy = Math.abs(distanceA - distanceB);
+            if (discrepancy < bestDiscrepancy) {
+                bestDiscrepancy = discrepancy;
+                bestX = point.x;
+                bestY = point.y;
+                moved = true;
+            }
+        }
+        this.x = bestX;
+        this.y = bestY;
+        this.discrepancy = bestDiscrepancy;
+        return moved;
+    }
+    public boolean moveIfNecessaryOld() {
         double distanceA = this.getDistance(boda);
         double distanceB = this.getDistance(bodb);
         int bestX = this.x;
@@ -223,6 +254,8 @@ public class Person {
             List<Point> freeSpaces = bod.getAdjacentFreePositions();
             System.out.println(freeSpaces);
         }
+        System.out.println("total discrepancy=" + String.format("%01.3f",
+                group.getTotalDiscrepancy()));
         for (int i = 0; i < 10; i++){
             System.out.println("About to move everyone - if necessary");
             for (Person bod : people) {
