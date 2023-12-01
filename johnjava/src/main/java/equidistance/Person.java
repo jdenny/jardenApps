@@ -1,6 +1,8 @@
 package equidistance;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -78,6 +80,24 @@ public class Person {
         if (verbose) System.out.println("next free position for Person" + this.number + ": (" + nextX + ", " + nextY + ")");
         return new Point(nextX, nextY);
     }
+    public List<Point> getAdjacentFreePositions() {
+        List<Point> listPoint = new ArrayList<>();
+        int gridWidth = group.getGridWidth();
+        int gridHeight = group.getGridHeight();
+        int newX, newY;
+        for (int xincr = -1; xincr <= 1; xincr++ ) {
+            for (int yincr = -1; yincr <= 1; yincr++) {
+                newX = xincr + this.x;
+                newY = yincr + this.y;
+                if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight &&
+                        !(xincr==0 && yincr == 0)) {
+                    listPoint.add(new Point(newX, newY));
+                }
+            }
+        }
+        return listPoint;
+    }
+
     /**
      * Choose two people who you are going to distance yourself from.
      * They can't be the same, and they can't me me!
@@ -115,7 +135,17 @@ public class Person {
     public boolean isPositionTaken() {
         for (int i = 0; i < group.getLength(); i++) {
             Person bod = group.getPerson(i);
-            if (bod != this && bod.x != -1 && bod.x == this.x && bod.y == this.y) {
+            if (this != bod &&bod.x != -1 && bod.x == this.x && bod.y == this.y) {
+                if (verbose) System.out.println("someone already at (" + this.x + ", " + this.y + ")");
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isPositionTaken(int posX, int posY) {
+        for (int i = 0; i < group.getLength(); i++) {
+            Person bod = group.getPerson(i);
+            if (bod.x != -1 && bod.x == this.x && bod.y == this.y) {
                 if (verbose) System.out.println("someone already at (" + this.x + ", " + this.y + ")");
                 return true;
             }
@@ -188,6 +218,10 @@ public class Person {
         }
         for (Person bod: people) {
             System.out.println(bod);
+        }
+        for (Person bod: people) {
+            List<Point> freeSpaces = bod.getAdjacentFreePositions();
+            System.out.println(freeSpaces);
         }
         for (int i = 0; i < 10; i++){
             System.out.println("About to move everyone - if necessary");
