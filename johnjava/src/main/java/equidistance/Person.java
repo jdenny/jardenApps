@@ -208,26 +208,45 @@ public class Person {
         for (Person bod: people) {
             System.out.println(bod);
         }
-        for (Person bod: people) {
-            List<Point> freeSpaces = bod.getAdjacentFreePositions();
-            System.out.println(freeSpaces);
+        if (debug) {
+            for (Person bod : people) {
+                List<Point> freeSpaces = bod.getAdjacentFreePositions();
+                System.out.println(freeSpaces);
+            }
         }
         System.out.println("total discrepancy=" + String.format("%01.3f",
                 group.getTotalDiscrepancy()));
-        boolean someoneMoved = true;
-        int i;
-        for (i = 0; i < 10 && someoneMoved; i++){
-            System.out.println("About to move everyone - if necessary");
-            someoneMoved = false;
-            for (Person bod : people) {
-                if (bod.moveIfNecessary()) someoneMoved = true;
-                System.out.println(bod);
+        boolean isUsingThreads = true;
+        if (isUsingThreads) {
+            Runnable runnable;
+            Thread thread = null;
+            for (Person bod: people) {
+                thread = new Thread(new Agent(bod));
+                thread.start();
+            }
+            try {
+                thread.join(3000); // wait for last thread to finish
+            } catch(InterruptedException ex) {
+                System.out.println("thread interrupted:" + ex);
             }
             System.out.println("total discrepancy=" + String.format("%01.3f",
                     group.getTotalDiscrepancy()));
-        }
-        if (i < 10) {
-            System.out.println("stopped moving after " + i + " moves");
+        } else {
+            boolean someoneMoved = true;
+            int i;
+            for (i = 0; i < 10 && someoneMoved; i++) {
+                System.out.println("About to move everyone - if necessary");
+                someoneMoved = false;
+                for (Person bod : people) {
+                    if (bod.moveIfNecessary()) someoneMoved = true;
+                    System.out.println(bod);
+                }
+                System.out.println("total discrepancy=" + String.format("%01.3f",
+                        group.getTotalDiscrepancy()));
+            }
+            if (i < 10) {
+                System.out.println("stopped moving after " + i + " moves");
+            }
         }
     }
 }
