@@ -13,30 +13,29 @@ import java.util.Random;
  * will have also moved.
  */
 public class Person {
-    private final static boolean verbose = false;
-    private final static double discrepancyTolerance = 0.02f;
+    private final static boolean debug = false;
+    private final static double discrepancyTolerance = 0.42f;
     private final int number;
     private int x = -1, y = -1;
-    private Person boda, bodb;
+    private Person bodA, bodB;
     private Group group;
     private int gridWidth, gridHeight;
     private final Random random = new Random();
-    private double discrepancy = -1;
+    private boolean moved = false;
 
     public Person(int number) {
         this.number = number;
     }
     public String toString() {
-        double distanceA = getDistance(boda);
-        double distanceB = getDistance(bodb);
         double discrepancy = getDiscrepancy();
         StringBuilder builder = new StringBuilder(
                 "Person " + number + " (" + x + ", " + y + ") chosen Persons(" +
-                        boda.number + ", " + bodb.number + "); discrepancy: " +
+                        bodA.number + ", " + bodB.number + "); discrepancy: " +
                         String.format("%01.3f",discrepancy));
-        if (verbose) {
-            builder.append(" distances: (" + String.format("%01.3f",distanceA) +
-                ", " + String.format("%01.3f",distanceA));
+        if (!moved) builder.append(" not moved");
+        if (debug) {
+            builder.append(" distances: (" + String.format("%01.3f",getDistance(bodA)) +
+                ", " + String.format("%01.3f",getDistance(bodB)) + ")");
         }
         return builder.toString();
     }
@@ -74,11 +73,11 @@ public class Person {
                 }
             }
             if (nextX == this.x && nextY == this.y) {
-                if (verbose) System.out.println("no free positions found!");
+                if (debug) System.out.println("no free positions found!");
                 return null;
             }
-        } while (isPositionTaken());
-        if (verbose) System.out.println("next free position for Person" + this.number + ": (" + nextX + ", " + nextY + ")");
+        } while (isPositionTaken(nextX, nextY));
+        if (debug) System.out.println("next free position for Person" + this.number + ": (" + nextX + ", " + nextY + ")");
         return new Point(nextX, nextY);
     }
     public List<Point> getAdjacentFreePositions() {
@@ -105,12 +104,12 @@ public class Person {
      */
     public void chooseTwo() {
         int a = random.nextInt(group.getLength());
-        boda = group.getPerson(a);
-        if (boda == this) { // check it's not yourself
+        bodA = group.getPerson(a);
+        if (bodA == this) { // check it's not yourself
             a = (a+1) % group.getLength();
-            boda = group.getPerson(a);
+            bodA = group.getPerson(a);
         }
-        bodb = getNextPerson(a);
+        bodB = getNextPerson(a);
     }
     private Person getNextPerson(int a) {
         int b = random.nextInt(group.getLength());
@@ -120,15 +119,15 @@ public class Person {
                 b++;
                 if (b >= group.getLength()) b = 0;
             }
-            bodb = group.getPerson(b);
-            if (bodb != this) { // check it's not yourself
+            bodB = group.getPerson(b);
+            if (bodB != this) { // check it's not yourself
                 found = true;
             } else {
                 b++;
                 if (b >= group.getLength()) b = 0;
             }
         }
-        return bodb;
+        return bodB;
     }
     /** Check there is no one currently in that position
      *  Return true if position is free, i.e no other persons at the same location as this.
@@ -137,7 +136,7 @@ public class Person {
         for (int i = 0; i < group.getLength(); i++) {
             Person bod = group.getPerson(i);
             if (this != bod &&bod.x != -1 && bod.x == this.x && bod.y == this.y) {
-                if (verbose) System.out.println("someone already at (" + this.x + ", " + this.y + ")");
+                if (debug) System.out.println("someone already at (" + this.x + ", " + this.y + ")");
                 return true;
             }
         }
@@ -147,93 +146,52 @@ public class Person {
         for (int i = 0; i < group.getLength(); i++) {
             Person bod = group.getPerson(i);
             if (bod.x != -1 && bod.x == posX && bod.y == posY) {
-                if (verbose) System.out.println("someone already at (" + posX + ", " + posY + ")");
+                if (debug) System.out.println("someone already at (" + posX + ", " + posY + ")");
                 return true;
             }
         }
         return false;
     }
-
-    /**
-     find the next free space from
-     * @return
-     */
     public boolean moveIfNecessary() {
-        double distanceA = this.getDistance(boda);
-        double distanceB = this.getDistance(bodb);
+        double distanceA = this.getDistance(bodA);
+        double distanceB = this.getDistance(bodB);
         int bestX = this.x;
         int bestY = this.y;
-
-        boolean moved = false;
+        moved = false;
         double discrepancy = Math.abs(distanceA - distanceB); // difference between the 2 distances; the value we want to minimise
         if (discrepancy < discrepancyTolerance) {
-            if (verbose) System.out.println("discrepancy < " + discrepancyTolerance + ", so not moving");
+            if (debug) System.out.println("discrepancy < " + discrepancyTolerance + ", so not moving");
             return false; // that's close enough!
         }
         double bestDiscrepancy = discrepancy;
         List<Point> freePoints = getAdjacentFreePositions();
         for (Point point: freePoints) {
-            distanceA = this.getDistance(point.x, point.y, boda);
-            distanceB = this.getDistance(point.x, point.y, bodb);
+            distanceA = this.getDistance(point.x, point.y, bodA);
+            distanceB = this.getDistance(point.x, point.y, bodB);
             discrepancy = Math.abs(distanceA - distanceB);
             if (discrepancy < bestDiscrepancy) {
                 bestDiscrepancy = discrepancy;
                 bestX = point.x;
                 bestY = point.y;
-                moved = true;
+                moved = true; // may find a better position, but will definitely move
             }
         }
         this.x = bestX;
         this.y = bestY;
-        this.discrepancy = bestDiscrepancy;
-        return moved;
-    }
-    public boolean moveIfNecessaryOld() {
-        double distanceA = this.getDistance(boda);
-        double distanceB = this.getDistance(bodb);
-        int bestX = this.x;
-        int bestY = this.y;
-        int currentX = this.x;
-        int currentY = this.y;
-
-        boolean moved = false;
-        double discrepancy; // difference between the 2 distances; the value we want to minimise
-        double bestDiscrepancy = Math.abs(distanceA - distanceB);
-        Point point;
-
-        while ((point = getNextFreePosition(currentX, currentY)) != null) { // returns false if no free position found
-            currentX = point.x;
-            currentY = point.y;
-            distanceA = this.getDistance(point.x, point.y, boda);
-            distanceB = this.getDistance(point.x, point.y, bodb);
-            discrepancy = Math.abs(distanceA - distanceB);
-            if (discrepancy < bestDiscrepancy) {
-                bestDiscrepancy = discrepancy;
-                bestX = point.x;
-                bestY = point.y;
-                moved = true;
-            }
-        }
-        this.x = bestX;
-        this.y = bestY;
-        this.discrepancy = bestDiscrepancy;
         return moved;
     }
     public double getDistance(Person other) {
         return getDistance(this.x, this.y, other);
     }
     public double getDistance(int thisX, int thisY, Person other) {
-        double xd = Math.abs(thisX - other.x);
-        double yd = Math.abs(thisY - other.y);
+        int xd = Math.abs(thisX - other.x);
+        int yd = Math.abs(thisY - other.y);
         return Math.sqrt(xd * xd + yd * yd);
     }
     public double getDiscrepancy() {
-        if (this.discrepancy < 0) {
-            double distanceA = getDistance(boda);
-            double distanceB = getDistance(bodb);
-            this.discrepancy = Math.abs(distanceA - distanceB);
-        }
-        return this.discrepancy;
+        double distanceA = getDistance(bodA);
+        double distanceB = getDistance(bodB);
+        return Math.abs(distanceA - distanceB);
     }
 
     public static void main(String[] args) {
@@ -256,14 +214,20 @@ public class Person {
         }
         System.out.println("total discrepancy=" + String.format("%01.3f",
                 group.getTotalDiscrepancy()));
-        for (int i = 0; i < 10; i++){
+        boolean someoneMoved = true;
+        int i;
+        for (i = 0; i < 10 && someoneMoved; i++){
             System.out.println("About to move everyone - if necessary");
+            someoneMoved = false;
             for (Person bod : people) {
-                bod.moveIfNecessary();
+                if (bod.moveIfNecessary()) someoneMoved = true;
                 System.out.println(bod);
             }
             System.out.println("total discrepancy=" + String.format("%01.3f",
                     group.getTotalDiscrepancy()));
+        }
+        if (i < 10) {
+            System.out.println("stopped moving after " + i + " moves");
         }
     }
 }
