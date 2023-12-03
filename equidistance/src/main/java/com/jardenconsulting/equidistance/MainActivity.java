@@ -40,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (Person bod : people) {
             bod.moveIfNecessary();
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, bod.toString());
+                Log.i(TAG, bod.toString());
             }
+        }
+        if (BuildConfig.DEBUG) {
+            Log.i(TAG, "");
         }
         canvasView.invalidate();
     }

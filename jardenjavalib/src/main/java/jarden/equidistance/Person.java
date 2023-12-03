@@ -19,7 +19,7 @@ public class Person {
         }
     }
     private final static boolean debug = false;
-    private final static double discrepancyTolerance = 0.42f;
+    private final static double discrepancyTolerance = 0.42d;
     private final String name;
     private int x = -1, y = -1;
     private Person bodA, bodB;
