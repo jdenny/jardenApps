@@ -18,6 +18,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.main.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.test.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.main.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.iml" filepath="$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/explorer/jardenApps.explorer.main.iml" />

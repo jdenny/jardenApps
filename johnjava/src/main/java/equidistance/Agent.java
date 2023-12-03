@@ -1,5 +1,7 @@
 package equidistance;
 
+import jarden.equidistance.Person;
+
 /**
  * Created by john.denny@gmail.com on 02/12/2023.
  */

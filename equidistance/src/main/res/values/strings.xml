@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Equidistance</string>
+    <string name="banner">Welcome to the Equi-distance game!</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="move">Move</string>
+</resources>

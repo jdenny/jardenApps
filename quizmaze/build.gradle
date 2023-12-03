@@ -3,7 +3,7 @@ apply plugin: 'java'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':jardenjavalib')
-    implementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.13.2'
 }
 sourceSets.main.resources.srcDirs = ["resources/"]
 
@@ -15,4 +15,9 @@ jar {
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }

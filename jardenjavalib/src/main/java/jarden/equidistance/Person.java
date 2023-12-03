@@ -1,10 +1,8 @@
-package equidistance;
+package jarden.equidistance;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 
 /**
  * Created by john.denny@gmail.com on 30/11/2023.
@@ -13,9 +11,16 @@ import java.util.Random;
  * will have also moved.
  */
 public class Person {
+    public class Point {
+        public int x, y;
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
     private final static boolean debug = false;
     private final static double discrepancyTolerance = 0.42f;
-    private final int number;
+    private final String name;
     private int x = -1, y = -1;
     private Person bodA, bodB;
     private Group group;
@@ -23,14 +28,14 @@ public class Person {
     private final Random random = new Random();
     private boolean moved = false;
 
-    public Person(int number) {
-        this.number = number;
+    public Person(String name) {
+        this.name = name;
     }
     public String toString() {
         double discrepancy = getDiscrepancy();
         StringBuilder builder = new StringBuilder(
-                "Person " + number + " (" + x + ", " + y + ") chosen Persons(" +
-                        bodA.number + ", " + bodB.number + "); discrepancy: " +
+                "Person " + name + " (" + x + ", " + y + ") chosen Persons(" +
+                        bodA.name + ", " + bodB.name + "); discrepancy: " +
                         String.format("%01.3f",discrepancy));
         if (!moved) builder.append(" not moved");
         if (debug) {
@@ -48,7 +53,7 @@ public class Person {
         if (this.isPositionTaken()) {
             Point point = getNextFreePosition(this.x, this.y);
             if (point == null) {
-                System.out.println("cannot find a free position for Person" + this.number);
+                System.out.println("cannot find a free position for Person" + this.name);
                 System.exit(1);
             } else {
                 this.x = point.x;
@@ -77,7 +82,7 @@ public class Person {
                 return null;
             }
         } while (isPositionTaken(nextX, nextY));
-        if (debug) System.out.println("next free position for Person" + this.number + ": (" + nextX + ", " + nextY + ")");
+        if (debug) System.out.println("next free position for Person" + this.name + ": (" + nextX + ", " + nextY + ")");
         return new Point(nextX, nextY);
     }
     public List<Point> getAdjacentFreePositions() {
@@ -194,60 +199,15 @@ public class Person {
         return Math.abs(distanceA - distanceB);
     }
 
-    public static void main(String[] args) {
-        Person[] people = {
-                new Person(1),
-                new Person(2),
-                new Person(3),
-                new Person(4)
-        };
-        Group group = new Group(people, 10, 10);
-        for (Person bod: people) {
-            bod.setGroup(group);
-        }
-        for (Person bod: people) {
-            System.out.println(bod);
-        }
-        if (debug) {
-            for (Person bod : people) {
-                List<Point> freeSpaces = bod.getAdjacentFreePositions();
-                System.out.println(freeSpaces);
-            }
-        }
-        System.out.println("total discrepancy=" + String.format("%01.3f",
-                group.getTotalDiscrepancy()));
-        boolean isUsingThreads = true;
-        if (isUsingThreads) {
-            Runnable runnable;
-            Thread thread = null;
-            for (Person bod: people) {
-                thread = new Thread(new Agent(bod));
-                thread.start();
-            }
-            try {
-                thread.join(3000); // wait for last thread to finish
-            } catch(InterruptedException ex) {
-                System.out.println("thread interrupted:" + ex);
-            }
-            System.out.println("total discrepancy=" + String.format("%01.3f",
-                    group.getTotalDiscrepancy()));
-        } else {
-            boolean someoneMoved = true;
-            int i;
-            for (i = 0; i < 10 && someoneMoved; i++) {
-                System.out.println("About to move everyone - if necessary");
-                someoneMoved = false;
-                for (Person bod : people) {
-                    if (bod.moveIfNecessary()) someoneMoved = true;
-                    System.out.println(bod);
-                }
-                System.out.println("total discrepancy=" + String.format("%01.3f",
-                        group.getTotalDiscrepancy()));
-            }
-            if (i < 10) {
-                System.out.println("stopped moving after " + i + " moves");
-            }
-        }
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+    public String getName() {
+        return this.name;
     }
 }
 

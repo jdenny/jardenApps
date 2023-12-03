@@ -1,4 +1,4 @@
-package equidistance;
+package jarden.equidistance;
 
 /**
  * Created by john.denny@gmail.com on 01/12/2023.

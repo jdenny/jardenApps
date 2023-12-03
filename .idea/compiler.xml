@@ -8,15 +8,13 @@
       <module name="jardenApps.documentation" target="11" />
       <module name="jardenApps.documentation.main" target="11" />
       <module name="jardenApps.documentation.test" target="11" />
+      <module name="jardenApps.equidistance" target="11" />
       <module name="jardenApps.explorer" target="11" />
       <module name="jardenApps.hotbridge" target="11" />
       <module name="jardenApps.jardenlib" target="11" />
       <module name="jardenApps.jardenprovider" target="11" />
       <module name="jardenApps.knowme" target="11" />
       <module name="jardenApps.music" target="11" />
-      <module name="jardenApps.quizmaze" target="11" />
-      <module name="jardenApps.quizmaze.main" target="11" />
-      <module name="jardenApps.quizmaze.test" target="11" />
       <module name="jardenApps.spanish" target="11" />
       <module name="jardenApps.testfreakwiz" target="11" />
       <module name="jardenApps.wifidirect" target="11" />
