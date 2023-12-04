@@ -14,6 +14,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private CanvasView canvasView;
     private Person[] people;
+    /*£
+    private ListView listView;
+    private List<Person> personList;
+    private ArrayAdapter<Person> adapter;
+     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +31,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Person("4"),
                 new Person("5")
         };
+        //£ personList = new ArrayList<>();
         Group group = new Group(people, 10, 10);
         for (Person bod: people) {
             bod.setGroup(group);
+            //£ personList.add(bod);
         }
         setContentView(R.layout.activity_main);
         this.canvasView = findViewById(R.id.canvasView);
         canvasView.setPeople(people);
         Button button = findViewById(R.id.moveButton);
         button.setOnClickListener(this);
+        /*£
+        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, personList);
+        listView = findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+
+         */
     }
 
     @Override
@@ -47,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.i(TAG, "");
         }
+        //£ adapter.notifyDataSetChanged();
         canvasView.invalidate();
     }
 }
