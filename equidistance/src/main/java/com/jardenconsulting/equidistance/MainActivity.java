@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Person("1"),
                 new Person("2"),
                 new Person("3"),
-                new Person("4")
+                new Person("4"),
+                new Person("5")
         };
         Group group = new Group(people, 10, 10);
         for (Person bod: people) {

@@ -18,11 +18,15 @@ public class CanvasView  extends View {
     private final static Paint paint1;
     private final static Paint paint2;
     private Person[] people = null;
+    private int circleRadius = 40;
+    private int gridMargin = circleRadius + 10;
+    private int cellSize = circleRadius * 2 + 10;
+    private int blobRadius = 10;
 
     static {
         paintBlack = new Paint();
         paintBlack.setColor(Color.BLACK);
-        paintBlack.setTextSize(30);
+        paintBlack.setTextSize(40);
         paint1 = new Paint();
         paint1.setColor(Color.CYAN);
         paint2 = new Paint();
@@ -45,14 +49,35 @@ public class CanvasView  extends View {
         super.onDraw(canvas);
         Paint paint = paint1;
         if (people != null) {
-            for (Person person: people) {
-                int x = 40 + 70 * person.getX();
-                int y = 40 + 70 * person.getY();
-                canvas.drawCircle(x, y, 30, paint);
+            Person personA, personB;
+            for (Person person : people) {
+                int x = gridMargin + cellSize * person.getX();
+                int y = gridMargin + cellSize * person.getY();
+                canvas.drawCircle(x, y, circleRadius, paint);
                 canvas.drawText(person.getName(), x, y, paintBlack);
-                paint = (paint == paint1)? paint2 : paint1;
+                paint = (paint == paint1) ? paint2 : paint1;
+                personA = person.getPersonA();
+                int xA = gridMargin + cellSize * personA.getX();
+                int yA = gridMargin + cellSize * personA.getY();
+                canvas.drawLine(x, y, xA, yA, paintBlack);
+                // drawBlob(x, xA, y, yA, canvas);
+                personB = person.getPersonB();
+                int xB = gridMargin + cellSize * personB.getX();
+                int yB = gridMargin + cellSize * personB.getY();
+                canvas.drawLine(x, y, xB, yB, paintBlack);
+                // drawBlob(x, xB, y, yB, canvas);
+                //!! canvas.drawCircle(xB, yB, blobRadius, paintBlack);
             }
         }
+    }
+    private void drawBlob(int x, int xA, int y, int yA, Canvas canvas) {
+        // calculate blob position
+        double dx = x - xA;
+        double dy = y - yA;
+        double h = Math.sqrt(dx * dx + dy * dy);
+        double xbA = xA - 40.0 * x / h;
+        double ybA = yA - 40.0 * y / h;
+        canvas.drawCircle((float) xbA, (float) ybA, blobRadius, paintBlack);
     }
 
 }

@@ -209,5 +209,7 @@ public class Person {
     public String getName() {
         return this.name;
     }
+    public Person getPersonA() { return this.bodA; }
+    public Person getPersonB() { return this.bodB; }
 }
 
