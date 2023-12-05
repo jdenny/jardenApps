@@ -5,12 +5,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.jardenconsulting.spanishapp"
         minSdk 14
-        targetSdk 33
+        targetSdk 34
         versionCode 41
         versionName "2.18"
     }
@@ -21,6 +21,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.spanishapp'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {

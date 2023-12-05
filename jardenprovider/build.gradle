@@ -17,6 +17,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.jardenprovider'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {

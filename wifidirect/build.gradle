@@ -23,6 +23,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.wifidirect'
+    buildFeatures {
+        buildConfig true
+    }
 
 }
 

@@ -17,6 +17,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.music'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {

@@ -23,6 +23,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.testfreakwiz'
+    buildFeatures {
+        buildConfig true
+    }
 
 }
 

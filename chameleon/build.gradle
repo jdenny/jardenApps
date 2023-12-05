@@ -21,6 +21,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.chameleon'
+    buildFeatures {
+        buildConfig true
+    }
 
 }
 

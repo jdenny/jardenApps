@@ -17,6 +17,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.explorer'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {

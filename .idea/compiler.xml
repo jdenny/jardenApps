@@ -2,22 +2,22 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
-      <module name="jardenApps.androidcourse" target="11" />
-      <module name="jardenApps.bluetoothlib" target="11" />
-      <module name="jardenApps.chameleon" target="11" />
-      <module name="jardenApps.documentation" target="11" />
-      <module name="jardenApps.documentation.main" target="11" />
-      <module name="jardenApps.documentation.test" target="11" />
-      <module name="jardenApps.equidistance" target="11" />
-      <module name="jardenApps.explorer" target="11" />
-      <module name="jardenApps.hotbridge" target="11" />
-      <module name="jardenApps.jardenlib" target="11" />
-      <module name="jardenApps.jardenprovider" target="11" />
-      <module name="jardenApps.knowme" target="11" />
-      <module name="jardenApps.music" target="11" />
-      <module name="jardenApps.spanish" target="11" />
-      <module name="jardenApps.testfreakwiz" target="11" />
-      <module name="jardenApps.wifidirect" target="11" />
+      <module name="jardenApps.androidcourse" target="17" />
+      <module name="jardenApps.bluetoothlib" target="17" />
+      <module name="jardenApps.chameleon" target="17" />
+      <module name="jardenApps.documentation" target="17" />
+      <module name="jardenApps.documentation.main" target="17" />
+      <module name="jardenApps.documentation.test" target="17" />
+      <module name="jardenApps.equidistance" target="17" />
+      <module name="jardenApps.explorer" target="17" />
+      <module name="jardenApps.hotbridge" target="17" />
+      <module name="jardenApps.jardenlib" target="17" />
+      <module name="jardenApps.jardenprovider" target="17" />
+      <module name="jardenApps.knowme" target="17" />
+      <module name="jardenApps.music" target="17" />
+      <module name="jardenApps.spanish" target="17" />
+      <module name="jardenApps.testfreakwiz" target="17" />
+      <module name="jardenApps.wifidirect" target="17" />
       <module name="jardenjavalib" target="1.7" />
     </bytecodeTargetLevel>
   </component>

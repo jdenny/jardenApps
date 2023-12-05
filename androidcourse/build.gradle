@@ -17,6 +17,9 @@ android {
         }
     }
     namespace 'com.jardenconsulting.androidcourse'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
