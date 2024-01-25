@@ -34,7 +34,7 @@ public class EquiDistanceMain {
         }
         System.out.println("total discrepancy=" + String.format("%01.3f",
                 group.getTotalDiscrepancy()));
-        boolean isUsingThreads = false;
+        boolean isUsingThreads = true;
         if (isUsingThreads) {
             Thread thread = null;
             for (Person bod: people) {
