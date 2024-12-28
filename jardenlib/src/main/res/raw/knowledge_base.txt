@@ -99,6 +99,14 @@ go to https://sites.google.com/
 if logged into Google as me, will show my sites
 within a site, can hold html web pages - create page, web page
 	or create a folder to hold raw files - create page, file cabinet
+Privacy Policy:
+https://sites.google.com/d/1OVItrKjHZgH-Xm5lMmCpQ1JvjSDl1oX-/p/1v3AvJi9g1syPMSrW9mgeNDpa2IiKOkKh/
+https://sites.google.com/view/amazequiz/home
+On Android console:
+	select the app
+	scroll down to App content on left
+	select Need attention or Actioned
+	Actioned > Privacy policy > Manage
 	
 Deleting files on device
 ------------------------
