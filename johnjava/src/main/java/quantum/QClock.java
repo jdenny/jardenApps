@@ -62,25 +62,24 @@ public class QClock {
     public QClock(double angle, double length) {
         this.angle = angle;
         this.length = length;
-        normaliseAngle();
+        convertAngleLengthToXY();
     }
-    private void normaliseAngle() {
-        if (this.angle >= angle360) {
-            this.angle = angle % angle360;
-        }
+    public QClock(double x, double y, boolean xy) {
+        this.x = x;
+        this.y = y;
+        convertXYtoAngleLength();
     }
+
     public void addQClock(QClock other) {
         x += other.x;
         y += other.y;
-        this.length = Math.sqrt(x*x + y*y);
-        this.angle = Math.acos(y / length);
-        /*
-        double newLength = calculateLength(this, other);
-        double newAngle = calculateAngle(other.length, newLength, this.length);
-        this.length = newLength;
-        this.angle = newAngle;
-
-         */
+        convertXYtoAngleLength();
+    }
+    public void rotateClock(double angle) {
+        this.angle += angle;
+        if (this.angle >= angle360) {
+            this.angle = angle % angle360;
+        }
     }
     public String toStringFull() {
         return "(" + angle + ", " + length + ")";
@@ -98,42 +97,32 @@ public class QClock {
         double angle135 = Math.PI * 0.75; // 2.356
         double angle180 = Math.PI; // 3.1416
         double angle225 = Math.PI * 1.25; // 3.927
-
-        QClock cA = new QClock(0, 1);
-        QClock cB = new QClock(angle90, 1);
-        cA.addQClock(cB);
-        System.out.println("cA=" + cA);
-        System.out.println();
-
-
          */
-        // testAddClocks();
         testConvertToXY();
+        testConvertFromXY();
+        testAddClocks();
     }
     private static void testConvertToXY() {
+        System.out.println("testConvertToXY");
         double angle15 = Math.PI / 12; // 1.0472
         for (int i = 0; i <= 24; i++) {
             QClock qc = new QClock(angle15 * i, 1);
-            System.out.print(qc + ", ");
-            qc.convertAngleLengthToXY();
-            qc.convertXYtoAngleLength();
             System.out.print(qc);
             System.out.println("; length=" + Math.sqrt(qc.x * qc.x + qc.y * qc.y));
         }
     }
     private static void testConvertFromXY() {
-        double angle15 = Math.PI / 12; // 1.0472
-        for (int i = 0; i <= 24; i++) {
-            QClock qc = new QClock(angle15 * i, 1);
-            System.out.print(qc + ", ");
-            qc.convertAngleLengthToXY();
-            qc.convertXYtoAngleLength();
-            System.out.print(qc);
-            System.out.println("; length=" + Math.sqrt(qc.x * qc.x + qc.y * qc.y));
+        System.out.println("testConvertFromXY");
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                QClock qc = new QClock(1 - 0.5 * i, 1 - 0.5 * j, true);
+                System.out.println(qc);
+            }
         }
     }
 
     private static void testAddClocks() {
+        System.out.println("testAddClocks");
         double increment = Math.PI / 6.0;
         double length = 1.0; // vary this later!
         for (int b=0; b<=12; b++) {
