@@ -63,7 +63,7 @@ public class QClock {
             if (handX < 0.0) {
                 angle = angle270 + Math.acos((-handX) / length);
             } else {
-                angle = Math.asin(handX / length);
+                angle = Math.asin(handX / length); // if length is zero, angle is NaN - correct!
             }
         }
     }
@@ -131,31 +131,24 @@ public class QClock {
         rotateClock(rotationAngle);
         convertAngleLengthToXY();
     }
-    public String toString() {
+    public String toStringRounded() {
         return "(" + (Math.round(Math.toDegrees(angle) * 1000.0) / 1000.0) +
                 ", " + (Math.round(length * 1000.0) / 1000.0) +
                 ", " + (Math.round(handX * 1000.0) / 1000.0) +
                 ", " + (Math.round(handY * 1000.0) / 1000.0) +
                 ", " + (Math.round(positionX * 1000.0) / 1000.0) +")";
     }
-    public static void main(String[] args) {
+    public String toString() {
+        return "(" + angle + ", " + length + ", " + positionX + ")";
+    }    public static void main(String[] args) {
         // testConvertToXY();
         // testConvertFromXY();
         // testAddClocks();
         // testRotateClock();
         // produceRotationTestResults();
         // testMoveClock();
+        testCancellingClocks();
         bCoxP58();
-        /*
-        QClock qc1 = new QClock();
-        QClock qc2 = new QClock();
-        qc1.moveClock(Math.sqrt(0.75));
-        qc2.moveClock(Math.sqrt(0.25));
-        System.out.println(qc1);
-        System.out.println(qc2);
-        qc1.addQClock(qc2);
-        System.out.println(qc1);
-         */
     }
     /*
     To reduce length of clock to zero (or close, due to rounding errors):
@@ -170,10 +163,32 @@ public class QClock {
         10        0.05     1000        0.113244     0.000113244
 
      */
+    private static void testCancellingClocks() {
+        double rootHalf = Math.sqrt(0.5); // probability if 2 clocks
+        QClock qc1, qc2;
+        /*
+        qc1 = new QClock(angle270, rootHalf, 0);
+        qc2 = new QClock(angle90, rootHalf, 0);
+        System.out.println(qc1);
+        System.out.println(qc2);
+        qc1.addQClock(qc2);
+        System.out.println(qc1);
+        System.out.println();
+         */
+        qc1 = new QClock(0, rootHalf, 0);
+        qc2 = new QClock(0, rootHalf, 0);
+        qc1.moveClock(Math.sqrt(0.75));
+        qc2.moveClock(Math.sqrt(0.25));
+        System.out.println(qc1);
+        System.out.println(qc2);
+        qc1.addQClock(qc2);
+        System.out.println(qc1);
+    }
     private static void bCoxP58() {
-        double distance = 10.0;
-        double span = 0.04375; // range of uncertainty
-        int numberOfClocks = 8;
+        System.out.println("bCoxP58()");
+        double distance = 100.0;
+        double span = 0.25 / distance; // range of uncertainty
+        int numberOfClocks = 2;
         double deltaX = span / (numberOfClocks - 1); // distance between clocks
         double length = Math.sqrt(1.0 / numberOfClocks);
         // assert (length * length * numberOfClocks == 1.0);
@@ -181,15 +196,16 @@ public class QClock {
         for (int i = 0; i < numberOfClocks; i++) {
             double xpos = i * deltaX;
             clocks[i] = new QClock(0, length, xpos);
-            // System.out.print(clocks[i] + "\t");
+            System.out.println(clocks[i]);
             clocks[i].moveClock(distance + span - xpos);
-            // System.out.print(clocks[i] + "\t");
+            System.out.print(clocks[i]);
+            System.out.println(Math.toDegrees(clocks[i].angle));
             if (i > 0) {
                 clocks[0].addQClock(clocks[i]);
+                System.out.println(clocks[0]);
             }
-            // System.out.println(clocks[0]);
         }
-        System.out.println(clocks[0] + " length=" + clocks[0].length);
+        // System.out.println(clocks[0]);
     }
     private static void testRotateClock() {
         for (int i = 0; i < 8; i++) {
