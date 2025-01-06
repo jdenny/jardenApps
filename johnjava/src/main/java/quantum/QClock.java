@@ -184,10 +184,15 @@ public class QClock {
         qc1.addQClock(qc2);
         System.out.println(qc1);
     }
+    /* how close to zero with just 2 clocks? Best result is
+        solving x^2 + 20x - 0.5 = 0
+       span = (Math.sqrt(402) - 20) / 2; span = 0.024968827881711
+       finalLength = 7.285229008292718E-14
+     */
     private static void bCoxP58() {
         System.out.println("bCoxP58()");
-        double distance = 100.0;
-        double span = 0.25 / distance; // range of uncertainty
+        double distance = 10.0;
+        double span = (Math.sqrt(402) - 20) / 2; //0.5 / distance; // range of uncertainty
         int numberOfClocks = 2;
         double deltaX = span / (numberOfClocks - 1); // distance between clocks
         double length = Math.sqrt(1.0 / numberOfClocks);
