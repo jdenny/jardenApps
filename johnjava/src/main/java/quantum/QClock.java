@@ -140,7 +140,8 @@ public class QClock {
     }
     public String toString() {
         return "(" + angle + ", " + length + ", " + positionX + ")";
-    }    public static void main(String[] args) {
+    }
+    public static void main(String[] args) {
         // testConvertToXY();
         // testConvertFromXY();
         // testAddClocks();
@@ -157,11 +158,13 @@ public class QClock {
         2 * distance * span = 1; hence span = 0.5 / distance
     Examples:
         distance  span     noOfClocks  finalLength  finalLength/noc
+        10          2
         10        0.025    2           0.002777     0.00138
         10        0.0375   4           0.004385     0.00110
         10        0.04375  8           0.006704     0.000838
         10        0.05     1000        0.113244     0.000113244
-
+        Best result: distance = 10; span = 0.024968827881711 (Math.sqrt(402) - 20) / 2
+        finalLength = 7.285229008292718E-14
      */
     private static void testCancellingClocks() {
         double rootHalf = Math.sqrt(0.5); // probability if 2 clocks
@@ -175,8 +178,8 @@ public class QClock {
         System.out.println(qc1);
         System.out.println();
          */
-        qc1 = new QClock(0, rootHalf, 0);
-        qc2 = new QClock(0, rootHalf, 0);
+        qc1 = new QClock(0.75, rootHalf, 0);
+        qc2 = new QClock(0.75, rootHalf, 0);
         qc1.moveClock(Math.sqrt(0.75));
         qc2.moveClock(Math.sqrt(0.25));
         System.out.println(qc1);
