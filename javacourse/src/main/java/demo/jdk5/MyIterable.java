@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 public class MyIterable implements Iterable<String>, Iterator<String> {
 	private int index;
 	private final static String[] dias = {
-		"sábado", "lunes", "martes", "miércoles", "jueves",
+		"sabado", "lunes", "martes", "miercoles", "jueves",
 		"viernes", "domingo"
 	};
 

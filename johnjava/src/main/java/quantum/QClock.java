@@ -13,6 +13,7 @@ public class QClock {
     private final static double angle360 = Math.PI * 2; // 6.2832
     private final static double h = 6.62607015 * 10e-34; // m^2 kg / s
 
+    private final static boolean debug = true;
     private double angle;
     private double length;
     private double handX, handY; // position of clock hand
@@ -36,6 +37,8 @@ public class QClock {
     public static double calculateAngle(double a, double b, double c) {
         return Math.acos((a*a + b*b - c*c)/(2 * a * b));
     }
+
+
     private void convertAngleLengthToXY() {
         if (angle >= angle270) {
             handX = - length * Math.cos(angle - angle270);
@@ -195,17 +198,17 @@ public class QClock {
     private static void bCoxP58() {
         System.out.println("bCoxP58()");
         double distance = 10.0;
-        double span = (Math.sqrt(402) - 20) / 2; //0.5 / distance; // range of uncertainty
+        double deltaX = (Math.sqrt(402) - 20) / 2; //0.5 / distance; // range of uncertainty
         int numberOfClocks = 2;
-        double deltaX = span / (numberOfClocks - 1); // distance between clocks
+        double clockGap = deltaX / (numberOfClocks - 1); // distance between clocks
         double length = Math.sqrt(1.0 / numberOfClocks);
         // assert (length * length * numberOfClocks == 1.0);
         QClock[] clocks = new QClock[numberOfClocks];
         for (int i = 0; i < numberOfClocks; i++) {
-            double xpos = i * deltaX;
+            double xpos = i * clockGap;
             clocks[i] = new QClock(0, length, xpos);
             System.out.println(clocks[i]);
-            clocks[i].moveClock(distance + span - xpos);
+            clocks[i].moveClock(distance + deltaX - xpos);
             System.out.print(clocks[i]);
             System.out.println(Math.toDegrees(clocks[i].angle));
             if (i > 0) {
@@ -214,6 +217,39 @@ public class QClock {
             }
         }
         // System.out.println(clocks[0]);
+    }
+
+    /**
+     *
+     * @param mass
+     * @param distanceX
+     * @param time
+     * @param clockCt - number of clocks
+     * @param deltaX - range of uncertainty
+     * @return
+     */
+    public static String moveClocks(double mass, double distanceX, double time,
+                                    int clockCt, double deltaX) {
+        if (debug) System.out.println("moveClocks(...)");
+        double clockGap = deltaX / (clockCt - 1); // distance between clocks
+        double length = Math.sqrt(1.0 / clockCt);
+        // assert (length * length * numberOfClocks == 1.0);
+        QClock[] clocks = new QClock[clockCt];
+        for (int i = 0; i < clockCt; i++) {
+            double xpos = i * clockGap;
+            clocks[i] = new QClock(0, length, xpos);
+            if (debug) System.out.println(clocks[i]);
+            clocks[i].moveClock(distanceX + deltaX - xpos);
+            if (debug) {
+                System.out.print(clocks[i]);
+                System.out.println(Math.toDegrees(clocks[i].angle));
+            }
+            if (i > 0) {
+                clocks[0].addQClock(clocks[i]);
+                if (debug) System.out.println(clocks[0]);
+            }
+        }
+        return "result=" + clocks[0];
     }
     private static void testRotateClock() {
         for (int i = 0; i < 8; i++) {

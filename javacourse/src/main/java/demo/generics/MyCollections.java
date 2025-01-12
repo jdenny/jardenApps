@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class MyCollections {
 	private final static String[] dias = {
-		"sábado", "lunes", "martes", "miércoles", "jueves",
+		"sabado", "lunes", "martes", "miercoles", "jueves",
 		"viernes", "domingo"
 	};
 
@@ -33,7 +33,7 @@ public class MyCollections {
 	private static void demoArrays() {
 		System.out.println("demoArrays()*************");
 		String[] stringArray = {"one", "two", "three"};
-		Object[] objectArray = {"four", new Double(5.6), new MyCollections()};
+		Object[] objectArray = {"four", Double.valueOf(5.6), new MyCollections()};
 		String[] strArray;
 		Object[] objArray;
 		objArray = stringArray; // compiler allows, and maybe okay...
@@ -43,7 +43,7 @@ public class MyCollections {
 		// but could be dodgy...
 		objArray[1] = "four"; // okay
 		try {
-			objArray[0] = new Double(4.5);  // compiles okay, but runtime exception
+			objArray[0] = Double.valueOf(4.5);  // compiles okay, but runtime exception
 		} catch (ArrayStoreException ase) {
 			System.out.println(ase);
 		}
