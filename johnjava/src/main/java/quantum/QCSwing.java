@@ -61,7 +61,7 @@ public class QCSwing implements ActionListener {
         fieldsPanel.add(timeTextField);
         fieldsPanel.add(new JLabel("no. of clocks"));
         fieldsPanel.add(clockCtTextField);
-        fieldsPanel.add(new JLabel("deltaX (uncertainty"));
+        fieldsPanel.add(new JLabel("deltaX (uncertainty)"));
         fieldsPanel.add(deltaXTextField);
 		container.add(controlPanel, BorderLayout.NORTH);
         container.add(fieldsPanel, BorderLayout.CENTER);
@@ -74,11 +74,11 @@ public class QCSwing implements ActionListener {
 		frame.setVisible(true); // start event handling thread
 	}
     private void reset() {
-        massTextField.setText("1");
-        distanceXTextField.setText("10");
+        massTextField.setText("1.0e9"); // 1
+        distanceXTextField.setText("1.0e-6"); // 10
         timeTextField.setText("1");
-        clockCtTextField.setText("10");
-        deltaXTextField.setText("0.2");
+        clockCtTextField.setText("1"); // 10
+        deltaXTextField.setText("0"); // 0.2
     }
 	@Override
 	public void actionPerformed(ActionEvent event) {

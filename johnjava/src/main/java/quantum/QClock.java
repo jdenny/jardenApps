@@ -77,7 +77,7 @@ public class QClock {
      * @param time s
      * @return
      */
-    public static double calculateWindAngle(double mass, double distance, double time) {
+    public static double calculateTurns(double mass, double distance, double time) {
         return mass * distance * distance / 2 * h * time;
     }
     public QClock() {
@@ -134,7 +134,13 @@ public class QClock {
         rotateClock(rotationAngle);
         convertAngleLengthToXY();
     }
-    public String toStringRounded() {
+    public void moveClock2(double mass, double distanceX, double time) {
+        this.positionX += distanceX;
+        double turns = calculateTurns(mass, distanceX, time);
+        double rotationAngle = angle360 * turns;
+        rotateClock(rotationAngle);
+        convertAngleLengthToXY();
+    }    public String toStringRounded() {
         return "(" + (Math.round(Math.toDegrees(angle) * 1000.0) / 1000.0) +
                 ", " + (Math.round(length * 1000.0) / 1000.0) +
                 ", " + (Math.round(handX * 1000.0) / 1000.0) +
@@ -192,7 +198,7 @@ public class QClock {
     }
     /* how close to zero with just 2 clocks? Best result is
         solving x^2 + 20x - 0.5 = 0
-       span = (Math.sqrt(402) - 20) / 2; span = 0.024968827881711
+       deltaX = (Math.sqrt(402) - 20) / 2; deltaX = 0.024968827881711
        finalLength = 7.285229008292718E-14
      */
     private static void bCoxP58() {
@@ -230,8 +236,13 @@ public class QClock {
      */
     public static String moveClocks(double mass, double distanceX, double time,
                                     int clockCt, double deltaX) {
+        double clockGap;
         if (debug) System.out.println("moveClocks(...)");
-        double clockGap = deltaX / (clockCt - 1); // distance between clocks
+        if (clockCt == 1) {
+            clockGap = 0.0;
+        } else {
+            clockGap = deltaX / (clockCt - 1); // distance between clocks
+        }
         double length = Math.sqrt(1.0 / clockCt);
         // assert (length * length * numberOfClocks == 1.0);
         QClock[] clocks = new QClock[clockCt];
@@ -239,7 +250,7 @@ public class QClock {
             double xpos = i * clockGap;
             clocks[i] = new QClock(0, length, xpos);
             if (debug) System.out.println(clocks[i]);
-            clocks[i].moveClock(distanceX + deltaX - xpos);
+            clocks[i].moveClock2(mass, distanceX + deltaX - xpos, time);
             if (debug) {
                 System.out.print(clocks[i]);
                 System.out.println(Math.toDegrees(clocks[i].angle));
