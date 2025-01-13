@@ -74,7 +74,7 @@ public class QCSwing implements ActionListener {
 		frame.setVisible(true); // start event handling thread
 	}
     private void reset() {
-        massTextField.setText("1.0e9"); // 1
+        massTextField.setText("1.0e-9"); // 1
         distanceXTextField.setText("1.0e-6"); // 10
         timeTextField.setText("1");
         clockCtTextField.setText("1"); // 10

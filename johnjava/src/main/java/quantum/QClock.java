@@ -78,7 +78,7 @@ public class QClock {
      * @return
      */
     public static double calculateTurns(double mass, double distance, double time) {
-        return mass * distance * distance / 2 * h * time;
+        return mass * distance * distance / (2 * h * time);
     }
     public QClock() {
         this(0, 1.0, 0);
@@ -137,10 +137,12 @@ public class QClock {
     public void moveClock2(double mass, double distanceX, double time) {
         this.positionX += distanceX;
         double turns = calculateTurns(mass, distanceX, time);
+        if (debug) System.out.println("turns=" + turns);
         double rotationAngle = angle360 * turns;
         rotateClock(rotationAngle);
         convertAngleLengthToXY();
-    }    public String toStringRounded() {
+    }
+    public String toStringRounded() {
         return "(" + (Math.round(Math.toDegrees(angle) * 1000.0) / 1000.0) +
                 ", " + (Math.round(length * 1000.0) / 1000.0) +
                 ", " + (Math.round(handX * 1000.0) / 1000.0) +
