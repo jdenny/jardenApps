@@ -1,5 +1,13 @@
 package quantum;
 
+/*
+TODO: convert to using angular rotation
+X2 = xcosA + ysinA
+Y2 = ycosA - xsinA
+See https://en.wikipedia.org/wiki/Talk:Rotation_of_axes_in_two_dimensions
+See Clock2
+ */
+
 /**
  * Quantum Clock.
  * Created by john.denny@gmail.com on 28/12/2024.
