@@ -111,7 +111,7 @@ public class QCSwing implements ActionListener {
             clockCt = Integer.parseInt(clockCtStr);
             deltaXTextField.requestFocusInWindow();
             deltaX = Double.parseDouble(deltaXStr);
-            String result = QClock.moveClocks(
+            String result = QClockRA.moveClocks(
                     mass, distanceX, time, clockCt, deltaX);
             statusTextField.setText(result);
         } catch (NumberFormatException e) {
