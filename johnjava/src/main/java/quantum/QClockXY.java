@@ -6,9 +6,10 @@ package quantum;
 public class QClockXY extends QClock {
     private double x, y;
     private double locationX; // locationY, locationZ
-    public QClockXY(double x, double y) {
+    public QClockXY(double x, double y, double locationX) {
         this.x = x;
         this.y = y;
+        this.locationX = locationX;
     }
     @Override
     public void addClock(QClock other) {
@@ -53,7 +54,7 @@ public class QClockXY extends QClock {
         testAngularRotation();
     }
     private static void testAngularRotation() {
-        QClockXY clockA = new QClockXY(Math.sqrt(3), 1);
+        QClockXY clockA = new QClockXY(Math.sqrt(3), 1, 0);
         System.out.println(clockA);
         clockA.rotateClock(Math.PI / 6);
         System.out.println(clockA);
@@ -79,10 +80,10 @@ public class QClockXY extends QClock {
         }
         double length = Math.sqrt(1.0 / clockCt);
         // assert (length * length * numberOfClocks == 1.0);
-        QClock[] clocks = new QClockRA[clockCt];
+        QClock[] clocks = new QClockXY[clockCt];
         for (int i = 0; i < clockCt; i++) {
             double xpos = i * clockGap;
-            clocks[i] = new QClockRA(0, length, xpos);
+            clocks[i] = new QClockXY(0, length, xpos);
             if (debug) System.out.println(clocks[i]);
             clocks[i].moveClock(mass, distanceX + deltaX - xpos, time);
             if (debug) {

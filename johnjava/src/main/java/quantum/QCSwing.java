@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +26,7 @@ public class QCSwing implements ActionListener {
     private JTextField timeTextField;
     private JTextField clockCtTextField;
     private JTextField deltaXTextField;
+    private JCheckBox useQClockRACheckBox;
 
 	public static void main(String[] args) {
 		//Schedule a job for the event-dispatching thread:
@@ -46,11 +48,14 @@ public class QCSwing implements ActionListener {
         deltaXTextField = new JTextField(20);
 		JButton goButton = new JButton("Go");
 		JButton resetButton = new JButton("Reset");
+        useQClockRACheckBox = new JCheckBox();
 		Container container = frame.getContentPane();
 		JPanel controlPanel = new JPanel();
         //!! controlPanel.add(textLabel);
         controlPanel.add(goButton);
         controlPanel.add(resetButton);
+        controlPanel.add(new JLabel("useQClockRA"));
+        controlPanel.add(useQClockRACheckBox);
         JPanel fieldsPanel = new JPanel();
         fieldsPanel.setLayout(new GridLayout(5, 2));
         fieldsPanel.add(new JLabel("mass (m)"));
@@ -111,8 +116,14 @@ public class QCSwing implements ActionListener {
             clockCt = Integer.parseInt(clockCtStr);
             deltaXTextField.requestFocusInWindow();
             deltaX = Double.parseDouble(deltaXStr);
-            String result = QClockRA.moveClocks(
-                    mass, distanceX, time, clockCt, deltaX);
+            String result;
+            if (useQClockRACheckBox.isSelected()) {
+                result = QClockRA.moveClocks(
+                        mass, distanceX, time, clockCt, deltaX);
+            } else {
+                result =QClockXY.moveClocks(
+                        mass, distanceX, time, clockCt, deltaX);
+            }
             statusTextField.setText(result);
         } catch (NumberFormatException e) {
             statusTextField.setText("Number format exception");
