@@ -149,11 +149,13 @@ public class MusicActivity extends AppCompatActivity
         if (BuildConfig.DEBUG) Log.d(TAG, "newNotes()");
         for (int i = 0; i < NOTES_IN_STAVE; i++) {
             int newPitchIndex = random.nextInt(pitchRange);
+            int newPitch = orderedPitches[newPitchIndex];
             // don't have same note 3 times in succession
-            if (i >= 2 && newPitchIndex == notePitches[i-1] && newPitchIndex == notePitches[i-2]) {
+            if (i >= 2 && newPitch == notePitches[i-1] && newPitch == notePitches[i-2]) {
                 if (++newPitchIndex >= pitchRange) newPitchIndex = 0;
+                newPitch = orderedPitches[newPitchIndex];
             }
-            notePitches[i] = orderedPitches[newPitchIndex];
+            notePitches[i] = newPitch;
         }
         setNotesText();
         highlightedNote = -1;
