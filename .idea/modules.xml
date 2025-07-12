@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jardenApps.iml" filepath="$PROJECT_DIR$/jardenApps.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.iml" filepath="$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.main.iml" filepath="$PROJECT_DIR$/.idea/modules/androidcourse/jardenApps.androidcourse.main.iml" />
@@ -16,8 +15,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chameleon/jardenApps.chameleon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/chameleon/jardenApps.chameleon.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chameleon/jardenApps.chameleon.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/chameleon/jardenApps.chameleon.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.main.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.test.iml" filepath="$PROJECT_DIR$/.idea/modules/documentation/jardenApps.documentation.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.main.iml" filepath="$PROJECT_DIR$/.idea/modules/equidistance/jardenApps.equidistance.main.iml" />
@@ -31,8 +28,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/hotbridge/jardenApps.hotbridge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/hotbridge/jardenApps.hotbridge.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/hotbridge/jardenApps.hotbridge.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/hotbridge/jardenApps.hotbridge.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenjavalib/jardenApps.jardenjavalib.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenlib/jardenApps.jardenlib.main.iml" />
@@ -42,25 +37,17 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenprovider/jardenApps.jardenprovider.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenprovider/jardenApps.jardenprovider.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jardenprovider/jardenApps.jardenprovider.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/jardenprovider/jardenApps.jardenprovider.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.iml" filepath="$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.main.iml" filepath="$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.test.iml" filepath="$PROJECT_DIR$/.idea/modules/javacourse/jardenApps.javacourse.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.iml" filepath="$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.main.iml" filepath="$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.test.iml" filepath="$PROJECT_DIR$/.idea/modules/johnjava/jardenApps.johnjava.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.iml" filepath="$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.main.iml" filepath="$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/knowme/jardenApps.knowme.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/life/jardenApps.life.iml" filepath="$PROJECT_DIR$/.idea/modules/life/jardenApps.life.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/life/jardenApps.life.main.iml" filepath="$PROJECT_DIR$/.idea/modules/life/jardenApps.life.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/life/jardenApps.life.test.iml" filepath="$PROJECT_DIR$/.idea/modules/life/jardenApps.life.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/music/jardenApps.music.iml" filepath="$PROJECT_DIR$/.idea/modules/music/jardenApps.music.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/music/jardenApps.music.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/music/jardenApps.music.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/music/jardenApps.music.main.iml" filepath="$PROJECT_DIR$/.idea/modules/music/jardenApps.music.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/music/jardenApps.music.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/music/jardenApps.music.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.iml" filepath="$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.test.iml" filepath="$PROJECT_DIR$/.idea/modules/quizmaze/jardenApps.quizmaze.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.iml" filepath="$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.main.iml" filepath="$PROJECT_DIR$/.idea/modules/spanish/jardenApps.spanish.main.iml" />

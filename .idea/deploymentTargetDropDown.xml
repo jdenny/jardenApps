@@ -6,6 +6,22 @@
         <State />
       </entry>
       <entry key="music">
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="ZY2277JX6V" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2025-07-12T09:19:10.006812Z" />
+        </State>
+      </entry>
+      <entry key="spanish">
         <State />
       </entry>
     </value>

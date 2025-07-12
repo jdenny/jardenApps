@@ -5,14 +5,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.jardenconsulting.spanishapp"
-        minSdk 14
-        targetSdk 34
-        versionCode 41
-        versionName "2.18"
+        minSdk 21
+        targetSdk 36
+        versionCode 42
+        versionName "2.19"
     }
     buildTypes {
         release {
@@ -30,7 +30,7 @@ dependencies {
     implementation project(':jardenlib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.2'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.12.0'
 }
