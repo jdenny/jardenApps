@@ -732,7 +732,7 @@ learn,aprender,verb,transIntrans,n_a,1
 leave,dejar,verb,transIntrans,n_a,1
 depart,salir,verb,transIntrans,place,1
 lend,prestar,verb,transIntrans,n_a,1
-like,gustar,verb,transIntrans,n_a,1
+disappoint,decepcionar,verb,transIntrans,n_a,1
 enchant,encantar,verb,transIntrans,n_a,1
 live,vivir,verb,transIntrans,n_a,1
 lose,perder,verb,transIntrans,n_a,1
@@ -1330,7 +1330,7 @@ congratulate,felicitar,verb,transitive,n_a,1
 to get married,casarse,phrase,n_a,culture,1
 <go> bowling,<ir> a la bolera,phrase,conjugate,sport,1
 <do> sport,<hacer> deporte,phrase,conjugate,sport,1
-to do gymnastics,hacer gimnasia,phrase,n_a,sport,1
+<do> gymnastics,<hacer> gimnasia,phrase,conjugate,sport,1
 exercise,ejercer,verb,intransitive,n_a,1
 fish,pescar,verb,transIntrans,sport,1
 <go> for a walk,<ir> de paseo,phrase,conjugate,n_a,1
@@ -1541,7 +1541,7 @@ tennis court,cancha de tenis,noun,feminine,place,1
 theme park,parque temático,noun,masculine,place,1
 ticket office,despacho de billetes,noun,masculine,place,1
 timetable,horario,noun,masculine,travel,1
-to be situated,estar situado,phrase,n_a,n_a,1
+<be> situated,<estar> situado,phrase,conjugate,n_a,1
 camp,acampar,verb,intransitive,hobby,1
 cross,cruzar,verb,transIntrans,place,1
 function,funcionar,verb,transIntrans,n_a,1
@@ -1622,7 +1622,7 @@ shine,brillar,verb,transIntrans,weather,1
 weather report,boletín meteorológico,noun,masculine,weather,1
 wind,viento,noun,masculine,weather,1
 windy,ventoso,adjective,n_a,weather,1
-I arrive on the third of October,yo llego el tres de octubre,phrase,n_a,time,1
+<arrive> on the third of October,<llegar> el tres de octubre,phrase,conjugate,time,1
 fifth of March 2016,cinco de marzo de 2016,phrase,n_a,time,1
 in the year 2012,en el año dos mil doce,phrase,n_a,time,1
 what are you doing tonight?,¿qué haces esta noche?,phrase,familiar,time,1
@@ -1634,13 +1634,13 @@ I would like to talk,quisiera hablar,phrase,n_a,n_a,1
 it was nothing,de nada,phrase,n_a,n_a,1
 where do you come from?,¿de dónde eres?,phrase,familiar,n_a,1
 where do you live?,¿dónde vives?,phrase,familiar,n_a,1
-I live in England,vivo en Inglaterra,phrase,n_a,n_a,1
+<live> in England,<vivir> en Inglaterra,phrase,conjugate,n_a,1
 how do you get there?,¿cómo se llega allí?,phrase,n_a,travel,1
-I go on foot,voy a pie,phrase,n_a,travel,1
+<go> on foot,<ir> a pie,phrase,conjugate,travel,1
 my name is Julie,me llamo Julie,phrase,n_a,person,1
 my husband is called John,mi esposo se llama John,phrase,n_a,person,1
 I have 5 children,tengo cinco hijos,phrase,n_a,person,1
-I live in the south of England,vivo en el sur de Inglaterra,phrase,n_a,person,1
+<live> in the south of England,<vivir> en el sur de Inglaterra,phrase,conjugate,person,1
 my good friend is Mexican,mi buena amiga es mexicana,phrase,n_a,person,1
 her name is Ana,ella se llama Ana,phrase,n_a,person,1
 our son lives in Canada,nuestro hijo vive en Canadá,phrase,n_a,person,1
@@ -1857,7 +1857,7 @@ I have just seen it,acabo de verlo,phrase,n_a,n_a,1
 we have just arrived,acabamos de llegar,phrase,n_a,n_a,1
 where have you put it?,¿dónde lo ha puesta?,phrase,n_a,n_a,1
 I feel like staying here with you,tengo ganas de quedarme aquí contigo,phrase,familiar,n_a,1
-I prefer to go out,prefiero salir,phrase,n_a,n_a,1
+<prefer> to go out,<preferir> salir,phrase,conjugate,n_a,1
 who's that?,¿quién es ese?,phrase,n_a,n_a,1
 nobody,nadie,pronoun,n_a,n_a,1
 everyone,todo el mundo,pronoun,n_a,n_a,1
