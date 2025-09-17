@@ -253,17 +253,6 @@ open Android developer console:
 	upload <app>.apk App bundles
 	manage list of testers: johnsandroidtesters@googlegroups.com
 
-Screen shots
-------------
-On Nexus 7
-	simultaneously press power and volume down buttons; saved in Photos
-On S3 mini
-	simultaneously press power and home buttons; saved in Gallery
-On Samsung Galaxy Young
-	Press and hold Home key, press and release Power key, release home key
-	Screen shots saved to Gallery, under ScreenCapture
-	click on notification to connect storage to PC
-
 Launch Icons					Scale factor	Action bar icons
 ------------					For bitmaps		----------------
 ldpi	~120 dpi	36x36		0.75
