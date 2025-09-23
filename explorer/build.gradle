@@ -1,24 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "com.jardenconsulting.explorer"
+        applicationId = "com.jardenconsulting.explorer"
         minSdkVersion 16
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.explorer'
+    namespace = 'com.jardenconsulting.explorer'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 
@@ -26,5 +26,5 @@ dependencies {
     implementation project(':jardenlib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.2'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
 }

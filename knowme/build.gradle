@@ -1,24 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 36
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "com.jardenconsulting.knowme"
-        minSdk 14
-        targetSdk 36
-        versionCode 15
-        versionName "4.5"
+        applicationId = "com.jardenconsulting.knowme"
+        minSdk = 14
+        targetSdk = 36
+        versionCode = 15
+        versionName = "4.5"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.knowme'
+    namespace = 'com.jardenconsulting.knowme'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 

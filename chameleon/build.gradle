@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk = 34
 
 
     defaultConfig {
         applicationId "com.jardenconsulting.chameleon"
         minSdkVersion 21
-        targetSdk 34
+        targetSdk = 34
         versionCode 1
         versionName "1.0"
 
@@ -20,9 +20,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.chameleon'
+    namespace = 'com.jardenconsulting.chameleon'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 
 }

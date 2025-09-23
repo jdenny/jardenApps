@@ -31,18 +31,27 @@ public class Atom {
 
     private void calculateOuterShell() {
         // return (electrons <= 2) ? electrons : ((electrons <= 10) ? (electrons - 2) : (electrons - 10));
-        if (electrons > 28) {
-            electronsInOuterShell = electrons - 28;
-            electronsOuterShortage = 32 - electronsInOuterShell;
+        if (electrons > 86) {
+            electronsInOuterShell = electrons - 86;
+            electronsOuterShortage = 118 - electrons;
+        } else if (electrons > 54) {
+            electronsInOuterShell = electrons - 54;
+            electronsOuterShortage = 86 - electrons;
+        } else if (electrons > 36) {
+            electronsInOuterShell = electrons - 36;
+            electronsOuterShortage = 54 - electrons;
+        } else if (electrons > 18) {
+            electronsInOuterShell = electrons - 18;
+            electronsOuterShortage = 36 - electrons;
         } else if (electrons > 10) {
             electronsInOuterShell = electrons - 10;
-            electronsOuterShortage = 18 - electronsInOuterShell;
+            electronsOuterShortage = 18 - electrons;
         } else if (electrons > 2) {
             electronsInOuterShell = electrons - 2;
-            electronsOuterShortage = 8 - electronsInOuterShell;
+            electronsOuterShortage = 10 - electrons;
         } else {
             electronsInOuterShell = electrons;
-            electronsOuterShortage = 2 - electronsInOuterShell;
+            electronsOuterShortage = 2 - electrons;
         }
     }
     /*

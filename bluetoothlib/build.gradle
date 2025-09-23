@@ -1,21 +1,21 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk 34
+    compileSdk = 36
 
     defaultConfig {
-        minSdk 14
-        targetSdk 34
+        minSdk = 14
+        targetSdk = 34
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.bluetoothapplib'
+    namespace = 'com.jardenconsulting.bluetoothapplib'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 

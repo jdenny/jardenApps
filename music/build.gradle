@@ -1,24 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.jardenconsulting.music"
-        minSdk 16
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        applicationId = "com.jardenconsulting.music"
+        minSdk = 16
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.music'
+    namespace = 'com.jardenconsulting.music'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 

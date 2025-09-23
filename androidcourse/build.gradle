@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId "com.jardenconsulting.androidcourse"
@@ -16,9 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.androidcourse'
+    namespace = 'com.jardenconsulting.androidcourse'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 

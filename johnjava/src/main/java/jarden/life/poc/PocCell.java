@@ -158,7 +158,7 @@ class TransferRNA extends Protein {
 		char aa = temp.getAminoAcid(aminoAcid);
 		String codonStr = new String(codon);
 		DockingSite site = temp.findSite("addaa", codonStr);
-		site.setValue(new Character(aa));
+		site.setValue(Character.valueOf(aa));
 	}
 	
 }

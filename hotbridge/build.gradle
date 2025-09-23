@@ -1,24 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.jardenconsulting.cardapp"
-        minSdkVersion 16
-        targetSdk 34
-        versionCode 43
-        versionName "7.10"
+        applicationId = "com.jardenconsulting.cardapp"
+        minSdkVersion = 16
+        targetSdk = 34
+        versionCode = 43
+        versionName = "7.10"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.cardapp'
+    namespace = 'com.jardenconsulting.cardapp'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 

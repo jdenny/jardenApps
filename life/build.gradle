@@ -2,11 +2,8 @@ apply plugin: 'java'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.13.2'
     implementation project(path: ':jardenjavalib')
     implementation project(path: ':jardenjavalib')
 }
 sourceSets.main.resources.srcDirs = ["resources/"]
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

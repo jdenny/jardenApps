@@ -1,21 +1,21 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk 36
+    compileSdk = 36
 
     defaultConfig {
-        minSdk 21
-        targetSdk 36
+        minSdk = 21
+        targetSdk = 36
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.jardenlib'
+    namespace = 'com.jardenconsulting.jardenlib'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 

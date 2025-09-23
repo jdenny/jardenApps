@@ -1,28 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    compileSdk 36
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "com.jardenconsulting.spanishapp"
-        minSdk 21
-        targetSdk 36
-        versionCode 43
-        versionName "2.20"
+        applicationId = "com.jardenconsulting.spanishapp"
+        minSdk = 21
+        targetSdk = 36
+        versionCode = 43
+        versionName = "2.20"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.jardenconsulting.spanishapp'
+    namespace = 'com.jardenconsulting.spanishapp'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 }
 
