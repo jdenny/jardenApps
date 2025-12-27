@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/androidcourse" />
+            <option value="$PROJECT_DIR$/balderdash" />
             <option value="$PROJECT_DIR$/bluetoothlib" />
             <option value="$PROJECT_DIR$/chameleon" />
             <option value="$PROJECT_DIR$/documentation" />
