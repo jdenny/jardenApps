@@ -1,17 +1,28 @@
 package com.jardenconsulting.balderdash;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import jarden.balderdash.WiFiDirectBroadcastReceiver;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements WifiP2pManager.ChannelListener/*, DeviceActionListener*/ {
     public static final String TAG = "Balderdash";
+    private WifiP2pManager manager;
+    private WifiP2pManager.Channel channel;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        channel = manager.initialize(this, getMainLooper(), null);
+        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
+
 //        if (BuildConfig.DEBUG) Log.d(TAG, "MainActivity.onCreate()");
 
         setContentView(R.layout.activity_main);
@@ -54,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onChannelDisconnected() {
+
     }
 
 //    @Override

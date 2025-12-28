@@ -7,6 +7,8 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.util.Log;
 
+import com.jardenconsulting.balderdash.MainActivity;
+
 /**
  * Created by john.denny@gmail.com on 26/12/2025.
  */
@@ -14,10 +16,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     public static final String TAG = "WiFiDirectBroadcastReceiver";
     private WifiP2pManager manager;
     private Channel channel;
-    private MyWiFiActivity activity;
+    private MainActivity activity;
 
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-                                       MyWiFiActivity activity) {
+                                       MainActivity activity) {
         super();
         this.manager = manager;
         this.channel = channel;
