@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.jardenconsulting.balderdash'
+    namespace = 'com.jardenconsulting.balderdash'
     compileSdk = 36
 
     defaultConfig {
