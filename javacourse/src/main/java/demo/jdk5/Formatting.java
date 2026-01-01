@@ -29,16 +29,16 @@ public class Formatting {
 	@Override
 	public String toString() {
 		return "name=" + name + ", number=" + number
-				+ ", target=£" + salesTarget + ", dateCreated="
+				+ ", target=$" + salesTarget + ", dateCreated="
 				+ dateCreated + ", male=" + male;
 	}
 	public String toString2() {
 		return MessageFormat.format(
-				"name={0}, number={1,number}, target=£{2,number,0.00}, dateCreated={3, date}, male={4}",
+				"name={0}, number={1,number}, target=${2,number,0.00}, dateCreated={3, date}, male={4}",
 				name, number, salesTarget, dateCreated, male);
 	}
 	public String toString3() {
-		return String.format("name=%s, number=%d, target=£%01.2f, dateCreated=%tD, male=%b%n",
+		return String.format("name=%s, number=%d, target=$%01.2f, dateCreated=%tD, male=%b%n",
 			name, number, salesTarget, dateCreated, male);
 	}
 }

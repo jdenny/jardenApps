@@ -23,7 +23,7 @@ hub, which means messages go directly from the sender to the receiver.</p>
 <p>If you want to concentrate on the business logic rather than the user
 interface, we have provided a Swing front-end - see
 chat.swing.ChatSwing. If you use our ChatSwing, you need to build a class
-that implements chat.swing.ChatNetIF. When you receive a 'connect' message
+that implements net.ChatNetIF. When you receive a 'connect' message
 (see below) create
 a new User object, and pass this to ChatSwing.addUser(). When you receive
 any other message, pass this to ChatSwing.showMessage().</p>

@@ -1,3 +1,4 @@
-include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':androidcourse', ':explorer', ':documentation', ':jardenprovider', ':music', ':johnjava', ':jardenjavalib', ':quizmaze', ':life', ':knowme', ':testfreakwiz', ':wifidirect', ':javacourse', ':chameleon'
+include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':androidcourse', ':explorer', ':documentation', ':jardenprovider', ':music', ':johnjava', ':jardenjavalib', ':quizmaze', ':life', ':knowme', ':testfreakwiz', ':javacourse', ':chameleon'
 include ':equidistance'
+include ':wifidirect'
 include ':balderdash'

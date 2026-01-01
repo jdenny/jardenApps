@@ -26,7 +26,7 @@ class Person {
 	}
 	public String toString() {
 		String formatStr =
-			"name=%s, salary=£%01.2f, friends=%d, DOB=%tF";
+			"name=%s, salary=$%01.2f, friends=%d, DOB=%tF";
 		return String.format(formatStr,
 			name, salary, friendCt, dob);
 	}

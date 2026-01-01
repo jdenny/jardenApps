@@ -55,13 +55,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         for (Person bod : people) {
             bod.moveIfNecessary();
-            if (BuildConfig.DEBUG) {
+            // if (BuildConfig.DEBUG) {
                 Log.i(TAG, bod.toString());
-            }
+            // }
         }
-        if (BuildConfig.DEBUG) {
+        // if (BuildConfig.DEBUG) {
             Log.i(TAG, "");
-        }
+        // }
         //£ adapter.notifyDataSetChanged();
         canvasView.invalidate();
     }

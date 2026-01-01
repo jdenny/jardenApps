@@ -19,7 +19,7 @@ public abstract class SalesUnit implements SalesUnitIF {
 		dateCreated = new Date();
 	}
 	public String toString() {
-		return String.format("%s, target=£%01.2f, dateCreated=%tF",
+		return String.format("%s, target=$%01.2f, dateCreated=%tF",
 				name, salesTarget, dateCreated);
 	}
 	public String getName() {

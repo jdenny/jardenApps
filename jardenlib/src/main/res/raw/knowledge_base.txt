@@ -14,6 +14,16 @@ otherwise: isInterrupted() = true;
 modifiers order:
 	Annotation public protected private abstract static final strictfp
 
+run Android studio java class from Terminal
+-------------------------------------------
+E.g. ChatSwing
+cd /Users/john/AndroidStudioProjects/jardenApps
+export CLASSPATH=johnjava/build/classes/java/main:jardenjavalib/build/classes/java/main
+java chat.swing.ChatSwing $ [change unicast port, say 8003]
+Ctrl/Z
+bg
+java chat.ChatSwing
+
 Course timetable
 ----------------
 Mon: 34, Invoking Activities Exercise
