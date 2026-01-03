@@ -30,8 +30,8 @@ public class ChatNet implements Runnable, ChatNetIF {
 		startNetwork();
 	}
 	private void startNetwork() throws IOException {
-		//?? InetAddress addr = InetAddress.getLocalHost();
-		//?? myHostAddress = addr.getHostAddress();
+		InetAddress addr = InetAddress.getLocalHost();
+		myHostAddress = addr.getHostAddress();
 		selfUser = new User(this.userName, this.myHostAddress, this.unicastPort);
 		group = InetAddress.getByName(MULTICAST_ADDRESS);
 		multicastSocket = new MulticastSocket(MULTICAST_PORT);

@@ -1,45 +1,56 @@
 package jarden.balderdash;
 
-import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
-import jarden.net.ChatListener;
-import jarden.net.ChatNet;
-import jarden.net.ChatNetIF;
 import jarden.net.User;
+import jarden.tcp.TcpControllerServer;
+import jarden.tcp.TcpPlayerClient;
 
-public class MainActivity extends AppCompatActivity implements ChatListener, OnItemClickListener {
+public class GameActivity extends AppCompatActivity implements
+        TcpControllerServer.MessageListener, AdapterView.OnItemClickListener, View.OnClickListener, TcpPlayerClient.Listener {
+    /*!!
     public static final String MULTICAST_IP = "239.255.0.1";
     public static final int MULTICAST_PORT = 50000;
     public static final int CONTROLLER_PORT = 50001;
     private ChatNetIF chat;
-    private EditText editText;
+    WifiManager.MulticastLock multicastLock;
+     */
+    private TcpControllerServer server;
+    private TcpPlayerClient client;
+    private String controllerAddress = "127.0.0.1";
+    private boolean isHost;
+    private EditText nameEditText;
     private TextView outputView;
+    private EditText playerName;
     private ListView usersListView;
     private ArrayList<User> userList = new ArrayList<>();
     private ArrayList<String> userListStr = new ArrayList<>();
-    WifiManager.MulticastLock multicastLock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        /*?
+        isHost = getIntent().getBooleanExtra("HOST", false);
+        if (isHost) {
+            server = new TcpControllerServer(this);
+            server.start();
+        }
+
+         */
+
+
+        setContentView(R.layout.activity_game);
         /*!!
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -47,7 +58,14 @@ public class MainActivity extends AppCompatActivity implements ChatListener, OnI
             return insets;
         });
          */
-        editText = findViewById(R.id.editText);
+        Button hostButton = findViewById(R.id.hostButton);
+        hostButton.setOnClickListener(this);
+        Button joinButton = findViewById(R.id.joinButton);
+        joinButton.setOnClickListener(this);
+        Button nextQuestionButton = findViewById(R.id.nextButton);
+        nextQuestionButton.setOnClickListener(this);
+        playerName = findViewById(R.id.nameEditText);
+        nameEditText = findViewById(R.id.editText);
         outputView = findViewById(R.id.outputView);
         usersListView = findViewById(R.id.usersListView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -55,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements ChatListener, OnI
                 userListStr);
         usersListView.setAdapter(adapter);
         usersListView.setOnItemClickListener(this);
+        /*!!
         try {
             WifiManager wifiManager =
                     (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -67,27 +86,15 @@ public class MainActivity extends AppCompatActivity implements ChatListener, OnI
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+         */
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        multicastLock.release();
-    }
-
-    @Override // ChatListener
-    public void addUser(User user) {
-        userList.add(user);
-        userListStr.add(user.toString());
-    }
-
-    @Override // ChatListener
-    public void showMessage(String message) {
-
-    }
-
-    @Override // ChatListener
-    public void setChat(ChatNetIF chat) {
-
+        if (server != null) server.stop();
+        if (client != null) client.disconnect();
+        //!! multicastLock.release();
     }
 
     @Override // OnItemClickListener
@@ -99,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements ChatListener, OnI
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
+    /**
     public static void sendMulticast(Context context, String message) {
 
         DatagramSocket socket = null;
@@ -136,5 +144,78 @@ public class MainActivity extends AppCompatActivity implements ChatListener, OnI
             }
         }
     }
+     */
 
+    @Override
+    public void onMessage(String playerId, String message) {
+        Log.d("GAME", playerId + ": " + message);
+
+        // Example:
+        // ANSWER|3|My fake definition
+        // VOTE|3|2
+    }
+
+    @Override
+    public void onPlayerConnected(String playerId) {
+        Log.d("GAME", "Player joined: " + playerId);
+    }
+
+    @Override
+    public void onPlayerDisconnected(String playerId) {
+        Log.d("GAME", "Player left: " + playerId);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int viewId = view.getId();
+        if (viewId == R.id.hostButton) {
+            server = new TcpControllerServer(this);
+            server.start();
+            //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
+        } else if (viewId == R.id.joinButton) {
+            String name = nameEditText.getText().toString();
+            client = new TcpPlayerClient(controllerAddress, 50001, name, this);
+            client.connect();
+        } else if (viewId == R.id.nextButton) {
+            getNextQuestion();
+        } else {
+            Toast.makeText(this, "unknown button pressed: " + view,
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private String[] questions = {
+            "A Swiss teenager has made a fully functional submarine out of...",
+            "What are 'Pooks'?",
+            "In Ssan Francisco, California, it is illegal to dance...",
+            "Who was Gustav Vigeland?"
+    };
+    private int questionIndex = -1;
+    private void getNextQuestion() {
+        questionIndex++;
+        if (questionIndex >= questions.length) questionIndex = 0;
+        String nextQuestion = questions[questionIndex];
+    }
+
+    @Override
+    public void onConnected() {
+        Toast.makeText(this, "Now connect to the game server",
+                Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onMessage(String message) {
+
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onError(Exception e) {
+
+    }
 }

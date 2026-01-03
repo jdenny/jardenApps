@@ -56,10 +56,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.main.iml" filepath="$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/testfreakwiz/jardenApps.testfreakwiz.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.iml" filepath="$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/wifidirect/jardenApps.wifidirect.unitTest.iml" />
     </modules>
   </component>
 </project>
