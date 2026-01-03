@@ -5,5 +5,5 @@
     <string name="joinGameStr">Join Game</string>
     <string name="yourNameStr">Your name</string>
     <string name="sendStr">Send</string>
-    <string name="nextQuestionStr">Next Question</string>
+    <string name="next_question">Next</string>
 </resources>

@@ -3,23 +3,17 @@ package jarden.balderdash;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import androidx.appcompat.app.AppCompatActivity;
-import jarden.net.User;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 public class GameActivity extends AppCompatActivity implements
-        TcpControllerServer.MessageListener, AdapterView.OnItemClickListener, View.OnClickListener, TcpPlayerClient.Listener {
+        TcpControllerServer.MessageListener, /*AdapterView.OnItemClickListener,*/ View.OnClickListener, TcpPlayerClient.Listener {
     /*!!
     public static final String MULTICAST_IP = "239.255.0.1";
     public static final int MULTICAST_PORT = 50000;
@@ -27,17 +21,21 @@ public class GameActivity extends AppCompatActivity implements
     private ChatNetIF chat;
     WifiManager.MulticastLock multicastLock;
      */
+    private static final String TAG = "Balderdash";
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "127.0.0.1";
     private boolean isHost;
     private EditText nameEditText;
+    private EditText answerEditText;
     private TextView outputView;
-    private EditText playerName;
+    /*!!
     private ListView usersListView;
     private ArrayList<User> userList = new ArrayList<>();
     private ArrayList<String> userListStr = new ArrayList<>();
-    @Override
+
+     */
+    @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*?
@@ -62,18 +60,17 @@ public class GameActivity extends AppCompatActivity implements
         hostButton.setOnClickListener(this);
         Button joinButton = findViewById(R.id.joinButton);
         joinButton.setOnClickListener(this);
-        Button nextQuestionButton = findViewById(R.id.nextButton);
+        Button nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
-        playerName = findViewById(R.id.nameEditText);
-        nameEditText = findViewById(R.id.editText);
+        nameEditText = findViewById(R.id.nameEditText);
+        answerEditText = findViewById(R.id.answerEditText);
         outputView = findViewById(R.id.outputView);
-        usersListView = findViewById(R.id.usersListView);
+        /*!! usersListView = findViewById(R.id.usersListView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 userListStr);
         usersListView.setAdapter(adapter);
         usersListView.setOnItemClickListener(this);
-        /*!!
         try {
             WifiManager wifiManager =
                     (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -89,7 +86,7 @@ public class GameActivity extends AppCompatActivity implements
 
          */
     }
-    @Override
+    @Override // Activity
     protected void onDestroy() {
         super.onDestroy();
         if (server != null) server.stop();
@@ -97,16 +94,18 @@ public class GameActivity extends AppCompatActivity implements
         //!! multicastLock.release();
     }
 
+    /*!!
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
 
+
     @Override // OnItemClickListener
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
-    /**
+
     public static void sendMulticast(Context context, String message) {
 
         DatagramSocket socket = null;
@@ -146,26 +145,27 @@ public class GameActivity extends AppCompatActivity implements
     }
      */
 
-    @Override
+    @Override // TcpControllerServer.MessageListener
     public void onMessage(String playerId, String message) {
-        Log.d("GAME", playerId + ": " + message);
+        Log.d(TAG, playerId + ": " + message);
+
 
         // Example:
         // ANSWER|3|My fake definition
         // VOTE|3|2
     }
 
-    @Override
+    @Override // TcpControllerServer.MessageListener
     public void onPlayerConnected(String playerId) {
-        Log.d("GAME", "Player joined: " + playerId);
+        Log.d(TAG, "Player joined: " + playerId);
     }
 
-    @Override
+    @Override // TcpControllerServer.MessageListener
     public void onPlayerDisconnected(String playerId) {
-        Log.d("GAME", "Player left: " + playerId);
+        Log.d(TAG, "Player left: " + playerId);
     }
 
-    @Override
+    @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.hostButton) {
@@ -176,7 +176,7 @@ public class GameActivity extends AppCompatActivity implements
             String name = nameEditText.getText().toString();
             client = new TcpPlayerClient(controllerAddress, 50001, name, this);
             client.connect();
-        } else if (viewId == R.id.nextButton) {
+        } else if (viewId == R.id.nextQuestionButton) {
             getNextQuestion();
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
@@ -196,26 +196,31 @@ public class GameActivity extends AppCompatActivity implements
         questionIndex++;
         if (questionIndex >= questions.length) questionIndex = 0;
         String nextQuestion = questions[questionIndex];
+        server.sendToAll(nextQuestion);
     }
 
-    @Override
+    @Override // TcpPlayerClient.Listener
     public void onConnected() {
-        Toast.makeText(this, "Now connect to the game server",
-                Toast.LENGTH_LONG).show();
+        Log.d(TAG, "Now connected to the game server");
     }
 
-    @Override
+    @Override // TcpPlayerClient.Listener
     public void onMessage(String message) {
-
+        Log.d(TAG, "onMessage(" + message + ")");
+        runOnUiThread(new Runnable() {
+            public void run() {
+                outputView.setText(message);
+            }
+        });
     }
 
-    @Override
+    @Override // TcpPlayerClient.Listener
     public void onDisconnected() {
-
+        Log.d(TAG, "Now disconnected from the game server");
     }
 
-    @Override
+    @Override // TcpPlayerClient.Listener
     public void onError(Exception e) {
-
+        Log.e(TAG, e.toString());
     }
 }

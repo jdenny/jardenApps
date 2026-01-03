@@ -90,9 +90,13 @@ public class TcpControllerServer {
 
     public void sendToPlayer(String playerId, String message) {
         ClientHandler handler = clients.get(playerId);
-        if (handler != null) {
-            handler.send(message);
-        }
+        executor.execute(() -> {
+            if (handler != null) {
+                handler.send(message);
+            }
+        });
+
+
     }
 
     public void sendToAll(String message) {
@@ -152,7 +156,11 @@ public class TcpControllerServer {
         }
 
         void send(String message) {
-            out.println(message);
+            executor.execute(() -> {
+                if (out != null) {
+                    out.println(message);
+                }
+            });
         }
 
         void close() {
