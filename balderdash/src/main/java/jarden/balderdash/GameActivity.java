@@ -1,5 +1,8 @@
 package jarden.balderdash;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
+/*
+TODO:
+  buttons: initially disable Next and Send
+      HostGame: automatically joinGame after start server; disable host and join; enable next and send
+      JoinGame: disable host (and next - already disabled); enable send.
+  process Send! When all players sent answers, show all the answers; let players vote, etc.
+ */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, /*AdapterView.OnItemClickListener,*/ View.OnClickListener, TcpPlayerClient.Listener {
     /*!!
@@ -24,7 +34,7 @@ public class GameActivity extends AppCompatActivity implements
     private static final String TAG = "Balderdash";
     private TcpControllerServer server;
     private TcpPlayerClient client;
-    private String controllerAddress = "127.0.0.1";
+    private String controllerAddress = "192.168.0.12"; // john's Moto g8
     private boolean isHost;
     private EditText nameEditText;
     private EditText answerEditText;
@@ -38,6 +48,7 @@ public class GameActivity extends AppCompatActivity implements
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         /*?
         isHost = getIntent().getBooleanExtra("HOST", false);
         if (isHost) {
@@ -169,6 +180,7 @@ public class GameActivity extends AppCompatActivity implements
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.hostButton) {
+            getControllerAddress();
             server = new TcpControllerServer(this);
             server.start();
             //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
@@ -183,6 +195,32 @@ public class GameActivity extends AppCompatActivity implements
                     Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void getControllerAddress() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "about to get WifiManager");
+                Context context = getApplicationContext();
+                WifiManager wifiManager =
+                        (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                int ipInt = wifiInfo.getIpAddress();
+                controllerAddress = String.format(
+                        "%d.%d.%d.%d",
+                        (ipInt & 0xff),
+                        (ipInt >> 8 & 0xff),
+                        (ipInt >> 16 & 0xff),
+                        (ipInt >> 24 & 0xff));
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.i(TAG, "controllerAddress: " + controllerAddress);
+                    }
+                });
+            }
+        }).start();
     }
 
     private String[] questions = {
