@@ -15,12 +15,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
-/*
-TODO:
-  buttons: initially disable Next and Send
-      HostGame: automatically joinGame after start server; disable host and join; enable next and send
-      JoinGame: disable host (and next - already disabled); enable send.
-  process Send! When all players sent answers, show all the answers; let players vote, etc.
+/** Design of application
+ One device is selected as the Server; other devices connect to the Server
+ Server gets next question from dictionary and sends to other devices
+ All players, including Server, see the question; supply their answer, which is sent to Server
+ When Server has the answers, including the real one, it sends them to all Clients, in random order
+ Players give their votes; when all votes in, Server highlights the real answer
+ three screens:
+ 1  HostButton, JoinButton, NextButton, SendButton
+    PlayerNameEditText
+    QuestionTextView
+ buttons: initially disable Next and Send
+ HostGame: disable HostGame; startServer(); after serverStarted: joinGame(); enable Next
+ JoinGame: disable HostGame & JoinGame; enable Send.
+
+ 2  list of:
+        optionNumber, answer (players click row to vote)
+    when all votes in, list changes to
+        playerName/correct, answer (correct answer highlighted)
+    ScoresButton -> next screen
+
+ 3  list of:
+        playerName, score (goes to first screen when host types NextButton)
+
+
+ TODO next:
+ wrap text on PlayerNameEditText and QuestionTextView
+ popup if no username shown when press Host or Join
+ process Send! When all players sent answers, show all the answers; let players vote, etc.
  */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, /*AdapterView.OnItemClickListener,*/ View.OnClickListener, TcpPlayerClient.Listener {
@@ -34,11 +56,16 @@ public class GameActivity extends AppCompatActivity implements
     private static final String TAG = "Balderdash";
     private TcpControllerServer server;
     private TcpPlayerClient client;
-    private String controllerAddress = "192.168.0.12"; // john's Moto g8
+    private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
     private boolean isHost;
     private EditText nameEditText;
     private EditText answerEditText;
     private TextView outputView;
+    private Button hostButton;
+    private Button joinButton;
+    private Button sendButton;
+    private Button nextQuestionButton;
+
     /*!!
     private ListView usersListView;
     private ArrayList<User> userList = new ArrayList<>();
@@ -55,9 +82,7 @@ public class GameActivity extends AppCompatActivity implements
             server = new TcpControllerServer(this);
             server.start();
         }
-
          */
-
 
         setContentView(R.layout.activity_game);
         /*!!
@@ -67,12 +92,16 @@ public class GameActivity extends AppCompatActivity implements
             return insets;
         });
          */
-        Button hostButton = findViewById(R.id.hostButton);
+        hostButton = findViewById(R.id.hostButton);
         hostButton.setOnClickListener(this);
-        Button joinButton = findViewById(R.id.joinButton);
+        joinButton = findViewById(R.id.joinButton);
         joinButton.setOnClickListener(this);
-        Button nextQuestionButton = findViewById(R.id.nextQuestionButton);
+        nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
+        nextQuestionButton.setEnabled(false);
+        sendButton = findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(this);
+        sendButton.setEnabled(false);
         nameEditText = findViewById(R.id.nameEditText);
         answerEditText = findViewById(R.id.answerEditText);
         outputView = findViewById(R.id.outputView);
@@ -176,18 +205,28 @@ public class GameActivity extends AppCompatActivity implements
         Log.d(TAG, "Player left: " + playerId);
     }
 
+    @Override
+    public void onServerStarted() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                joinGame();
+                nextQuestionButton.setEnabled(true);
+            }
+        });
+
+    }
+
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.hostButton) {
+            hostButton.setEnabled(false);
             getControllerAddress();
             server = new TcpControllerServer(this);
             server.start();
             //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
         } else if (viewId == R.id.joinButton) {
-            String name = nameEditText.getText().toString();
-            client = new TcpPlayerClient(controllerAddress, 50001, name, this);
-            client.connect();
+            joinGame();
         } else if (viewId == R.id.nextQuestionButton) {
             getNextQuestion();
         } else {
@@ -195,6 +234,15 @@ public class GameActivity extends AppCompatActivity implements
                     Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void joinGame() {
+        hostButton.setEnabled(false);
+        joinButton.setEnabled(false);
+        String name = nameEditText.getText().toString();
+        client = new TcpPlayerClient(controllerAddress, 50001, name, this);
+        client.connect();
+        sendButton.setEnabled(true);
     }
 
     private void getControllerAddress() {
@@ -214,11 +262,11 @@ public class GameActivity extends AppCompatActivity implements
                         (ipInt >> 8 & 0xff),
                         (ipInt >> 16 & 0xff),
                         (ipInt >> 24 & 0xff));
-                runOnUiThread(new Runnable() {
-                    public void run() {
+    //            runOnUiThread(new Runnable() {
+    //                public void run() {
                         Log.i(TAG, "controllerAddress: " + controllerAddress);
-                    }
-                });
+    //                }
+    //            });
             }
         }).start();
     }

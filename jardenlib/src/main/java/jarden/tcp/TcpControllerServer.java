@@ -24,6 +24,7 @@ public class TcpControllerServer {
         void onMessage(String playerId, String message);
         void onPlayerConnected(String playerId);
         void onPlayerDisconnected(String playerId);
+        void onServerStarted();
     }
 
     private static final int PORT = 50001;
@@ -53,7 +54,7 @@ public class TcpControllerServer {
         executor.execute(() -> {
             try {
                 serverSocket = new ServerSocket(PORT);
-
+                listener.onServerStarted();
                 while (running) {
                     Socket socket = serverSocket.accept();
                     ClientHandler handler = new ClientHandler(socket);
