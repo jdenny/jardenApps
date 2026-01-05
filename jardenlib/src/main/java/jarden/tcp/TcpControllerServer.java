@@ -145,12 +145,21 @@ public class TcpControllerServer {
                 listener.onPlayerConnected(playerId);
 
                 String line;
-                while ((line = in.readLine()) != null) {
+//                while ((line = in.readLine()) != null) {
+//                    listener.onMessage(playerId, line);
+//                }
+                Log.d("TCP_SERVER", "Socket closed? " + socket.isClosed());
+                line = in.readLine();
+                Log.d("TCP_SERVER", "Line after readLine(): " + line);
+                while (line != null) {
                     listener.onMessage(playerId, line);
+                    line = in.readLine();
                 }
 
+                String dummy = "Dummy";
+
             } catch (IOException e) {
-                // Client disconnected
+                throw new RuntimeException(e);
             } finally {
                 close();
             }

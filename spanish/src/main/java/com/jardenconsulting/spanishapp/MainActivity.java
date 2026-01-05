@@ -703,9 +703,12 @@ public class MainActivity extends AppCompatActivity
         setAppBarTitle(titleId);
     }
 	private void setAppBarTitle(int titleId) {
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"setAppBarTitle(" + titleId + ")");
-        if (titleId == TOPIC_FOR_TITLE) super.setTitle(getEngSpaUser().getTopic());
+		if (BuildConfig.DEBUG) {
+            Log.d(TAG, "setAppBarTitle(" + titleId + ")");
+        }
+        if (titleId == TOPIC_FOR_TITLE) {
+            super.setTitle(getEngSpaUser().getTopic());
+        }
 		else super.setTitle(titleId);
 	}
 	@Override // EngSpaActivity

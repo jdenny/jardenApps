@@ -1,5 +1,7 @@
 package jarden.tcp;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.util.concurrent.Executors;
  * Created by john.denny@gmail.com on 03/01/2026.
  */
 public class TcpPlayerClient {
+    private static final String TAG = "TcpPlayerClient";
 
     public interface Listener {
         void onConnected();
@@ -22,7 +25,9 @@ public class TcpPlayerClient {
         void onError(Exception e);
     }
 
-    private final ExecutorService executor =
+    private final ExecutorService readExecutor =
+            Executors.newSingleThreadExecutor();
+    private final ExecutorService writeExecutor =
             Executors.newSingleThreadExecutor();
 
     private final Listener listener;
@@ -54,7 +59,7 @@ public class TcpPlayerClient {
     // ----------------------------
 
     public void connect() {
-        executor.execute(() -> {
+        readExecutor.execute(() -> {
             try {
                 socket = new Socket(hostAddress, port);
 
@@ -108,9 +113,13 @@ public class TcpPlayerClient {
     }
 
     public void send(String message) {
-        executor.execute(() -> {
+        Log.d(TAG, "send(" + message + ")");
+        writeExecutor.execute(() -> {
+            Log.d(TAG, "send(" + message + ") inside execute thread");
             if (out != null) {
                 out.println(message);
+            } else {
+                Log.d(TAG, "send(" + message + ") out is null!");
             }
         });
     }

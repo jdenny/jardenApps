@@ -44,13 +44,14 @@
         android:id="@+id/answerEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="your answer"
+        android:hint="@string/your_answer"
         android:ems="10"
-        android:inputType="text" />
+        android:inputType="textMultiLine" />
     <TextView
         android:id="@+id/outputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ems="10"
         android:text="@string/balderdashStr" />
     <!--
     <ListView
