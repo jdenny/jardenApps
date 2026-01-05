@@ -19,6 +19,10 @@ import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 /** Design of application
+ Message Protocol:
+    ANSWER|3|My fake definition
+    ALL_ANSWERS|3|1 dollop|2 doofer
+    VOTE|3|2
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
@@ -43,10 +47,12 @@ import jarden.tcp.TcpPlayerClient;
 
 
  TODO next:
- wrap text on PlayerNameEditText and QuestionTextView
- popup if no username shown when press Host or Join
+ onSend -> disable sendButton
+ random order for allAnswers
+ on receiving nextQuestion -> enable sendButton
  process Send! When all players sent answers, show all the answers; let players vote, etc.
  use a proper database of QA!
+ only use Log.d(message) if in debug mode
  */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener /*AdapterView.OnItemClickListener*/  {
@@ -56,6 +62,7 @@ public class GameActivity extends AppCompatActivity implements
     WifiManager.MulticastLock multicastLock;
      */
     private static final String TAG = "Balderdash";
+    private static final String ALL_ANSWERS = "ALL_ANSWERS";
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
@@ -71,6 +78,8 @@ public class GameActivity extends AppCompatActivity implements
     private Button nextQuestionButton;
     private String playerName;
     private int round = 0;
+    private int answersCt = 0;
+    private QuestionAnswer currentQuestionAnswer;
 
     /*!!
     private ListView usersListView;
@@ -140,13 +149,40 @@ public class GameActivity extends AppCompatActivity implements
 
 
     @Override // TcpControllerServer.MessageListener
+    // i.e. message sent from player to host
     public void onMessage(String playerId, String message) {
-        Log.d(TAG, playerId + ": " + message);
-        answers.put(playerId, message);
-
-        // Example:
-        // ANSWER|3|My fake definition
-        // VOTE|3|2
+        if (message.startsWith("ANSWER")) {
+            Log.d(TAG, playerId + ": " + message);
+            String answer = message.split("\\|", 3)[2];
+            /*if (BuildConfig.DEBUG)*/
+            answers.put(playerId, answer);
+            answersCt++;
+            if (answersCt == answers.size()) {
+                /*
+                Put them into a collection:
+                    A answerJohn
+                    B answerJulie
+                    C correctAnswer
+                New collection in random order
+                Show:
+                    1 answerJulie
+                    2 correctAnswer
+                    3 answerJohn
+                 */
+                Log.d(TAG, "all answers received for current question");
+                StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "\\|" + questionIndex);
+                String answerI;
+                for (String nameI : answers.keySet()) {
+                    answerI = answers.get(nameI);
+                    buffer.append("\\|" + nameI + " " + answerI);
+                }
+                buffer.append("\\|" + currentQuestionAnswer.answer);
+                server.sendToAll(buffer.toString());
+            }
+        } else {
+            Toast.makeText(this, "unrecognised message received: " + message,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -234,18 +270,28 @@ public class GameActivity extends AppCompatActivity implements
         }).start();
     }
 
-    private final String[] questions = {
-            "A Swiss teenager has made a fully functional submarine out of... what?",
-            "What are 'Pooks'?",
-            "In Ssan Francisco, California, it is illegal to dance...",
-            "Who was Gustav Vigeland?"
+    private class QuestionAnswer {
+        String question;
+        String answer;
+        QuestionAnswer(String q, String a) {
+            question = q;
+            answer = a;
+        }
+    }
+    private final QuestionAnswer[] questions = {
+            new QuestionAnswer("A Swiss teenager has made a fully functional submarine out of... what?", "a pig trough"),
+            new QuestionAnswer("What are 'Pooks'?","small piles of hay"),
+            new QuestionAnswer("In San Francisco, California, it is illegal to dance...", "to the Star Spangled Banner"),
+            new QuestionAnswer("What does F.E.F.O. an abbreviation of?", "Petrified Forest National Park"),
+            new QuestionAnswer("Who was Gustav Vigeland?", "Norway's most famous sculptor, known for his giant sculpture park in Oslo")
     };
     private int questionIndex = -1;
     private void getNextQuestion() {
         questionIndex++;
         if (questionIndex >= questions.length) questionIndex = 0;
-        String nextQuestion = questions[questionIndex];
-        server.sendToAll(nextQuestion);
+        currentQuestionAnswer = questions[questionIndex];
+        server.sendToAll(currentQuestionAnswer.question);
+        answersCt = 0;
     }
 
     @Override // TcpPlayerClient.Listener
@@ -254,11 +300,16 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     @Override // TcpPlayerClient.Listener
+    // i.e. message sent from host to  player
     public void onMessage(String message) {
         Log.d(TAG, "TcpPlayerClient.Listener.onMessage(" + message + ")");
+        if (message.startsWith(ALL_ANSWERS)) {
+            message = message.substring(ALL_ANSWERS.length() + 3).replace("\\|", "\n");
+        }
+        String finalMessage = message;
         runOnUiThread(new Runnable() {
             public void run() {
-                outputView.setText(message);
+                outputView.setText(finalMessage);
             }
         });
     }

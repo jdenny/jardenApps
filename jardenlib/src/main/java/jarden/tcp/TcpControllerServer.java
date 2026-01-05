@@ -101,6 +101,7 @@ public class TcpControllerServer {
     }
 
     public void sendToAll(String message) {
+        // TODO: run on thread?
         for (ClientHandler handler : clients.values()) {
             handler.send(message);
         }
@@ -145,18 +146,9 @@ public class TcpControllerServer {
                 listener.onPlayerConnected(playerId);
 
                 String line;
-//                while ((line = in.readLine()) != null) {
-//                    listener.onMessage(playerId, line);
-//                }
-                Log.d("TCP_SERVER", "Socket closed? " + socket.isClosed());
-                line = in.readLine();
-                Log.d("TCP_SERVER", "Line after readLine(): " + line);
-                while (line != null) {
+                while ((line = in.readLine()) != null) {
                     listener.onMessage(playerId, line);
-                    line = in.readLine();
                 }
-
-                String dummy = "Dummy";
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
