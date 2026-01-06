@@ -92,7 +92,7 @@ public class GameActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             this.answersFragment = new AnswersFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.add(this.answersFragment, ALL_ANSWERS);
+            ft.add(R.id.fragmentContainerView, this.answersFragment, ALL_ANSWERS);
             ft.commit();
         } else {
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
