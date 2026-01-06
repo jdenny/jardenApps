@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".GameActivity">
 
+
+    <!--        android:name="jarden.balderdash.AnswersFragment" -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,12 +60,5 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:text="@string/balderdashStr" />
-    <!--
-    <ListView
-        android:id="@+id/usersListView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-        -->
-
 
 </LinearLayout>

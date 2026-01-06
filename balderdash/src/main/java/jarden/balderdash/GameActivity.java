@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
@@ -55,7 +57,7 @@ import jarden.tcp.TcpPlayerClient;
  only use Log.d(message) if in debug mode
  */
 public class GameActivity extends AppCompatActivity implements
-        TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener /*AdapterView.OnItemClickListener*/  {
+        TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener {
     /*
     public static final String MULTICAST_IP = "239.255.0.1";
     public static final int MULTICAST_PORT = 50000;
@@ -80,15 +82,23 @@ public class GameActivity extends AppCompatActivity implements
     private int round = 0;
     private int answersCt = 0;
     private QuestionAnswer currentQuestionAnswer;
+    private FragmentManager fragmentManager;
+    private AnswersFragment answersFragment;
 
-    /*!!
-    private ListView usersListView;
-    private ArrayList<User> userList = new ArrayList<>();
-    private ArrayList<String> userListStr = new ArrayList<>();
-     */
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.fragmentManager = getSupportFragmentManager();
+        if (savedInstanceState == null) {
+            this.answersFragment = new AnswersFragment();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.add(this.answersFragment, ALL_ANSWERS);
+            ft.commit();
+        } else {
+            answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
+        }
+
+
         /*?
         isHost = getIntent().getBooleanExtra("HOST", false);
         if (isHost) {
@@ -303,13 +313,18 @@ public class GameActivity extends AppCompatActivity implements
     // i.e. message sent from host to  player
     public void onMessage(String message) {
         Log.d(TAG, "TcpPlayerClient.Listener.onMessage(" + message + ")");
-        if (message.startsWith(ALL_ANSWERS)) {
-            message = message.substring(ALL_ANSWERS.length() + 3).replace("\\|", "\n");
-        }
-        String finalMessage = message;
         runOnUiThread(new Runnable() {
             public void run() {
-                outputView.setText(finalMessage);
+                String mess2 = message;
+                if (mess2.startsWith(ALL_ANSWERS)) {
+                    mess2 = mess2.substring(ALL_ANSWERS.length() + 3).replace("\\|", "\n");
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentContainerView, answersFragment);
+                    transaction.commit();
+                    answersFragment.showAnswers(null);
+                } else {
+                    outputView.setText(mess2);
+                }
             }
         });
     }
@@ -325,10 +340,6 @@ public class GameActivity extends AppCompatActivity implements
     }
 
         /*!!
-    @Override // OnItemClickListener
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
 
 
     @Override // OnItemClickListener

@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'jarden.balderdash'
+    namespace 'com.example.tempapp'
     compileSdk 36
 
     defaultConfig {
-        applicationId "jarden.balderdash"
+        applicationId "com.example.tempapp"
         minSdk 24
         targetSdk 36
         versionCode 1
@@ -26,16 +26,18 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.13.0'
-    implementation 'androidx.activity:activity:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation project(':jardenlib')
-    implementation 'androidx.fragment:fragment:1.8.9'
+    implementation 'androidx.navigation:navigation-fragment:2.9.6'
+    implementation 'androidx.navigation:navigation-ui:2.9.6'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'

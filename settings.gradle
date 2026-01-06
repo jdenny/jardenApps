@@ -2,3 +2,4 @@ include ':spanish', ':jardenlib', ':hotbridge', ':bluetoothlib', ':androidcourse
 include ':equidistance'
 include ':wifidirect'
 include ':balderdash'
+include ':tempapp'
