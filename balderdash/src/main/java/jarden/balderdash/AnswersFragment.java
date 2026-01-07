@@ -9,9 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import androidx.fragment.app.Fragment;
 
 /**
@@ -38,20 +35,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         Log.d(TAG, "onItemClick(position=" + position);
     }
 
-    private String[] answersArray = {
-        "silly moo",
-        "you cannot be serious",
-        "one flew over the cookoo's next",
-        "Play it Sam!"
-    };
-    private ArrayList<String> answersList;
-    public void showAnswers(ArrayList<String> answers) {
-        // the following is temporary code!
-        if (answersList == null) {
-            answersList = new ArrayList<>(Arrays.asList(answersArray));
-        }
-        answers = answersList;
-        // end of temporary code
+    public void showAnswers(String[] answers) {
         answersAdapter.setNotifyOnChange(false);
         answersAdapter.clear();
         for (String answer : answers) {

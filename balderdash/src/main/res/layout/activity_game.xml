@@ -8,11 +8,6 @@
     tools:context=".GameActivity">
 
 
-    <!--        android:name="jarden.balderdash.AnswersFragment" -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,22 +35,14 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/nameEditText"
+    <!--        android:name="jarden.balderdash.AnswersFragment" -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/yourNameStr"
-        android:ems="10"
-        android:inputType="text" />
-    <EditText
-        android:id="@+id/answerEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/your_answer"
-        android:ems="10"
-        android:inputType="textMultiLine" />
+        android:layout_height="wrap_content" />
+
     <TextView
-        android:id="@+id/outputView"
+        android:id="@+id/statusView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +21,11 @@ import jarden.tcp.TcpPlayerClient;
 
 /** Design of application
  Message Protocol:
+    QUESTION|3|Who is Gustav Vigeland?
     ANSWER|3|My fake definition
     ALL_ANSWERS|3|1 dollop|2 doofer
     VOTE|3|2
+    SCORES|3|John 2|Julie 4
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
@@ -64,40 +65,43 @@ public class GameActivity extends AppCompatActivity implements
     WifiManager.MulticastLock multicastLock;
      */
     private static final String TAG = "Balderdash";
+    private static final String QUESTION = "QUESTION";
+    private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
+    private static final String MAIN = "MAIN";
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
     private final Map<String, String> answers =
             new ConcurrentHashMap<>();
     private boolean isHost;
-    private EditText nameEditText;
-    private EditText answerEditText;
-    private TextView outputView;
     private Button hostButton;
     private Button joinButton;
     private Button sendButton;
     private Button nextQuestionButton;
+    private TextView statusTextView;
     private String playerName;
     private int round = 0;
     private int answersCt = 0;
     private QuestionAnswer currentQuestionAnswer;
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
+    private MainFragment mainFragment;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
+            this.mainFragment = new MainFragment();
             this.answersFragment = new AnswersFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.add(R.id.fragmentContainerView, this.answersFragment, ALL_ANSWERS);
+            ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
         } else {
+            mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN);
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
         }
-
 
         /*?
         isHost = getIntent().getBooleanExtra("HOST", false);
@@ -108,7 +112,7 @@ public class GameActivity extends AppCompatActivity implements
          */
 
         setContentView(R.layout.activity_game);
-        /*!!
+        /*??
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -125,15 +129,8 @@ public class GameActivity extends AppCompatActivity implements
         sendButton = findViewById(R.id.sendButton);
         sendButton.setOnClickListener(this);
         sendButton.setEnabled(false);
-        nameEditText = findViewById(R.id.nameEditText);
-        answerEditText = findViewById(R.id.answerEditText);
-        outputView = findViewById(R.id.outputView);
-        /*!! usersListView = findViewById(R.id.usersListView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
-                userListStr);
-        usersListView.setAdapter(adapter);
-        usersListView.setOnItemClickListener(this);
+        statusTextView = findViewById(R.id.statusView);
+        /* later!
         try {
             WifiManager wifiManager =
                     (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -154,7 +151,7 @@ public class GameActivity extends AppCompatActivity implements
         super.onDestroy();
         if (server != null) server.stop();
         if (client != null) client.disconnect();
-        //!! multicastLock.release();
+        // multicastLock.release();
     }
 
 
@@ -190,8 +187,7 @@ public class GameActivity extends AppCompatActivity implements
                 server.sendToAll(buffer.toString());
             }
         } else {
-            Toast.makeText(this, "unrecognised message received: " + message,
-                    Toast.LENGTH_LONG).show();
+            Log.d(TAG, "unrecognised message received by host: " + message);
         }
     }
 
@@ -208,11 +204,9 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpControllerServer.MessageListener
     public void onServerStarted() {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                joinGame();
-                nextQuestionButton.setEnabled(true);
-            }
+        runOnUiThread(() -> {
+            joinGame();
+            nextQuestionButton.setEnabled(true);
         });
 
     }
@@ -221,8 +215,8 @@ public class GameActivity extends AppCompatActivity implements
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.hostButton || viewId == R.id.joinButton) {
-            playerName = nameEditText.getText().toString().trim();
-            if (playerName.length() == 0) {
+            playerName = mainFragment.getPlayerName();
+             if (playerName.length() == 0) {
                 Toast.makeText(this, "Supply your name first!", Toast.LENGTH_LONG).show();
             } else if (viewId == R.id.hostButton) {
                 hostButton.setEnabled(false);
@@ -237,7 +231,7 @@ public class GameActivity extends AppCompatActivity implements
         } else if (viewId == R.id.nextQuestionButton) {
             getNextQuestion();
         } else if (viewId == R.id.sendButton) {
-            String answer = this.answerEditText.getText().toString();
+            String answer = mainFragment.getAnswerEditText();
             client.sendAnswer(round, answer);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
@@ -248,7 +242,7 @@ public class GameActivity extends AppCompatActivity implements
     private void joinGame() {
         hostButton.setEnabled(false);
         joinButton.setEnabled(false);
-        String name = nameEditText.getText().toString();
+        String name = this.playerName;
         client = new TcpPlayerClient(controllerAddress, 50001, playerName, this);
         client.connect();
         sendButton.setEnabled(true);
@@ -300,7 +294,8 @@ public class GameActivity extends AppCompatActivity implements
         questionIndex++;
         if (questionIndex >= questions.length) questionIndex = 0;
         currentQuestionAnswer = questions[questionIndex];
-        server.sendToAll(currentQuestionAnswer.question);
+        String nextQuestion = QUESTION + "|" + questionIndex +"|" +currentQuestionAnswer.question;
+        server.sendToAll(nextQuestion);
         answersCt = 0;
     }
 
@@ -310,20 +305,26 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     @Override // TcpPlayerClient.Listener
-    // i.e. message sent from host to  player
+    // i.e. message sent from host to player
     public void onMessage(String message) {
         Log.d(TAG, "TcpPlayerClient.Listener.onMessage(" + message + ")");
         runOnUiThread(new Runnable() {
             public void run() {
-                String mess2 = message;
-                if (mess2.startsWith(ALL_ANSWERS)) {
-                    mess2 = mess2.substring(ALL_ANSWERS.length() + 3).replace("\\|", "\n");
+                if (message.startsWith(ALL_ANSWERS)) {
+                    // ALL_ANSWERS\|0\|john dollop\|a pig trough
+                    String[] answers = message.substring(ALL_ANSWERS.length() + 3).split("\\|");
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction.replace(R.id.fragmentContainerView, answersFragment);
                     transaction.commit();
-                    answersFragment.showAnswers(null);
+                    answersFragment.showAnswers(answers);
+                } else if (message.startsWith(QUESTION)) {
+                    String question = message.split("\\|", 3)[2];
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentContainerView, mainFragment);
+                    transaction.commit();
+                    mainFragment.setOutputView(message);
                 } else {
-                    outputView.setText(mess2);
+                    Log.d(TAG, "unrecognised message received by player: " + message);
                 }
             }
         });
