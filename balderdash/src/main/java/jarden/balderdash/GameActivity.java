@@ -64,7 +64,7 @@ public class GameActivity extends AppCompatActivity implements
     public static final int MULTICAST_PORT = 50000;
     WifiManager.MulticastLock multicastLock;
      */
-    private static final String TAG = "Balderdash";
+    private static final String TAG = "GameActivity";
     private static final String QUESTION = "QUESTION";
     private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
@@ -87,6 +87,7 @@ public class GameActivity extends AppCompatActivity implements
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
+    private String currentFragmentTag = MAIN;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,8 +159,8 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
     public void onMessage(String playerId, String message) {
+        Log.d(TAG, "from player: " + playerId + " message: " + message);
         if (message.startsWith("ANSWER")) {
-            Log.d(TAG, playerId + ": " + message);
             String answer = message.split("\\|", 3)[2];
             /*if (BuildConfig.DEBUG)*/
             answers.put(playerId, answer);
@@ -265,11 +266,7 @@ public class GameActivity extends AppCompatActivity implements
                         (ipInt >> 8 & 0xff),
                         (ipInt >> 16 & 0xff),
                         (ipInt >> 24 & 0xff));
-    //            runOnUiThread(new Runnable() {
-    //                public void run() {
                         Log.i(TAG, "controllerAddress: " + controllerAddress);
-    //                }
-    //            });
             }
         }).start();
     }
@@ -289,12 +286,11 @@ public class GameActivity extends AppCompatActivity implements
             new QuestionAnswer("What does F.E.F.O. an abbreviation of?", "Petrified Forest National Park"),
             new QuestionAnswer("Who was Gustav Vigeland?", "Norway's most famous sculptor, known for his giant sculpture park in Oslo")
     };
-    private int questionIndex = -1;
+    private int questionIndex = 0;
     private void getNextQuestion() {
-        questionIndex++;
         if (questionIndex >= questions.length) questionIndex = 0;
-        currentQuestionAnswer = questions[questionIndex];
-        String nextQuestion = QUESTION + "|" + questionIndex +"|" +currentQuestionAnswer.question;
+        currentQuestionAnswer = questions[questionIndex++];
+        String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
         server.sendToAll(nextQuestion);
         answersCt = 0;
     }
@@ -307,22 +303,26 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpPlayerClient.Listener
     // i.e. message sent from host to player
     public void onMessage(String message) {
-        Log.d(TAG, "TcpPlayerClient.Listener.onMessage(" + message + ")");
+        Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
         runOnUiThread(new Runnable() {
             public void run() {
                 if (message.startsWith(ALL_ANSWERS)) {
                     // ALL_ANSWERS\|0\|john dollop\|a pig trough
                     String[] answers = message.substring(ALL_ANSWERS.length() + 3).split("\\|");
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainerView, answersFragment);
+                    transaction.replace(R.id.fragmentContainerView, answersFragment, ANSWER);
                     transaction.commit();
+                    currentFragmentTag = ANSWER;
                     answersFragment.showAnswers(answers);
                 } else if (message.startsWith(QUESTION)) {
                     String question = message.split("\\|", 3)[2];
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainerView, mainFragment);
-                    transaction.commit();
-                    mainFragment.setOutputView(message);
+                    if (!currentFragmentTag.equals(MAIN)) {
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainerView, mainFragment, MAIN);
+                        transaction.commit();
+                        currentFragmentTag = MAIN;
+                    }
+                    mainFragment.setOutputView(question);
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
                 }

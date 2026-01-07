@@ -19,6 +19,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     private static final String TAG = "AnswersFragment";
     private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;
+    private String[] savedAnswers = null;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +29,9 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         this.answersAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
         answersListView.setAdapter(answersAdapter);
+        if (savedAnswers != null) {
+            showAnswers(savedAnswers);
+        }
         return rootView;
     }
     @Override // OnItemClickListener
@@ -36,12 +40,17 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     public void showAnswers(String[] answers) {
-        answersAdapter.setNotifyOnChange(false);
-        answersAdapter.clear();
-        for (String answer : answers) {
-            answersAdapter.add(answer);
+        if (answersAdapter != null) {
+            answersAdapter.setNotifyOnChange(false);
+            answersAdapter.clear();
+            for (String answer : answers) {
+                answersAdapter.add(answer);
+            }
+            answersAdapter.notifyDataSetChanged();
+        } else {
+            // wait for fragment to initialise
+            savedAnswers = answers;
         }
-        answersAdapter.notifyDataSetChanged();
     }
 
 }
