@@ -287,14 +287,27 @@ public class GameActivity extends AppCompatActivity implements
                     }
                     mainFragment.setOutputView(question);
                 } else if (message.startsWith(SCORES)) {
-                    
-                    
+                    // SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
+                    String question = message.split("\\|", 3)[10];
+                    if (!currentFragmentTag.equals(SCORES)) {
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainerView, scoresFragment, SCORES);
+                        transaction.commit();
+                        currentFragmentTag = SCORES;
+                    }
+                    Results results = new Results("mild", "Guinness", tempPlayers);
+                    scoresFragment.showScores(results);
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
                 }
             }
         });
     }
+    Player[] tempPlayers = {
+            new Player(3, "mild", "john"),
+            new Player(4, "bitter", "Joe"),
+            new Player(2, "wine", "Julie")
+    };
 
     @Override // View.OnClickListener
     public void onClick(View view) {
@@ -305,14 +318,16 @@ public class GameActivity extends AppCompatActivity implements
                 Toast.makeText(this, "Supply your name first!", Toast.LENGTH_LONG).show();
             } else if (viewId == R.id.hostButton) {
                 hostButton.setEnabled(false);
-                nextQuestionButton.setVisibility(GONE);
                 getControllerAddress();
                 server = new TcpControllerServer(this);
                 server.start();
                 isHost = true;
                 //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
             } else { // must be joinButton
-                joinGame();
+                 if (!isHost) {
+                     nextQuestionButton.setVisibility(GONE);
+                 }
+                 joinGame();
             }
         } else if (viewId == R.id.nextQuestionButton) {
             getNextQuestion();

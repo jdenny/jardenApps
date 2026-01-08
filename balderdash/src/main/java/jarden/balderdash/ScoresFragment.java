@@ -46,9 +46,8 @@ public class ScoresFragment extends Fragment {
     public void showScores(Results results) {
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
-            // TODO: use real data!
-            yourAnswerTextView.setText("mild");
-            correctAnswerTextView.setText("ginger beer");
+            yourAnswerTextView.setText(results.getPlayerAnswer());
+            correctAnswerTextView.setText(results.getCorrectAnswer());
             scoresAdapter.setNotifyOnChange(false);
             scoresAdapter.clear();
             for (Player player : results.getPlayers()) {
