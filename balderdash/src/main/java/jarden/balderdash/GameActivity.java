@@ -26,10 +26,10 @@ import jarden.tcp.TcpPlayerClient;
 
 /** Design of application
  Message Protocol:
-    QUESTION|3|Who is Gustav Vigeland?
-    ANSWER|3|My fake definition
-    ALL_ANSWERS|3|1 dollop|2 doofer
-    VOTE|3|2
+    QUESTION|3|Who was Gustav Vigeland?
+    ANSWER|3|Centre forward for Liverpool
+    ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
+    VOTE|3|1
     SCORES|3|John 2|Julie 4
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
@@ -105,10 +105,10 @@ public class GameActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             this.mainFragment = new MainFragment();
             this.answersFragment = new AnswersFragment();
-            answersFragment.setOnItemClickListener(this);
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
+            answersFragment.setOnItemClickListener(this);
         } else {
             mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN);
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
@@ -174,7 +174,7 @@ public class GameActivity extends AppCompatActivity implements
             /*if (BuildConfig.DEBUG)*/
             answers.put(playerId, answer);
             answersCt++;
-            if (answersCt == answers.size()) {
+            if (answersCt >= (answers.size())) {
                 Log.d(TAG, "all answers received for current question");
                 String nextMessage = getAllAnswersMessage();
                 server.sendToAll(nextMessage);
@@ -185,15 +185,8 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     /*
-    Put them into a collection:
-        A answerJohn
-        B answerJulie
-        C correctAnswer
-    New collection in random order
-    Show:
-        1 answerJulie
-        2 correctAnswer
-        3 answerJohn
+    create a list of names, shuffle the list and then
+     create message: String to hold the answers
      */
     private String getAllAnswersMessage() {
         Set<String> nameSet = answers.keySet();
@@ -219,6 +212,7 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpControllerServer.MessageListener
     public void onPlayerDisconnected(String playerId) {
         Log.d(TAG, "Player left: " + playerId);
+        answers.remove(playerId);
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -232,7 +226,12 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
-        Log.d(TAG, "Now connected to the game server");
+        setStatus("Now connected to the game host");
+    }
+
+    private void setStatus(String status) {
+        Log.d(TAG, status);
+        this.statusTextView.setText(status);
     }
 
     @Override // TcpPlayerClient.Listener
@@ -321,7 +320,7 @@ public class GameActivity extends AppCompatActivity implements
                         (ipInt >> 8 & 0xff),
                         (ipInt >> 16 & 0xff),
                         (ipInt >> 24 & 0xff));
-                        Log.i(TAG, "controllerAddress: " + controllerAddress);
+                Log.i(TAG, "controllerAddress: " + controllerAddress);
             }
         }).start();
     }
@@ -354,12 +353,15 @@ public class GameActivity extends AppCompatActivity implements
     };
     private int questionIndex = 0;
     private void getNextQuestion() {
+        // temporary until we get a proper database!
         if (questionIndex >= questions.length) questionIndex = 0;
         currentQuestionAnswer = questions[questionIndex++];
+        // end of temporary
         String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
-        server.sendToAll(nextQuestion);
-        answersCt = 0;
+        answers.clear();
         answers.put(CORRECT, currentQuestionAnswer.answer);
+        answersCt = 1;
+        server.sendToAll(nextQuestion);
     }
 
 
@@ -374,12 +376,6 @@ public class GameActivity extends AppCompatActivity implements
     }
 
         /*!!
-
-
-    @Override // OnItemClickListener
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
-    }
 
     public static void sendMulticast(Context context, String message) {
 

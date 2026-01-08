@@ -114,9 +114,7 @@ public class TcpPlayerClient {
     }
 
     public void send(String message) {
-        Log.d(TAG, "send(" + message + ")");
         writeExecutor.execute(() -> {
-            Log.d(TAG, "send(" + message + ") inside execute thread");
             if (out != null) {
                 out.println(message);
             } else {

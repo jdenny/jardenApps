@@ -44,11 +44,13 @@ public class TestShuffle {
             shuffledNameList.add(name);
         }
         Collections.shuffle(shuffledNameList);
+        System.out.println(shuffledNameList);
         StringBuffer buffer = new StringBuffer("ALL_ANSWERS" + "|" + 1);
         for (String name: shuffledNameList) {
             buffer.append("|" + answers.get(name));
         }
         String message = buffer.toString();
+        System.out.println(message);
 
         // This is the code to go into onItemClicked()
         String nameI, answerI;

@@ -1,6 +1,7 @@
 package jarden.balderdash;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class AnswersFragment extends Fragment {
     private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;
     private String[] savedAnswers = null;
+    private AdapterView.OnItemClickListener savedListener = null;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,11 +32,22 @@ public class AnswersFragment extends Fragment {
         answersListView.setAdapter(answersAdapter);
         if (savedAnswers != null) {
             showAnswers(savedAnswers);
+            savedAnswers = null;
+        }
+        if (savedListener != null) {
+            setOnItemClickListener(savedListener);
         }
         return rootView;
     }
     public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
-        answersListView.setOnItemClickListener(listener);
+        if (answersListView != null) {
+            answersListView.setOnItemClickListener(listener);
+        } else {
+            savedListener = listener;
+        }
+    }
+    public AnswersFragment() {
+        Log.d(TAG, "AnswersFragment()");
     }
 
     public void showAnswers(String[] answers) {

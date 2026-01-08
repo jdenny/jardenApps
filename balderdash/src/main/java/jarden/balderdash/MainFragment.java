@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
@@ -18,6 +19,7 @@ public class MainFragment extends Fragment {
     private EditText nameEditText;
     private EditText answerEditText;
     private TextView outputView;
+    private String savedMessage;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,7 +39,21 @@ public class MainFragment extends Fragment {
         return answerEditText.getText().toString();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (savedMessage != null) {
+            setOutputView(savedMessage);
+            savedMessage = null;
+        }
+    }
+
     public void setOutputView(String message) {
-        outputView.setText(message);
+        Lifecycle.State state = getLifecycle().getCurrentState();
+        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
+            outputView.setText(message);
+        } else {
+            savedMessage = message;
+        }
     }
 }
