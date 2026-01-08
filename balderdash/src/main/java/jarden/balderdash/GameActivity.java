@@ -190,7 +190,7 @@ public class GameActivity extends AppCompatActivity implements
             String answer = message.split("\\|", 3)[2];
             // TODO: send real data!
             votesCt++;
-            if (votesCt >= (namesAnswers.size())) {
+            if ((votesCt + 1) >= (namesAnswers.size())) {
                 Log.d(TAG, "all votes received for current question");
                 String scoresMessage = getScoresMessage();
                 server.sendToAll(scoresMessage);
@@ -202,11 +202,13 @@ public class GameActivity extends AppCompatActivity implements
 
     private String getScoresMessage() {
         // SCORES|3|2|John 2|Julie 4
-        StringBuffer buffer = new StringBuffer(SCORES + '|' + 2); // 2 is wrong!
+        int correctAnswerIndex = 2; // bodge!
+        StringBuffer buffer = new StringBuffer(SCORES + '|' + round +  '|' +
+                correctAnswerIndex);
         int i = 1;
         for (String name: namesAnswers.values()) {
             buffer.append('|');
-            buffer.append(name + i++);
+            buffer.append(name + ' ' + i++);
         }
         return buffer.toString();
     }
@@ -287,8 +289,9 @@ public class GameActivity extends AppCompatActivity implements
                     }
                     mainFragment.setOutputView(question);
                 } else if (message.startsWith(SCORES)) {
-                    // SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
-                    String question = message.split("\\|", 3)[10];
+                    // expected: SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
+                    // actual: SCORES|2|a pig trough1|mild2
+                    String question = message.split("\\|", 10)[3];
                     if (!currentFragmentTag.equals(SCORES)) {
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.fragmentContainerView, scoresFragment, SCORES);

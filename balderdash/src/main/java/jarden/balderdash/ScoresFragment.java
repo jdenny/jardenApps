@@ -26,8 +26,8 @@ public class ScoresFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_scores, container, false);
-        yourAnswerTextView.findViewById(R.id.yourAnswer);
-        correctAnswerTextView.findViewById(R.id.correctAnswer);
+        yourAnswerTextView = rootView.findViewById(R.id.yourAnswer);
+        correctAnswerTextView = rootView.findViewById(R.id.correctAnswer);
         scoresListView = rootView.findViewById(R.id.scoresListView);
         this.scoresAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);

@@ -33,7 +33,8 @@ public class AnswersFragment extends Fragment {
         return rootView;
     }
     public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
-        if (answersListView != null) {
+        Lifecycle.State state = getLifecycle().getCurrentState();
+        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             answersListView.setOnItemClickListener(listener);
         } else {
             savedListener = listener;
@@ -46,6 +47,10 @@ public class AnswersFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (savedListener != null) {
+            setOnItemClickListener(savedListener);
+            savedListener = null;
+        }
         if (savedAnswers != null) {
             showAnswers(savedAnswers);
             savedAnswers = null;
