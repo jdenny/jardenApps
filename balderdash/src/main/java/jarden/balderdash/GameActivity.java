@@ -6,11 +6,16 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +63,8 @@ import jarden.tcp.TcpPlayerClient;
  only use Log.d(message) if in debug mode
  */
 public class GameActivity extends AppCompatActivity implements
-        TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener {
+        TcpControllerServer.MessageListener, View.OnClickListener,
+        AdapterView.OnItemClickListener, TcpPlayerClient.Listener {
     /*
     public static final String MULTICAST_IP = "239.255.0.1";
     public static final int MULTICAST_PORT = 50000;
@@ -69,6 +75,7 @@ public class GameActivity extends AppCompatActivity implements
     private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
     private static final String MAIN = "MAIN";
+    private static final String CORRECT = "CORRECT";
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
@@ -88,6 +95,8 @@ public class GameActivity extends AppCompatActivity implements
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
     private String currentFragmentTag = MAIN;
+    private List<Integer> intList; // used for shuffling answers
+    private List<String> shuffledNameList = new ArrayList<>();
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +105,7 @@ public class GameActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             this.mainFragment = new MainFragment();
             this.answersFragment = new AnswersFragment();
+            answersFragment.setOnItemClickListener(this);
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
@@ -155,7 +165,6 @@ public class GameActivity extends AppCompatActivity implements
         // multicastLock.release();
     }
 
-
     @Override // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
     public void onMessage(String playerId, String message) {
@@ -166,30 +175,39 @@ public class GameActivity extends AppCompatActivity implements
             answers.put(playerId, answer);
             answersCt++;
             if (answersCt == answers.size()) {
-                /*
-                Put them into a collection:
-                    A answerJohn
-                    B answerJulie
-                    C correctAnswer
-                New collection in random order
-                Show:
-                    1 answerJulie
-                    2 correctAnswer
-                    3 answerJohn
-                 */
                 Log.d(TAG, "all answers received for current question");
-                StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "\\|" + questionIndex);
-                String answerI;
-                for (String nameI : answers.keySet()) {
-                    answerI = answers.get(nameI);
-                    buffer.append("\\|" + nameI + " " + answerI);
-                }
-                buffer.append("\\|" + currentQuestionAnswer.answer);
-                server.sendToAll(buffer.toString());
+                String nextMessage = getAllAnswersMessage();
+                server.sendToAll(nextMessage);
             }
         } else {
             Log.d(TAG, "unrecognised message received by host: " + message);
         }
+    }
+
+    /*
+    Put them into a collection:
+        A answerJohn
+        B answerJulie
+        C correctAnswer
+    New collection in random order
+    Show:
+        1 answerJulie
+        2 correctAnswer
+        3 answerJohn
+     */
+    private String getAllAnswersMessage() {
+        Set<String> nameSet = answers.keySet();
+        if (shuffledNameList.size() == 0) {
+            for (String name : nameSet) {
+                shuffledNameList.add(name);
+            }
+        }
+        Collections.shuffle(shuffledNameList);
+        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + questionIndex);
+        for (String name: shuffledNameList) {
+            buffer.append("|" + answers.get(name));
+        }
+        return buffer.toString();
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -210,6 +228,43 @@ public class GameActivity extends AppCompatActivity implements
             nextQuestionButton.setEnabled(true);
         });
 
+    }
+
+    @Override // TcpPlayerClient.Listener
+    public void onConnected() {
+        Log.d(TAG, "Now connected to the game server");
+    }
+
+    @Override // TcpPlayerClient.Listener
+    // i.e. message sent from host to player
+    public void onMessage(String message) {
+        Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if (message.startsWith(ALL_ANSWERS)) {
+                    // ALL_ANSWERS|0|dollop|a pig trough
+                    int indexOf3rdField = ALL_ANSWERS.length() + 1;
+                    int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
+                    String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentContainerView, answersFragment, ANSWER);
+                    transaction.commit();
+                    currentFragmentTag = ANSWER;
+                    answersFragment.showAnswers(answers);
+                } else if (message.startsWith(QUESTION)) {
+                    String question = message.split("\\|", 3)[2];
+                    if (!currentFragmentTag.equals(MAIN)) {
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainerView, mainFragment, MAIN);
+                        transaction.commit();
+                        currentFragmentTag = MAIN;
+                    }
+                    mainFragment.setOutputView(question);
+                } else {
+                    Log.d(TAG, "unrecognised message received by player: " + message);
+                }
+            }
+        });
     }
 
     @Override // View.OnClickListener
@@ -271,6 +326,17 @@ public class GameActivity extends AppCompatActivity implements
         }).start();
     }
 
+
+    @Override // OnItemClickListener
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "onItemClick(position=" + position);
+        String name, answer;
+        name = shuffledNameList.get(position);
+        answer = answers.get(name);
+        Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
+        Log.d(TAG, "correct answer=" + answers.get(CORRECT));
+    }
+
     private class QuestionAnswer {
         String question;
         String answer;
@@ -293,42 +359,9 @@ public class GameActivity extends AppCompatActivity implements
         String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
         server.sendToAll(nextQuestion);
         answersCt = 0;
+        answers.put(CORRECT, currentQuestionAnswer.answer);
     }
 
-    @Override // TcpPlayerClient.Listener
-    public void onConnected() {
-        Log.d(TAG, "Now connected to the game server");
-    }
-
-    @Override // TcpPlayerClient.Listener
-    // i.e. message sent from host to player
-    public void onMessage(String message) {
-        Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
-        runOnUiThread(new Runnable() {
-            public void run() {
-                if (message.startsWith(ALL_ANSWERS)) {
-                    // ALL_ANSWERS\|0\|john dollop\|a pig trough
-                    String[] answers = message.substring(ALL_ANSWERS.length() + 3).split("\\|");
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainerView, answersFragment, ANSWER);
-                    transaction.commit();
-                    currentFragmentTag = ANSWER;
-                    answersFragment.showAnswers(answers);
-                } else if (message.startsWith(QUESTION)) {
-                    String question = message.split("\\|", 3)[2];
-                    if (!currentFragmentTag.equals(MAIN)) {
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragmentContainerView, mainFragment, MAIN);
-                        transaction.commit();
-                        currentFragmentTag = MAIN;
-                    }
-                    mainFragment.setOutputView(question);
-                } else {
-                    Log.d(TAG, "unrecognised message received by player: " + message);
-                }
-            }
-        });
-    }
 
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {

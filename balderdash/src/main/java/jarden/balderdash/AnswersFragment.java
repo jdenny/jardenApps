@@ -1,7 +1,6 @@
 package jarden.balderdash;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.fragment.app.Fragment;
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
  */
-public class AnswersFragment extends Fragment implements AdapterView.OnItemClickListener  {
+public class AnswersFragment extends Fragment {
 
     private static final String TAG = "AnswersFragment";
     private ListView answersListView;
@@ -34,9 +33,8 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         }
         return rootView;
     }
-    @Override // OnItemClickListener
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick(position=" + position);
+    public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
+        answersListView.setOnItemClickListener(listener);
     }
 
     public void showAnswers(String[] answers) {
