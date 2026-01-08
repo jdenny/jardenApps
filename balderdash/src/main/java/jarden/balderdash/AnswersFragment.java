@@ -16,7 +16,6 @@ import androidx.lifecycle.Lifecycle;
  * Created by john.denny@gmail.com on 06/01/2026.
  */
 public class AnswersFragment extends Fragment {
-
     private static final String TAG = "AnswersFragment";
     private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;

@@ -31,8 +31,8 @@ import static android.view.View.GONE;
     QUESTION|3|Who was Gustav Vigeland?
     ANSWER|3|Centre forward for Liverpool
     ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
-    VOTE|3|1
-    SCORES|3|John 2|Julie 4
+    VOTE|3|1 - index of players vote
+    SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
@@ -58,9 +58,8 @@ import static android.view.View.GONE;
 
  TODO next:
  onSend -> disable sendButton
- random order for allAnswers
  on receiving nextQuestion -> enable sendButton
- process Send! When all players sent answers, show all the answers; let players vote, etc.
+ let players vote, etc.
  use a proper database of QA!
  only use Log.d(message) if in debug mode
  */
@@ -78,6 +77,9 @@ public class GameActivity extends AppCompatActivity implements
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
     private static final String MAIN = "MAIN";
     private static final String CORRECT = "CORRECT";
+    private static final String VOTE = "VOTE";
+    private static final String SCORES = "SCORES";
+
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
@@ -92,12 +94,13 @@ public class GameActivity extends AppCompatActivity implements
     private String playerName;
     private int round = 0;
     private int answersCt = 0;
+    private int votesCt = 0;
     private QuestionAnswer currentQuestionAnswer;
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
     private String currentFragmentTag = MAIN;
-    private List<Integer> intList; // used for shuffling answers
+    private ScoresFragment scoresFragment;
     private List<String> shuffledNameList = new ArrayList<>();
 
     @Override // Activity
@@ -107,6 +110,7 @@ public class GameActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             this.mainFragment = new MainFragment();
             this.answersFragment = new AnswersFragment();
+            this.scoresFragment = new ScoresFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
@@ -114,6 +118,7 @@ public class GameActivity extends AppCompatActivity implements
         } else {
             mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN);
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
+            scoresFragment = (ScoresFragment) fragmentManager.findFragmentByTag(SCORES);
         }
 
         /*?
@@ -171,7 +176,7 @@ public class GameActivity extends AppCompatActivity implements
     // i.e. message sent from player to host
     public void onMessage(String playerId, String message) {
         Log.d(TAG, "from player: " + playerId + " message: " + message);
-        if (message.startsWith("ANSWER")) {
+        if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
             /*if (BuildConfig.DEBUG)*/
             namesAnswers.put(playerId, answer);
@@ -181,9 +186,29 @@ public class GameActivity extends AppCompatActivity implements
                 String nextMessage = getAllAnswersMessage();
                 server.sendToAll(nextMessage);
             }
+        } else if (message.startsWith(VOTE)) {
+            String answer = message.split("\\|", 3)[2];
+            // TODO: send real data!
+            votesCt++;
+            if (votesCt >= (namesAnswers.size())) {
+                Log.d(TAG, "all votes received for current question");
+                String scoresMessage = getScoresMessage();
+                server.sendToAll(scoresMessage);
+            }
         } else {
             Log.d(TAG, "unrecognised message received by host: " + message);
         }
+    }
+
+    private String getScoresMessage() {
+        // SCORES|3|2|John 2|Julie 4
+        StringBuffer buffer = new StringBuffer(SCORES + '|' + 2); // 2 is wrong!
+        int i = 1;
+        for (String name: namesAnswers.values()) {
+            buffer.append('|');
+            buffer.append(name + i++);
+        }
+        return buffer.toString();
     }
 
     /*
@@ -261,6 +286,9 @@ public class GameActivity extends AppCompatActivity implements
                         currentFragmentTag = MAIN;
                     }
                     mainFragment.setOutputView(question);
+                } else if (message.startsWith(SCORES)) {
+                    
+                    
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
                 }
@@ -337,6 +365,11 @@ public class GameActivity extends AppCompatActivity implements
         answer = namesAnswers.get(name);
         Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
         Log.d(TAG, "correct answer=" + namesAnswers.get(CORRECT));
+        client.sendVote(round, position);
+        /*
+        if answer is correct, add 1 to name's score
+        else add 1 to score of person she voted for
+         */
     }
 
     private class QuestionAnswer {
