@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
@@ -30,13 +31,6 @@ public class AnswersFragment extends Fragment {
         this.answersAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
         answersListView.setAdapter(answersAdapter);
-        if (savedAnswers != null) {
-            showAnswers(savedAnswers);
-            savedAnswers = null;
-        }
-        if (savedListener != null) {
-            setOnItemClickListener(savedListener);
-        }
         return rootView;
     }
     public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
@@ -50,8 +44,18 @@ public class AnswersFragment extends Fragment {
         Log.d(TAG, "AnswersFragment()");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (savedAnswers != null) {
+            showAnswers(savedAnswers);
+            savedAnswers = null;
+        }
+    }
+
     public void showAnswers(String[] answers) {
-        if (answersAdapter != null) {
+        Lifecycle.State state = getLifecycle().getCurrentState();
+        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             answersAdapter.setNotifyOnChange(false);
             answersAdapter.clear();
             for (String answer : answers) {
@@ -59,7 +63,6 @@ public class AnswersFragment extends Fragment {
             }
             answersAdapter.notifyDataSetChanged();
         } else {
-            // wait for fragment to initialise
             savedAnswers = answers;
         }
     }

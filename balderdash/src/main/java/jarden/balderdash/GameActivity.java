@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentTransaction;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
+import static android.view.View.GONE;
+
 /** Design of application
  Message Protocol:
     QUESTION|3|Who was Gustav Vigeland?
@@ -79,7 +81,7 @@ public class GameActivity extends AppCompatActivity implements
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
-    private final Map<String, String> answers =
+    private final Map<String, String> namesAnswers =
             new ConcurrentHashMap<>();
     private boolean isHost;
     private Button hostButton;
@@ -172,9 +174,9 @@ public class GameActivity extends AppCompatActivity implements
         if (message.startsWith("ANSWER")) {
             String answer = message.split("\\|", 3)[2];
             /*if (BuildConfig.DEBUG)*/
-            answers.put(playerId, answer);
+            namesAnswers.put(playerId, answer);
             answersCt++;
-            if (answersCt >= (answers.size())) {
+            if (answersCt >= (namesAnswers.size())) {
                 Log.d(TAG, "all answers received for current question");
                 String nextMessage = getAllAnswersMessage();
                 server.sendToAll(nextMessage);
@@ -189,7 +191,7 @@ public class GameActivity extends AppCompatActivity implements
      create message: String to hold the answers
      */
     private String getAllAnswersMessage() {
-        Set<String> nameSet = answers.keySet();
+        Set<String> nameSet = namesAnswers.keySet();
         if (shuffledNameList.size() == 0) {
             for (String name : nameSet) {
                 shuffledNameList.add(name);
@@ -198,7 +200,7 @@ public class GameActivity extends AppCompatActivity implements
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + questionIndex);
         for (String name: shuffledNameList) {
-            buffer.append("|" + answers.get(name));
+            buffer.append("|" + namesAnswers.get(name));
         }
         return buffer.toString();
     }
@@ -206,13 +208,13 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpControllerServer.MessageListener
     public void onPlayerConnected(String playerId) {
         Log.d(TAG, "Player joined: " + playerId);
-        answers.put(playerId, "");
+        namesAnswers.put(playerId, "");
     }
 
     @Override // TcpControllerServer.MessageListener
     public void onPlayerDisconnected(String playerId) {
         Log.d(TAG, "Player left: " + playerId);
-        answers.remove(playerId);
+        namesAnswers.remove(playerId);
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -241,7 +243,7 @@ public class GameActivity extends AppCompatActivity implements
         runOnUiThread(new Runnable() {
             public void run() {
                 if (message.startsWith(ALL_ANSWERS)) {
-                    // ALL_ANSWERS|0|dollop|a pig trough
+                    // ALL_ANSWERS|2|dollop|a pig trough
                     int indexOf3rdField = ALL_ANSWERS.length() + 1;
                     int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
                     String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
@@ -275,6 +277,7 @@ public class GameActivity extends AppCompatActivity implements
                 Toast.makeText(this, "Supply your name first!", Toast.LENGTH_LONG).show();
             } else if (viewId == R.id.hostButton) {
                 hostButton.setEnabled(false);
+                nextQuestionButton.setVisibility(GONE);
                 getControllerAddress();
                 server = new TcpControllerServer(this);
                 server.start();
@@ -331,9 +334,9 @@ public class GameActivity extends AppCompatActivity implements
         Log.d(TAG, "onItemClick(position=" + position);
         String name, answer;
         name = shuffledNameList.get(position);
-        answer = answers.get(name);
+        answer = namesAnswers.get(name);
         Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
-        Log.d(TAG, "correct answer=" + answers.get(CORRECT));
+        Log.d(TAG, "correct answer=" + namesAnswers.get(CORRECT));
     }
 
     private class QuestionAnswer {
@@ -358,8 +361,8 @@ public class GameActivity extends AppCompatActivity implements
         currentQuestionAnswer = questions[questionIndex++];
         // end of temporary
         String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
-        answers.clear();
-        answers.put(CORRECT, currentQuestionAnswer.answer);
+        namesAnswers.clear();
+        namesAnswers.put(CORRECT, currentQuestionAnswer.answer);
         answersCt = 1;
         server.sendToAll(nextQuestion);
     }
