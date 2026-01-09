@@ -57,11 +57,22 @@ import static android.view.View.GONE;
 
 
  TODO next:
- use dialog for initial login
+ real data on scoresFragment
+    current: SCORES|3|2|John 2|Julie 4
+    revised: SCORES|3|correct answer|your answer|John 2|Julie 4
+ change layout:
+    same line:
+        hostPrompt: TextView // for host: "when all players have joined, click"; remove after first click
+        next question : Button
+    question: TextView
+    Your answer: EditText
+    submit answer : Button
+    statusText : TextView
  onSend -> disable sendButton
  on receiving nextQuestion -> enable sendButton
- use a proper database of QA!
  only use Log.d(message) if in debug mode
+ use a proper database of QA!
+ separate classes Activity.client; Activity host
  */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
