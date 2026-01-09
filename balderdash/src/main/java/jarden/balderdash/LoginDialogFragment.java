@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -52,16 +53,20 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         String playerName = playerNameEditText.getText().toString();
-        Log.d(TAG, "playerName=" + playerName);
-        int viewId = view.getId();
-        if (viewId == R.id.hostButton) {
-            loginDialogListener.onHostButton(playerName);
-        } else if (viewId == R.id.joinButton) {
-            loginDialogListener.onJoinButton(playerName);
+        if (playerName.isEmpty()) {
+            Toast.makeText(getContext(), "Supply your name first!", Toast.LENGTH_LONG).show();
         } else {
-            Log.d(TAG, "unrecognised button, viewId=" + viewId);
+            Log.d(TAG, "playerName=" + playerName);
+            int viewId = view.getId();
+            if (viewId == R.id.hostButton) {
+                loginDialogListener.onHostButton(playerName);
+            } else if (viewId == R.id.joinButton) {
+                loginDialogListener.onJoinButton(playerName);
+            } else {
+                Log.d(TAG, "unrecognised button, viewId=" + viewId);
+            }
+            alertDialog.cancel();
         }
-        alertDialog.cancel();
     }
 }
 

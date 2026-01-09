@@ -87,8 +87,6 @@ public class GameActivity extends AppCompatActivity implements
     private final Map<String, String> namesAnswers =
             new ConcurrentHashMap<>();
     private boolean isHost;
-    private Button hostButton;
-    private Button joinButton;
     private Button sendButton;
     private Button nextQuestionButton;
     private TextView statusTextView;
@@ -114,9 +112,9 @@ public class GameActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         this.fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            this.mainFragment = new MainFragment();
-            this.answersFragment = new AnswersFragment();
-            this.scoresFragment = new ScoresFragment();
+            mainFragment = new MainFragment();
+            answersFragment = new AnswersFragment();
+            scoresFragment = new ScoresFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
@@ -142,10 +140,6 @@ public class GameActivity extends AppCompatActivity implements
             return insets;
         });
          */
-        hostButton = findViewById(R.id.hostButton);
-        hostButton.setOnClickListener(this);
-        joinButton = findViewById(R.id.joinButton);
-        joinButton.setOnClickListener(this);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
         nextQuestionButton.setEnabled(false);
@@ -153,6 +147,8 @@ public class GameActivity extends AppCompatActivity implements
         sendButton.setOnClickListener(this);
         sendButton.setEnabled(false);
         statusTextView = findViewById(R.id.statusView);
+        loginDialog = new LoginDialogFragment();
+        loginDialog.show(fragmentManager, "LoginDialog");
 
         /* later!
         try {
@@ -322,27 +318,7 @@ public class GameActivity extends AppCompatActivity implements
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.hostButton || viewId == R.id.joinButton) {
-            if (this.loginDialog == null) loginDialog = new LoginDialogFragment();
-            this.loginDialog.show(getSupportFragmentManager(), "LoginDialog");
-
-            playerName = mainFragment.getPlayerName();
-             if (playerName.length() == 0) {
-                Toast.makeText(this, "Supply your name first!", Toast.LENGTH_LONG).show();
-            } else if (viewId == R.id.hostButton) {
-                hostButton.setEnabled(false);
-                getControllerAddress();
-                server = new TcpControllerServer(this);
-                server.start();
-                isHost = true;
-                //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
-            } else { // must be joinButton
-                 if (!isHost) {
-                     nextQuestionButton.setVisibility(GONE);
-                 }
-                 joinGame();
-            }
-        } else if (viewId == R.id.nextQuestionButton) {
+        if (viewId == R.id.nextQuestionButton) {
             getNextQuestion();
         } else if (viewId == R.id.sendButton) {
             String answer = mainFragment.getAnswerEditText();
@@ -354,8 +330,6 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private void joinGame() {
-        hostButton.setEnabled(false);
-        joinButton.setEnabled(false);
         String name = this.playerName;
         client = new TcpPlayerClient(controllerAddress, 50001, playerName, this);
         client.connect();
@@ -403,11 +377,22 @@ public class GameActivity extends AppCompatActivity implements
     @Override
     public void onHostButton(String playerName) {
         Log.d(TAG, "onHostButton(" + playerName + ')');
+        this.playerName = playerName;
+        getControllerAddress();
+        server = new TcpControllerServer(this);
+        server.start();
+        isHost = true;
+        //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
     }
 
     @Override
     public void onJoinButton(String playerName) {
-        Log.d(TAG, "onHostButton(" + playerName + ')');
+        Log.d(TAG, "onJoinButton(" + playerName + ')');
+        this.playerName = playerName;
+        if (!isHost) {
+            nextQuestionButton.setVisibility(GONE);
+        }
+        joinGame();
     }
 
     private class QuestionAnswer {
@@ -449,7 +434,7 @@ public class GameActivity extends AppCompatActivity implements
         Log.e(TAG, e.toString());
     }
 
-        /*!!
+        /*??
 
     public static void sendMulticast(Context context, String message) {
 

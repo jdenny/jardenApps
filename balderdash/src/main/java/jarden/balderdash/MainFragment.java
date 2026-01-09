@@ -1,6 +1,7 @@
 package jarden.balderdash;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,8 @@ public class MainFragment extends Fragment {
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        nameEditText = rootView.findViewById((R.id.nameEditText));
         answerEditText = rootView.findViewById(R.id.answerEditText);
         outputView = rootView.findViewById(R.id.outputView);
         return rootView;
