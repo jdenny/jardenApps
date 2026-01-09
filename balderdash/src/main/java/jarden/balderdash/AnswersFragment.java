@@ -21,6 +21,7 @@ public class AnswersFragment extends Fragment {
     private ArrayAdapter<String> answersAdapter;
     private String[] savedAnswers = null;
     private AdapterView.OnItemClickListener savedListener = null;
+    private AnswersFragment previousThis;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +59,7 @@ public class AnswersFragment extends Fragment {
     }
 
     public void showAnswers(String[] answers) {
+        previousThis = this;
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             answersAdapter.setNotifyOnChange(false);

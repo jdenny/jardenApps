@@ -104,6 +104,10 @@ public class GameActivity extends AppCompatActivity implements
     private List<String> shuffledNameList = new ArrayList<>();
 
     @Override // Activity
+    public void onResume() {
+        super.onResume();
+    }
+    @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.fragmentManager = getSupportFragmentManager();
@@ -114,7 +118,6 @@ public class GameActivity extends AppCompatActivity implements
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
-            answersFragment.setOnItemClickListener(this);
         } else {
             mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN);
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
@@ -278,6 +281,7 @@ public class GameActivity extends AppCompatActivity implements
                     transaction.replace(R.id.fragmentContainerView, answersFragment, ANSWER);
                     transaction.commit();
                     currentFragmentTag = ANSWER;
+                    answersFragment.setOnItemClickListener(GameActivity.this);
                     answersFragment.showAnswers(answers);
                 } else if (message.startsWith(QUESTION)) {
                     String question = message.split("\\|", 3)[2];
@@ -289,7 +293,7 @@ public class GameActivity extends AppCompatActivity implements
                     }
                     mainFragment.setOutputView(question);
                 } else if (message.startsWith(SCORES)) {
-                    // expected: SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
+                    // SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
                     // actual: SCORES|2|a pig trough1|mild2
                     String question = message.split("\\|", 10)[3];
                     if (!currentFragmentTag.equals(SCORES)) {
@@ -377,7 +381,7 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick(position=" + position);
+        Log.d(TAG, "onItemClick(position=" + position + ')');
         String name, answer;
         name = shuffledNameList.get(position);
         answer = namesAnswers.get(name);
