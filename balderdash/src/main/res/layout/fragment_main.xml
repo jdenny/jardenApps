@@ -11,7 +11,7 @@
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/yourNameStr"
+        android:hint="@string/yourName"
         android:ems="10"
         android:inputType="text" />
     <EditText

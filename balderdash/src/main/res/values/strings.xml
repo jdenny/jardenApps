@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Balderdash</string>
-    <string name="balderdashStr">Balderdash!</string>
-    <string name="hostGameStr">Host Game</string>
-    <string name="joinGameStr">Join Game</string>
-    <string name="yourNameStr">Your name</string>
+    <string name="balderdash">Balderdash!</string>
+    <string name="hostGame">Host Game</string>
+    <string name="joinGame">Join Game</string>
+    <string name="yourName">Your name</string>
     <string name="sendStr">Send</string>
     <string name="next_question">Next</string>
     <string name="your_answer">Your answer</string>

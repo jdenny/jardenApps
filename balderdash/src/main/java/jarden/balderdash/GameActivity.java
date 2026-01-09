@@ -57,15 +57,16 @@ import static android.view.View.GONE;
 
 
  TODO next:
+ use dialog for initial login
  onSend -> disable sendButton
  on receiving nextQuestion -> enable sendButton
- let players vote, etc.
  use a proper database of QA!
  only use Log.d(message) if in debug mode
  */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
-        AdapterView.OnItemClickListener, TcpPlayerClient.Listener {
+        AdapterView.OnItemClickListener, TcpPlayerClient.Listener,
+        LoginDialogFragment.LoginDialogListener {
     /*
     public static final String MULTICAST_IP = "239.255.0.1";
     public static final int MULTICAST_PORT = 50000;
@@ -102,6 +103,7 @@ public class GameActivity extends AppCompatActivity implements
     private String currentFragmentTag = MAIN;
     private ScoresFragment scoresFragment;
     private List<String> shuffledNameList = new ArrayList<>();
+    private LoginDialogFragment loginDialog;
 
     @Override // Activity
     public void onResume() {
@@ -151,6 +153,7 @@ public class GameActivity extends AppCompatActivity implements
         sendButton.setOnClickListener(this);
         sendButton.setEnabled(false);
         statusTextView = findViewById(R.id.statusView);
+
         /* later!
         try {
             WifiManager wifiManager =
@@ -320,6 +323,9 @@ public class GameActivity extends AppCompatActivity implements
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.hostButton || viewId == R.id.joinButton) {
+            if (this.loginDialog == null) loginDialog = new LoginDialogFragment();
+            this.loginDialog.show(getSupportFragmentManager(), "LoginDialog");
+
             playerName = mainFragment.getPlayerName();
              if (playerName.length() == 0) {
                 Toast.makeText(this, "Supply your name first!", Toast.LENGTH_LONG).show();
@@ -392,6 +398,16 @@ public class GameActivity extends AppCompatActivity implements
         if answer is correct, add 1 to name's score
         else add 1 to score of person she voted for
          */
+    }
+
+    @Override
+    public void onHostButton(String playerName) {
+        Log.d(TAG, "onHostButton(" + playerName + ')');
+    }
+
+    @Override
+    public void onJoinButton(String playerName) {
+        Log.d(TAG, "onHostButton(" + playerName + ')');
     }
 
     private class QuestionAnswer {
