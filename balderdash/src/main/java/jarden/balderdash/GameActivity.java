@@ -92,6 +92,7 @@ public class GameActivity extends AppCompatActivity implements
     private static final String CORRECT = "CORRECT";
     private static final String VOTE = "VOTE";
     private static final String SCORES = "SCORES";
+    private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
 
     private TcpControllerServer server;
     private TcpPlayerClient client;
@@ -127,6 +128,7 @@ public class GameActivity extends AppCompatActivity implements
             mainFragment = new MainFragment();
             answersFragment = new AnswersFragment();
             scoresFragment = new ScoresDialogFragment();
+            //!! scoresFragment.show(fragmentManager, LOGIN_DIALOG); // TODO: remove this!
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
@@ -158,7 +160,7 @@ public class GameActivity extends AppCompatActivity implements
         scoresButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
         loginDialog = new LoginDialogFragment();
-        loginDialog.show(fragmentManager, "LoginDialog");
+        loginDialog.show(fragmentManager, LOGIN_DIALOG);
         Log.d(TAG, "isHost=" + isHost);
         // TODO: if not host, don't show hostButtons
 
@@ -282,8 +284,9 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
-        Toast.makeText(this, "Now connected to the game host",
-                Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Now connected to the game host",
+//                Toast.LENGTH_LONG).show();
+        Log.d(TAG, "Now connected to the game host");
     }
 
     private void setStatus(String status) {
@@ -319,7 +322,7 @@ public class GameActivity extends AppCompatActivity implements
                 } else if (message.startsWith(SCORES)) {
                     // SCORES|3|John 2|Julie 4
                     String question = message.split("\\|", 10)[3];
-                    setFragment(scoresFragment, SCORES);
+                    //?? setFragment(scoresFragment, SCORES);
                     scoresFragment.show(fragmentManager, SCORES);
                     scoresFragment.showScores(players.values());
                 } else {
