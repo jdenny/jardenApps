@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,9 +18,11 @@ import androidx.lifecycle.Lifecycle;
 public class MainFragment extends Fragment {
 
     private static final String TAG = "MainFragment";
-    private EditText nameEditText;
-    private EditText answerEditText;
     private TextView outputView;
+    private EditText answerEditText;
+    private Button sendButton;
+
+
     private String savedMessage;
 
     @Override // Fragment
@@ -27,13 +30,12 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        answerEditText = rootView.findViewById(R.id.answerEditText);
         outputView = rootView.findViewById(R.id.outputView);
+        answerEditText = rootView.findViewById(R.id.answerEditText);
+        sendButton = rootView.findViewById(R.id.sendButton);
+        sendButton.setOnClickListener((GameActivity)getActivity());
         return rootView;
-    }
 
-    public String getPlayerName() {
-        return nameEditText.getText().toString().trim();
     }
 
     public String getAnswerEditText() {

@@ -10,29 +10,18 @@
 
 
     <LinearLayout
+        android:id="@+id/hostButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
-        <!--
-        <Button
-            android:id="@+id/hostButton"
-            android:text="@string/hostGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/joinButton"
-            android:text="@string/joinGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-            -->
         <Button
             android:id="@+id/nextQuestionButton"
             android:text="@string/next_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Button
-            android:id="@+id/sendButton"
-            android:text="@string/sendStr"
+            android:id="@+id/scoresButton"
+            android:text="@string/scores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -63,16 +63,13 @@ import static android.view.View.GONE;
     and highlight the correct answer; host pressed Scores Button for scores dialog (no answers)
     SCORES|3|John 2|Julie 4
  change layout:
-    same line:
-        hostPrompt: TextView // for host: "when all players have joined, click"; remove after first click
-        next question : Button
+    only for host:
+        nextButton, scoresButton
+        statusText: "when all players have joined, click 'next'"
     question: TextView
     Your answer: EditText
-    submit answer : Button
+    sendButton
     statusText : TextView
- delete class Results
- onSend -> disable sendButton
- on receiving nextQuestion -> enable sendButton
  only use Log.d(message) if in debug mode
  use a proper database of QA!
  separate classes Activity.client; Activity host
@@ -102,7 +99,6 @@ public class GameActivity extends AppCompatActivity implements
     private final Map<String, Player> players =
             new ConcurrentHashMap<>();
     private boolean isHost;
-    private Button sendButton;
     private Button nextQuestionButton;
     private TextView statusTextView;
     private String playerName;
@@ -114,9 +110,10 @@ public class GameActivity extends AppCompatActivity implements
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
     private String currentFragmentTag = MAIN;
-    private ScoresFragment scoresFragment;
+    private ScoresDialogFragment scoresFragment;
     private List<String> shuffledNameList = new ArrayList<>();
     private LoginDialogFragment loginDialog;
+    private View scoresButton;
 
     @Override // Activity
     public void onResume() {
@@ -129,14 +126,14 @@ public class GameActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             mainFragment = new MainFragment();
             answersFragment = new AnswersFragment();
-            scoresFragment = new ScoresFragment();
+            scoresFragment = new ScoresDialogFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
         } else {
             mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN);
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
-            scoresFragment = (ScoresFragment) fragmentManager.findFragmentByTag(SCORES);
+            scoresFragment = (ScoresDialogFragment) fragmentManager.findFragmentByTag(SCORES);
         }
 
         /*?
@@ -157,13 +154,13 @@ public class GameActivity extends AppCompatActivity implements
          */
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
-        nextQuestionButton.setEnabled(false);
-        sendButton = findViewById(R.id.sendButton);
-        sendButton.setOnClickListener(this);
-        sendButton.setEnabled(false);
+        scoresButton = findViewById(R.id.scoresButton);
+        scoresButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
         loginDialog = new LoginDialogFragment();
         loginDialog.show(fragmentManager, "LoginDialog");
+        Log.d(TAG, "isHost=" + isHost);
+        // TODO: if not host, don't show hostButtons
 
         /* later!
         try {
@@ -213,7 +210,6 @@ public class GameActivity extends AppCompatActivity implements
             votesCt++;
             if ((votesCt + 1) >= (players.size())) {
                 Log.d(TAG, "all votes received for current question");
-                //!! String scoresMessage = getScoresMessage();
                 String allAnswers2Message = getAllAnswers2Message();
                 server.sendToAll(allAnswers2Message);
             }
@@ -266,7 +262,7 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpControllerServer.MessageListener
     public void onPlayerConnected(String playerName) {
         Log.d(TAG, "Player joined: " + playerName);
-        players.put(playerName, new Player(playerName, "", 0));
+        players.put(playerName, new Player(playerName, "not supplied", 0));
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -286,7 +282,8 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
-        setStatus("Now connected to the game host");
+        Toast.makeText(this, "Now connected to the game host",
+                Toast.LENGTH_LONG).show();
     }
 
     private void setStatus(String status) {
@@ -323,6 +320,7 @@ public class GameActivity extends AppCompatActivity implements
                     // SCORES|3|John 2|Julie 4
                     String question = message.split("\\|", 10)[3];
                     setFragment(scoresFragment, SCORES);
+                    scoresFragment.show(fragmentManager, SCORES);
                     scoresFragment.showScores(players.values());
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
@@ -348,6 +346,9 @@ public class GameActivity extends AppCompatActivity implements
         } else if (viewId == R.id.sendButton) {
             String answer = mainFragment.getAnswerEditText();
             client.sendAnswer(round, answer);
+        } else if (viewId == R.id.scoresButton) {
+            String scoresMessage = getScoresMessage();
+            server.sendToAll(scoresMessage);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -358,7 +359,6 @@ public class GameActivity extends AppCompatActivity implements
         String name = this.playerName;
         client = new TcpPlayerClient(controllerAddress, 50001, playerName, this);
         client.connect();
-        sendButton.setEnabled(true);
     }
 
     private void getControllerAddress() {
@@ -407,6 +407,7 @@ public class GameActivity extends AppCompatActivity implements
         server = new TcpControllerServer(this);
         server.start();
         isHost = true;
+        statusTextView.setText("when all players have joined, click Next");
         //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
     }
 
