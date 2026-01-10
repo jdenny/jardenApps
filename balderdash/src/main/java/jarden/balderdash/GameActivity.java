@@ -57,7 +57,6 @@ import static android.view.View.GONE;
 
 
  TODO next:
- real data on scoresFragment
  when all the scores are in, using the same screen (answersFragment), show name/answer pairs
     and highlight the correct answer; host pressed Scores Button for scores dialog (no answers)
     SCORES|3|John 2|Julie 4
@@ -204,7 +203,7 @@ public class GameActivity extends AppCompatActivity implements
             String votedForName = message.split("\\|", 3)[2];
             if (votedForName.equals(CORRECT)) {
                 players.get(playerName).incrementScore();
-            } else {
+            } else if (!votedForName.equals(playerName)) { // I only vote for myself during development!
                 players.get(votedForName).incrementScore();
             }
             votesCt++;
