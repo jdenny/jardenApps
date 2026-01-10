@@ -8,10 +8,10 @@ public class Player {
     private String answer;
     private int score;
 
-    public Player(int score, String answer, String name) {
-        this.score = score;
-        this.answer = answer;
+    public Player(String name, String answer, int score) {
         this.name = name;
+        this.answer = answer;
+        this.score = score;
     }
 
     @Override
@@ -29,7 +29,9 @@ public class Player {
     public String getAnswer() {
         return answer;
     }
-
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
     public int getScore() {
         return score;
     }

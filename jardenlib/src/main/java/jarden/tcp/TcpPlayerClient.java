@@ -109,8 +109,8 @@ public class TcpPlayerClient {
         send("ANSWER|" + round + "|" + answer);
     }
 
-    public void sendVote(int round, int choiceIndex) {
-        send("VOTE|" + round + "|" + choiceIndex);
+    public void sendVote(int round, String playerName) {
+        send("VOTE|" + round + "|" + playerName);
     }
 
     public void send(String message) {

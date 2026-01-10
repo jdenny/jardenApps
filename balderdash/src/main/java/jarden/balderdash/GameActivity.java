@@ -31,8 +31,8 @@ import static android.view.View.GONE;
     QUESTION|3|Who was Gustav Vigeland?
     ANSWER|3|Centre forward for Liverpool
     ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
-    VOTE|3|1 - index of players vote
-    SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
+    VOTE|3|playerName
+    SCORES|3|John 2|Julie 4
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
@@ -58,8 +58,9 @@ import static android.view.View.GONE;
 
  TODO next:
  real data on scoresFragment
-    current: SCORES|3|2|John 2|Julie 4
-    revised: SCORES|3|correct answer|your answer|John 2|Julie 4
+ when all the scores are in, using the same screen (answersFragment), show name/answer pairs
+    and highlight the correct answer; host pressed Scores Button for scores dialog (no answers)
+    SCORES|3|John 2|Julie 4
  change layout:
     same line:
         hostPrompt: TextView // for host: "when all players have joined, click"; remove after first click
@@ -95,7 +96,7 @@ public class GameActivity extends AppCompatActivity implements
     private TcpControllerServer server;
     private TcpPlayerClient client;
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
-    private final Map<String, String> namesAnswers =
+    private final Map<String, Player> players =
             new ConcurrentHashMap<>();
     private boolean isHost;
     private Button sendButton;
@@ -187,23 +188,27 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
-    public void onMessage(String playerId, String message) {
-        Log.d(TAG, "from player: " + playerId + " message: " + message);
+    public void onMessage(String playerName, String message) {
+        Log.d(TAG, "from player: " + playerName + " message: " + message);
         if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
             /*if (BuildConfig.DEBUG)*/
-            namesAnswers.put(playerId, answer);
+            players.get(playerName).setAnswer(answer);
             answersCt++;
-            if (answersCt >= (namesAnswers.size())) {
+            if (answersCt >= (players.size())) {
                 Log.d(TAG, "all answers received for current question");
                 String nextMessage = getAllAnswersMessage();
                 server.sendToAll(nextMessage);
             }
         } else if (message.startsWith(VOTE)) {
-            String answer = message.split("\\|", 3)[2];
-            // TODO: send real data!
+            String votedForName = message.split("\\|", 3)[2];
+            if (votedForName.equals(CORRECT)) {
+                players.get(playerName).incrementScore();
+            } else {
+                players.get(votedForName).incrementScore();
+            }
             votesCt++;
-            if ((votesCt + 1) >= (namesAnswers.size())) {
+            if ((votesCt + 1) >= (players.size())) {
                 Log.d(TAG, "all votes received for current question");
                 String scoresMessage = getScoresMessage();
                 server.sendToAll(scoresMessage);
@@ -214,14 +219,13 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private String getScoresMessage() {
-        // SCORES|3|2|John 2|Julie 4
+        // SCORES|3|John 2|Julie 4
         int correctAnswerIndex = 2; // bodge!
         StringBuffer buffer = new StringBuffer(SCORES + '|' + round +  '|' +
                 correctAnswerIndex);
-        int i = 1;
-        for (String name: namesAnswers.values()) {
+        for (Player player : players.values()) {
             buffer.append('|');
-            buffer.append(name + ' ' + i++);
+            buffer.append(player.getName() + ' ' + player.getScore());
         }
         return buffer.toString();
     }
@@ -231,30 +235,30 @@ public class GameActivity extends AppCompatActivity implements
      create message: String to hold the answers
      */
     private String getAllAnswersMessage() {
-        Set<String> nameSet = namesAnswers.keySet();
+        Set<String> nameSet = players.keySet();
         if (shuffledNameList.size() == 0) {
             for (String name : nameSet) {
                 shuffledNameList.add(name);
             }
         }
         Collections.shuffle(shuffledNameList);
-        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + questionIndex);
+        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + round);
         for (String name: shuffledNameList) {
-            buffer.append("|" + namesAnswers.get(name));
+            buffer.append("|" + players.get(name).getAnswer());
         }
         return buffer.toString();
     }
 
     @Override // TcpControllerServer.MessageListener
-    public void onPlayerConnected(String playerId) {
-        Log.d(TAG, "Player joined: " + playerId);
-        namesAnswers.put(playerId, "");
+    public void onPlayerConnected(String playerName) {
+        Log.d(TAG, "Player joined: " + playerName);
+        players.put(playerName, new Player(playerName, "", 0));
     }
 
     @Override // TcpControllerServer.MessageListener
-    public void onPlayerDisconnected(String playerId) {
-        Log.d(TAG, "Player left: " + playerId);
-        namesAnswers.remove(playerId);
+    public void onPlayerDisconnected(String playerName) {
+        Log.d(TAG, "Player left: " + playerName);
+        players.remove(playerName);
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -303,8 +307,7 @@ public class GameActivity extends AppCompatActivity implements
                     }
                     mainFragment.setOutputView(question);
                 } else if (message.startsWith(SCORES)) {
-                    // SCORES|3|2|John 2|Julie 4 - 3rd field is index of correct answer
-                    // actual: SCORES|2|a pig trough1|mild2
+                    // SCORES|3|John 2|Julie 4
                     String question = message.split("\\|", 10)[3];
                     if (!currentFragmentTag.equals(SCORES)) {
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -312,19 +315,14 @@ public class GameActivity extends AppCompatActivity implements
                         transaction.commit();
                         currentFragmentTag = SCORES;
                     }
-                    Results results = new Results("mild", "Guinness", tempPlayers);
-                    scoresFragment.showScores(results);
+                    //!! Results results = new Results("mild", "Guinness", players);
+                    scoresFragment.showScores(players.values());
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
                 }
             }
         });
     }
-    Player[] tempPlayers = {
-            new Player(3, "mild", "john"),
-            new Player(4, "bitter", "Joe"),
-            new Player(2, "wine", "Julie")
-    };
 
     @Override // View.OnClickListener
     public void onClick(View view) {
@@ -375,10 +373,10 @@ public class GameActivity extends AppCompatActivity implements
         Log.d(TAG, "onItemClick(position=" + position + ')');
         String name, answer;
         name = shuffledNameList.get(position);
-        answer = namesAnswers.get(name);
+        answer = players.get(name).getAnswer();
         Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
-        Log.d(TAG, "correct answer=" + namesAnswers.get(CORRECT));
-        client.sendVote(round, position);
+        Log.d(TAG, "correct answer=" + players.get(CORRECT).getAnswer());
+        client.sendVote(round, name);
         /*
         if answer is correct, add 1 to name's score
         else add 1 to score of person she voted for
@@ -428,8 +426,8 @@ public class GameActivity extends AppCompatActivity implements
         currentQuestionAnswer = questions[questionIndex++];
         // end of temporary
         String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
-        namesAnswers.clear();
-        namesAnswers.put(CORRECT, currentQuestionAnswer.answer);
+        //!! players.clear();
+        players.put(CORRECT, new Player(CORRECT, currentQuestionAnswer.answer, 0));
         answersCt = 1;
         server.sendToAll(nextQuestion);
     }

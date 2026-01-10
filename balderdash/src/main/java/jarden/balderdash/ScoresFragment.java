@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Collection;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 
@@ -19,7 +21,7 @@ public class ScoresFragment extends Fragment {
     private TextView yourAnswerTextView;
     private TextView correctAnswerTextView;
     private ListView scoresListView;
-    private Results savedResults;
+    private Collection<Player> players;
     private ArrayAdapter<Object> scoresAdapter;
 
     @Override // Fragment
@@ -37,25 +39,25 @@ public class ScoresFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (savedResults != null) {
-            showScores(savedResults);
-            savedResults = null;
+        if (players != null) {
+            showScores(players);
+            players = null;
         }
     }
 
-    public void showScores(Results results) {
+    public void showScores(Collection<Player> players) {
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
-            yourAnswerTextView.setText(results.getPlayerAnswer());
-            correctAnswerTextView.setText(results.getCorrectAnswer());
+            //!! yourAnswerTextView.setText(results.getPlayerAnswer());
+           //!!  correctAnswerTextView.setText(results.getCorrectAnswer());
             scoresAdapter.setNotifyOnChange(false);
             scoresAdapter.clear();
-            for (Player player : results.getPlayers()) {
+            for (Player player : players) {
                 scoresAdapter.add(player.getName() + " " + player.getScore());
             }
             scoresAdapter.notifyDataSetChanged();
         } else {
-            savedResults = results;
+            this.players = players;
         }
 
     }
