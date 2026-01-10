@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import jarden.tcp.TcpControllerServer;
@@ -31,7 +32,8 @@ import static android.view.View.GONE;
     QUESTION|3|Who was Gustav Vigeland?
     ANSWER|3|Centre forward for Liverpool
     ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
-    VOTE|3|playerName
+    NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
+    VOTE|3|votedForPlayerName
     SCORES|3|John 2|Julie 4
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
@@ -68,6 +70,7 @@ import static android.view.View.GONE;
     Your answer: EditText
     submit answer : Button
     statusText : TextView
+ delete class Results
  onSend -> disable sendButton
  on receiving nextQuestion -> enable sendButton
  only use Log.d(message) if in debug mode
@@ -87,6 +90,7 @@ public class GameActivity extends AppCompatActivity implements
     private static final String QUESTION = "QUESTION";
     private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
+    private static final String NAMED_ANSWERS = "NAMED_ANSWERS";
     private static final String MAIN = "MAIN";
     private static final String CORRECT = "CORRECT";
     private static final String VOTE = "VOTE";
@@ -209,12 +213,22 @@ public class GameActivity extends AppCompatActivity implements
             votesCt++;
             if ((votesCt + 1) >= (players.size())) {
                 Log.d(TAG, "all votes received for current question");
-                String scoresMessage = getScoresMessage();
-                server.sendToAll(scoresMessage);
+                //!! String scoresMessage = getScoresMessage();
+                String allAnswers2Message = getAllAnswers2Message();
+                server.sendToAll(allAnswers2Message);
             }
         } else {
             Log.d(TAG, "unrecognised message received by host: " + message);
         }
+    }
+
+    private String getAllAnswers2Message() {
+        // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
+        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + "|" + round);
+        for (Player player: players.values()) {
+            buffer.append("|" + player.getName() + "|" + player.getAnswer());
+        }
+        return buffer.toString();
     }
 
     private String getScoresMessage() {
@@ -240,6 +254,7 @@ public class GameActivity extends AppCompatActivity implements
                 shuffledNameList.add(name);
             }
         }
+
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + round);
         for (String name: shuffledNameList) {
@@ -290,37 +305,39 @@ public class GameActivity extends AppCompatActivity implements
                     int indexOf3rdField = ALL_ANSWERS.length() + 1;
                     int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
                     String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainerView, answersFragment, ANSWER);
-                    transaction.commit();
-                    currentFragmentTag = ANSWER;
+                    setFragment(answersFragment, ANSWER);
                     answersFragment.setOnItemClickListener(GameActivity.this);
-                    answersFragment.showAnswers(answers);
+                    answersFragment.showAnswers(answers, false);
+                } else if (message.startsWith(NAMED_ANSWERS)) {
+                    // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
+                    int indexOf3rdField = NAMED_ANSWERS.length() + 1;
+                    int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
+                    String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+                    setFragment(answersFragment, ANSWER);
+                    answersFragment.showAnswers(answers, true);
                 } else if (message.startsWith(QUESTION)) {
                     String question = message.split("\\|", 3)[2];
-                    if (!currentFragmentTag.equals(MAIN)) {
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragmentContainerView, mainFragment, MAIN);
-                        transaction.commit();
-                        currentFragmentTag = MAIN;
-                    }
+                    setFragment(mainFragment, MAIN);
                     mainFragment.setOutputView(question);
                 } else if (message.startsWith(SCORES)) {
                     // SCORES|3|John 2|Julie 4
                     String question = message.split("\\|", 10)[3];
-                    if (!currentFragmentTag.equals(SCORES)) {
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragmentContainerView, scoresFragment, SCORES);
-                        transaction.commit();
-                        currentFragmentTag = SCORES;
-                    }
-                    //!! Results results = new Results("mild", "Guinness", players);
+                    setFragment(scoresFragment, SCORES);
                     scoresFragment.showScores(players.values());
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
                 }
             }
         });
+    }
+
+    private void setFragment(Fragment answersFragment, String fragmentTag) {
+        if (!currentFragmentTag.equals(fragmentTag)) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragmentContainerView, answersFragment, fragmentTag);
+            transaction.commit();
+            currentFragmentTag = fragmentTag;
+        }
     }
 
     @Override // View.OnClickListener

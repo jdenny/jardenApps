@@ -22,6 +22,7 @@ public class AnswersFragment extends Fragment {
     private String[] savedAnswers = null;
     private AdapterView.OnItemClickListener savedListener = null;
     private AnswersFragment previousThis;
+    private boolean showPlayerNames;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,23 +54,29 @@ public class AnswersFragment extends Fragment {
             savedListener = null;
         }
         if (savedAnswers != null) {
-            showAnswers(savedAnswers);
+            showAnswers(savedAnswers, showPlayerNames);
             savedAnswers = null;
         }
     }
 
-    public void showAnswers(String[] answers) {
-        previousThis = this;
+    public void showAnswers(String[] answers, boolean showPlayerNames) {
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             answersAdapter.setNotifyOnChange(false);
             answersAdapter.clear();
-            for (String answer : answers) {
-                answersAdapter.add(answer);
+            if (showPlayerNames) {
+                for (int i = 0; i < answers.length; i++) {
+                    answersAdapter.add(answers[i++] + ' ' + answers[i]); // namei answeri
+                }
+            } else {
+                for (String answer : answers) {
+                    answersAdapter.add(answer);
+                }
             }
             answersAdapter.notifyDataSetChanged();
         } else {
             savedAnswers = answers;
+            this.showPlayerNames = showPlayerNames;
         }
     }
 
