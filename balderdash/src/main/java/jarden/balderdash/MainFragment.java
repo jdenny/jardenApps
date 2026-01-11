@@ -26,6 +26,7 @@ public class MainFragment extends Fragment {
     private OnClickListener gameActivity;
 
     private String savedMessage;
+    private boolean sendButtonEnabled;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +36,6 @@ public class MainFragment extends Fragment {
         outputView = rootView.findViewById(R.id.outputView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        //!! sendButton.setOnClickListener((GameActivity)getActivity());
         gameActivity = (GameActivity)getActivity();
         sendButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -57,6 +57,7 @@ public class MainFragment extends Fragment {
     }
 
     public void enableSendButton(boolean enabled) {
+        this.sendButtonEnabled = enabled;
         sendButton.setEnabled(enabled);
     }
 
@@ -67,6 +68,7 @@ public class MainFragment extends Fragment {
             setOutputView(savedMessage);
             savedMessage = null;
         }
+        sendButton.setEnabled(sendButtonEnabled);
     }
 
     public void setOutputView(String message) {

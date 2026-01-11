@@ -58,16 +58,16 @@ public class ScoresDialogFragment extends DialogFragment {
     }
     public void showScores(Collection<Player> players) {
         Lifecycle.State state = getLifecycle().getCurrentState();
-        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
+        //!! if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             scoresAdapter.setNotifyOnChange(false);
             scoresAdapter.clear();
             for (Player player : players) {
                 scoresAdapter.add(player.getName() + " " + player.getScore());
             }
             scoresAdapter.notifyDataSetChanged();
-        } else {
-            this.players = players;
-        }
+//        } else {
+//            this.players = players;
+//        }
 
     }
 

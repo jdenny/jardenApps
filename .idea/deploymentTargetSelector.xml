@@ -7,10 +7,10 @@
       </SelectionState>
       <SelectionState runConfigName="balderdash">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-01-11T17:39:41.357329Z">
+        <DropdownSelection timestamp="2026-01-11T19:46:39.863494Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=MWUBB18612202175" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=ZY2277JX6V" />
             </handle>
           </Target>
         </DropdownSelection>
