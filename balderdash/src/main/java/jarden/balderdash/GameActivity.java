@@ -25,8 +25,6 @@ import androidx.fragment.app.FragmentTransaction;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
-import static android.view.View.GONE;
-
 /** Design of application
  Message Protocol:
     QUESTION|3|Who was Gustav Vigeland?
@@ -59,9 +57,6 @@ import static android.view.View.GONE;
 
 
  TODO next:
- when all the scores are in, using the same screen (answersFragment), show name/answer pairs
-    and highlight the correct answer; host pressed Scores Button for scores dialog (no answers)
-    SCORES|3|John 2|Julie 4
  change layout:
     only for host:
         nextButton, scoresButton
@@ -115,11 +110,13 @@ public class GameActivity extends AppCompatActivity implements
     private List<String> shuffledNameList = new ArrayList<>();
     private LoginDialogFragment loginDialog;
     private View scoresButton;
+    private View hostButtonsLayout;
 
     @Override // Activity
     public void onResume() {
         super.onResume();
     }
+
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +125,6 @@ public class GameActivity extends AppCompatActivity implements
             mainFragment = new MainFragment();
             answersFragment = new AnswersFragment();
             scoresFragment = new ScoresDialogFragment();
-            //!! scoresFragment.show(fragmentManager, LOGIN_DIALOG); // TODO: remove this!
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
             ft.commit();
@@ -162,7 +158,7 @@ public class GameActivity extends AppCompatActivity implements
         loginDialog = new LoginDialogFragment();
         loginDialog.show(fragmentManager, LOGIN_DIALOG);
         Log.d(TAG, "isHost=" + isHost);
-        // TODO: if not host, don't show hostButtons
+        hostButtonsLayout = findViewById(R.id.hostButtons);
 
         /* later!
         try {
@@ -201,6 +197,8 @@ public class GameActivity extends AppCompatActivity implements
                 Log.d(TAG, "all answers received for current question");
                 String nextMessage = getAllAnswersMessage();
                 server.sendToAll(nextMessage);
+            } else {
+                setStatus("waiting for " + (players.size() - answersCt) + " players to answer");
             }
         } else if (message.startsWith(VOTE)) {
             String votedForName = message.split("\\|", 3)[2];
@@ -214,6 +212,8 @@ public class GameActivity extends AppCompatActivity implements
                 Log.d(TAG, "all votes received for current question");
                 String allAnswers2Message = getAllAnswers2Message();
                 server.sendToAll(allAnswers2Message);
+            } else {
+                setStatus("waiting for " + (players.size() - votesCt) + " players to vote");
             }
         } else {
             Log.d(TAG, "unrecognised message received by host: " + message);
@@ -291,7 +291,12 @@ public class GameActivity extends AppCompatActivity implements
 
     private void setStatus(String status) {
         Log.d(TAG, status);
-        this.statusTextView.setText(status);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusTextView.setText(status);
+            }
+        });
     }
 
     @Override // TcpPlayerClient.Listener
@@ -319,10 +324,10 @@ public class GameActivity extends AppCompatActivity implements
                     String question = message.split("\\|", 3)[2];
                     setFragment(mainFragment, MAIN);
                     mainFragment.setOutputView(question);
+                    mainFragment.showSendButton(true);
                 } else if (message.startsWith(SCORES)) {
                     // SCORES|3|John 2|Julie 4
                     String question = message.split("\\|", 10)[3];
-                    //?? setFragment(scoresFragment, SCORES);
                     scoresFragment.show(fragmentManager, SCORES);
                     scoresFragment.showScores(players.values());
                 } else {
@@ -344,12 +349,14 @@ public class GameActivity extends AppCompatActivity implements
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.nextQuestionButton) {
+        if (viewId == R.id.nextQuestionButton) { // Host only
             getNextQuestion();
-        } else if (viewId == R.id.sendButton) {
+            statusTextView.setText("waiting for all players to answer");
+        } else if (viewId == R.id.sendButton) { // Player
             String answer = mainFragment.getAnswerEditText();
             client.sendAnswer(round, answer);
-        } else if (viewId == R.id.scoresButton) {
+            mainFragment.showSendButton(false);
+        } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
             server.sendToAll(scoresMessage);
         } else {
@@ -359,9 +366,10 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private void joinGame() {
-        String name = this.playerName;
         client = new TcpPlayerClient(controllerAddress, 50001, playerName, this);
         client.connect();
+        statusTextView.setText(playerName + " has joined; " + players.size() +
+                " players so far");
     }
 
     private void getControllerAddress() {
@@ -410,6 +418,7 @@ public class GameActivity extends AppCompatActivity implements
         server = new TcpControllerServer(this);
         server.start();
         isHost = true;
+        hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have joined, click Next");
         //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
     }
@@ -418,9 +427,6 @@ public class GameActivity extends AppCompatActivity implements
     public void onJoinButton(String playerName) {
         Log.d(TAG, "onJoinButton(" + playerName + ')');
         this.playerName = playerName;
-        if (!isHost) {
-            nextQuestionButton.setVisibility(GONE);
-        }
         joinGame();
     }
 

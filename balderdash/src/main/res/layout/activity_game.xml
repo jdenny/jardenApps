@@ -7,30 +7,38 @@
     android:orientation="vertical"
     tools:context=".GameActivity">
 
-
-
     <LinearLayout
-        android:id="@+id/hostButtons"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        <Button
-            android:id="@+id/nextQuestionButton"
-            android:text="@string/next_question"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/scoresButton"
-            android:text="@string/scores"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-    <!--        android:name="jarden.balderdash.AnswersFragment" -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/hostButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/nextQuestionButton"
+                android:text="@string/next_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/scoresButton"
+                android:text="@string/scores"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!--        android:name="jarden.balderdash.AnswersFragment" -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
 
     <TextView
         android:id="@+id/statusView"

@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -21,7 +23,7 @@ public class MainFragment extends Fragment {
     private TextView outputView;
     private EditText answerEditText;
     private Button sendButton;
-
+    private OnClickListener gameActivity;
 
     private String savedMessage;
 
@@ -33,13 +35,28 @@ public class MainFragment extends Fragment {
         outputView = rootView.findViewById(R.id.outputView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        sendButton.setOnClickListener((GameActivity)getActivity());
+        //!! sendButton.setOnClickListener((GameActivity)getActivity());
+        gameActivity = (GameActivity)getActivity();
+        sendButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (answerEditText.getText().toString().trim().length() == 0) {
+                    Toast.makeText(getContext(), "supply an answer first!",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    gameActivity.onClick(view);
+                }
+            }
+        });
         return rootView;
 
     }
 
     public String getAnswerEditText() {
         return answerEditText.getText().toString();
+    }
+    public void showSendButton(boolean show) {
+        sendButton.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
