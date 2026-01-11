@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.Collection;
-
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Lifecycle;
 
@@ -20,7 +18,7 @@ import androidx.lifecycle.Lifecycle;
 public class ScoresDialogFragment extends DialogFragment {
     private static final String TAG = "ScoresDialogFragment";
     private ListView scoresListView;
-    private Collection<Player> players;
+    private String[] scores;
     private ArrayAdapter<Object> scoresAdapter;
     private Button closeButton;
     private AlertDialog alertDialog;
@@ -51,23 +49,23 @@ public class ScoresDialogFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (players != null) {
-            showScores(players);
-            players = null;
+        if (scores != null) {
+            showScores(scores);
+            scores = null;
         }
     }
-    public void showScores(Collection<Player> players) {
+    public void showScores(String[] scores) {
         Lifecycle.State state = getLifecycle().getCurrentState();
-        //!! if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
+        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             scoresAdapter.setNotifyOnChange(false);
             scoresAdapter.clear();
-            for (Player player : players) {
-                scoresAdapter.add(player.getName() + " " + player.getScore());
+            for (String score : scores) {
+                scoresAdapter.add(score);
             }
             scoresAdapter.notifyDataSetChanged();
-//        } else {
-//            this.players = players;
-//        }
+        } else {
+            this.scores = scores;
+        }
 
     }
 

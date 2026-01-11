@@ -59,14 +59,6 @@ Message Protocol:
 
 
  TODO next:
- change layout:
-    only for host:
-        nextButton, scoresButton
-        statusText: "when all players have joined, click 'next'"
-    question: TextView
-    Your answer: EditText
-    sendButton
-    statusText : TextView
  only use Log.d(message) if in debug mode
  use a proper database of QA!
  separate classes Activity.client; Activity host
@@ -91,28 +83,33 @@ public class GameActivity extends AppCompatActivity implements
     private static final String SCORES = "SCORES";
     private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
 
-    private TcpControllerServer server;
-    private TcpPlayerClient client;
-    private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
+    // Host fields: ***************************
     private final Map<String, Player> players =
             new ConcurrentHashMap<>();
-    private boolean isHost;
     private Button nextQuestionButton;
     private TextView statusTextView;
-    private String playerName;
+    private TcpControllerServer server;
     private int round = 0;
-    private int answersCt = 0;
-    private int votesCt = 0;
+    private int answersCt;
+    private int votesCt;
+    private List<String> shuffledNameList = new ArrayList<>();
+    private LoginDialogFragment loginDialog;
+    private View scoresButton;
+    private View hostButtonsLayout;
     private QuestionAnswer currentQuestionAnswer;
+    // Player fields ***************************
+    private TcpPlayerClient client;
+    // Host & Client fields ***************************
+    private String playerName;
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
     private String currentFragmentTag = MAIN;
     private ScoresDialogFragment scoresFragment;
-    private List<String> shuffledNameList = new ArrayList<>();
-    private LoginDialogFragment loginDialog;
-    private View scoresButton;
-    private View hostButtonsLayout;
+    private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
+    private boolean isHost;
+
+
 
     @Override // Activity
     public void onResume() {
@@ -203,15 +200,6 @@ public class GameActivity extends AppCompatActivity implements
                 setStatus("waiting for " + (players.size() - answersCt) + " players to answer");
             }
         } else if (message.startsWith(VOTE)) {
-                    /*!!
-        String name, answer;
-        name = shuffledNameList.get(position);
-        answer = players.get(name).getAnswer();
-        Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
-        Log.d(TAG, "correct answer=" + players.get(CORRECT).getAnswer());
-
-         */
-
             String index = message.split("\\|", 3)[2];
             int indexOfVotedItem = Integer.parseInt(index);
             String votedForName = shuffledNameList.get(indexOfVotedItem);
@@ -221,7 +209,7 @@ public class GameActivity extends AppCompatActivity implements
                 players.get(votedForName).incrementScore();
             }
             votesCt++;
-            if ((votesCt + 1) >= (players.size())) {
+            if ((votesCt) >= (players.size())) {
                 Log.d(TAG, "all votes received for current question");
                 String allAnswers2Message = getAllAnswers2Message();
                 server.sendToAll(allAnswers2Message);
@@ -245,11 +233,9 @@ public class GameActivity extends AppCompatActivity implements
     private String getScoresMessage() {
         // SCORES|3|John 2|Julie 4
         int correctAnswerIndex = 2; // bodge!
-        StringBuffer buffer = new StringBuffer(SCORES + '|' + round +  '|' +
-                correctAnswerIndex);
+        StringBuffer buffer = new StringBuffer(SCORES + '|' + round);
         for (Player player : players.values()) {
-            buffer.append('|');
-            buffer.append(player.getName() + ' ' + player.getScore());
+            buffer.append('|' + player.getName() + ": " + player.getScore());
         }
         return buffer.toString();
     }
@@ -339,9 +325,11 @@ public class GameActivity extends AppCompatActivity implements
                     mainFragment.enableSendButton(true);
                 } else if (message.startsWith(SCORES)) {
                     // SCORES|3|John 2|Julie 4
-                    String question = message.split("\\|", 10)[3];
+                    int indexOf3rdField = SCORES.length() + 1;
+                    int indexOfFirstScore = message.indexOf('|', indexOf3rdField) + 1;
+                    String[] scores = message.substring(indexOfFirstScore).split("\\|");
                     scoresFragment.show(fragmentManager, SCORES);
-                    scoresFragment.showScores(players.values());
+                    scoresFragment.showScores(scores);
                 } else {
                     Log.d(TAG, "unrecognised message received by player: " + message);
                 }
@@ -453,9 +441,9 @@ public class GameActivity extends AppCompatActivity implements
         currentQuestionAnswer = questions[questionIndex++];
         // end of temporary
         String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
-        //!! players.clear();
         players.put(CORRECT, new Player(CORRECT, currentQuestionAnswer.answer, 0));
         answersCt = 1;
+        votesCt = 1;
         server.sendToAll(nextQuestion);
     }
 
