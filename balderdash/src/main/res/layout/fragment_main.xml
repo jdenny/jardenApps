@@ -24,6 +24,6 @@
         android:text="@string/sendStr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+        android:enabled="false" />
 
 </LinearLayout>

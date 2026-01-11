@@ -55,8 +55,9 @@ public class MainFragment extends Fragment {
     public String getAnswerEditText() {
         return answerEditText.getText().toString();
     }
-    public void showSendButton(boolean show) {
-        sendButton.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+
+    public void enableSendButton(boolean enabled) {
+        sendButton.setEnabled(enabled);
     }
 
     @Override

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,13 +25,16 @@ import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 /** Design of application
- Message Protocol:
+Message Protocol:
+ Host to Player
     QUESTION|3|Who was Gustav Vigeland?
-    ANSWER|3|Centre forward for Liverpool
     ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
     NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
-    VOTE|3|votedForPlayerName
     SCORES|3|John 2|Julie 4
+ Player to Host
+    ANSWER|3|Centre forward for Liverpool
+    VOTE|3|indexOfSelectedAnswer
+
  One device is selected as the Server; other devices connect to the Server
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
@@ -201,7 +203,18 @@ public class GameActivity extends AppCompatActivity implements
                 setStatus("waiting for " + (players.size() - answersCt) + " players to answer");
             }
         } else if (message.startsWith(VOTE)) {
-            String votedForName = message.split("\\|", 3)[2];
+                    /*!!
+        String name, answer;
+        name = shuffledNameList.get(position);
+        answer = players.get(name).getAnswer();
+        Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
+        Log.d(TAG, "correct answer=" + players.get(CORRECT).getAnswer());
+
+         */
+
+            String index = message.split("\\|", 3)[2];
+            int indexOfVotedItem = Integer.parseInt(index);
+            String votedForName = shuffledNameList.get(indexOfVotedItem);
             if (votedForName.equals(CORRECT)) {
                 players.get(playerName).incrementScore();
             } else if (!votedForName.equals(playerName)) { // I only vote for myself during development!
@@ -246,13 +259,10 @@ public class GameActivity extends AppCompatActivity implements
      create message: String to hold the answers
      */
     private String getAllAnswersMessage() {
-        Set<String> nameSet = players.keySet();
-        if (shuffledNameList.size() == 0) {
-            for (String name : nameSet) {
-                shuffledNameList.add(name);
-            }
+        shuffledNameList.clear();
+        for (String name : players.keySet()) {
+            shuffledNameList.add(name);
         }
-
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + round);
         for (String name: shuffledNameList) {
@@ -265,6 +275,8 @@ public class GameActivity extends AppCompatActivity implements
     public void onPlayerConnected(String playerName) {
         Log.d(TAG, "Player joined: " + playerName);
         players.put(playerName, new Player(playerName, "not supplied", 0));
+        statusTextView.setText(playerName + " has joined; " + players.size() +
+                " players so far");
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -324,7 +336,7 @@ public class GameActivity extends AppCompatActivity implements
                     String question = message.split("\\|", 3)[2];
                     setFragment(mainFragment, MAIN);
                     mainFragment.setOutputView(question);
-                    mainFragment.showSendButton(true);
+                    mainFragment.enableSendButton(true);
                 } else if (message.startsWith(SCORES)) {
                     // SCORES|3|John 2|Julie 4
                     String question = message.split("\\|", 10)[3];
@@ -355,7 +367,7 @@ public class GameActivity extends AppCompatActivity implements
         } else if (viewId == R.id.sendButton) { // Player
             String answer = mainFragment.getAnswerEditText();
             client.sendAnswer(round, answer);
-            mainFragment.showSendButton(false);
+            mainFragment.enableSendButton(false);
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
             server.sendToAll(scoresMessage);
@@ -368,8 +380,6 @@ public class GameActivity extends AppCompatActivity implements
     private void joinGame() {
         client = new TcpPlayerClient(controllerAddress, 50001, playerName, this);
         client.connect();
-        statusTextView.setText(playerName + " has joined; " + players.size() +
-                " players so far");
     }
 
     private void getControllerAddress() {
@@ -398,16 +408,7 @@ public class GameActivity extends AppCompatActivity implements
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d(TAG, "onItemClick(position=" + position + ')');
-        String name, answer;
-        name = shuffledNameList.get(position);
-        answer = players.get(name).getAnswer();
-        Log.d(TAG, "vote: name=" + name + ", answer=" + answer);
-        Log.d(TAG, "correct answer=" + players.get(CORRECT).getAnswer());
-        client.sendVote(round, name);
-        /*
-        if answer is correct, add 1 to name's score
-        else add 1 to score of person she voted for
-         */
+        client.sendVote(round, String.valueOf(position));
     }
 
     @Override
