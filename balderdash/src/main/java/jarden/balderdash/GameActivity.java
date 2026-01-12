@@ -61,6 +61,7 @@ Message Protocol:
  TODO next:
  only use Log.d(message) if in debug mode
  put questions into a resource file, similar to Spanish
+    see loadDB (line 228) in spanish > MainActivity
  separate classes Activity.client; Activity host
  in landscape mode, show question and answer side by side
  */
