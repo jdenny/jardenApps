@@ -60,7 +60,7 @@ Message Protocol:
 
  TODO next:
  only use Log.d(message) if in debug mode
- use a proper database of QA!
+ put questions into a resource file, similar to Spanish
  separate classes Activity.client; Activity host
  in landscape mode, show question and answer side by side
  */
