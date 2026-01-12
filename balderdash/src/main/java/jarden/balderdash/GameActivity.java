@@ -60,8 +60,6 @@ Message Protocol:
 
  TODO next:
  only use Log.d(message) if in debug mode
- put questions into a resource file, similar to Spanish
-    see loadDB (line 228) in spanish > MainActivity
  separate classes Activity.client; Activity host
  in landscape mode, show question and answer side by side
  */
@@ -88,7 +86,7 @@ public class GameActivity extends AppCompatActivity implements
     // Host fields: ***************************
     private final Map<String, Player> players =
             new ConcurrentHashMap<>();
-    private final QuestionManager questionManager = new QuestionManager();
+    private QuestionManager questionManager;
     private Button nextQuestionButton;
     private TextView statusTextView;
     private TcpControllerServer server;
@@ -161,6 +159,7 @@ public class GameActivity extends AppCompatActivity implements
         loginDialog.show(fragmentManager, LOGIN_DIALOG);
         Log.d(TAG, "isHost=" + isHost);
         hostButtonsLayout = findViewById(R.id.hostButtons);
+        questionManager = new QuestionManager(this);
 
         /* later!
         try {
