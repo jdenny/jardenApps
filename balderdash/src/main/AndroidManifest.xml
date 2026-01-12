@@ -17,6 +17,7 @@
         android:theme="@style/Theme.JardenApps">
         <activity
             android:name=".GameActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

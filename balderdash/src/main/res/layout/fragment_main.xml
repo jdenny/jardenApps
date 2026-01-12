@@ -11,13 +11,13 @@
         android:id="@+id/outputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" />
+        android:textSize="20sp" />
     <EditText
         android:id="@+id/answerEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/your_answer"
-        android:ems="10"
+        android:textSize="20sp"
         android:inputType="textMultiLine" />
     <Button
         android:id="@+id/sendButton"

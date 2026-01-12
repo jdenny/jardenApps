@@ -62,6 +62,7 @@ Message Protocol:
  only use Log.d(message) if in debug mode
  use a proper database of QA!
  separate classes Activity.client; Activity host
+ in landscape mode, show question and answer side by side
  */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
@@ -86,6 +87,7 @@ public class GameActivity extends AppCompatActivity implements
     // Host fields: ***************************
     private final Map<String, Player> players =
             new ConcurrentHashMap<>();
+    private final QuestionManager questionManager = new QuestionManager();
     private Button nextQuestionButton;
     private TextView statusTextView;
     private TcpControllerServer server;
@@ -96,7 +98,7 @@ public class GameActivity extends AppCompatActivity implements
     private LoginDialogFragment loginDialog;
     private View scoresButton;
     private View hostButtonsLayout;
-    private QuestionAnswer currentQuestionAnswer;
+    private QuestionManager.QuestionAnswer currentQuestionAnswer;
     // Player fields ***************************
     private TcpPlayerClient client;
     // Host & Client fields ***************************
@@ -419,34 +421,14 @@ public class GameActivity extends AppCompatActivity implements
         joinGame();
     }
 
-    private class QuestionAnswer {
-        String question;
-        String answer;
-        QuestionAnswer(String q, String a) {
-            question = q;
-            answer = a;
-        }
-    }
-    private final QuestionAnswer[] questions = {
-            new QuestionAnswer("A Swiss teenager has made a fully functional submarine out of... what?", "a pig trough"),
-            new QuestionAnswer("What are 'Pooks'?","small piles of hay"),
-            new QuestionAnswer("In San Francisco, California, it is illegal to dance...", "to the Star Spangled Banner"),
-            new QuestionAnswer("What does F.E.F.O. an abbreviation of?", "Petrified Forest National Park"),
-            new QuestionAnswer("Who was Gustav Vigeland?", "Norway's most famous sculptor, known for his giant sculpture park in Oslo")
-    };
-    private int questionIndex = 0;
     private void getNextQuestion() {
-        // temporary until we get a proper database!
-        if (questionIndex >= questions.length) questionIndex = 0;
-        currentQuestionAnswer = questions[questionIndex++];
-        // end of temporary
+        currentQuestionAnswer = questionManager.getNext();
         String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
         players.put(CORRECT, new Player(CORRECT, currentQuestionAnswer.answer, 0));
         answersCt = 1;
         votesCt = 1;
         server.sendToAll(nextQuestion);
     }
-
 
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {

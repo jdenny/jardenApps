@@ -10,7 +10,7 @@ android:orientation="vertical" >
         android:layout_gravity="center"
         android:fontFamily="cursive"
         android:text="@string/balderdash"
-        android:textSize="40dp" />
+        android:textSize="40sp" />
     <EditText
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
