@@ -59,6 +59,7 @@ Message Protocol:
 
 
  TODO next:
+ can the views go in the middle of the screen, and expand as necessary?
  only use Log.d(message) if in debug mode
  separate classes Activity.client; Activity host
  in landscape mode, show question and answer side by side
