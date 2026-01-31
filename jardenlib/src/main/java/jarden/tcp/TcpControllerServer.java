@@ -1,5 +1,8 @@
 package jarden.tcp;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -8,8 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +34,7 @@ public class TcpControllerServer {
         void onServerStarted();
     }
 
+    private String controllerIpAddress = null;
     private static final int PORT = 50001;
 
     private final ExecutorService executor =
@@ -175,6 +183,42 @@ public class TcpControllerServer {
                 listener.onPlayerDisconnected(playerId);
             }
         }
+    }
+    public /*!!static*/ void sendHostBroadcast(Context context) {
+
+        new Thread(() -> {
+            try {
+                if (controllerIpAddress == null) {
+                    WifiManager wifi =
+                            (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+                    WifiInfo info = wifi.getConnectionInfo();
+                    int ipInt = info.getIpAddress();
+
+                    controllerIpAddress = String.format(
+                            "%d.%d.%d.%d",
+                            (ipInt & 0xff),
+                            (ipInt >> 8 & 0xff),
+                            (ipInt >> 16 & 0xff),
+                            (ipInt >> 24 & 0xff));
+                }
+                String message =
+                        "HOST_ANNOUNCE|" + controllerIpAddress + "|" + PORT;
+                DatagramSocket socket = new DatagramSocket();
+                socket.setBroadcast(true);
+                InetAddress broadcastAddress =
+                        InetAddress.getByName("255.255.255.255");
+                byte[] data = message.getBytes(StandardCharsets.UTF_8);
+                DatagramPacket packet =
+                        new DatagramPacket(data, data.length,
+                                broadcastAddress, 45454);
+                socket.send(packet);
+                socket.close();
+                Log.d("UDP_HOST", "Broadcast sent: " + message);
+            } catch (Exception e) {
+                Log.e("UDP_HOST", "Broadcast failed", e);
+            }
+        }).start();
     }
 }
 

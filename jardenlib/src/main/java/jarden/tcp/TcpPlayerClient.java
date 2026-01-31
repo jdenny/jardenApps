@@ -1,5 +1,7 @@
 package jarden.tcp;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -8,7 +10,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,6 +25,7 @@ public class TcpPlayerClient {
     private static final String TAG = "TcpPlayerClient";
 
     public interface Listener {
+        void onHostFound(String hostIp, int port);
         void onConnected();
         void onMessage(String message);
         void onDisconnected();
@@ -121,6 +128,47 @@ public class TcpPlayerClient {
                 Log.d(TAG, "send(" + message + ") out is null!");
             }
         });
+    }
+    public static void listenForHostBroadcast(Context context,
+                                              Listener callback) {
+        new Thread(() -> {
+            WifiManager wifi =
+                    (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiManager.MulticastLock lock =
+                    wifi.createMulticastLock("codswallopLock");
+            lock.acquire();
+            try {
+                DatagramSocket socket =
+                        new DatagramSocket(45454,
+                                InetAddress.getByName("0.0.0.0"));
+                socket.setBroadcast(true);
+                byte[] buf = new byte[1024];
+                Log.d("UDP_CLIENT", "Listening for host...");
+                boolean hostFound = false;
+                while (!hostFound) {
+                    DatagramPacket packet =
+                            new DatagramPacket(buf, buf.length);
+                    socket.receive(packet);
+                    String msg = new String(packet.getData(),
+                            0,
+                            packet.getLength(),
+                            StandardCharsets.UTF_8);
+                    Log.d("UDP_CLIENT", "Received: " + msg);
+                    if (msg.startsWith("HOST_ANNOUNCE|")) {
+                        String[] parts = msg.split("\\|");
+                        String hostIp = parts[1];
+                        int port = Integer.parseInt(parts[2]);
+                        callback.onHostFound(hostIp, port);
+                        hostFound = true;
+                    }
+                }
+                socket.close();
+            } catch (Exception e) {
+                Log.e("UDP_CLIENT", "Listen failed", e);
+            } finally {
+                lock.release();
+            }
+        }).start();
     }
 }
 

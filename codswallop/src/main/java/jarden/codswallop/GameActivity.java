@@ -26,7 +26,9 @@ import jarden.tcp.TcpPlayerClient;
 
 /** Design of application
 Message Protocol:
- Host to Player
+ Host to all Players using broadcast:
+    HOST_ANNOUNCE|192.168.0.12|50001
+ Host to all Players using Tcp:
     QUESTION|3|Who was Gustav Vigeland?
     ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
     NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
@@ -59,6 +61,8 @@ Message Protocol:
 
 
  TODO next:
+ On host, on click of "Send Ip Address" button, call TcpControllerServer.sendHostBroadcast()
+ On join, wait callback from TcpPlayerClient.listenForHostBroadcast()
  can the views go in the middle of the screen, and expand as necessary?
  separate classes Activity.client; Activity host
  in landscape mode, show question and answer side by side
@@ -140,17 +144,12 @@ public class GameActivity extends AppCompatActivity implements
          */
 
         setContentView(R.layout.activity_game);
-        /*??
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-         */
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
         Button scoresButton = findViewById(R.id.scoresButton);
         scoresButton.setOnClickListener(this);
+        Button sendIpAddressButton = findViewById(R.id.sendIPButton);
+        sendIpAddressButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
         LoginDialogFragment loginDialog = new LoginDialogFragment();
         loginDialog.show(fragmentManager, LOGIN_DIALOG);
@@ -160,21 +159,13 @@ public class GameActivity extends AppCompatActivity implements
         hostButtonsLayout = findViewById(R.id.hostButtons);
         questionManager = new QuestionManager(this);
 
-        /* later!
-        try {
-            WifiManager wifiManager =
-                    (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-            multicastLock =
+            /*
+            WifiManager.MulticastLock multicastLock =
                     wifiManager.createMulticastLock("game_multicast");
             multicastLock.setReferenceCounted(true);
             multicastLock.acquire();
             chat = new ChatNet(this, "John", 8002);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-         */
+             */
     }
     @Override // Activity
     protected void onDestroy() {
@@ -377,6 +368,8 @@ public class GameActivity extends AppCompatActivity implements
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
             server.sendToAll(scoresMessage);
+        } else if (viewId == R.id.sendIPButton) {
+            server.sendHostBroadcast(getApplicationContext());
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -398,7 +391,6 @@ public class GameActivity extends AppCompatActivity implements
                 Context context = getApplicationContext();
                 WifiManager wifiManager =
                         (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 int ipInt = wifiInfo.getIpAddress();
                 controllerAddress = String.format(
@@ -444,6 +436,7 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         this.playerName = playerName;
+        TcpPlayerClient.listenForHostBroadcast(getApplicationContext(), this);
         joinGame();
     }
 
@@ -470,47 +463,12 @@ public class GameActivity extends AppCompatActivity implements
         }
     }
 
-        /*??
-
-    public static void sendMulticast(Context context, String message) {
-
-        DatagramSocket socket = null;
-
-        try {
-            // Acquire multicast lock (required on Android)
-            WifiManager wifiManager =
-                    (WifiManager) context.getApplicationContext()
-                            .getSystemService(Context.WIFI_SERVICE);
-
-            WifiManager.MulticastLock multicastLock =
-                    wifiManager.createMulticastLock("balderdash_multicast");
-            multicastLock.acquire();
-
-            socket = new DatagramSocket();
-            socket.setReuseAddress(true);
-
-            byte[] data = message.getBytes(StandardCharsets.UTF_8);
-
-            InetAddress group = InetAddress.getByName("239.255.0.1");
-            int port = 50000;
-
-            DatagramPacket packet =
-                    new DatagramPacket(data, data.length, group, port);
-
-            socket.send(packet);
-
-            multicastLock.release();
-
-        } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                Log.e("NET", "sendMulticast failed", e);
-            }
-        } finally {
-            if (socket != null) {
-                socket.close();
-            }
+    @Override // TcpPlayerClient.HostFoundCallback
+    public void onHostFound(String hostIp, int port) {
+        if (BuildConfig.DEBUG) {
+            String s = "onHostFound(" + hostIp + "' " + port;
+            Log.d(TAG, s);
+            Toast.makeText(this, s, Toast.LENGTH_LONG).show();
         }
     }
-     */
-
 }
