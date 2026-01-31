@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Balderdash</string>
-    <string name="balderdash">Balderdash!</string>
+    <string name="app_name">Codswallop</string>
+    <string name="codswallop">Call My Codswallop!</string>
     <string name="hostGame">Host Game</string>
     <string name="joinGame">Join Game</string>
     <string name="yourName">Your name</string>
@@ -10,4 +10,6 @@
     <string name="correct_answer">Correct answer</string>
     <string name="scores">Scores</string>
     <string name="close">Close</string>
+    <string name="send_ip_address">Send IP address</string>
+    <string name="view_ip_address">View IP address</string>
 </resources>

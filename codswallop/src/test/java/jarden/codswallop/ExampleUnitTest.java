@@ -1,4 +1,4 @@
-package jarden.balderdash;
+package jarden.codswallop;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package jarden.balderdash;
+package jarden.codswallop;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;
@@ -60,7 +60,6 @@ Message Protocol:
 
  TODO next:
  can the views go in the middle of the screen, and expand as necessary?
- only use Log.d(message) if in debug mode
  separate classes Activity.client; Activity host
  in landscape mode, show question and answer side by side
  */
@@ -94,11 +93,8 @@ public class GameActivity extends AppCompatActivity implements
     private int round = 0;
     private int answersCt;
     private int votesCt;
-    private List<String> shuffledNameList = new ArrayList<>();
-    private LoginDialogFragment loginDialog;
-    private View scoresButton;
+    private final List<String> shuffledNameList = new ArrayList<>();
     private View hostButtonsLayout;
-    private QuestionManager.QuestionAnswer currentQuestionAnswer;
     // Player fields ***************************
     private TcpPlayerClient client;
     // Host & Client fields ***************************
@@ -153,12 +149,14 @@ public class GameActivity extends AppCompatActivity implements
          */
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
-        scoresButton = findViewById(R.id.scoresButton);
+        Button scoresButton = findViewById(R.id.scoresButton);
         scoresButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
-        loginDialog = new LoginDialogFragment();
+        LoginDialogFragment loginDialog = new LoginDialogFragment();
         loginDialog.show(fragmentManager, LOGIN_DIALOG);
-        Log.d(TAG, "isHost=" + isHost);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "isHost=" + isHost);
+        }
         hostButtonsLayout = findViewById(R.id.hostButtons);
         questionManager = new QuestionManager(this);
 
@@ -189,14 +187,17 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
     public void onMessage(String playerName, String message) {
-        Log.d(TAG, "from player: " + playerName + " message: " + message);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "from player: " + playerName + " message: " + message);
+        }
         if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
-            /*if (BuildConfig.DEBUG)*/
             players.get(playerName).setAnswer(answer);
             answersCt++;
             if (answersCt >= (players.size())) {
-                Log.d(TAG, "all answers received for current question");
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "all answers received for current question");
+                }
                 String nextMessage = getAllAnswersMessage();
                 server.sendToAll(nextMessage);
             } else {
@@ -213,14 +214,18 @@ public class GameActivity extends AppCompatActivity implements
             }
             votesCt++;
             if ((votesCt) >= (players.size())) {
-                Log.d(TAG, "all votes received for current question");
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "all votes received for current question");
+                }
                 String allAnswers2Message = getAllAnswers2Message();
                 server.sendToAll(allAnswers2Message);
             } else {
                 setStatus("waiting for " + (players.size() - votesCt) + " players to vote");
             }
         } else {
-            Log.d(TAG, "unrecognised message received by host: " + message);
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "unrecognised message received by host: " + message);
+            }
         }
     }
 
@@ -262,7 +267,9 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpControllerServer.MessageListener
     public void onPlayerConnected(String playerName) {
-        Log.d(TAG, "Player joined: " + playerName);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Player joined: " + playerName);
+        }
         players.put(playerName, new Player(playerName, "not supplied", 0));
         statusTextView.setText(playerName + " has joined; " + players.size() +
                 " players so far");
@@ -270,7 +277,9 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpControllerServer.MessageListener
     public void onPlayerDisconnected(String playerName) {
-        Log.d(TAG, "Player left: " + playerName);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Player left: " + playerName);
+        }
         players.remove(playerName);
     }
 
@@ -291,7 +300,9 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private void setStatus(String status) {
-        Log.d(TAG, status);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, status);
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -303,7 +314,9 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpPlayerClient.Listener
     // i.e. message sent from host to player
     public void onMessage(String message) {
-        Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
+        }
         runOnUiThread(new Runnable() {
             public void run() {
                 if (message.startsWith(ALL_ANSWERS)) {
@@ -334,7 +347,9 @@ public class GameActivity extends AppCompatActivity implements
                     scoresFragment.show(fragmentManager, SCORES);
                     scoresFragment.showScores(scores);
                 } else {
-                    Log.d(TAG, "unrecognised message received by player: " + message);
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "unrecognised message received by player: " + message);
+                    }
                 }
             }
         });
@@ -377,7 +392,9 @@ public class GameActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "about to get WifiManager");
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "about to get WifiManager");
+                }
                 Context context = getApplicationContext();
                 WifiManager wifiManager =
                         (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -390,7 +407,9 @@ public class GameActivity extends AppCompatActivity implements
                         (ipInt >> 8 & 0xff),
                         (ipInt >> 16 & 0xff),
                         (ipInt >> 24 & 0xff));
-                Log.i(TAG, "controllerAddress: " + controllerAddress);
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "controllerAddress: " + controllerAddress);
+                }
             }
         }).start();
     }
@@ -398,13 +417,17 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick(position=" + position + ')');
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onItemClick(position=" + position + ')');
+        }
         client.sendVote(round, String.valueOf(position));
     }
 
     @Override
     public void onHostButton(String playerName) {
-        Log.d(TAG, "onHostButton(" + playerName + ')');
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onHostButton(" + playerName + ')');
+        }
         this.playerName = playerName;
         getControllerAddress();
         server = new TcpControllerServer(this);
@@ -417,14 +440,16 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override
     public void onJoinButton(String playerName) {
-        Log.d(TAG, "onJoinButton(" + playerName + ')');
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onJoinButton(" + playerName + ')');
+        }
         this.playerName = playerName;
         joinGame();
     }
 
     private void getNextQuestion() {
-        currentQuestionAnswer = questionManager.getNext();
-        String nextQuestion = QUESTION + "|" + round++ +"|" +currentQuestionAnswer.question;
+        QuestionManager.QuestionAnswer currentQuestionAnswer = questionManager.getNext();
+        String nextQuestion = QUESTION + "|" + round++ +"|" + currentQuestionAnswer.question;
         players.put(CORRECT, new Player(CORRECT, currentQuestionAnswer.answer, 0));
         answersCt = 1;
         votesCt = 1;
@@ -433,12 +458,16 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {
-        Log.d(TAG, "Now disconnected from the game server");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Now disconnected from the game server");
+        }
     }
 
     @Override // TcpPlayerClient.Listener
     public void onError(Exception e) {
-        Log.e(TAG, e.toString());
+        if (BuildConfig.DEBUG) {
+            Log.e(TAG, e.toString());
+        }
     }
 
         /*??
@@ -473,7 +502,9 @@ public class GameActivity extends AppCompatActivity implements
             multicastLock.release();
 
         } catch (Exception e) {
-            Log.e("NET", "sendMulticast failed", e);
+            if (BuildConfig.DEBUG) {
+                Log.e("NET", "sendMulticast failed", e);
+            }
         } finally {
             if (socket != null) {
                 socket.close();

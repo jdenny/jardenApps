@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'jarden.balderdash'
+    namespace 'jarden.codswallop'
     compileSdk 36
 
     defaultConfig {
-        applicationId "jarden.balderdash"
+        applicationId "jarden.codswallop"
         minSdk 24
         targetSdk 36
         versionCode 1
@@ -25,6 +25,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

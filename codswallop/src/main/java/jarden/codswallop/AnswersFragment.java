@@ -1,4 +1,4 @@
-package jarden.balderdash;
+package jarden.codswallop;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -43,7 +43,9 @@ public class AnswersFragment extends Fragment {
         }
     }
     public AnswersFragment() {
-        Log.d(TAG, "AnswersFragment()");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "AnswersFragment()");
+        }
     }
 
     @Override

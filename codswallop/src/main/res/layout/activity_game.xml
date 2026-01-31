@@ -32,7 +32,6 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <!--        android:name="jarden.balderdash.AnswersFragment" -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"
             android:layout_width="match_parent"
@@ -46,6 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="@string/balderdash" />
+        android:text="@string/codswallop" />
 
 </LinearLayout>

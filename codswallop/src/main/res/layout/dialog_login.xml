@@ -9,7 +9,7 @@ android:orientation="vertical" >
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="cursive"
-        android:text="@string/balderdash"
+        android:text="@string/codswallop"
         android:textSize="40sp" />
     <EditText
         android:id="@+id/nameEditText"

@@ -1,4 +1,4 @@
-package jarden.balderdash;
+package jarden.codswallop;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -56,14 +56,18 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
         if (playerName.isEmpty()) {
             Toast.makeText(getContext(), "Supply your name first!", Toast.LENGTH_LONG).show();
         } else {
-            Log.d(TAG, "playerName=" + playerName);
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "playerName=" + playerName);
+            }
             int viewId = view.getId();
             if (viewId == R.id.hostButton) {
                 loginDialogListener.onHostButton(playerName);
             } else if (viewId == R.id.joinButton) {
                 loginDialogListener.onJoinButton(playerName);
             } else {
-                Log.d(TAG, "unrecognised button, viewId=" + viewId);
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "unrecognised button, viewId=" + viewId);
+                }
             }
             alertDialog.cancel();
         }

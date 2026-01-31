@@ -1,4 +1,4 @@
-package jarden.balderdash;
+package jarden.codswallop;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
