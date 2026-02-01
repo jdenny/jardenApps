@@ -75,11 +75,6 @@ public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
         AdapterView.OnItemClickListener, TcpPlayerClient.Listener,
         LoginDialogFragment.LoginDialogListener {
-    /*
-    public static final String MULTICAST_IP = "239.255.0.1";
-    public static final int MULTICAST_PORT = 50000;
-    WifiManager.MulticastLock multicastLock;
-     */
     private static final String TAG = "GameActivity";
     private static final String QUESTION = "QUESTION";
     private static final String ANSWER = "ANSWER";
@@ -97,22 +92,22 @@ public class GameActivity extends AppCompatActivity implements
     private QuestionManager questionManager;
     private Button nextQuestionButton;
     private TextView statusTextView;
-    private TcpControllerServer server;
+    private TcpControllerServer tcpControllerServer;
     private int round = 0;
     private int answersCt;
     private int votesCt;
     private final List<String> shuffledNameList = new ArrayList<>();
     private View hostButtonsLayout;
     // Player fields ***************************
-    private TcpPlayerClient client;
+    private TcpPlayerClient tcpPlayerClient;
     // Host & Client fields ***************************
+    private String currentFragmentTag = MAIN;
     private String playerName;
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
-    private String currentFragmentTag = MAIN;
     private ScoresDialogFragment scoresFragment;
-    private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
+    private String controllerAddress = null; // "192.168.0.12"; // john's Moto g8 at home
     private boolean isHost;
 
     @Override // Activity
@@ -164,8 +159,8 @@ public class GameActivity extends AppCompatActivity implements
     @Override // Activity
     protected void onDestroy() {
         super.onDestroy();
-        if (server != null) server.stop();
-        if (client != null) client.disconnect();
+        if (tcpControllerServer != null) tcpControllerServer.stop();
+        if (tcpPlayerClient != null) tcpPlayerClient.disconnect();
         // multicastLock.release();
     }
 
@@ -184,7 +179,7 @@ public class GameActivity extends AppCompatActivity implements
                     Log.d(TAG, "all answers received for current question");
                 }
                 String nextMessage = getAllAnswersMessage();
-                server.sendToAll(nextMessage);
+                tcpControllerServer.sendToAll(nextMessage);
             } else {
                 setStatus("waiting for " + (players.size() - answersCt) + " players to answer");
             }
@@ -203,7 +198,7 @@ public class GameActivity extends AppCompatActivity implements
                     Log.d(TAG, "all votes received for current question");
                 }
                 String allAnswers2Message = getAllAnswers2Message();
-                server.sendToAll(allAnswers2Message);
+                tcpControllerServer.sendToAll(allAnswers2Message);
             } else {
                 setStatus("waiting for " + (players.size() - votesCt) + " players to vote");
             }
@@ -256,8 +251,10 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "Player joined: " + playerName);
         }
         players.put(playerName, new Player(playerName, "not supplied", 0));
-        statusTextView.setText(playerName + " has joined; " + players.size() +
-                " players so far");
+        runOnUiThread(() -> {
+            statusTextView.setText(playerName + " has joined; " + players.size() +
+                    " players so far");
+        });
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -270,10 +267,13 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpControllerServer.MessageListener
     public void onServerStarted() {
+        /*!!
         runOnUiThread(() -> {
             joinGame();
             nextQuestionButton.setEnabled(true);
         });
+
+         */
 
     }
 
@@ -357,13 +357,13 @@ public class GameActivity extends AppCompatActivity implements
             statusTextView.setText("waiting for all players to answer");
         } else if (viewId == R.id.sendButton) { // Player
             String answer = mainFragment.getAnswerEditText();
-            client.sendAnswer(round, answer);
+            tcpPlayerClient.sendAnswer(round, answer);
             mainFragment.enableSendButton(false);
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
-            server.sendToAll(scoresMessage);
+            tcpControllerServer.sendToAll(scoresMessage);
         } else if (viewId == R.id.sendIPButton) {
-            server.sendHostBroadcast(/*!!getApplicationContext()*/this);
+            tcpControllerServer.sendHostBroadcast(/*!!getApplicationContext()*/this);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -371,8 +371,9 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private void joinGame() {
-        client = new TcpPlayerClient(controllerAddress, 50001, playerName, this);
-        client.connect();
+        tcpPlayerClient = new TcpPlayerClient(controllerAddress, TcpControllerServer.TCP_PORT,
+                playerName, this);
+        tcpPlayerClient.connect();
     }
 
     private void getControllerAddress() {
@@ -406,7 +407,7 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
-        client.sendVote(round, String.valueOf(position));
+        tcpPlayerClient.sendVote(round, String.valueOf(position));
     }
 
     @Override // LoginDialogListener
@@ -415,12 +416,13 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
         this.playerName = playerName;
-        getControllerAddress();
-        server = new TcpControllerServer(this);
-        server.start();
+        //!! getControllerAddress();
+        tcpControllerServer = new TcpControllerServer(this);
+        tcpControllerServer.start();
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have joined, click Next");
+        TcpPlayerClient.listenForHostBroadcast(this, this);
     }
 
     @Override // LoginDialogListener
@@ -429,8 +431,8 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         this.playerName = playerName;
-        TcpPlayerClient.listenForHostBroadcast(getApplicationContext(), this);
-        joinGame();
+        TcpPlayerClient.listenForHostBroadcast(this, this);
+        //!! joinGame();
     }
 
     private void getNextQuestion() {
@@ -439,7 +441,7 @@ public class GameActivity extends AppCompatActivity implements
         players.put(CORRECT, new Player(CORRECT, currentQuestionAnswer.answer, 0));
         answersCt = 1;
         votesCt = 1;
-        server.sendToAll(nextQuestion);
+        tcpControllerServer.sendToAll(nextQuestion);
     }
 
     @Override // TcpPlayerClient.Listener
@@ -458,10 +460,17 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpPlayerClient.HostFoundCallback
     public void onHostFound(String hostIp, int port) {
+        String status = "onHostFound(" + hostIp + "' " + port + ')';
+        this.controllerAddress = hostIp;
         if (BuildConfig.DEBUG) {
-            String s = "onHostFound(" + hostIp + "' " + port;
-            Log.d(TAG, s);
-            Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+            Log.d(TAG, status);
         }
+        runOnUiThread(() -> {
+            Toast.makeText(this, status, Toast.LENGTH_LONG).show();
+            joinGame();
+            if (isHost) {
+                nextQuestionButton.setEnabled(true);
+            }
+        });
     }
 }

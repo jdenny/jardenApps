@@ -27,7 +27,6 @@ import java.util.concurrent.Executors;
  */
 public class TcpControllerServer {
 
-    public static final int UDP_PORT = 45454;
 
     public interface MessageListener {
         void onMessage(String playerId, String message);
@@ -37,7 +36,9 @@ public class TcpControllerServer {
     }
 
     private String controllerIpAddress = null;
-    private static final int PORT = 50001;
+    public static final int TCP_PORT = 50001;
+    public static final int UDP_PORT = 45454;
+
 
     private final ExecutorService executor =
             Executors.newCachedThreadPool();
@@ -63,7 +64,7 @@ public class TcpControllerServer {
 
         executor.execute(() -> {
             try {
-                serverSocket = new ServerSocket(PORT);
+                serverSocket = new ServerSocket(TCP_PORT);
                 listener.onServerStarted();
                 while (running) {
                     Socket socket = serverSocket.accept();
@@ -204,7 +205,7 @@ public class TcpControllerServer {
                             (ipInt >> 24 & 0xff));
                 }
                 String message =
-                        "HOST_ANNOUNCE|" + controllerIpAddress + "|" + PORT;
+                        "HOST_ANNOUNCE|" + controllerIpAddress + "|" + TCP_PORT;
                 DatagramSocket socket = new DatagramSocket();
                 socket.setBroadcast(true);
                 InetAddress broadcastAddress =
