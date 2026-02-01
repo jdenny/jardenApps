@@ -27,6 +27,8 @@ import java.util.concurrent.Executors;
  */
 public class TcpControllerServer {
 
+    public static final int UDP_PORT = 45454;
+
     public interface MessageListener {
         void onMessage(String playerId, String message);
         void onPlayerConnected(String playerId);
@@ -184,8 +186,7 @@ public class TcpControllerServer {
             }
         }
     }
-    public /*!!static*/ void sendHostBroadcast(Context context) {
-
+    public void sendHostBroadcast(Context context) {
         new Thread(() -> {
             try {
                 if (controllerIpAddress == null) {
@@ -211,7 +212,7 @@ public class TcpControllerServer {
                 byte[] data = message.getBytes(StandardCharsets.UTF_8);
                 DatagramPacket packet =
                         new DatagramPacket(data, data.length,
-                                broadcastAddress, 45454);
+                                broadcastAddress, UDP_PORT);
                 socket.send(packet);
                 socket.close();
                 Log.d("UDP_HOST", "Broadcast sent: " + message);

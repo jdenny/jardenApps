@@ -12,7 +12,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
@@ -137,10 +136,9 @@ public class TcpPlayerClient {
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");
             lock.acquire();
+            DatagramSocket socket = null;
             try {
-                DatagramSocket socket =
-                        new DatagramSocket(45454,
-                                InetAddress.getByName("0.0.0.0"));
+                socket = new DatagramSocket(TcpControllerServer.UDP_PORT);
                 socket.setBroadcast(true);
                 byte[] buf = new byte[1024];
                 Log.d("UDP_CLIENT", "Listening for host...");
@@ -162,10 +160,13 @@ public class TcpPlayerClient {
                         hostFound = true;
                     }
                 }
-                socket.close();
             } catch (Exception e) {
                 Log.e("UDP_CLIENT", "Listen failed", e);
+                callback.onError(e);
             } finally {
+                if (socket != null) {
+                    socket.close();
+                }
                 lock.release();
             }
         }).start();

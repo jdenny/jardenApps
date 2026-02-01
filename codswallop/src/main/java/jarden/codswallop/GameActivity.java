@@ -37,24 +37,28 @@ Message Protocol:
     ANSWER|3|Centre forward for Liverpool
     VOTE|3|indexOfSelectedAnswer
 
- One device is selected as the Server; other devices connect to the Server
+ Players agree who will be host; all open the app; all login: name, host or join.
+ Host selects “send IP Address”; when each player receives the host address, it joins the game.
+
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
  When Server has the answers, including the real one, it sends them to all Clients, in random order
  Players give their votes; when all votes in, Server highlights the real answer
- three screens:
- 1  HostButton, JoinButton, NextButton, SendButton
-    PlayerNameEditText
+ Initial dialog:
+    PlayerNameEditText; HostButton; JoinButton
+ three screens (Fragments):
+ 1  NextButton, ScoresButton, SendIPAddressButton (host only)
     QuestionTextView
- buttons: initially disable Next and Send
+    YourAnswerEditText
+    SendButton (initially disabled)
  HostGame: disable HostGame; startServer(); after serverStarted: joinGame(); enable Next
  JoinGame: disable HostGame & JoinGame; enable Send.
 
  2  list of:
         optionNumber, answer (players click row to vote)
     when all votes in, list changes to
-        playerName/correct, answer (correct answer highlighted)
-    ScoresButton -> next screen
+        "Correct" correct answer
+        playerName answer
 
  3  list of:
         playerName, score (goes to first screen when host types NextButton)
@@ -111,8 +115,6 @@ public class GameActivity extends AppCompatActivity implements
     private String controllerAddress = "192.168.0.12"; // john's Moto g8 at home
     private boolean isHost;
 
-
-
     @Override // Activity
     public void onResume() {
         super.onResume();
@@ -158,14 +160,6 @@ public class GameActivity extends AppCompatActivity implements
         }
         hostButtonsLayout = findViewById(R.id.hostButtons);
         questionManager = new QuestionManager(this);
-
-            /*
-            WifiManager.MulticastLock multicastLock =
-                    wifiManager.createMulticastLock("game_multicast");
-            multicastLock.setReferenceCounted(true);
-            multicastLock.acquire();
-            chat = new ChatNet(this, "John", 8002);
-             */
     }
     @Override // Activity
     protected void onDestroy() {
@@ -369,7 +363,7 @@ public class GameActivity extends AppCompatActivity implements
             String scoresMessage = getScoresMessage();
             server.sendToAll(scoresMessage);
         } else if (viewId == R.id.sendIPButton) {
-            server.sendHostBroadcast(getApplicationContext());
+            server.sendHostBroadcast(/*!!getApplicationContext()*/this);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -415,7 +409,7 @@ public class GameActivity extends AppCompatActivity implements
         client.sendVote(round, String.valueOf(position));
     }
 
-    @Override
+    @Override // LoginDialogListener
     public void onHostButton(String playerName) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
@@ -427,10 +421,9 @@ public class GameActivity extends AppCompatActivity implements
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have joined, click Next");
-        //? sendMulticast("HOST_ANNOUNCE|" + localIp + "|50001");
     }
 
-    @Override
+    @Override // LoginDialogListener
     public void onJoinButton(String playerName) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
