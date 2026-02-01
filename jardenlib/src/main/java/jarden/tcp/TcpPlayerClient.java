@@ -35,25 +35,19 @@ public class TcpPlayerClient {
             Executors.newSingleThreadExecutor();
     private final ExecutorService writeExecutor =
             Executors.newSingleThreadExecutor();
-
     private final Listener listener;
-
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-
     private volatile boolean running = false;
-
     private final String hostAddress;
     private final int port;
     private final String playerId;
-
     public TcpPlayerClient(
             String hostAddress,
             int port,
             String playerId,
             Listener listener) {
-
         this.hostAddress = hostAddress;
         this.port = port;
         this.playerId = playerId;
@@ -68,26 +62,20 @@ public class TcpPlayerClient {
         readExecutor.execute(() -> {
             try {
                 socket = new Socket(hostAddress, port);
-
                 out = new PrintWriter(
                         new BufferedWriter(
                                 new OutputStreamWriter(socket.getOutputStream())),
                         true);
-
                 in = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
-
                 // Send JOIN immediately
                 out.println("JOIN|" + playerId);
-
                 running = true;
                 listener.onConnected();
-
                 String line;
                 while (running && (line = in.readLine()) != null) {
                     listener.onMessage(line);
                 }
-
             } catch (Exception e) {
                 listener.onError(e);
             } finally {
@@ -95,17 +83,13 @@ public class TcpPlayerClient {
             }
         });
     }
-
     public void disconnect() {
         running = false;
-
         try {
             if (socket != null) socket.close();
         } catch (IOException ignored) {}
-
         listener.onDisconnected();
     }
-
     // ----------------------------
     // Send messages
     // ----------------------------
@@ -118,7 +102,6 @@ public class TcpPlayerClient {
     public void sendVote(int round, String selectionIndex) {
         send("VOTE|" + round + "|" + selectionIndex);
     }
-
     public void send(String message) {
         writeExecutor.execute(() -> {
             if (out != null) {

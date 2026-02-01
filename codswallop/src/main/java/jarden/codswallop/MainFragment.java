@@ -37,30 +37,24 @@ public class MainFragment extends Fragment {
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
         gameActivity = (GameActivity)getActivity();
-        sendButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (answerEditText.getText().toString().trim().length() == 0) {
-                    Toast.makeText(getContext(), "supply an answer first!",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    gameActivity.onClick(view);
-                }
+        sendButton.setOnClickListener(view -> {
+            if (answerEditText.getText().toString().trim().length() == 0) {
+                Toast.makeText(getContext(), "supply an answer first!",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                gameActivity.onClick(view);
             }
         });
         return rootView;
-
     }
-
     public String getAnswerEditText() {
         return answerEditText.getText().toString();
     }
 
     public void enableSendButton(boolean enabled) {
-        this.sendButtonEnabled = enabled;
+        sendButtonEnabled = enabled;
         sendButton.setEnabled(enabled);
     }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -70,11 +64,11 @@ public class MainFragment extends Fragment {
         }
         sendButton.setEnabled(sendButtonEnabled);
     }
-
     public void setOutputView(String message) {
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
             outputView.setText(message);
+            answerEditText.setText("");
         } else {
             savedMessage = message;
         }

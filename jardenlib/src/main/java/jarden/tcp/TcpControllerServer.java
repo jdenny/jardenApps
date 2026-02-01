@@ -26,8 +26,6 @@ import java.util.concurrent.Executors;
  * Created by john.denny@gmail.com on 03/01/2026.
  */
 public class TcpControllerServer {
-
-
     public interface MessageListener {
         void onMessage(String playerId, String message);
         void onPlayerConnected(String playerId);
@@ -35,22 +33,16 @@ public class TcpControllerServer {
         void onServerStarted();
     }
 
-    private String controllerIpAddress = null;
+    private String HostIpAddress = null; // "192.168.0.12"; // john's Moto g8 at home
     public static final int TCP_PORT = 50001;
     public static final int UDP_PORT = 45454;
-
-
     private final ExecutorService executor =
             Executors.newCachedThreadPool();
-
     private final Map<String, ClientHandler> clients =
             new ConcurrentHashMap<>();
-
     private final MessageListener listener;
-
     private ServerSocket serverSocket;
     private volatile boolean running = false;
-
     public TcpControllerServer(MessageListener listener) {
         this.listener = listener;
     }
@@ -58,20 +50,17 @@ public class TcpControllerServer {
     // ----------------------------
     // Start / Stop server
     // ----------------------------
-
     public void start() {
         running = true;
-
         executor.execute(() -> {
             try {
                 serverSocket = new ServerSocket(TCP_PORT);
                 listener.onServerStarted();
                 while (running) {
-                    Socket socket = serverSocket.accept();
-                    ClientHandler handler = new ClientHandler(socket);
+                    Socket tcpSocket = serverSocket.accept();
+                    ClientHandler handler = new ClientHandler(tcpSocket);
                     executor.execute(handler);
                 }
-
             } catch (IOException e) {
                 if (running) {
                     Log.e("TCP", "Server error", e);
@@ -79,10 +68,8 @@ public class TcpControllerServer {
             }
         });
     }
-
     public void stop() {
         running = false;
-
         try {
             if (serverSocket != null) {
                 serverSocket.close();
@@ -124,25 +111,24 @@ public class TcpControllerServer {
 
     private class ClientHandler implements Runnable {
 
-        private final Socket socket;
+        private final Socket tcpSocket;
         private BufferedReader in;
         private PrintWriter out;
         private String playerId;
 
-        ClientHandler(Socket socket) {
-            this.socket = socket;
+        ClientHandler(Socket tcpSocket) {
+            this.tcpSocket = tcpSocket;
         }
 
         @Override
         public void run() {
             try {
                 in = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()));
+                        new InputStreamReader(tcpSocket.getInputStream()));
                 out = new PrintWriter(
                         new BufferedWriter(
-                                new OutputStreamWriter(socket.getOutputStream())),
+                                new OutputStreamWriter(tcpSocket.getOutputStream())),
                         true);
-
                 // First message must be JOIN
                 // JOIN|playerId
                 String join = in.readLine();
@@ -150,24 +136,19 @@ public class TcpControllerServer {
                     close();
                     return;
                 }
-
                 playerId = join.split("\\|", 2)[1];
                 clients.put(playerId, this);
-
                 listener.onPlayerConnected(playerId);
-
                 String line;
                 while ((line = in.readLine()) != null) {
                     listener.onMessage(playerId, line);
                 }
-
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } finally {
                 close();
             }
         }
-
         void send(String message) {
             executor.execute(() -> {
                 if (out != null) {
@@ -175,12 +156,10 @@ public class TcpControllerServer {
                 }
             });
         }
-
         void close() {
             try {
-                socket.close();
+                tcpSocket.close();
             } catch (IOException ignored) {}
-
             if (playerId != null) {
                 clients.remove(playerId);
                 listener.onPlayerDisconnected(playerId);
@@ -190,14 +169,12 @@ public class TcpControllerServer {
     public void sendHostBroadcast(Context context) {
         new Thread(() -> {
             try {
-                if (controllerIpAddress == null) {
+                if (HostIpAddress == null) {
                     WifiManager wifi =
                             (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
                     WifiInfo info = wifi.getConnectionInfo();
                     int ipInt = info.getIpAddress();
-
-                    controllerIpAddress = String.format(
+                    HostIpAddress = String.format(
                             "%d.%d.%d.%d",
                             (ipInt & 0xff),
                             (ipInt >> 8 & 0xff),
@@ -205,17 +182,17 @@ public class TcpControllerServer {
                             (ipInt >> 24 & 0xff));
                 }
                 String message =
-                        "HOST_ANNOUNCE|" + controllerIpAddress + "|" + TCP_PORT;
-                DatagramSocket socket = new DatagramSocket();
-                socket.setBroadcast(true);
+                        "HOST_ANNOUNCE|" + HostIpAddress + "|" + TCP_PORT;
+                DatagramSocket udpSocket = new DatagramSocket();
+                udpSocket.setBroadcast(true);
                 InetAddress broadcastAddress =
                         InetAddress.getByName("255.255.255.255");
                 byte[] data = message.getBytes(StandardCharsets.UTF_8);
                 DatagramPacket packet =
                         new DatagramPacket(data, data.length,
                                 broadcastAddress, UDP_PORT);
-                socket.send(packet);
-                socket.close();
+                udpSocket.send(packet);
+                udpSocket.close();
                 Log.d("UDP_HOST", "Broadcast sent: " + message);
             } catch (Exception e) {
                 Log.e("UDP_HOST", "Broadcast failed", e);

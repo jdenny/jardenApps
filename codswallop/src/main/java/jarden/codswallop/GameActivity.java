@@ -1,8 +1,5 @@
 package jarden.codswallop;
 
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -91,6 +88,7 @@ public class GameActivity extends AppCompatActivity implements
             new ConcurrentHashMap<>();
     private QuestionManager questionManager;
     private Button nextQuestionButton;
+    private Button scoresButton;
     private TextView statusTextView;
     private TcpControllerServer tcpControllerServer;
     private int round = 0;
@@ -107,7 +105,6 @@ public class GameActivity extends AppCompatActivity implements
     private AnswersFragment answersFragment;
     private MainFragment mainFragment;
     private ScoresDialogFragment scoresFragment;
-    private String controllerAddress = null; // "192.168.0.12"; // john's Moto g8 at home
     private boolean isHost;
 
     @Override // Activity
@@ -131,7 +128,6 @@ public class GameActivity extends AppCompatActivity implements
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
             scoresFragment = (ScoresDialogFragment) fragmentManager.findFragmentByTag(SCORES);
         }
-
         /*?
         isHost = getIntent().getBooleanExtra("HOST", false);
         if (isHost) {
@@ -139,11 +135,10 @@ public class GameActivity extends AppCompatActivity implements
             server.start();
         }
          */
-
         setContentView(R.layout.activity_game);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
-        Button scoresButton = findViewById(R.id.scoresButton);
+        scoresButton = findViewById(R.id.scoresButton);
         scoresButton.setOnClickListener(this);
         Button sendIpAddressButton = findViewById(R.id.sendIPButton);
         sendIpAddressButton.setOnClickListener(this);
@@ -267,14 +262,9 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpControllerServer.MessageListener
     public void onServerStarted() {
-        /*!!
-        runOnUiThread(() -> {
-            joinGame();
-            nextQuestionButton.setEnabled(true);
-        });
-
-         */
-
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onServerStarted()");
+        }
     }
 
     @Override // TcpPlayerClient.Listener
@@ -363,44 +353,14 @@ public class GameActivity extends AppCompatActivity implements
             String scoresMessage = getScoresMessage();
             tcpControllerServer.sendToAll(scoresMessage);
         } else if (viewId == R.id.sendIPButton) {
-            tcpControllerServer.sendHostBroadcast(/*!!getApplicationContext()*/this);
+            tcpControllerServer.sendHostBroadcast(this);
+            nextQuestionButton.setEnabled(true);
+            scoresButton.setEnabled(true);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
         }
     }
-
-    private void joinGame() {
-        tcpPlayerClient = new TcpPlayerClient(controllerAddress, TcpControllerServer.TCP_PORT,
-                playerName, this);
-        tcpPlayerClient.connect();
-    }
-
-    private void getControllerAddress() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "about to get WifiManager");
-                }
-                Context context = getApplicationContext();
-                WifiManager wifiManager =
-                        (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                int ipInt = wifiInfo.getIpAddress();
-                controllerAddress = String.format(
-                        "%d.%d.%d.%d",
-                        (ipInt & 0xff),
-                        (ipInt >> 8 & 0xff),
-                        (ipInt >> 16 & 0xff),
-                        (ipInt >> 24 & 0xff));
-                if (BuildConfig.DEBUG) {
-                    Log.i(TAG, "controllerAddress: " + controllerAddress);
-                }
-            }
-        }).start();
-    }
-
 
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -416,7 +376,6 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
         this.playerName = playerName;
-        //!! getControllerAddress();
         tcpControllerServer = new TcpControllerServer(this);
         tcpControllerServer.start();
         isHost = true;
@@ -432,7 +391,6 @@ public class GameActivity extends AppCompatActivity implements
         }
         this.playerName = playerName;
         TcpPlayerClient.listenForHostBroadcast(this, this);
-        //!! joinGame();
     }
 
     private void getNextQuestion() {
@@ -461,13 +419,15 @@ public class GameActivity extends AppCompatActivity implements
     @Override // TcpPlayerClient.HostFoundCallback
     public void onHostFound(String hostIp, int port) {
         String status = "onHostFound(" + hostIp + "' " + port + ')';
-        this.controllerAddress = hostIp;
         if (BuildConfig.DEBUG) {
             Log.d(TAG, status);
         }
         runOnUiThread(() -> {
             Toast.makeText(this, status, Toast.LENGTH_LONG).show();
-            joinGame();
+            tcpPlayerClient = new TcpPlayerClient(hostIp, TcpControllerServer.TCP_PORT,
+                    playerName, this);
+            tcpPlayerClient.connect();
+
             if (isHost) {
                 nextQuestionButton.setEnabled(true);
             }
