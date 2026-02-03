@@ -1,5 +1,7 @@
 package jarden.codswallop;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
@@ -106,6 +109,8 @@ public class GameActivity extends AppCompatActivity implements
     private MainFragment mainFragment;
     private ScoresDialogFragment scoresFragment;
     private boolean isHost;
+    private SharedPreferences sharedPreferences;
+    private final String questionSequenceKey = "QUESTION_SEQUENCE_KEY";
 
     @Override // Activity
     public void onResume() {
@@ -150,6 +155,7 @@ public class GameActivity extends AppCompatActivity implements
         }
         hostButtonsLayout = findViewById(R.id.hostButtons);
         questionManager = new QuestionManager(this);
+        sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
     }
     @Override // Activity
     protected void onDestroy() {
@@ -310,7 +316,8 @@ public class GameActivity extends AppCompatActivity implements
                     setFragment(answersFragment, ANSWER);
                     answersFragment.showAnswers(answers, true);
                 } else if (message.startsWith(QUESTION)) {
-                    String question = message.split("\\|", 3)[2];
+                    String[] tqa = message.split("\\|", 4);
+                    String question = tqa[2] + ' ' + tqa[3];
                     setFragment(mainFragment, MAIN);
                     mainFragment.setOutputView(question);
                     mainFragment.enableSendButton(true);
@@ -392,11 +399,30 @@ public class GameActivity extends AppCompatActivity implements
         this.playerName = playerName;
         TcpPlayerClient.listenForHostBroadcast(this, this);
     }
+    public int getQuestionSequence(boolean reset) {
+        int questionSeq = reset ? -1 : sharedPreferences.getInt(questionSequenceKey, -1);
+        if (questionSeq == -1 && BuildConfig.DEBUG) {
+            Log.w(TAG, "getQuestionSequence() returning -1");
+        }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(questionSequenceKey, ++questionSeq);
+        editor.apply();
+        return questionSeq;
+    }
 
     private void getNextQuestion() {
-        QuestionManager.QuestionAnswer currentQuestionAnswer = questionManager.getNext();
-        String nextQuestion = QUESTION + "|" + round++ +"|" + currentQuestionAnswer.question;
-        players.put(CORRECT, new Player(CORRECT, currentQuestionAnswer.answer, 0));
+        QuestionManager.QuestionAnswer currentQA;
+        try {
+            currentQA = questionManager.getNext(getQuestionSequence(false));
+        } catch (EndOfQuestionsException e) {
+            try {
+                currentQA = questionManager.getNext(getQuestionSequence(true));
+            } catch (EndOfQuestionsException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        String nextQuestion = QUESTION + '|' + round++ + '|' + currentQA.type + '|' + currentQA.question;
+        players.put(CORRECT, new Player(CORRECT, currentQA.answer, 0));
         answersCt = 1;
         votesCt = 1;
         tcpControllerServer.sendToAll(nextQuestion);

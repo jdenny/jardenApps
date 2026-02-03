@@ -6,10 +6,10 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jarden.engspa.EngSpaUtils;
+import jarden.quiz.EndOfQuestionsException;
 
 /**
  * Created by john.denny@gmail.com on 12/01/2026.
@@ -19,34 +19,44 @@ public class QuestionManager {
     private final Context context;
 
     public class QuestionAnswer {
+        public String type;
         public String question;
         public String answer;
-        QuestionAnswer(String q, String a) {
+        QuestionAnswer(String t, String q, String a) {
+            type = t;
             question = q;
             answer = a;
         }
     }
     private int questionIndex = 0;
-    private final List<QuestionAnswer> shuffledQuestions = new ArrayList<>();
+    private final List<QuestionAnswer> questionList = new ArrayList<>();
     public QuestionManager(Context context) {
         this.context = context;
-        try {
-            InputStream is = context.getResources().openRawResource(R.raw.questions);
+        try (InputStream is =
+                     context.getResources().openRawResource(R.raw.questions)) { // or R.raw.test_questions
             List<String> lines = EngSpaUtils.getLinesFromStream(is);
-            for (int i = 0; i < lines.size(); i++) {
-                String line = lines.get(i);
-                String[] qa = line.split("\\|");
-                shuffledQuestions.add(new QuestionAnswer(qa[0], qa[1]));
-                Log.d(TAG, "loaded " + lines.size() + " questions from R.raw.questions");
+            for (String line : lines) {
+                if (!line.trim().isEmpty()) {
+                    String[] qa = line.split("\\|");
+                    if (qa.length == 3) {
+                        questionList.add(new QuestionAnswer(qa[0].trim(), qa[1].trim(), qa[2].trim()));
+                    } else {
+                        Log.w(TAG, "Skipping malformed line: " + line);
+                    }
+                }
             }
+            Log.d(TAG, "loaded " + questionList.size() + " questions from R.raw.questions");
         } catch (IOException e) {
-            Log.e(TAG, "exception: " + e);
+            Log.e(TAG, "Failed to load questions: " + e);
             throw new RuntimeException(e);
         }
-        Collections.shuffle(shuffledQuestions);
+        //!! Collections.shuffle(questionList);
     }
-    public QuestionAnswer getNext() {
-        if (questionIndex >= shuffledQuestions.size()) questionIndex = 0;
-        return shuffledQuestions.get(questionIndex++);
+    public QuestionAnswer getNext(int questionIndex) throws EndOfQuestionsException {
+        if (questionIndex < questionList.size()) {
+            return questionList.get(questionIndex);
+        } else {
+            throw new EndOfQuestionsException();
+        }
     }
 }

@@ -251,11 +251,13 @@ create john's private key and public certificate:
 			keytool -import -alias jarden -file jardenCertFile.cer -keypass jardencertpass
 	
 in Android Studio
-	Build, Generate Signed APK...
+	Build, Generate Signed App Bundle
 	old version of Spanish(?):
 	    keystore: /Users/john/jarden.jks, alias jarden
-	for HotBridge & Spanish:
+	for HotBridge, Spanish, Codswallop:
 	    keystore: /Users/john/Documents/johnIdentity2.jks, alias john2, p/w = happy2
+	for Testing:
+	    keystore: /Users/john/Documents/johnIdentityTest.jks, alias john3, p/w = <insecure>
 
 open Android developer console:
 	https://play.google.com/console/
