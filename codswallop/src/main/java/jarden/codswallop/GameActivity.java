@@ -65,6 +65,9 @@ Message Protocol:
 
 
  TODO next:
+ Use statusText to talk players through what is happening
+ On Back pressed: are you sure you want to exit?
+ Show extra field on named answers
  On host, on click of "Send Ip Address" button, call TcpControllerServer.sendHostBroadcast()
  On join, wait callback from TcpPlayerClient.listenForHostBroadcast()
  can the views go in the middle of the screen, and expand as necessary?
@@ -94,11 +97,13 @@ public class GameActivity extends AppCompatActivity implements
     private Button scoresButton;
     private TextView statusTextView;
     private TcpControllerServer tcpControllerServer;
-    private int round = 0;
     private int answersCt;
     private int votesCt;
     private final List<String> shuffledNameList = new ArrayList<>();
     private View hostButtonsLayout;
+    private SharedPreferences sharedPreferences;
+    private final String questionSequenceKey = "QUESTION_SEQUENCE_KEY";
+    private int questionSequence;
     // Player fields ***************************
     private TcpPlayerClient tcpPlayerClient;
     // Host & Client fields ***************************
@@ -109,8 +114,6 @@ public class GameActivity extends AppCompatActivity implements
     private MainFragment mainFragment;
     private ScoresDialogFragment scoresFragment;
     private boolean isHost;
-    private SharedPreferences sharedPreferences;
-    private final String questionSequenceKey = "QUESTION_SEQUENCE_KEY";
 
     @Override // Activity
     public void onResume() {
@@ -212,7 +215,7 @@ public class GameActivity extends AppCompatActivity implements
 
     private String getAllAnswers2Message() {
         // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
-        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + "|" + round);
+        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + "|" + questionSequence);
         for (Player player: players.values()) {
             buffer.append("|" + player.getName() + "|" + player.getAnswer());
         }
@@ -222,7 +225,7 @@ public class GameActivity extends AppCompatActivity implements
     private String getScoresMessage() {
         // SCORES|3|John 2|Julie 4
         int correctAnswerIndex = 2; // bodge!
-        StringBuffer buffer = new StringBuffer(SCORES + '|' + round);
+        StringBuffer buffer = new StringBuffer(SCORES + '|' + questionSequence);
         for (Player player : players.values()) {
             buffer.append('|' + player.getName() + ": " + player.getScore());
         }
@@ -239,7 +242,7 @@ public class GameActivity extends AppCompatActivity implements
             shuffledNameList.add(name);
         }
         Collections.shuffle(shuffledNameList);
-        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + round);
+        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + questionSequence);
         for (String name: shuffledNameList) {
             buffer.append("|" + players.get(name).getAnswer());
         }
@@ -317,7 +320,7 @@ public class GameActivity extends AppCompatActivity implements
                     answersFragment.showAnswers(answers, true);
                 } else if (message.startsWith(QUESTION)) {
                     String[] tqa = message.split("\\|", 4);
-                    String question = tqa[2] + ' ' + tqa[3];
+                    String question = tqa[2] + ": " + tqa[3];
                     setFragment(mainFragment, MAIN);
                     mainFragment.setOutputView(question);
                     mainFragment.enableSendButton(true);
@@ -354,7 +357,7 @@ public class GameActivity extends AppCompatActivity implements
             statusTextView.setText("waiting for all players to answer");
         } else if (viewId == R.id.sendButton) { // Player
             String answer = mainFragment.getAnswerEditText();
-            tcpPlayerClient.sendAnswer(round, answer);
+            tcpPlayerClient.sendAnswer(questionSequence, answer);
             mainFragment.enableSendButton(false);
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
@@ -374,7 +377,7 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
-        tcpPlayerClient.sendVote(round, String.valueOf(position));
+        tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
     }
 
     @Override // LoginDialogListener
@@ -400,14 +403,14 @@ public class GameActivity extends AppCompatActivity implements
         TcpPlayerClient.listenForHostBroadcast(this, this);
     }
     public int getQuestionSequence(boolean reset) {
-        int questionSeq = reset ? -1 : sharedPreferences.getInt(questionSequenceKey, -1);
-        if (questionSeq == -1 && BuildConfig.DEBUG) {
+        questionSequence = reset ? -1 : sharedPreferences.getInt(questionSequenceKey, -1);
+        if (questionSequence == -1 && BuildConfig.DEBUG) {
             Log.w(TAG, "getQuestionSequence() returning -1");
         }
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(questionSequenceKey, ++questionSeq);
+        editor.putInt(questionSequenceKey, ++questionSequence);
         editor.apply();
-        return questionSeq;
+        return questionSequence;
     }
 
     private void getNextQuestion() {
@@ -421,7 +424,7 @@ public class GameActivity extends AppCompatActivity implements
                 throw new RuntimeException(ex);
             }
         }
-        String nextQuestion = QUESTION + '|' + round++ + '|' + currentQA.type + '|' + currentQA.question;
+        String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type + '|' + currentQA.question;
         players.put(CORRECT, new Player(CORRECT, currentQA.answer, 0));
         answersCt = 1;
         votesCt = 1;

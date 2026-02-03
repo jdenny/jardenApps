@@ -22,10 +22,15 @@ public class QuestionManager {
         public String type;
         public String question;
         public String answer;
+        public String comment;
         QuestionAnswer(String t, String q, String a) {
             type = t;
             question = q;
             answer = a;
+        }
+        QuestionAnswer(String t, String q, String a, String c) {
+            this(t, q, c);
+            comment = c;
         }
     }
     private int questionIndex = 0;
@@ -39,7 +44,12 @@ public class QuestionManager {
                 if (!line.trim().isEmpty()) {
                     String[] qa = line.split("\\|");
                     if (qa.length == 3) {
-                        questionList.add(new QuestionAnswer(qa[0].trim(), qa[1].trim(), qa[2].trim()));
+                        questionList.add(new QuestionAnswer(qa[0].trim(), qa[1].trim(),
+                                qa[2].trim()));
+                    } else if (qa.length == 4) {
+                        questionList.add(new QuestionAnswer(qa[0].trim(), qa[1].trim(),
+                                qa[2].trim(), qa[3].trim()));
+
                     } else {
                         Log.w(TAG, "Skipping malformed line: " + line);
                     }
@@ -50,7 +60,6 @@ public class QuestionManager {
             Log.e(TAG, "Failed to load questions: " + e);
             throw new RuntimeException(e);
         }
-        //!! Collections.shuffle(questionList);
     }
     public QuestionAnswer getNext(int questionIndex) throws EndOfQuestionsException {
         if (questionIndex < questionList.size()) {
