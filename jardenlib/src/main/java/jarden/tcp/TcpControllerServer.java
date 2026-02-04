@@ -108,8 +108,6 @@ public class TcpControllerServer {
     // ----------------------------
 
     private class ClientHandler implements Runnable {
-
-        private static final String TAG = "ClientHandler";
         private final Socket tcpSocket;
         private BufferedReader in;
         private PrintWriter out;
@@ -170,7 +168,7 @@ public class TcpControllerServer {
             try {
                 if (HostIpAddress == null) {
                     WifiManager wifi =
-                            (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                            (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     WifiInfo info = wifi.getConnectionInfo();
                     int ipInt = info.getIpAddress();
                     HostIpAddress = String.format(

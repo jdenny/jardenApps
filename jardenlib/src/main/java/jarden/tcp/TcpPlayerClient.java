@@ -115,7 +115,7 @@ public class TcpPlayerClient {
                                               Listener callback) {
         new Thread(() -> {
             WifiManager wifi =
-                    (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                    (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");
             lock.acquire();

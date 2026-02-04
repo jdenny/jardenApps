@@ -25,6 +25,13 @@ import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
+/* TODO next:
+ Show question in answers screen
+ can the views go in the middle of the screen, and expand as necessary?
+ separate classes Activity.player; Activity.host
+ in landscape mode, show question and answer side by side
+ */
+
 /** Design of application
 Message Protocol:
  Host to all Players using broadcast:
@@ -39,7 +46,7 @@ Message Protocol:
     VOTE|3|indexOfSelectedAnswer
 
  Players agree who will be host; all open the app; all login: name, host or join.
- Host selects “send IP Address”; when each player receives the host address, it joins the game.
+ Host selects “Send Host Address”; when each player receives the host address, it joins the game.
 
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
@@ -48,7 +55,7 @@ Message Protocol:
  Initial dialog:
     PlayerNameEditText; HostButton; JoinButton
  three screens (Fragments):
- 1  NextButton, ScoresButton, SendIPAddressButton (host only)
+ 1  NextButton, ScoresButton, SendHostAddressButton (host only)
     QuestionTextView
     YourAnswerEditText
     SendButton (initially disabled)
@@ -63,17 +70,6 @@ Message Protocol:
 
  3  list of:
         playerName, score (goes to first screen when host types NextButton)
-
-
- TODO next:
- Use statusText to talk players through what is happening
- On Back pressed: are you sure you want to exit?
- Show extra field on named answers
- On host, on click of "Send Ip Address" button, call TcpControllerServer.sendHostBroadcast()
- On join, wait callback from TcpPlayerClient.listenForHostBroadcast()
- can the views go in the middle of the screen, and expand as necessary?
- separate classes Activity.client; Activity host
- in landscape mode, show question and answer side by side
  */
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
@@ -89,11 +85,12 @@ public class GameActivity extends AppCompatActivity implements
     private static final String VOTE = "VOTE";
     private static final String SCORES = "SCORES";
     private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
+    private static final String questionSequenceKey = "QUESTION_SEQUENCE_KEY";
 
     // Host fields: ***************************
-    private final Map<String, Player> players =
-            new ConcurrentHashMap<>();
+    private Map<String, Player> players;
     private QuestionManager questionManager;
+    QuestionManager.QuestionAnswer currentQA;
     private Button nextQuestionButton;
     private Button scoresButton;
     private TextView statusTextView;
@@ -103,8 +100,9 @@ public class GameActivity extends AppCompatActivity implements
     private final List<String> shuffledNameList = new ArrayList<>();
     private View hostButtonsLayout;
     private SharedPreferences sharedPreferences;
-    private final String questionSequenceKey = "QUESTION_SEQUENCE_KEY";
     private int questionSequence;
+    private boolean voteCast;
+
     // Player fields ***************************
     private TcpPlayerClient tcpPlayerClient;
     // Host & Client fields ***************************
@@ -163,8 +161,8 @@ public class GameActivity extends AppCompatActivity implements
         nextQuestionButton.setOnClickListener(this);
         scoresButton = findViewById(R.id.scoresButton);
         scoresButton.setOnClickListener(this);
-        Button sendIpAddressButton = findViewById(R.id.sendIPButton);
-        sendIpAddressButton.setOnClickListener(this);
+        Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
+        sendHostAddressButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
         LoginDialogFragment loginDialog = new LoginDialogFragment();
         loginDialog.show(fragmentManager, LOGIN_DIALOG);
@@ -200,7 +198,7 @@ public class GameActivity extends AppCompatActivity implements
                 String nextMessage = getAllAnswersMessage();
                 tcpControllerServer.sendToAll(nextMessage);
             } else {
-                setStatus("waiting for " + (players.size() - answersCt) + " players to answer");
+                setStatus("waiting for " + (players.size() - answersCt) + " player(s) to answer");
             }
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
@@ -216,10 +214,10 @@ public class GameActivity extends AppCompatActivity implements
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "all votes received for current question");
                 }
-                String allAnswers2Message = getAllAnswers2Message();
+                String allAnswers2Message = getNamedAnswersMessage();
                 tcpControllerServer.sendToAll(allAnswers2Message);
             } else {
-                setStatus("waiting for " + (players.size() - votesCt) + " players to vote");
+                setStatus("waiting for " + (players.size() - votesCt) + " player(s) to vote");
             }
         } else {
             if (BuildConfig.DEBUG) {
@@ -228,21 +226,26 @@ public class GameActivity extends AppCompatActivity implements
         }
     }
 
-    private String getAllAnswers2Message() {
+    private String getNamedAnswersMessage() {
         // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
-        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + "|" + questionSequence);
+        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
+        buffer.append('|' + CORRECT + '|' + currentQA.answer);
+        if (currentQA.comment != null) {
+            buffer.append(". " + currentQA.comment);
+        }
         for (Player player: players.values()) {
-            buffer.append("|" + player.getName() + "|" + player.getAnswer());
+            buffer.append('|' + player.getName() + '|' + player.getAnswer());
         }
         return buffer.toString();
     }
 
     private String getScoresMessage() {
         // SCORES|3|John 2|Julie 4
-        int correctAnswerIndex = 2; // bodge!
         StringBuffer buffer = new StringBuffer(SCORES + '|' + questionSequence);
         for (Player player : players.values()) {
-            buffer.append('|' + player.getName() + ": " + player.getScore());
+            if (!player.getName().equals(CORRECT)) {
+                buffer.append('|' + player.getName() + ": " + player.getScore());
+            }
         }
         return buffer.toString();
     }
@@ -253,13 +256,16 @@ public class GameActivity extends AppCompatActivity implements
      */
     private String getAllAnswersMessage() {
         shuffledNameList.clear();
-        for (String name : players.keySet()) {
-            shuffledNameList.add(name);
-        }
+        shuffledNameList.add(CORRECT);
+        shuffledNameList.addAll(players.keySet());
         Collections.shuffle(shuffledNameList);
-        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + "|" + questionSequence);
+        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
         for (String name: shuffledNameList) {
-            buffer.append("|" + players.get(name).getAnswer());
+            if (name.equals(CORRECT)) {
+                buffer.append('|' + currentQA.answer);
+            } else {
+                buffer.append('|' + players.get(name).getAnswer());
+            }
         }
         return buffer.toString();
     }
@@ -270,10 +276,8 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "Player joined: " + playerName);
         }
         players.put(playerName, new Player(playerName, "not supplied", 0));
-        runOnUiThread(() -> {
-            statusTextView.setText(playerName + " has joined; " + players.size() +
-                    " players so far");
-        });
+        runOnUiThread(() -> statusTextView.setText(playerName + " has joined; " + players.size() +
+                " players so far"));
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -293,21 +297,17 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
-//        Toast.makeText(this, "Now connected to the game host",
-//                Toast.LENGTH_LONG).show();
-        Log.d(TAG, "Now connected to the game host");
+        runOnUiThread(() -> {
+            Log.d(TAG, "Now connected to the game host");
+            statusTextView.setText("Now connected to the game host; wait for the first question");
+        });
     }
 
     private void setStatus(String status) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, status);
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusTextView.setText(status);
-            }
-        });
+        runOnUiThread(() -> statusTextView.setText(status));
     }
 
     @Override // TcpPlayerClient.Listener
@@ -316,41 +316,42 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
         }
-        runOnUiThread(new Runnable() {
-            public void run() {
-                if (message.startsWith(ALL_ANSWERS)) {
-                    // ALL_ANSWERS|2|a pig trough|dollop|
-                    int indexOf3rdField = ALL_ANSWERS.length() + 1;
-                    int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
-                    String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
-                    setFragment(answersFragment, ANSWER);
-                    answersFragment.setOnItemClickListener(GameActivity.this);
-                    answersFragment.showAnswers(answers, false);
-                    statusTextView.setText("tap on the answer you think is correct");
-                } else if (message.startsWith(NAMED_ANSWERS)) {
-                    // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
-                    int indexOf3rdField = NAMED_ANSWERS.length() + 1;
-                    int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
-                    String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
-                    setFragment(answersFragment, ANSWER);
-                    answersFragment.showAnswers(answers, true);
-                } else if (message.startsWith(QUESTION)) {
-                    String[] tqa = message.split("\\|", 4);
-                    String question = tqa[2] + ": " + tqa[3];
-                    setFragment(mainFragment, MAIN);
-                    mainFragment.setOutputView(question);
-                    mainFragment.enableSendButton(true);
-                } else if (message.startsWith(SCORES)) {
-                    // SCORES|3|John 2|Julie 4
-                    int indexOf3rdField = SCORES.length() + 1;
-                    int indexOfFirstScore = message.indexOf('|', indexOf3rdField) + 1;
-                    String[] scores = message.substring(indexOfFirstScore).split("\\|");
-                    scoresFragment.show(fragmentManager, SCORES);
-                    scoresFragment.showScores(scores);
-                } else {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "unrecognised message received by player: " + message);
-                    }
+        runOnUiThread(() -> {
+            if (message.startsWith(ALL_ANSWERS)) {
+                // ALL_ANSWERS|2|a pig trough|dollop|
+                int indexOf3rdField = ALL_ANSWERS.length() + 1;
+                int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
+                String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+                setFragment(answersFragment, ANSWER);
+                answersFragment.setOnItemClickListener(GameActivity.this);
+                voteCast = false;
+                answersFragment.showAnswers(answers, false);
+                statusTextView.setText("tap on the answer you think is correct");
+            } else if (message.startsWith(NAMED_ANSWERS)) {
+                // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
+                int indexOf3rdField = NAMED_ANSWERS.length() + 1;
+                int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
+                String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+                setFragment(answersFragment, ANSWER);
+                answersFragment.showAnswers(answers, true);
+                statusTextView.setText("Who said what");
+            } else if (message.startsWith(QUESTION)) {
+                String[] tqa = message.split("\\|", 4);
+                String question = tqa[2] + ": " + tqa[3];
+                setFragment(mainFragment, MAIN);
+                mainFragment.setOutputView(question);
+                mainFragment.enableSendButton(true);
+                statusTextView.setText("supply answer and Send");
+            } else if (message.startsWith(SCORES)) {
+                // SCORES|3|John 2|Julie 4
+                int indexOf3rdField = SCORES.length() + 1;
+                int indexOfFirstScore = message.indexOf('|', indexOf3rdField) + 1;
+                String[] scores = message.substring(indexOfFirstScore).split("\\|");
+                scoresFragment.show(fragmentManager, SCORES);
+                scoresFragment.showScores(scores);
+            } else {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "unrecognised message received by player: " + message);
                 }
             }
         });
@@ -379,7 +380,7 @@ public class GameActivity extends AppCompatActivity implements
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
             tcpControllerServer.sendToAll(scoresMessage);
-        } else if (viewId == R.id.sendIPButton) {
+        } else if (viewId == R.id.broadcastHostButton) { // Host only
             tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
             scoresButton.setEnabled(true);
@@ -395,7 +396,13 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
-        tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+        if (!voteCast) {
+            tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+            voteCast = true;
+            statusTextView.setText("Waiting for other players to vote");
+        } else {
+            statusTextView.setText("You have already cast your vote; you can't change your mind!");
+        }
     }
 
     @Override // LoginDialogListener
@@ -403,12 +410,13 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
+        players = new ConcurrentHashMap<>();
         this.playerName = playerName;
         tcpControllerServer = new TcpControllerServer(this);
         tcpControllerServer.start();
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
-        statusTextView.setText("when all players have joined, Send IP address");
+        statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
         TcpPlayerClient.listenForHostBroadcast(this, this);
     }
 
@@ -419,6 +427,7 @@ public class GameActivity extends AppCompatActivity implements
         }
         this.playerName = playerName;
         TcpPlayerClient.listenForHostBroadcast(this, this);
+        statusTextView.setText("Wait for Host to contact");
     }
     public int getQuestionSequence(boolean reset) {
         questionSequence = reset ? -1 : sharedPreferences.getInt(questionSequenceKey, -1);
@@ -432,7 +441,6 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private void getNextQuestion() {
-        QuestionManager.QuestionAnswer currentQA;
         try {
             currentQA = questionManager.getNext(getQuestionSequence(false));
         } catch (EndOfQuestionsException e) {
@@ -443,9 +451,8 @@ public class GameActivity extends AppCompatActivity implements
             }
         }
         String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type + '|' + currentQA.question;
-        players.put(CORRECT, new Player(CORRECT, currentQA.answer, 0));
-        answersCt = 1;
-        votesCt = 1;
+        answersCt = 0;
+        votesCt = 0;
         tcpControllerServer.sendToAll(nextQuestion);
     }
 
@@ -469,15 +476,10 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, status);
         }
-        runOnUiThread(() -> {
-            Toast.makeText(this, status, Toast.LENGTH_LONG).show();
+        //!! runOnUiThread(() -> {
             tcpPlayerClient = new TcpPlayerClient(hostIp, TcpControllerServer.TCP_PORT,
                     playerName, this);
             tcpPlayerClient.connect();
-
-            if (isHost) {
-                nextQuestionButton.setEnabled(true);
-            }
-        });
+        //!! });
     }
 }

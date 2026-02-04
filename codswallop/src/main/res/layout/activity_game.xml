@@ -33,8 +33,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
-                android:id="@+id/sendIPButton"
-                android:text="@string/send_ip_address"
+                android:id="@+id/broadcastHostButton"
+                android:text="@string/broadcastHostAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

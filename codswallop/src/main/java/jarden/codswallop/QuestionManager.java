@@ -29,7 +29,7 @@ public class QuestionManager {
             answer = a;
         }
         QuestionAnswer(String t, String q, String a, String c) {
-            this(t, q, c);
+            this(t, q, a);
             comment = c;
         }
     }
@@ -37,8 +37,11 @@ public class QuestionManager {
     private final List<QuestionAnswer> questionList = new ArrayList<>();
     public QuestionManager(Context context) {
         this.context = context;
+        int qaFileId =
+                R.raw.test_questions;
+                // R.raw.questions;
         try (InputStream is =
-                     context.getResources().openRawResource(R.raw.questions)) { // or R.raw.test_questions
+                     context.getResources().openRawResource(qaFileId)) {
             List<String> lines = EngSpaUtils.getLinesFromStream(is);
             for (String line : lines) {
                 if (!line.trim().isEmpty()) {
