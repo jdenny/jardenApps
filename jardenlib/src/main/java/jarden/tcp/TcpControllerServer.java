@@ -33,7 +33,7 @@ public class TcpControllerServer {
         void onServerStarted();
     }
 
-    private String HostIpAddress = null; // "192.168.0.12"; // john's Moto g8 at home
+    private static final String TAG = "TcpControllerServer";
     public static final int TCP_PORT = 50001;
     public static final int UDP_PORT = 45454;
     private final ExecutorService executor =
@@ -43,6 +43,7 @@ public class TcpControllerServer {
     private final MessageListener listener;
     private ServerSocket serverSocket;
     private volatile boolean running = false;
+    private String HostIpAddress = null; // "192.168.0.12"; // john's Moto g8 at home
     public TcpControllerServer(MessageListener listener) {
         this.listener = listener;
     }
@@ -63,7 +64,7 @@ public class TcpControllerServer {
                 }
             } catch (IOException e) {
                 if (running) {
-                    Log.e("TCP", "Server error", e);
+                    Log.e(TAG, "Server error", e);
                 }
             }
         });
@@ -79,7 +80,6 @@ public class TcpControllerServer {
         for (ClientHandler handler : clients.values()) {
             handler.close();
         }
-
         executor.shutdownNow();
     }
 
@@ -94,8 +94,6 @@ public class TcpControllerServer {
                 handler.send(message);
             }
         });
-
-
     }
 
     public void sendToAll(String message) {
@@ -111,6 +109,7 @@ public class TcpControllerServer {
 
     private class ClientHandler implements Runnable {
 
+        private static final String TAG = "ClientHandler";
         private final Socket tcpSocket;
         private BufferedReader in;
         private PrintWriter out;
@@ -193,9 +192,9 @@ public class TcpControllerServer {
                                 broadcastAddress, UDP_PORT);
                 udpSocket.send(packet);
                 udpSocket.close();
-                Log.d("UDP_HOST", "Broadcast sent: " + message);
+                Log.d(TAG, "Broadcast sent: " + message);
             } catch (Exception e) {
-                Log.e("UDP_HOST", "Broadcast failed", e);
+                Log.e(TAG, "Broadcast failed", e);
             }
         }).start();
     }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -77,7 +78,7 @@ Message Protocol:
 public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
         AdapterView.OnItemClickListener, TcpPlayerClient.Listener,
-        LoginDialogFragment.LoginDialogListener {
+        LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
     private static final String TAG = "GameActivity";
     private static final String QUESTION = "QUESTION";
     private static final String ANSWER = "ANSWER";
@@ -114,15 +115,29 @@ public class GameActivity extends AppCompatActivity implements
     private MainFragment mainFragment;
     private ScoresDialogFragment scoresFragment;
     private boolean isHost;
+    private OnBackPressedCallback backPressedCallback;
 
     @Override // Activity
     public void onResume() {
         super.onResume();
     }
+    @Override // ConfirmExitDialogFragment.ExitDialogListener
+    public void onExitDialogConfirmed() {
+            backPressedCallback.setEnabled(false); // DON'T FORGET THIS!
+            getOnBackPressedDispatcher().onBackPressed();
+    }
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        backPressedCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ConfirmExitDialogFragment dialog = new ConfirmExitDialogFragment();
+                dialog.show(getSupportFragmentManager(), "ConfirmExitDialogFragment");
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         this.fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             mainFragment = new MainFragment();
@@ -304,13 +319,14 @@ public class GameActivity extends AppCompatActivity implements
         runOnUiThread(new Runnable() {
             public void run() {
                 if (message.startsWith(ALL_ANSWERS)) {
-                    // ALL_ANSWERS|2|dollop|a pig trough
+                    // ALL_ANSWERS|2|a pig trough|dollop|
                     int indexOf3rdField = ALL_ANSWERS.length() + 1;
                     int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
                     String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
                     setFragment(answersFragment, ANSWER);
                     answersFragment.setOnItemClickListener(GameActivity.this);
                     answersFragment.showAnswers(answers, false);
+                    statusTextView.setText("tap on the answer you think is correct");
                 } else if (message.startsWith(NAMED_ANSWERS)) {
                     // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
                     int indexOf3rdField = NAMED_ANSWERS.length() + 1;
@@ -359,6 +375,7 @@ public class GameActivity extends AppCompatActivity implements
             String answer = mainFragment.getAnswerEditText();
             tcpPlayerClient.sendAnswer(questionSequence, answer);
             mainFragment.enableSendButton(false);
+            statusTextView.setText("waiting for other players to answer");
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();
             tcpControllerServer.sendToAll(scoresMessage);
@@ -366,6 +383,7 @@ public class GameActivity extends AppCompatActivity implements
             tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
             scoresButton.setEnabled(true);
+            statusTextView.setText("wait for all players to join, then 'Next'");
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -390,7 +408,7 @@ public class GameActivity extends AppCompatActivity implements
         tcpControllerServer.start();
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
-        statusTextView.setText("when all players have joined, click Next");
+        statusTextView.setText("when all players have joined, Send IP address");
         TcpPlayerClient.listenForHostBroadcast(this, this);
     }
 
