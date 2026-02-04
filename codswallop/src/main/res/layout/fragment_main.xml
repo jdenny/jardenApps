@@ -8,7 +8,7 @@
     tools:context=".GameActivity">
 
     <TextView
-        android:id="@+id/outputView"
+        android:id="@+id/questionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp" />

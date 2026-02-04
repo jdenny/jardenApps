@@ -26,7 +26,6 @@ import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 /* TODO next:
- Show question in answers screen
  can the views go in the middle of the screen, and expand as necessary?
  separate classes Activity.player; Activity.host
  in landscape mode, show question and answer side by side
@@ -105,6 +104,7 @@ public class GameActivity extends AppCompatActivity implements
 
     // Player fields ***************************
     private TcpPlayerClient tcpPlayerClient;
+    private String currentQuestion;
     // Host & Client fields ***************************
     private String currentFragmentTag = MAIN;
     private String playerName;
@@ -325,7 +325,7 @@ public class GameActivity extends AppCompatActivity implements
                 setFragment(answersFragment, ANSWER);
                 answersFragment.setOnItemClickListener(GameActivity.this);
                 voteCast = false;
-                answersFragment.showAnswers(answers, false);
+                answersFragment.showAnswers(currentQuestion, answers, false);
                 statusTextView.setText("tap on the answer you think is correct");
             } else if (message.startsWith(NAMED_ANSWERS)) {
                 // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
@@ -333,13 +333,13 @@ public class GameActivity extends AppCompatActivity implements
                 int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
                 String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
                 setFragment(answersFragment, ANSWER);
-                answersFragment.showAnswers(answers, true);
+                answersFragment.showAnswers(currentQuestion, answers, true);
                 statusTextView.setText("Who said what");
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
-                String question = tqa[2] + ": " + tqa[3];
+                currentQuestion = tqa[2] + ": " + tqa[3];
                 setFragment(mainFragment, MAIN);
-                mainFragment.setOutputView(question);
+                mainFragment.setQuestionView(currentQuestion);
                 mainFragment.enableSendButton(true);
                 statusTextView.setText("supply answer and Send");
             } else if (message.startsWith(SCORES)) {

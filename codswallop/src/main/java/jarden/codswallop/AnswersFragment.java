@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -17,17 +18,20 @@ import androidx.lifecycle.Lifecycle;
  */
 public class AnswersFragment extends Fragment {
     private static final String TAG = "AnswersFragment";
+    private TextView questionView;
     private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;
-    private String[] savedAnswers = null;
     private AdapterView.OnItemClickListener savedListener = null;
     private AnswersFragment previousThis;
-    private boolean showPlayerNames;
+    private String[] savedAnswers = null;
+    private String savedCurrentQuestion = null;
+    private boolean savedShowPlayerNames;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_answers, container, false);
+        questionView = rootView.findViewById(R.id.questionView);
         answersListView = rootView.findViewById(R.id.answersListView);
         this.answersAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
@@ -56,14 +60,15 @@ public class AnswersFragment extends Fragment {
             savedListener = null;
         }
         if (savedAnswers != null) {
-            showAnswers(savedAnswers, showPlayerNames);
+            showAnswers(savedCurrentQuestion, savedAnswers, savedShowPlayerNames);
             savedAnswers = null;
         }
     }
 
-    public void showAnswers(String[] answers, boolean showPlayerNames) {
+    public void showAnswers(String currentQuestion, String[] answers, boolean showPlayerNames) {
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
+            questionView.setText(currentQuestion);
             answersAdapter.setNotifyOnChange(false);
             answersAdapter.clear();
             if (showPlayerNames) {
@@ -77,8 +82,9 @@ public class AnswersFragment extends Fragment {
             }
             answersAdapter.notifyDataSetChanged();
         } else {
+            savedCurrentQuestion = currentQuestion;
             savedAnswers = answers;
-            this.showPlayerNames = showPlayerNames;
+            savedShowPlayerNames = showPlayerNames;
         }
     }
 

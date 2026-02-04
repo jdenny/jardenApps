@@ -20,12 +20,12 @@ import androidx.lifecycle.Lifecycle;
 public class MainFragment extends Fragment {
 
     private static final String TAG = "MainFragment";
-    private TextView outputView;
+    private TextView questionView;
     private EditText answerEditText;
     private Button sendButton;
     private OnClickListener gameActivity;
 
-    private String savedMessage;
+    private String savedQuestion;
     private boolean sendButtonEnabled;
 
     @Override // Fragment
@@ -33,7 +33,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        outputView = rootView.findViewById(R.id.outputView);
+        questionView = rootView.findViewById(R.id.questionView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
         gameActivity = (GameActivity)getActivity();
@@ -58,19 +58,19 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (savedMessage != null) {
-            setOutputView(savedMessage);
-            savedMessage = null;
+        if (savedQuestion != null) {
+            setQuestionView(savedQuestion);
+            savedQuestion = null;
         }
         sendButton.setEnabled(sendButtonEnabled);
     }
-    public void setOutputView(String message) {
+    public void setQuestionView(String question) {
         Lifecycle.State state = getLifecycle().getCurrentState();
         if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
-            outputView.setText(message);
+            questionView.setText(question);
             answerEditText.setText("");
         } else {
-            savedMessage = message;
+            savedQuestion = question;
         }
     }
 }
