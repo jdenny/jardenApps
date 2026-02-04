@@ -73,7 +73,7 @@ public class AnswersFragment extends Fragment {
             answersAdapter.clear();
             if (showPlayerNames) {
                 for (int i = 0; i < answers.length; i++) {
-                    answersAdapter.add(answers[i++] + ' ' + answers[i]); // namei answeri
+                    answersAdapter.add(answers[i++] + ": " + answers[i]); // namei answeri
                 }
             } else {
                 for (String answer : answers) {
