@@ -119,11 +119,6 @@ public class GameActivity extends AppCompatActivity implements
     public void onResume() {
         super.onResume();
     }
-    @Override // ConfirmExitDialogFragment.ExitDialogListener
-    public void onExitDialogConfirmed() {
-            backPressedCallback.setEnabled(false); // DON'T FORGET THIS!
-            getOnBackPressedDispatcher().onBackPressed();
-    }
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +174,11 @@ public class GameActivity extends AppCompatActivity implements
         if (tcpControllerServer != null) tcpControllerServer.stop();
         if (tcpPlayerClient != null) tcpPlayerClient.disconnect();
         // multicastLock.release();
+    }
+    @Override // ConfirmExitDialogFragment.ExitDialogListener
+    public void onExitDialogConfirmed() {
+        backPressedCallback.setEnabled(false); // DON'T FORGET THIS!
+        getOnBackPressedDispatcher().onBackPressed();
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -476,10 +476,8 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, status);
         }
-        //!! runOnUiThread(() -> {
-            tcpPlayerClient = new TcpPlayerClient(hostIp, TcpControllerServer.TCP_PORT,
-                    playerName, this);
-            tcpPlayerClient.connect();
-        //!! });
+        tcpPlayerClient = new TcpPlayerClient(hostIp, TcpControllerServer.TCP_PORT,
+                playerName, this);
+        tcpPlayerClient.connect();
     }
 }

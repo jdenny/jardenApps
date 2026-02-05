@@ -31,18 +31,15 @@ public class EngSpaUtils {
 	public static List<String> getLinesFromStream(InputStream is) throws IOException {
 		List<String> lines = new ArrayList<String>();
 		BufferedReader reader = null;
-		try {
+		try (InputStreamReader isReader = new InputStreamReader(is, "iso-8859-1")) {
 			// iso-8859 needed for Android, and maybe for Java;
 			// see javadocs in QuizCache.loadQuizFromServer()
-			InputStreamReader isReader = new InputStreamReader(is, "iso-8859-1");
 			reader = new BufferedReader(isReader);
 			String line;
 			while ((line = reader.readLine()) != null) {
 				lines.add(line);
 			}
 			return lines;
-		} finally {
-			is.close();
 		}
 	}
 	public static ContentValues[] getContentValuesArray(List<String> engSpaLines) {

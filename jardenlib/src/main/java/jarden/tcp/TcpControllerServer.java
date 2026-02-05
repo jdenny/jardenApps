@@ -141,7 +141,7 @@ public class TcpControllerServer {
                     listener.onMessage(playerId, line);
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Log.w(TAG, "Client disconnected: " + playerId, e);
             } finally {
                 close();
             }

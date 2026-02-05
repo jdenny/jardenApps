@@ -1,4 +1,4 @@
-EVENTS|Who or what was the Piltdown Man?|A composite of a human skull and an orangutan jawbone|The fossil, presented as the “missing link” between apes and humans, was carefully constructed to deceive the scientific community
+EVENTS|Who or what was the Piltdown Man?|A composite of a human skull and an orangutan jawbone|The fossil, presented as the missing link between apes and humans, was carefully constructed to deceive the scientific community
 LAWS|What restrictions are you under if you visit any royal household with your dog?|You mustn’t let your dog with one of the royal dogs|Until 1965 this was punishable by the death sentence
 INITIALS|VIN|Vehicle Identification Number
 PEOPLE|Buford Pusser|Sheriff of McNairy County, Tennessee, tracked down and killed 3 out of the 4 people who killed his wife
@@ -36,7 +36,7 @@ WORDS|Cockalorum|a strutting little man with an inflated ego
 EVENTS|In ancient Egypt, what technique was used to keep flies away from the pharaoh?|Honey was smeared on servants, to attract the flies
 LAWS|According to a 1324 British law, still in force, whales, sturgeons, porpoises, and dolphins that become beached must be offered to whom or what?|The reigning monarch
 INITIALS|DINK|Double Income, No Kids
-PEOPLE|Cleisthenes|a Greek philosopher, born around 570 B.C.E., known as the "father of Athenian democracy."
+PEOPLE|Cleisthenes|a Greek philosopher, born around 570 B.C.E., known as the father of Athenian democracy.
 WORDS|Billingsgate|coarsely abusive or profane language|From London's Billingsgate Fish Market
 EVENTS|In 1184, during a grand royal assembly in Erfurt, Germany, the weight of the gathered nobles caused the wooden floor to collapse. What happened next?|dozens of high-ranking officials fell into a latrine cesspit below. Around 60 nobles drowned in liquid excrement.
 LAWS|What law in Arizona protects cacti?|Cutting down a cactus in Arizona without permission could get you sent to jail for up to 25 years
@@ -51,7 +51,7 @@ WORDS|Callipygian|having well-shaped buttocks
 EVENTS|In 1875 in Dublin, a fire heated up the whiskey barrels in a warehouse until they exploded, killing 13 people. What did they die from?|alcohol poisoning, after a flood of whiskey. No one actually died from the flood itself
 LAWS|According to the Libraries Offences Act, 1898, where is gambling prohibited?|In a British library
 INITIALS|HIPPO|Highest Paid Person’s Opinion
-PEOPLE|John "Chickie" Donohue|In 1967, he sailed thousands of miles from New York City to Vietnam to deliver beer to his friends serving in the war|His story was later portrayed in the 2022 film “The Greatest Beer Run Ever”
+PEOPLE|John (Chickie) Donohue|In 1967, he sailed thousands of miles from New York City to Vietnam to deliver beer to his friends serving in the war|His story was later portrayed in the 2022 film “The Greatest Beer Run Ever”
 WORDS|Boustrophedon|written from right to left and from left to right in alternate lines
 EVENTS|The mayor of Rome and the mayor of Carthage met in 1985 to sign a peace treaty to end a war. What was unusual about that?|The war was the Punic Wars,  between the Roman Republic and the Carthaginian Empire. The peace treaty was signed 2,131 years after Carthage was destroyed.
 LAWS|According to the Metropolitan Police Act 1839, section 7, what is not permitted in the street?|Beating or shaking your carpet or rug

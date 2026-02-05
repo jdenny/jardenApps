@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
@@ -61,7 +62,10 @@ public class TcpPlayerClient {
     public void connect() {
         readExecutor.execute(() -> {
             try {
-                socket = new Socket(hostAddress, port);
+                socket = new Socket();
+                socket.connect(
+                        new InetSocketAddress(hostAddress, port),
+                        5000); // connect timeout only
                 out = new PrintWriter(
                         new BufferedWriter(
                                 new OutputStreamWriter(socket.getOutputStream())),
@@ -84,11 +88,19 @@ public class TcpPlayerClient {
         });
     }
     public void disconnect() {
-        running = false;
-        try {
-            if (socket != null) socket.close();
-        } catch (IOException ignored) {}
-        listener.onDisconnected();
+        if (running) {
+            running = false;
+            if (readExecutor != null) {
+                readExecutor.shutdownNow();
+            }
+            if (writeExecutor != null) {
+                writeExecutor.shutdownNow();
+            }
+            listener.onDisconnected();
+            try {
+                if (socket != null) socket.close();
+            } catch (IOException ignored) {}
+        }
     }
     // ----------------------------
     // Send messages
