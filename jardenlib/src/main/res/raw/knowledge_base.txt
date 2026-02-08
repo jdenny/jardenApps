@@ -258,6 +258,18 @@ in Android Studio
 	    keystore: /Users/john/Documents/johnIdentity2.jks, alias john2, p/w = happy2
 	for Testing:
 	    keystore: /Users/john/Documents/johnIdentityTest.jks, alias john3, p/w = <insecure>
+	play.google.com; select app; monitor and improve, policy and programmes, app content; actioned
+	Privacy policy: https://sites.google.com/view/amazequiz/home
+	App access: no access restrictions
+	Ads: No
+	Content rating
+	Target audience: 9 and older
+	Date safety: not share
+	Government apps: No
+	Financial features: None
+	Health: no
+	App category
+	Store listing
 
 open Android developer console:
 	https://play.google.com/console/
