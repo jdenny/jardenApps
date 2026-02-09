@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.jardenconsulting.jardenlib.BuildConfig;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -32,6 +34,8 @@ public class TcpPlayerClient {
         void onError(Exception e);
     }
 
+    private static final ExecutorService udpExecutor =
+            Executors.newSingleThreadExecutor();
     private final ExecutorService readExecutor =
             Executors.newSingleThreadExecutor();
     private final ExecutorService writeExecutor =
@@ -119,15 +123,17 @@ public class TcpPlayerClient {
             if (out != null) {
                 out.println(message);
             } else {
-                Log.d(TAG, "send(" + message + ") out is null!");
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "send(" + message + ") out is null!");
+                }
             }
         });
     }
     public static void listenForHostBroadcast(Context context,
                                               Listener callback) {
-        new Thread(() -> {
+        udpExecutor.execute(() -> {
             WifiManager wifi =
-                    (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");
             lock.acquire();
@@ -136,7 +142,9 @@ public class TcpPlayerClient {
                 socket = new DatagramSocket(TcpControllerServer.UDP_PORT);
                 socket.setBroadcast(true);
                 byte[] buf = new byte[1024];
-                Log.d("UDP_CLIENT", "Listening for host...");
+                if (BuildConfig.DEBUG) {
+                    Log.d("UDP_CLIENT", "Listening for host...");
+                }
                 boolean hostFound = false;
                 while (!hostFound) {
                     DatagramPacket packet =
@@ -156,7 +164,9 @@ public class TcpPlayerClient {
                     }
                 }
             } catch (Exception e) {
-                Log.e("UDP_CLIENT", "Listen failed", e);
+                if (BuildConfig.DEBUG) {
+                    Log.e("UDP_CLIENT", "Listen failed", e);
+                }
                 callback.onError(e);
             } finally {
                 if (socket != null) {
@@ -164,7 +174,10 @@ public class TcpPlayerClient {
                 }
                 lock.release();
             }
-        }).start();
+        });
+    }
+    public static void stopListening() {
+        udpExecutor.shutdownNow();
     }
 }
 

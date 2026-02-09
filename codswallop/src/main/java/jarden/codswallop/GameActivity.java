@@ -170,10 +170,10 @@ public class GameActivity extends AppCompatActivity implements
     }
     @Override // Activity
     protected void onDestroy() {
-        super.onDestroy();
         if (tcpControllerServer != null) tcpControllerServer.stop();
         if (tcpPlayerClient != null) tcpPlayerClient.disconnect();
-        // multicastLock.release();
+        TcpPlayerClient.stopListening();
+        super.onDestroy();
     }
     @Override // ConfirmExitDialogFragment.ExitDialogListener
     public void onExitDialogConfirmed() {
@@ -227,14 +227,15 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private String getNamedAnswersMessage() {
-        // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
+        // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe (2)|Centre forward for Liverpool
         StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
         buffer.append('|' + CORRECT + '|' + currentQA.answer);
         if (currentQA.comment != null) {
             buffer.append(". " + currentQA.comment);
         }
         for (Player player: players.values()) {
-            buffer.append('|' + player.getName() + '|' + player.getAnswer());
+            buffer.append('|' + player.getName() + " (" + player.getScore() + ')' +
+                    '|' + player.getAnswer());
         }
         return buffer.toString();
     }
@@ -426,6 +427,9 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         this.playerName = playerName;
+        waitForHost();
+    }
+    private void waitForHost() {
         TcpPlayerClient.listenForHostBroadcast(this, this);
         statusTextView.setText("Wait for Host to contact");
     }
@@ -461,6 +465,7 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Now disconnected from the game server");
         }
+        waitForHost(); // await a new host!
     }
 
     @Override // TcpPlayerClient.Listener

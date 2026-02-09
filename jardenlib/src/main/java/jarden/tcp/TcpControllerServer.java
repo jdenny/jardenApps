@@ -5,6 +5,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.jardenconsulting.jardenlib.BuildConfig;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -64,7 +66,9 @@ public class TcpControllerServer {
                 }
             } catch (IOException e) {
                 if (running) {
-                    Log.e(TAG, "Server error", e);
+                    if (BuildConfig.DEBUG) {
+                        Log.e(TAG, "Server error", e);
+                    }
                 }
             }
         });
@@ -141,7 +145,9 @@ public class TcpControllerServer {
                     listener.onMessage(playerId, line);
                 }
             } catch (IOException e) {
-                Log.w(TAG, "Client disconnected: " + playerId, e);
+                if (BuildConfig.DEBUG) {
+                    Log.w(TAG, "Client disconnected: " + playerId, e);
+                }
             } finally {
                 close();
             }
@@ -190,9 +196,13 @@ public class TcpControllerServer {
                                 broadcastAddress, UDP_PORT);
                 udpSocket.send(packet);
                 udpSocket.close();
-                Log.d(TAG, "Broadcast sent: " + message);
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "Broadcast sent: " + message);
+                }
             } catch (Exception e) {
-                Log.e(TAG, "Broadcast failed", e);
+                if (BuildConfig.DEBUG) {
+                    Log.e(TAG, "Broadcast failed", e);
+                }
             }
         }).start();
     }
