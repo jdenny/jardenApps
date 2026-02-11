@@ -15,7 +15,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
@@ -26,8 +25,6 @@ public class AnswersFragment extends Fragment {
     private TextView questionView;
     private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;
-    private AdapterView.OnItemClickListener savedListener = null;
-    private boolean savedShowPlayerNames;
     private AnswersViewModel viewModel;
 
     @Override // Fragment
@@ -39,17 +36,16 @@ public class AnswersFragment extends Fragment {
         this.answersAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
         answersListView.setAdapter(answersAdapter);
+        try {
+            AdapterView.OnItemClickListener onItemClickListener =
+                    (AdapterView.OnItemClickListener) getContext();
+            answersListView.setOnItemClickListener(onItemClickListener);
+        } catch (ClassCastException cce) {
+            Log.e(TAG, cce.toString());
+        }
+
         viewModel = new ViewModelProvider(requireActivity()).get(AnswersViewModel.class);
         return rootView;
-    }
-
-    public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
-        Lifecycle.State state = getLifecycle().getCurrentState();
-        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
-            answersListView.setOnItemClickListener(listener);
-        } else {
-            savedListener = listener;
-        }
     }
 
     public AnswersFragment() {
@@ -64,10 +60,6 @@ public class AnswersFragment extends Fragment {
             Log.d(TAG, "onResume()");
         }
         super.onResume();
-        if (savedListener != null) {
-            setOnItemClickListener(savedListener);
-            savedListener = null;
-        }
     }
 
     @Override
@@ -76,12 +68,6 @@ public class AnswersFragment extends Fragment {
         viewModel.getAnswersState().observe(
                 getViewLifecycleOwner(),
                 answersState -> {
-                    try {
-                        AdapterView.OnItemClickListener onItemClickListener = (AdapterView.OnItemClickListener) getContext();
-                        setOnItemClickListener(onItemClickListener);
-                    } catch (ClassCastException cce) {
-                        Log.e(TAG, cce.toString());
-                    }
                     questionView.setText(answersState.question);
                     List<String> answers = answersState.answers;
                     answersAdapter.setNotifyOnChange(false);
