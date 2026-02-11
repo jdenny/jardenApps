@@ -118,6 +118,7 @@ public class GameActivity extends AppCompatActivity implements
     private ScoresDialogFragment scoresFragment;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
+    private GameViewModel gameViewModel;
     private AnswersViewModel answersViewModel;
     private QuestionViewModel questionViewModel;
 
@@ -174,12 +175,15 @@ public class GameActivity extends AppCompatActivity implements
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
+        gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        tcpPlayerClient = gameViewModel.getTcpPlayerClient();
+        tcpPlayerClient.listenForHostBroadcast(this, this);
     }
     @Override // Activity
     protected void onDestroy() {
-        if (tcpControllerServer != null) tcpControllerServer.stop();
-        if (tcpPlayerClient != null) tcpPlayerClient.disconnect();
-        TcpPlayerClient.stopListening();
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onDestroy()");
+        }
         super.onDestroy();
     }
     @Override // ConfirmExitDialogFragment.ExitDialogListener
@@ -416,12 +420,15 @@ public class GameActivity extends AppCompatActivity implements
         }
         players = new ConcurrentHashMap<>();
         this.playerName = playerName;
-        tcpControllerServer = new TcpControllerServer(this);
-        tcpControllerServer.start();
+        tcpControllerServer = gameViewModel.getTcpControllerServer();
+        if (tcpControllerServer == null) {
+            tcpControllerServer = new TcpControllerServer(this);
+            gameViewModel.setTcpControllerServer(tcpControllerServer);
+            tcpControllerServer.start();
+        }
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
-        TcpPlayerClient.listenForHostBroadcast(this, this);
     }
 
     @Override // LoginDialogListener
@@ -430,11 +437,6 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         this.playerName = playerName;
-        waitForHost();
-    }
-    private void waitForHost() {
-        TcpPlayerClient.listenForHostBroadcast(this, this);
-        statusTextView.setText("Wait for Host to contact");
     }
     public int getQuestionSequence(boolean reset) {
         questionSequence = reset ? -1 : sharedPreferences.getInt(QUESTION_SEQUENCE_KEY, -1);
@@ -468,7 +470,7 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Now disconnected from the game server");
         }
-        waitForHost(); // await a new host!
+        //?? waitForHost(); // await a new host!
     }
 
     @Override // TcpPlayerClient.Listener
@@ -484,8 +486,7 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, status);
         }
-        tcpPlayerClient = new TcpPlayerClient(hostIp, TcpControllerServer.TCP_PORT,
+        tcpPlayerClient.connect(hostIp, TcpControllerServer.TCP_PORT,
                 playerName, this);
-        tcpPlayerClient.connect();
     }
 }

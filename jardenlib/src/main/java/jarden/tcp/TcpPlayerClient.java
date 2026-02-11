@@ -40,15 +40,20 @@ public class TcpPlayerClient {
             Executors.newSingleThreadExecutor();
     private final ExecutorService writeExecutor =
             Executors.newSingleThreadExecutor();
-    private final Listener listener;
+    private Listener listener;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     private volatile boolean running = false;
-    private final String hostAddress;
-    private final int port;
-    private final String playerId;
-    public TcpPlayerClient(
+    private String hostAddress;
+    private int port;
+    private String playerId;
+
+    // ----------------------------
+    // Connect / Disconnect
+    // ----------------------------
+
+    public void connect(
             String hostAddress,
             int port,
             String playerId,
@@ -57,13 +62,7 @@ public class TcpPlayerClient {
         this.port = port;
         this.playerId = playerId;
         this.listener = listener;
-    }
 
-    // ----------------------------
-    // Connect / Disconnect
-    // ----------------------------
-
-    public void connect() {
         readExecutor.execute(() -> {
             try {
                 socket = new Socket();
@@ -129,7 +128,7 @@ public class TcpPlayerClient {
             }
         });
     }
-    public static void listenForHostBroadcast(Context context,
+    public void listenForHostBroadcast(Context context,
                                               Listener callback) {
         udpExecutor.execute(() -> {
             WifiManager wifi =
@@ -176,7 +175,7 @@ public class TcpPlayerClient {
             }
         });
     }
-    public static void stopListening() {
+    public void stopListening() {
         udpExecutor.shutdownNow();
     }
 }
