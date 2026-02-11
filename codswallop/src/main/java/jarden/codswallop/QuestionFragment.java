@@ -11,22 +11,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
  */
-public class MainFragment extends Fragment {
+public class QuestionFragment extends Fragment {
 
     private static final String TAG = "MainFragment";
     private TextView questionView;
     private EditText answerEditText;
     private Button sendButton;
     private OnClickListener gameActivity;
-
-    private String savedQuestion;
-    private boolean sendButtonEnabled;
+    private QuestionViewModel questionViewModel;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,41 +36,37 @@ public class MainFragment extends Fragment {
         questionView = rootView.findViewById(R.id.questionView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        gameActivity = (GameActivity)getActivity();
+        try {
+            gameActivity = (GameActivity) getActivity();
+        } catch (ClassCastException cce) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, cce.toString());
+            }
+        }
         sendButton.setOnClickListener(view -> {
             if (answerEditText.getText().toString().trim().length() == 0) {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                gameActivity.onClick(view);
+                sendButton.setEnabled(false);
+                if (gameActivity != null) { gameActivity.onClick(view); }
             }
         });
+        questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
         return rootView;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        questionViewModel.getQuestionLD().observe(
+                getViewLifecycleOwner(),
+                question -> {
+                    questionView.setText(question);
+                    answerEditText.setText("");
+                    sendButton.setEnabled(true);
+                });
     }
     public String getAnswerEditText() {
         return answerEditText.getText().toString();
-    }
-
-    public void enableSendButton(boolean enabled) {
-        sendButtonEnabled = enabled;
-        sendButton.setEnabled(enabled);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (savedQuestion != null) {
-            setQuestionView(savedQuestion);
-            savedQuestion = null;
-        }
-        sendButton.setEnabled(sendButtonEnabled);
-    }
-    public void setQuestionView(String question) {
-        Lifecycle.State state = getLifecycle().getCurrentState();
-        if (state == Lifecycle.State.RESUMED || state == Lifecycle.State.STARTED) {
-            questionView.setText(question);
-            answerEditText.setText("");
-        } else {
-            savedQuestion = question;
-        }
     }
 }

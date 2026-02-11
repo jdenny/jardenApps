@@ -36,7 +36,7 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
     public void onAttach(Context context) {
         super.onAttach(context);
         loginDialogListener = (LoginDialogListener) context;
-        sharedPreferences = context.getSharedPreferences(GameActivity.TAG, Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override

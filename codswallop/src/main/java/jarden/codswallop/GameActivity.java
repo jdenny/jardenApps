@@ -28,6 +28,7 @@ import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 /* TODO next:
+ rename MainFragment to QuestionFragment
  what happens if player clicks on more than one answer? Ditto if clicks on namedAnswer?
  can the views go in the middle of the screen, and expand as necessary?
  separate classes Activity.player; Activity.host
@@ -113,11 +114,12 @@ public class GameActivity extends AppCompatActivity implements
     private String playerName;
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
-    private MainFragment mainFragment;
+    private QuestionFragment questionFragment;
     private ScoresDialogFragment scoresFragment;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
     private AnswersViewModel answersViewModel;
+    private QuestionViewModel questionViewModel;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,14 +138,14 @@ public class GameActivity extends AppCompatActivity implements
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         this.fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            mainFragment = new MainFragment();
+            questionFragment = new QuestionFragment();
             answersFragment = new AnswersFragment();
             scoresFragment = new ScoresDialogFragment();
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.add(R.id.fragmentContainerView, this.mainFragment, MAIN);
+            ft.add(R.id.fragmentContainerView, this.questionFragment, MAIN);
             ft.commit();
         } else {
-            mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN);
+            questionFragment = (QuestionFragment) fragmentManager.findFragmentByTag(MAIN);
             answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
             scoresFragment = (ScoresDialogFragment) fragmentManager.findFragmentByTag(SCORES);
         }
@@ -169,7 +171,8 @@ public class GameActivity extends AppCompatActivity implements
         }
         hostButtonsLayout = findViewById(R.id.hostButtons);
         questionManager = new QuestionManager(this);
-        sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
     }
     @Override // Activity
@@ -341,9 +344,8 @@ public class GameActivity extends AppCompatActivity implements
                 String[] tqa = message.split("\\|", 4);
                 String questionIndexStr = tqa[1];
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
-                setFragment(mainFragment, MAIN);
-                mainFragment.setQuestionView(currentQuestion);
-                mainFragment.enableSendButton(true);
+                setFragment(questionFragment, MAIN);
+                questionViewModel.setAnswerState(currentQuestion);
                 statusTextView.setText("supply answer and Send");
             } else if (message.startsWith(SCORES)) {
                 // SCORES|3|John 2|Julie 4
@@ -376,9 +378,8 @@ public class GameActivity extends AppCompatActivity implements
             getNextQuestion();
             statusTextView.setText("waiting for all players to answer");
         } else if (viewId == R.id.sendButton) { // Player
-            String answer = mainFragment.getAnswerEditText();
+            String answer = questionFragment.getAnswerEditText();
             tcpPlayerClient.sendAnswer(questionSequence, answer);
-            mainFragment.enableSendButton(false);
             statusTextView.setText("waiting for other players to answer");
         } else if (viewId == R.id.scoresButton) { // Host only
             String scoresMessage = getScoresMessage();

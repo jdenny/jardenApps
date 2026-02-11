@@ -25,7 +25,7 @@ public class AnswersFragment extends Fragment {
     private TextView questionView;
     private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;
-    private AnswersViewModel viewModel;
+    private AnswersViewModel answersViewModel;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +44,7 @@ public class AnswersFragment extends Fragment {
             Log.e(TAG, cce.toString());
         }
 
-        viewModel = new ViewModelProvider(requireActivity()).get(AnswersViewModel.class);
+        answersViewModel = new ViewModelProvider(requireActivity()).get(AnswersViewModel.class);
         return rootView;
     }
 
@@ -65,7 +65,7 @@ public class AnswersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel.getAnswersState().observe(
+        answersViewModel.getAnswersState().observe(
                 getViewLifecycleOwner(),
                 answersState -> {
                     questionView.setText(answersState.question);
