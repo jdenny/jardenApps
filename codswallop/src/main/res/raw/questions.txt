@@ -1,5 +1,5 @@
 EVENTS|Who or what was the Piltdown Man?|A composite of a human skull and an orangutan jawbone|The fossil, presented as the missing link between apes and humans, was carefully constructed to deceive the scientific community
-LAWS|What restrictions are you under if you visit any royal household with your dog?|You mustn’t let your dog with one of the royal dogs|Until 1965 this was punishable by the death sentence
+LAWS|What restrictions are you under if you visit any royal household with your dog?|You mustn't let your dog mate with one of the royal dogs|Until 1965 this was punishable by the death sentence
 INITIALS|VIN|Vehicle Identification Number
 PEOPLE|Buford Pusser|Sheriff of McNairy County, Tennessee, tracked down and killed 3 out of the 4 people who killed his wife
 WORDS|Bowyang|a band or strap worn round the trouser leg below the knee
@@ -50,7 +50,7 @@ PEOPLE|Mary Ellen Pleasant|American entrepreneur, financier, real estate magnate
 WORDS|Callipygian|having well-shaped buttocks
 EVENTS|In 1875 in Dublin, a fire heated up the whiskey barrels in a warehouse until they exploded, killing 13 people. What did they die from?|alcohol poisoning, after a flood of whiskey. No one actually died from the flood itself
 LAWS|According to the Libraries Offences Act, 1898, where is gambling prohibited?|In a British library
-INITIALS|HIPPO|Highest Paid Person’s Opinion
+INITIALS|HIPPO|Highest Paid Person's Opinion
 PEOPLE|John (Chickie) Donohue|In 1967, he sailed thousands of miles from New York City to Vietnam to deliver beer to his friends serving in the war|His story was later portrayed in the 2022 film “The Greatest Beer Run Ever”
 WORDS|Boustrophedon|written from right to left and from left to right in alternate lines
 EVENTS|The mayor of Rome and the mayor of Carthage met in 1985 to sign a peace treaty to end a war. What was unusual about that?|The war was the Punic Wars,  between the Roman Republic and the Carthaginian Empire. The peace treaty was signed 2,131 years after Carthage was destroyed.
@@ -58,7 +58,7 @@ LAWS|According to the Metropolitan Police Act 1839, section 7, what is not permi
 INITIALS|FLOTUS|First Lady of the United States
 PEOPLE|Cliff Young|a potato farmer from Australia who unexpectedly won the first Sydney to Melbourne Ultramarathon (544 miles) at the age of 61 years, principally by not sleeping for 5 days
 WORDS|Absquatulate|To leave abruptly
-EVENTS|What keepsake did Mary Shelley retain after the death of her husband, Percy?|Percy’s heart
+EVENTS|What keepsake did Mary Shelley retain after the death of her husband, Percy?|Percy's heart
 LAWS|In Florida, under what circumstances is it illegal for a woman to fall asleep?|under a hairdryer in a salon
 INITIALS|FEMA|Federal Emergency Management Agency
 PEOPLE|Corrie Ten Boom|a Dutch watchmaker who saved 800 Jewish people during World War II

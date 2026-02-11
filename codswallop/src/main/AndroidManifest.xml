@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <!--android:configChanges="orientation|keyboardHidden|screenSize"-->
 
     <application
         android:allowBackup="true"
@@ -15,7 +16,6 @@
         android:theme="@style/Theme.JardenApps">
         <activity
             android:name=".GameActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,5 +24,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

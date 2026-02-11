@@ -9,13 +9,29 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 /**
  * Created by john.denny@gmail.com on 08/01/2026.
  */
 public class ScoresDialogFragment extends DialogFragment {
+    public class ScoresViewModel extends ViewModel {
+        private final MutableLiveData<List<String>> scores =
+                new MutableLiveData<>(new ArrayList<>());
+        public void setScores(List<String> newScores) {
+            scores.setValue(newScores);
+        }
+        public LiveData<List<String>> getScores() {
+            return scores;
+        }
+    }
     private static final String TAG = "ScoresDialogFragment";
     private ListView scoresListView;
     private String[] scores;

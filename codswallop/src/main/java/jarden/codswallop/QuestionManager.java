@@ -37,9 +37,7 @@ public class QuestionManager {
     private final List<QuestionAnswer> questionList = new ArrayList<>();
     public QuestionManager(Context context) {
         this.context = context;
-        int qaFileId =
-                // R.raw.test_questions;
-                R.raw.questions;
+        int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
         try (InputStream is =
                      context.getResources().openRawResource(qaFileId)) {
             List<String> lines = EngSpaUtils.getLinesFromStream(is);

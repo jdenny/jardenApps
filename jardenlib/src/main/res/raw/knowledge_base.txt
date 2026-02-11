@@ -58,12 +58,16 @@ fn+cmd+right	go to end of file
 
 git
 ---
+If pushing a big files of changes, may need to increase the buffer size:
+	Android Studio terminal
+	$ git config --global http.postBuffer 524288000
 Generate Personal Access Token for github
 The token is displayed, once only, after generating it. If you miss that, you'll have to regenerate
 See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-Grant access: repo, gist, read:org
+https://github.com/settings/tokens
+Grant access: repo, workflow, read:org, gist, read:user, user:email
 Token stored in MySettings2.txt
-renewed 13/1/2026
+renewed 9/2/2026
 
 In Android Studio -> Preferences -> Version Control -> GitHub
 + (add) -> Use Token -> [paste in token]

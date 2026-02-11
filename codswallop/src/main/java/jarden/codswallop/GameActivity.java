@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +22,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 /* TODO next:
+ what happens if player clicks on more than one answer? Ditto if clicks on namedAnswer?
  can the views go in the middle of the screen, and expand as necessary?
  separate classes Activity.player; Activity.host
  in landscape mode, show question and answer side by side
@@ -74,7 +77,7 @@ public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener,
         AdapterView.OnItemClickListener, TcpPlayerClient.Listener,
         LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
-    private static final String TAG = "GameActivity";
+    public static final String TAG = "GameActivity";
     private static final String QUESTION = "QUESTION";
     private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
@@ -84,7 +87,7 @@ public class GameActivity extends AppCompatActivity implements
     private static final String VOTE = "VOTE";
     private static final String SCORES = "SCORES";
     private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
-    private static final String questionSequenceKey = "QUESTION_SEQUENCE_KEY";
+    private static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";
 
     // Host fields: ***************************
     private Map<String, Player> players;
@@ -114,15 +117,15 @@ public class GameActivity extends AppCompatActivity implements
     private ScoresDialogFragment scoresFragment;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
-
-    @Override // Activity
-    public void onResume() {
-        super.onResume();
-    }
+    private AnswersViewModel answersViewModel;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            String message = "onCreate(" + ((savedInstanceState == null) ? "null" : "not null") + ")";
+            Log.d(TAG, message);
+        }
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -167,6 +170,7 @@ public class GameActivity extends AppCompatActivity implements
         hostButtonsLayout = findViewById(R.id.hostButtons);
         questionManager = new QuestionManager(this);
         sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
     }
     @Override // Activity
     protected void onDestroy() {
@@ -206,7 +210,7 @@ public class GameActivity extends AppCompatActivity implements
             String votedForName = shuffledNameList.get(indexOfVotedItem);
             if (votedForName.equals(CORRECT)) {
                 players.get(playerName).incrementScore();
-            } else if (!votedForName.equals(playerName)) { // I only vote for myself during development!
+            } else if (!votedForName.equals(playerName)) {
                 players.get(votedForName).incrementScore();
             }
             votesCt++;
@@ -224,31 +228,6 @@ public class GameActivity extends AppCompatActivity implements
                 Log.d(TAG, "unrecognised message received by host: " + message);
             }
         }
-    }
-
-    private String getNamedAnswersMessage() {
-        // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe (2)|Centre forward for Liverpool
-        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
-        buffer.append('|' + CORRECT + '|' + currentQA.answer);
-        if (currentQA.comment != null) {
-            buffer.append(". " + currentQA.comment);
-        }
-        for (Player player: players.values()) {
-            buffer.append('|' + player.getName() + " (" + player.getScore() + ')' +
-                    '|' + player.getAnswer());
-        }
-        return buffer.toString();
-    }
-
-    private String getScoresMessage() {
-        // SCORES|3|John 2|Julie 4
-        StringBuffer buffer = new StringBuffer(SCORES + '|' + questionSequence);
-        for (Player player : players.values()) {
-            if (!player.getName().equals(CORRECT)) {
-                buffer.append('|' + player.getName() + ": " + player.getScore());
-            }
-        }
-        return buffer.toString();
     }
 
     /*
@@ -270,7 +249,30 @@ public class GameActivity extends AppCompatActivity implements
         }
         return buffer.toString();
     }
+    private String getNamedAnswersMessage() {
+        // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
+        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
+        buffer.append('|' + CORRECT + ": " + currentQA.answer);
+        if (currentQA.comment != null) {
+            buffer.append(". " + currentQA.comment);
+        }
+        for (Player player: players.values()) {
+            buffer.append('|' + player.getName() + " (" + player.getScore() + ')' +
+                    ": " + player.getAnswer());
+        }
+        return buffer.toString();
+    }
 
+    private String getScoresMessage() {
+        // SCORES|3|John 2|Julie 4
+        StringBuffer buffer = new StringBuffer(SCORES + '|' + questionSequence);
+        for (Player player : players.values()) {
+            if (!player.getName().equals(CORRECT)) {
+                buffer.append('|' + player.getName() + ": " + player.getScore());
+            }
+        }
+        return buffer.toString();
+    }
     @Override // TcpControllerServer.MessageListener
     public void onPlayerConnected(String playerName) {
         if (BuildConfig.DEBUG) {
@@ -310,7 +312,15 @@ public class GameActivity extends AppCompatActivity implements
         }
         runOnUiThread(() -> statusTextView.setText(status));
     }
-
+    private void showAnswers(String message) {
+        int index = message.indexOf('|');
+        int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
+        String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+        List<String> answersList = Arrays.asList(answers);
+        setFragment(answersFragment, ANSWER);
+        answersViewModel.setAnswersState(
+                new AnswersState(currentQuestion, answersList));
+    }
     @Override // TcpPlayerClient.Listener
     // i.e. message sent from host to player
     public void onMessage(String message) {
@@ -320,25 +330,17 @@ public class GameActivity extends AppCompatActivity implements
         runOnUiThread(() -> {
             if (message.startsWith(ALL_ANSWERS)) {
                 // ALL_ANSWERS|2|a pig trough|dollop|
-                int indexOf3rdField = ALL_ANSWERS.length() + 1;
-                int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
-                String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
-                setFragment(answersFragment, ANSWER);
-                answersFragment.setOnItemClickListener(GameActivity.this);
+                showAnswers(message);
                 voteCast = false;
-                answersFragment.showAnswers(currentQuestion, answers, false);
                 statusTextView.setText("tap on the answer you think is correct");
             } else if (message.startsWith(NAMED_ANSWERS)) {
-                // NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
-                int indexOf3rdField = NAMED_ANSWERS.length() + 1;
-                int indexOfFirstAnswer = message.indexOf('|', indexOf3rdField) + 1;
-                String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
-                setFragment(answersFragment, ANSWER);
-                answersFragment.showAnswers(currentQuestion, answers, true);
+                // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
+                showAnswers(message);
                 statusTextView.setText("Who said what");
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
-                currentQuestion = tqa[2] + ": " + tqa[3];
+                String questionIndexStr = tqa[1];
+                currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
                 setFragment(mainFragment, MAIN);
                 mainFragment.setQuestionView(currentQuestion);
                 mainFragment.enableSendButton(true);
@@ -434,12 +436,12 @@ public class GameActivity extends AppCompatActivity implements
         statusTextView.setText("Wait for Host to contact");
     }
     public int getQuestionSequence(boolean reset) {
-        questionSequence = reset ? -1 : sharedPreferences.getInt(questionSequenceKey, -1);
+        questionSequence = reset ? -1 : sharedPreferences.getInt(QUESTION_SEQUENCE_KEY, -1);
         if (questionSequence == -1 && BuildConfig.DEBUG) {
             Log.w(TAG, "getQuestionSequence() returning -1");
         }
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(questionSequenceKey, ++questionSequence);
+        editor.putInt(QUESTION_SEQUENCE_KEY, ++questionSequence);
         editor.apply();
         return questionSequence;
     }
