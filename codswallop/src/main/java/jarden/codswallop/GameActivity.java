@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import jarden.quiz.EndOfQuestionsException;
@@ -109,9 +108,9 @@ public class GameActivity extends AppCompatActivity implements
     private TcpPlayerClient tcpPlayerClient;
     private String currentQuestion;
     // Host & Client fields ***************************
-    private String currentFragmentTag = QUESTION;
+    private String currentFragmentTag;
     private String playerName;
-    private FragmentManager fragmentManager;
+    //!! private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
     private QuestionFragment questionFragment;
     private boolean isHost;
@@ -142,7 +141,7 @@ public class GameActivity extends AppCompatActivity implements
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
-        this.fragmentManager = getSupportFragmentManager();
+        //!! this.fragmentManager = getSupportFragmentManager();
         LoginDialogFragment loginDialog;
         questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
@@ -155,18 +154,16 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "isHost=" + isHost);
         }
+        String fragmentTag = QUESTION;
         if (savedInstanceState == null) {
             loginDialog = new LoginDialogFragment();
             questionFragment = new QuestionFragment();
             answersFragment = new AnswersFragment();
-            loginDialog.show(fragmentManager, LOGIN_DIALOG);
+            loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
         } else {
-            questionFragment = (QuestionFragment) fragmentManager.findFragmentByTag(QUESTION);
-            answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
-            if (answersFragment == null) {
-                answersFragment = new AnswersFragment();
-            }
-            currentFragmentTag = gameViewModel.getCurrentFragmentTag();
+            questionFragment = (QuestionFragment) getSupportFragmentManager().findFragmentByTag(QUESTION);
+            answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentByTag(ALL_ANSWERS);
+            fragmentTag = gameViewModel.getCurrentFragmentTag();
             voteCast = gameViewModel.getVoteCast();
             if (isHost) {
                 answersCt = gameViewModel.getAnswersCt();
@@ -176,10 +173,14 @@ public class GameActivity extends AppCompatActivity implements
                 hostButtonsLayout.setVisibility(View.VISIBLE);
             }
         }
+        showFragment(fragmentTag);
+        /*!!
         Fragment currentFragment = (currentFragmentTag == QUESTION) ? questionFragment : answersFragment;
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.fragmentContainerView, currentFragment, currentFragmentTag);
         ft.commit();
+
+         */
         questionManager = new QuestionManager(this);
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         tcpPlayerClient = gameViewModel.getTcpPlayerClient();
@@ -320,7 +321,7 @@ public class GameActivity extends AppCompatActivity implements
         int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
-        setFragment(answersFragment, ALL_ANSWERS);
+        showFragment(ALL_ANSWERS);
         answersViewModel.setAnswersState(
                 new AnswersState(currentQuestion, answersList));
     }
@@ -343,7 +344,7 @@ public class GameActivity extends AppCompatActivity implements
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
-                setFragment(questionFragment, QUESTION);
+                showFragment(QUESTION);
                 questionViewModel.setAnswerState(currentQuestion);
                 statusTextView.setText("supply answer and Send");
             } else {
@@ -353,6 +354,29 @@ public class GameActivity extends AppCompatActivity implements
             }
         });
     }
+    private void showFragment(String fragmentTag) {
+        if (!fragmentTag.equals(currentFragmentTag)) {
+            currentFragmentTag = fragmentTag;
+            Fragment currentFragment;
+            if (fragmentTag == QUESTION) {
+                if (questionFragment == null) {
+                    questionFragment = new QuestionFragment();
+                }
+                currentFragment = questionFragment;
+            } else if (fragmentTag == ALL_ANSWERS) {
+                if (answersFragment == null) {
+                    answersFragment = new AnswersFragment();
+                }
+                currentFragment = answersFragment;
+            } else {
+                throw new RuntimeException("unrecognised fragmentTag: " + fragmentTag);
+            }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragmentContainerView, currentFragment, fragmentTag);
+            transaction.commit();
+        }
+    }
+    /*!!
     private void setFragment(Fragment fragment, String fragmentTag) {
         if (!currentFragmentTag.equals(fragmentTag)) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -361,6 +385,8 @@ public class GameActivity extends AppCompatActivity implements
             currentFragmentTag = fragmentTag;
         }
     }
+
+     */
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();

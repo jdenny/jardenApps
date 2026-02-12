@@ -24,18 +24,22 @@
 
         <LinearLayout
             android:id="@+id/hostButtonsLayout"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
+
             <Button
                 android:id="@+id/nextQuestionButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:text="@string/next_question"
-                android:enabled="false"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <Button
                 android:id="@+id/broadcastHostButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:text="@string/broadcastHostAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
