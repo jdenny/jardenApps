@@ -33,7 +33,6 @@ public class TcpPlayerClient {
         void onDisconnected();
         void onError(Exception e);
     }
-
     private static final ExecutorService udpExecutor =
             Executors.newSingleThreadExecutor();
     private final ExecutorService readExecutor =
@@ -47,7 +46,7 @@ public class TcpPlayerClient {
     private volatile boolean running = false;
     private String hostAddress;
     private int port;
-    private String playerId;
+    private String playerName;
 
     // ----------------------------
     // Connect / Disconnect
@@ -56,11 +55,11 @@ public class TcpPlayerClient {
     public void connect(
             String hostAddress,
             int port,
-            String playerId,
+            String playerName,
             Listener listener) {
         this.hostAddress = hostAddress;
         this.port = port;
-        this.playerId = playerId;
+        this.playerName = playerName;
         this.listener = listener;
 
         readExecutor.execute(() -> {
@@ -76,7 +75,7 @@ public class TcpPlayerClient {
                 in = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
                 // Send JOIN immediately
-                out.println("JOIN|" + playerId);
+                out.println("JOIN|" + playerName);
                 running = true;
                 listener.onConnected();
                 String line;
@@ -105,6 +104,10 @@ public class TcpPlayerClient {
             } catch (IOException ignored) {}
         }
     }
+    public String getPlayerName() {
+        return playerName;
+    }
+
     // ----------------------------
     // Send messages
     // ----------------------------

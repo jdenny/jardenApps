@@ -29,9 +29,9 @@ import java.util.concurrent.Executors;
  */
 public class TcpControllerServer {
     public interface MessageListener {
-        void onMessage(String playerId, String message);
-        void onPlayerConnected(String playerId);
-        void onPlayerDisconnected(String playerId);
+        void onMessage(String playerName, String message);
+        void onPlayerConnected(String playerName);
+        void onPlayerDisconnected(String playerName);
         void onServerStarted();
     }
 
@@ -91,8 +91,8 @@ public class TcpControllerServer {
     // Send messages
     // ----------------------------
 
-    public void sendToPlayer(String playerId, String message) {
-        ClientHandler handler = clients.get(playerId);
+    public void sendToPlayer(String playerName, String message) {
+        ClientHandler handler = clients.get(playerName);
         executor.execute(() -> {
             if (handler != null) {
                 handler.send(message);
@@ -115,7 +115,7 @@ public class TcpControllerServer {
         private final Socket tcpSocket;
         private BufferedReader in;
         private PrintWriter out;
-        private String playerId;
+        private String playerName;
 
         ClientHandler(Socket tcpSocket) {
             this.tcpSocket = tcpSocket;
@@ -131,22 +131,22 @@ public class TcpControllerServer {
                                 new OutputStreamWriter(tcpSocket.getOutputStream())),
                         true);
                 // First message must be JOIN
-                // JOIN|playerId
+                // JOIN|playerName
                 String join = in.readLine();
                 if (join == null || !join.startsWith("JOIN|")) {
                     close();
                     return;
                 }
-                playerId = join.split("\\|", 2)[1];
-                clients.put(playerId, this);
-                listener.onPlayerConnected(playerId);
+                playerName = join.split("\\|", 2)[1];
+                clients.put(playerName, this);
+                listener.onPlayerConnected(playerName);
                 String line;
                 while ((line = in.readLine()) != null) {
-                    listener.onMessage(playerId, line);
+                    listener.onMessage(playerName, line);
                 }
             } catch (IOException e) {
                 if (BuildConfig.DEBUG) {
-                    Log.w(TAG, "Client disconnected: " + playerId, e);
+                    Log.w(TAG, "Client disconnected: " + playerName, e);
                 }
             } finally {
                 close();
@@ -163,9 +163,9 @@ public class TcpControllerServer {
             try {
                 tcpSocket.close();
             } catch (IOException ignored) {}
-            if (playerId != null) {
-                clients.remove(playerId);
-                listener.onPlayerDisconnected(playerId);
+            if (playerName != null) {
+                clients.remove(playerName);
+                listener.onPlayerDisconnected(playerName);
             }
         }
     }

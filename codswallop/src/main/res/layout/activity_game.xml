@@ -23,7 +23,7 @@
         android:layout_weight="1" >
 
         <LinearLayout
-            android:id="@+id/hostButtons"
+            android:id="@+id/hostButtonsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -31,12 +31,6 @@
             <Button
                 android:id="@+id/nextQuestionButton"
                 android:text="@string/next_question"
-                android:enabled="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/scoresButton"
-                android:text="@string/scores"
                 android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

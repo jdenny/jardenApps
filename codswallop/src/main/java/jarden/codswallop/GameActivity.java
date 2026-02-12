@@ -28,8 +28,6 @@ import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
 /* TODO next:
- rename MainFragment to QuestionFragment
- what happens if player clicks on more than one answer? Ditto if clicks on namedAnswer?
  can the views go in the middle of the screen, and expand as necessary?
  separate classes Activity.player; Activity.host
  in landscape mode, show question and answer side by side
@@ -58,7 +56,7 @@ Message Protocol:
  Initial dialog:
     PlayerNameEditText; HostButton; JoinButton
  three screens (Fragments):
- 1  NextButton, ScoresButton, SendHostAddressButton (host only)
+ 1  NextButton, SendHostAddressButton (host only)
     QuestionTextView
     YourAnswerEditText
     SendButton (initially disabled)
@@ -83,10 +81,12 @@ public class GameActivity extends AppCompatActivity implements
     private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
     private static final String NAMED_ANSWERS = "NAMED_ANSWERS";
+    /*!!
     private static final String MAIN = "MAIN";
+
+     */
     private static final String CORRECT = "CORRECT";
     private static final String VOTE = "VOTE";
-    private static final String SCORES = "SCORES";
     private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
     private static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";
 
@@ -95,7 +95,6 @@ public class GameActivity extends AppCompatActivity implements
     private QuestionManager questionManager;
     QuestionManager.QuestionAnswer currentQA;
     private Button nextQuestionButton;
-    private Button scoresButton;
     private TextView statusTextView;
     private TcpControllerServer tcpControllerServer;
     private int answersCt;
@@ -110,12 +109,11 @@ public class GameActivity extends AppCompatActivity implements
     private TcpPlayerClient tcpPlayerClient;
     private String currentQuestion;
     // Host & Client fields ***************************
-    private String currentFragmentTag = MAIN;
+    private String currentFragmentTag = QUESTION;
     private String playerName;
     private FragmentManager fragmentManager;
     private AnswersFragment answersFragment;
     private QuestionFragment questionFragment;
-    private ScoresDialogFragment scoresFragment;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
@@ -129,6 +127,13 @@ public class GameActivity extends AppCompatActivity implements
             String message = "onCreate(" + ((savedInstanceState == null) ? "null" : "not null") + ")";
             Log.d(TAG, message);
         }
+        setContentView(R.layout.activity_game);
+        nextQuestionButton = findViewById(R.id.nextQuestionButton);
+        nextQuestionButton.setOnClickListener(this);
+        Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
+        sendHostAddressButton.setOnClickListener(this);
+        statusTextView = findViewById(R.id.statusView);
+        hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -138,46 +143,48 @@ public class GameActivity extends AppCompatActivity implements
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         this.fragmentManager = getSupportFragmentManager();
-        if (savedInstanceState == null) {
-            questionFragment = new QuestionFragment();
-            answersFragment = new AnswersFragment();
-            scoresFragment = new ScoresDialogFragment();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.add(R.id.fragmentContainerView, this.questionFragment, MAIN);
-            ft.commit();
-        } else {
-            questionFragment = (QuestionFragment) fragmentManager.findFragmentByTag(MAIN);
-            answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
-            scoresFragment = (ScoresDialogFragment) fragmentManager.findFragmentByTag(SCORES);
-        }
-        /*?
-        isHost = getIntent().getBooleanExtra("HOST", false);
-        if (isHost) {
-            server = new TcpControllerServer(this);
-            server.start();
-        }
-         */
-        setContentView(R.layout.activity_game);
-        nextQuestionButton = findViewById(R.id.nextQuestionButton);
-        nextQuestionButton.setOnClickListener(this);
-        scoresButton = findViewById(R.id.scoresButton);
-        scoresButton.setOnClickListener(this);
-        Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
-        sendHostAddressButton.setOnClickListener(this);
-        statusTextView = findViewById(R.id.statusView);
-        LoginDialogFragment loginDialog = new LoginDialogFragment();
-        loginDialog.show(fragmentManager, LOGIN_DIALOG);
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "isHost=" + isHost);
-        }
-        hostButtonsLayout = findViewById(R.id.hostButtons);
-        questionManager = new QuestionManager(this);
-        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        LoginDialogFragment loginDialog;
         questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        tcpControllerServer = gameViewModel.getTcpControllerServer();
+        if (tcpControllerServer != null) {
+            isHost = true;
+            players = gameViewModel.getPlayers();
+        }
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "isHost=" + isHost);
+        }
+        if (savedInstanceState == null) {
+            loginDialog = new LoginDialogFragment();
+            questionFragment = new QuestionFragment();
+            answersFragment = new AnswersFragment();
+            loginDialog.show(fragmentManager, LOGIN_DIALOG);
+        } else {
+            questionFragment = (QuestionFragment) fragmentManager.findFragmentByTag(QUESTION);
+            answersFragment = (AnswersFragment) fragmentManager.findFragmentByTag(ALL_ANSWERS);
+            if (answersFragment == null) {
+                answersFragment = new AnswersFragment();
+            }
+            currentFragmentTag = gameViewModel.getCurrentFragmentTag();
+            voteCast = gameViewModel.getVoteCast();
+            if (isHost) {
+                answersCt = gameViewModel.getAnswersCt();
+                votesCt = gameViewModel.getVotesCt();
+                questionSequence = gameViewModel.getQuestionSequence();
+                currentQuestion = gameViewModel.getCurrentQuestion();
+                hostButtonsLayout.setVisibility(View.VISIBLE);
+            }
+        }
+        Fragment currentFragment = (currentFragmentTag == QUESTION) ? questionFragment : answersFragment;
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.fragmentContainerView, currentFragment, currentFragmentTag);
+        ft.commit();
+        questionManager = new QuestionManager(this);
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         tcpPlayerClient = gameViewModel.getTcpPlayerClient();
         tcpPlayerClient.listenForHostBroadcast(this, this);
+        playerName = tcpPlayerClient.getPlayerName();
     }
     @Override // Activity
     protected void onDestroy() {
@@ -269,17 +276,6 @@ public class GameActivity extends AppCompatActivity implements
         }
         return buffer.toString();
     }
-
-    private String getScoresMessage() {
-        // SCORES|3|John 2|Julie 4
-        StringBuffer buffer = new StringBuffer(SCORES + '|' + questionSequence);
-        for (Player player : players.values()) {
-            if (!player.getName().equals(CORRECT)) {
-                buffer.append('|' + player.getName() + ": " + player.getScore());
-            }
-        }
-        return buffer.toString();
-    }
     @Override // TcpControllerServer.MessageListener
     public void onPlayerConnected(String playerName) {
         if (BuildConfig.DEBUG) {
@@ -324,7 +320,7 @@ public class GameActivity extends AppCompatActivity implements
         int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
-        setFragment(answersFragment, ANSWER);
+        setFragment(answersFragment, ALL_ANSWERS);
         answersViewModel.setAnswersState(
                 new AnswersState(currentQuestion, answersList));
     }
@@ -346,18 +342,10 @@ public class GameActivity extends AppCompatActivity implements
                 statusTextView.setText("Who said what");
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
-                String questionIndexStr = tqa[1];
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
-                setFragment(questionFragment, MAIN);
+                setFragment(questionFragment, QUESTION);
                 questionViewModel.setAnswerState(currentQuestion);
                 statusTextView.setText("supply answer and Send");
-            } else if (message.startsWith(SCORES)) {
-                // SCORES|3|John 2|Julie 4
-                int indexOf3rdField = SCORES.length() + 1;
-                int indexOfFirstScore = message.indexOf('|', indexOf3rdField) + 1;
-                String[] scores = message.substring(indexOfFirstScore).split("\\|");
-                scoresFragment.show(fragmentManager, SCORES);
-                scoresFragment.showScores(scores);
             } else {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "unrecognised message received by player: " + message);
@@ -365,16 +353,14 @@ public class GameActivity extends AppCompatActivity implements
             }
         });
     }
-
-    private void setFragment(Fragment answersFragment, String fragmentTag) {
+    private void setFragment(Fragment fragment, String fragmentTag) {
         if (!currentFragmentTag.equals(fragmentTag)) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragmentContainerView, answersFragment, fragmentTag);
+            transaction.replace(R.id.fragmentContainerView, fragment, fragmentTag);
             transaction.commit();
             currentFragmentTag = fragmentTag;
         }
     }
-
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
@@ -385,20 +371,15 @@ public class GameActivity extends AppCompatActivity implements
             String answer = questionFragment.getAnswerEditText();
             tcpPlayerClient.sendAnswer(questionSequence, answer);
             statusTextView.setText("waiting for other players to answer");
-        } else if (viewId == R.id.scoresButton) { // Host only
-            String scoresMessage = getScoresMessage();
-            tcpControllerServer.sendToAll(scoresMessage);
         } else if (viewId == R.id.broadcastHostButton) { // Host only
             tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
-            scoresButton.setEnabled(true);
             statusTextView.setText("wait for all players to join, then 'Next'");
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
         }
     }
-
     @Override // OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (BuildConfig.DEBUG) {
@@ -412,13 +393,13 @@ public class GameActivity extends AppCompatActivity implements
             statusTextView.setText("You have already cast your vote; you can't change your mind!");
         }
     }
-
     @Override // LoginDialogListener
     public void onHostButton(String playerName) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
         players = new ConcurrentHashMap<>();
+        gameViewModel.setPlayers(players);
         this.playerName = playerName;
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer == null) {
@@ -430,7 +411,6 @@ public class GameActivity extends AppCompatActivity implements
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
     }
-
     @Override // LoginDialogListener
     public void onJoinButton(String playerName) {
         if (BuildConfig.DEBUG) {
@@ -448,7 +428,6 @@ public class GameActivity extends AppCompatActivity implements
         editor.apply();
         return questionSequence;
     }
-
     private void getNextQuestion() {
         try {
             currentQA = questionManager.getNext(getQuestionSequence(false));
@@ -464,7 +443,6 @@ public class GameActivity extends AppCompatActivity implements
         votesCt = 0;
         tcpControllerServer.sendToAll(nextQuestion);
     }
-
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {
         if (BuildConfig.DEBUG) {
@@ -472,14 +450,12 @@ public class GameActivity extends AppCompatActivity implements
         }
         //?? waitForHost(); // await a new host!
     }
-
     @Override // TcpPlayerClient.Listener
     public void onError(Exception e) {
         if (BuildConfig.DEBUG) {
             Log.e(TAG, e.toString());
         }
     }
-
     @Override // TcpPlayerClient.HostFoundCallback
     public void onHostFound(String hostIp, int port) {
         String status = "onHostFound(" + hostIp + "' " + port + ')';
@@ -488,5 +464,21 @@ public class GameActivity extends AppCompatActivity implements
         }
         tcpPlayerClient.connect(hostIp, TcpControllerServer.TCP_PORT,
                 playerName, this);
+    }
+    @Override // Activity
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
+                    currentFragmentTag);
+        }
+        gameViewModel.setCurrentFragmentTag(currentFragmentTag);
+        gameViewModel.setVoteCast(voteCast);
+        if (isHost) {
+            gameViewModel.setAnswersCt(answersCt);
+            gameViewModel.setVotesCt(votesCt);
+            gameViewModel.setQuestionSequence(questionSequence);
+            gameViewModel.setCurrentQuestion(currentQuestion);
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
