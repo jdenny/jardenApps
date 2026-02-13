@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.util.Map;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
@@ -13,16 +15,25 @@ import jarden.tcp.TcpPlayerClient;
  */
 public class GameViewModel extends ViewModel {
     private final static String TAG = "GameViewModel";
+    private final MutableLiveData<String> currentFragmentTagLiveData =
+            new MutableLiveData<>(new String(""));
+    private String pendingFragmentTag;
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
     private Map<String, Player> players;
-    private String currentFragmentTag;
+    //!! private String currentFragmentTag;
     private boolean voteCast;
     private int answersCt;
     private int votesCt;
     private int questionSequence;
     private String currentQuestion;
 
+    public void setCurrentFragmentTagLiveData(String currentFragmentTag) {
+        currentFragmentTagLiveData.setValue(currentFragmentTag);
+    }
+    public LiveData<String> getCurrentFragmentTagLiveData() {
+        return currentFragmentTagLiveData;
+    }
     public TcpPlayerClient getTcpPlayerClient() {
         return tcpPlayerClient;
     }
@@ -38,11 +49,20 @@ public class GameViewModel extends ViewModel {
     public Map<String, Player> getPlayers() {
         return players;
     }
+    /*!!
     public void setCurrentFragmentTag(String currentFragmentTag) {
         this.currentFragmentTag = currentFragmentTag;
     }
     public String getCurrentFragmentTag() {
         return currentFragmentTag;
+    }
+
+     */
+    public void setPendingFragmentTag(String pendingFragmentTag) {
+        this.pendingFragmentTag = pendingFragmentTag;
+    }
+    public String getPendingFragmentTag() {
+        return pendingFragmentTag;
     }
     public void setVoteCast(boolean voteCast) {
         this.voteCast = voteCast;

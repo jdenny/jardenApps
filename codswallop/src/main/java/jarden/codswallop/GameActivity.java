@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
@@ -101,7 +102,8 @@ public class GameActivity extends AppCompatActivity implements
     private TcpPlayerClient tcpPlayerClient;
     private String currentQuestion;
     // Host & Client fields ***************************
-    private String currentFragmentTag;
+    private String currentFragmentTag = null;
+    private String pendingFragmentTag = null;
     private String playerName;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
@@ -136,14 +138,18 @@ public class GameActivity extends AppCompatActivity implements
         questionViewModel.getAnswerLiveData().observe(
                 this,
                 answer -> {
-                    tcpPlayerClient.sendAnswer(questionSequence, answer);
-                    statusTextView.setText("waiting for other players to answer");
+                    if (answer != null && answer.length() > 0) {
+                        tcpPlayerClient.sendAnswer(questionSequence, answer);
+                        statusTextView.setText("waiting for other players to answer");
+                    }
                 });
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
         answersViewModel.getSelectedAnswerLiveData().observe(
                 this,
                 position -> {
-                    tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+                    if (position != null) {
+                        tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+                    }
                 });
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
         tcpControllerServer = gameViewModel.getTcpControllerServer();
@@ -154,12 +160,18 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "isHost=" + isHost);
         }
-        String fragmentTag = QUESTION;
+        final LiveData<String> currentFragmentTagLiveData =
+                gameViewModel.getCurrentFragmentTagLiveData();
+        currentFragmentTagLiveData.observe(this, this::requestShowFragment);
+        String fragmentTag;
         if (savedInstanceState == null) {
+            fragmentTag = QUESTION;
             loginDialog = new LoginDialogFragment();
             loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
         } else {
-            fragmentTag = gameViewModel.getCurrentFragmentTag();
+            fragmentTag = currentFragmentTagLiveData.getValue();
+            currentFragmentTag = fragmentTag;
+            pendingFragmentTag = gameViewModel.getPendingFragmentTag();
             voteCast = gameViewModel.getVoteCast();
             if (isHost) {
                 answersCt = gameViewModel.getAnswersCt();
@@ -169,12 +181,59 @@ public class GameActivity extends AppCompatActivity implements
                 hostButtonsLayout.setVisibility(View.VISIBLE);
             }
         }
-        showFragment(fragmentTag);
+        gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
         questionManager = new QuestionManager(this);
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         tcpPlayerClient = gameViewModel.getTcpPlayerClient();
         tcpPlayerClient.listenForHostBroadcast(this, this);
         playerName = tcpPlayerClient.getPlayerName();
+    }
+
+    private void requestShowFragment(String fragmentTag) {
+        if (fragmentTag != null) {
+            // Already showing it?
+            if (!fragmentTag.equals(currentFragmentTag)) {
+                if (getSupportFragmentManager().isStateSaved()) {
+                    // Can't do it now — queue it
+                    pendingFragmentTag = fragmentTag;
+                } else {
+                    performShowFragment(fragmentTag);
+                }
+            }
+        }
+    }
+    private void performShowFragment(String fragmentTag) {
+        if (!fragmentTag.equals(currentFragmentTag)) {
+            currentFragmentTag = fragmentTag;
+            pendingFragmentTag = null;
+            Fragment fragment =
+                    getSupportFragmentManager()
+                            .findFragmentByTag(fragmentTag);
+            if (fragment == null) {
+                if (QUESTION.equals(fragmentTag)) {
+                    fragment = new QuestionFragment();
+                } else if (ALL_ANSWERS.equals(fragmentTag)) {
+                    fragment = new AnswersFragment();
+                } else {
+                    throw new RuntimeException(
+                            "Unknown fragmentTag: " + fragmentTag);
+                }
+            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView,
+                            fragment,
+                            fragmentTag)
+                    .commit();
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (pendingFragmentTag != null &&
+                !getSupportFragmentManager().isStateSaved()) {
+            performShowFragment(pendingFragmentTag);
+        }
     }
     @Override // Activity
     protected void onDestroy() {
@@ -310,7 +369,7 @@ public class GameActivity extends AppCompatActivity implements
         int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
-        showFragment(ALL_ANSWERS);
+        gameViewModel.setCurrentFragmentTagLiveData(ALL_ANSWERS);
         answersViewModel.setAnswersLiveData(
                 new AnswersState(currentQuestion, answersList));
     }
@@ -333,7 +392,7 @@ public class GameActivity extends AppCompatActivity implements
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
-                showFragment(QUESTION);
+                gameViewModel.setCurrentFragmentTagLiveData(QUESTION);
                 questionViewModel.setQuestionLiveData(currentQuestion);
                 statusTextView.setText("supply answer and Send");
             } else {
@@ -343,40 +402,12 @@ public class GameActivity extends AppCompatActivity implements
             }
         });
     }
-    private void showFragment(String fragmentTag) {
-        if (!fragmentTag.equals(currentFragmentTag)) {
-            currentFragmentTag = fragmentTag;
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
-            if (fragment == null) {
-                if (QUESTION.equals(fragmentTag)) {
-                    fragment = new QuestionFragment();
-                } else if (ALL_ANSWERS.equals(fragmentTag)) {
-                    fragment = new AnswersFragment();
-                } else {
-                    throw new RuntimeException("unrecognised fragmentTag: " + fragmentTag);
-                }
-            }
-            if (!getSupportFragmentManager().isStateSaved()) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainerView, fragment, fragmentTag)
-                        .commit();
-            }
-        }
-    }
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.nextQuestionButton) { // Host only
             getNextQuestion();
             statusTextView.setText("waiting for all players to answer");
-        /*
-        } else if (viewId == R.id.sendButton) { // Player
-            String answer = questionFragment.getAnswerEditText();
-            tcpPlayerClient.sendAnswer(questionSequence, answer);
-            statusTextView.setText("waiting for other players to answer");
-
-         */
         } else if (viewId == R.id.broadcastHostButton) { // Host only
             tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
@@ -464,7 +495,7 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
                     currentFragmentTag);
         }
-        gameViewModel.setCurrentFragmentTag(currentFragmentTag);
+        gameViewModel.setPendingFragmentTag(pendingFragmentTag);
         gameViewModel.setVoteCast(voteCast);
         if (isHost) {
             gameViewModel.setAnswersCt(answersCt);
