@@ -42,7 +42,7 @@ public class QuestionFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else {
                 sendButton.setEnabled(false);
-                questionViewModel.setAnswerState(answer);
+                questionViewModel.setAnswerLiveData(answer);
             }
         });
         return rootView;
@@ -50,7 +50,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        questionViewModel.getQuestionLD().observe(
+        questionViewModel.getQuestionLiveData().observe(
                 getViewLifecycleOwner(),
                 question -> {
                     questionView.setText(question);

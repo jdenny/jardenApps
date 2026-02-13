@@ -8,21 +8,21 @@ import androidx.lifecycle.ViewModel;
  * Created by john.denny@gmail.com on 11/02/2026.
  */
 public class QuestionViewModel extends ViewModel {
-    private final MutableLiveData<String> questionLD =
+    private final MutableLiveData<String> questionLiveData =
             new MutableLiveData<>(new String(""));
-    private final MutableLiveData<String> answerLD =
+    private final MutableLiveData<String> answerLiveData =
             new MutableLiveData<>(new String(""));
 
-    public void setQuestionState(String question) {
-        questionLD.setValue(question);
+    public void setQuestionLiveData(String question) {
+        questionLiveData.setValue(question);
     }
-    public LiveData<String> getQuestionLD() {
-        return questionLD;
+    public LiveData<String> getQuestionLiveData() {
+        return questionLiveData;
     }
-    public void setAnswerState(String answer) {
-        answerLD.setValue(answer);
+    public void setAnswerLiveData(String answer) {
+        answerLiveData.setValue(answer);
     }
-    public MutableLiveData<String> getAnswerLD() {
-        return answerLD;
+    public MutableLiveData<String> getAnswerLiveData() {
+        return answerLiveData;
     }
 }

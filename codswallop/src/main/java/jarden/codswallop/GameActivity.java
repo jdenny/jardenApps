@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,8 +70,7 @@ Message Protocol:
         playerName, score (goes to first screen when host types NextButton)
  */
 public class GameActivity extends AppCompatActivity implements
-        TcpControllerServer.MessageListener, View.OnClickListener,
-        AdapterView.OnItemClickListener, TcpPlayerClient.Listener,
+        TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener,
         LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
     public static final String TAG = "GameActivity";
     private static final String QUESTION = "QUESTION";
@@ -135,13 +133,18 @@ public class GameActivity extends AppCompatActivity implements
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         LoginDialogFragment loginDialog;
         questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
-        questionViewModel.getAnswerLD().observe(
+        questionViewModel.getAnswerLiveData().observe(
                 this,
                 answer -> {
                     tcpPlayerClient.sendAnswer(questionSequence, answer);
                     statusTextView.setText("waiting for other players to answer");
                 });
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
+        answersViewModel.getSelectedAnswerLiveData().observe(
+                this,
+                position -> {
+                    tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+                });
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer != null) {
@@ -308,7 +311,7 @@ public class GameActivity extends AppCompatActivity implements
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
         showFragment(ALL_ANSWERS);
-        answersViewModel.setAnswersState(
+        answersViewModel.setAnswersLiveData(
                 new AnswersState(currentQuestion, answersList));
     }
     @Override // TcpPlayerClient.Listener
@@ -331,7 +334,7 @@ public class GameActivity extends AppCompatActivity implements
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
                 showFragment(QUESTION);
-                questionViewModel.setQuestionState(currentQuestion);
+                questionViewModel.setQuestionLiveData(currentQuestion);
                 statusTextView.setText("supply answer and Send");
             } else {
                 if (BuildConfig.DEBUG) {
@@ -381,19 +384,6 @@ public class GameActivity extends AppCompatActivity implements
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
-        }
-    }
-    @Override // OnItemClickListener
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onItemClick(position=" + position + ')');
-        }
-        if (!voteCast) {
-            tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
-            voteCast = true;
-            statusTextView.setText("Waiting for other players to vote");
-        } else {
-            statusTextView.setText("You have already cast your vote; you can't change your mind!");
         }
     }
     @Override // LoginDialogListener

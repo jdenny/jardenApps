@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,30 +21,23 @@ import androidx.lifecycle.ViewModelProvider;
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
  */
-public class AnswersFragment extends Fragment {
+public class AnswersFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "AnswersFragment";
     private TextView questionView;
-    private ListView answersListView;
     private ArrayAdapter<String> answersAdapter;
     private AnswersViewModel answersViewModel;
+    private boolean voteCast;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_answers, container, false);
         questionView = rootView.findViewById(R.id.questionView);
-        answersListView = rootView.findViewById(R.id.answersListView);
+        ListView answersListView = rootView.findViewById(R.id.answersListView);
         this.answersAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1);
         answersListView.setAdapter(answersAdapter);
-        try {
-            AdapterView.OnItemClickListener onItemClickListener =
-                    (AdapterView.OnItemClickListener) getContext();
-            answersListView.setOnItemClickListener(onItemClickListener);
-        } catch (ClassCastException cce) {
-            Log.e(TAG, cce.toString());
-        }
-
+        answersListView.setOnItemClickListener(this);
         answersViewModel = new ViewModelProvider(requireActivity()).get(AnswersViewModel.class);
         return rootView;
     }
@@ -65,7 +59,7 @@ public class AnswersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        answersViewModel.getAnswersState().observe(
+        answersViewModel.getAnswersLiveData().observe(
                 getViewLifecycleOwner(),
                 answersState -> {
                     questionView.setText(answersState.question);
@@ -77,5 +71,20 @@ public class AnswersFragment extends Fragment {
                     }
                     answersAdapter.notifyDataSetChanged();
                 });
+        voteCast = false;
+    }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onItemClick(position=" + position + ')');
+        }
+        if (!voteCast) {
+            answersViewModel.setSelectedAnswerLiveData(position);
+            voteCast = true;
+        } else {
+            Toast.makeText(getContext(),
+                    "You have already cast your vote; you can't change your mind!",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }
