@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
@@ -80,10 +79,6 @@ public class GameActivity extends AppCompatActivity implements
     private static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
     private static final String NAMED_ANSWERS = "NAMED_ANSWERS";
-    /*!!
-    private static final String MAIN = "MAIN";
-
-     */
     private static final String CORRECT = "CORRECT";
     private static final String VOTE = "VOTE";
     private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
@@ -110,9 +105,6 @@ public class GameActivity extends AppCompatActivity implements
     // Host & Client fields ***************************
     private String currentFragmentTag;
     private String playerName;
-    //!! private FragmentManager fragmentManager;
-    private AnswersFragment answersFragment;
-    private QuestionFragment questionFragment;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
@@ -141,9 +133,14 @@ public class GameActivity extends AppCompatActivity implements
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
-        //!! this.fragmentManager = getSupportFragmentManager();
         LoginDialogFragment loginDialog;
         questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
+        questionViewModel.getAnswerLD().observe(
+                this,
+                answer -> {
+                    tcpPlayerClient.sendAnswer(questionSequence, answer);
+                    statusTextView.setText("waiting for other players to answer");
+                });
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
         tcpControllerServer = gameViewModel.getTcpControllerServer();
@@ -157,12 +154,8 @@ public class GameActivity extends AppCompatActivity implements
         String fragmentTag = QUESTION;
         if (savedInstanceState == null) {
             loginDialog = new LoginDialogFragment();
-            questionFragment = new QuestionFragment();
-            answersFragment = new AnswersFragment();
             loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
         } else {
-            questionFragment = (QuestionFragment) getSupportFragmentManager().findFragmentByTag(QUESTION);
-            answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentByTag(ALL_ANSWERS);
             fragmentTag = gameViewModel.getCurrentFragmentTag();
             voteCast = gameViewModel.getVoteCast();
             if (isHost) {
@@ -174,13 +167,6 @@ public class GameActivity extends AppCompatActivity implements
             }
         }
         showFragment(fragmentTag);
-        /*!!
-        Fragment currentFragment = (currentFragmentTag == QUESTION) ? questionFragment : answersFragment;
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.fragmentContainerView, currentFragment, currentFragmentTag);
-        ft.commit();
-
-         */
         questionManager = new QuestionManager(this);
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         tcpPlayerClient = gameViewModel.getTcpPlayerClient();
@@ -345,7 +331,7 @@ public class GameActivity extends AppCompatActivity implements
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
                 showFragment(QUESTION);
-                questionViewModel.setAnswerState(currentQuestion);
+                questionViewModel.setQuestionState(currentQuestion);
                 statusTextView.setText("supply answer and Send");
             } else {
                 if (BuildConfig.DEBUG) {
@@ -357,46 +343,37 @@ public class GameActivity extends AppCompatActivity implements
     private void showFragment(String fragmentTag) {
         if (!fragmentTag.equals(currentFragmentTag)) {
             currentFragmentTag = fragmentTag;
-            Fragment currentFragment;
-            if (fragmentTag == QUESTION) {
-                if (questionFragment == null) {
-                    questionFragment = new QuestionFragment();
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) {
+                if (QUESTION.equals(fragmentTag)) {
+                    fragment = new QuestionFragment();
+                } else if (ALL_ANSWERS.equals(fragmentTag)) {
+                    fragment = new AnswersFragment();
+                } else {
+                    throw new RuntimeException("unrecognised fragmentTag: " + fragmentTag);
                 }
-                currentFragment = questionFragment;
-            } else if (fragmentTag == ALL_ANSWERS) {
-                if (answersFragment == null) {
-                    answersFragment = new AnswersFragment();
-                }
-                currentFragment = answersFragment;
-            } else {
-                throw new RuntimeException("unrecognised fragmentTag: " + fragmentTag);
             }
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragmentContainerView, currentFragment, fragmentTag);
-            transaction.commit();
+            if (!getSupportFragmentManager().isStateSaved()) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainerView, fragment, fragmentTag)
+                        .commit();
+            }
         }
     }
-    /*!!
-    private void setFragment(Fragment fragment, String fragmentTag) {
-        if (!currentFragmentTag.equals(fragmentTag)) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragmentContainerView, fragment, fragmentTag);
-            transaction.commit();
-            currentFragmentTag = fragmentTag;
-        }
-    }
-
-     */
     @Override // View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.nextQuestionButton) { // Host only
             getNextQuestion();
             statusTextView.setText("waiting for all players to answer");
+        /*
         } else if (viewId == R.id.sendButton) { // Player
             String answer = questionFragment.getAnswerEditText();
             tcpPlayerClient.sendAnswer(questionSequence, answer);
             statusTextView.setText("waiting for other players to answer");
+
+         */
         } else if (viewId == R.id.broadcastHostButton) { // Host only
             tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);

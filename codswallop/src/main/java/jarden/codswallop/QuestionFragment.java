@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +24,6 @@ public class QuestionFragment extends Fragment {
     private TextView questionView;
     private EditText answerEditText;
     private Button sendButton;
-    private OnClickListener gameActivity;
     private QuestionViewModel questionViewModel;
 
     @Override // Fragment
@@ -36,23 +34,17 @@ public class QuestionFragment extends Fragment {
         questionView = rootView.findViewById(R.id.questionView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        try {
-            gameActivity = (GameActivity) getActivity();
-        } catch (ClassCastException cce) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, cce.toString());
-            }
-        }
+        questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
         sendButton.setOnClickListener(view -> {
-            if (answerEditText.getText().toString().trim().length() == 0) {
+            String answer = answerEditText.getText().toString().trim();
+            if (answer.length() == 0) {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
                 sendButton.setEnabled(false);
-                if (gameActivity != null) { gameActivity.onClick(view); }
+                questionViewModel.setAnswerState(answer);
             }
         });
-        questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
         return rootView;
     }
     @Override
