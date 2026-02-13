@@ -135,6 +135,7 @@ public class GameActivity extends AppCompatActivity implements
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         LoginDialogFragment loginDialog;
         questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
+        /*!!
         questionViewModel.getAnswerLiveData().observe(
                 this,
                 answer -> {
@@ -143,6 +144,8 @@ public class GameActivity extends AppCompatActivity implements
                         statusTextView.setText("waiting for other players to answer");
                     }
                 });
+
+         */
         answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
         answersViewModel.getSelectedAnswerLiveData().observe(
                 this,
@@ -152,6 +155,7 @@ public class GameActivity extends AppCompatActivity implements
                     }
                 });
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        gameViewModel.observeQuestionViewModel(questionViewModel);
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer != null) {
             isHost = true;

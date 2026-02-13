@@ -17,11 +17,15 @@ public class GameViewModel extends ViewModel {
     private final static String TAG = "GameViewModel";
     private final MutableLiveData<String> currentFragmentTagLiveData =
             new MutableLiveData<>(new String(""));
+    private final MutableLiveData<String> questionLiveData =
+            new MutableLiveData<>(new String(""));
+    private final MutableLiveData<String> answerLiveData =
+            new MutableLiveData<>(new String(""));
+
     private String pendingFragmentTag;
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
     private Map<String, Player> players;
-    //!! private String currentFragmentTag;
     private boolean voteCast;
     private int answersCt;
     private int votesCt;
@@ -33,6 +37,18 @@ public class GameViewModel extends ViewModel {
     }
     public LiveData<String> getCurrentFragmentTagLiveData() {
         return currentFragmentTagLiveData;
+    }
+    public void setQuestionLiveData(String question) {
+        questionLiveData.setValue(question);
+    }
+    public LiveData<String> getQuestionLiveData() {
+        return questionLiveData;
+    }
+    public void setAnswerLiveData(String answer) {
+        answerLiveData.setValue(answer);
+    }
+    public MutableLiveData<String> getAnswerLiveData() {
+        return answerLiveData;
     }
     public TcpPlayerClient getTcpPlayerClient() {
         return tcpPlayerClient;
@@ -49,15 +65,14 @@ public class GameViewModel extends ViewModel {
     public Map<String, Player> getPlayers() {
         return players;
     }
-    /*!!
-    public void setCurrentFragmentTag(String currentFragmentTag) {
-        this.currentFragmentTag = currentFragmentTag;
-    }
-    public String getCurrentFragmentTag() {
-        return currentFragmentTag;
-    }
 
-     */
+    public void observeQuestionViewModel(QuestionViewModel qvm) {
+        qvm.getAnswerLiveData().observeForever(answer -> {
+            if (answer != null && answer.length() > 0) {
+                tcpPlayerClient.sendAnswer(questionSequence, answer);
+            }
+        });
+    }
     public void setPendingFragmentTag(String pendingFragmentTag) {
         this.pendingFragmentTag = pendingFragmentTag;
     }
