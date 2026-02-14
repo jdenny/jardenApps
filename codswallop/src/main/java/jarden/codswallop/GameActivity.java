@@ -108,8 +108,6 @@ public class GameActivity extends AppCompatActivity implements
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
-    private AnswersViewModel answersViewModel;
-    private QuestionViewModel questionViewModel;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,28 +132,12 @@ public class GameActivity extends AppCompatActivity implements
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         LoginDialogFragment loginDialog;
-        questionViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
-        /*!!
-        questionViewModel.getAnswerLiveData().observe(
-                this,
-                answer -> {
-                    if (answer != null && answer.length() > 0) {
-                        tcpPlayerClient.sendAnswer(questionSequence, answer);
-                        statusTextView.setText("waiting for other players to answer");
-                    }
-                });
-
-         */
-        answersViewModel = new ViewModelProvider(this).get(AnswersViewModel.class);
-        answersViewModel.getSelectedAnswerLiveData().observe(
-                this,
-                position -> {
-                    if (position != null) {
-                        tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
-                    }
-                });
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
-        gameViewModel.observeQuestionViewModel(questionViewModel);
+        gameViewModel.getQuestionLiveData().observe(
+                this,
+                statusText -> {
+                    statusTextView.setText(statusText);
+                });
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer != null) {
             isHost = true;
@@ -374,7 +356,7 @@ public class GameActivity extends AppCompatActivity implements
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
         gameViewModel.setCurrentFragmentTagLiveData(ALL_ANSWERS);
-        answersViewModel.setAnswersLiveData(
+        gameViewModel.setAnswersLiveData(
                 new AnswersState(currentQuestion, answersList));
     }
     @Override // TcpPlayerClient.Listener
@@ -392,12 +374,12 @@ public class GameActivity extends AppCompatActivity implements
             } else if (message.startsWith(NAMED_ANSWERS)) {
                 // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
                 showAnswers(message);
-                statusTextView.setText("Who said what");
+                statusTextView.setText("player(score): their answer");
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
                 gameViewModel.setCurrentFragmentTagLiveData(QUESTION);
-                questionViewModel.setQuestionLiveData(currentQuestion);
+                gameViewModel.setQuestionLiveData(currentQuestion);
                 statusTextView.setText("supply answer and Send");
             } else {
                 if (BuildConfig.DEBUG) {

@@ -25,7 +25,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     private static final String TAG = "AnswersFragment";
     private TextView questionView;
     private ArrayAdapter<String> answersAdapter;
-    private AnswersViewModel answersViewModel;
+    private GameViewModel gameViewModel;
     private boolean voteCast;
 
     @Override // Fragment
@@ -38,16 +38,14 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
                 getActivity(), android.R.layout.simple_list_item_1);
         answersListView.setAdapter(answersAdapter);
         answersListView.setOnItemClickListener(this);
-        answersViewModel = new ViewModelProvider(requireActivity()).get(AnswersViewModel.class);
+        gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
         return rootView;
     }
-
     public AnswersFragment() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "AnswersFragment()");
         }
     }
-
     @Override
     public void onResume() {
         if (BuildConfig.DEBUG) {
@@ -55,11 +53,10 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         }
         super.onResume();
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        answersViewModel.getAnswersLiveData().observe(
+        gameViewModel.getAnswersLiveData().observe(
                 getViewLifecycleOwner(),
                 answersState -> {
                     questionView.setText(answersState.question);
@@ -79,7 +76,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
         if (!voteCast) {
-            answersViewModel.setSelectedAnswerLiveData(position);
+            gameViewModel.setSelectedAnswerLiveData(position);
             voteCast = true;
         } else {
             Toast.makeText(getContext(),

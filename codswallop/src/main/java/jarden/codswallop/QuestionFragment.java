@@ -24,7 +24,7 @@ public class QuestionFragment extends Fragment {
     private TextView questionView;
     private EditText answerEditText;
     private Button sendButton;
-    private QuestionViewModel questionViewModel;
+    private GameViewModel gameViewModel;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,7 +34,7 @@ public class QuestionFragment extends Fragment {
         questionView = rootView.findViewById(R.id.questionView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
+        gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
         sendButton.setOnClickListener(view -> {
             String answer = answerEditText.getText().toString().trim();
             if (answer.length() == 0) {
@@ -42,7 +42,7 @@ public class QuestionFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else {
                 sendButton.setEnabled(false);
-                questionViewModel.setAnswerLiveData(answer);
+                gameViewModel.setAnswerLiveData(answer);
             }
         });
         return rootView;
@@ -50,7 +50,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        questionViewModel.getQuestionLiveData().observe(
+        gameViewModel.getQuestionLiveData().observe(
                 getViewLifecycleOwner(),
                 question -> {
                     questionView.setText(question);

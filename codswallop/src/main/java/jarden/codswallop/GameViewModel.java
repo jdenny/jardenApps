@@ -16,12 +16,17 @@ import jarden.tcp.TcpPlayerClient;
 public class GameViewModel extends ViewModel {
     private final static String TAG = "GameViewModel";
     private final MutableLiveData<String> currentFragmentTagLiveData =
-            new MutableLiveData<>(new String(""));
+            new MutableLiveData<>("");
     private final MutableLiveData<String> questionLiveData =
-            new MutableLiveData<>(new String(""));
+            new MutableLiveData<>("");
     private final MutableLiveData<String> answerLiveData =
-            new MutableLiveData<>(new String(""));
-
+            new MutableLiveData<>("");
+    private final MutableLiveData<AnswersState> answersLiveData =
+            new MutableLiveData<>(new AnswersState(null, null));
+    private final MutableLiveData<Integer> selectedAnswerLiveData =
+            new MutableLiveData<>(null);
+    private final MutableLiveData<String> statusTextLiveData =
+            new MutableLiveData<>("");
     private String pendingFragmentTag;
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
@@ -45,10 +50,30 @@ public class GameViewModel extends ViewModel {
         return questionLiveData;
     }
     public void setAnswerLiveData(String answer) {
-        answerLiveData.setValue(answer);
+        if (answer != null && !answer.isEmpty()) {
+            tcpPlayerClient.sendAnswer(questionSequence, answer);
+            setStatusTextLiveData("waiting for other players to answer");
+        }
     }
     public MutableLiveData<String> getAnswerLiveData() {
         return answerLiveData;
+    }
+    public void setAnswersLiveData(AnswersState newAnswersState) {
+        answersLiveData.setValue(newAnswersState);
+    }
+    public LiveData<AnswersState> getAnswersLiveData() {
+        return answersLiveData;
+    }
+    public void setSelectedAnswerLiveData(Integer position) {
+        if (position != null) {
+            tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+        }
+    }
+    public LiveData<Integer> getSelectedAnswerLiveData() {
+        return selectedAnswerLiveData;
+    }
+    public void setStatusTextLiveData(String statusText) {
+        statusTextLiveData.setValue(statusText);
     }
     public TcpPlayerClient getTcpPlayerClient() {
         return tcpPlayerClient;
@@ -64,14 +89,6 @@ public class GameViewModel extends ViewModel {
     }
     public Map<String, Player> getPlayers() {
         return players;
-    }
-
-    public void observeQuestionViewModel(QuestionViewModel qvm) {
-        qvm.getAnswerLiveData().observeForever(answer -> {
-            if (answer != null && answer.length() > 0) {
-                tcpPlayerClient.sendAnswer(questionSequence, answer);
-            }
-        });
     }
     public void setPendingFragmentTag(String pendingFragmentTag) {
         this.pendingFragmentTag = pendingFragmentTag;
@@ -122,4 +139,5 @@ public class GameViewModel extends ViewModel {
             tcpPlayerClient.disconnect();
         }
     }
+
 }
