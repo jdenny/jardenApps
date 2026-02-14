@@ -65,6 +65,11 @@ public class QuestionFragment extends Fragment {
                     answerEditText.setText("");
                     sendButton.setEnabled(true);
                 });
+        if (savedInstanceState != null) {
+            sendButton.setEnabled(
+                    savedInstanceState.getBoolean(SEND_BUTTON_ENABLED));
+            answerEditText.setText(savedInstanceState.getCharSequence(ANSWER));
+        }
     }
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {

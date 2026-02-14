@@ -14,4 +14,6 @@
     <string name="viewHostAddress">View Host address</string>
     <string name="loginText">Nominate one person to \'Host Game\'; all other players should \'Join Game\'</string>
     <string name="dialog_confirm">Are you sure you want to leave Call My Codswallop?</string>
+    <string name="waiting_for_more_answers">Waiting for%1$s other player(s) to answer</string>
+    <string name="waiting_for_more_votes">Waiting for%1$s other player(s) to vote</string>
 </resources>

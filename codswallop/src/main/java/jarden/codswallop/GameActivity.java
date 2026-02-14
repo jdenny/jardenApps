@@ -256,7 +256,10 @@ public class GameActivity extends AppCompatActivity implements
                 String nextMessage = getAllAnswersMessage();
                 tcpControllerServer.sendToAll(nextMessage);
             } else {
-                setStatus("waiting for " + (players.size() - answersCt) + " player(s) to answer");
+                // setStatus("waiting for " + (players.size() - answersCt) + " player(s) to answer");
+                String status = getString(R.string.waiting_for_more_answers,
+                        (" " + (players.size() - answersCt)));
+                setStatus(status);
             }
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
@@ -275,7 +278,9 @@ public class GameActivity extends AppCompatActivity implements
                 String allAnswers2Message = getNamedAnswersMessage();
                 tcpControllerServer.sendToAll(allAnswers2Message);
             } else {
-                setStatus("waiting for " + (players.size() - votesCt) + " player(s) to vote");
+                String status = getString(R.string.waiting_for_more_votes,
+                        (" " + (players.size() - votesCt)));
+                setStatus(status);
             }
         } else {
             if (BuildConfig.DEBUG) {
@@ -323,14 +328,13 @@ public class GameActivity extends AppCompatActivity implements
         }
         String status;
         if (players.containsKey(playerName)) {
-            status = playerName + " already in use!";
-        } else {
-            Player player = new Player(playerName, "not supplied", 0);
-            gameViewModel.addPlayer(playerName, player);
-            players.put(playerName, player);
-            status = playerName + " has joined; " + players.size() +
-                    " players so far";
+            playerName = playerName + "2";
         }
+        Player player = new Player(playerName, "not supplied", 0);
+        gameViewModel.addPlayer(playerName, player);
+        players.put(playerName, player);
+        status = playerName + " has joined; " + players.size() +
+                " players so far";
         runOnUiThread(() -> statusTextView.setText(status));
     }
 
@@ -406,7 +410,10 @@ public class GameActivity extends AppCompatActivity implements
         int viewId = view.getId();
         if (viewId == R.id.nextQuestionButton) { // Host only
             getNextQuestion();
-            statusTextView.setText("waiting for all players to answer");
+            //!! statusTextView.setText("waiting for all players to answer");
+            String status = getString(R.string.waiting_for_more_answers,
+                    String.valueOf(players.size() - answersCt));
+            setStatus(status);
         } else if (viewId == R.id.broadcastHostButton) { // Host only
             tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
@@ -495,7 +502,10 @@ public class GameActivity extends AppCompatActivity implements
                     currentFragmentTag);
         }
         gameViewModel.setPendingFragmentTag(pendingFragmentTag);
-        gameViewModel.setVoteCast(voteCast);
+        gameViewModel.setVoteCast(voteCast); /* TODO this is a load of old Codswallop!
+        as it is only saving the Hosts voteCast. How about adding voteCast to Player?
+        We already have Player::answer so we could set this to null for each new question
+        */
         if (isHost) {
             /*!!
             gameViewModel.setAnswersCt(answersCt);
