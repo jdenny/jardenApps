@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -75,7 +74,7 @@ public class GameActivity extends AppCompatActivity implements
         LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
     public static final String TAG = "GameActivity";
     private static final String QUESTION = "QUESTION";
-    private static final String ANSWER = "ANSWER";
+    public static final String ANSWER = "ANSWER";
     private static final String ALL_ANSWERS = "ALL_ANSWERS";
     private static final String NAMED_ANSWERS = "NAMED_ANSWERS";
     private static final String CORRECT = "CORRECT";
@@ -133,11 +132,14 @@ public class GameActivity extends AppCompatActivity implements
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         LoginDialogFragment loginDialog;
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        /*!!
         gameViewModel.getQuestionLiveData().observe(
                 this,
                 statusText -> {
                     statusTextView.setText(statusText);
                 });
+
+         */
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer != null) {
             isHost = true;
@@ -164,8 +166,11 @@ public class GameActivity extends AppCompatActivity implements
                 votesCt = gameViewModel.getVotesCt();
                 questionSequence = gameViewModel.getQuestionSequence();
                 currentQuestion = gameViewModel.getCurrentQuestion();
-                hostButtonsLayout.setVisibility(View.VISIBLE);
             }
+        }
+        if (isHost) {
+            hostButtonsLayout.setVisibility(View.VISIBLE);
+            statusTextView.setVisibility(View.VISIBLE);
         }
         gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
         questionManager = new QuestionManager(this);
@@ -243,7 +248,7 @@ public class GameActivity extends AppCompatActivity implements
         if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
             players.get(playerName).setAnswer(answer);
-            answersCt++;
+            answersCt = gameViewModel.incrementAnswersCt();
             if (answersCt >= (players.size())) {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "all answers received for current question");
@@ -262,7 +267,7 @@ public class GameActivity extends AppCompatActivity implements
             } else if (!votedForName.equals(playerName)) {
                 players.get(votedForName).incrementScore();
             }
-            votesCt++;
+            votesCt = gameViewModel.incrementVotesCt();
             if ((votesCt) >= (players.size())) {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "all votes received for current question");
@@ -316,9 +321,17 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Player joined: " + playerName);
         }
-        players.put(playerName, new Player(playerName, "not supplied", 0));
-        runOnUiThread(() -> statusTextView.setText(playerName + " has joined; " + players.size() +
-                " players so far"));
+        String status;
+        if (players.containsKey(playerName)) {
+            status = playerName + " already in use!";
+        } else {
+            Player player = new Player(playerName, "not supplied", 0);
+            gameViewModel.addPlayer(playerName, player);
+            players.put(playerName, player);
+            status = playerName + " has joined; " + players.size() +
+                    " players so far";
+        }
+        runOnUiThread(() -> statusTextView.setText(status));
     }
 
     @Override // TcpControllerServer.MessageListener
@@ -408,8 +421,7 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        players = new ConcurrentHashMap<>();
-        gameViewModel.setPlayers(players);
+        players = gameViewModel.getPlayers();
         this.playerName = playerName;
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer == null) {
@@ -449,8 +461,9 @@ public class GameActivity extends AppCompatActivity implements
             }
         }
         String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type + '|' + currentQA.question;
-        answersCt = 0;
-        votesCt = 0;
+        answersCt = 0; gameViewModel.setAnswersCt(answersCt);
+        votesCt = 0; gameViewModel.setVotesCt(votesCt);
+
         tcpControllerServer.sendToAll(nextQuestion);
     }
     @Override // TcpPlayerClient.Listener
@@ -484,8 +497,11 @@ public class GameActivity extends AppCompatActivity implements
         gameViewModel.setPendingFragmentTag(pendingFragmentTag);
         gameViewModel.setVoteCast(voteCast);
         if (isHost) {
+            /*!!
             gameViewModel.setAnswersCt(answersCt);
             gameViewModel.setVotesCt(votesCt);
+
+             */
             gameViewModel.setQuestionSequence(questionSequence);
             gameViewModel.setCurrentQuestion(currentQuestion);
         }

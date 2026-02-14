@@ -24,6 +24,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
     </ListView>
+    <TextView
+        android:id="@+id/promptView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
 
 </LinearLayout>
 

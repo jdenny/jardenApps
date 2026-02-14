@@ -3,6 +3,7 @@ package jarden.codswallop;
 import android.util.Log;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -25,12 +26,15 @@ public class GameViewModel extends ViewModel {
             new MutableLiveData<>(new AnswersState(null, null));
     private final MutableLiveData<Integer> selectedAnswerLiveData =
             new MutableLiveData<>(null);
+    /*!!
     private final MutableLiveData<String> statusTextLiveData =
             new MutableLiveData<>("");
+
+     */
     private String pendingFragmentTag;
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
-    private Map<String, Player> players;
+    private Map<String, Player> players = new ConcurrentHashMap<>();
     private boolean voteCast;
     private int answersCt;
     private int votesCt;
@@ -51,8 +55,8 @@ public class GameViewModel extends ViewModel {
     }
     public void setAnswerLiveData(String answer) {
         if (answer != null && !answer.isEmpty()) {
+            answerLiveData.setValue(answer);
             tcpPlayerClient.sendAnswer(questionSequence, answer);
-            setStatusTextLiveData("waiting for other players to answer");
         }
     }
     public MutableLiveData<String> getAnswerLiveData() {
@@ -72,9 +76,12 @@ public class GameViewModel extends ViewModel {
     public LiveData<Integer> getSelectedAnswerLiveData() {
         return selectedAnswerLiveData;
     }
+    /*!!
     public void setStatusTextLiveData(String statusText) {
         statusTextLiveData.setValue(statusText);
     }
+
+     */
     public TcpPlayerClient getTcpPlayerClient() {
         return tcpPlayerClient;
     }
@@ -84,11 +91,12 @@ public class GameViewModel extends ViewModel {
     public void setTcpControllerServer(TcpControllerServer server) {
         this.tcpControllerServer = server;
     }
-    public void setPlayers(Map<String, Player> players) {
-        this.players = players;
-    }
     public Map<String, Player> getPlayers() {
         return players;
+    }
+    public void addPlayer(String name, Player player) {
+        // TODO: throw exception if playerName already used
+        players.put(name, player);
     }
     public void setPendingFragmentTag(String pendingFragmentTag) {
         this.pendingFragmentTag = pendingFragmentTag;
@@ -105,11 +113,17 @@ public class GameViewModel extends ViewModel {
     public void setAnswersCt(int answersCt) {
         this.answersCt = answersCt;
     }
+    public int incrementAnswersCt() {
+        return ++answersCt;
+    }
     public int getAnswersCt() {
         return answersCt;
     }
     public void setVotesCt(int votesCt) {
         this.votesCt = votesCt;
+    }
+    public int incrementVotesCt() {
+        return ++votesCt;
     }
     public int getVotesCt() {
         return votesCt;

@@ -148,6 +148,15 @@ okay if it's just interfaces
 
 Coping with configuration changes
 ---------------------------------
+After a configuration change (e.g. screen rotation, language change, dark mode change, etc.)
+    Activity destroyed
+    new Activity created
+    FragmentManager re-creates existing Fragments, and passes saved state in Bundle
+    	Fragment data only saved in
+    		onSaveInstanceState() - UI-only state (scroll position, text in EditText)
+    		ViewModel - App data (game state, network results, timers)
+
+SIMPLE OPTIONS
 If all layouts are the same for landscape and portrait, then the
 easiest solution is to include the following in the manifest file
 	android:configChanges="orientation|keyboardHidden|screenSize"

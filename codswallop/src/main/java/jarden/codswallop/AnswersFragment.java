@@ -27,6 +27,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     private ArrayAdapter<String> answersAdapter;
     private GameViewModel gameViewModel;
     private boolean voteCast;
+    private TextView promptTextView;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +40,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         answersListView.setAdapter(answersAdapter);
         answersListView.setOnItemClickListener(this);
         gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
+        promptTextView = rootView.findViewById(R.id.promptView);
         return rootView;
     }
     public AnswersFragment() {
@@ -67,8 +69,8 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
                         answersAdapter.add(answer);
                     }
                     answersAdapter.notifyDataSetChanged();
+                    voteCast = false;
                 });
-        voteCast = false;
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
