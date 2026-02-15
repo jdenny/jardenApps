@@ -112,6 +112,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             tcpControllerServer.start();
         }
     }
+    /*!!
     public TcpPlayerClient getTcpPlayerClient() {
         return tcpPlayerClient;
     }
@@ -123,6 +124,11 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public Map<String, Player> getPlayers() {
         return players;
+    }
+
+     */
+    public void setPlayerName(String name) {
+        playerName = name;
     }
     public void addPlayer(String name, Player player) {
         players.put(name, player);

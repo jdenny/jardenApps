@@ -227,16 +227,6 @@ public class GameActivity extends AppCompatActivity implements
             performShowFragment(pendingFragmentTag);
         }
     }
-    @Override // Activity
-    protected void onDestroy() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onDestroy()");
-        }
-        super.onDestroy();
-        SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
-        editor.putInt(QUESTION_SEQUENCE_KEY, gameViewModel.getQuestionSequence());
-        editor.apply();
-    }
     @Override // ConfirmExitDialogFragment.ExitDialogListener
     public void onExitDialogConfirmed() {
         backPressedCallback.setEnabled(false); // DON'T FORGET THIS!
@@ -453,14 +443,15 @@ public class GameActivity extends AppCompatActivity implements
          */
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setVisibility(View.VISIBLE);
-        waitForHostBroadcast();
+        waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
         //!! isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
     }
 
-    private void waitForHostBroadcast() {
+    private void waitForHostBroadcast(String playerName) {
+        gameViewModel.setPlayerName(playerName);
         WifiManager wifi =
                 (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         gameViewModel.listenForBroadcast(wifi);
@@ -472,7 +463,7 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         //!! this.playerName = playerName;
-        waitForHostBroadcast();
+        waitForHostBroadcast(playerName);
     }
     /*!!
     public int getQuestionSequence(boolean reset) {
@@ -542,5 +533,15 @@ public class GameActivity extends AppCompatActivity implements
 
          */
         super.onSaveInstanceState(savedInstanceState);
+    }
+    @Override // Activity
+    protected void onDestroy() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onDestroy()");
+        }
+        super.onDestroy();
+        SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
+        editor.putInt(QUESTION_SEQUENCE_KEY, gameViewModel.getQuestionSequence());
+        editor.apply();
     }
 }
