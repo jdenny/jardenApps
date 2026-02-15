@@ -1,12 +1,14 @@
 package jarden.codswallop;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +26,13 @@ import static jarden.codswallop.Protocol.ANSWER;
 import static jarden.codswallop.Protocol.CORRECT;
 import static jarden.codswallop.Protocol.NAMED_ANSWERS;
 import static jarden.codswallop.Protocol.QUESTION;
-import static jarden.codswallop.Protocol.QUESTION_SEQUENCE_KEY;
 import static jarden.codswallop.Protocol.VOTE;
 
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
-public class GameViewModel extends ViewModel implements TcpControllerServer.MessageListener {
+public class GameViewModel extends ViewModel implements TcpControllerServer.MessageListener,
+        TcpPlayerClient.Listener {
     private final static String TAG = "GameViewModel";
     private QuestionManager questionManager;
     private final MutableLiveData<String> currentFragmentTagLiveData =
@@ -40,7 +42,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private final MutableLiveData<String> answerLiveData =
             new MutableLiveData<>("");
     private final MutableLiveData<AnswersState> answersLiveData =
-            new MutableLiveData<>(new AnswersState(null, null));
+            new MutableLiveData<>(new AnswersState(null, null, false));
     private final MutableLiveData<Integer> selectedAnswerLiveData =
             new MutableLiveData<>(null);
     private final MutableLiveData<String> hostStatusLiveData =
@@ -50,13 +52,14 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private String pendingFragmentTag;
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
-    private Map<String, Player> players = new ConcurrentHashMap<>();
+    private Map<String, Player> players;
     private boolean voteCast;
     private int answersCt;
     private int votesCt;
     private int questionSequence;
     private String currentQuestion;
     private QuestionManager.QuestionAnswer currentQA;
+    private String playerName;
 
     public void setCurrentFragmentTagLiveData(String currentFragmentTag) {
         currentFragmentTagLiveData.setValue(currentFragmentTag);
@@ -101,9 +104,10 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     public MutableLiveData<String> getHostStatusLiveData() {
         return hostStatusLiveData;
     }
-    public void startHost(Context context) {
+    public void startHost(Resources gameResources) {
         if (tcpControllerServer == null) {
-            questionManager = new QuestionManager(context);
+            players = new ConcurrentHashMap<>();
+            questionManager = new QuestionManager(gameResources);
             tcpControllerServer = new TcpControllerServer(this);
             tcpControllerServer.start();
         }
@@ -261,11 +265,11 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Player joined: " + playerName);
         }
-        String status;
         if (players.containsKey(playerName)) {
             playerName = playerName + "2";
         }
         Player player = new Player(playerName, "not supplied", 0);
+        this.playerName = playerName;
         addPlayer(playerName, player);
         setHostStatusLiveData(playerName + " has joined; " + players.size() +
                 " players so far");
@@ -287,33 +291,90 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     public void sendHostBroadcast(Context context) {
         tcpControllerServer.sendHostBroadcast(context);
     }
-    public void sendNextQuestion(SharedPreferences sharedPreferences) {
-        tcpControllerServer.sendToAll(getNextQuestion(sharedPreferences));
+    public void sendNextQuestion() {
+        tcpControllerServer.sendToAll(getNextQuestion());
     }
-    private String getNextQuestion(SharedPreferences sharedPreferences) {
+    private String getNextQuestion() {
         try {
-            currentQA = questionManager.getQuestionAnswer(getQuestionSequence(sharedPreferences, false));
+            currentQA = questionManager.getQuestionAnswer(questionSequence);
         } catch (EndOfQuestionsException e) {
             try {
-                currentQA = questionManager.getQuestionAnswer(getQuestionSequence(sharedPreferences, true));
-            } catch (EndOfQuestionsException ex) {
-                throw new RuntimeException(ex);
+                questionSequence = 0;
+                currentQA = questionManager.getQuestionAnswer(questionSequence);
+            } catch (EndOfQuestionsException e2) {
+                throw new RuntimeException(e2);
             }
         }
         String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type +
                 '|' + currentQA.question;
+        ++questionSequence;
         answersCt = 0;
         votesCt = 0;
         return nextQuestion;
     }
-    private int getQuestionSequence(SharedPreferences sharedPreferences, boolean reset) {
-        questionSequence = reset ? -1 : sharedPreferences.getInt(QUESTION_SEQUENCE_KEY, -1);
-        if (questionSequence == -1 && BuildConfig.DEBUG) {
-            Log.w(TAG, "getQuestionSequence() returning -1");
+    private void showAnswers(String message) {
+        int index = message.indexOf('|');
+        int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
+        String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+        List<String> answersList = Arrays.asList(answers);
+        setCurrentFragmentTagLiveData(ALL_ANSWERS);
+        setAnswersLiveData(new AnswersState(currentQuestion, answersList,
+                (message.startsWith(NAMED_ANSWERS))));
+    }
+    @Override // TcpPlayerClient.Listener; message sent from host to player
+    public void onMessage(String message) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
         }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(QUESTION_SEQUENCE_KEY, ++questionSequence);
-        editor.apply();
-        return questionSequence;
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (message.startsWith(ALL_ANSWERS)) {
+                // ALL_ANSWERS|2|a pig trough|dollop|
+                showAnswers(message);
+                voteCast = false;
+            } else if (message.startsWith(NAMED_ANSWERS)) {
+                // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
+                showAnswers(message);
+                voteCast = true;
+            } else if (message.startsWith(QUESTION)) {
+                String[] tqa = message.split("\\|", 4);
+                currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
+                setCurrentFragmentTagLiveData(QUESTION);
+                setQuestionLiveData(currentQuestion);
+            } else {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "unrecognised message received by player: " + message);
+                }
+            }
+        });
+    }
+    @Override // TcpPlayerClient.Listener
+    public void onConnected() {
+            Log.d(TAG, "Now connected to the game host");
+            setHostStatusLiveData("Now connected to the game host; wait for the first question");
+    }
+    @Override // TcpPlayerClient.Listener
+    public void onDisconnected() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Now disconnected from the game server");
+        }
+        //?? waitForHost(); // await a new host!
+    }
+    @Override // TcpPlayerClient.Listener
+    public void onError(Exception e) {
+        if (BuildConfig.DEBUG) {
+            Log.e(TAG, e.toString());
+        }
+    }
+    @Override // TcpPlayerClient.HostFoundCallback
+    public void onHostFound(String hostIp, int port) {
+        String status = "onHostFound(" + hostIp + "' " + port + ')';
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, status);
+        }
+        tcpPlayerClient.connect(hostIp, TcpControllerServer.TCP_PORT,
+                playerName, this);
+    }
+    public void listenForBroadcast(WifiManager wifi) {
+        tcpPlayerClient.listenForHostBroadcast(wifi, this);
     }
 }

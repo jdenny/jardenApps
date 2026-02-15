@@ -64,6 +64,7 @@ public class QuestionFragment extends Fragment {
                     questionView.setText(question);
                     answerEditText.setText("");
                     sendButton.setEnabled(true);
+                    promptView.setText("supply answer and Send");
                 });
         if (savedInstanceState != null) {
             sendButton.setEnabled(

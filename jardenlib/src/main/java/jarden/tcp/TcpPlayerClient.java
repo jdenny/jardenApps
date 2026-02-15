@@ -1,6 +1,5 @@
 package jarden.tcp;
 
-import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
@@ -131,11 +130,10 @@ public class TcpPlayerClient {
             }
         });
     }
-    public void listenForHostBroadcast(Context context,
-                                              Listener callback) {
+    public void listenForHostBroadcast(WifiManager wifi, Listener callback) {
         udpExecutor.execute(() -> {
-            WifiManager wifi =
-                    (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            /*!! WifiManager wifi =
+                    (WifiManager) context.getSystemService(Context.WIFI_SERVICE);*/
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");
             lock.acquire();

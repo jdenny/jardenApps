@@ -70,6 +70,9 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
                     }
                     answersAdapter.notifyDataSetChanged();
                     voteCast = false;
+                    String prompt = answersState.named ? "player(score): player's answer" :
+                            "tap on the answer you think is correct";
+                    promptTextView.setText(prompt);
                 });
     }
     @Override

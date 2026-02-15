@@ -1,6 +1,6 @@
 package jarden.codswallop;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import java.io.IOException;
@@ -33,10 +33,10 @@ public class QuestionManager {
         }
     }
     private final List<QuestionAnswer> questionList = new ArrayList<>();
-    public QuestionManager(Context context) {
+    public QuestionManager(Resources gameResources) {
         int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
         try (InputStream is =
-                     context.getResources().openRawResource(qaFileId)) {
+                     gameResources.openRawResource(qaFileId)) {
             List<String> lines = EngSpaUtils.getLinesFromStream(is);
             for (String line : lines) {
                 if (!line.trim().isEmpty()) {

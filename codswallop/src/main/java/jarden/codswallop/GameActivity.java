@@ -2,6 +2,7 @@ package jarden.codswallop;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,22 +10,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import jarden.quiz.EndOfQuestionsException;
-import jarden.tcp.TcpControllerServer;
-import jarden.tcp.TcpPlayerClient;
 
 import static jarden.codswallop.Protocol.ALL_ANSWERS;
+import static jarden.codswallop.Protocol.LOGIN_DIALOG;
+import static jarden.codswallop.Protocol.QUESTION;
+import static jarden.codswallop.Protocol.QUESTION_SEQUENCE_KEY;
+/*!!
 import static jarden.codswallop.Protocol.ANSWER;
 import static jarden.codswallop.Protocol.CORRECT;
 import static jarden.codswallop.Protocol.LOGIN_DIALOG;
@@ -33,10 +29,6 @@ import static jarden.codswallop.Protocol.QUESTION;
 import static jarden.codswallop.Protocol.QUESTION_SEQUENCE_KEY;
 import static jarden.codswallop.Protocol.VOTE;
 
-/* TODO next:
- can the views go in the middle of the screen, and expand as necessary?
- separate classes Activity.player; Activity.host
- in landscape mode, show question and answer side by side
  */
 
 /** Design of application
@@ -79,32 +71,32 @@ Message Protocol:
         playerName, score (goes to first screen when host types NextButton)
  */
 public class GameActivity extends AppCompatActivity implements
-        TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener,
+        /*!!TcpControllerServer.MessageListener, TcpPlayerClient.Listener, */ View.OnClickListener,
         LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
     public static final String TAG = "GameActivity";
 
     // Host fields: ***************************
-    private Map<String, Player> players;
-    private QuestionManager questionManager;
-    QuestionManager.QuestionAnswer currentQA;
+    //!! private Map<String, Player> players;
+    //!! private QuestionManager questionManager;
+    //!! QuestionManager.QuestionAnswer currentQA;
     private Button nextQuestionButton;
     private TextView statusTextView;
-    private TcpControllerServer tcpControllerServer;
-    private int answersCt;
-    private int votesCt;
-    private final List<String> shuffledNameList = new ArrayList<>();
+    //!! private TcpControllerServer tcpControllerServer;
+    //!! private int answersCt;
+    //!! private int votesCt;
+    //!! private final List<String> shuffledNameList = new ArrayList<>();
     private View hostButtonsLayout;
-    private SharedPreferences sharedPreferences;
-    private int questionSequence;
-    private boolean voteCast;
+    //!! private SharedPreferences sharedPreferences;
+    //!! private int questionSequence;
+    //!! private boolean voteCast;
 
     // Player fields ***************************
-    private TcpPlayerClient tcpPlayerClient;
-    private String currentQuestion;
+    //!! private TcpPlayerClient tcpPlayerClient;
+    //!! private String currentQuestion;
     // Host & Client fields ***************************
     private String currentFragmentTag = null;
     private String pendingFragmentTag = null;
-    private String playerName;
+    //!! private String playerName;
     private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
@@ -139,11 +131,13 @@ public class GameActivity extends AppCompatActivity implements
                         statusTextView.setText(hostStatus);
                     }
                 });
+        /*!!
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer != null) {
             isHost = true;
             players = gameViewModel.getPlayers();
         }
+         */
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "isHost=" + isHost);
         }
@@ -159,24 +153,28 @@ public class GameActivity extends AppCompatActivity implements
             fragmentTag = currentFragmentTagLiveData.getValue();
             currentFragmentTag = fragmentTag;
             pendingFragmentTag = gameViewModel.getPendingFragmentTag();
-            voteCast = gameViewModel.getVoteCast();
+            //!! voteCast = gameViewModel.getVoteCast();
+            /*!!
             if (isHost) {
                 answersCt = gameViewModel.getAnswersCt();
                 votesCt = gameViewModel.getVotesCt();
                 questionSequence = gameViewModel.getQuestionSequence();
                 currentQuestion = gameViewModel.getCurrentQuestion();
             }
+             */
         }
         if (isHost) {
             hostButtonsLayout.setVisibility(View.VISIBLE);
             statusTextView.setVisibility(View.VISIBLE);
         }
         gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
-        questionManager = new QuestionManager(this);
-        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        tcpPlayerClient = gameViewModel.getTcpPlayerClient();
-        tcpPlayerClient.listenForHostBroadcast(this, this);
-        playerName = tcpPlayerClient.getPlayerName();
+        int qs = getPreferences(Context.MODE_PRIVATE).getInt(QUESTION_SEQUENCE_KEY, -1);
+        gameViewModel.setQuestionSequence(qs);
+        //! questionManager = new QuestionManager(this);
+        //!! sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        //!! tcpPlayerClient = gameViewModel.getTcpPlayerClient();
+        //!! tcpPlayerClient.listenForHostBroadcast(this, this);
+        //!! playerName = tcpPlayerClient.getPlayerName();
         hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
     }
 
@@ -232,6 +230,9 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
+        SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
+        editor.putInt(QUESTION_SEQUENCE_KEY, gameViewModel.getQuestionSequence());
+        editor.apply();
     }
     @Override // ConfirmExitDialogFragment.ExitDialogListener
     public void onExitDialogConfirmed() {
@@ -239,6 +240,7 @@ public class GameActivity extends AppCompatActivity implements
         getOnBackPressedDispatcher().onBackPressed();
     }
 
+    /*!!
     @Override // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
     public void onMessage(String playerName, String message) {
@@ -288,10 +290,13 @@ public class GameActivity extends AppCompatActivity implements
         }
     }
 
+     */
+
     /*
     create a list of names, shuffle the list and then
      create message: String to hold the answers
      */
+    /*!!
     private String getAllAnswersMessage() {
         shuffledNameList.clear();
         shuffledNameList.add(CORRECT);
@@ -359,7 +364,9 @@ public class GameActivity extends AppCompatActivity implements
             statusTextView.setText("Now connected to the game host; wait for the first question");
         });
     }
+    */
 
+    /*!!
     private void setStatus(String status) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, status);
@@ -375,8 +382,7 @@ public class GameActivity extends AppCompatActivity implements
         gameViewModel.setAnswersLiveData(
                 new AnswersState(currentQuestion, answersList));
     }
-    @Override // TcpPlayerClient.Listener
-    // i.e. message sent from host to player
+    @Override // TcpPlayerClient.Listener; message sent from host to player
     public void onMessage(String message) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
@@ -404,15 +410,20 @@ public class GameActivity extends AppCompatActivity implements
             }
         });
     }
-    @Override // View.OnClickListener
+     */
+
+
+    @Override // View.OnClickListener; action host buttons
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.nextQuestionButton) { // Host only
-            gameViewModel.sendNextQuestion(sharedPreferences);
+        if (viewId == R.id.nextQuestionButton) {
+            gameViewModel.sendNextQuestion();
+            /*!!
             String status = getString(R.string.waiting_for_more_answers,
                     String.valueOf(players.size() - answersCt));
             setStatus(status);
-        } else if (viewId == R.id.broadcastHostButton) { // Host only
+             */
+        } else if (viewId == R.id.broadcastHostButton) {
             gameViewModel.sendHostBroadcast(this);
             //!! tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
@@ -427,9 +438,9 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
+        /*!!
         players = gameViewModel.getPlayers();
         this.playerName = playerName;
-        /*
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer == null) {
             tcpControllerServer = new TcpControllerServer(this);
@@ -437,7 +448,8 @@ public class GameActivity extends AppCompatActivity implements
             tcpControllerServer.start();
         }
          */
-        gameViewModel.startHost();
+
+        gameViewModel.startHost(getResources());
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
@@ -447,8 +459,12 @@ public class GameActivity extends AppCompatActivity implements
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        this.playerName = playerName;
+        //!! this.playerName = playerName;
+        WifiManager wifi =
+                (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        gameViewModel.listenForBroadcast(wifi);
     }
+    /*!!
     public int getQuestionSequence(boolean reset) {
         questionSequence = reset ? -1 : sharedPreferences.getInt(QUESTION_SEQUENCE_KEY, -1);
         if (questionSequence == -1 && BuildConfig.DEBUG) {
@@ -459,7 +475,6 @@ public class GameActivity extends AppCompatActivity implements
         editor.apply();
         return questionSequence;
     }
-    /*!!
     private String getNextQuestion() {
         try {
             currentQA = questionManager.getQuestionAnswer(getQuestionSequence(false));
@@ -476,7 +491,6 @@ public class GameActivity extends AppCompatActivity implements
         return nextQuestion;
     }
 
-     */
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {
         if (BuildConfig.DEBUG) {
@@ -499,21 +513,24 @@ public class GameActivity extends AppCompatActivity implements
         tcpPlayerClient.connect(hostIp, TcpControllerServer.TCP_PORT,
                 playerName, this);
     }
+
+     */
     @Override // Activity
     public void onSaveInstanceState(Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
                     currentFragmentTag);
         }
+        /*!!
         gameViewModel.setPendingFragmentTag(pendingFragmentTag);
-        gameViewModel.setVoteCast(voteCast); /* TODO this is a load of old Codswallop!
-        as it is only saving the Hosts voteCast. How about adding voteCast to Player?
-        We already have Player::answer so we could set this to null for each new question
-        */
+        gameViewModel.setVoteCast(voteCast);
+
         if (isHost) {
             gameViewModel.setQuestionSequence(questionSequence);
             gameViewModel.setCurrentQuestion(currentQuestion);
         }
+
+         */
         super.onSaveInstanceState(savedInstanceState);
     }
 }
