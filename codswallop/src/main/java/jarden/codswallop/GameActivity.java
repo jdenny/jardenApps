@@ -24,6 +24,15 @@ import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
+import static jarden.codswallop.Protocol.ALL_ANSWERS;
+import static jarden.codswallop.Protocol.ANSWER;
+import static jarden.codswallop.Protocol.CORRECT;
+import static jarden.codswallop.Protocol.LOGIN_DIALOG;
+import static jarden.codswallop.Protocol.NAMED_ANSWERS;
+import static jarden.codswallop.Protocol.QUESTION;
+import static jarden.codswallop.Protocol.QUESTION_SEQUENCE_KEY;
+import static jarden.codswallop.Protocol.VOTE;
+
 /* TODO next:
  can the views go in the middle of the screen, and expand as necessary?
  separate classes Activity.player; Activity.host
@@ -73,14 +82,6 @@ public class GameActivity extends AppCompatActivity implements
         TcpControllerServer.MessageListener, View.OnClickListener, TcpPlayerClient.Listener,
         LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
     public static final String TAG = "GameActivity";
-    private static final String QUESTION = "QUESTION";
-    public static final String ANSWER = "ANSWER";
-    private static final String ALL_ANSWERS = "ALL_ANSWERS";
-    private static final String NAMED_ANSWERS = "NAMED_ANSWERS";
-    private static final String CORRECT = "CORRECT";
-    private static final String VOTE = "VOTE";
-    private static final String LOGIN_DIALOG = "LOGIN_DIALOG";
-    private static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";
 
     // Host fields: ***************************
     private Map<String, Player> players;
@@ -121,7 +122,6 @@ public class GameActivity extends AppCompatActivity implements
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
-        hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -132,14 +132,13 @@ public class GameActivity extends AppCompatActivity implements
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         LoginDialogFragment loginDialog;
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
-        /*!!
-        gameViewModel.getQuestionLiveData().observe(
+        gameViewModel.getHostStatusLiveData().observe(
                 this,
-                statusText -> {
-                    statusTextView.setText(statusText);
+                hostStatus -> {
+                    if (hostStatus != null && !hostStatus.isEmpty()) {
+                        statusTextView.setText(hostStatus);
+                    }
                 });
-
-         */
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer != null) {
             isHost = true;
@@ -178,6 +177,7 @@ public class GameActivity extends AppCompatActivity implements
         tcpPlayerClient = gameViewModel.getTcpPlayerClient();
         tcpPlayerClient.listenForHostBroadcast(this, this);
         playerName = tcpPlayerClient.getPlayerName();
+        hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
     }
 
     private void requestShowFragment(String fragmentTag) {
@@ -256,7 +256,6 @@ public class GameActivity extends AppCompatActivity implements
                 String nextMessage = getAllAnswersMessage();
                 tcpControllerServer.sendToAll(nextMessage);
             } else {
-                // setStatus("waiting for " + (players.size() - answersCt) + " player(s) to answer");
                 String status = getString(R.string.waiting_for_more_answers,
                         (" " + (players.size() - answersCt)));
                 setStatus(status);
@@ -409,13 +408,13 @@ public class GameActivity extends AppCompatActivity implements
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.nextQuestionButton) { // Host only
-            getNextQuestion();
-            //!! statusTextView.setText("waiting for all players to answer");
+            gameViewModel.sendNextQuestion(sharedPreferences);
             String status = getString(R.string.waiting_for_more_answers,
                     String.valueOf(players.size() - answersCt));
             setStatus(status);
         } else if (viewId == R.id.broadcastHostButton) { // Host only
-            tcpControllerServer.sendHostBroadcast(this);
+            gameViewModel.sendHostBroadcast(this);
+            //!! tcpControllerServer.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
             statusTextView.setText("wait for all players to join, then 'Next'");
         } else {
@@ -430,12 +429,15 @@ public class GameActivity extends AppCompatActivity implements
         }
         players = gameViewModel.getPlayers();
         this.playerName = playerName;
+        /*
         tcpControllerServer = gameViewModel.getTcpControllerServer();
         if (tcpControllerServer == null) {
             tcpControllerServer = new TcpControllerServer(this);
             gameViewModel.setTcpControllerServer(tcpControllerServer);
             tcpControllerServer.start();
         }
+         */
+        gameViewModel.startHost();
         isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
@@ -457,12 +459,13 @@ public class GameActivity extends AppCompatActivity implements
         editor.apply();
         return questionSequence;
     }
-    private void getNextQuestion() {
+    /*!!
+    private String getNextQuestion() {
         try {
-            currentQA = questionManager.getNext(getQuestionSequence(false));
+            currentQA = questionManager.getQuestionAnswer(getQuestionSequence(false));
         } catch (EndOfQuestionsException e) {
             try {
-                currentQA = questionManager.getNext(getQuestionSequence(true));
+                currentQA = questionManager.getQuestionAnswer(getQuestionSequence(true));
             } catch (EndOfQuestionsException ex) {
                 throw new RuntimeException(ex);
             }
@@ -470,9 +473,10 @@ public class GameActivity extends AppCompatActivity implements
         String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type + '|' + currentQA.question;
         answersCt = 0; gameViewModel.setAnswersCt(answersCt);
         votesCt = 0; gameViewModel.setVotesCt(votesCt);
-
-        tcpControllerServer.sendToAll(nextQuestion);
+        return nextQuestion;
     }
+
+     */
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {
         if (BuildConfig.DEBUG) {
@@ -507,11 +511,6 @@ public class GameActivity extends AppCompatActivity implements
         We already have Player::answer so we could set this to null for each new question
         */
         if (isHost) {
-            /*!!
-            gameViewModel.setAnswersCt(answersCt);
-            gameViewModel.setVotesCt(votesCt);
-
-             */
             gameViewModel.setQuestionSequence(questionSequence);
             gameViewModel.setCurrentQuestion(currentQuestion);
         }

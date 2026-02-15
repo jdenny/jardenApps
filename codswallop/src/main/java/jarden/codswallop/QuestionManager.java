@@ -16,9 +16,8 @@ import jarden.quiz.EndOfQuestionsException;
  */
 public class QuestionManager {
     private final String TAG = "QuestionManager";
-    private final Context context;
 
-    public class QuestionAnswer {
+    public static class QuestionAnswer {
         public String type;
         public String question;
         public String answer;
@@ -33,10 +32,8 @@ public class QuestionManager {
             comment = c;
         }
     }
-    private int questionIndex = 0;
     private final List<QuestionAnswer> questionList = new ArrayList<>();
     public QuestionManager(Context context) {
-        this.context = context;
         int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
         try (InputStream is =
                      context.getResources().openRawResource(qaFileId)) {
@@ -62,7 +59,7 @@ public class QuestionManager {
             throw new RuntimeException(e);
         }
     }
-    public QuestionAnswer getNext(int questionIndex) throws EndOfQuestionsException {
+    public QuestionAnswer getQuestionAnswer(int questionIndex) throws EndOfQuestionsException {
         if (questionIndex < questionList.size()) {
             return questionList.get(questionIndex);
         } else {

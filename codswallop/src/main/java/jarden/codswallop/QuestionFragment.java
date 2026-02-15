@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import static jarden.codswallop.GameActivity.ANSWER;
+import static jarden.codswallop.Protocol.ANSWER;
 
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
@@ -44,7 +44,7 @@ public class QuestionFragment extends Fragment {
         gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
         sendButton.setOnClickListener(view -> {
             String answer = answerEditText.getText().toString().trim();
-            if (answer.length() == 0) {
+            if (answer.isEmpty()) {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
