@@ -260,16 +260,16 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         }
         return buffer.toString();    }
 
-    @Override
-    public void onPlayerConnected(String playerName) {
+    @Override // TcpControllerServer.Listener
+    public void onPlayerConnected(String name) {
+        if (players.containsKey(name)) {
+            name = name + "2";
+        }
+        playerName = name;
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Player joined: " + playerName);
         }
-        if (players.containsKey(playerName)) {
-            playerName = playerName + "2";
-        }
         Player player = new Player(playerName, "not supplied", 0);
-        this.playerName = playerName;
         addPlayer(playerName, player);
         setHostStatusLiveData(playerName + " has joined; " + players.size() +
                 " players so far");

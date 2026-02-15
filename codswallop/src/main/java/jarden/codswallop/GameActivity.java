@@ -97,7 +97,7 @@ public class GameActivity extends AppCompatActivity implements
     private String currentFragmentTag = null;
     private String pendingFragmentTag = null;
     //!! private String playerName;
-    private boolean isHost;
+    //!! private boolean isHost;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
 
@@ -137,10 +137,10 @@ public class GameActivity extends AppCompatActivity implements
             isHost = true;
             players = gameViewModel.getPlayers();
         }
-         */
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "isHost=" + isHost);
         }
+         */
         final LiveData<String> currentFragmentTagLiveData =
                 gameViewModel.getCurrentFragmentTagLiveData();
         currentFragmentTagLiveData.observe(this, this::requestShowFragment);
@@ -163,10 +163,13 @@ public class GameActivity extends AppCompatActivity implements
             }
              */
         }
+        /*!!
         if (isHost) {
             hostButtonsLayout.setVisibility(View.VISIBLE);
             statusTextView.setVisibility(View.VISIBLE);
         }
+
+         */
         gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
         int qs = getPreferences(Context.MODE_PRIVATE).getInt(QUESTION_SEQUENCE_KEY, -1);
         gameViewModel.setQuestionSequence(qs);
@@ -448,21 +451,28 @@ public class GameActivity extends AppCompatActivity implements
             tcpControllerServer.start();
         }
          */
-
+        hostButtonsLayout.setVisibility(View.VISIBLE);
+        statusTextView.setVisibility(View.VISIBLE);
+        waitForHostBroadcast();
         gameViewModel.startHost(getResources());
-        isHost = true;
+        //!! isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
     }
+
+    private void waitForHostBroadcast() {
+        WifiManager wifi =
+                (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        gameViewModel.listenForBroadcast(wifi);
+    }
+
     @Override // LoginDialogListener
     public void onJoinButton(String playerName) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         //!! this.playerName = playerName;
-        WifiManager wifi =
-                (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        gameViewModel.listenForBroadcast(wifi);
+        waitForHostBroadcast();
     }
     /*!!
     public int getQuestionSequence(boolean reset) {
