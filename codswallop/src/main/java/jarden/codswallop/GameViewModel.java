@@ -60,6 +60,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private String currentQuestion;
     private QuestionManager.QuestionAnswer currentQA;
     private String playerName;
+    private boolean isHost;
 
     public void setCurrentFragmentTagLiveData(String currentFragmentTag) {
         currentFragmentTagLiveData.setValue(currentFragmentTag);
@@ -110,6 +111,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             questionManager = new QuestionManager(gameResources);
             tcpControllerServer = new TcpControllerServer(this);
             tcpControllerServer.start();
+            isHost = true;
         }
     }
     /*!!
@@ -382,5 +384,11 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public void listenForBroadcast(WifiManager wifi) {
         tcpPlayerClient.listenForHostBroadcast(wifi, this);
+    }
+    public void setIsHost(boolean isHost) {
+        this.isHost = isHost;
+    }
+    public boolean getIsHost() {
+        return isHost;
     }
 }

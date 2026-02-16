@@ -114,6 +114,7 @@ public class GameActivity extends AppCompatActivity implements
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
         statusTextView = findViewById(R.id.statusView);
+        hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -153,6 +154,9 @@ public class GameActivity extends AppCompatActivity implements
             fragmentTag = currentFragmentTagLiveData.getValue();
             currentFragmentTag = fragmentTag;
             pendingFragmentTag = gameViewModel.getPendingFragmentTag();
+            if (gameViewModel.getIsHost()) {
+                setHostViews();
+            }
             //!! voteCast = gameViewModel.getVoteCast();
             /*!!
             if (isHost) {
@@ -178,7 +182,6 @@ public class GameActivity extends AppCompatActivity implements
         //!! tcpPlayerClient = gameViewModel.getTcpPlayerClient();
         //!! tcpPlayerClient.listenForHostBroadcast(this, this);
         //!! playerName = tcpPlayerClient.getPlayerName();
-        hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
     }
 
     private void requestShowFragment(String fragmentTag) {
@@ -441,13 +444,16 @@ public class GameActivity extends AppCompatActivity implements
             tcpControllerServer.start();
         }
          */
-        hostButtonsLayout.setVisibility(View.VISIBLE);
-        statusTextView.setVisibility(View.VISIBLE);
+        setHostViews();
         waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
         //!! isHost = true;
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
+    }
+    private void setHostViews() {
+        hostButtonsLayout.setVisibility(View.VISIBLE);
+        statusTextView.setVisibility(View.VISIBLE);
     }
 
     private void waitForHostBroadcast(String playerName) {
@@ -463,6 +469,7 @@ public class GameActivity extends AppCompatActivity implements
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
         //!! this.playerName = playerName;
+        gameViewModel.setIsHost(false);
         waitForHostBroadcast(playerName);
     }
     /*!!

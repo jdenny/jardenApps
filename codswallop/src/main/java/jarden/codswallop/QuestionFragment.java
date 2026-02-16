@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import static jarden.codswallop.Protocol.ANSWER;
-
 /**
  * Created by john.denny@gmail.com on 06/01/2026.
  */
@@ -29,6 +27,10 @@ public class QuestionFragment extends Fragment {
     private Button sendButton;
     private GameViewModel gameViewModel;
     private TextView promptView;
+    //?? private boolean questionRendered = false;
+    private int lastRenderedQuestionId = -1;
+
+
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,21 +63,42 @@ public class QuestionFragment extends Fragment {
         gameViewModel.getQuestionLiveData().observe(
                 getViewLifecycleOwner(),
                 question -> {
-                    questionView.setText(question);
-                    answerEditText.setText("");
-                    sendButton.setEnabled(true);
-                    promptView.setText("supply answer and Send");
+                    if (question != null && !question.isEmpty()) {
+                        // if (!questionView.getText().equals(question)) {
+                        int currentQuestionId = getQuestionSequence(question.toString());
+                        // if (!questionRendered) {
+                        if (currentQuestionId != lastRenderedQuestionId) {
+                            questionView.setText(question);
+                            sendButton.setEnabled(true);
+                            if (lastRenderedQuestionId != -1) {
+                                answerEditText.setText("");
+                            }
+                            promptView.setText("supply answer and Send");
+                            // questionRendered = true;
+                            lastRenderedQuestionId = currentQuestionId;
+                        }
+                    }
                 });
+        /*!!
         if (savedInstanceState != null) {
             sendButton.setEnabled(
                     savedInstanceState.getBoolean(SEND_BUTTON_ENABLED));
             answerEditText.setText(savedInstanceState.getCharSequence(ANSWER));
         }
+
+         */
     }
+    private static int getQuestionSequence(String question) {
+        int i = question.indexOf('.');
+        return Integer.valueOf(question.substring(0, i));
+    }
+    /*!!
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putCharSequence(ANSWER, answerEditText.getText());
         outState.putBoolean(SEND_BUTTON_ENABLED, sendButton.isEnabled());
         super.onSaveInstanceState(outState);
     }
+
+     */
 }
