@@ -51,7 +51,6 @@ public class QuestionFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else {
                 if (Boolean.FALSE.equals(gameViewModel.getHasSubmittedAnswer().getValue())) {
-                    //!! sendButton.setEnabled(false);
                     gameViewModel.setAnswerLiveData(answer);
                     promptView.setText("waiting for other players to answer");
                     gameViewModel.setHasSubmittedAnswer(true);
@@ -71,7 +70,6 @@ public class QuestionFragment extends Fragment {
                         // if (!questionRendered) {
                         if (currentQuestionId != lastRenderedQuestionId) {
                             questionView.setText(question);
-                            //!! sendButton.setEnabled(true);
                             // questionLiveData.setValue(question); //?? suggested by ChatGpt
                             gameViewModel.setHasSubmittedAnswer(false);
                             if (lastRenderedQuestionId != -1) {
@@ -89,27 +87,9 @@ public class QuestionFragment extends Fragment {
                             boolean hasAnswered = Boolean.TRUE.equals(submitted);
                             sendButton.setEnabled(!hasAnswered);
                         });
-
-        /*!!
-        if (savedInstanceState != null) {
-            sendButton.setEnabled(
-                    savedInstanceState.getBoolean(SEND_BUTTON_ENABLED));
-            answerEditText.setText(savedInstanceState.getCharSequence(ANSWER));
-        }
-
-         */
     }
     private static int getQuestionSequence(String question) {
         int i = question.indexOf('.');
         return Integer.valueOf(question.substring(0, i));
     }
-    /*!!
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putCharSequence(ANSWER, answerEditText.getText());
-        outState.putBoolean(SEND_BUTTON_ENABLED, sendButton.isEnabled());
-        super.onSaveInstanceState(outState);
-    }
-
-     */
 }

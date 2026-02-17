@@ -122,21 +122,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             isHost = true;
         }
     }
-    /*!!
-    public TcpPlayerClient getTcpPlayerClient() {
-        return tcpPlayerClient;
-    }
-    public TcpControllerServer getTcpControllerServer() {
-        return tcpControllerServer;
-    }
-    public void setTcpControllerServer(TcpControllerServer server) {
-        this.tcpControllerServer = server;
-    }
-    public Map<String, Player> getPlayers() {
-        return players;
-    }
-
-     */
     public void setPlayerName(String name) {
         playerName = name;
     }
