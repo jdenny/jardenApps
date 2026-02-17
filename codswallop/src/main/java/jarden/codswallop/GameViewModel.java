@@ -47,6 +47,8 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             new MutableLiveData<>(null);
     private final MutableLiveData<String> hostStatusLiveData =
             new MutableLiveData<>(null);
+    private final MutableLiveData<Boolean> hasSubmittedAnswer =
+            new MutableLiveData<>(false);
 
     private final List<String> shuffledNameList = new ArrayList<>();
     private String pendingFragmentTag;
@@ -62,6 +64,12 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private String playerName;
     private boolean isHost;
 
+    public LiveData<Boolean> getHasSubmittedAnswer() {
+        return hasSubmittedAnswer;
+    }
+    public void setHasSubmittedAnswer(boolean submittedAnswer) {
+        hasSubmittedAnswer.setValue(submittedAnswer);
+    }
     public void setCurrentFragmentTagLiveData(String currentFragmentTag) {
         currentFragmentTagLiveData.setValue(currentFragmentTag);
     }

@@ -14,6 +14,16 @@ otherwise: isInterrupted() = true;
 modifiers order:
 	Annotation public protected private abstract static final strictfp
 
+ANDROID STUDIO
+--------------
+Debug app using wireless
+   macOS terminal
+      adb tcpip 555
+      # with no usb cable; Huawei IP 192.168.0.16
+      adb connect 192.169.0.12:555
+      # should see: connected to 192.169.0.12:555
+If you plugin device with USB it will revert to USB mode, so repeat above
+
 run Android studio java class from Terminal
 -------------------------------------------
 E.g. ChatSwing
@@ -23,23 +33,6 @@ java chat.swing.ChatSwing $ [change unicast port, say 8003]
 Ctrl/Z
 bg
 java chat.ChatSwing
-
-Course timetable
-----------------
-Mon: 34, Invoking Activities Exercise
-Tue: 59, Action Bar Exercise
-Wed: 73, Intent Service & Notification Exercise
-Thur: 101, End!
-
-Factory reset of S3 Mini
-------------------------
-Settings, Backup and Reset, Factory Data Reset
-apps to re-install: JW Library, Hot Bridge, Spanish, Pano Tuner
-front page: Memo, Hot Bridge, KnowMe, Revise Spanish
-	JW Library, Translate, SPlanner, Hangouts
-	Camera, Drive, Pano Tuner, Maps
-Footer: Phone, Chrome, GMail, Apps
-old_telephone.mp3
 
 MAC keyboard shortcuts for AS			Windows
 -----------------------------			-------

@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
  */
 public class QuestionFragment extends Fragment {
 
-    private static final String TAG = "MainFragment";
+    private static final String TAG = "QuestionFragment";
     private static final String SEND_BUTTON_ENABLED = "SEND_BUTTON_ENABLED";
     private TextView questionView;
     private EditText answerEditText;
@@ -36,7 +36,7 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onCreateView(" + savedInstanceState == null ? "" : "not null");
+            Log.d(TAG, "onCreateView(" + (savedInstanceState == null ? "" : "not null"));
         }
         View rootView = inflater.inflate(R.layout.fragment_question, container, false);
         questionView = rootView.findViewById(R.id.questionView);
@@ -50,9 +50,12 @@ public class QuestionFragment extends Fragment {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                sendButton.setEnabled(false);
-                gameViewModel.setAnswerLiveData(answer);
-                promptView.setText("waiting for other players to answer");
+                if (Boolean.FALSE.equals(gameViewModel.getHasSubmittedAnswer().getValue())) {
+                    //!! sendButton.setEnabled(false);
+                    gameViewModel.setAnswerLiveData(answer);
+                    promptView.setText("waiting for other players to answer");
+                    gameViewModel.setHasSubmittedAnswer(true);
+                }
             }
         });
         return rootView;
@@ -60,8 +63,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gameViewModel.getQuestionLiveData().observe(
-                getViewLifecycleOwner(),
+        gameViewModel.getQuestionLiveData().observe(getViewLifecycleOwner(),
                 question -> {
                     if (question != null && !question.isEmpty()) {
                         // if (!questionView.getText().equals(question)) {
@@ -69,7 +71,9 @@ public class QuestionFragment extends Fragment {
                         // if (!questionRendered) {
                         if (currentQuestionId != lastRenderedQuestionId) {
                             questionView.setText(question);
-                            sendButton.setEnabled(true);
+                            //!! sendButton.setEnabled(true);
+                            // questionLiveData.setValue(question); //?? suggested by ChatGpt
+                            gameViewModel.setHasSubmittedAnswer(false);
                             if (lastRenderedQuestionId != -1) {
                                 answerEditText.setText("");
                             }
@@ -79,6 +83,13 @@ public class QuestionFragment extends Fragment {
                         }
                     }
                 });
+        gameViewModel.getHasSubmittedAnswer()
+                .observe(getViewLifecycleOwner(),
+                        submitted -> {
+                            boolean hasAnswered = Boolean.TRUE.equals(submitted);
+                            sendButton.setEnabled(!hasAnswered);
+                        });
+
         /*!!
         if (savedInstanceState != null) {
             sendButton.setEnabled(
