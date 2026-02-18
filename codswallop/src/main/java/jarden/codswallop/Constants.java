@@ -1,0 +1,28 @@
+package jarden.codswallop;
+
+/**
+ * Created by john.denny@gmail.com on 15/02/2026.
+ */
+public class Constants {
+    /* sample usage:
+        String s = PlayerState.AWAITING_HOST_IP.toString(); // preferred
+        String s2 = PlayerState.AWAITING_HOST_IP.name();
+        PlayerState ps = PlayerState.AWAITING_QUESTION;
+        if (ps == PlayerState.DISCONNECTED) {} // returns true
+     */
+    public enum PlayerState {
+        AWAITING_HOST_IP, AWAITING_QUESTION, SUPPLY_ANSWER, AWAITING_ANSWERS,
+        SUPPLY_VOTE, AWAITING_VOTES, DISCONNECTED
+    }
+    public enum Protocol {
+        HOST_ANNOUNCE, QUESTION, ALL_ANSWERS, NAMED_ANSWERS, ANSWER, VOTE
+    }
+    public static final String QUESTION = "QUESTION";
+    public static final String ANSWER = "ANSWER";
+    public static final String ALL_ANSWERS = "ALL_ANSWERS";
+    public static final String NAMED_ANSWERS = "NAMED_ANSWERS";
+    public static final String CORRECT = "CORRECT";
+    public static final String VOTE = "VOTE";
+    public static final String LOGIN_DIALOG = "LOGIN_DIALOG";
+    public static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";
+}

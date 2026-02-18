@@ -21,54 +21,73 @@ import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
 
-import static jarden.codswallop.Protocol.ALL_ANSWERS;
-import static jarden.codswallop.Protocol.ANSWER;
-import static jarden.codswallop.Protocol.CORRECT;
-import static jarden.codswallop.Protocol.NAMED_ANSWERS;
-import static jarden.codswallop.Protocol.QUESTION;
-import static jarden.codswallop.Protocol.VOTE;
-
+import static jarden.codswallop.Constants.ALL_ANSWERS;
+import static jarden.codswallop.Constants.ANSWER;
+import static jarden.codswallop.Constants.CORRECT;
+import static jarden.codswallop.Constants.NAMED_ANSWERS;
+import static jarden.codswallop.Constants.QUESTION;
+import static jarden.codswallop.Constants.VOTE;
+import static jarden.codswallop.Constants.PlayerState;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
 public class GameViewModel extends ViewModel implements TcpControllerServer.MessageListener,
         TcpPlayerClient.Listener {
-    private final static String TAG = "GameViewModel";
-    private QuestionManager questionManager;
-    private final MutableLiveData<String> currentFragmentTagLiveData =
-            new MutableLiveData<>("");
-    private final MutableLiveData<String> questionLiveData =
-            new MutableLiveData<>("");
+
+    /*!!
+    private final MutableLiveData<Boolean> awaitingHostIPLiveData =
+            new MutableLiveData<>(false);
+     */
     private final MutableLiveData<String> answerLiveData =
             new MutableLiveData<>("");
+    private int answersCt;
     private final MutableLiveData<AnswersState> answersLiveData =
             new MutableLiveData<>(new AnswersState(null, null, false));
-    private final MutableLiveData<Integer> selectedAnswerLiveData =
-            new MutableLiveData<>(null);
-    private final MutableLiveData<String> hostStatusLiveData =
-            new MutableLiveData<>(null);
-    private final MutableLiveData<Boolean> hasSubmittedAnswer =
+    private final MutableLiveData<String> currentFragmentTagLiveData =
+            new MutableLiveData<>("");
+    private QuestionManager.QuestionAnswer currentQA;
+    private String currentQuestion;
+    private final MutableLiveData<Boolean> hasSentAnswerLiveData =
             new MutableLiveData<>(false);
 
-    private final List<String> shuffledNameList = new ArrayList<>();
+    private final MutableLiveData<String> hostStatusLiveData =
+            new MutableLiveData<>(null);
+    private boolean isHost;
+    private String playerName;
     private String pendingFragmentTag;
+    private Map<String, Player> players;
+    private final MutableLiveData<PlayerState> playerStateLiveData =
+            new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
+    private final MutableLiveData<String> questionLiveData =
+            new MutableLiveData<>("");
+    private QuestionManager questionManager;
+    private int questionSequence;
+    private final MutableLiveData<Integer> selectedAnswerLiveData =
+            new MutableLiveData<>(null);
+    private final List<String> shuffledNameList = new ArrayList<>();
+    private final static String TAG = "GameViewModel";
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
-    private Map<String, Player> players;
     private boolean voteCast;
-    private int answersCt;
     private int votesCt;
-    private int questionSequence;
-    private String currentQuestion;
-    private QuestionManager.QuestionAnswer currentQA;
-    private String playerName;
-    private boolean isHost;
 
-    public LiveData<Boolean> getHasSubmittedAnswer() {
-        return hasSubmittedAnswer;
+    public LiveData<Boolean> getHasSentAnswerLiveData() {
+        return hasSentAnswerLiveData;
     }
-    public void setHasSubmittedAnswer(boolean submittedAnswer) {
-        hasSubmittedAnswer.setValue(submittedAnswer);
+    public void setHasSentAnswerLiveData(boolean sentAnswer) {
+        hasSentAnswerLiveData.setValue(sentAnswer);
+    }
+    public LiveData<PlayerState> getPlayerStateLiveData() {
+        return playerStateLiveData;
+    }
+    public void setPlayerStateLiveData(PlayerState playerState) {
+        playerStateLiveData.setValue(playerState);
+    }
+    public void setPlayerName(String name) {
+        playerName = name;
+    }
+    public void addPlayer(String name, Player player) {
+        players.put(name, player);
     }
     public void setCurrentFragmentTagLiveData(String currentFragmentTag) {
         currentFragmentTagLiveData.setValue(currentFragmentTag);
@@ -77,7 +96,12 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         return currentFragmentTagLiveData;
     }
     public void setQuestionLiveData(String question) {
-        questionLiveData.setValue(question);
+        if (question != null && !question.isEmpty()) {
+            questionLiveData.setValue(question);
+            playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
+        } else {
+            Log.e(TAG, "setQuestion(" + question + ')');
+        }
     }
     public LiveData<String> getQuestionLiveData() {
         return questionLiveData;
@@ -86,6 +110,9 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         if (answer != null && !answer.isEmpty()) {
             answerLiveData.setValue(answer);
             tcpPlayerClient.sendAnswer(questionSequence, answer);
+            hasSentAnswerLiveData.setValue(true);
+            setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
+
         }
     }
     public MutableLiveData<String> getAnswerLiveData() {
@@ -121,12 +148,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             tcpControllerServer.start();
             isHost = true;
         }
-    }
-    public void setPlayerName(String name) {
-        playerName = name;
-    }
-    public void addPlayer(String name, Player player) {
-        players.put(name, player);
     }
     public void setPendingFragmentTag(String pendingFragmentTag) {
         this.pendingFragmentTag = pendingFragmentTag;
@@ -266,13 +287,12 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         if (players.containsKey(name)) {
             name = name + "2";
         }
-        playerName = name;
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Player joined: " + playerName);
+            Log.d(TAG, "Player joined: " + name);
         }
-        Player player = new Player(playerName, "not supplied", 0);
-        addPlayer(playerName, player);
-        setHostStatusLiveData(playerName + " has joined; " + players.size() +
+        Player player = new Player(name, "not supplied", 0);
+        addPlayer(name, player);
+        setHostStatusLiveData(name + " has joined; " + players.size() +
                 " players so far");
     }
 
@@ -341,6 +361,8 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
                 setCurrentFragmentTagLiveData(QUESTION);
                 setQuestionLiveData(currentQuestion);
+                hasSentAnswerLiveData.setValue(false);
+                playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
             } else {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "unrecognised message received by player: " + message);
@@ -350,15 +372,16 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
-            Log.d(TAG, "Now connected to the game host");
-            setHostStatusLiveData("Now connected to the game host; wait for the first question");
+        Log.d(TAG, "Now connected to the game host");
+        new Handler(Looper.getMainLooper()).post(() -> {
+            setPlayerStateLiveData(PlayerState.AWAITING_QUESTION);
+        });
     }
     @Override // TcpPlayerClient.Listener
     public void onDisconnected() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Now disconnected from the game server");
         }
-        //?? waitForHost(); // await a new host!
     }
     @Override // TcpPlayerClient.Listener
     public void onError(Exception e) {

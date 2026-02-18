@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
  * Created by john.denny@gmail.com on 06/01/2026.
  */
 public class QuestionFragment extends Fragment {
-
     private static final String TAG = "QuestionFragment";
     private static final String SEND_BUTTON_ENABLED = "SEND_BUTTON_ENABLED";
     private TextView questionView;
@@ -29,8 +28,6 @@ public class QuestionFragment extends Fragment {
     private TextView promptView;
     //?? private boolean questionRendered = false;
     private int lastRenderedQuestionId = -1;
-
-
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,10 +47,9 @@ public class QuestionFragment extends Fragment {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                if (Boolean.FALSE.equals(gameViewModel.getHasSubmittedAnswer().getValue())) {
+                if (Boolean.FALSE.equals(gameViewModel.getHasSentAnswerLiveData().getValue())) {
                     gameViewModel.setAnswerLiveData(answer);
-                    promptView.setText("waiting for other players to answer");
-                    gameViewModel.setHasSubmittedAnswer(true);
+                    gameViewModel.setHasSentAnswerLiveData(true);
                 }
             }
         });
@@ -64,32 +60,42 @@ public class QuestionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         gameViewModel.getQuestionLiveData().observe(getViewLifecycleOwner(),
                 question -> {
-                    if (question != null && !question.isEmpty()) {
-                        // if (!questionView.getText().equals(question)) {
-                        int currentQuestionId = getQuestionSequence(question.toString());
-                        // if (!questionRendered) {
-                        if (currentQuestionId != lastRenderedQuestionId) {
-                            questionView.setText(question);
-                            // questionLiveData.setValue(question); //?? suggested by ChatGpt
-                            gameViewModel.setHasSubmittedAnswer(false);
-                            if (lastRenderedQuestionId != -1) {
-                                answerEditText.setText("");
-                            }
-                            promptView.setText("supply answer and Send");
-                            // questionRendered = true;
-                            lastRenderedQuestionId = currentQuestionId;
+                    int currentQuestionId = getQuestionSequence(question);
+                    questionView.setText(question);
+                    //!! promptView.setText(R.string.supply_answer_and_send);
+                    if (currentQuestionId != lastRenderedQuestionId) {
+                        if (lastRenderedQuestionId != -1) {
+                            answerEditText.setText("");
                         }
+                        lastRenderedQuestionId = currentQuestionId;
                     }
                 });
-        gameViewModel.getHasSubmittedAnswer()
+        gameViewModel.getHasSentAnswerLiveData()
                 .observe(getViewLifecycleOwner(),
-                        submitted -> {
-                            boolean hasAnswered = Boolean.TRUE.equals(submitted);
+                        sentAnswer -> {
+                            boolean hasAnswered = Boolean.TRUE.equals(sentAnswer);
                             sendButton.setEnabled(!hasAnswered);
+                        });
+        gameViewModel.getPlayerStateLiveData()
+                .observe(getViewLifecycleOwner(),
+                        playerState -> {
+                            int promptId;
+                            if (playerState == Constants.PlayerState.AWAITING_HOST_IP) {
+                                promptId = R.string.waiting_for_host_address;
+                            } else if (playerState == Constants.PlayerState.AWAITING_QUESTION) {
+                                promptId = R.string.connectedWaitForQuestion;
+                            } else if (playerState == Constants.PlayerState.SUPPLY_ANSWER) {
+                                promptId = R.string.supply_answer_and_send;
+                            } else if (playerState == Constants.PlayerState.AWAITING_ANSWERS) {
+                                promptId = R.string.waiting_for_more_answers;
+                            } else {
+                                promptId = R.string.play_on;
+                            }
+                            promptView.setText(promptId);
                         });
     }
     private static int getQuestionSequence(String question) {
         int i = question.indexOf('.');
-        return Integer.valueOf(question.substring(0, i));
+        return  (i < 0) ? -1 : Integer.valueOf(question.substring(0, i));
     }
 }

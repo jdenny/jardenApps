@@ -12,9 +12,43 @@ public class HelloJohn {
             "(1S) double, (pass) 2NT",
             "(1H) double"
     };
+    /* sample usage:
+    String s = PlayerState.AWAITING_HOST_IP.toString(); // preferred
+    String s2 = PlayerState.AWAITING_HOST_IP.name();
+    PlayerState ps = PlayerState.AWAITING_QUESTION;
+    if (ps == PlayerState.DISCONNECTED) {} // returns true
+ */
+    public enum PlayerState {
+        AWAITING_HOST_IP, AWAITING_QUESTION, DISCONNECTED
+    }
+    public enum Protocol {
+        HOST_ANNOUNCE, QUESTION, ALL_ANSWERS, NAMED_ANSWERS, ANSWER, VOTE
+    }
+    private static void hello() {
+        String s = PlayerState.AWAITING_HOST_IP.toString(); // preferred
+        String s2 = PlayerState.AWAITING_HOST_IP.name();
+        PlayerState ps = PlayerState.AWAITING_QUESTION;
+        System.out.println(ps == PlayerState.DISCONNECTED);
+        System.out.println(ps == PlayerState.AWAITING_QUESTION);
+    }
+    public static class Test {
+        private int counter;
+
+        public void setCounter(int ct) {
+            this.counter = ct;
+        }
+        public void incrementCounter() {
+            // this is the question:
+            counter++;
+            // or:
+            int ct = counter + 1;
+            setCounter(ct);
+        }
+    }
 
     public static void main(String[] args) {
         System.out.println("hello John");
+        // hello();
         // testGetBidsFromSequence();
         version2();
         if (true) return;

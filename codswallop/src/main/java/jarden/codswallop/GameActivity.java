@@ -11,15 +11,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
-import static jarden.codswallop.Protocol.ALL_ANSWERS;
-import static jarden.codswallop.Protocol.LOGIN_DIALOG;
-import static jarden.codswallop.Protocol.QUESTION;
-import static jarden.codswallop.Protocol.QUESTION_SEQUENCE_KEY;
+import static jarden.codswallop.Constants.ALL_ANSWERS;
+import static jarden.codswallop.Constants.LOGIN_DIALOG;
+import static jarden.codswallop.Constants.QUESTION;
+import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
 
 /** Design of application
 Message Protocol:
@@ -29,7 +30,7 @@ Message Protocol:
     QUESTION|3|Who was Gustav Vigeland?
     ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
     NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
-    SCORES|3|John 2|Julie 4
+    Not used: SCORES|3|John 2|Julie 4
  Player to Host
     ANSWER|3|Centre forward for Liverpool
     VOTE|3|indexOfSelectedAnswer
@@ -189,7 +190,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         } else if (viewId == R.id.broadcastHostButton) {
             gameViewModel.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
-            statusTextView.setText("wait for all players to join, then 'Next'");
+            statusTextView.setText(R.string.wait_for_players_to_join);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -204,7 +205,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
         hostButtonsLayout.setVisibility(View.VISIBLE);
-        statusTextView.setText("when all players have logged in (using 'Join'), Broadcast Host");
+        statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
     }
     private void setHostViews() {
         hostButtonsLayout.setVisibility(View.VISIBLE);
@@ -227,7 +228,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         waitForHostBroadcast(playerName);
     }
     @Override // Activity
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
                     currentFragmentTag);

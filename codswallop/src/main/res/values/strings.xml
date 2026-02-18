@@ -16,4 +16,10 @@
     <string name="dialog_confirm">Are you sure you want to leave Call My Codswallop?</string>
     <string name="waiting_for_more_answers">Waiting for%1$s other player(s) to answer</string>
     <string name="waiting_for_more_votes">Waiting for%1$s other player(s) to vote</string>
+    <string name="wait_for_players_to_join">wait for all players to join, then \'Next\'</string>
+    <string name="wait_for_players_then_broadcast_host">when all players have logged in (using \'Join\'), Broadcast Host</string>
+    <string name="supply_answer_and_send">supply answer and Send</string>
+    <string name="waiting_for_host_address">Waiting for host to contact us</string>
+    <string name="connectedWaitForQuestion">Now connected to the game host; wait for the first question</string>
+    <string name="play_on">play on!</string>
 </resources>
