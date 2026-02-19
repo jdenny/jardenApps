@@ -240,11 +240,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
             } else {
                 setHostStateLiveData(HostState.AWAITING_CT_VOTES);
-                /*!!
-                        "Waiting for " + (players.size() - votesCt) +
-                                " other player(s) to vote");
-
-                 */
             }
         } else {
             if (BuildConfig.DEBUG) {
@@ -293,11 +288,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         addPlayer(name, player);
         lastJoinedPlayerName = name;
         setHostStateLiveData(HostState.PLAYER_JOINED);
-        /*!!
-                name + " has joined; " + players.size() +
-                " players so far");
-
-         */
     }
 
     @Override

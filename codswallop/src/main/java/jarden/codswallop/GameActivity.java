@@ -201,7 +201,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         } else if (viewId == R.id.broadcastHostButton) {
             gameViewModel.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
-            //!! statusTextView.setText(R.string.wait_for_players_to_join);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -216,11 +215,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
         hostViewsLayout.setVisibility(View.VISIBLE);
-        //!! statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
     }
     private void setHostViews() {
         hostViewsLayout.setVisibility(View.VISIBLE);
-        //!! statusTextView.setVisibility(View.VISIBLE);
     }
     private void waitForHostBroadcast(String playerName) {
         gameViewModel.setPlayerName(playerName);

@@ -62,7 +62,6 @@ public class QuestionFragment extends Fragment {
                 question -> {
                     int currentQuestionId = getQuestionSequence(question);
                     questionView.setText(question);
-                    //!! promptView.setText(R.string.supply_answer_and_send);
                     if (currentQuestionId != lastRenderedQuestionId) {
                         if (lastRenderedQuestionId != -1) {
                             answerEditText.setText("");

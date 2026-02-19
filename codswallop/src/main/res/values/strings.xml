@@ -19,8 +19,8 @@
     <string name="viewHostAddress">View Host address</string>
     <string name="wait_for_players_then_broadcast_host">when all players have logged in (using \'Join\'), Broadcast Host</string>
     <string name="wait_for_players_to_join">wait for all players to join, then \'Next\'</string>
-    <string name="waiting_for_ct_answers">Waiting for%1$d other player(s) to answer</string>
-    <string name="waiting_for_ct_votes">Waiting for%1$d other player(s) to vote</string>
+    <string name="waiting_for_ct_answers">Waiting for %1$d player(s) to answer</string>
+    <string name="waiting_for_ct_votes">Waiting for %1$d player(s) to vote</string>
     <string name="waiting_for_host_address">Waiting for host to contact us</string>
     <string name="waiting_for_more_answers">Waiting for other player(s) to answer</string>
     <string name="waiting_for_more_votes">Waiting for other player(s) to vote</string>
