@@ -34,6 +34,7 @@
                 android:id="@+id/nextQuestionButton"
                 style="?android:attr/buttonBarButtonStyle"
                 android:text="@string/next_question"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -43,21 +44,18 @@
                 android:text="@string/broadcastHostAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/statusView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="20sp"
+                android:text="@string/codswallop" />
         </LinearLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/statusView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:textSize="20sp"
-        android:text="@string/codswallop" />
-
 </LinearLayout>

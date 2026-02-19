@@ -83,8 +83,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         if (!voteCast) {
             gameViewModel.setSelectedAnswerLiveData(position);
             voteCast = true;
-            String prompt = getString(R.string.waiting_for_more_answers, "");
-            promptTextView.setText(getString(R.string.waiting_for_more_answers, ""));
+            promptTextView.setText(R.string.waiting_for_more_answers);
         } else {
             Toast.makeText(getContext(),
                     "You have already cast your vote; you can't change your mind!",

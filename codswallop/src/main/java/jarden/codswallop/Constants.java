@@ -10,6 +10,10 @@ public class Constants {
         PlayerState ps = PlayerState.AWAITING_QUESTION;
         if (ps == PlayerState.DISCONNECTED) {} // returns true
      */
+    public enum HostState {
+        AWAITING_PLAYERS, PLAYER_JOINED, AWAITING_CT_ANSWERS, AWAITING_CT_VOTES,
+        READY_FOR_NEXT_QUESTION
+    }
     public enum PlayerState {
         AWAITING_HOST_IP, AWAITING_QUESTION, SUPPLY_ANSWER, AWAITING_ANSWERS,
         SUPPLY_VOTE, AWAITING_VOTES, DISCONNECTED

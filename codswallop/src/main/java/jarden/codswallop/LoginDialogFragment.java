@@ -54,13 +54,14 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
         joinButton.setOnClickListener(this);
         builder.setView(view);
         alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
         return alertDialog;
     }
     @Override
     public void onClick(View view) {
         String playerName = playerNameEditText.getText().toString();
         if (playerName.isEmpty()) {
-            Toast.makeText(getContext(), "Supply your name first!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.supply_name, Toast.LENGTH_LONG).show();
         } else {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "playerName=" + playerName);
@@ -75,12 +76,10 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
                 loginDialogListener.onJoinButton(playerName);
             } else {
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "unrecognised button, viewId=" + viewId);
+                    Log.e(TAG, "unrecognised button, viewId=" + viewId);
                 }
             }
             alertDialog.cancel();
         }
     }
 }
-
-// somewhere! LoginDialogFragment().show(supportFragmentManager, "LOGIN_DIALOG");

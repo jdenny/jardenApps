@@ -27,9 +27,9 @@ Message Protocol:
  Host to all Players using broadcast:
     HOST_ANNOUNCE|192.168.0.12|50001
  Host to all Players using Tcp:
-    QUESTION|3|Who was Gustav Vigeland?
-    ALL_ANSWERS|3|Norway's most famous sculptor|Centre forward for Liverpool
-    NAMED_ANSWERS|3|CORRECT|Norway's most famous sculptor|Joe|Centre forward for Liverpool
+    QUESTION|3|PEOPLE|Ignaz Semmelveis
+    ALL_ANSWERS|3|Centre forward for Man Utd and England|Hungarian physician and scientist
+    NAMED_ANSWERS|3|CORRECT|Hungarian physician and scientist, known as the saviour of mothers|Joe|Centre forward for Man Utd and England
     Not used: SCORES|3|John 2|Julie 4
  Player to Host
     ANSWER|3|Centre forward for Liverpool
@@ -100,11 +100,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
         LoginDialogFragment loginDialog;
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
-        gameViewModel.getHostStatusLiveData().observe(
+        gameViewModel.getHostStateLiveData().observe(
                 this,
-                hostStatus -> {
-                    if (hostStatus != null && !hostStatus.isEmpty()) {
-                        statusTextView.setText(hostStatus);
+                hostState -> {
+                    if (hostState == Constants.HostState.PLAYER_JOINED) {
+                        statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
+                    } else if (hostState == Constants.HostState.PLAYER_JOINED) {
+                        int ct = gameViewModel.getPlayersCount();
+                        String playerName = gameViewModel.getLastJoinedPlayerName();
+                        statusTextView.setText(getString(R.string.player_joined, playerName, ct));
+                    } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
+                        int ct = gameViewModel.getNotAnsweredCount();
+                        statusTextView.setText(getString(R.string.waiting_for_ct_answers, ct));
+                    } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
+                        int ct = gameViewModel.getNotVotedCount();
+                        statusTextView.setText(getString(R.string.waiting_for_ct_votes, ct));
+                    } else if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
+                        statusTextView.setText(R.string.ready_for_next_question);
+                    } else {
+                        statusTextView.setText("Unknown hostState: " + hostState);
                     }
                 });
         final LiveData<String> currentFragmentTagLiveData =
@@ -179,9 +193,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback.setEnabled(false); // DON'T FORGET THIS!
         getOnBackPressedDispatcher().onBackPressed();
     }
-
-
-
     @Override // View.OnClickListener; action host buttons
     public void onClick(View view) {
         int viewId = view.getId();
@@ -190,7 +201,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         } else if (viewId == R.id.broadcastHostButton) {
             gameViewModel.sendHostBroadcast(this);
             nextQuestionButton.setEnabled(true);
-            statusTextView.setText(R.string.wait_for_players_to_join);
+            //!! statusTextView.setText(R.string.wait_for_players_to_join);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -205,20 +216,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
         hostButtonsLayout.setVisibility(View.VISIBLE);
-        statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
+        //!! statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
     }
     private void setHostViews() {
         hostButtonsLayout.setVisibility(View.VISIBLE);
         statusTextView.setVisibility(View.VISIBLE);
     }
-
     private void waitForHostBroadcast(String playerName) {
         gameViewModel.setPlayerName(playerName);
         WifiManager wifi =
                 (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         gameViewModel.listenForBroadcast(wifi);
     }
-
     @Override // LoginDialogListener
     public void onJoinButton(String playerName) {
         if (BuildConfig.DEBUG) {

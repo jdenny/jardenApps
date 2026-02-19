@@ -27,17 +27,13 @@ import static jarden.codswallop.Constants.CORRECT;
 import static jarden.codswallop.Constants.NAMED_ANSWERS;
 import static jarden.codswallop.Constants.QUESTION;
 import static jarden.codswallop.Constants.VOTE;
+import static jarden.codswallop.Constants.HostState;
 import static jarden.codswallop.Constants.PlayerState;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
 public class GameViewModel extends ViewModel implements TcpControllerServer.MessageListener,
         TcpPlayerClient.Listener {
-
-    /*!!
-    private final MutableLiveData<Boolean> awaitingHostIPLiveData =
-            new MutableLiveData<>(false);
-     */
     private final MutableLiveData<String> answerLiveData =
             new MutableLiveData<>("");
     private int answersCt;
@@ -48,10 +44,10 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
     private final MutableLiveData<Boolean> hasSentAnswerLiveData =
-            new MutableLiveData<>(false);
+            new MutableLiveData<>(true); // initially, no question to answer
 
-    private final MutableLiveData<String> hostStatusLiveData =
-            new MutableLiveData<>(null);
+    private final MutableLiveData<HostState> hostStateLiveData =
+            new MutableLiveData<>(HostState.AWAITING_PLAYERS);
     private boolean isHost;
     private String playerName;
     private String pendingFragmentTag;
@@ -70,6 +66,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private TcpControllerServer tcpControllerServer;
     private boolean voteCast;
     private int votesCt;
+    private String lastJoinedPlayerName;
 
     public LiveData<Boolean> getHasSentAnswerLiveData() {
         return hasSentAnswerLiveData;
@@ -132,13 +129,13 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     public LiveData<Integer> getSelectedAnswerLiveData() {
         return selectedAnswerLiveData;
     }
-    public void setHostStatusLiveData(String hostStatus) {
+    public void setHostStateLiveData(HostState hostState) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            this.hostStatusLiveData.setValue(hostStatus);
+            this.hostStateLiveData.setValue(hostState);
         });
     }
-    public MutableLiveData<String> getHostStatusLiveData() {
-        return hostStatusLiveData;
+    public MutableLiveData<HostState> getHostStateLiveData() {
+        return hostStateLiveData;
     }
     public void startHost(Resources gameResources) {
         if (tcpControllerServer == null) {
@@ -221,10 +218,14 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 }
                 String nextMessage = getAllAnswersMessage();
                 tcpControllerServer.sendToAll(nextMessage);
+                hostStateLiveData.setValue(HostState.AWAITING_CT_VOTES);
             } else {
-                setHostStatusLiveData(
+                hostStateLiveData.setValue(HostState.AWAITING_CT_ANSWERS);
+                /*!!
                         "Waiting for " + (players.size() - answersCt) +
                         " other player(s) to answer");
+
+                 */
             }
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
@@ -242,10 +243,14 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 }
                 String allAnswers2Message = getNamedAnswersMessage();
                 tcpControllerServer.sendToAll(allAnswers2Message);
+                hostStateLiveData.setValue(HostState.READY_FOR_NEXT_QUESTION);
             } else {
-                setHostStatusLiveData(
+                setHostStateLiveData(HostState.AWAITING_CT_VOTES);
+                /*!!
                         "Waiting for " + (players.size() - votesCt) +
                                 " other player(s) to vote");
+
+                 */
             }
         } else {
             if (BuildConfig.DEBUG) {
@@ -292,8 +297,13 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         }
         Player player = new Player(name, "not supplied", 0);
         addPlayer(name, player);
-        setHostStatusLiveData(name + " has joined; " + players.size() +
+        lastJoinedPlayerName = name;
+        setHostStateLiveData(HostState.PLAYER_JOINED);
+        /*!!
+                name + " has joined; " + players.size() +
                 " players so far");
+
+         */
     }
 
     @Override
@@ -391,8 +401,8 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     @Override // TcpPlayerClient.HostFoundCallback
     public void onHostFound(String hostIp, int port) {
-        String status = "onHostFound(" + hostIp + "' " + port + ')';
         if (BuildConfig.DEBUG) {
+            String status = "onHostFound(" + hostIp + "' " + port + ')';
             Log.d(TAG, status);
         }
         tcpPlayerClient.connect(hostIp, TcpControllerServer.TCP_PORT,
@@ -406,5 +416,18 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public boolean getIsHost() {
         return isHost;
+    }
+    public int getNotAnsweredCount() {
+        return players.size() - answersCt;
+    }
+    public int getNotVotedCount() {
+        return (players.size() - votesCt);
+    }
+
+    public int getPlayersCount() {
+        return (players.size());
+    }
+    public String getLastJoinedPlayerName() {
+        return lastJoinedPlayerName;
     }
 }

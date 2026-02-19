@@ -32,7 +32,7 @@ public class TcpPlayerClient {
         void onDisconnected();
         void onError(Exception e);
     }
-    private static final ExecutorService udpExecutor =
+    private ExecutorService udpExecutor =
             Executors.newSingleThreadExecutor();
     private final ExecutorService readExecutor =
             Executors.newSingleThreadExecutor();
@@ -131,9 +131,12 @@ public class TcpPlayerClient {
         });
     }
     public void listenForHostBroadcast(WifiManager wifi, Listener callback) {
+        if (udpExecutor == null ||
+                udpExecutor.isShutdown() ||
+                udpExecutor.isTerminated()) {
+            udpExecutor = Executors.newSingleThreadExecutor();
+        }
         udpExecutor.execute(() -> {
-            /*!! WifiManager wifi =
-                    (WifiManager) context.getSystemService(Context.WIFI_SERVICE);*/
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");
             lock.acquire();
