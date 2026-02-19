@@ -68,7 +68,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     // Host fields: ***************************
     private Button nextQuestionButton;
     private TextView statusTextView;
-    private View hostButtonsLayout;
+    private View hostViewsLayout;
 
     // Host & Client fields ***************************
     private String currentFragmentTag = null;
@@ -88,8 +88,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         nextQuestionButton.setOnClickListener(this);
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
-        statusTextView = findViewById(R.id.statusView);
-        hostButtonsLayout = findViewById(R.id.hostButtonsLayout);
+        statusTextView = findViewById(R.id.hostStatusView);
+        hostViewsLayout = findViewById(R.id.hostLayout);
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -103,7 +103,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         gameViewModel.getHostStateLiveData().observe(
                 this,
                 hostState -> {
-                    if (hostState == Constants.HostState.PLAYER_JOINED) {
+                    if (hostState == Constants.HostState.AWAITING_PLAYERS) {
                         statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
                     } else if (hostState == Constants.HostState.PLAYER_JOINED) {
                         int ct = gameViewModel.getPlayersCount();
@@ -215,12 +215,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setHostViews();
         waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
-        hostButtonsLayout.setVisibility(View.VISIBLE);
+        hostViewsLayout.setVisibility(View.VISIBLE);
         //!! statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
     }
     private void setHostViews() {
-        hostButtonsLayout.setVisibility(View.VISIBLE);
-        statusTextView.setVisibility(View.VISIBLE);
+        hostViewsLayout.setVisibility(View.VISIBLE);
+        //!! statusTextView.setVisibility(View.VISIBLE);
     }
     private void waitForHostBroadcast(String playerName) {
         gameViewModel.setPlayerName(playerName);

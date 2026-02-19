@@ -109,7 +109,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             tcpPlayerClient.sendAnswer(questionSequence, answer);
             hasSentAnswerLiveData.setValue(true);
             setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
-
         }
     }
     public MutableLiveData<String> getAnswerLiveData() {
@@ -218,14 +217,9 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 }
                 String nextMessage = getAllAnswersMessage();
                 tcpControllerServer.sendToAll(nextMessage);
-                hostStateLiveData.setValue(HostState.AWAITING_CT_VOTES);
+                setHostStateLiveData(HostState.AWAITING_CT_VOTES);
             } else {
-                hostStateLiveData.setValue(HostState.AWAITING_CT_ANSWERS);
-                /*!!
-                        "Waiting for " + (players.size() - answersCt) +
-                        " other player(s) to answer");
-
-                 */
+                setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
             }
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
@@ -243,7 +237,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 }
                 String allAnswers2Message = getNamedAnswersMessage();
                 tcpControllerServer.sendToAll(allAnswers2Message);
-                hostStateLiveData.setValue(HostState.READY_FOR_NEXT_QUESTION);
+                setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
             } else {
                 setHostStateLiveData(HostState.AWAITING_CT_VOTES);
                 /*!!
