@@ -28,4 +28,6 @@
     <string name="yourName">Your name</string>
     <string name="ready_for_next_question">When all are happy, select Next for next question</string>
     <string name="host_as_player">Host as Player</string>
+    <string name="host_control">Host Control</string>
+    <string name="duplicatePlayerName">Someone trying to log in with name already used</string>
 </resources>

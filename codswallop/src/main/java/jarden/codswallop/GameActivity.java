@@ -117,6 +117,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         statusTextView.setText(getString(R.string.waiting_for_ct_votes, ct));
                     } else if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
                         statusTextView.setText(R.string.ready_for_next_question);
+                    } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
+                        statusTextView.setText(R.string.duplicatePlayerName);
                     } else {
                         statusTextView.setText("Unknown hostState: " + hostState);
                     }

@@ -24,11 +24,11 @@ import jarden.tcp.TcpPlayerClient;
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.ANSWER;
 import static jarden.codswallop.Constants.CORRECT;
+import static jarden.codswallop.Constants.HostState;
 import static jarden.codswallop.Constants.NAMED_ANSWERS;
+import static jarden.codswallop.Constants.PlayerState;
 import static jarden.codswallop.Constants.QUESTION;
 import static jarden.codswallop.Constants.VOTE;
-import static jarden.codswallop.Constants.HostState;
-import static jarden.codswallop.Constants.PlayerState;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
@@ -187,20 +187,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     public String getCurrentQuestion() {
         return currentQuestion;
     }
-    @Override
-    protected void onCleared() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onCleared()");
-        }
-        if (tcpControllerServer != null) {
-            tcpControllerServer.stop();
-        }
-        if (tcpPlayerClient != null) {
-            tcpPlayerClient.stopListening();
-            tcpPlayerClient.disconnect();
-        }
-    }
-
     @Override  // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
     public void onMessage(String playerName, String message) {
@@ -279,15 +265,17 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     @Override // TcpControllerServer.Listener
     public void onPlayerConnected(String name) {
         if (players.containsKey(name)) {
-            name = name + "2";
+            Log.d(TAG, "Player name already used: " + name);
+            setHostStateLiveData(HostState.DUPLICATE_PLAYER_NAME);
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Player joined: " + name);
+            }
+            Player player = new Player(name, "not supplied", 0);
+            addPlayer(name, player);
+            lastJoinedPlayerName = name;
+            setHostStateLiveData(HostState.PLAYER_JOINED);
         }
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Player joined: " + name);
-        }
-        Player player = new Player(name, "not supplied", 0);
-        addPlayer(name, player);
-        lastJoinedPlayerName = name;
-        setHostStateLiveData(HostState.PLAYER_JOINED);
     }
 
     @Override
@@ -308,6 +296,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public void sendNextQuestion() {
         tcpControllerServer.sendToAll(getNextQuestion());
+        setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
     }
     private String getNextQuestion() {
         try {
@@ -413,5 +402,18 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public String getLastJoinedPlayerName() {
         return lastJoinedPlayerName;
+    }
+    @Override
+    protected void onCleared() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onCleared()");
+        }
+        if (tcpControllerServer != null) {
+            tcpControllerServer.stop();
+        }
+        if (tcpPlayerClient != null) {
+            tcpPlayerClient.stopListening();
+            tcpPlayerClient.disconnect();
+        }
     }
 }
