@@ -6,19 +6,24 @@
     <string name="connectedWaitForQuestion">Now connected to the game host; wait for the first question</string>
     <string name="correct_answer">Correct answer</string>
     <string name="dialog_confirm">Are you sure you want to leave Call My Codswallop?</string>
+    <string name="duplicatePlayerName">Someone trying to log in with name already used</string>
+    <string name="host_control">Host Control</string>
     <string name="hostGame">Host Game</string>
     <string name="joinGame">Join Game</string>
     <string name="loginText">Nominate one person to \'Host Game\' \nAll other players should \'Join Game\'</string>
     <string name="next_question">Next</string>
     <string name="play_on">play on!</string>
     <string name="player_joined">%1$s has joined; %2$d players so far. Press Next when all joined"</string>
+    <string name="ready_for_next_question">When all are happy, select Next for next question</string>
     <string name="scores">Scores</string>
     <string name="sendStr">Send</string>
     <string name="supply_answer_and_send">supply answer and Send</string>
     <string name="supply_name">Supply your name first!</string>
     <string name="viewHostAddress">View Host address</string>
+    <string name="voteNow">tap on the answer you think is correct</string>
     <string name="wait_for_players_then_broadcast_host">when all players have logged in (using \'Join\'), Broadcast Host</string>
     <string name="wait_for_players_to_join">wait for all players to join, then \'Next\'</string>
+    <string name="scores_wait_for_question">scores; wait for next question</string>
     <string name="waiting_for_ct_answers">Waiting for %1$d player(s) to answer</string>
     <string name="waiting_for_ct_votes">Waiting for %1$d player(s) to vote</string>
     <string name="waiting_for_host_address">Waiting for host to contact us</string>
@@ -26,8 +31,5 @@
     <string name="waiting_for_more_votes">Waiting for other player(s) to vote</string>
     <string name="your_answer">Your answer</string>
     <string name="yourName">Your name</string>
-    <string name="ready_for_next_question">When all are happy, select Next for next question</string>
-    <string name="host_as_player">Host as Player</string>
-    <string name="host_control">Host Control</string>
-    <string name="duplicatePlayerName">Someone trying to log in with name already used</string>
+    <string name="already_cast_vote">You have already cast your vote; you can\'t change your mind!</string>
 </resources>

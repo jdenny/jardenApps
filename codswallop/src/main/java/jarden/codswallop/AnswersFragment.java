@@ -26,8 +26,8 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     private TextView questionView;
     private ArrayAdapter<String> answersAdapter;
     private GameViewModel gameViewModel;
-    private boolean voteCast;
     private TextView promptTextView;
+    private Constants.PlayerState playerState;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,24 +69,37 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
                         answersAdapter.add(answer);
                     }
                     answersAdapter.notifyDataSetChanged();
-                    voteCast = false;
                     String prompt = answersState.named ? "player(score): player's answer" :
                             "tap on the answer you think is correct";
                     promptTextView.setText(prompt);
                 });
+        gameViewModel.getPlayerStateLiveData()
+                .observe(getViewLifecycleOwner(),
+                        playerState -> {
+                            this.playerState = playerState;
+                            int promptId;
+                            if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
+                                promptId = R.string.voteNow;
+                            } else if (playerState == Constants.PlayerState.AWAITING_VOTES) {
+                                promptId = R.string.waiting_for_more_votes;
+                            } else if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
+                                promptId = R.string.scores_wait_for_question;
+                            } else {
+                                promptId = R.string.play_on;
+                            }
+                            promptTextView.setText(promptId);
+                        });
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
-        if (!voteCast) {
+        if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
             gameViewModel.setSelectedAnswerLiveData(position);
-            voteCast = true;
-            promptTextView.setText(R.string.waiting_for_more_votes);
         } else {
             Toast.makeText(getContext(),
-                    "You have already cast your vote; you can't change your mind!",
+                    R.string.already_cast_vote,
                     Toast.LENGTH_LONG).show();
         }
     }

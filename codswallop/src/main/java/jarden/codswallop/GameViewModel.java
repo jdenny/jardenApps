@@ -43,8 +43,10 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             new MutableLiveData<>("");
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
-    private final MutableLiveData<Boolean> hasSentAnswerLiveData =
-            new MutableLiveData<>(true); // initially, no question to answer
+    private final MutableLiveData<Boolean> awaitingAnswerLiveData =
+            new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> awaitingVoteLiveData =
+            new MutableLiveData<>(false);
 
     private final MutableLiveData<HostState> hostStateLiveData =
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
@@ -64,15 +66,14 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private final static String TAG = "GameViewModel";
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
-    private boolean voteCast;
     private int votesCt;
     private String lastJoinedPlayerName;
 
-    public LiveData<Boolean> getHasSentAnswerLiveData() {
-        return hasSentAnswerLiveData;
+    public LiveData<Boolean> getAwaitingAnswerLiveData() {
+        return awaitingAnswerLiveData;
     }
-    public void setHasSentAnswerLiveData(boolean sentAnswer) {
-        hasSentAnswerLiveData.setValue(sentAnswer);
+    public void setAwaitingAnswerLiveData(boolean awaitingAnswer) {
+        awaitingAnswerLiveData.setValue(awaitingAnswer);
     }
     public LiveData<PlayerState> getPlayerStateLiveData() {
         return playerStateLiveData;
@@ -107,7 +108,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         if (answer != null && !answer.isEmpty()) {
             answerLiveData.setValue(answer);
             tcpPlayerClient.sendAnswer(questionSequence, answer);
-            hasSentAnswerLiveData.setValue(true);
+            awaitingAnswerLiveData.setValue(false);
             setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
         }
     }
@@ -123,6 +124,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     public void setSelectedAnswerLiveData(Integer position) {
         if (position != null) {
             tcpPlayerClient.sendVote(questionSequence, String.valueOf(position));
+            playerStateLiveData.setValue(PlayerState.AWAITING_VOTES);
         }
     }
     public LiveData<Integer> getSelectedAnswerLiveData() {
@@ -150,12 +152,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public String getPendingFragmentTag() {
         return pendingFragmentTag;
-    }
-    public void setVoteCast(boolean voteCast) {
-        this.voteCast = voteCast;
-    }
-    public boolean getVoteCast() {
-        return voteCast;
     }
     public void setAnswersCt(int answersCt) {
         this.answersCt = answersCt;
@@ -334,17 +330,19 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             if (message.startsWith(ALL_ANSWERS)) {
                 // ALL_ANSWERS|2|a pig trough|dollop|
                 showAnswers(message);
-                voteCast = false;
+                awaitingVoteLiveData.setValue(true);
+                playerStateLiveData.setValue(PlayerState.SUPPLY_VOTE);
             } else if (message.startsWith(NAMED_ANSWERS)) {
                 // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
                 showAnswers(message);
-                voteCast = true;
+                awaitingVoteLiveData.setValue(false);
+                playerStateLiveData.setValue(PlayerState.AWAITING_NEXT_QUESTION);
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
                 setCurrentFragmentTagLiveData(QUESTION);
                 setQuestionLiveData(currentQuestion);
-                hasSentAnswerLiveData.setValue(false);
+                awaitingAnswerLiveData.setValue(true);
                 playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
             } else {
                 if (BuildConfig.DEBUG) {
@@ -357,7 +355,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     public void onConnected() {
         Log.d(TAG, "Now connected to the game host");
         new Handler(Looper.getMainLooper()).post(() -> {
-            setPlayerStateLiveData(PlayerState.AWAITING_QUESTION);
+            setPlayerStateLiveData(PlayerState.AWAITING_FIRST_QUESTION);
         });
     }
     @Override // TcpPlayerClient.Listener

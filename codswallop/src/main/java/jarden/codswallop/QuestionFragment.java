@@ -47,9 +47,8 @@ public class QuestionFragment extends Fragment {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                if (Boolean.FALSE.equals(gameViewModel.getHasSentAnswerLiveData().getValue())) {
+                if (Boolean.TRUE.equals(gameViewModel.getAwaitingAnswerLiveData().getValue())) {
                     gameViewModel.setAnswerLiveData(answer);
-                    gameViewModel.setHasSentAnswerLiveData(true);
                 }
             }
         });
@@ -69,11 +68,10 @@ public class QuestionFragment extends Fragment {
                         lastRenderedQuestionId = currentQuestionId;
                     }
                 });
-        gameViewModel.getHasSentAnswerLiveData()
+        gameViewModel.getAwaitingAnswerLiveData()
                 .observe(getViewLifecycleOwner(),
-                        sentAnswer -> {
-                            boolean hasAnswered = Boolean.TRUE.equals(sentAnswer);
-                            sendButton.setEnabled(!hasAnswered);
+                        awaitingAnswer -> {
+                            sendButton.setEnabled(awaitingAnswer);
                         });
         gameViewModel.getPlayerStateLiveData()
                 .observe(getViewLifecycleOwner(),
@@ -81,7 +79,7 @@ public class QuestionFragment extends Fragment {
                             int promptId;
                             if (playerState == Constants.PlayerState.AWAITING_HOST_IP) {
                                 promptId = R.string.waiting_for_host_address;
-                            } else if (playerState == Constants.PlayerState.AWAITING_QUESTION) {
+                            } else if (playerState == Constants.PlayerState.AWAITING_FIRST_QUESTION) {
                                 promptId = R.string.connectedWaitForQuestion;
                             } else if (playerState == Constants.PlayerState.SUPPLY_ANSWER) {
                                 promptId = R.string.supply_answer_and_send;

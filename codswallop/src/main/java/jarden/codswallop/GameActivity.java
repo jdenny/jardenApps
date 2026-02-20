@@ -135,10 +135,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             fragmentTag = currentFragmentTagLiveData.getValue();
             currentFragmentTag = fragmentTag;
             pendingFragmentTag = gameViewModel.getPendingFragmentTag();
-            if (gameViewModel.getIsHost()) {
-                setHostViews();
-            }
         }
+        setHostViews();
         gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
         int qs = getPreferences(Context.MODE_PRIVATE).getInt(QUESTION_SEQUENCE_KEY, -1);
         gameViewModel.setQuestionSequence(qs);
@@ -213,13 +211,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        setHostViews();
         waitForHostBroadcast(playerName);
         gameViewModel.startHost(getResources());
-        hostViewsLayout.setVisibility(View.VISIBLE);
+        setHostViews();
     }
     private void setHostViews() {
-        hostViewsLayout.setVisibility(View.VISIBLE);
+        if (gameViewModel.getIsHost()) {
+            hostViewsLayout.setVisibility(View.VISIBLE);
+        }
     }
     private void waitForHostBroadcast(String playerName) {
         gameViewModel.setPlayerName(playerName);

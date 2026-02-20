@@ -3,28 +3,28 @@ plugins {
 }
 
 android {
-    namespace 'jarden.codswallop'
-    compileSdk 36
+    namespace = 'jarden.codswallop'
+    compileSdk = 36
 
     defaultConfig {
         applicationId "jarden.codswallop"
-        minSdk 24
-        targetSdk 36
-        versionCode 4
-        versionName "1.4"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 4
+        versionName = "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
         buildConfig = true
