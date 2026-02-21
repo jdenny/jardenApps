@@ -1,11 +1,15 @@
 package jarden.codswallop;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpControllerServer;
 import jarden.tcp.TcpPlayerClient;
@@ -24,15 +28,17 @@ import jarden.tcp.TcpPlayerClient;
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.ANSWER;
 import static jarden.codswallop.Constants.CORRECT;
+import static jarden.codswallop.Constants.GAME_PREFS;
 import static jarden.codswallop.Constants.HostState;
 import static jarden.codswallop.Constants.NAMED_ANSWERS;
 import static jarden.codswallop.Constants.PlayerState;
 import static jarden.codswallop.Constants.QUESTION;
+import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
 import static jarden.codswallop.Constants.VOTE;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
-public class GameViewModel extends ViewModel implements TcpControllerServer.MessageListener,
+public class GameViewModel extends AndroidViewModel implements TcpControllerServer.MessageListener,
         TcpPlayerClient.Listener {
     private final MutableLiveData<String> answerLiveData =
             new MutableLiveData<>("");
@@ -68,6 +74,13 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     private TcpControllerServer tcpControllerServer;
     private int votesCt;
     private String lastJoinedPlayerName;
+    private SharedPreferences prefs;
+
+    public GameViewModel(@NotNull Application application) {
+        super(application);
+        prefs = application.getSharedPreferences(
+                GAME_PREFS, Context.MODE_PRIVATE);
+    }
 
     public LiveData<Boolean> getAwaitingAnswerLiveData() {
         return awaitingAnswerLiveData;
@@ -145,6 +158,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
             tcpControllerServer = new TcpControllerServer(this);
             tcpControllerServer.start();
             isHost = true;
+            questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
         }
     }
     public void setPendingFragmentTag(String pendingFragmentTag) {
@@ -228,7 +242,6 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
                 Log.d(TAG, "unrecognised message received by host: " + message);
             }
         }
-
     }
     private String getAllAnswersMessage() {
         shuffledNameList.clear();
@@ -289,6 +302,7 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
     }
     public void sendHostBroadcast(Context context) {
         tcpControllerServer.sendHostBroadcast(context);
+        this.getApplication();
     }
     public void sendNextQuestion() {
         tcpControllerServer.sendToAll(getNextQuestion());
@@ -406,8 +420,16 @@ public class GameViewModel extends ViewModel implements TcpControllerServer.Mess
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onCleared()");
         }
-        if (tcpControllerServer != null) {
-            tcpControllerServer.stop();
+        onPlayerLeavingGame();
+    }
+    public void onPlayerLeavingGame() {
+        if (isHost) {
+            prefs.edit()
+                    .putInt(QUESTION_SEQUENCE_KEY, questionSequence)
+                    .apply();
+            if (tcpControllerServer != null) {
+                tcpControllerServer.stop();
+            }
         }
         if (tcpPlayerClient != null) {
             tcpPlayerClient.stopListening();

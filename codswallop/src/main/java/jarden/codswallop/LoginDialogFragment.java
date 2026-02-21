@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
@@ -52,6 +53,8 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
         hostButton.setOnClickListener(this);
         joinButton = view.findViewById(R.id.joinButton);
         joinButton.setOnClickListener(this);
+        TextView versionText = view.findViewById(R.id.versionText);
+        versionText.setText("Version " + BuildConfig.VERSION_NAME);
         builder.setView(view);
         alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(false);

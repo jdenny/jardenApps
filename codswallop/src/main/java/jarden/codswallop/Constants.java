@@ -31,4 +31,5 @@ public class Constants {
     public static final String VOTE = "VOTE";
     public static final String LOGIN_DIALOG = "LOGIN_DIALOG";
     public static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";
+    public static final String GAME_PREFS = "GAME_PREFS";
 }

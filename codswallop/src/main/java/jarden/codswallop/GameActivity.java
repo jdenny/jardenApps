@@ -1,7 +1,6 @@
 package jarden.codswallop;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.LOGIN_DIALOG;
 import static jarden.codswallop.Constants.QUESTION;
-import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
 
 /** Design of application
 Message Protocol:
@@ -138,8 +136,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         setHostViews();
         gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
+        /*!!
         int qs = getPreferences(Context.MODE_PRIVATE).getInt(QUESTION_SEQUENCE_KEY, -1);
         gameViewModel.setQuestionSequence(qs);
+
+         */
     }
 
     private void requestShowFragment(String fragmentTag) {
@@ -190,7 +191,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override // ConfirmExitDialogFragment.ExitDialogListener
     public void onExitDialogConfirmed() {
-        backPressedCallback.setEnabled(false); // DON'T FORGET THIS!
+        gameViewModel.onPlayerLeavingGame();
+        backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
         getOnBackPressedDispatcher().onBackPressed();
     }
     @Override // View.OnClickListener; action host buttons
@@ -248,8 +250,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
+        /*!!
         SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
         editor.putInt(QUESTION_SEQUENCE_KEY, gameViewModel.getQuestionSequence());
         editor.apply();
+
+         */
     }
 }
