@@ -136,6 +136,8 @@ public class TcpPlayerClient {
                 udpExecutor.isTerminated()) {
             udpExecutor = Executors.newSingleThreadExecutor();
         }
+        // TODO:
+        // scheduler.scheduleAtFixedRate(() -> sendBroadcast(), 0, 1, TimeUnit.SECONDS);
         udpExecutor.execute(() -> {
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");

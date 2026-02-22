@@ -198,7 +198,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             gameViewModel.sendNextQuestion();
         } else if (viewId == R.id.broadcastHostButton) {
             gameViewModel.sendHostBroadcast(this);
-            nextQuestionButton.setEnabled(true);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();

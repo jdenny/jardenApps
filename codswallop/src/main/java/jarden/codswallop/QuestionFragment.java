@@ -20,13 +20,11 @@ import androidx.lifecycle.ViewModelProvider;
  */
 public class QuestionFragment extends Fragment {
     private static final String TAG = "QuestionFragment";
-    private static final String SEND_BUTTON_ENABLED = "SEND_BUTTON_ENABLED";
     private TextView questionView;
     private EditText answerEditText;
     private Button sendButton;
     private GameViewModel gameViewModel;
     private TextView promptView;
-    //?? private boolean questionRendered = false;
     private int lastRenderedQuestionId = -1;
 
     @Override // Fragment
@@ -47,7 +45,6 @@ public class QuestionFragment extends Fragment {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                //!! if (Boolean.TRUE.equals(gameViewModel.getAwaitingAnswerLiveData().getValue())) {
                 if (gameViewModel.getAwaitingAnswerLiveData().getValue()) {
                     gameViewModel.setAnswer(answer);
                 }
