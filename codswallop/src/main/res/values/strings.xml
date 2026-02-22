@@ -23,7 +23,7 @@
     <string name="voteNow">tap on the answer you think is correct</string>
     <string name="wait_for_players_then_broadcast_host">when all players have logged in (using \'Join\'), Broadcast Host</string>
     <string name="wait_for_players_to_join">wait for all players to join, then \'Next\'</string>
-    <string name="scores_wait_for_question">scores; wait for next question</string>
+    <string name="scores_wait_for_question">(score); wait for next question</string>
     <string name="waiting_for_ct_answers">Waiting for %1$d player(s) to answer</string>
     <string name="waiting_for_ct_votes">Waiting for %1$d player(s) to vote</string>
     <string name="waiting_for_host_address">Waiting for host to contact us</string>

@@ -257,7 +257,7 @@ public class QuizActivity extends AppCompatActivity implements OnClickListener,
 		if (currentLevel > savedLevel) {
 			SharedPreferences.Editor editor = sharedPref.edit();
 			editor.putInt(getString(R.string.savedLevelTag), currentLevel);
-			editor.commit();
+			editor.apply();
 		}
 	}
 	// QuizListener methods:

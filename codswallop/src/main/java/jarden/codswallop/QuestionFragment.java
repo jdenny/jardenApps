@@ -47,8 +47,9 @@ public class QuestionFragment extends Fragment {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                if (Boolean.TRUE.equals(gameViewModel.getAwaitingAnswerLiveData().getValue())) {
-                    gameViewModel.setAnswerLiveData(answer);
+                //!! if (Boolean.TRUE.equals(gameViewModel.getAwaitingAnswerLiveData().getValue())) {
+                if (gameViewModel.getAwaitingAnswerLiveData().getValue()) {
+                    gameViewModel.setAnswer(answer);
                 }
             }
         });

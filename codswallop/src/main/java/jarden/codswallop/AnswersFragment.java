@@ -96,7 +96,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
         if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
-            gameViewModel.setSelectedAnswerLiveData(position);
+            gameViewModel.setSelectedAnswer(position);
         } else {
             Toast.makeText(getContext(),
                     R.string.already_cast_vote,

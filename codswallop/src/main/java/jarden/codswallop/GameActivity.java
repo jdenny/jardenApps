@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -65,11 +64,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     // Host fields: ***************************
     private Button nextQuestionButton;
-    private TextView statusTextView;
+    private TextView hostStatusTextView;
     private View hostViewsLayout;
 
     // Host & Client fields ***************************
     private String currentFragmentTag = null;
+    /*
+    pendingFragmentTag is used when a network/game event requires navigation to a
+    different Fragment, but the Activity is not currently in a safe lifecycle state
+    to perform a FragmentTransaction (e.g. FragmentManager has already saved state
+    because the Activity is stopping, backgrounded, or being recreated after a
+    configuration change).
+
+    In this case we store the requested fragment tag here and perform the
+    navigation later in onResume(), when FragmentManager.isStateSaved() == false
+    and it is safe to commit the transaction.
+     */
     private String pendingFragmentTag = null;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
@@ -86,7 +96,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         nextQuestionButton.setOnClickListener(this);
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
-        statusTextView = findViewById(R.id.hostStatusView);
+        hostStatusTextView = findViewById(R.id.hostStatusView);
         hostViewsLayout = findViewById(R.id.hostLayout);
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
@@ -102,23 +112,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 this,
                 hostState -> {
                     if (hostState == Constants.HostState.AWAITING_PLAYERS) {
-                        statusTextView.setText(R.string.wait_for_players_then_broadcast_host);
+                        hostStatusTextView.setText(R.string.wait_for_players_then_broadcast_host);
                     } else if (hostState == Constants.HostState.PLAYER_JOINED) {
                         int ct = gameViewModel.getPlayersCount();
                         String playerName = gameViewModel.getLastJoinedPlayerName();
-                        statusTextView.setText(getString(R.string.player_joined, playerName, ct));
+                        hostStatusTextView.setText(getString(R.string.player_joined, playerName, ct));
                     } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
                         int ct = gameViewModel.getNotAnsweredCount();
-                        statusTextView.setText(getString(R.string.waiting_for_ct_answers, ct));
+                        hostStatusTextView.setText(getString(R.string.waiting_for_ct_answers, ct));
                     } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
                         int ct = gameViewModel.getNotVotedCount();
-                        statusTextView.setText(getString(R.string.waiting_for_ct_votes, ct));
+                        hostStatusTextView.setText(getString(R.string.waiting_for_ct_votes, ct));
                     } else if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
-                        statusTextView.setText(R.string.ready_for_next_question);
+                        hostStatusTextView.setText(R.string.ready_for_next_question);
                     } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
-                        statusTextView.setText(R.string.duplicatePlayerName);
+                        hostStatusTextView.setText(R.string.duplicatePlayerName);
                     } else {
-                        statusTextView.setText("Unknown hostState: " + hostState);
+                        hostStatusTextView.setText("Unknown hostState: " + hostState);
                     }
                 });
         final LiveData<String> currentFragmentTagLiveData =
@@ -132,15 +142,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             fragmentTag = currentFragmentTagLiveData.getValue();
             currentFragmentTag = fragmentTag;
-            pendingFragmentTag = gameViewModel.getPendingFragmentTag();
         }
         setHostViews();
         gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
-        /*!!
-        int qs = getPreferences(Context.MODE_PRIVATE).getInt(QUESTION_SEQUENCE_KEY, -1);
-        gameViewModel.setQuestionSequence(qs);
-
-         */
     }
 
     private void requestShowFragment(String fragmentTag) {
@@ -214,7 +218,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
         waitForHostBroadcast(playerName);
-        gameViewModel.startHost(getResources());
+        gameViewModel.startHost();
         setHostViews();
     }
     private void setHostViews() {
@@ -233,16 +237,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        gameViewModel.setIsHost(false);
+        //?? gameViewModel.setIsHost(false);
         waitForHostBroadcast(playerName);
-    }
-    @Override // Activity
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onSaveInstanceState(); currentFragmentTag=" +
-                    currentFragmentTag);
-        }
-        super.onSaveInstanceState(savedInstanceState);
     }
     @Override // Activity
     protected void onDestroy() {
@@ -250,11 +246,5 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
-        /*!!
-        SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
-        editor.putInt(QUESTION_SEQUENCE_KEY, gameViewModel.getQuestionSequence());
-        editor.apply();
-
-         */
     }
 }

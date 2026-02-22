@@ -33,10 +33,10 @@ public class QuestionManager {
         }
     }
     private final List<QuestionAnswer> questionList = new ArrayList<>();
-    public QuestionManager(Resources gameResources) {
+    public QuestionManager(Resources resources) {
         int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
         try (InputStream is =
-                     gameResources.openRawResource(qaFileId)) {
+                     resources.openRawResource(qaFileId)) {
             List<String> lines = EngSpaUtils.getLinesFromStream(is);
             for (String line : lines) {
                 if (!line.trim().isEmpty()) {
