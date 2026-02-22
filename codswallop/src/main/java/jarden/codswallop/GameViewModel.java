@@ -45,7 +45,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private final MutableLiveData<AnswersState> answersLiveData =
             new MutableLiveData<>(new AnswersState(null, null, false));
     private final MutableLiveData<String> currentFragmentTagLiveData =
-            new MutableLiveData<>("");
+            new MutableLiveData<>(QUESTION);
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
     private final MutableLiveData<Boolean> awaitingAnswerLiveData =
@@ -90,9 +90,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     public void addPlayer(String name, Player player) {
         players.put(name, player);
-    }
-    public void setCurrentFragmentTagLiveData(String currentFragmentTag) {
-        currentFragmentTagLiveData.setValue(currentFragmentTag);
     }
     public LiveData<String> getCurrentFragmentTagLiveData() {
         return currentFragmentTagLiveData;
@@ -293,7 +290,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
-        setCurrentFragmentTagLiveData(ALL_ANSWERS);
+        currentFragmentTagLiveData.setValue(ALL_ANSWERS);
         setAnswersLiveData(new AnswersState(currentQuestion, answersList,
                 (message.startsWith(NAMED_ANSWERS))));
     }
@@ -316,7 +313,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             } else if (message.startsWith(QUESTION)) {
                 String[] tqa = message.split("\\|", 4);
                 currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
-                setCurrentFragmentTagLiveData(QUESTION);
+                currentFragmentTagLiveData.setValue(QUESTION);
                 setQuestionLiveData(currentQuestion);
                 awaitingAnswerLiveData.setValue(true);
                 playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
@@ -355,9 +352,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         tcpPlayerClient.connect(hostIp, TcpControllerServer.TCP_PORT,
                 playerName, this);
     }
-    public void listenForBroadcast(WifiManager wifi) {
-        tcpPlayerClient.listenForHostBroadcast(wifi, this);
-    }
     @Override
     protected void onCleared() {
         if (BuildConfig.DEBUG) {
@@ -374,6 +368,15 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (tcpPlayerClient != null) {
             tcpPlayerClient.stopListening();
             tcpPlayerClient.disconnect();
+        }
+    }
+    public void onPlayerJoined(String playerName, boolean host) {
+        this.playerName = playerName;
+        WifiManager wifi =
+                (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
+        tcpPlayerClient.listenForHostBroadcast(wifi, this);
+        if (host) {
+            startHost();
         }
     }
 }

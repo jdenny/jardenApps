@@ -1,7 +1,5 @@
 package jarden.codswallop;
 
-import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -106,7 +104,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
-        LoginDialogFragment loginDialog;
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
         gameViewModel.getHostStateLiveData().observe(
                 this,
@@ -134,19 +131,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         final LiveData<String> currentFragmentTagLiveData =
                 gameViewModel.getCurrentFragmentTagLiveData();
         currentFragmentTagLiveData.observe(this, this::requestShowFragment);
-        String fragmentTag;
+        LoginDialogFragment loginDialog;
         if (savedInstanceState == null) {
-            fragmentTag = QUESTION;
             loginDialog = new LoginDialogFragment();
             loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
         } else {
-            fragmentTag = currentFragmentTagLiveData.getValue();
-            currentFragmentTag = fragmentTag;
         }
         setHostViews();
-        gameViewModel.setCurrentFragmentTagLiveData(fragmentTag);
     }
-
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
             // Already showing it?
@@ -217,8 +209,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        waitForHostBroadcast(playerName);
-        gameViewModel.startHost();
+        gameViewModel.onPlayerJoined(playerName, true);
         setHostViews();
     }
     private void setHostViews() {
@@ -226,19 +217,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             hostViewsLayout.setVisibility(View.VISIBLE);
         }
     }
-    private void waitForHostBroadcast(String playerName) {
-        gameViewModel.setPlayerName(playerName);
-        WifiManager wifi =
-                (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        gameViewModel.listenForBroadcast(wifi);
-    }
     @Override // LoginDialogListener
     public void onJoinButton(String playerName) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        //?? gameViewModel.setIsHost(false);
-        waitForHostBroadcast(playerName);
+        gameViewModel.onPlayerJoined(playerName, false);
     }
     @Override // Activity
     protected void onDestroy() {
