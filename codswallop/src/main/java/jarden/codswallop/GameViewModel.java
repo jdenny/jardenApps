@@ -85,9 +85,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public void setPlayerStateLiveData(PlayerState playerState) {
         playerStateLiveData.setValue(playerState);
     }
-    public void setPlayerName(String name) {
-        playerName = name;
-    }
     public void addPlayer(String name, Player player) {
         players.put(name, player);
     }
@@ -257,7 +254,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         }
     }
     public void sendHostBroadcast(Context context) {
-        tcpControllerServer.sendHostBroadcast(context);
+        tcpControllerServer.sendMultipleHostBroadcasts(context, 5);
         this.getApplication();
     }
     public void sendNextQuestion() {

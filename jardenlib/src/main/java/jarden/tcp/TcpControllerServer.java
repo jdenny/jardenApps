@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Created by john.denny@gmail.com on 03/01/2026.
@@ -40,6 +44,8 @@ public class TcpControllerServer {
     public static final int UDP_PORT = 45454;
     private final ExecutorService executor =
             Executors.newCachedThreadPool();
+    private final ScheduledExecutorService scheduler =
+            Executors.newScheduledThreadPool(1);
     private final Map<String, ClientHandler> clients =
             new ConcurrentHashMap<>();
     private final MessageListener listener;
@@ -85,6 +91,7 @@ public class TcpControllerServer {
             handler.close();
         }
         executor.shutdownNow();
+        scheduler.shutdownNow();
     }
 
     // ----------------------------
@@ -168,6 +175,11 @@ public class TcpControllerServer {
                 listener.onPlayerDisconnected(playerName);
             }
         }
+    }
+    public void sendMultipleHostBroadcasts(Context context, int count)  {
+        final ScheduledFuture<?> broadcastHandle =
+                scheduler.scheduleWithFixedDelay(() -> sendHostBroadcast(context), 0, 1, SECONDS);
+        scheduler.schedule(() -> { broadcastHandle.cancel(true); }, count, SECONDS);
     }
     public void sendHostBroadcast(Context context) {
         new Thread(() -> {

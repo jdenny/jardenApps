@@ -8,7 +8,8 @@ public class HttpMain {
 
 	public static void main(String[] args) throws IOException {
 		String urlStr =
-				"https://sites.google.com:443/site/amazequiz/home/problems/colores.properties";
+			//	"https://sites.google.com:443/site/amazequiz/home/problems/colores.properties";
+                "https://github.com/jdenny/jardenApps/blob/master/codswallop/src/main/res/raw/test_questions.txt";
 		URL url = new URL(urlStr);
 		System.out.println(
 				"url=" + urlStr +
