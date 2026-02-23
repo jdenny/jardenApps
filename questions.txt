@@ -1,2 +1,4 @@
-WORDS|Absquatulate|To leave abruptly
 WORDS|Cozen|To lie, cheat, or deceive
+INITIALS|FLOTUS|First Lady of the United States
+PEOPLE|Joe Medicine Crow|The last Plains Indian war chief in history
+WORDS|Absquatulate|To leave abruptly
