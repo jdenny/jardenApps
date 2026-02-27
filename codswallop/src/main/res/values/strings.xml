@@ -32,4 +32,5 @@
     <string name="your_answer">Your answer</string>
     <string name="yourName">Your name</string>
     <string name="already_cast_vote">You have already cast your vote; you can\'t change your mind!</string>
+    <string name="confirm_skip_question">Are you sure you want to skip the current question?</string>
 </resources>

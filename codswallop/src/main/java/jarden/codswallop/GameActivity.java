@@ -1,5 +1,6 @@
 package jarden.codswallop;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -99,8 +101,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ConfirmExitDialogFragment dialog = new ConfirmExitDialogFragment();
-                dialog.show(getSupportFragmentManager(), "ConfirmExitDialogFragment");
+                showAlertDialog(R.string.dialog_confirm, new AlertDialogListener() {
+                    @Override
+                    public void onAlertDialogPositive() {
+                        gameViewModel.onPlayerLeavingGame();
+                        backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
+                        getOnBackPressedDispatcher().onBackPressed();
+                    }
+                });
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
@@ -195,7 +203,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.nextQuestionButton) {
-            gameViewModel.sendNextQuestion();
+            Constants.HostState state = gameViewModel.getHostStateLiveData().getValue();
+            if (state == Constants.HostState.AWAITING_CT_ANSWERS ||
+                    state == Constants.HostState.AWAITING_CT_VOTES) {
+                showAlertDialog(R.string.confirm_skip_question, new AlertDialogListener() {
+                    @Override
+                    public void onAlertDialogPositive() {
+                        gameViewModel.sendNextQuestion();
+                    }
+                });
+            } else {
+                gameViewModel.sendNextQuestion();
+            }
         } else if (viewId == R.id.broadcastHostButton) {
             gameViewModel.sendHostBroadcast(this);
         } else {
@@ -229,5 +248,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
+    }
+    public interface AlertDialogListener {
+        public void onAlertDialogPositive();
+    }
+    private void showAlertDialog(int message, AlertDialogListener listener) {
+        new AlertDialog.Builder(this)
+                .setTitle("Codswallop!")
+                .setMessage(message)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.yesStr, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        listener.onAlertDialogPositive();
+                    }})
+                .setNegativeButton(R.string.noStr, null).show();
     }
 }

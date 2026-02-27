@@ -7,13 +7,14 @@ public class Player {
     private String name;
     private String answer;
     private int score;
+    private boolean awaitingAnswer;
+    private boolean awaitingVote;
 
     public Player(String name, String answer, int score) {
         this.name = name;
         this.answer = answer;
         this.score = score;
     }
-
     @Override
     public String toString() {
         return "Player: " +
@@ -21,11 +22,9 @@ public class Player {
                 ", answer='" + answer +
                 ", score=" + score;
     }
-
     public String getName() {
         return name;
     }
-
     public String getAnswer() {
         return answer;
     }
@@ -38,7 +37,16 @@ public class Player {
     public void incrementScore() {
         score++;
     }
-    public void resetScore() {
-        score = 0;
+    public boolean isAwaitingAnswer() {
+        return awaitingAnswer;
+    }
+    public void setAwaitingAnswer(boolean awaitingAnswer) {
+        this.awaitingAnswer = awaitingAnswer;
+    }
+    public boolean isAwaitingVote() {
+        return awaitingVote;
+    }
+    public void setAwaitingVote(boolean awaitingVote) {
+        this.awaitingVote = awaitingVote;
     }
 }
