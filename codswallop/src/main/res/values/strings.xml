@@ -11,7 +11,7 @@
     <string name="hostGame">Host Game</string>
     <string name="joinGame">Join Game</string>
     <string name="loginText">Nominate one person to \'Host Game\' \nAll other players should \'Join Game\'</string>
-    <string name="next_question">Next</string>
+    <string name="next_question">Next Question</string>
     <string name="play_on">play on!</string>
     <string name="player_joined">%1$s has joined; %2$d players so far. Press Next when all joined"</string>
     <string name="ready_for_next_question">When all are happy, select Next for next question</string>

@@ -3,8 +3,10 @@ package jarden.codswallop;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +61,7 @@ Message Protocol:
         playerName, score (goes to first screen when host types NextButton)
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener,
-        LoginDialogFragment.LoginDialogListener, ConfirmExitDialogFragment.ExitDialogListener {
+        LoginDialogFragment.LoginDialogListener {
     public static final String TAG = "GameActivity";
 
     // Host fields: ***************************
@@ -101,14 +103,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                showAlertDialog(R.string.dialog_confirm, new AlertDialogListener() {
-                    @Override
-                    public void onAlertDialogPositive() {
-                        gameViewModel.onPlayerLeavingGame();
-                        backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
-                        getOnBackPressedDispatcher().onBackPressed();
-                    }
-                });
+                showAlertDialog(R.string.dialog_confirm,
+                        new AlertDialogListener() {
+                            @Override
+                            public void onAlertDialogPositive() {
+                                gameViewModel.onPlayerLeavingGame();
+                                backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
+                                getOnBackPressedDispatcher().onBackPressed();
+                            }
+                        }, R.drawable.leaving_fish_transparent);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
@@ -193,12 +196,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             performShowFragment(pendingFragmentTag);
         }
     }
-    @Override // ConfirmExitDialogFragment.ExitDialogListener
-    public void onExitDialogConfirmed() {
-        gameViewModel.onPlayerLeavingGame();
-        backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
-        getOnBackPressedDispatcher().onBackPressed();
-    }
     @Override // View.OnClickListener; action host buttons
     public void onClick(View view) {
         int viewId = view.getId();
@@ -211,7 +208,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     public void onAlertDialogPositive() {
                         gameViewModel.sendNextQuestion();
                     }
-                });
+                }, R.drawable.next_question_fish_transparent);
             } else {
                 gameViewModel.sendNextQuestion();
             }
@@ -252,15 +249,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public interface AlertDialogListener {
         public void onAlertDialogPositive();
     }
-    private void showAlertDialog(int message, AlertDialogListener listener) {
+    private void showAlertDialog(int message, AlertDialogListener listener, int iconResource) {
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_image, null);
+
+        ImageView image = view.findViewById(R.id.dialogImage);
+        image.setImageResource(iconResource);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Codswallop")
+                .setMessage(message)
+                .setView(view)
+                .setPositiveButton(R.string.yesStr, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        listener.onAlertDialogPositive();
+                    }})
+                .setNegativeButton(R.string.noStr, null)
+                .create();
+        dialog.show();
+        /*!!
         new AlertDialog.Builder(this)
                 .setTitle("Codswallop!")
                 .setMessage(message)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(iconResource)
                 .setPositiveButton(R.string.yesStr, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         listener.onAlertDialogPositive();
                     }})
                 .setNegativeButton(R.string.noStr, null).show();
+
+         */
     }
 }

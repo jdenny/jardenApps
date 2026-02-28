@@ -40,8 +40,8 @@ import static jarden.codswallop.Constants.VOTE;
 public class GameViewModel extends AndroidViewModel implements TcpControllerServer.MessageListener,
         TcpPlayerClient.Listener {
 
-    private final MutableLiveData<AnswersState> answersLiveData =
-            new MutableLiveData<>(new AnswersState(null, null, false));
+    private final MutableLiveData<AllAnswers> answersLiveData =
+            new MutableLiveData<>(new AllAnswers(null, null, false));
     private final MutableLiveData<String> currentFragmentTagLiveData =
             new MutableLiveData<>(QUESTION);
     private QuestionManager.QuestionAnswer currentQA;
@@ -107,10 +107,10 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
         }
     }
-    public void setAnswersLiveData(AnswersState newAnswersState) {
-        answersLiveData.setValue(newAnswersState);
+    public void setAnswersLiveData(AllAnswers allAnswers) {
+        answersLiveData.setValue(allAnswers);
     }
-    public LiveData<AnswersState> getAnswersLiveData() {
+    public LiveData<AllAnswers> getAnswersLiveData() {
         return answersLiveData;
     }
     public void setSelectedAnswer(int position) {
@@ -330,7 +330,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
         currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        setAnswersLiveData(new AnswersState(currentQuestion, answersList,
+        setAnswersLiveData(new AllAnswers(currentQuestion, answersList,
                 (message.startsWith(NAMED_ANSWERS))));
     }
     @Override // TcpPlayerClient.Listener; message sent from host to player

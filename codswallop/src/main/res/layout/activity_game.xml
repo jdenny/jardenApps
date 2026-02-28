@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/hostLayout"
         android:orientation="vertical"
-        android:visibility="gone"
+
         android:background="@color/hostControlBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -25,13 +25,17 @@
             android:text="@string/host_control"
             android:textSize="25sp" />
 
-        <!--style="?android:attr/buttonBarStyle"-->
+        <TextView
+            android:id="@+id/hostStatusView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/codswallop" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!--style="?android:attr/buttonBarButtonStyle" -->
             <Button
                 android:id="@+id/nextQuestionButton"
                 android:text="@string/next_question"
@@ -46,12 +50,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/hostStatusView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/codswallop" />
 
     </LinearLayout>
 
