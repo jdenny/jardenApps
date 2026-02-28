@@ -1,11 +1,13 @@
 <resources>
+    <string name="already_cast_vote">You have already cast your vote; you can\'t change your mind!</string>
     <string name="app_name">Codswallop</string>
     <string name="broadcastHostAddress">Broadcast Host</string>
     <string name="close">Close</string>
     <string name="codswallop">Call My Codswallop!</string>
     <string name="connectedWaitForQuestion">Now connected to the game host; wait for the first question</string>
+    <string name="confirm_leaving">Are you sure you want to leave Call My Codswallop?</string>
+    <string name="confirm_skip_question">Are you sure you want to skip the current question?</string>
     <string name="correct_answer">Correct answer</string>
-    <string name="dialog_confirm">Are you sure you want to leave Call My Codswallop?</string>
     <string name="duplicatePlayerName">Someone trying to log in with name already used</string>
     <string name="host_control">Host Control</string>
     <string name="hostGame">Host Game</string>
@@ -13,7 +15,7 @@
     <string name="loginText">Nominate one person to \'Host Game\' \nAll other players should \'Join Game\'</string>
     <string name="next_question">Next Question</string>
     <string name="play_on">play on!</string>
-    <string name="player_joined">%1$s has joined; %2$d players so far. Press Next when all joined"</string>
+    <string name="player_joined">%1$s has joined; %2$d players so far. Press Next Question when all joined"</string>
     <string name="ready_for_next_question">When all are happy, select Next for next question</string>
     <string name="scores">Scores</string>
     <string name="sendStr">Send</string>
@@ -31,6 +33,4 @@
     <string name="waiting_for_more_votes">Waiting for other player(s) to vote</string>
     <string name="your_answer">Your answer</string>
     <string name="yourName">Your name</string>
-    <string name="already_cast_vote">You have already cast your vote; you can\'t change your mind!</string>
-    <string name="confirm_skip_question">Are you sure you want to skip the current question?</string>
 </resources>

@@ -27,8 +27,8 @@ Message Protocol:
     HOST_ANNOUNCE|192.168.0.12|50001
  Host to all Players using Tcp:
     QUESTION|3|PEOPLE|Ignaz Semmelveis
-    ALL_ANSWERS|3|Centre forward for Man Utd and England|Hungarian physician and scientist
-    NAMED_ANSWERS|3|CORRECT|Hungarian physician and scientist, known as the saviour of mothers|Joe|Centre forward for Man Utd and England
+    ALL_ANSWERS|3|Centre forward for Man Utd|Hungarian physician|Russian Pole Vaulter
+    NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N|Centre forward for Man Utd|John|Y|Hungarian physician
     Not used: SCORES|3|John 2|Julie 4
  Player to Host
     ANSWER|3|Centre forward for Liverpool
@@ -103,7 +103,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                showAlertDialog(R.string.dialog_confirm,
+                showAlertDialog(R.string.confirm_leaving,
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {

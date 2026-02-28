@@ -63,6 +63,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private QuestionManager questionManager;
     private int questionSequence;
     private final List<String> shuffledNameList = new ArrayList<>();
+    private int correctShuffledIndex;
     private final static String TAG = "GameViewModel";
     private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private TcpControllerServer tcpControllerServer;
@@ -146,7 +147,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
             player.setAnswer(answer);
-            player.setAwaitingAnswer(false);
+            //!! player.setAwaitingAnswer(false);
             checkForAllAnswers();
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
@@ -157,7 +158,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             } else if (!votedForName.equals(playerName)) {
                 players.get(votedForName).incrementScore();
             }
-            player.setAwaitingVote(false);
+            player.setVotedIndex(indexOfVotedItem);
             checkForAllVotes();
         } else {
             if (BuildConfig.DEBUG) {
@@ -192,7 +193,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private int getVotesCt() {
         int votesCt = 0;
         for (Player playerN : players.values()) {
-            if (!playerN.isAwaitingVote()) {
+            if (playerN.getVotedIndex() >= 0) {
                 votesCt++;
             }
         }
@@ -201,7 +202,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private int getAnswersCt() {
         int answersCt = 0;
         for (Player playerN : players.values()) {
-            if (!playerN.isAwaitingAnswer()) {
+            if (playerN.getAnswer() != null) {
                 answersCt++;
             }
         }
@@ -213,8 +214,12 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         shuffledNameList.addAll(players.keySet());
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
-        for (String name: shuffledNameList) {
+        //!! for (String name: shuffledNameList) {
+        String name;
+        for (int i = 0; i < shuffledNameList.size(); i++) {
+            name = shuffledNameList.get(i);
             if (name.equals(CORRECT)) {
+                this.correctShuffledIndex = i;
                 buffer.append('|' + currentQA.answer);
             } else {
                 buffer.append('|' + players.get(name).getAnswer());
@@ -223,6 +228,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return buffer.toString();
     }
     private String getNamedAnswersMessage() {
+        // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N|Centre forward for Man Utd|John|Y|Hungarian physician
         // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
         StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
         buffer.append('|' + CORRECT + ": " + currentQA.answer);
@@ -266,7 +272,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 players.put(name, leftPlayers.put(name, leftPlayers.get(name)));
                 leftPlayers.remove(name);
             } else {
-                Player player = new Player(name, "not yet supplied", 0);
+                Player player = new Player(name);
                 addPlayer(name, player);
             }
             lastJoinedPlayerName = name;
@@ -319,8 +325,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 .putInt(QUESTION_SEQUENCE_KEY, questionSequence)
                 .apply();
         for (Player player: players.values()) {
-            player.setAwaitingAnswer(true);
-            player.setAwaitingVote(true);
+            player.setAnswer(null);
+            player.setVotedIndex(-1);
         }
         return nextQuestion;
     }

@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="hostControlBackground">#D9E2FF</color>
+    <color name="correct_green">#A5D6A7</color>
+    <color name="wrong_red">#EF9A9A</color>
 </resources>

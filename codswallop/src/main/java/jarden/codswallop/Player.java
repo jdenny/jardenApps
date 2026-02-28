@@ -5,15 +5,14 @@ package jarden.codswallop;
  */
 public class Player {
     private String name;
-    private String answer;
-    private int score;
-    private boolean awaitingAnswer;
-    private boolean awaitingVote;
+    private String answer = null;
+    private int score = 0;
+    //!! private boolean awaitingAnswer;
+    //!! private boolean awaitingVote;
+    private int votedIndex = -1;
 
-    public Player(String name, String answer, int score) {
+    public Player(String name) {
         this.name = name;
-        this.answer = answer;
-        this.score = score;
     }
     @Override
     public String toString() {
@@ -37,6 +36,7 @@ public class Player {
     public void incrementScore() {
         score++;
     }
+    /*!!
     public boolean isAwaitingAnswer() {
         return awaitingAnswer;
     }
@@ -48,5 +48,14 @@ public class Player {
     }
     public void setAwaitingVote(boolean awaitingVote) {
         this.awaitingVote = awaitingVote;
+    }
+
+     */
+
+    public int getVotedIndex() {
+        return votedIndex;
+    }
+    public void setVotedIndex(int votedIndex) {
+        this.votedIndex = votedIndex;
     }
 }
