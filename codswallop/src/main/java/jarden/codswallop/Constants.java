@@ -27,7 +27,7 @@ public class Constants {
     public static final String ANSWER = "ANSWER";
     public static final String ALL_ANSWERS = "ALL_ANSWERS";
     public static final String NAMED_ANSWERS = "NAMED_ANSWERS";
-    public static final String CORRECT = "CORRECT";
+    public static final String CORRECT = "RIGHT ANSWER";
     public static final String VOTE = "VOTE";
     public static final String LOGIN_DIALOG = "LOGIN_DIALOG";
     public static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";

@@ -14,15 +14,15 @@ import androidx.core.content.ContextCompat;
  * Created by john.denny@gmail.com on 28/02/2026.
  */
 public class AnswersAdapter extends ArrayAdapter<String> {
-    private int indexIVotedFor = -1;
-    private boolean showResults = false;
+    private boolean isCorrect;
+    private boolean showResults;
 
     public AnswersAdapter(Context context) {
         super(context, 0);
     }
-    public void setResultsState(boolean showResults, int indexIVotedFor) {
+    public void setResultsState(boolean showResults, boolean isCorrect) {
         this.showResults = showResults;
-        this.indexIVotedFor = indexIVotedFor;
+        this.isCorrect = isCorrect;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -38,13 +38,9 @@ public class AnswersAdapter extends ArrayAdapter<String> {
         if (showResults) {
             // Correct answer is always first
             if (position == 0) {
+                int colour = isCorrect ? R.color.correct_green : R.color.wrong_red;
                 view.setBackgroundColor(
-                        ContextCompat.getColor(getContext(), R.color.correct_green));
-            }
-            // If I voted wrongly
-            else if (position == indexIVotedFor) {
-                view.setBackgroundColor(
-                        ContextCompat.getColor(getContext(), R.color.wrong_red));
+                        ContextCompat.getColor(getContext(), colour));
             }
         }
         return view;

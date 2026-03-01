@@ -267,17 +267,5 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 .setNegativeButton(R.string.noStr, null)
                 .create();
         dialog.show();
-        /*!!
-        new AlertDialog.Builder(this)
-                .setTitle("Codswallop!")
-                .setMessage(message)
-                .setIcon(iconResource)
-                .setPositiveButton(R.string.yesStr, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        listener.onAlertDialogPositive();
-                    }})
-                .setNegativeButton(R.string.noStr, null).show();
-
-         */
     }
 }

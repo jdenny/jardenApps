@@ -6,12 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 public class AnswersFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "AnswersFragment";
     private TextView questionView;
-    private ArrayAdapter<String> answersAdapter;
+    private AnswersAdapter answersAdapter;
     private GameViewModel gameViewModel;
     private TextView promptTextView;
     private Constants.PlayerState playerState;
@@ -35,8 +32,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         View rootView = inflater.inflate(R.layout.fragment_answers, container, false);
         questionView = rootView.findViewById(R.id.questionView);
         ListView answersListView = rootView.findViewById(R.id.answersListView);
-        this.answersAdapter = new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_list_item_1);
+        this.answersAdapter = new AnswersAdapter(getActivity());
         answersListView.setAdapter(answersAdapter);
         answersListView.setOnItemClickListener(this);
         gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
@@ -60,18 +56,16 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         super.onViewCreated(view, savedInstanceState);
         gameViewModel.getAnswersLiveData().observe(
                 getViewLifecycleOwner(),
-                answersState -> {
-                    questionView.setText(answersState.question);
-                    List<String> answers = answersState.answers;
+                allAnswers -> {
+                    questionView.setText(allAnswers.question);
                     answersAdapter.setNotifyOnChange(false);
                     answersAdapter.clear();
-                    for (String answer : answers) {
-                        answersAdapter.add(answer);
-                    }
+                    answersAdapter.addAll(allAnswers.answers);
+                    answersAdapter.setResultsState(
+                            allAnswers.named,
+                            allAnswers.isCorrect);
+
                     answersAdapter.notifyDataSetChanged();
-                    String prompt = answersState.named ? "player(score): player's answer" :
-                            "tap on the answer you think is correct";
-                    promptTextView.setText(prompt);
                 });
         gameViewModel.getPlayerStateLiveData()
                 .observe(getViewLifecycleOwner(),

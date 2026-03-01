@@ -147,7 +147,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
             player.setAnswer(answer);
-            //!! player.setAwaitingAnswer(false);
             checkForAllAnswers();
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
@@ -156,7 +155,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (votedForName.equals(CORRECT)) {
                 players.get(playerName).incrementScore();
             } else if (!votedForName.equals(playerName)) {
-                players.get(votedForName).incrementScore();
+                players.get(votedForName).incrementVotedForScore();
             }
             player.setVotedIndex(indexOfVotedItem);
             checkForAllVotes();
@@ -171,8 +170,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all votes received for current question");
             }
-            String allAnswers2Message = getNamedAnswersMessage();
-            tcpControllerServer.sendToAll(allAnswers2Message);
+            tcpControllerServer.sendToAll(getNamedAnswersMessage());
             setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
@@ -214,7 +212,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         shuffledNameList.addAll(players.keySet());
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
-        //!! for (String name: shuffledNameList) {
         String name;
         for (int i = 0; i < shuffledNameList.size(); i++) {
             name = shuffledNameList.get(i);
@@ -228,16 +225,17 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return buffer.toString();
     }
     private String getNamedAnswersMessage() {
-        // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N|Centre forward for Man Utd|John|Y|Hungarian physician
-        // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
+        // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
         StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
-        buffer.append('|' + CORRECT + ": " + currentQA.answer);
+        buffer.append('|' + CORRECT + '|' + currentQA.answer);
         if (currentQA.comment != null) {
             buffer.append(". " + currentQA.comment);
         }
+        char isCorrect;
         for (Player player: players.values()) {
-            buffer.append('|' + player.getName() + " (" + player.getScore() + ')' +
-                    ": " + player.getAnswer());
+            isCorrect = (player.getVotedIndex() == this.correctShuffledIndex) ? 'Y' : 'N';
+            buffer.append('|' + player.getName() + '|' + isCorrect + ',' + player.getVotedForCt() + ',' +
+                    player.getScore() + '|' + player.getAnswer());
         }
         return buffer.toString();
     }
@@ -325,19 +323,38 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 .putInt(QUESTION_SEQUENCE_KEY, questionSequence)
                 .apply();
         for (Player player: players.values()) {
-            player.setAnswer(null);
-            player.setVotedIndex(-1);
+            player.reset();
         }
         return nextQuestion;
     }
     private void showAnswers(String message) {
+        // ALL_ANSWERS|2|a pig trough|dollop|
         int index = message.indexOf('|');
         int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
         currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        setAnswersLiveData(new AllAnswers(currentQuestion, answersList,
-                (message.startsWith(NAMED_ANSWERS))));
+        setAnswersLiveData(new AllAnswers(currentQuestion, answersList, false));
+    }
+    private void showNamedAnswers(String message) {
+        // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
+        String[] tokens = message.split("\\|");
+        List<String> answersList = new ArrayList<>();
+        answersList.add(tokens[2] + ": " + tokens[3]);
+        int tokenIndex = 4;
+        String[] details;
+        boolean isCorrect = false;
+        while ((tokenIndex + 2) < tokens.length) {
+            details = tokens[tokenIndex + 1].split(",");
+            if (tokens[tokenIndex].equals(playerName)) {
+                isCorrect = details[0].equals("Y");
+            }
+            answersList.add(tokens[tokenIndex] + " (" + details[1] + ',' +
+                    details[2] + "): " + tokens[tokenIndex + 2]);
+            tokenIndex += 3;
+        }
+        currentFragmentTagLiveData.setValue(ALL_ANSWERS);
+        setAnswersLiveData(new AllAnswers(currentQuestion, answersList, true, isCorrect));
     }
     @Override // TcpPlayerClient.Listener; message sent from host to player
     public void onMessage(String message) {
@@ -351,8 +368,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 awaitingVoteLiveData.setValue(true);
                 playerStateLiveData.setValue(PlayerState.SUPPLY_VOTE);
             } else if (message.startsWith(NAMED_ANSWERS)) {
-                // NAMED_ANSWERS|3|CORRECT: Norway's most famous sculptor|Joe (2): Centre forward for Liverpool
-                showAnswers(message);
+                // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
+                showNamedAnswers(message);
                 awaitingVoteLiveData.setValue(false);
                 playerStateLiveData.setValue(PlayerState.AWAITING_NEXT_QUESTION);
             } else if (message.startsWith(QUESTION)) {

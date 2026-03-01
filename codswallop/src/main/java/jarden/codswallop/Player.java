@@ -7,12 +7,16 @@ public class Player {
     private String name;
     private String answer = null;
     private int score = 0;
-    //!! private boolean awaitingAnswer;
-    //!! private boolean awaitingVote;
     private int votedIndex = -1;
+    private int votedForCt = 0;
 
     public Player(String name) {
         this.name = name;
+    }
+    public void reset() {
+        answer = null; // i.e. not answered yet
+        votedIndex = -1; // i.e. not voted yet
+        votedForCt = 0; // i.e. no one voted for your answer yet
     }
     @Override
     public String toString() {
@@ -33,29 +37,22 @@ public class Player {
     public int getScore() {
         return score;
     }
+    public int getVotedForCt() {
+        return votedForCt;
+    }
     public void incrementScore() {
         score++;
     }
-    /*!!
-    public boolean isAwaitingAnswer() {
-        return awaitingAnswer;
-    }
-    public void setAwaitingAnswer(boolean awaitingAnswer) {
-        this.awaitingAnswer = awaitingAnswer;
-    }
-    public boolean isAwaitingVote() {
-        return awaitingVote;
-    }
-    public void setAwaitingVote(boolean awaitingVote) {
-        this.awaitingVote = awaitingVote;
-    }
-
-     */
 
     public int getVotedIndex() {
         return votedIndex;
     }
     public void setVotedIndex(int votedIndex) {
         this.votedIndex = votedIndex;
+    }
+
+    public void incrementVotedForScore() {
+        votedForCt++; // someone voted for my answer...
+        score++; // which increases my total score
     }
 }

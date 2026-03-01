@@ -21,7 +21,7 @@
         android:inputType="textMultiLine" />
     <Button
         android:id="@+id/sendButton"
-        android:text="@string/sendStr"
+        android:text="@string/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false" />
