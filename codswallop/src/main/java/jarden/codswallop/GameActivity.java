@@ -1,7 +1,13 @@
 package jarden.codswallop;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import jarden.tcp.TcpService;
 
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.LOGIN_DIALOG;
@@ -85,6 +92,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private String pendingFragmentTag = null;
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
+    private TcpService tcpService;
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            TcpService.LocalBinder binder = (TcpService.LocalBinder) service;
+            tcpService = binder.getService();
+            gameViewModel.attachService(tcpService);
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            tcpService = null;
+        }
+    };
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +113,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             String message = "onCreate(" + ((savedInstanceState == null) ? "null" : "not null") + ")";
             Log.d(TAG, message);
         }
+        // next lines as now using a foreground service:
+        Intent intent = new Intent(this, TcpService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        // end of new lines
+
         setContentView(R.layout.activity_game);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
@@ -142,11 +172,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         final LiveData<String> currentFragmentTagLiveData =
                 gameViewModel.getCurrentFragmentTagLiveData();
         currentFragmentTagLiveData.observe(this, this::requestShowFragment);
+        gameViewModel.getExceptionLiveData().observe(this,exception -> {
+            if (exception != null) {
+                gameViewModel.onPlayerLeavingGame();
+                finishAffinity(); // close the app
+            }
+        });
         LoginDialogFragment loginDialog;
         if (savedInstanceState == null) {
             loginDialog = new LoginDialogFragment();
             loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
-        } else {
         }
         setHostViews();
     }
@@ -224,7 +259,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        gameViewModel.onPlayerJoined(playerName, true);
+        gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
     }
     private void setHostViews() {
@@ -237,7 +272,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        gameViewModel.onPlayerJoined(playerName, false);
+        gameViewModel.onPlayerSignedIn(playerName, false);
     }
     @Override // Activity
     protected void onDestroy() {

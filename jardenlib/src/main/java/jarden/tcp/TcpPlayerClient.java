@@ -43,9 +43,9 @@ public class TcpPlayerClient {
     private PrintWriter out;
     private BufferedReader in;
     private volatile boolean running = false;
-    private String hostAddress;
-    private int port;
-    private String playerName;
+    //!! private String hostAddress;
+    //!! private int port;
+    //!! private String playerName;
 
     // ----------------------------
     // Connect / Disconnect
@@ -56,9 +56,9 @@ public class TcpPlayerClient {
             int port,
             String playerName,
             Listener listener) {
-        this.hostAddress = hostAddress;
-        this.port = port;
-        this.playerName = playerName;
+        //!! this.hostAddress = hostAddress;
+        //!! this.port = port;
+        //!! this.playerName = playerName;
         this.listener = listener;
 
         readExecutor.execute(() -> {
@@ -97,15 +97,21 @@ public class TcpPlayerClient {
             if (writeExecutor != null) {
                 writeExecutor.shutdownNow();
             }
+            if (udpExecutor != null) {
+                udpExecutor.shutdownNow();
+            }
             listener.onDisconnected();
             try {
                 if (socket != null) socket.close();
             } catch (IOException ignored) {}
         }
     }
+    /*!!
     public String getPlayerName() {
         return playerName;
     }
+
+     */
 
     // ----------------------------
     // Send messages
@@ -136,8 +142,6 @@ public class TcpPlayerClient {
                 udpExecutor.isTerminated()) {
             udpExecutor = Executors.newSingleThreadExecutor();
         }
-        // TODO:
-        // scheduler.scheduleAtFixedRate(() -> sendBroadcast(), 0, 1, TimeUnit.SECONDS);
         udpExecutor.execute(() -> {
             WifiManager.MulticastLock lock =
                     wifi.createMulticastLock("codswallopLock");
@@ -180,9 +184,6 @@ public class TcpPlayerClient {
                 lock.release();
             }
         });
-    }
-    public void stopListening() {
-        udpExecutor.shutdownNow();
     }
 }
 

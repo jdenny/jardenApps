@@ -32,7 +32,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Created by john.denny@gmail.com on 03/01/2026.
  */
 public class TcpControllerServer {
-    public interface MessageListener {
+    public interface ServerListener {
         void onMessage(String playerName, String message);
         void onPlayerConnected(String playerName);
         void onPlayerDisconnected(String playerName);
@@ -48,11 +48,11 @@ public class TcpControllerServer {
             Executors.newScheduledThreadPool(1);
     private final Map<String, ClientHandler> clients =
             new ConcurrentHashMap<>();
-    private final MessageListener listener;
+    private final ServerListener listener;
     private ServerSocket serverSocket;
     private volatile boolean running = false;
-    private String HostIpAddress = null; // "192.168.0.12"; // john's Moto g8 at home
-    public TcpControllerServer(MessageListener listener) {
+    private String HostIpAddress = null; // "192.168.0.96"; // john's Moto g8 at home
+    public TcpControllerServer(ServerListener listener) {
         this.listener = listener;
     }
 
