@@ -28,7 +28,7 @@ public class TcpPlayerClient {
     public interface Listener {
         void onHostFound(String hostIp, int port);
         void onConnected();
-        void onMessage(String message);
+        void onMessageToClient(String message);
         void onDisconnected();
         void onError(Exception e);
     }
@@ -43,9 +43,6 @@ public class TcpPlayerClient {
     private PrintWriter out;
     private BufferedReader in;
     private volatile boolean running = false;
-    //!! private String hostAddress;
-    //!! private int port;
-    //!! private String playerName;
 
     // ----------------------------
     // Connect / Disconnect
@@ -56,9 +53,6 @@ public class TcpPlayerClient {
             int port,
             String playerName,
             Listener listener) {
-        //!! this.hostAddress = hostAddress;
-        //!! this.port = port;
-        //!! this.playerName = playerName;
         this.listener = listener;
 
         readExecutor.execute(() -> {
@@ -79,7 +73,7 @@ public class TcpPlayerClient {
                 listener.onConnected();
                 String line;
                 while (running && (line = in.readLine()) != null) {
-                    listener.onMessage(line);
+                    listener.onMessageToClient(line);
                 }
             } catch (Exception e) {
                 listener.onError(e);
@@ -106,12 +100,6 @@ public class TcpPlayerClient {
             } catch (IOException ignored) {}
         }
     }
-    /*!!
-    public String getPlayerName() {
-        return playerName;
-    }
-
-     */
 
     // ----------------------------
     // Send messages

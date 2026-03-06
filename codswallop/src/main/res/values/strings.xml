@@ -25,7 +25,7 @@
     <string name="voteNow">Tap on the answer you think is correct</string>
     <string name="wait_for_players_then_broadcast_host">When all players have logged in (using \'Join\'), Broadcast Host</string>
     <string name="wait_for_players_to_join">Wait for all players to join, then press Next Question</string>
-    <string name="scores_wait_for_question">(votes for you, total score). Wait for next question</string>
+    <string name="scores_wait_for_question">(total score); highlighted players voted for you. Wait for next question</string>
     <string name="waiting_for_ct_answers">Waiting for %1$d player(s) to answer</string>
     <string name="waiting_for_ct_votes">Waiting for %1$d player(s) to vote</string>
     <string name="waiting_for_host_address">Waiting for host to contact us</string>
@@ -33,4 +33,5 @@
     <string name="waiting_for_more_votes">Waiting for other player(s) to vote</string>
     <string name="your_answer">Your answer</string>
     <string name="yourName">Your name</string>
+    <string name="confirm_host_leaving">Are you sure you want to leave, as this will close the game?</string>
 </resources>

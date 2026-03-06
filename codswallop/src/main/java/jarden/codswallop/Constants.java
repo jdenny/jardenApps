@@ -8,7 +8,8 @@ public class Constants {
         String s = PlayerState.AWAITING_HOST_IP.toString(); // preferred
         String s2 = PlayerState.AWAITING_HOST_IP.name();
         PlayerState ps = PlayerState.AWAITING_QUESTION;
-        if (ps == PlayerState.DISCONNECTED) {} // returns true
+        if (ps == PlayerState.DISCONNECTED) {} // returns false
+        if (ps == PlayerState.AWAITING_QUESTION) {} // returns true
      */
     public enum HostState {
         AWAITING_PLAYERS, PLAYER_JOINED, AWAITING_CT_ANSWERS, AWAITING_CT_VOTES,
@@ -21,13 +22,27 @@ public class Constants {
         SUPPLY_VOTE, AWAITING_VOTES, AWAITING_NEXT_QUESTION, DISCONNECTED
     }
     public enum Protocol {
-        HOST_ANNOUNCE, QUESTION, ALL_ANSWERS, NAMED_ANSWERS, ANSWER, VOTE
+        // Host to all Players using broadcast:
+        HOST_ANNOUNCE, // e.g. HOST_ANNOUNCE|192.168.0.12|50001
+        // Host to all Players using Tcp:
+        QUESTION, // e.g. QUESTION|{questionSequence, e.g. 3}|PEOPLE|Ignaz Semmelveis
+        ALL_ANSWERS, // e.g. ALL_ANSWERS|3|footballer|physician|Russian politican
+        NAMED_ANSWERS,
+        // NAMED_ANSWERS|3|CORRECT|{realAnswer}|{playerName}|{votedFor}|{totalScore}|{playerAnswer}|...
+        // e.g. NAMED_ANSWERS|3|CORRECT|physician|Joe|John|2|footballer|John|CORRECT|4|physician
+        // i.e. Joe voted for John and has total score of 2; John voted for the real answer and has
+        // a total score of 4 so far.
+        GAME_OVER, // i.e. GAME_OVER
+
+        // Player to Host:
+        ANSWER, // e.g. ANSWER|3|physician
+        VOTE // e.g. VOTE|3|{indexOfSelectedAnswer}
     }
     public static final String QUESTION = "QUESTION";
     public static final String ANSWER = "ANSWER";
     public static final String ALL_ANSWERS = "ALL_ANSWERS";
     public static final String NAMED_ANSWERS = "NAMED_ANSWERS";
-    public static final String CORRECT = "RIGHT ANSWER";
+    public static final String CORRECT = "REAL ANSWER";
     public static final String VOTE = "VOTE";
     public static final String LOGIN_DIALOG = "LOGIN_DIALOG";
     public static final String QUESTION_SEQUENCE_KEY = "QUESTION_SEQUENCE_KEY";

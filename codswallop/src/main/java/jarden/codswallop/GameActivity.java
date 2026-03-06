@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -113,15 +112,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             String message = "onCreate(" + ((savedInstanceState == null) ? "null" : "not null") + ")";
             Log.d(TAG, message);
         }
-        // next lines as now using a foreground service:
         Intent intent = new Intent(this, TcpService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            startService(intent);
-        }
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        // end of new lines
 
         setContentView(R.layout.activity_game);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
@@ -133,7 +125,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                showAlertDialog(R.string.confirm_leaving,
+                String s = getString(R.string.confirm_host_leaving);
+                int confirmMessage = gameViewModel.getIsHost() ?
+                        R.string.confirm_host_leaving : R.string.confirm_leaving;
+                showAlertDialog(confirmMessage,
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {
@@ -280,6 +275,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
+    }
+    public void endGame() {
+        if (tcpService != null) {
+            tcpService.stopNetworking();
+        }
+        Intent intent = new Intent(this, TcpService.class);
+        stopService(intent);
     }
     public interface AlertDialogListener {
         public void onAlertDialogPositive();

@@ -33,7 +33,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class TcpControllerServer {
     public interface ServerListener {
-        void onMessage(String playerName, String message);
+        void onMessageToServer(String playerName, String message);
         void onPlayerConnected(String playerName);
         void onPlayerDisconnected(String playerName);
         void onServerStarted();
@@ -51,7 +51,7 @@ public class TcpControllerServer {
     private final ServerListener listener;
     private ServerSocket serverSocket;
     private volatile boolean running = false;
-    private String HostIpAddress = null; // "192.168.0.96"; // john's Moto g8 at home
+    private String HostIpAddress = null; // "192.168.0.96"; // John's Moto g8 at home
     public TcpControllerServer(ServerListener listener) {
         this.listener = listener;
     }
@@ -120,7 +120,6 @@ public class TcpControllerServer {
 
     private class ClientHandler implements Runnable {
         private final Socket tcpSocket;
-        private BufferedReader in;
         private PrintWriter out;
         private String playerName;
 
@@ -131,14 +130,13 @@ public class TcpControllerServer {
         @Override
         public void run() {
             try {
-                in = new BufferedReader(
+                BufferedReader in = new BufferedReader(
                         new InputStreamReader(tcpSocket.getInputStream()));
                 out = new PrintWriter(
                         new BufferedWriter(
                                 new OutputStreamWriter(tcpSocket.getOutputStream())),
                         true);
-                // First message must be JOIN
-                // JOIN|playerName
+                // First message must be JOIN|playerName
                 String join = in.readLine();
                 if (join == null || !join.startsWith("JOIN|")) {
                     close();
@@ -149,7 +147,7 @@ public class TcpControllerServer {
                 listener.onPlayerConnected(playerName);
                 String line;
                 while ((line = in.readLine()) != null) {
-                    listener.onMessage(playerName, line);
+                    listener.onMessageToServer(playerName, line);
                 }
             } catch (IOException e) {
                 if (BuildConfig.DEBUG) {

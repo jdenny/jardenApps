@@ -42,7 +42,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         TcpPlayerClient.Listener {
 
     private final MutableLiveData<AllAnswers> answersLiveData =
-            new MutableLiveData<>(new AllAnswers(null, null, false));
+            new MutableLiveData<>(new AllAnswers(null, null, false, false, null));
     private final MutableLiveData<String> currentFragmentTagLiveData =
             new MutableLiveData<>(QUESTION);
     private QuestionManager.QuestionAnswer currentQA;
@@ -54,7 +54,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private final MutableLiveData<HostState> hostStateLiveData =
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
     private boolean isHost;
-    private String playerName;
+    private String thisPlayerName;
     private Map<String, Player> players;
     private Map<String, Player> leftPlayers;
     private final MutableLiveData<PlayerState> playerStateLiveData =
@@ -66,8 +66,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private final List<String> shuffledNameList = new ArrayList<>();
     private int correctShuffledIndex;
     private final static String TAG = "GameViewModel";
-    //!! private final TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
-    //!! private TcpControllerServer tcpControllerServer;
     private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
     private final MutableLiveData<Exception> exceptionLiveData =
@@ -81,6 +79,26 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     public void attachService(TcpService tcpService) {
         this.tcpService = tcpService;
+        /* Advice from ChatGPT: If tcpService is null at the point of joinGame(), startHosting(),
+         // sendMessage(), add this instance variable:
+         // private final List<Runnable> pendingServiceActions = new ArrayList<>();
+         // add the code below to attachService():
+        for (Runnable action : pendingServiceActions) {
+            action.run();
+        }
+        pendingServiceActions.clear();
+         */
+        // then, delay calls if tcpService is null, e.g.
+        /*
+        public void sendMessage(String msg) {
+            Runnable action = () -> tcpService.sendMessage(msg);
+            if (tcpService != null) {
+                action.run();
+            } else {
+                pendingServiceActions.add(action);
+            }
+        }
+         */
     }
     public LiveData<Exception> getExceptionLiveData() {
         return exceptionLiveData;
@@ -113,7 +131,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     public void setAnswer(String answer) {
         if (answer != null && !answer.isEmpty()) {
-            /*!!tcpPlayerClient*/tcpService.sendAnswer(questionSequence, answer);
+            tcpService.sendAnswer(questionSequence, answer);
             awaitingAnswerLiveData.setValue(false);
             setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
         }
@@ -125,7 +143,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return answersLiveData;
     }
     public void setSelectedAnswer(int position) {
-        /*!!tcpPlayerClient*/tcpService.sendVote(questionSequence, position);
+        tcpService.sendVote(questionSequence, position);
         playerStateLiveData.setValue(PlayerState.AWAITING_VOTES);
     }
     public void setHostStateLiveData(HostState hostState) {
@@ -137,38 +155,36 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return hostStateLiveData;
     }
     public void startHost() {
-        tcpService.startHosting(playerName, this, this);
-        //!! if (tcpControllerServer == null) {
-            players = new ConcurrentHashMap<>();
-            leftPlayers = new ConcurrentHashMap<>();
-            questionManager = new QuestionManager(getApplication().getResources());
-            //!! tcpControllerServer = new TcpControllerServer(this);
-            //!! tcpControllerServer.start();
-            isHost = true;
-            questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
-        //!! }
+        players = new ConcurrentHashMap<>();
+        leftPlayers = new ConcurrentHashMap<>();
+        questionManager = new QuestionManager(getApplication().getResources());
+        isHost = true;
+        questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
+        tcpService.startHosting(this);
     }
     @Override  // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
-    public void onMessage(String playerName, String message) {
+    public void onMessageToServer(String playerName, String message) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "from player: " + playerName + " message: " + message);
         }
-        Player player = players.get(playerName);
+        Player currentPlayer = players.get(playerName);
         if (message.startsWith(ANSWER)) {
             String answer = message.split("\\|", 3)[2];
-            player.setAnswer(answer);
+            currentPlayer.setAnswer(answer);
             checkForAllAnswers();
         } else if (message.startsWith(VOTE)) {
             String index = message.split("\\|", 3)[2];
             int indexOfVotedItem = Integer.parseInt(index);
-            String votedForName = shuffledNameList.get(indexOfVotedItem);
-            if (votedForName.equals(CORRECT)) {
-                players.get(playerName).incrementScore();
-            } else if (!votedForName.equals(playerName)) {
-                players.get(votedForName).incrementVotedForScore();
+            String nameVotedFor = shuffledNameList.get(indexOfVotedItem);
+            currentPlayer.setNameVotedFor(nameVotedFor);
+            if (nameVotedFor.equals(CORRECT)) {
+                currentPlayer.incrementScore();
+            } else {
+                if (!nameVotedFor.equals(playerName)) {
+                    players.get(nameVotedFor).incrementScore();
+                }
             }
-            player.setVotedIndex(indexOfVotedItem);
             checkForAllVotes();
         } else {
             if (BuildConfig.DEBUG) {
@@ -181,7 +197,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all votes received for current question");
             }
-            /*!!tcpControllerServer*/tcpService.sendToAll(getNamedAnswersMessage());
+            tcpService.sendToAll(getNamedAnswersMessage());
             setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
@@ -193,7 +209,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 Log.d(TAG, "all answers received for current question");
             }
             String nextMessage = getAllAnswersMessage();
-            /*!!tcpControllerServer*/tcpService.sendToAll(nextMessage);
+            tcpService.sendToAll(nextMessage);
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
@@ -202,7 +218,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private int getVotesCt() {
         int votesCt = 0;
         for (Player playerN : players.values()) {
-            if (playerN.getVotedIndex() >= 0) {
+            if (playerN.getNameVotedFor() != null) {
                 votesCt++;
             }
         }
@@ -236,17 +252,23 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return buffer.toString();
     }
     private String getNamedAnswersMessage() {
+        // old version:
         // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
+        // new version:
+        // NAMED_ANSWERS|3|CORRECT|{realAnswer}|{playerName}|{nameVotedFor}|{totalScore}|{playerAnswer}|...
+        // e.g. NAMED_ANSWERS|3|CORRECT|physician|Joe|John|2|footballer|John|CORRECT|4|physician
+
+        List<Player> playerList = new ArrayList<>(players.values());
+        playerList.sort((p1, p2) ->
+                Integer.compare(p2.getScore(), p1.getScore()));
         StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
         buffer.append('|' + CORRECT + '|' + currentQA.answer);
         if (currentQA.comment != null) {
             buffer.append(". " + currentQA.comment);
         }
-        char isCorrect;
-        for (Player player: players.values()) {
-            isCorrect = (player.getVotedIndex() == this.correctShuffledIndex) ? 'Y' : 'N';
-            buffer.append('|' + player.getName() + '|' + isCorrect + ',' + player.getVotedForCt() + ',' +
-                    player.getScore() + '|' + player.getAnswer());
+        for (Player player: playerList) {
+            buffer.append('|' + player.getName() + '|' + player.getNameVotedFor() +
+                    '|' + player.getScore() + '|' + player.getAnswer());
         }
         return buffer.toString();
     }
@@ -308,17 +330,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             Log.d(TAG, "onServerStarted()");
         }
     }
-    public void stopGame() {
-        if (tcpService != null) {
-            tcpService.stopNetworking();
-        }
-    }
     public void sendHostBroadcast(Context context) {
-        /*!!tcpControllerServer*/tcpService.sendMultipleHostBroadcasts(context, 5);
-        this.getApplication();
+        tcpService.sendMultipleHostBroadcasts(context, 5);
     }
     public void sendNextQuestion() {
-        /*!!tcpControllerServer*/tcpService.sendToAll(getNextQuestion());
+        tcpService.sendToAll(getNextQuestion());
         setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
     }
     private String getNextQuestion() {
@@ -353,38 +369,42 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         setAnswersLiveData(new AllAnswers(currentQuestion, answersList, false));
     }
     private void showNamedAnswers(String message) {
-        // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
         String[] tokens = message.split("\\|");
         List<String> answersList = new ArrayList<>();
+        List<Integer> linesVotedForMe = new ArrayList<>();
         answersList.add(tokens[2] + ": " + tokens[3]);
         int tokenIndex = 4;
-        String[] details;
         boolean isCorrect = false;
-        while ((tokenIndex + 2) < tokens.length) {
-            details = tokens[tokenIndex + 1].split(",");
-            if (tokens[tokenIndex].equals(playerName)) {
-                isCorrect = details[0].equals("Y");
+        String currentPlayerName;
+        String nameVotedFor;
+        while ((tokenIndex + 3) < tokens.length) {
+            currentPlayerName = tokens[tokenIndex];
+            nameVotedFor = tokens[tokenIndex + 1];
+            if (currentPlayerName.equals(thisPlayerName)) {
+                isCorrect = CORRECT.equals(nameVotedFor);
             }
-            answersList.add(tokens[tokenIndex] + " (" + details[1] + ',' +
-                    details[2] + "): " + tokens[tokenIndex + 2]);
-            tokenIndex += 3;
+            answersList.add(currentPlayerName + " (" +
+                    tokens[tokenIndex + 2] + "): " + tokens[tokenIndex + 3]);
+            if (nameVotedFor.equals(thisPlayerName)) {
+                linesVotedForMe.add(answersList.size() - 1);
+            }
+            tokenIndex += 4;
         }
         currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        setAnswersLiveData(new AllAnswers(currentQuestion, answersList, true, isCorrect));
+        setAnswersLiveData(new AllAnswers(currentQuestion, answersList, true, isCorrect,
+                linesVotedForMe));
     }
     @Override // TcpPlayerClient.Listener; message sent from host to player
-    public void onMessage(String message) {
+    public void onMessageToClient(String message) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "from host to player: " + playerName + " onMessage(" + message + ")");
+            Log.d(TAG, "from host to player: " + thisPlayerName + " onMessageToClient(" + message + ")");
         }
         new Handler(Looper.getMainLooper()).post(() -> {
             if (message.startsWith(ALL_ANSWERS)) {
-                // ALL_ANSWERS|2|a pig trough|dollop|
                 showAnswers(message);
                 awaitingVoteLiveData.setValue(true);
                 playerStateLiveData.setValue(PlayerState.SUPPLY_VOTE);
             } else if (message.startsWith(NAMED_ANSWERS)) {
-                // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
                 showNamedAnswers(message);
                 awaitingVoteLiveData.setValue(false);
                 playerStateLiveData.setValue(PlayerState.AWAITING_NEXT_QUESTION);
@@ -430,8 +450,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             String status = "onHostFound(" + hostIp + "' " + port + ')';
             Log.d(TAG, status);
         }
-        /*!!tcpPlayerClient*/tcpService.connect(hostIp, /*!!TcpControllerServer.TCP_PORT,*/
-                playerName, this);
+        tcpService.connect(hostIp, thisPlayerName, this);
     }
     @Override
     protected void onCleared() {
@@ -441,27 +460,18 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         onPlayerLeavingGame();
     }
     public void onPlayerSignedIn(String playerName, boolean host) {
-        this.playerName = playerName;
+        thisPlayerName = playerName;
         if (host) {
             startHost();
         }
         WifiManager wifi =
                 (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
-        /*!!tcpPlayerClient*/tcpService.listenForHostBroadcast(wifi, this);
+        tcpService.listenForHostBroadcast(wifi, this);
     }
     public void onPlayerLeavingGame() {
-        tcpService.stopNetworking();
-        /*!!
         if (isHost) {
-            if (tcpControllerServer != null) {
-                tcpControllerServer.stop();
-            }
+            // send a message to all players to close down;
+            tcpService.stopNetworking();
         }
-        if (tcpPlayerClient != null) {
-            tcpPlayerClient.stopListening();
-            tcpPlayerClient.disconnect();
-        }
-
-         */
     }
 }

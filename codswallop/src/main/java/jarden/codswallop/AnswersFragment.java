@@ -63,7 +63,8 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
                     answersAdapter.addAll(allAnswers.answers);
                     answersAdapter.setResultsState(
                             allAnswers.named,
-                            allAnswers.isCorrect);
+                            allAnswers.isCorrect,
+                            allAnswers.linesVotedForMe);
 
                     answersAdapter.notifyDataSetChanged();
                 });

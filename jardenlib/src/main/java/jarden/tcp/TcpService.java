@@ -14,24 +14,40 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 
 public class TcpService extends Service {
-
     public static final String CHANNEL_ID = "codswallop_network";
     private final IBinder binder = new LocalBinder();
-
     private TcpControllerServer tcpControllerServer;
     private TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
+    private boolean isForeground = false;
+    private WifiManager.WifiLock wifiLock;
 
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
-        startForegroundServiceNotification();
+        WifiManager wifiManager =
+                (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiLock = wifiManager.createWifiLock(
+                WifiManager.WIFI_MODE_FULL_HIGH_PERF,
+                "Codswallop:WifiLock");
+        wifiLock.acquire();
     }
     @Override
     public IBinder onBind(Intent intent) {
+        if (!isForeground) {
+            startForegroundServiceNotification();
+            isForeground = true;
+        }
         return binder;
     }
-
+    @Override
+    public void onDestroy() {
+        stopNetworking();
+        if (wifiLock != null && wifiLock.isHeld()) {
+            wifiLock.release();
+        }
+        super.onDestroy();
+    }
     public void sendAnswer(int questionSequence, String answer) {
         tcpPlayerClient.sendAnswer(questionSequence, answer);
     }
@@ -52,16 +68,9 @@ public class TcpService extends Service {
             return TcpService.this;
         }
     }
-    public void startHosting(String playerName, TcpPlayerClient.Listener clientListener,
-                             TcpControllerServer.ServerListener serverListener) {
+    public void startHosting(TcpControllerServer.ServerListener serverListener) {
         tcpControllerServer = new TcpControllerServer(serverListener);
         tcpControllerServer.start();
-        /*!!
-        tcpPlayerClient.connect("127.0.0.1",
-                TcpControllerServer.TCP_PORT,
-                playerName,
-                clientListener);
-         */
     }
     public void connect(String hostIp,
                          String playerName,
@@ -77,17 +86,14 @@ public class TcpService extends Service {
     // =========================
 
     public void stopNetworking() {
-
         if (tcpPlayerClient != null) {
             tcpPlayerClient.disconnect();
             tcpPlayerClient = null;
         }
-
         if (tcpControllerServer != null) {
             tcpControllerServer.stop();
             tcpControllerServer = null;
         }
-
         stopForeground(true);
         stopSelf();
     }
@@ -105,7 +111,6 @@ public class TcpService extends Service {
                       //??  .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setOngoing(true)
                         .build();
-
         startForeground(1, notification);
     }
 

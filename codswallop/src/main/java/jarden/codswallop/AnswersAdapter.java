@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import androidx.core.content.ContextCompat;
 
 /**
@@ -16,13 +18,15 @@ import androidx.core.content.ContextCompat;
 public class AnswersAdapter extends ArrayAdapter<String> {
     private boolean isCorrect;
     private boolean showResults;
+    private List<Integer> linesVotedForMe;
 
     public AnswersAdapter(Context context) {
         super(context, 0);
     }
-    public void setResultsState(boolean showResults, boolean isCorrect) {
+    public void setResultsState(boolean showResults, boolean isCorrect, List<Integer> linesVotedForMe) {
         this.showResults = showResults;
         this.isCorrect = isCorrect;
+        this.linesVotedForMe = linesVotedForMe;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -41,6 +45,10 @@ public class AnswersAdapter extends ArrayAdapter<String> {
                 int colour = isCorrect ? R.color.correct_green : R.color.wrong_red;
                 view.setBackgroundColor(
                         ContextCompat.getColor(getContext(), colour));
+            }
+            if (linesVotedForMe.contains(position)) {
+                view.setBackgroundColor(
+                        ContextCompat.getColor(getContext(), R.color.voted_for_me));
             }
         }
         return view;
