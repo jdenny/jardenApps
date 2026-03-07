@@ -57,8 +57,8 @@ public class TcpService extends Service {
     public void listenForHostBroadcast(WifiManager wifi, TcpPlayerClient.Listener listener) {
         tcpPlayerClient.listenForHostBroadcast(wifi, listener);
     }
-    public void sendToAll(String namedAnswersMessage) {
-        tcpControllerServer.sendToAll((namedAnswersMessage));
+    public void sendToAll(String message) {
+        tcpControllerServer.sendToAll(message);
     }
     public void sendMultipleHostBroadcasts(Context context, int count) {
         tcpControllerServer.sendMultipleHostBroadcasts(context, count);

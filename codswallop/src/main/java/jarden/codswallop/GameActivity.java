@@ -28,18 +28,7 @@ import static jarden.codswallop.Constants.LOGIN_DIALOG;
 import static jarden.codswallop.Constants.QUESTION;
 
 /** Design of application
-Message Protocol:
- Host to all Players using broadcast:
-    HOST_ANNOUNCE|192.168.0.12|50001
- Host to all Players using Tcp:
-    QUESTION|3|PEOPLE|Ignaz Semmelveis
-    ALL_ANSWERS|3|Centre forward for Man Utd|Hungarian physician|Russian Pole Vaulter
-    NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N|Centre forward for Man Utd|John|Y|Hungarian physician
-    Not used: SCORES|3|John 2|Julie 4
- Player to Host
-    ANSWER|3|Centre forward for Liverpool
-    VOTE|3|indexOfSelectedAnswer
-
+ Message Protocol: see class Constants
  Players agree who will be host; all open the app; all login: name, host or join.
  Host selects “Send Host Address”; when each player receives the host address, it joins the game.
 
@@ -49,7 +38,7 @@ Message Protocol:
  Players give their votes; when all votes in, Server highlights the real answer
  Initial dialog:
     PlayerNameEditText; HostButton; JoinButton
- three screens (Fragments):
+ two screens (Fragments):
  1  NextButton, SendHostAddressButton (host only)
     QuestionTextView
     YourAnswerEditText
@@ -63,8 +52,6 @@ Message Protocol:
         "Correct" correct answer
         playerName answer
 
- 3  list of:
-        playerName, score (goes to first screen when host types NextButton)
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener,
         LoginDialogFragment.LoginDialogListener {
@@ -72,7 +59,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     // Host fields: ***************************
     private Button nextQuestionButton;
-    private TextView hostStatusTextView;
+    private TextView hostPromptView;
+    private TextView playerPromptView;
     private View hostViewsLayout;
 
     // Host & Client fields ***************************
@@ -114,13 +102,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         Intent intent = new Intent(this, TcpService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
         setContentView(R.layout.activity_game);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
-        hostStatusTextView = findViewById(R.id.hostStatusView);
+        hostPromptView = findViewById(R.id.hostPromptView);
+        playerPromptView = findViewById(R.id.playerPromptView);
         hostViewsLayout = findViewById(R.id.hostLayout);
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
@@ -134,7 +122,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             public void onAlertDialogPositive() {
                                 gameViewModel.onPlayerLeavingGame();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
-                                getOnBackPressedDispatcher().onBackPressed();
+                                Intent intent = new Intent(GameActivity.this, TcpService.class);
+                                stopService(intent);
+                                //!! getOnBackPressedDispatcher().onBackPressed();
                             }
                         }, R.drawable.leaving_fish_transparent);
             }
@@ -145,25 +135,57 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 this,
                 hostState -> {
                     if (hostState == Constants.HostState.AWAITING_PLAYERS) {
-                        hostStatusTextView.setText(R.string.wait_for_players_then_broadcast_host);
+                        hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
                     } else if (hostState == Constants.HostState.PLAYER_JOINED) {
                         int ct = gameViewModel.getPlayersCount();
                         String playerName = gameViewModel.getLastJoinedPlayerName();
-                        hostStatusTextView.setText(getString(R.string.player_joined, playerName, ct));
+                        hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
                     } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
                         int ct = gameViewModel.getNotAnsweredCount();
-                        hostStatusTextView.setText(getString(R.string.waiting_for_ct_answers, ct));
+                        hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
                     } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
                         int ct = gameViewModel.getNotVotedCount();
-                        hostStatusTextView.setText(getString(R.string.waiting_for_ct_votes, ct));
+                        hostPromptView.setText(getString(R.string.waiting_for_ct_votes, ct));
                     } else if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
-                        hostStatusTextView.setText(R.string.ready_for_next_question);
+                        hostPromptView.setText(R.string.ready_for_next_question);
                     } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
-                        hostStatusTextView.setText(R.string.duplicatePlayerName);
+                        hostPromptView.setText(R.string.duplicatePlayerName);
                     } else {
-                        hostStatusTextView.setText("Unknown hostState: " + hostState);
+                        hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
                     }
                 });
+        gameViewModel.getPlayerStateLiveData()
+                .observe(this,
+                        playerState -> {
+                            int promptId;
+                            if (playerState == Constants.PlayerState.AWAITING_HOST_IP) {
+                                promptId = R.string.waiting_for_host_address;
+                            } else if (playerState == Constants.PlayerState.AWAITING_FIRST_QUESTION) {
+                                promptId = R.string.connectedWaitForQuestion;
+                            } else if (playerState == Constants.PlayerState.SUPPLY_ANSWER) {
+                                promptId = R.string.supply_answer_and_send;
+                            } else if (playerState == Constants.PlayerState.AWAITING_ANSWERS) {
+                                promptId = R.string.waiting_for_more_answers;
+                            } else if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
+                                    promptId = R.string.voteNow;
+                            } else if (playerState == Constants.PlayerState.AWAITING_VOTES) {
+                                promptId = R.string.waiting_for_more_votes;
+                            } else if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
+                                promptId = R.string.scores_wait_for_question;
+                            } else if (playerState == Constants.PlayerState.GAME_ENDED) {
+                                promptId = R.string.game_ended;
+                                showAlertDialog(R.string.game_ended,
+                                        new AlertDialogListener() {
+                                            @Override
+                                            public void onAlertDialogPositive() {
+                                                finishAffinity();
+                                            }
+                                        }, R.drawable.thumbs_up_fish_transparent);
+                            } else {
+                                promptId = R.string.unrecognised_state;
+                            }
+                            playerPromptView.setText(promptId);
+                        });
         final LiveData<String> currentFragmentTagLiveData =
                 gameViewModel.getCurrentFragmentTagLiveData();
         currentFragmentTagLiveData.observe(this, this::requestShowFragment);
@@ -275,13 +297,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
-    }
-    public void endGame() {
-        if (tcpService != null) {
-            tcpService.stopNetworking();
-        }
-        Intent intent = new Intent(this, TcpService.class);
-        stopService(intent);
     }
     public interface AlertDialogListener {
         public void onAlertDialogPositive();

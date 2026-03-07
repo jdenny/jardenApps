@@ -19,12 +19,16 @@ public class Constants {
         // used by QuestionFragment
         AWAITING_HOST_IP, AWAITING_FIRST_QUESTION, SUPPLY_ANSWER, AWAITING_ANSWERS,
         // used by AnswerFragment
-        SUPPLY_VOTE, AWAITING_VOTES, AWAITING_NEXT_QUESTION, DISCONNECTED
+        SUPPLY_VOTE, AWAITING_VOTES, AWAITING_NEXT_QUESTION, GAME_ENDED
     }
     public enum Protocol {
-        // Host to all Players using broadcast:
+        // *************************************
+        // Host to all Players using broadcast *
+        // *************************************
         HOST_ANNOUNCE, // e.g. HOST_ANNOUNCE|192.168.0.12|50001
-        // Host to all Players using Tcp:
+        // *******************************
+        // Host to all Players using Tcp *
+        // *******************************
         QUESTION, // e.g. QUESTION|{questionSequence, e.g. 3}|PEOPLE|Ignaz Semmelveis
         ALL_ANSWERS, // e.g. ALL_ANSWERS|3|footballer|physician|Russian politican
         NAMED_ANSWERS,
@@ -33,8 +37,9 @@ public class Constants {
         // i.e. Joe voted for John and has total score of 2; John voted for the real answer and has
         // a total score of 4 so far.
         GAME_OVER, // i.e. GAME_OVER
-
-        // Player to Host:
+        // *******************
+        // Player to Host:   *
+        // *******************
         ANSWER, // e.g. ANSWER|3|physician
         VOTE // e.g. VOTE|3|{indexOfSelectedAnswer}
     }

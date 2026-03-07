@@ -1,6 +1,7 @@
 <resources>
     <string name="already_cast_vote">You have already cast your vote; you can\'t change your mind!</string>
     <string name="app_name">Codswallop</string>
+    <string name="confirm_host_leaving">Are you sure you want to leave, as this will close the game?</string>
     <string name="broadcastHostAddress">Broadcast Host</string>
     <string name="close">Close</string>
     <string name="codswallop">Call My Codswallop!</string>
@@ -33,5 +34,7 @@
     <string name="waiting_for_more_votes">Waiting for other player(s) to vote</string>
     <string name="your_answer">Your answer</string>
     <string name="yourName">Your name</string>
-    <string name="confirm_host_leaving">Are you sure you want to leave, as this will close the game?</string>
+    <string name="unrecognised_state">Unrecognised State</string>
+    <string name="unknown_hoststate">Unknown hostState: %1$s</string>
+    <string name="game_ended">Game Ended</string>
 </resources>

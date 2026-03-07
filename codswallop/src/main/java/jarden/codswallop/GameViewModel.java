@@ -64,7 +64,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private QuestionManager questionManager;
     private int questionSequence;
     private final List<String> shuffledNameList = new ArrayList<>();
-    private int correctShuffledIndex;
+    //!! private int correctShuffledIndex;
     private final static String TAG = "GameViewModel";
     private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
@@ -208,8 +208,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all answers received for current question");
             }
-            String nextMessage = getAllAnswersMessage();
-            tcpService.sendToAll(nextMessage);
+            tcpService.sendToAll(getAllAnswersMessage());
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
@@ -239,11 +238,12 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         shuffledNameList.addAll(players.keySet());
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
-        String name;
-        for (int i = 0; i < shuffledNameList.size(); i++) {
-            name = shuffledNameList.get(i);
+        //!! String name;
+        //!! for (int i = 0; i < shuffledNameList.size(); i++) {
+        for (String name : shuffledNameList) {
+            //!! name = shuffledNameList.get(i);
             if (name.equals(CORRECT)) {
-                this.correctShuffledIndex = i;
+                //!! this.correctShuffledIndex = i;
                 buffer.append('|' + currentQA.answer);
             } else {
                 buffer.append('|' + players.get(name).getAnswer());
@@ -252,12 +252,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return buffer.toString();
     }
     private String getNamedAnswersMessage() {
-        // old version:
-        // NAMED_ANSWERS|3|CORRECT|Hungarian physician|Joe|N,1,4|Centre forward for Man Utd|John|Y,0,3|Russian politician
-        // new version:
-        // NAMED_ANSWERS|3|CORRECT|{realAnswer}|{playerName}|{nameVotedFor}|{totalScore}|{playerAnswer}|...
-        // e.g. NAMED_ANSWERS|3|CORRECT|physician|Joe|John|2|footballer|John|CORRECT|4|physician
-
         List<Player> playerList = new ArrayList<>(players.values());
         playerList.sort((p1, p2) ->
                 Integer.compare(p2.getScore(), p1.getScore()));
@@ -415,6 +409,9 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 setQuestionLiveData(currentQuestion);
                 awaitingAnswerLiveData.setValue(true);
                 playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
+            } else if (message.startsWith(Constants.Protocol.GAME_OVER.name())) {
+                tcpService.stopNetworking();
+                playerStateLiveData.setValue(PlayerState.GAME_ENDED);
             } else {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "unrecognised message received by player: " + message);
@@ -457,7 +454,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onCleared()");
         }
-        onPlayerLeavingGame();
+        //??!! onPlayerLeavingGame();
     }
     public void onPlayerSignedIn(String playerName, boolean host) {
         thisPlayerName = playerName;
@@ -470,8 +467,16 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     public void onPlayerLeavingGame() {
         if (isHost) {
-            // send a message to all players to close down;
+            tcpService.sendToAll(Constants.Protocol.GAME_OVER.name());
+        }
+        if (tcpService != null) {
             tcpService.stopNetworking();
         }
+        /* can a service stop itself?
+        Intent intent = new Intent(this, TcpService.class);
+        tcpService.stopService(intent);
+
+         */
+
     }
 }

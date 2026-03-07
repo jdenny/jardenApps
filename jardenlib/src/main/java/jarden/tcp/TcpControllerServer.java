@@ -171,6 +171,7 @@ public class TcpControllerServer {
             if (playerName != null) {
                 clients.remove(playerName);
                 listener.onPlayerDisconnected(playerName);
+                playerName = null;
             }
         }
     }

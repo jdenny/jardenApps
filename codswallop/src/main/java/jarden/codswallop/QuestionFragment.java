@@ -24,7 +24,7 @@ public class QuestionFragment extends Fragment {
     private EditText answerEditText;
     private Button sendButton;
     private GameViewModel gameViewModel;
-    private TextView promptView;
+    //!! private TextView promptView;
     private int lastRenderedQuestionId = -1;
 
     @Override // Fragment
@@ -37,7 +37,7 @@ public class QuestionFragment extends Fragment {
         questionView = rootView.findViewById(R.id.questionView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        promptView = rootView.findViewById(R.id.promptView);
+        //!! promptView = rootView.findViewById(R.id.playerPromptView);
         gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
         sendButton.setOnClickListener(view -> {
             String answer = answerEditText.getText().toString().trim();
@@ -71,6 +71,7 @@ public class QuestionFragment extends Fragment {
                         awaitingAnswer -> {
                             sendButton.setEnabled(awaitingAnswer);
                         });
+        /*!!
         gameViewModel.getPlayerStateLiveData()
                 .observe(getViewLifecycleOwner(),
                         playerState -> {
@@ -88,6 +89,7 @@ public class QuestionFragment extends Fragment {
                             }
                             promptView.setText(promptId);
                         });
+         */
     }
     private static int getQuestionSequence(String question) {
         int i = question.indexOf('.');
