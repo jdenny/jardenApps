@@ -466,17 +466,19 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         tcpService.listenForHostBroadcast(wifi, this);
     }
     public void onPlayerLeavingGame() {
-        if (isHost) {
-            tcpService.sendToAll(Constants.Protocol.GAME_OVER.name());
+        if (tcpService != null) {
+            if (isHost) {
+                tcpService.sendToAll(Constants.Protocol.GAME_OVER.name());
+                // TODO: maybe use callback to wait for above broadcast to finish
+            }
+            stopNetworking();
         }
+    }
+
+    public void stopNetworking() {
         if (tcpService != null) {
             tcpService.stopNetworking();
+            //??!! tcpService = null;
         }
-        /* can a service stop itself?
-        Intent intent = new Intent(this, TcpService.class);
-        tcpService.stopService(intent);
-
-         */
-
     }
 }

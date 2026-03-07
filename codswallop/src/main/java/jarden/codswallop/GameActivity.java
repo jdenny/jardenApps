@@ -122,8 +122,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             public void onAlertDialogPositive() {
                                 gameViewModel.onPlayerLeavingGame();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
+                                /*!!
                                 Intent intent = new Intent(GameActivity.this, TcpService.class);
                                 stopService(intent);
+                                 */
                                 //!! getOnBackPressedDispatcher().onBackPressed();
                             }
                         }, R.drawable.leaving_fish_transparent);
@@ -178,7 +180,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                         new AlertDialogListener() {
                                             @Override
                                             public void onAlertDialogPositive() {
-                                                finishAffinity();
+                                                endGame();
                                             }
                                         }, R.drawable.thumbs_up_fish_transparent);
                             } else {
@@ -202,6 +204,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         setHostViews();
     }
+
+    private void endGame() {
+        gameViewModel.stopNetworking();
+        finishAffinity();
+    }
+
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
             // Already showing it?
