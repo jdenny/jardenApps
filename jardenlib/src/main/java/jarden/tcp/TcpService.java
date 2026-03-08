@@ -43,10 +43,19 @@ public class TcpService extends Service {
     @Override
     public void onDestroy() {
         stopNetworking();
+        releaseWifiLock();
+        /*!!
         if (wifiLock != null && wifiLock.isHeld()) {
             wifiLock.release();
         }
+
+         */
         super.onDestroy();
+    }
+    public void releaseWifiLock () {
+        if (wifiLock != null && wifiLock.isHeld()) {
+            wifiLock.release();
+        }
     }
     public void sendAnswer(int questionSequence, String answer) {
         tcpPlayerClient.sendAnswer(questionSequence, answer);
@@ -94,6 +103,7 @@ public class TcpService extends Service {
             tcpControllerServer.stop();
             tcpControllerServer = null;
         }
+        releaseWifiLock();
         stopForeground(true);
         stopSelf();
     }

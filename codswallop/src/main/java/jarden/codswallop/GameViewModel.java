@@ -55,6 +55,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
     private boolean isHost;
     private String thisPlayerName;
+    private boolean isPlayerLeavingGame = false;
     private Map<String, Player> players;
     private Map<String, Player> leftPlayers;
     private final MutableLiveData<PlayerState> playerStateLiveData =
@@ -444,7 +445,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     @Override // TcpPlayerClient.Listener
     public void onHostFound(String hostIp, int port) {
         if (BuildConfig.DEBUG) {
-            String status = "onHostFound(" + hostIp + "' " + port + ')';
+            String status = "onHostFound(" + hostIp + ", " + port + ')';
             Log.d(TAG, status);
         }
         tcpService.connect(hostIp, thisPlayerName, this);
@@ -454,7 +455,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onCleared()");
         }
-        //??!! onPlayerLeavingGame();
     }
     public void onPlayerSignedIn(String playerName, boolean host) {
         thisPlayerName = playerName;
@@ -466,19 +466,15 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         tcpService.listenForHostBroadcast(wifi, this);
     }
     public void onPlayerLeavingGame() {
-        if (tcpService != null) {
-            if (isHost) {
-                tcpService.sendToAll(Constants.Protocol.GAME_OVER.name());
-                // TODO: maybe use callback to wait for above broadcast to finish
+        if (!isPlayerLeavingGame) {
+            isPlayerLeavingGame = true;
+            if (tcpService != null) {
+                if (isHost) {
+                    tcpService.sendToAll(Constants.Protocol.GAME_OVER.name());
+                } else {
+                    tcpService.stopNetworking();
+                }
             }
-            stopNetworking();
-        }
-    }
-
-    public void stopNetworking() {
-        if (tcpService != null) {
-            tcpService.stopNetworking();
-            //??!! tcpService = null;
         }
     }
 }

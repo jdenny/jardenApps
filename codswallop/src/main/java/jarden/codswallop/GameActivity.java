@@ -180,7 +180,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                         new AlertDialogListener() {
                                             @Override
                                             public void onAlertDialogPositive() {
-                                                endGame();
+                                                //!! endGame();
+                                                finishAffinity();
                                             }
                                         }, R.drawable.thumbs_up_fish_transparent);
                             } else {
@@ -205,10 +206,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setHostViews();
     }
 
+    /*!!
     private void endGame() {
         gameViewModel.stopNetworking();
         finishAffinity();
     }
+
+     */
 
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
