@@ -42,7 +42,7 @@ public class TcpPlayerClient {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private volatile boolean running = false;
+    private volatile boolean connectedToHost = false;
 
     // ----------------------------
     // Connect / Disconnect
@@ -69,10 +69,10 @@ public class TcpPlayerClient {
                         new InputStreamReader(socket.getInputStream()));
                 // Send JOIN immediately
                 out.println("JOIN|" + playerName);
-                running = true;
+                connectedToHost = true;
                 listener.onConnected();
                 String line;
-                while (running && (line = in.readLine()) != null) {
+                while (connectedToHost && (line = in.readLine()) != null) {
                     listener.onMessageToClient(line);
                 }
             } catch (Exception e) {
@@ -83,8 +83,8 @@ public class TcpPlayerClient {
         });
     }
     public void disconnect() {
-        if (running) {
-            running = false;
+        if (connectedToHost) {
+            connectedToHost = false;
             if (readExecutor != null) {
                 readExecutor.shutdownNow();
             }
@@ -151,7 +151,9 @@ public class TcpPlayerClient {
                             0,
                             packet.getLength(),
                             StandardCharsets.UTF_8);
-                    Log.d("UDP_CLIENT", "Received: " + msg);
+                    if (BuildConfig.DEBUG) {
+                        Log.d("UDP_CLIENT", "Received: " + msg);
+                    }
                     if (msg.startsWith("HOST_ANNOUNCE|")) {
                         String[] parts = msg.split("\\|");
                         String hostIp = parts[1];

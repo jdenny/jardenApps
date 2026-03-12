@@ -65,7 +65,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private QuestionManager questionManager;
     private int questionSequence;
     private final List<String> shuffledNameList = new ArrayList<>();
-    //!! private int correctShuffledIndex;
     private final static String TAG = "GameViewModel";
     private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
@@ -239,12 +238,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         shuffledNameList.addAll(players.keySet());
         Collections.shuffle(shuffledNameList);
         StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
-        //!! String name;
-        //!! for (int i = 0; i < shuffledNameList.size(); i++) {
         for (String name : shuffledNameList) {
-            //!! name = shuffledNameList.get(i);
             if (name.equals(CORRECT)) {
-                //!! this.correctShuffledIndex = i;
                 buffer.append('|' + currentQA.answer);
             } else {
                 buffer.append('|' + players.get(name).getAnswer());
@@ -308,7 +303,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     @Override
     public void onPlayerDisconnected(String playerName) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Player left: " + playerName);
+            Log.d(TAG, "onPlayerDisconnected(" + playerName + ")");
         }
         leftPlayers.put(playerName, players.get(playerName));
         players.remove(playerName);
@@ -410,9 +405,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 setQuestionLiveData(currentQuestion);
                 awaitingAnswerLiveData.setValue(true);
                 playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
-            } else if (message.startsWith(Constants.Protocol.GAME_OVER.name())) {
-                tcpService.stopNetworking();
-                playerStateLiveData.setValue(PlayerState.GAME_ENDED);
+            } else if (message.startsWith(Constants.Protocol.END_GAME.name())) {
+                endGame();
             } else {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "unrecognised message received by player: " + message);
@@ -420,9 +414,15 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             }
         });
     }
+    private void endGame() {
+        tcpService.stopNetworking();
+        playerStateLiveData.setValue(PlayerState.GAME_ENDED);
+    }
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
-        Log.d(TAG, "Now connected to the game host");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Now connected to the game host");
+        }
         new Handler(Looper.getMainLooper()).post(() -> {
             setPlayerStateLiveData(PlayerState.AWAITING_FIRST_QUESTION);
         });
@@ -438,9 +438,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.e(TAG, e.toString());
         }
-        new Handler(Looper.getMainLooper()).post(() -> {
-            exceptionLiveData.setValue(e);
-        });
+        if (!isPlayerLeavingGame) {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                exceptionLiveData.setValue(e);
+            });
+        }
     }
     @Override // TcpPlayerClient.Listener
     public void onHostFound(String hostIp, int port) {
@@ -466,13 +468,16 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         tcpService.listenForHostBroadcast(wifi, this);
     }
     public void onPlayerLeavingGame() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onPlayerLeavingGame(); isPlayerLeavingGame=" + isPlayerLeavingGame);
+        }
         if (!isPlayerLeavingGame) {
             isPlayerLeavingGame = true;
             if (tcpService != null) {
                 if (isHost) {
-                    tcpService.sendToAll(Constants.Protocol.GAME_OVER.name());
+                    tcpService.sendToAll(Constants.Protocol.END_GAME.name());
                 } else {
-                    tcpService.stopNetworking();
+                    endGame();
                 }
             }
         }

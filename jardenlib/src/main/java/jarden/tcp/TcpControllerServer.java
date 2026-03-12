@@ -80,6 +80,9 @@ public class TcpControllerServer {
         });
     }
     public void stop() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "stop(); running=" + running);
+        }
         running = false;
         try {
             if (serverSocket != null) {

@@ -36,7 +36,7 @@ public class Constants {
         // e.g. NAMED_ANSWERS|3|CORRECT|physician|Joe|John|2|footballer|John|CORRECT|4|physician
         // i.e. Joe voted for John and has total score of 2; John voted for the real answer and has
         // a total score of 4 so far.
-        GAME_OVER, // i.e. GAME_OVER
+        END_GAME, // i.e. END_GAME
         // *******************
         // Player to Host:   *
         // *******************

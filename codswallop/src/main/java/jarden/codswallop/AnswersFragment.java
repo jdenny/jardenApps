@@ -23,7 +23,6 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     private TextView questionView;
     private AnswersAdapter answersAdapter;
     private GameViewModel gameViewModel;
-    //!! private TextView promptTextView;
     private Constants.PlayerState playerState;
 
     @Override // Fragment
@@ -36,7 +35,6 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
         answersListView.setAdapter(answersAdapter);
         answersListView.setOnItemClickListener(this);
         gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
-        //!! promptTextView = rootView.findViewById(R.id.playerPromptView);
         return rootView;
     }
     public AnswersFragment() {
@@ -72,20 +70,6 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
                 .observe(getViewLifecycleOwner(),
                         playerState -> {
                             this.playerState = playerState;
-                            /*!!
-                            int promptId;
-                            if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
-                                promptId = R.string.voteNow;
-                            } else if (playerState == Constants.PlayerState.AWAITING_VOTES) {
-                                promptId = R.string.waiting_for_more_votes;
-                            } else if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
-                                promptId = R.string.scores_wait_for_question;
-                            } else {
-                                promptId = R.string.play_on;
-                            }
-                            promptTextView.setText(promptId);
-
-                             */
                         });
     }
     @Override

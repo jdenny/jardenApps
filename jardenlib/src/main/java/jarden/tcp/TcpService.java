@@ -10,20 +10,28 @@ import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
+
+import com.jardenconsulting.jardenlib.BuildConfig;
 
 import androidx.core.app.NotificationCompat;
 
 public class TcpService extends Service {
+    private static final String TAG = "TcpService";
     public static final String CHANNEL_ID = "codswallop_network";
     private final IBinder binder = new LocalBinder();
     private TcpControllerServer tcpControllerServer;
     private TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private boolean isForeground = false;
     private WifiManager.WifiLock wifiLock;
+    private boolean netWorkRunning = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onCreate()");
+        }
         createNotificationChannel();
         WifiManager wifiManager =
                 (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -42,14 +50,11 @@ public class TcpService extends Service {
     }
     @Override
     public void onDestroy() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onDestroy()");
+        }
         stopNetworking();
         releaseWifiLock();
-        /*!!
-        if (wifiLock != null && wifiLock.isHeld()) {
-            wifiLock.release();
-        }
-
-         */
         super.onDestroy();
     }
     public void releaseWifiLock () {
@@ -68,6 +73,9 @@ public class TcpService extends Service {
     }
     public void sendToAll(String message) {
         tcpControllerServer.sendToAll(message);
+    }
+    public void sendToPlayer(String playerName, String message) {
+        tcpControllerServer.sendToPlayer(playerName, message);
     }
     public void sendMultipleHostBroadcasts(Context context, int count) {
         tcpControllerServer.sendMultipleHostBroadcasts(context, count);
@@ -95,17 +103,23 @@ public class TcpService extends Service {
     // =========================
 
     public void stopNetworking() {
-        if (tcpPlayerClient != null) {
-            tcpPlayerClient.disconnect();
-            tcpPlayerClient = null;
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "stopNetworking(); netWorkRunning=" + netWorkRunning);
         }
-        if (tcpControllerServer != null) {
-            tcpControllerServer.stop();
-            tcpControllerServer = null;
+        if (netWorkRunning) {
+            if (tcpPlayerClient != null) {
+                tcpPlayerClient.disconnect();
+                tcpPlayerClient = null;
+            }
+            if (tcpControllerServer != null) {
+                tcpControllerServer.stop();
+                tcpControllerServer = null;
+            }
+            releaseWifiLock();
+            stopForeground(true);
+            stopSelf();
+            netWorkRunning = false;
         }
-        releaseWifiLock();
-        stopForeground(true);
-        stopSelf();
     }
 
     // =========================

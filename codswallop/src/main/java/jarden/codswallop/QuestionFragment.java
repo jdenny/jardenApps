@@ -24,20 +24,18 @@ public class QuestionFragment extends Fragment {
     private EditText answerEditText;
     private Button sendButton;
     private GameViewModel gameViewModel;
-    //!! private TextView promptView;
     private int lastRenderedQuestionId = -1;
 
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onCreateView(" + (savedInstanceState == null ? "" : "not null"));
+            Log.d(TAG, "onCreateView(" + (savedInstanceState == null ? "" : "not") + "null)");
         }
         View rootView = inflater.inflate(R.layout.fragment_question, container, false);
         questionView = rootView.findViewById(R.id.questionView);
         answerEditText = rootView.findViewById(R.id.answerEditText);
         sendButton = rootView.findViewById(R.id.sendButton);
-        //!! promptView = rootView.findViewById(R.id.playerPromptView);
         gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
         sendButton.setOnClickListener(view -> {
             String answer = answerEditText.getText().toString().trim();
@@ -71,25 +69,6 @@ public class QuestionFragment extends Fragment {
                         awaitingAnswer -> {
                             sendButton.setEnabled(awaitingAnswer);
                         });
-        /*!!
-        gameViewModel.getPlayerStateLiveData()
-                .observe(getViewLifecycleOwner(),
-                        playerState -> {
-                            int promptId;
-                            if (playerState == Constants.PlayerState.AWAITING_HOST_IP) {
-                                promptId = R.string.waiting_for_host_address;
-                            } else if (playerState == Constants.PlayerState.AWAITING_FIRST_QUESTION) {
-                                promptId = R.string.connectedWaitForQuestion;
-                            } else if (playerState == Constants.PlayerState.SUPPLY_ANSWER) {
-                                promptId = R.string.supply_answer_and_send;
-                            } else if (playerState == Constants.PlayerState.AWAITING_ANSWERS) {
-                                promptId = R.string.waiting_for_more_answers;
-                            } else {
-                                promptId = R.string.play_on;
-                            }
-                            promptView.setText(promptId);
-                        });
-         */
     }
     private static int getQuestionSequence(String question) {
         int i = question.indexOf('.');

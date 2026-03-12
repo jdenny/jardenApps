@@ -80,15 +80,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
     private TcpService tcpService;
+    private boolean isBound = false;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             TcpService.LocalBinder binder = (TcpService.LocalBinder) service;
             tcpService = binder.getService();
+            isBound = true;
             gameViewModel.attachService(tcpService);
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
             tcpService = null;
         }
     };
@@ -122,11 +125,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             public void onAlertDialogPositive() {
                                 gameViewModel.onPlayerLeavingGame();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
-                                /*!!
-                                Intent intent = new Intent(GameActivity.this, TcpService.class);
-                                stopService(intent);
-                                 */
-                                //!! getOnBackPressedDispatcher().onBackPressed();
                             }
                         }, R.drawable.leaving_fish_transparent);
             }
@@ -176,14 +174,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 promptId = R.string.scores_wait_for_question;
                             } else if (playerState == Constants.PlayerState.GAME_ENDED) {
                                 promptId = R.string.game_ended;
-                                showAlertDialog(R.string.game_ended,
-                                        new AlertDialogListener() {
-                                            @Override
-                                            public void onAlertDialogPositive() {
-                                                //!! endGame();
-                                                finishAffinity();
-                                            }
-                                        }, R.drawable.thumbs_up_fish_transparent);
+                                new AlertDialog.Builder(this)
+                                        .setTitle("Game ended")
+                                        .setMessage("The host has ended the game")
+                                        .setIcon(R.drawable.thumbs_up_fish_transparent)
+                                        .setPositiveButton("OK", (d, w) -> finish())
+                                        .show();
                             } else {
                                 promptId = R.string.unrecognised_state;
                             }
@@ -205,15 +201,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         setHostViews();
     }
-
-    /*!!
-    private void endGame() {
-        gameViewModel.stopNetworking();
-        finishAffinity();
-    }
-
-     */
-
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
             // Already showing it?
@@ -309,6 +296,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onDestroy()");
         }
         super.onDestroy();
+        if (isBound) {
+            unbindService(serviceConnection);
+            isBound = false;
+        }
     }
     public interface AlertDialogListener {
         public void onAlertDialogPositive();
