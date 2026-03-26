@@ -174,9 +174,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 promptId = R.string.scores_wait_for_question;
                             } else if (playerState == Constants.PlayerState.GAME_ENDED) {
                                 promptId = R.string.game_ended;
+                                String message = gameViewModel.getIsHost() ? "The host has ended the game" :
+                                        "You have left the game";
                                 new AlertDialog.Builder(this)
                                         .setTitle("Game ended")
-                                        .setMessage("The host has ended the game")
+                                        .setMessage(message)
                                         .setIcon(R.drawable.thumbs_up_fish_transparent)
                                         .setPositiveButton("OK", (d, w) -> finish())
                                         .show();
@@ -281,6 +283,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void setHostViews() {
         if (gameViewModel.getIsHost()) {
             hostViewsLayout.setVisibility(View.VISIBLE);
+            int qaCount = gameViewModel.getQuestionCount();
+            Toast.makeText(this, qaCount + " questions loaded", Toast.LENGTH_LONG).show();
         }
     }
     @Override // LoginDialogListener

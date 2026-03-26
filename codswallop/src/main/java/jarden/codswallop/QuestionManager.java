@@ -55,8 +55,10 @@ public class QuestionManager {
                     Log.e(TAG,
                             String.valueOf(e));
                 }
-                Log.d(TAG, "loaded " + questionList.size() +
-                        " questions from R.raw.questions & gitHub raw file");
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "loaded " + questionList.size() +
+                            " questions from R.raw.questions & gitHub raw file");
+                }
             });
         } catch (IOException e) {
             Log.e(TAG, "Failed to load questions: " + e);
@@ -87,4 +89,8 @@ public class QuestionManager {
             throw new EndOfQuestionsException();
         }
     }
+    public int getQuestionCount() {
+        return questionList.size();
+    }
+
 }

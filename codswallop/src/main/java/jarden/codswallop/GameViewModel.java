@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -481,5 +482,9 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 }
             }
         }
+    }
+
+    public int getQuestionCount() {
+        return questionManager.getQuestionCount();
     }
 }
