@@ -29,14 +29,14 @@ import static jarden.codswallop.Constants.QUESTION;
 
 /** Design of application
  Message Protocol: see class Constants
- Players agree who will be host; all open the app; all login: name, host or join.
+ Players agree who will host; all open the app; all login: name, host or join.
  Host selects “Send Host Address”; when each player receives the host address, it joins the game.
 
  Server gets next question from dictionary and sends to other devices
  All players, including Server, see the question; supply their answer, which is sent to Server
  When Server has the answers, including the real one, it sends them to all Clients, in random order
  Players give their votes; when all votes in, Server highlights the real answer
- Initial dialog:
+ Initial dialogue:
     PlayerNameEditText; HostButton; JoinButton
  two screens (Fragments):
  1  NextButton, SendHostAddressButton (host only)
@@ -54,11 +54,11 @@ import static jarden.codswallop.Constants.QUESTION;
 
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener,
-        LoginDialogFragment.LoginDialogListener {
+        LoginDialogFragment.LoginDialogListener, GameEndedDialog.Listener {
     public static final String TAG = "GameActivity";
 
     // Host fields: ***************************
-    private Button nextQuestionButton;
+    //!! private Button nextQuestionButton;
     private TextView hostPromptView;
     private TextView playerPromptView;
     private View hostViewsLayout;
@@ -104,9 +104,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, message);
         }
         Intent intent = new Intent(this, TcpService.class);
+        startService(intent);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         setContentView(R.layout.activity_game);
-        nextQuestionButton = findViewById(R.id.nextQuestionButton);
+        Button nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
@@ -116,7 +117,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                String s = getString(R.string.confirm_host_leaving);
                 int confirmMessage = gameViewModel.getIsHost() ?
                         R.string.confirm_host_leaving : R.string.confirm_leaving;
                 showAlertDialog(confirmMessage,
@@ -172,6 +172,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 promptId = R.string.waiting_for_more_votes;
                             } else if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
                                 promptId = R.string.scores_wait_for_question;
+                                /*!!
                             } else if (playerState == Constants.PlayerState.GAME_ENDED) {
                                 promptId = R.string.game_ended;
                                 String message = gameViewModel.getIsHost() ? "The host has ended the game" :
@@ -180,8 +181,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                         .setTitle("Game ended")
                                         .setMessage(message)
                                         .setIcon(R.drawable.thumbs_up_fish_transparent)
-                                        .setPositiveButton("OK", (d, w) -> finish())
+                                        .setPositiveButton("OK", (d, w) -> {
+                                            stopService(new Intent(this, TcpService.class));
+                                            finish();
+                                        })
                                         .show();
+                                 */
                             } else {
                                 promptId = R.string.unrecognised_state;
                             }
@@ -196,6 +201,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 finishAffinity(); // close the app
             }
         });
+        gameViewModel.gameEndedEvent.observe(this, mess -> {
+            stopService(new Intent(this, TcpService.class));
+            String message = gameViewModel.getIsHost() ? "The host has ended the game" :
+                    "You have left the game";
+            GameEndedDialog dialog = new GameEndedDialog();
+            Bundle b = new Bundle();
+            b.putString("message", message);
+            dialog.setArguments(b);
+            dialog.show(getSupportFragmentManager(), "game_end");
+        });
+            /*!!
+
+            if (message != null && !isFinishing() && !isDestroyed()) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Game ended")
+                        .setMessage(message)
+                        .setIcon(R.drawable.thumbs_up_fish_transparent)
+                        .setPositiveButton("OK", (d, w) -> finish())
+                        .show();
+            }
+             */
+        //!!promptId = R.string.game_ended;
+
         LoginDialogFragment loginDialog;
         if (savedInstanceState == null) {
             loginDialog = new LoginDialogFragment();
@@ -305,8 +333,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             isBound = false;
         }
     }
+
+    @Override
+    public void onGameEndedAcknowledged() {
+        stopService(new Intent(this, TcpService.class));
+        finish();
+    }
+
     public interface AlertDialogListener {
-        public void onAlertDialogPositive();
+        void onAlertDialogPositive();
     }
     private void showAlertDialog(int message, AlertDialogListener listener, int iconResource) {
         LayoutInflater inflater = getLayoutInflater();

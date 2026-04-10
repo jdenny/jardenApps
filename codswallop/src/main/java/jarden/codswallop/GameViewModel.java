@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +62,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
     private final MutableLiveData<String> questionLiveData =
             new MutableLiveData<>("");
+    MutableLiveData<String> gameEndedEvent = new MutableLiveData<>();
     private QuestionManager questionManager;
     private int questionSequence;
     private final List<String> shuffledNameList = new ArrayList<>();
@@ -417,7 +417,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     private void endGame() {
         tcpService.stopNetworking();
-        playerStateLiveData.setValue(PlayerState.GAME_ENDED);
+        //!! playerStateLiveData.setValue(PlayerState.GAME_ENDED);
+        gameEndedEvent.setValue("Game has ended");
     }
     @Override // TcpPlayerClient.Listener
     public void onConnected() {
