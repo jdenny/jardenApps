@@ -306,13 +306,15 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerDisconnected(" + playerName + ")");
         }
-        leftPlayers.put(playerName, players.get(playerName));
-        players.remove(playerName);
-        HostState hostState = hostStateLiveData.getValue();
-        if (hostState == HostState.AWAITING_CT_ANSWERS) {
-            checkForAllAnswers();
-        } else if (hostState == HostState.AWAITING_CT_VOTES) {
-            checkForAllVotes();
+        if (players.containsKey(playerName)) { // check not already removed
+            leftPlayers.put(playerName, players.get(playerName));
+            players.remove(playerName);
+            HostState hostState = hostStateLiveData.getValue();
+            if (hostState == HostState.AWAITING_CT_ANSWERS) {
+                checkForAllAnswers();
+            } else if (hostState == HostState.AWAITING_CT_VOTES) {
+                checkForAllVotes();
+            }
         }
     }
     @Override // TcpControllerServer.MessageListener
@@ -417,7 +419,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     private void endGame() {
         tcpService.stopNetworking();
-        //!! playerStateLiveData.setValue(PlayerState.GAME_ENDED);
         gameEndedEvent.setValue("Game has ended");
     }
     @Override // TcpPlayerClient.Listener

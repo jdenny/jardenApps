@@ -172,21 +172,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 promptId = R.string.waiting_for_more_votes;
                             } else if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
                                 promptId = R.string.scores_wait_for_question;
-                                /*!!
-                            } else if (playerState == Constants.PlayerState.GAME_ENDED) {
-                                promptId = R.string.game_ended;
-                                String message = gameViewModel.getIsHost() ? "The host has ended the game" :
-                                        "You have left the game";
-                                new AlertDialog.Builder(this)
-                                        .setTitle("Game ended")
-                                        .setMessage(message)
-                                        .setIcon(R.drawable.thumbs_up_fish_transparent)
-                                        .setPositiveButton("OK", (d, w) -> {
-                                            stopService(new Intent(this, TcpService.class));
-                                            finish();
-                                        })
-                                        .show();
-                                 */
                             } else {
                                 promptId = R.string.unrecognised_state;
                             }
@@ -211,19 +196,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-            /*!!
-
-            if (message != null && !isFinishing() && !isDestroyed()) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Game ended")
-                        .setMessage(message)
-                        .setIcon(R.drawable.thumbs_up_fish_transparent)
-                        .setPositiveButton("OK", (d, w) -> finish())
-                        .show();
-            }
-             */
-        //!!promptId = R.string.game_ended;
-
         LoginDialogFragment loginDialog;
         if (savedInstanceState == null) {
             loginDialog = new LoginDialogFragment();
