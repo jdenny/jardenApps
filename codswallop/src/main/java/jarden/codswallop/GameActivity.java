@@ -195,7 +195,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 finishAffinity(); // close the app
             }
         });
-        gameViewModel.gameEndedEvent.observe(this, mess -> {
+        gameViewModel.getGameEndedEvent().observe(this, mess -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "gameEndedEvent.observe(" + mess + ')');
             }
@@ -207,10 +207,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-        // Activity
         gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
             if (answer != null) {
                 tcpService.sendAnswer(gameViewModel.getQuestionSequence(), answer);
+            }
+        });
+        gameViewModel.getSubmitVoteEvent().observe(this, position -> {
+            if (position != null) {
+                tcpService.sendVote(gameViewModel.getQuestionSequence(), position);
             }
         });
         LoginDialogFragment loginDialog;
@@ -313,6 +317,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
+        tcpService.startHosting(gameViewModel);
     }
     private void setHostViews() {
         if (gameViewModel.getIsHost()) {

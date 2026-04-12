@@ -45,33 +45,33 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             new MutableLiveData<>(new AllAnswers(null, null, false, false, null));
     private final MutableLiveData<String> currentFragmentTagLiveData =
             new MutableLiveData<>(QUESTION);
-    private QuestionManager.QuestionAnswer currentQA;
-    private String currentQuestion;
+    private final MutableLiveData<PlayerState> playerStateLiveData =
+            new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
+    private final MutableLiveData<String> questionLiveData =
+            new MutableLiveData<>();
+    private final MutableLiveData<String> gameEndedEvent = new MutableLiveData<>();
+    private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
+    private final MutableLiveData<Integer> submitVoteEvent = new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingAnswerLiveData =
             new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> awaitingVoteLiveData =
             new MutableLiveData<>(false);
     private final MutableLiveData<HostState> hostStateLiveData =
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
-    private boolean isHost;
+    private final MutableLiveData<Exception> exceptionLiveData =
+            new MutableLiveData<>(null);
+    private QuestionManager.QuestionAnswer currentQA;
+    private String currentQuestion;private boolean isHost;
     private String thisPlayerName;
     private boolean isPlayerLeavingGame = false;
     private Map<String, Player> players;
     private Map<String, Player> leftPlayers;
-    private final MutableLiveData<PlayerState> playerStateLiveData =
-            new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
-    private final MutableLiveData<String> questionLiveData =
-            new MutableLiveData<>("");
-    MutableLiveData<String> gameEndedEvent = new MutableLiveData<>();
-    private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
     private QuestionManager questionManager;
     private int questionSequence;
     private final List<String> shuffledNameList = new ArrayList<>();
     private final static String TAG = "GameViewModel";
     private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
-    private final MutableLiveData<Exception> exceptionLiveData =
-            new MutableLiveData<>(null);
     private TcpService tcpService;
 
     public GameViewModel(@NotNull Application application) {
@@ -131,7 +131,15 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public LiveData<String> getQuestionLiveData() {
         return questionLiveData;
     }
-
+    public LiveData<String> getSubmitAnswerEvent() {
+        return submitAnswerEvent;
+    }
+    public LiveData<Integer> getSubmitVoteEvent() {
+        return submitVoteEvent;
+    }
+    public LiveData<String> getGameEndedEvent() {
+        return gameEndedEvent;
+    }
     public void setAnswer(String answer) {
         if (answer != null && !answer.isEmpty()) {
             //!! tcpService.sendAnswer(questionSequence, answer);
@@ -147,7 +155,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return answersLiveData;
     }
     public void setSelectedAnswer(int position) {
-        tcpService.sendVote(questionSequence, position);
+        //!! tcpService.sendVote(questionSequence, position);
+        submitVoteEvent.setValue(position);
         playerStateLiveData.setValue(PlayerState.AWAITING_VOTES);
     }
     public void setHostStateLiveData(HostState hostState) {
@@ -164,7 +173,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         questionManager = new QuestionManager(getApplication().getResources());
         isHost = true;
         questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
-        tcpService.startHosting(this);
+        //!! tcpService.startHosting(this);
     }
     @Override  // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
@@ -492,16 +501,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             }
         }
     }
-
     public int getQuestionCount() {
         return questionManager.getQuestionCount();
     }
-
-    public LiveData<String> getSubmitAnswerEvent() {
-        return submitAnswerEvent;
-    }
-
     public int getQuestionSequence() {
         return questionSequence;
     }
+
 }
