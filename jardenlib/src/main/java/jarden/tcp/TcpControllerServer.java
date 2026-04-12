@@ -30,6 +30,11 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Created by john.denny@gmail.com on 03/01/2026.
+ * This class runs on the host device.
+ * sendHostBroadcast() sends its ipAddress using a DatagramSocket
+ * start() listens for TCP connections from clients using a ServerSocket
+ *    upon receiving a connection, it creates a ClientHandler to handle conversations
+ *    with that device.
  */
 public class TcpControllerServer {
     public interface ServerListener {

@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -95,6 +99,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             tcpService = null;
         }
     };
+    private SpannableStringBuilder scoresWaitText;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +119,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         hostPromptView = findViewById(R.id.hostPromptView);
         playerPromptView = findViewById(R.id.playerPromptView);
         hostViewsLayout = findViewById(R.id.hostLayout);
+        makeScoresWaitText();
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -157,25 +163,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         gameViewModel.getPlayerStateLiveData()
                 .observe(this,
                         playerState -> {
-                            int promptId;
-                            if (playerState == Constants.PlayerState.AWAITING_HOST_IP) {
-                                promptId = R.string.waiting_for_host_address;
-                            } else if (playerState == Constants.PlayerState.AWAITING_FIRST_QUESTION) {
-                                promptId = R.string.connectedWaitForQuestion;
-                            } else if (playerState == Constants.PlayerState.SUPPLY_ANSWER) {
-                                promptId = R.string.supply_answer_and_send;
-                            } else if (playerState == Constants.PlayerState.AWAITING_ANSWERS) {
-                                promptId = R.string.waiting_for_more_answers;
-                            } else if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
-                                    promptId = R.string.voteNow;
-                            } else if (playerState == Constants.PlayerState.AWAITING_VOTES) {
-                                promptId = R.string.waiting_for_more_votes;
-                            } else if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
-                                promptId = R.string.scores_wait_for_question;
+                            if (playerState == Constants.PlayerState.AWAITING_NEXT_QUESTION) {
+                                playerPromptView.setText(scoresWaitText);
                             } else {
-                                promptId = R.string.unrecognised_state;
+                                int promptId;
+                                if (playerState == Constants.PlayerState.AWAITING_HOST_IP) {
+                                    promptId = R.string.waiting_for_host_address;
+                                } else if (playerState == Constants.PlayerState.AWAITING_FIRST_QUESTION) {
+                                    promptId = R.string.connectedWaitForQuestion;
+                                } else if (playerState == Constants.PlayerState.SUPPLY_ANSWER) {
+                                    promptId = R.string.supply_answer_and_send;
+                                } else if (playerState == Constants.PlayerState.AWAITING_ANSWERS) {
+                                    promptId = R.string.waiting_for_more_answers;
+                                } else if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
+                                    promptId = R.string.voteNow;
+                                } else if (playerState == Constants.PlayerState.AWAITING_VOTES) {
+                                    promptId = R.string.waiting_for_more_votes;
+                                } else {
+                                    promptId = R.string.unrecognised_state;
+                                }
+                                playerPromptView.setText(promptId);
                             }
-                            playerPromptView.setText(promptId);
                         });
         final LiveData<String> currentFragmentTagLiveData =
                 gameViewModel.getCurrentFragmentTagLiveData();
@@ -202,6 +210,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
         }
         setHostViews();
+    }
+    private void makeScoresWaitText() {
+        String highlight = getString(R.string.scoresHighlighted);
+        String fullText = getString(R.string.scores_wait_for_question, highlight);
+        SpannableStringBuilder builder = new SpannableStringBuilder(fullText);
+        int start = fullText.indexOf(highlight);
+        int end = start + highlight.length();
+        builder.setSpan(new BackgroundColorSpan(ContextCompat.getColor(this, R.color.voted_for_me)),
+                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        scoresWaitText = builder;
     }
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
@@ -308,7 +326,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onGameEndedAcknowledged() {
-        stopService(new Intent(this, TcpService.class));
         finish();
     }
 

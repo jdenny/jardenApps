@@ -19,6 +19,8 @@
     <string name="player_joined">%1$s has joined; %2$d players so far. Press Next Question when all joined"</string>
     <string name="ready_for_next_question">When all are happy, press Next Question</string>
     <string name="scores">Scores</string>
+    <string name="scoresHighlighted">highlighted players</string>
+    <string name="scores_wait_for_question">(total score); %1$s voted for you. Wait for next question</string>
     <string name="send">Send</string>
     <string name="supply_answer_and_send">Supply answer and Send</string>
     <string name="supply_name">Supply your name first!</string>
@@ -26,7 +28,6 @@
     <string name="voteNow">Tap on the answer you think is correct</string>
     <string name="wait_for_players_then_broadcast_host">When all players have logged in (using \'Join\'), Broadcast Host</string>
     <string name="wait_for_players_to_join">Wait for all players to join, then press Next Question</string>
-    <string name="scores_wait_for_question">(total score); highlighted players voted for you. Wait for next question</string>
     <string name="waiting_for_ct_answers">Waiting for %1$d player(s) to answer</string>
     <string name="waiting_for_ct_votes">Waiting for %1$d player(s) to vote</string>
     <string name="waiting_for_host_address">Waiting for host to contact us</string>
