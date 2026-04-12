@@ -63,6 +63,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private final MutableLiveData<String> questionLiveData =
             new MutableLiveData<>("");
     MutableLiveData<String> gameEndedEvent = new MutableLiveData<>();
+    private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
     private QuestionManager questionManager;
     private int questionSequence;
     private final List<String> shuffledNameList = new ArrayList<>();
@@ -130,9 +131,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public LiveData<String> getQuestionLiveData() {
         return questionLiveData;
     }
+
     public void setAnswer(String answer) {
         if (answer != null && !answer.isEmpty()) {
-            tcpService.sendAnswer(questionSequence, answer);
+            //!! tcpService.sendAnswer(questionSequence, answer);
+            submitAnswerEvent.setValue(answer);
             awaitingAnswerLiveData.setValue(false);
             setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
         }
@@ -323,14 +326,17 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             Log.d(TAG, "onServerStarted()");
         }
     }
-    public void sendHostBroadcast(Context context) {
-        tcpService.sendMultipleHostBroadcasts(context, 5);
+    /*!!
+    public void sendHostBroadcast() {
+        tcpService.sendMultipleHostBroadcasts(5);
     }
+
+     */
     public void sendNextQuestion() {
-        tcpService.sendToAll(getNextQuestion());
+        //!! tcpService.sendToAll(getNextQuestion());
         setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
     }
-    private String getNextQuestion() {
+    public String getNextQuestion() {
         try {
             currentQA = questionManager.getQuestionAnswer(questionSequence);
         } catch (EndOfQuestionsException e) {
@@ -418,6 +424,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         });
     }
     private void endGame() {
+        isPlayerLeavingGame = true;
         tcpService.stopNetworking();
         gameEndedEvent.setValue("Game has ended");
     }
@@ -488,5 +495,13 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
 
     public int getQuestionCount() {
         return questionManager.getQuestionCount();
+    }
+
+    public LiveData<String> getSubmitAnswerEvent() {
+        return submitAnswerEvent;
+    }
+
+    public int getQuestionSequence() {
+        return questionSequence;
     }
 }

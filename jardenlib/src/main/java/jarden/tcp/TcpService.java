@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
@@ -25,6 +26,7 @@ public class TcpService extends Service {
     private boolean isForeground = false;
     private WifiManager.WifiLock wifiLock;
     private boolean netWorkRunning = true;
+    private String hostIpAddress;
 
     @Override
     public void onCreate() {
@@ -77,8 +79,20 @@ public class TcpService extends Service {
     public void sendToPlayer(String playerName, String message) {
         tcpControllerServer.sendToPlayer(playerName, message);
     }
-    public void sendMultipleHostBroadcasts(Context context, int count) {
-        tcpControllerServer.sendMultipleHostBroadcasts(context, count);
+    public void sendMultipleHostBroadcasts(int count) {
+        if (hostIpAddress == null) {
+            WifiManager wifi =
+                    (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = wifi.getConnectionInfo();
+            int ipInt = info.getIpAddress();
+            hostIpAddress = String.format(
+                    "%d.%d.%d.%d",
+                    (ipInt & 0xff),
+                    (ipInt >> 8 & 0xff),
+                    (ipInt >> 16 & 0xff),
+                    (ipInt >> 24 & 0xff));
+        }
+        tcpControllerServer.sendMultipleHostBroadcasts(hostIpAddress, count);
     }
     public class LocalBinder extends Binder {
         public TcpService getService() {

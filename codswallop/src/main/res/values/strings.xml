@@ -10,11 +10,13 @@
     <string name="confirm_skip_question">Are you sure you want to skip the current question?</string>
     <string name="correct_answer">Correct answer</string>
     <string name="duplicatePlayerName">Someone trying to log in with name already used</string>
+    <string name="endedByHost">The host has ended the game</string>
     <string name="host_control">Host Control</string>
     <string name="hostGame">Host Game</string>
     <string name="joinGame">Join Game</string>
     <string name="loginText">Nominate one person to \'Host Game\' \nAll other players should \'Join Game\'</string>
     <string name="next_question">Next Question</string>
+    <string name="playerLeft">You have left the game</string>
     <string name="play_on">play on!</string>
     <string name="player_joined">%1$s has joined; %2$d players so far. Press Next Question when all joined"</string>
     <string name="ready_for_next_question">When all are happy, press Next Question</string>

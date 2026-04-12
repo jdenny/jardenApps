@@ -1,8 +1,5 @@
 package jarden.tcp;
 
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import com.jardenconsulting.jardenlib.BuildConfig;
@@ -37,6 +34,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  *    with that device.
  */
 public class TcpControllerServer {
+
     public interface ServerListener {
         void onMessageToServer(String playerName, String message);
         void onPlayerConnected(String playerName);
@@ -56,7 +54,6 @@ public class TcpControllerServer {
     private final ServerListener listener;
     private ServerSocket serverSocket;
     private volatile boolean running = false;
-    private String HostIpAddress = null; // "192.168.0.96"; // John's Moto g8 at home
     public TcpControllerServer(ServerListener listener) {
         this.listener = listener;
     }
@@ -183,28 +180,16 @@ public class TcpControllerServer {
             }
         }
     }
-    public void sendMultipleHostBroadcasts(Context context, int count)  {
+    public void sendMultipleHostBroadcasts(String hostIpAddress, int count)  {
         final ScheduledFuture<?> broadcastHandle =
-                scheduler.scheduleWithFixedDelay(() -> sendHostBroadcast(context), 0, 1, SECONDS);
+                scheduler.scheduleWithFixedDelay(() -> sendHostBroadcast(hostIpAddress), 0, 1, SECONDS);
         scheduler.schedule(() -> { broadcastHandle.cancel(true); }, count, SECONDS);
     }
-    public void sendHostBroadcast(Context context) {
+    public void sendHostBroadcast(String hostIpAddress) {
         new Thread(() -> {
             try {
-                if (HostIpAddress == null) {
-                    WifiManager wifi =
-                            (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    WifiInfo info = wifi.getConnectionInfo();
-                    int ipInt = info.getIpAddress();
-                    HostIpAddress = String.format(
-                            "%d.%d.%d.%d",
-                            (ipInt & 0xff),
-                            (ipInt >> 8 & 0xff),
-                            (ipInt >> 16 & 0xff),
-                            (ipInt >> 24 & 0xff));
-                }
                 String message =
-                        "HOST_ANNOUNCE|" + HostIpAddress + "|" + TCP_PORT;
+                        "HOST_ANNOUNCE|" + hostIpAddress + "|" + TCP_PORT;
                 DatagramSocket udpSocket = new DatagramSocket();
                 udpSocket.setBroadcast(true);
                 InetAddress broadcastAddress =

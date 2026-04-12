@@ -62,7 +62,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG = "GameActivity";
 
     // Host fields: ***************************
-    //!! private Button nextQuestionButton;
     private TextView hostPromptView;
     private TextView playerPromptView;
     private View hostViewsLayout;
@@ -100,6 +99,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
     private SpannableStringBuilder scoresWaitText;
+    private boolean iChoseToLeave = false;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +129,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {
+                                iChoseToLeave = true;
                                 gameViewModel.onPlayerLeavingGame();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
                             }
@@ -195,14 +196,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         gameViewModel.gameEndedEvent.observe(this, mess -> {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "gameEndedEvent.observe(" + mess + ')');
+            }
             stopService(new Intent(this, TcpService.class));
-            String message = gameViewModel.getIsHost() ? "The host has ended the game" :
-                    "You have left the game";
+            String message = getString(iChoseToLeave ? R.string.playerLeft : R.string.endedByHost);
             GameEndedDialog dialog = new GameEndedDialog();
             Bundle b = new Bundle();
             b.putString("message", message);
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
+        });
+        // Activity
+        gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
+            if (answer != null) {
+                tcpService.sendAnswer(gameViewModel.getQuestionSequence(), answer);
+            }
         });
         LoginDialogFragment loginDialog;
         if (savedInstanceState == null) {
@@ -277,18 +286,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 showAlertDialog(R.string.confirm_skip_question, new AlertDialogListener() {
                     @Override
                     public void onAlertDialogPositive() {
-                        gameViewModel.sendNextQuestion();
+                        //!! gameViewModel.sendNextQuestion();
+                        sendNextQuestion();
                     }
                 }, R.drawable.next_question_fish_transparent);
             } else {
-                gameViewModel.sendNextQuestion();
+                //!! gameViewModel.sendNextQuestion();
+                sendNextQuestion();
             }
         } else if (viewId == R.id.broadcastHostButton) {
-            gameViewModel.sendHostBroadcast(this);
+            //!! gameViewModel.sendHostBroadcast();
+            tcpService.sendMultipleHostBroadcasts(5);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
         }
+    }
+    private void sendNextQuestion() {
+        tcpService.sendToAll(gameViewModel.getNextQuestion());
+        gameViewModel.sendNextQuestion();
     }
     @Override // LoginDialogListener
     public void onHostButton(String playerName) {
