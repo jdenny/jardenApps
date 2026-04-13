@@ -210,7 +210,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all votes received for current question");
             }
-            tcpService.sendToAll(getNamedAnswersMessage());
+            //!! tcpService.sendToAll(getNamedAnswersMessage());
             setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
@@ -260,7 +260,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         }
         return buffer.toString();
     }
-    private String getNamedAnswersMessage() {
+    public String getNamedAnswersMessage() {
         List<Player> playerList = new ArrayList<>(players.values());
         playerList.sort((p1, p2) ->
                 Integer.compare(p2.getScore(), p1.getScore()));

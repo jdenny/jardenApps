@@ -141,24 +141,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         gameViewModel.getHostStateLiveData().observe(
                 this,
                 hostState -> {
-                    if (hostState == Constants.HostState.AWAITING_PLAYERS) {
-                        hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
-                    } else if (hostState == Constants.HostState.PLAYER_JOINED) {
-                        int ct = gameViewModel.getPlayersCount();
-                        String playerName = gameViewModel.getLastJoinedPlayerName();
-                        hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
-                    } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
-                        int ct = gameViewModel.getNotAnsweredCount();
-                        hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
-                    } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
-                        int ct = gameViewModel.getNotVotedCount();
-                        hostPromptView.setText(getString(R.string.waiting_for_ct_votes, ct));
-                    } else if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
+                    if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
+                        tcpService.sendToAll(gameViewModel.getNamedAnswersMessage());
                         hostPromptView.setText(R.string.ready_for_next_question);
-                    } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
-                        hostPromptView.setText(R.string.duplicatePlayerName);
                     } else {
-                        hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
+                        if (hostState == Constants.HostState.AWAITING_PLAYERS) {
+                            hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
+                        } else if (hostState == Constants.HostState.PLAYER_JOINED) {
+                            int ct = gameViewModel.getPlayersCount();
+                            String playerName = gameViewModel.getLastJoinedPlayerName();
+                            hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
+                        } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
+                            int ct = gameViewModel.getNotAnsweredCount();
+                            hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
+                        } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
+                            int ct = gameViewModel.getNotVotedCount();
+                            hostPromptView.setText(getString(R.string.waiting_for_ct_votes, ct));
+                        } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
+                            hostPromptView.setText(R.string.duplicatePlayerName);
+                        } else {
+                            hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
+                        }
                     }
                 });
         gameViewModel.getPlayerStateLiveData()
@@ -200,7 +203,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, "gameEndedEvent.observe(" + mess + ')');
             }
             stopService(new Intent(this, TcpService.class));
-            String message = getString(iChoseToLeave ? R.string.playerLeft : R.string.endedByHost);
+            int messageId;
+            if (iChoseToLeave) {
+                if (gameViewModel.getIsHost()) {
+                    messageId = R.string.youEndedGame;
+                } else {
+                    messageId = R.string.playerLeft;
+                }
+            } else {
+                messageId = R.string.endedByHost;
+            }
+            String message = getString(messageId);
+            // put above code into gameViewModel, and pass result in gameEndedEvent;
+            //!! String message = getString(iChoseToLeave ? R.string.playerLeft : R.string.endedByHost);
             GameEndedDialog dialog = new GameEndedDialog();
             Bundle b = new Bundle();
             b.putString("message", message);
