@@ -78,7 +78,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private final static String TAG = "GameViewModel";
     private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
-    //!! private TcpService tcpService;
 
     public GameViewModel(@NotNull Application application) {
         super(application);
@@ -117,14 +116,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public LiveData<PlayerState> getPlayerStateLiveData() {
         return playerStateLiveData;
     }
-    /*!!
-    public void setPlayerStateLiveData(PlayerState playerState) {
-        playerStateLiveData.setValue(playerState);
-    }
-    public void addPlayer(String name, Player player) {
-        players.put(name, player);
-    }
-     */
     public LiveData<String> getCurrentFragmentTagLiveData() {
         return currentFragmentTagLiveData;
     }
@@ -162,10 +153,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     public void setAnswer(String answer) {
         if (answer != null && !answer.isEmpty()) {
-            //!! tcpService.sendAnswer(questionSequence, answer);
             submitAnswerEvent.setValue(answer);
             awaitingAnswerLiveData.setValue(false);
-            //!! setPlayerStateLiveData(PlayerState.AWAITING_ANSWERS);
             playerStateLiveData.setValue(PlayerState.AWAITING_ANSWERS);
         }
     }
@@ -176,7 +165,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return answersLiveData;
     }
     public void setSelectedAnswer(int position) {
-        //!! tcpService.sendVote(questionSequence, position);
         submitVoteEvent.setValue(position);
         playerStateLiveData.setValue(PlayerState.AWAITING_VOTES);
     }
@@ -194,7 +182,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         questionManager = new QuestionManager(getApplication().getResources());
         isHost = true;
         questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
-        //!! tcpService.startHosting(this);
     }
     @Override  // TcpControllerServer.MessageListener
     // i.e. message sent from player to host
@@ -231,7 +218,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all votes received for current question");
             }
-            //!! tcpService.sendToAll(getNamedAnswersMessage());
             setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
@@ -242,7 +228,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all answers received for current question");
             }
-            //!! tcpService.sendToAll(getAllAnswersMessage());
             new Handler(Looper.getMainLooper()).post(() -> {
                 answersEventLiveData.setValue(getAllAnswersMessage());
             });
@@ -331,7 +316,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 leftPlayers.remove(name);
             } else {
                 Player player = new Player(name);
-                //!! addPlayer(name, player);
                 players.put(name, player);
             }
             lastJoinedPlayerName = name;
@@ -360,14 +344,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             Log.d(TAG, "onServerStarted()");
         }
     }
-    /*!!
-    public void sendHostBroadcast() {
-        tcpService.sendMultipleHostBroadcasts(5);
-    }
-
-     */
     public void sendNextQuestion() {
-        //!! tcpService.sendToAll(getNextQuestion());
         setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
     }
     public String getNextQuestion() {
@@ -459,7 +436,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     private void endGame() {
         isPlayerLeavingGame = true;
-        //!! tcpService.stopNetworking();
         int messageId;
         if (iChoseToLeave) {
             if (isHost) {
@@ -501,13 +477,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     @Override // TcpPlayerClient.Listener
     public void onHostFound(String hostIp, int port) {
         if (BuildConfig.DEBUG) {
-            //!! String status = "onHostFound(" + hostIp + ", " + port + ')';
             Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
         }
         new Handler(Looper.getMainLooper()).post(() -> {
             hostFoundEvent.setValue(hostIp);
         });
-        //!! tcpService.connect(hostIp, thisPlayerName, this);
     }
     @Override
     protected void onCleared() {
@@ -521,11 +495,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             startHost();
         }
         listenForHostBroadcastLiveData.setValue(true);
-        /*!!
-        WifiManager wifi =
-                (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
-        tcpService.listenForHostBroadcast(wifi, this);
-         */
     }
     public void onPlayerLeavingGame() {
         if (BuildConfig.DEBUG) {
@@ -535,7 +504,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (!isPlayerLeavingGame) {
             isPlayerLeavingGame = true;
             if (isHost) {
-                //!! tcpService.sendToAll(Constants.Protocol.END_GAME.name());
                 playerLeavingGameEvent.setValue(true);
             } else {
                 endGame();

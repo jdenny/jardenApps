@@ -89,7 +89,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isBound = false;
     private SpannableStringBuilder scoresWaitText;
-    //!! private boolean iChoseToLeave = false;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -97,7 +96,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             TcpService.LocalBinder binder = (TcpService.LocalBinder) service;
             tcpService = binder.getService();
             isBound = true;
-            //!! gameViewModel.attachService(tcpService);
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -134,7 +132,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {
-                                //!! iChoseToLeave = true;
                                 gameViewModel.onPlayerLeavingGame();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
                             }
@@ -315,16 +312,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 showAlertDialog(R.string.confirm_skip_question, new AlertDialogListener() {
                     @Override
                     public void onAlertDialogPositive() {
-                        //!! gameViewModel.sendNextQuestion();
                         sendNextQuestion();
                     }
                 }, R.drawable.next_question_fish_transparent);
             } else {
-                //!! gameViewModel.sendNextQuestion();
                 sendNextQuestion();
             }
         } else if (viewId == R.id.broadcastHostButton) {
-            //!! gameViewModel.sendHostBroadcast();
             tcpService.sendMultipleHostBroadcasts(5);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
@@ -337,11 +331,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override // LoginDialogListener
     public void onHostButton(String playerName) {
-        this.playerName = playerName;
-        this.isHost = true;
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
+        this.playerName = playerName;
+        this.isHost = true;
         gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
         tcpService.startHosting(gameViewModel);
@@ -358,6 +352,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
+        this.playerName = playerName;
         gameViewModel.onPlayerSignedIn(playerName, false);
     }
     @Override // Activity
