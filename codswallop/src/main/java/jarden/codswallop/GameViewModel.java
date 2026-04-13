@@ -66,14 +66,15 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private final MutableLiveData<Exception> exceptionLiveData =
             new MutableLiveData<>(null);
     private QuestionManager.QuestionAnswer currentQA;
-    private String currentQuestion;private boolean isHost;
+    private String currentQuestion;
+    private boolean isHost;
     private boolean iChoseToLeave = false;
     private String thisPlayerName;
     private boolean isPlayerLeavingGame = false;
     private Map<String, Player> players;
     private Map<String, Player> leftPlayers;
     private QuestionManager questionManager;
-    private int questionSequence;
+    private int questionSequence = 21;
     private final List<String> shuffledNameList = new ArrayList<>();
     private final static String TAG = "GameViewModel";
     private String lastJoinedPlayerName;
