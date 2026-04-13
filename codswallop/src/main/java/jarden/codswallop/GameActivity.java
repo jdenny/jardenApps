@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.SpannableStringBuilder;
@@ -83,14 +84,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
     private TcpService tcpService;
+    private String playerName;
+    private boolean isHost = false;
+
     private boolean isBound = false;
+    private SpannableStringBuilder scoresWaitText;
+    //!! private boolean iChoseToLeave = false;
+
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             TcpService.LocalBinder binder = (TcpService.LocalBinder) service;
             tcpService = binder.getService();
             isBound = true;
-            gameViewModel.attachService(tcpService);
+            //!! gameViewModel.attachService(tcpService);
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -98,8 +105,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             tcpService = null;
         }
     };
-    private SpannableStringBuilder scoresWaitText;
-    private boolean iChoseToLeave = false;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +134,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {
-                                iChoseToLeave = true;
+                                //!! iChoseToLeave = true;
                                 gameViewModel.onPlayerLeavingGame();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
                             }
@@ -198,24 +203,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 finishAffinity(); // close the app
             }
         });
-        gameViewModel.getGameEndedEvent().observe(this, mess -> {
+        gameViewModel.getGameEndedEvent().observe(this, messageId -> {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "gameEndedEvent.observe(" + mess + ')');
+                Log.d(TAG, "gameEndedEvent.observe(" + messageId + ')');
             }
+            tcpService.stopNetworking();
             stopService(new Intent(this, TcpService.class));
-            int messageId;
-            if (iChoseToLeave) {
-                if (gameViewModel.getIsHost()) {
-                    messageId = R.string.youEndedGame;
-                } else {
-                    messageId = R.string.playerLeft;
-                }
-            } else {
-                messageId = R.string.endedByHost;
-            }
             String message = getString(messageId);
-            // put above code into gameViewModel, and pass result in gameEndedEvent;
-            //!! String message = getString(iChoseToLeave ? R.string.playerLeft : R.string.endedByHost);
             GameEndedDialog dialog = new GameEndedDialog();
             Bundle b = new Bundle();
             b.putString("message", message);
@@ -227,10 +221,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 tcpService.sendAnswer(gameViewModel.getQuestionSequence(), answer);
             }
         });
+        gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
+            tcpService.connect(hostIpAddress, playerName, gameViewModel);
+        });
+        gameViewModel.getAnswersEvent().observe(this, answers -> {
+            tcpService.sendToAll(answers);
+        });
         gameViewModel.getSubmitVoteEvent().observe(this, position -> {
             if (position != null) {
                 tcpService.sendVote(gameViewModel.getQuestionSequence(), position);
             }
+        });
+        gameViewModel.getPlayerLeavingGameEvent().observe(this, listen -> {
+            if (tcpService != null) {
+                tcpService.sendToAll(Constants.Protocol.END_GAME.name());
+            }
+        });
+        gameViewModel.getListenForHostBroadcastLiveData().observe(this, listen -> {
+            WifiManager wifi =
+                    (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
+            tcpService.listenForHostBroadcast(wifi, gameViewModel);
         });
         LoginDialogFragment loginDialog;
         if (savedInstanceState == null) {
@@ -327,6 +337,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override // LoginDialogListener
     public void onHostButton(String playerName) {
+        this.playerName = playerName;
+        this.isHost = true;
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
