@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import jarden.tcp.TcpService;
 
@@ -126,7 +125,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                int confirmMessage = gameViewModel.getIsHost() ?
+                int confirmMessage = isHost ?
                         R.string.confirm_host_leaving : R.string.confirm_leaving;
                 showAlertDialog(confirmMessage,
                         new AlertDialogListener() {
@@ -144,26 +143,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 this,
                 hostState -> {
                     if (hostState == Constants.HostState.READY_FOR_NEXT_QUESTION) {
-                        tcpService.sendToAll(gameViewModel.getNamedAnswersMessage());
                         hostPromptView.setText(R.string.ready_for_next_question);
+                    } else if (hostState == Constants.HostState.AWAITING_PLAYERS) {
+                        hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
+                    } else if (hostState == Constants.HostState.PLAYER_JOINED) {
+                        int ct = gameViewModel.getPlayersCount();
+                        String playerName = gameViewModel.getLastJoinedPlayerName();
+                        hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
+                    } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
+                        int ct = gameViewModel.getNotAnsweredCount();
+                        hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
+                    } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
+                        int ct = gameViewModel.getNotVotedCount();
+                        hostPromptView.setText(getString(R.string.waiting_for_ct_votes, ct));
+                    } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
+                        hostPromptView.setText(R.string.duplicatePlayerName);
                     } else {
-                        if (hostState == Constants.HostState.AWAITING_PLAYERS) {
-                            hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
-                        } else if (hostState == Constants.HostState.PLAYER_JOINED) {
-                            int ct = gameViewModel.getPlayersCount();
-                            String playerName = gameViewModel.getLastJoinedPlayerName();
-                            hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
-                        } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
-                            int ct = gameViewModel.getNotAnsweredCount();
-                            hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
-                        } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
-                            int ct = gameViewModel.getNotVotedCount();
-                            hostPromptView.setText(getString(R.string.waiting_for_ct_votes, ct));
-                        } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
-                            hostPromptView.setText(R.string.duplicatePlayerName);
-                        } else {
-                            hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
-                        }
+                        hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
                     }
                 });
         gameViewModel.getPlayerStateLiveData()
@@ -191,12 +187,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 playerPromptView.setText(promptId);
                             }
                         });
-        final LiveData<String> currentFragmentTagLiveData =
-                gameViewModel.getCurrentFragmentTagLiveData();
-        currentFragmentTagLiveData.observe(this, this::requestShowFragment);
+        gameViewModel.getCurrentFragmentTagLiveData().observe(this, this::requestShowFragment);
         gameViewModel.getExceptionLiveData().observe(this,exception -> {
             if (exception != null) {
-                gameViewModel.onPlayerLeavingGame();
+                //!! gameViewModel.onPlayerLeavingGame();
                 finishAffinity(); // close the app
             }
         });
@@ -369,6 +363,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onGameEndedAcknowledged() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onGameEndedAcknowledged()");
+        }
         finish();
     }
 

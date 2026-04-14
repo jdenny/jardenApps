@@ -159,9 +159,6 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             playerStateLiveData.setValue(PlayerState.AWAITING_ANSWERS);
         }
     }
-    public void setAnswersLiveData(AllAnswers allAnswers) {
-        answersLiveData.setValue(allAnswers);
-    }
     public LiveData<AllAnswers> getAnswersLiveData() {
         return answersLiveData;
     }
@@ -219,6 +216,9 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "all votes received for current question");
             }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                answersEventLiveData.setValue(getNamedAnswersMessage());
+            });
             setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
         } else {
             setHostStateLiveData(HostState.AWAITING_CT_VOTES);
@@ -328,14 +328,16 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerDisconnected(" + playerName + ")");
         }
-        if (players.containsKey(playerName)) { // check not already removed
-            leftPlayers.put(playerName, players.get(playerName));
-            players.remove(playerName);
-            HostState hostState = hostStateLiveData.getValue();
-            if (hostState == HostState.AWAITING_CT_ANSWERS) {
-                checkForAllAnswers();
-            } else if (hostState == HostState.AWAITING_CT_VOTES) {
-                checkForAllVotes();
+        if (playerName != null) {
+            if (players.containsKey(playerName)) { // check not already removed
+                leftPlayers.put(playerName, players.get(playerName));
+                players.remove(playerName);
+                HostState hostState = hostStateLiveData.getValue();
+                if (hostState == HostState.AWAITING_CT_ANSWERS) {
+                    checkForAllAnswers();
+                } else if (hostState == HostState.AWAITING_CT_VOTES) {
+                    checkForAllVotes();
+                }
             }
         }
     }
@@ -377,7 +379,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
         List<String> answersList = Arrays.asList(answers);
         currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        setAnswersLiveData(new AllAnswers(currentQuestion, answersList, false));
+        answersLiveData.setValue(new AllAnswers(currentQuestion, answersList, false));
     }
     private void showNamedAnswers(String message) {
         String[] tokens = message.split("\\|");
@@ -402,7 +404,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             tokenIndex += 4;
         }
         currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        setAnswersLiveData(new AllAnswers(currentQuestion, answersList, true, isCorrect,
+        answersLiveData.setValue(new AllAnswers(currentQuestion, answersList, true, isCorrect,
                 linesVotedForMe));
     }
     @Override // TcpPlayerClient.Listener; message sent from host to player
@@ -471,6 +473,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         }
         if (!isPlayerLeavingGame) {
             new Handler(Looper.getMainLooper()).post(() -> {
+                onPlayerLeavingGame();
                 exceptionLiveData.setValue(e);
             });
         }
@@ -501,9 +504,9 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerLeavingGame(); isPlayerLeavingGame=" + isPlayerLeavingGame);
         }
-        iChoseToLeave = true;
         if (!isPlayerLeavingGame) {
             isPlayerLeavingGame = true;
+            iChoseToLeave = true;
             if (isHost) {
                 playerLeavingGameEvent.setValue(true);
             } else {
