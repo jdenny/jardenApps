@@ -190,7 +190,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         gameViewModel.getCurrentFragmentTagLiveData().observe(this, this::requestShowFragment);
         gameViewModel.getExceptionLiveData().observe(this,exception -> {
             if (exception != null) {
-                //!! gameViewModel.onPlayerLeavingGame();
                 finishAffinity(); // close the app
             }
         });
@@ -209,7 +208,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         });
         gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
             if (answer != null) {
-                tcpService.sendAnswer(gameViewModel.getQuestionSequence(), answer);
+                // note: questionSequence not used for this event, so sending zero
+                // for consistency with other events; similarly sendVote()
+                tcpService.sendAnswer(0, answer);
             }
         });
         gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
@@ -220,7 +221,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         });
         gameViewModel.getSubmitVoteEvent().observe(this, position -> {
             if (position != null) {
-                tcpService.sendVote(gameViewModel.getQuestionSequence(), position);
+                tcpService.sendVote(0, position);
             }
         });
         gameViewModel.getPlayerLeavingGameEvent().observe(this, listen -> {
