@@ -146,10 +146,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         hostPromptView.setText(R.string.ready_for_next_question);
                     } else if (hostState == Constants.HostState.AWAITING_PLAYERS) {
                         hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
+                    /*!!
                     } else if (hostState == Constants.HostState.PLAYER_JOINED) {
                         int ct = gameViewModel.getPlayersCount();
                         String playerName = gameViewModel.getLastJoinedPlayerName();
                         hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
+                     */
                     } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
                         int ct = gameViewModel.getNotAnsweredCount();
                         hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
@@ -162,6 +164,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
                     }
                 });
+        gameViewModel.getPlayerJoiningEvent().observe(this, playerData -> {
+            hostPromptView.setText(getString(R.string.player_joined, playerData.joinedPlayerName,
+                    playerData.playerCount));
+        });
         gameViewModel.getPlayerStateLiveData()
                 .observe(this,
                         playerState -> {
@@ -224,7 +230,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 tcpService.sendVote(0, position);
             }
         });
-        gameViewModel.getPlayerLeavingGameEvent().observe(this, listen -> {
+        gameViewModel.getPlayerLeavingEvent().observe(this, playerCount -> {
             if (tcpService != null) {
                 tcpService.sendToAll(Constants.Protocol.END_GAME.name());
             }
@@ -304,12 +310,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Constants.HostState state = gameViewModel.getHostStateLiveData().getValue();
             if (state == Constants.HostState.AWAITING_CT_ANSWERS ||
                     state == Constants.HostState.AWAITING_CT_VOTES) {
-                showAlertDialog(R.string.confirm_skip_question, new AlertDialogListener() {
-                    @Override
-                    public void onAlertDialogPositive() {
-                        sendNextQuestion();
-                    }
-                }, R.drawable.next_question_fish_transparent);
+                showAlertDialog(R.string.confirm_skip_question, this::sendNextQuestion,
+                        R.drawable.next_question_fish_transparent);
             } else {
                 sendNextQuestion();
             }

@@ -38,14 +38,24 @@ import static jarden.codswallop.Constants.VOTE;
  */
 public class GameViewModel extends AndroidViewModel implements TcpControllerServer.ServerListener,
         TcpPlayerClient.Listener {
-    private final MutableLiveData<Boolean> playerLeavingGameEvent =
+    public final class PlayerJoinedData {
+        public String joinedPlayerName;
+        public int playerCount;
+        public PlayerJoinedData(String joinedPlayerName, int playerCount) {
+            this.joinedPlayerName = joinedPlayerName;
+            this.playerCount = playerCount;
+        }
+    }
+    private final MutableLiveData<PlayerJoinedData> playerJoiningEvent =
+            new MutableLiveData<>();
+    private final MutableLiveData<Integer> playerLeavingEvent =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> listenForHostBroadcastLiveData =
             new MutableLiveData<>();
     private final MutableLiveData<String> hostFoundEvent =
             new MutableLiveData<>();
     private final MutableLiveData<AllAnswers> answersLiveData =
-            new MutableLiveData<>(new AllAnswers(null, null, false, false, null));
+            new MutableLiveData<>();
     private final MutableLiveData<String> answersEventLiveData =
             new MutableLiveData<>();
     private final MutableLiveData<String> currentFragmentTagLiveData =
@@ -111,6 +121,9 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public LiveData<Exception> getExceptionLiveData() {
         return exceptionLiveData;
     }
+    public LiveData<PlayerJoinedData> getPlayerJoiningEvent() {
+        return playerJoiningEvent;
+    }
     public LiveData<Boolean> getAwaitingAnswerLiveData() {
         return awaitingAnswerLiveData;
     }
@@ -149,8 +162,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public LiveData<Boolean> getListenForHostBroadcastLiveData() {
         return listenForHostBroadcastLiveData;
     }
-    public LiveData<Boolean> getPlayerLeavingGameEvent() {
-        return playerLeavingGameEvent;
+    public LiveData<Integer> getPlayerLeavingEvent() {
+        return playerLeavingEvent;
     }
     public void setAnswer(String answer) {
         if (answer != null && !answer.isEmpty()) {
@@ -297,9 +310,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public int getPlayersCount() {
         return (players.size());
     }
+    /*//
     public String getLastJoinedPlayerName() {
         return lastJoinedPlayerName;
     }
+     */
     @Override // TcpControllerServer.Listener
     public void onPlayerConnected(String name) {
         if (BuildConfig.DEBUG) {
@@ -320,7 +335,11 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 players.put(name, player);
             }
             lastJoinedPlayerName = name;
-            setHostStateLiveData(HostState.PLAYER_JOINED);
+            new Handler(Looper.getMainLooper()).post(() -> {
+                playerJoiningEvent.setValue(
+                        new PlayerJoinedData(lastJoinedPlayerName, players.size()));
+            });
+            //!! setHostStateLiveData(HostState.PLAYER_JOINED);
         }
     }
     @Override
@@ -508,7 +527,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             isPlayerLeavingGame = true;
             iChoseToLeave = true;
             if (isHost) {
-                playerLeavingGameEvent.setValue(true);
+                playerLeavingEvent.setValue(players.size());
             } else {
                 endGame();
             }
