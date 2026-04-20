@@ -12,12 +12,15 @@ public class Constants {
         if (ps == PlayerState.AWAITING_QUESTION) {} // returns true
      */
     public enum HostState {
-        AWAITING_PLAYERS, AWAITING_CT_ANSWERS, AWAITING_CT_VOTES,
+        AWAITING_PLAYERS,
+        AWAITING_CT_ANSWERS,
+        AWAITING_CT_VOTES,
         READY_FOR_NEXT_QUESTION, DUPLICATE_PLAYER_NAME
     }
     public enum PlayerState {
         // used by QuestionFragment
-        AWAITING_HOST_IP, AWAITING_FIRST_QUESTION, SUPPLY_ANSWER, AWAITING_ANSWERS,
+        AWAITING_HOST_IP, AWAITING_FIRST_QUESTION,
+        SUPPLY_ANSWER, AWAITING_ANSWERS,
         // used by AnswerFragment
         SUPPLY_VOTE, AWAITING_VOTES, AWAITING_NEXT_QUESTION
     }

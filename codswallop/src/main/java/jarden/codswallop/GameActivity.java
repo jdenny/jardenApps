@@ -85,7 +85,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TcpService tcpService;
     private String playerName;
     private boolean isHost = false;
-
     private boolean isBound = false;
     private SpannableStringBuilder scoresWaitText;
 
@@ -102,6 +101,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             tcpService = null;
         }
     };
+    private Constants.HostState hostState;
 
     @Override // Activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,17 +146,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         hostPromptView.setText(R.string.ready_for_next_question);
                     } else if (hostState == Constants.HostState.AWAITING_PLAYERS) {
                         hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
-                    } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
-                        int ct = gameViewModel.getNotAnsweredCount();
-                        hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
-                    } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
-                        int ct = gameViewModel.getNotVotedCount();
-                        hostPromptView.setText(getString(R.string.waiting_for_ct_votes, ct));
                     } else if (hostState == Constants.HostState.DUPLICATE_PLAYER_NAME) {
                         hostPromptView.setText(R.string.duplicatePlayerName);
-                    } else {
+                    } else if (hostState != Constants.HostState.AWAITING_CT_VOTES &&
+                            hostState != Constants.HostState.AWAITING_CT_ANSWERS) {
                         hostPromptView.setText(getString(R.string.unknown_hoststate, hostState));
                     }
+                    this.hostState = hostState;
                 });
         gameViewModel.getPlayerJoiningEvent().observe(this, playerData -> {
             hostPromptView.setText(getString(R.string.player_joined, playerData.joinedPlayerName,
@@ -193,7 +189,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 finishAffinity(); // close the app
             }
         });
-        gameViewModel.getGameEndedEvent().observe(this, messageId -> {
+        gameViewModel.getGameEndedEvent().observe(this,messageId -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "gameEndedEvent.observe(" + messageId + ')');
             }
@@ -206,22 +202,37 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-        gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
+        gameViewModel.getSubmitAnswerEvent().observe(this,answer -> {
             if (answer != null) {
                 // note: questionSequence not used for this event, so sending zero
                 // for consistency with other events; similarly sendVote()
                 tcpService.sendAnswer(0, answer);
             }
         });
-        gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
+        gameViewModel.getHostFoundEvent().observe(this,hostIpAddress -> {
             tcpService.connect(hostIpAddress, playerName, gameViewModel);
         });
-        gameViewModel.getAnswersEvent().observe(this, answers -> {
+        gameViewModel.getNextQuestionEvent().observe(this,question -> {
+            tcpService.sendToAll(question);
+        });
+        gameViewModel.getAnswersEvent().observe(this,answers -> {
             tcpService.sendToAll(answers);
         });
-        gameViewModel.getSubmitVoteEvent().observe(this, position -> {
+        gameViewModel.getSubmitVoteEvent().observe(this,position -> {
             if (position != null) {
                 tcpService.sendVote(0, position);
+            }
+        });
+        gameViewModel.getMissingVoteCtLiveData().observe(this, missingVoteCt -> {
+            if (missingVoteCt != null) {
+                hostPromptView.setText(getString(R.string.waiting_for_ct_votes,
+                        missingVoteCt));
+            }
+        });
+        gameViewModel.getMissingAnswerCtLiveData().observe(this, missingAnswerCt -> {
+            if (missingAnswerCt != null) {
+                hostPromptView.setText(getString(R.string.waiting_for_ct_answers,
+                        missingAnswerCt));
             }
         });
         gameViewModel.getHostLeavingEvent().observe(this, hostLeaving -> {
@@ -301,9 +312,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.nextQuestionButton) {
-            Constants.HostState state = gameViewModel.getHostStateLiveData().getValue();
-            if (state == Constants.HostState.AWAITING_CT_ANSWERS ||
-                    state == Constants.HostState.AWAITING_CT_VOTES) {
+            if (hostState == Constants.HostState.AWAITING_CT_ANSWERS ||
+                    hostState == Constants.HostState.AWAITING_CT_VOTES) {
                 showAlertDialog(R.string.confirm_skip_question, this::sendNextQuestion,
                         R.drawable.next_question_fish_transparent);
             } else {
@@ -317,7 +327,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     private void sendNextQuestion() {
-        tcpService.sendToAll(gameViewModel.getNextQuestion());
+        //! tcpService.sendToAll(gameViewModel.getNextQuestion());
         gameViewModel.sendNextQuestion();
     }
     @Override // LoginDialogListener
@@ -332,7 +342,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         tcpService.startHosting(gameViewModel);
     }
     private void setHostViews() {
-        if (gameViewModel.getIsHost()) {
+        if (isHost) {
             hostViewsLayout.setVisibility(View.VISIBLE);
             int qaCount = gameViewModel.getQuestionCount();
             Toast.makeText(this, qaCount + " questions loaded", Toast.LENGTH_LONG).show();

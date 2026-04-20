@@ -54,6 +54,9 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>();
     private final MutableLiveData<String> hostFoundEvent =
             new MutableLiveData<>();
+    // AllAnswers (named or not) now available
+    private final MutableLiveData<String> nextQuestionEvent =
+            new MutableLiveData<>();
     private final MutableLiveData<AllAnswers> answersLiveData =
             new MutableLiveData<>();
     private final MutableLiveData<String> answersEventLiveData =
@@ -66,6 +69,8 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     private final MutableLiveData<Integer> gameEndedEvent = new MutableLiveData<>();
     private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
     private final MutableLiveData<Integer> submitVoteEvent = new MutableLiveData<>();
+    private final MutableLiveData<Integer> missingAnswerCtLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> missingVoteCtLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingAnswerLiveData =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingVoteLiveData =
@@ -95,37 +100,23 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         prefs = application.getSharedPreferences(
                 GAME_PREFS, Context.MODE_PRIVATE);
     }
-    // public void attachService(TcpService tcpService) {
-    //    this.tcpService = tcpService;
-        /* Advice from ChatGPT: If tcpService is null at the point of joinGame(), startHosting(),
-         // sendMessage(), add this instance variable:
-         // private final List<Runnable> pendingServiceActions = new ArrayList<>();
-         // add the code below to attachService():
-        for (Runnable action : pendingServiceActions) {
-            action.run();
-        }
-        pendingServiceActions.clear();
-         */
-        // then, delay calls if tcpService is null, e.g.
-        /*
-        public void sendMessage(String msg) {
-            Runnable action = () -> tcpService.sendMessage(msg);
-            if (tcpService != null) {
-                action.run();
-            } else {
-                pendingServiceActions.add(action);
-            }
-        }
-         */
-   // }
     public LiveData<Exception> getExceptionLiveData() {
         return exceptionLiveData;
     }
     public LiveData<PlayerJoinedData> getPlayerJoiningEvent() {
         return playerJoiningEvent;
     }
+    public LiveData<String> getNextQuestionEvent() {
+        return nextQuestionEvent;
+    }
     public LiveData<Boolean> getAwaitingAnswerLiveData() {
         return awaitingAnswerLiveData;
+    }
+    public LiveData<Integer> getMissingVoteCtLiveData() {
+        return missingVoteCtLiveData;
+    }
+    public LiveData<Integer> getMissingAnswerCtLiveData() {
+        return missingAnswerCtLiveData;
     }
     public LiveData<PlayerState> getPlayerStateLiveData() {
         return playerStateLiveData;
@@ -228,31 +219,39 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             }
         }
     }
-    private void checkForAllVotes() {
-        if (getVotesCt() >= (players.size())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "all votes received for current question");
-            }
-            new Handler(Looper.getMainLooper()).post(() -> {
-                answersEventLiveData.setValue(getNamedAnswersMessage());
-            });
-            setHostStateLiveData(HostState.READY_FOR_NEXT_QUESTION);
-        } else {
-            setHostStateLiveData(HostState.AWAITING_CT_VOTES);
-        }
-    }
     private void checkForAllAnswers() {
-        if (getAnswersCt() >= (players.size())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "all answers received for current question");
-            }
-            new Handler(Looper.getMainLooper()).post(() -> {
-                answersEventLiveData.setValue(getAllAnswersMessage());
-            });
-            setHostStateLiveData(HostState.AWAITING_CT_VOTES);
-        } else {
-            setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "checkForAllAnswers");
         }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (getAnswersCt() >= (players.size())) {
+                answersEventLiveData.setValue(getAllAnswersMessage());
+                waitingForVotes();
+            } else {
+                waitingForAnswers();
+            }
+        });
+    }
+    private void checkForAllVotes() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "checkForAllVotes");
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (getVotesCt() >= (players.size())) {
+                answersEventLiveData.setValue(getNamedAnswersMessage());
+                hostStateLiveData.setValue(HostState.READY_FOR_NEXT_QUESTION);
+            } else {
+                waitingForVotes();
+            }
+        });
+    }
+    private void waitingForAnswers() {
+        missingAnswerCtLiveData.setValue(getNotAnsweredCount());
+        hostStateLiveData.setValue(HostState.AWAITING_CT_ANSWERS);
+    }
+    private void waitingForVotes() {
+        missingVoteCtLiveData.setValue(getNotVotedCount());
+        hostStateLiveData.setValue(HostState.AWAITING_CT_VOTES);
     }
     private int getVotesCt() {
         int votesCt = 0;
@@ -370,7 +369,8 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         }
     }
     public void sendNextQuestion() {
-        setHostStateLiveData(HostState.AWAITING_CT_ANSWERS);
+        nextQuestionEvent.setValue(getNextQuestion());
+        waitingForAnswers();
     }
     public String getNextQuestion() {
         try {
