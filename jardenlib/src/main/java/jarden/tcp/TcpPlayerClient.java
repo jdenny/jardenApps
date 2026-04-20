@@ -136,7 +136,7 @@ public class TcpPlayerClient {
             lock.acquire();
             DatagramSocket socket = null;
             try {
-                socket = new DatagramSocket(TcpControllerServer.UDP_PORT);
+                socket = new DatagramSocket(TcpHostServer.UDP_PORT);
                 socket.setBroadcast(true);
                 byte[] buf = new byte[1024];
                 if (BuildConfig.DEBUG) {

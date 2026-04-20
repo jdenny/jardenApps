@@ -20,7 +20,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import jarden.quiz.EndOfQuestionsException;
-import jarden.tcp.TcpControllerServer;
+import jarden.tcp.TcpHostServer;
 import jarden.tcp.TcpPlayerClient;
 
 import static jarden.codswallop.Constants.ALL_ANSWERS;
@@ -36,7 +36,7 @@ import static jarden.codswallop.Constants.VOTE;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
-public class GameViewModel extends AndroidViewModel implements TcpControllerServer.ServerListener,
+public class GameViewModel extends AndroidViewModel implements TcpHostServer.ServerListener,
         TcpPlayerClient.Listener {
     public final class PlayerJoinedData {
         public String joinedPlayerName;
@@ -48,7 +48,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     private final MutableLiveData<PlayerJoinedData> playerJoiningEvent =
             new MutableLiveData<>();
-    private final MutableLiveData<Integer> playerLeavingEvent =
+    private final MutableLiveData<Boolean> hostLeavingEvent =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> listenForHostBroadcastLiveData =
             new MutableLiveData<>();
@@ -62,15 +62,14 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             new MutableLiveData<>(QUESTION);
     private final MutableLiveData<PlayerState> playerStateLiveData =
             new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
-    private final MutableLiveData<String> questionLiveData =
-            new MutableLiveData<>();
-    private final MutableLiveData<Integer> gameEndedEvent = new MutableLiveData<Integer>();
+    private final MutableLiveData<String> questionLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> gameEndedEvent = new MutableLiveData<>();
     private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
     private final MutableLiveData<Integer> submitVoteEvent = new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingAnswerLiveData =
-            new MutableLiveData<>(false);
+            new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingVoteLiveData =
-            new MutableLiveData<>(false);
+            new MutableLiveData<>();
     private final MutableLiveData<HostState> hostStateLiveData =
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
     private final MutableLiveData<Exception> exceptionLiveData =
@@ -78,9 +77,10 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
     private boolean isHost;
+    private boolean gameEnding = false;
     private boolean iChoseToLeave = false;
     private String thisPlayerName;
-    private boolean isPlayerLeavingGame = false;
+    private boolean isPlayerLeaving = false;
     private Map<String, Player> players;
     private Map<String, Player> leftPlayers;
     private QuestionManager questionManager;
@@ -162,8 +162,8 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     public LiveData<Boolean> getListenForHostBroadcastLiveData() {
         return listenForHostBroadcastLiveData;
     }
-    public LiveData<Integer> getPlayerLeavingEvent() {
-        return playerLeavingEvent;
+    public LiveData<Boolean> getHostLeavingEvent() {
+        return hostLeavingEvent;
     }
     public void setAnswer(String answer) {
         if (answer != null && !answer.isEmpty()) {
@@ -194,7 +194,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         isHost = true;
         questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
     }
-    @Override  // TcpControllerServer.MessageListener
+    @Override  // TcpHostServer.MessageListener
     // i.e. message sent from player to host
     public void onMessageToServer(String playerName, String message) {
         if (BuildConfig.DEBUG) {
@@ -213,8 +213,12 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             if (nameVotedFor.equals(CORRECT)) {
                 currentPlayer.incrementScore();
             } else {
-                if (!nameVotedFor.equals(playerName)) {
-                    players.get(nameVotedFor).incrementScore();
+                try {
+                    if (!nameVotedFor.equals(playerName)) {
+                        players.get(nameVotedFor).incrementScore();
+                    }
+                } catch (NullPointerException e) {
+                    Log.e(TAG, nameVotedFor + " no longer connected");
                 }
             }
             checkForAllVotes();
@@ -315,7 +319,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         return lastJoinedPlayerName;
     }
      */
-    @Override // TcpControllerServer.Listener
+    @Override // TcpHostServer.Listener
     public void onPlayerConnected(String name) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerConnected(" + name + ')');
@@ -339,15 +343,14 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
                 playerJoiningEvent.setValue(
                         new PlayerJoinedData(lastJoinedPlayerName, players.size()));
             });
-            //!! setHostStateLiveData(HostState.PLAYER_JOINED);
         }
     }
-    @Override
+    @Override // TcpHostServer.ServerListener
     public void onPlayerDisconnected(String playerName) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerDisconnected(" + playerName + ")");
         }
-        if (playerName != null) {
+        if (!gameEnding && playerName != null) {
             if (players.containsKey(playerName)) { // check not already removed
                 leftPlayers.put(playerName, players.get(playerName));
                 players.remove(playerName);
@@ -360,7 +363,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
             }
         }
     }
-    @Override // TcpControllerServer.MessageListener
+    @Override // TcpHostServer.MessageListener
     public void onServerStarted() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onServerStarted()");
@@ -457,7 +460,7 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         });
     }
     private void endGame() {
-        isPlayerLeavingGame = true;
+        isPlayerLeaving = true;
         int messageId;
         if (iChoseToLeave) {
             if (isHost) {
@@ -490,9 +493,9 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         if (BuildConfig.DEBUG) {
             Log.e(TAG, e.toString());
         }
-        if (!isPlayerLeavingGame) {
+        if (!isPlayerLeaving) {
             new Handler(Looper.getMainLooper()).post(() -> {
-                onPlayerLeavingGame();
+                onPlayerLeaving();
                 exceptionLiveData.setValue(e);
             });
         }
@@ -519,15 +522,16 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
         }
         listenForHostBroadcastLiveData.setValue(true);
     }
-    public void onPlayerLeavingGame() {
+    public void onPlayerLeaving() {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onPlayerLeavingGame(); isPlayerLeavingGame=" + isPlayerLeavingGame);
+            Log.d(TAG, "onPlayerLeaving(); isPlayerLeaving=" + isPlayerLeaving);
         }
-        if (!isPlayerLeavingGame) {
-            isPlayerLeavingGame = true;
+        if (!isPlayerLeaving) {
+            isPlayerLeaving = true;
             iChoseToLeave = true;
             if (isHost) {
-                playerLeavingEvent.setValue(players.size());
+                this.gameEnding = true;
+                hostLeavingEvent.setValue(true);
             } else {
                 endGame();
             }
@@ -535,8 +539,5 @@ public class GameViewModel extends AndroidViewModel implements TcpControllerServ
     }
     public int getQuestionCount() {
         return questionManager.getQuestionCount();
-    }
-    public int getQuestionSequence() {
-        return questionSequence;
     }
 }

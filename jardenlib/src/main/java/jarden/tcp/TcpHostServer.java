@@ -33,7 +33,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  *    upon receiving a connection, it creates a ClientHandler to handle conversations
  *    with that device.
  */
-public class TcpControllerServer {
+public class TcpHostServer {
 
     public interface ServerListener {
         void onMessageToServer(String playerName, String message);
@@ -42,7 +42,7 @@ public class TcpControllerServer {
         void onServerStarted();
     }
 
-    private static final String TAG = "TcpControllerServer";
+    private static final String TAG = "TcpHostServer";
     public static final int TCP_PORT = 50001;
     public static final int UDP_PORT = 45454;
     private final ExecutorService executor =
@@ -51,11 +51,11 @@ public class TcpControllerServer {
             Executors.newScheduledThreadPool(1);
     private final Map<String, ClientHandler> clients =
             new ConcurrentHashMap<>();
-    private final ServerListener listener;
+    private final ServerListener serverListener;
     private ServerSocket serverSocket;
     private volatile boolean running = false;
-    public TcpControllerServer(ServerListener listener) {
-        this.listener = listener;
+    public TcpHostServer(ServerListener listener) {
+        this.serverListener = listener;
     }
 
     // ----------------------------
@@ -66,7 +66,7 @@ public class TcpControllerServer {
         executor.execute(() -> {
             try {
                 serverSocket = new ServerSocket(TCP_PORT);
-                listener.onServerStarted();
+                serverListener.onServerStarted();
                 while (running) {
                     Socket tcpSocket = serverSocket.accept();
                     ClientHandler handler = new ClientHandler(tcpSocket);
@@ -149,10 +149,10 @@ public class TcpControllerServer {
                 }
                 playerName = join.split("\\|", 2)[1];
                 clients.put(playerName, this);
-                listener.onPlayerConnected(playerName);
+                serverListener.onPlayerConnected(playerName);
                 String line;
                 while ((line = in.readLine()) != null) {
-                    listener.onMessageToServer(playerName, line);
+                    serverListener.onMessageToServer(playerName, line);
                 }
             } catch (IOException e) {
                 if (BuildConfig.DEBUG) {
@@ -175,7 +175,7 @@ public class TcpControllerServer {
             } catch (IOException ignored) {}
             if (playerName != null) {
                 clients.remove(playerName);
-                listener.onPlayerDisconnected(playerName);
+                serverListener.onPlayerDisconnected(playerName);
                 playerName = null;
             }
         }

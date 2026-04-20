@@ -131,7 +131,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {
-                                gameViewModel.onPlayerLeavingGame();
+                                gameViewModel.onPlayerLeaving();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
                             }
                         }, R.drawable.leaving_fish_transparent);
@@ -146,12 +146,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         hostPromptView.setText(R.string.ready_for_next_question);
                     } else if (hostState == Constants.HostState.AWAITING_PLAYERS) {
                         hostPromptView.setText(R.string.wait_for_players_then_broadcast_host);
-                    /*!!
-                    } else if (hostState == Constants.HostState.PLAYER_JOINED) {
-                        int ct = gameViewModel.getPlayersCount();
-                        String playerName = gameViewModel.getLastJoinedPlayerName();
-                        hostPromptView.setText(getString(R.string.player_joined, playerName, ct));
-                     */
                     } else if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
                         int ct = gameViewModel.getNotAnsweredCount();
                         hostPromptView.setText(getString(R.string.waiting_for_ct_answers, ct));
@@ -230,7 +224,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 tcpService.sendVote(0, position);
             }
         });
-        gameViewModel.getPlayerLeavingEvent().observe(this, playerCount -> {
+        gameViewModel.getHostLeavingEvent().observe(this, hostLeaving -> {
             if (tcpService != null) {
                 tcpService.sendToAll(Constants.Protocol.END_GAME.name());
             }

@@ -21,7 +21,7 @@ public class TcpService extends Service {
     private static final String TAG = "TcpService";
     public static final String CHANNEL_ID = "codswallop_network";
     private final IBinder binder = new LocalBinder();
-    private TcpControllerServer tcpControllerServer;
+    private TcpHostServer tcpHostServer;
     private TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
     private boolean isForeground = false;
     private WifiManager.WifiLock wifiLock;
@@ -74,10 +74,10 @@ public class TcpService extends Service {
         tcpPlayerClient.listenForHostBroadcast(wifi, listener);
     }
     public void sendToAll(String message) {
-        tcpControllerServer.sendToAll(message);
+        tcpHostServer.sendToAll(message);
     }
     public void sendToPlayer(String playerName, String message) {
-        tcpControllerServer.sendToPlayer(playerName, message);
+        tcpHostServer.sendToPlayer(playerName, message);
     }
     public void sendMultipleHostBroadcasts(int count) {
         if (hostIpAddress == null) {
@@ -92,22 +92,22 @@ public class TcpService extends Service {
                     (ipInt >> 16 & 0xff),
                     (ipInt >> 24 & 0xff));
         }
-        tcpControllerServer.sendMultipleHostBroadcasts(hostIpAddress, count);
+        tcpHostServer.sendMultipleHostBroadcasts(hostIpAddress, count);
     }
     public class LocalBinder extends Binder {
         public TcpService getService() {
             return TcpService.this;
         }
     }
-    public void startHosting(TcpControllerServer.ServerListener serverListener) {
-        tcpControllerServer = new TcpControllerServer(serverListener);
-        tcpControllerServer.start();
+    public void startHosting(TcpHostServer.ServerListener serverListener) {
+        tcpHostServer = new TcpHostServer(serverListener);
+        tcpHostServer.start();
     }
     public void connect(String hostIp,
                          String playerName,
                          TcpPlayerClient.Listener listener) {
         tcpPlayerClient.connect(hostIp,
-                TcpControllerServer.TCP_PORT,
+                TcpHostServer.TCP_PORT,
                 playerName,
                 listener);
     }
@@ -125,9 +125,9 @@ public class TcpService extends Service {
                 tcpPlayerClient.disconnect();
                 tcpPlayerClient = null;
             }
-            if (tcpControllerServer != null) {
-                tcpControllerServer.stop();
-                tcpControllerServer = null;
+            if (tcpHostServer != null) {
+                tcpHostServer.stop();
+                tcpHostServer = null;
             }
             releaseWifiLock();
             stopForeground(true);
