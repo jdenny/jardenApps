@@ -8,13 +8,18 @@ import android.content.ServiceConnection;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -114,6 +120,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         startService(intent);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         setContentView(R.layout.activity_game);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         Button nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
@@ -138,7 +146,66 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
+        makeObservations();
+        LoginDialogFragment loginDialog;
+        if (savedInstanceState == null) {
+            loginDialog = new LoginDialogFragment();
+            loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
+        }
+        setHostViews();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection.
+        switch (item.getItemId()) {
+            case R.id.setQuestionNumber:
+                showQuestionNumberDialog();
+                return true;
+            case R.id.sendIPAddress:
+                tcpService.sendMultipleHostBroadcasts(5);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private void showQuestionNumberDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter question number");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setHint("question number");
+        builder.setView(input);
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String value = input.getText().toString().trim();
+            if (!value.isEmpty()) {
+                int questionNumber = Integer.parseInt(value);
+                gameViewModel.setQuestionSequence(questionNumber);
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+    private void makeScoresWaitText() {
+        String highlight = getString(R.string.scoresHighlighted);
+        String fullText = getString(R.string.scores_wait_for_question, highlight);
+        SpannableStringBuilder builder = new SpannableStringBuilder(fullText);
+        int start = fullText.indexOf(highlight);
+        int end = start + highlight.length();
+        builder.setSpan(new BackgroundColorSpan(ContextCompat.getColor(this, R.color.voted_for_me)),
+                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        scoresWaitText = builder;
+    }
+    private void makeObservations() {
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        gameViewModel.getQuestionsLoadedEvent().observe(this, qaCount -> {
+            Toast.makeText(this, qaCount + " questions loaded", Toast.LENGTH_LONG).show();
+        });
         gameViewModel.getHostStateLiveData().observe(
                 this,
                 hostState -> {
@@ -184,12 +251,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
         gameViewModel.getCurrentFragmentTagLiveData().observe(this, this::requestShowFragment);
-        gameViewModel.getExceptionLiveData().observe(this,exception -> {
+        gameViewModel.getExceptionLiveData().observe(this, exception -> {
             if (exception != null) {
                 finishAffinity(); // close the app
             }
         });
-        gameViewModel.getGameEndedEvent().observe(this,messageId -> {
+        gameViewModel.getGameEndedEvent().observe(this, messageId -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "gameEndedEvent.observe(" + messageId + ')');
             }
@@ -202,23 +269,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-        gameViewModel.getSubmitAnswerEvent().observe(this,answer -> {
+        gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
             if (answer != null) {
                 // note: questionSequence not used for this event, so sending zero
                 // for consistency with other events; similarly sendVote()
                 tcpService.sendAnswer(0, answer);
             }
         });
-        gameViewModel.getHostFoundEvent().observe(this,hostIpAddress -> {
+        gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
             tcpService.connect(hostIpAddress, playerName, gameViewModel);
         });
-        gameViewModel.getNextQuestionEvent().observe(this,question -> {
+        gameViewModel.getNextQuestionEvent().observe(this, question -> {
             tcpService.sendToAll(question);
         });
-        gameViewModel.getAnswersEvent().observe(this,answers -> {
+        gameViewModel.getAnswersEvent().observe(this, answers -> {
             tcpService.sendToAll(answers);
         });
-        gameViewModel.getSubmitVoteEvent().observe(this,position -> {
+        gameViewModel.getSubmitVoteEvent().observe(this, position -> {
             if (position != null) {
                 tcpService.sendVote(0, position);
             }
@@ -245,22 +312,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
             tcpService.listenForHostBroadcast(wifi, gameViewModel);
         });
-        LoginDialogFragment loginDialog;
-        if (savedInstanceState == null) {
-            loginDialog = new LoginDialogFragment();
-            loginDialog.show(getSupportFragmentManager(), LOGIN_DIALOG);
-        }
-        setHostViews();
-    }
-    private void makeScoresWaitText() {
-        String highlight = getString(R.string.scoresHighlighted);
-        String fullText = getString(R.string.scores_wait_for_question, highlight);
-        SpannableStringBuilder builder = new SpannableStringBuilder(fullText);
-        int start = fullText.indexOf(highlight);
-        int end = start + highlight.length();
-        builder.setSpan(new BackgroundColorSpan(ContextCompat.getColor(this, R.color.voted_for_me)),
-                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        scoresWaitText = builder;
     }
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
@@ -344,8 +395,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void setHostViews() {
         if (isHost) {
             hostViewsLayout.setVisibility(View.VISIBLE);
-            int qaCount = gameViewModel.getQuestionCount();
-            Toast.makeText(this, qaCount + " questions loaded", Toast.LENGTH_LONG).show();
+            setTitle(R.string.host_control);
         }
     }
     @Override // LoginDialogListener

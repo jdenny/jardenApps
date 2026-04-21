@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +38,7 @@ import static jarden.codswallop.Constants.VOTE;
  * Created by john.denny@gmail.com on 11/02/2026.
  */
 public class GameViewModel extends AndroidViewModel implements TcpHostServer.ServerListener,
-        TcpPlayerClient.Listener {
+        TcpPlayerClient.Listener, QuestionManager.Listener {
     public final class PlayerJoinedData {
         public String joinedPlayerName;
         public int playerCount;
@@ -46,6 +47,8 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             this.playerCount = playerCount;
         }
     }
+    private final MutableLiveData<Integer> questionsLoadedEvent =
+            new MutableLiveData<>();
     private final MutableLiveData<PlayerJoinedData> playerJoiningEvent =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> hostLeavingEvent =
@@ -99,6 +102,9 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         super(application);
         prefs = application.getSharedPreferences(
                 GAME_PREFS, Context.MODE_PRIVATE);
+    }
+    public LiveData<Integer> getQuestionsLoadedEvent() {
+        return questionsLoadedEvent;
     }
     public LiveData<Exception> getExceptionLiveData() {
         return exceptionLiveData;
@@ -181,9 +187,13 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public void startHost() {
         players = new ConcurrentHashMap<>();
         leftPlayers = new ConcurrentHashMap<>();
-        questionManager = new QuestionManager(getApplication().getResources());
+        questionManager = new QuestionManager(getApplication().getResources(), this);
+        //!! questionsLoadedEvent.setValue(questionManager.getQuestionCount());
         isHost = true;
         questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
+    }
+    public void setQuestionSequence(int questionSequence) {
+        this.questionSequence = questionSequence;
     }
     @Override  // TcpHostServer.MessageListener
     // i.e. message sent from player to host
@@ -537,7 +547,12 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             }
         }
     }
-    public int getQuestionCount() {
-        return questionManager.getQuestionCount();
+    @Override // QuestionManager.Listener
+    public void onError(String message) {
+        Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
+    }
+    @Override // QuestionManager.Listener
+    public void onQuestionsLoaded(int questionCount) {
+        questionsLoadedEvent.setValue(questionCount);
     }
 }

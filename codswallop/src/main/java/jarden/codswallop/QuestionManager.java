@@ -19,8 +19,10 @@ import jarden.tcp.HttpClient;
  * Created by john.denny@gmail.com on 12/01/2026.
  */
 public class QuestionManager {
-    private final String TAG = "QuestionManager";
-
+    public interface Listener {
+        void onError(String message);
+        void onQuestionsLoaded(int questionCount);
+    }
     public static class QuestionAnswer {
         public String type;
         public String question;
@@ -36,8 +38,11 @@ public class QuestionManager {
             comment = c;
         }
     }
+    private final String TAG = "QuestionManager";
+    private final Listener listener;
     private final List<QuestionAnswer> questionList = new ArrayList<>();
-    public QuestionManager(Resources resources) {
+    public QuestionManager(Resources resources, Listener listener) {
+        this.listener = listener;
         int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
         try (InputStream is =
                      resources.openRawResource(qaFileId)) {
@@ -61,8 +66,11 @@ public class QuestionManager {
                 }
             });
         } catch (IOException e) {
-            Log.e(TAG, "Failed to load questions: " + e);
-            throw new RuntimeException(e);
+            String message = "Failure during load questions: " + e;
+            Log.e(TAG, message);
+            listener.onError(message);
+        } finally {
+            listener.onQuestionsLoaded(questionList.size());
         }
     }
     private void getQuestionsFromStrings(List<String> lines) {
@@ -75,7 +83,6 @@ public class QuestionManager {
                 } else if (qa.length == 4) {
                     questionList.add(new QuestionAnswer(qa[0].trim(), qa[1].trim(),
                             qa[2].trim(), qa[3].trim()));
-
                 } else {
                     Log.w(TAG, "Skipping malformed line: " + line);
                 }
@@ -92,5 +99,4 @@ public class QuestionManager {
     public int getQuestionCount() {
         return questionList.size();
     }
-
 }

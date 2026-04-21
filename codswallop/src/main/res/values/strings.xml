@@ -41,4 +41,5 @@
     <string name="unknown_hoststate">Unknown hostState: %1$s</string>
     <string name="game_ended">Game Ended</string>
     <string name="youEndedGame">You ended the game for everyone</string>
+    <string name="set_question_number">Set Question Number</string>
 </resources>
