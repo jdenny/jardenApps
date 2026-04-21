@@ -71,6 +71,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView hostPromptView;
     private TextView playerPromptView;
     private View hostViewsLayout;
+    private Button nextQuestionButton;
 
     // Host & Client fields ***************************
     private String currentFragmentTag = null;
@@ -122,7 +123,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Button nextQuestionButton = findViewById(R.id.nextQuestionButton);
+        nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
@@ -372,6 +373,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (viewId == R.id.broadcastHostButton) {
             tcpService.sendMultipleHostBroadcasts(5);
+            nextQuestionButton.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();

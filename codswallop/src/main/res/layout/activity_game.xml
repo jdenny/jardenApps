@@ -41,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next_question"
+                android:visibility="gone"
                 android:textSize="20sp" />
 
             <Button
