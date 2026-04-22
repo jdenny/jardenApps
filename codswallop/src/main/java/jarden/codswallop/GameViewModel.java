@@ -10,33 +10,28 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import jarden.quiz.EndOfQuestionsException;
-import jarden.tcp.TcpHostServer;
 
-import static jarden.codswallop.Constants.ALL_ANSWERS;
-import static jarden.codswallop.Constants.ANSWER;
-import static jarden.codswallop.Constants.CORRECT;
 import static jarden.codswallop.Constants.GAME_PREFS;
 import static jarden.codswallop.Constants.HostState;
-import static jarden.codswallop.Constants.NAMED_ANSWERS;
 import static jarden.codswallop.Constants.PlayerState;
 import static jarden.codswallop.Constants.QUESTION;
 import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
-import static jarden.codswallop.Constants.VOTE;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
-public class GameViewModel extends AndroidViewModel implements TcpHostServer.ServerListener,
+public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer.ServerListener,*/
         QuestionManager.Listener {
+    /*!!
+    public Player getPlayer(String playerName) {
+        return players.get(playerName);
+    } */
+
     public final class PlayerJoinedData {
         public String joinedPlayerName;
         public int playerCount;
@@ -57,8 +52,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>();
     private final MutableLiveData<AllAnswers> answersLiveData =
             new MutableLiveData<>();
-    private final MutableLiveData<String> answersEventLiveData =
-            new MutableLiveData<>();
+    //!! private final MutableLiveData<String> answersEventLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> currentFragmentTagLiveData =
             new MutableLiveData<>(QUESTION);
     private final MutableLiveData<PlayerState> playerStateLiveData =
@@ -73,18 +67,20 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
     private final MutableLiveData<Exception> exceptionLiveData =
             new MutableLiveData<>(null);
+    /*!!
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
+     */
     private boolean isHost;
     private boolean gameEnding = false;
     private boolean iChoseToLeave = false;
     private String thisPlayerName;
     private boolean isPlayerLeaving = false;
-    private Map<String, Player> players;
-    private Map<String, Player> leftPlayers;
+    //!! private Map<String, Player> players;
+    //!! private Map<String, Player> leftPlayers;
     private QuestionManager questionManager;
     private int questionSequence = 21;
-    private final List<String> shuffledNameList = new ArrayList<>();
+    //!! private final List<String> shuffledNameList = new ArrayList<>();
     private final static String TAG = "GameViewModel";
     private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
@@ -115,8 +111,14 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<Integer> getMissingVoteCtLiveData() {
         return missingVoteCtLiveData;
     }
+    public void setMissingVoteCtLiveData(Integer notVotedCt) {
+        missingVoteCtLiveData.setValue(notVotedCt);
+    }
     public LiveData<Integer> getMissingAnswerCtLiveData() {
         return missingAnswerCtLiveData;
+    }
+    public void setMissingAnswerCtLiveData(Integer notAnsweredCt) {
+        missingAnswerCtLiveData.setValue(notAnsweredCt);
     }
     public LiveData<PlayerState> getPlayerStateLiveData() {
         return playerStateLiveData;
@@ -152,9 +154,14 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<Integer> getGameEndedEvent() {
         return gameEndedEvent;
     }
+    /*!!
     public LiveData<String> getAnswersEvent() {
         return answersEventLiveData;
     }
+    public void setAnswersEvent(String answersMessage) {
+        answersEventLiveData.setValue(answersMessage);
+    }
+     */
     public LiveData<Boolean> getListenForHostBroadcastLiveData() {
         return listenForHostBroadcastLiveData;
     }
@@ -192,6 +199,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public void setQuestionSequence(int questionSequence) {
         this.questionSequence = questionSequence;
     }
+    /*!!
     @Override  // TcpHostServer.ServerListener
     // i.e. message sent from player to host
     public void onMessageToServer(String playerName, String message) {
@@ -308,9 +316,11 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         }
         return buffer.toString();
     }
+     */
     public boolean getIsHost() {
         return isHost;
     }
+    /*!!
     public int getNotAnsweredCount() {
         return players.size() - getAnswersCt();
     }
@@ -320,11 +330,12 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public int getPlayersCount() {
         return (players.size());
     }
-    /*//
     public String getLastJoinedPlayerName() {
         return lastJoinedPlayerName;
     }
      */
+
+    /*!!
     @Override // TcpHostServer.ServerListener
     public void onPlayerConnected(String name) {
         if (BuildConfig.DEBUG) {
@@ -375,6 +386,8 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             Log.d(TAG, "onServerStarted()");
         }
     }
+     */
+    /*
     public void sendNextQuestion() {
         nextQuestionEvent.setValue(getNextQuestion());
         waitingForAnswers();
@@ -401,6 +414,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         }
         return nextQuestion;
     }
+     */
     public void endGame() {
         isPlayerLeaving = true;
         int messageId;

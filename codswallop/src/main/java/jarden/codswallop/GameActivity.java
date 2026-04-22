@@ -291,11 +291,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 tcpService.sendToAll(question);
             }
         });
+        /*!!
         gameViewModel.getAnswersEvent().observe(this, answers -> {
             if (answers != null && tcpService != null) {
                 tcpService.sendToAll(answers);
             }
         });
+         */
         gameViewModel.getMissingVoteCtLiveData().observe(this, missingVoteCt -> {
             if (missingVoteCt != null) {
                 hostPromptView.setText(getString(R.string.waiting_for_ct_votes,
@@ -385,7 +387,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void sendNextQuestion() {
         // TODO: why isn't this tcpService.sendNextQuestion()?
-        gameViewModel.sendNextQuestion();
+        //!!?? gameViewModel.sendNextQuestion();
+        tcpService.sendNextQuestion();
     }
     @Override // LoginDialogListener
     public void onHostButton(String playerName) {
@@ -394,7 +397,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
-        tcpService.startHosting(gameViewModel);
+        tcpService.startHosting();
     }
     private void setHostViews() {
         if (gameViewModel.getIsHost()) {

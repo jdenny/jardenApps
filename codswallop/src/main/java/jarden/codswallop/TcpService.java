@@ -20,17 +20,28 @@ import com.jardenconsulting.jardenlib.BuildConfig;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import androidx.core.app.NotificationCompat;
+import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpHostServer;
 import jarden.tcp.TcpPlayerClient;
 
 import static jarden.codswallop.Constants.ALL_ANSWERS;
+import static jarden.codswallop.Constants.ANSWER;
 import static jarden.codswallop.Constants.CORRECT;
 import static jarden.codswallop.Constants.NAMED_ANSWERS;
 import static jarden.codswallop.Constants.QUESTION;
+import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
+import static jarden.codswallop.Constants.VOTE;
 
-public class TcpService extends Service implements TcpPlayerClient.ClientListener {
+    /**
+    Network event (host found) -> TcpService.onHostFound() -> connect()
+    Network event (connected to host) -> TcpService.connected() ->
+        update ViewModel (state only) -> Activity observes -> updates UI
+     */
+public class TcpService extends Service implements TcpHostServer.ServerListener,
+        TcpPlayerClient.ClientListener {
     private static final String TAG = "TcpService";
     public static final String CHANNEL_ID = "codswallop_network";
     private final IBinder binder = new LocalBinder();
@@ -43,8 +54,12 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
     private GameViewModel gameViewModel;
     private String thisPlayerName;
     private String currentQuestion;
+    private final List<String> shuffledNameList = new ArrayList<>();
+    private QuestionManager.QuestionAnswer currentQA;
+    private Map<String, Player> players;
+    private Map<String, Player> leftPlayers;
 
-    @Override
+    @Override // Service
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) {
@@ -58,7 +73,7 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
                 "Codswallop:WifiLock");
         wifiLock.acquire();
     }
-    @Override
+    @Override // Service
     public IBinder onBind(Intent intent) {
         if (!isForeground) {
             startForegroundServiceNotification();
@@ -66,7 +81,7 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
         }
         return binder;
     }
-    @Override
+    @Override  // Service
     public void onDestroy() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onDestroy()");
@@ -75,7 +90,70 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
         releaseWifiLock();
         super.onDestroy();
     }
-    public void releaseWifiLock () {
+    //************************************************
+    // code to implement TcpHostServer.ServerListener
+    //************************************************
+    @Override  // TcpHostServer.ServerListener
+    // i.e. message sent from player to host
+    public void onMessageToServer(String playerName, String message) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "from player: " + playerName + " message: " + message);
+        }
+        Player currentPlayer = players.get(playerName);
+        if (message.startsWith(ANSWER)) {
+            String answer = message.split("\\|", 3)[2];
+            currentPlayer.setAnswer(answer);
+            checkForAllAnswers();
+        } else if (message.startsWith(VOTE)) {
+            String index = message.split("\\|", 3)[2];
+            int indexOfVotedItem = Integer.parseInt(index);
+            String nameVotedFor = shuffledNameList.get(indexOfVotedItem);
+            currentPlayer.setNameVotedFor(nameVotedFor);
+            if (nameVotedFor.equals(CORRECT)) {
+                currentPlayer.incrementScore();
+            } else {
+                try {
+                    if (!nameVotedFor.equals(playerName)) {
+                        players.get(nameVotedFor).incrementScore();
+                    }
+                } catch (NullPointerException e) {
+                    Log.e(TAG, nameVotedFor + " no longer connected");
+                }
+            }
+            checkForAllVotes();
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "unrecognised message received by host: " + message);
+            }
+        }
+    }
+    private void checkForAllAnswers() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "checkForAllAnswers");
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+
+            if (getAnswersCt() >= (players.size())) {
+                sendToAll(getAllAnswersMessage());
+                waitingForVotes();
+            } else {
+                waitingForAnswers();
+            }
+        });
+    }
+    private void checkForAllVotes() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "checkForAllVotes");
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (getVotesCt() >= (players.size())) {
+                answersEventLiveData.setValue(getNamedAnswersMessage());
+                hostStateLiveData.setValue(HostState.READY_FOR_NEXT_QUESTION);
+            } else {
+                waitingForVotes();
+            }
+        });
+    }    public void releaseWifiLock () {
         if (wifiLock != null && wifiLock.isHeld()) {
             wifiLock.release();
         }
@@ -110,12 +188,155 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
         }
         tcpHostServer.sendMultipleHostBroadcasts(hostIpAddress, count);
     }
+    private void waitingForAnswers() {
+        gameViewModel.setMissingAnswerCtLiveData(getNotAnsweredCount());
+        gameViewModel.setHostStateLiveData(Constants.HostState.AWAITING_CT_ANSWERS);
+    }
+    private void waitingForVotes() {
+        gameViewModel.setMissingVoteCtLiveData(getNotVotedCount());
+        gameViewModel.setHostStateLiveData(Constants.HostState.AWAITING_CT_VOTES);
+    }
 
-    /*
-    Network event (host found) -> TcpService.onHostFound() -> connect()
-    Network event (connected to host) -> TcpService.connected() ->
-        update ViewModel (state only) -> Activity observes -> updates UI
-     */
+    //************************************************
+    // code to implement TcpHostServer.ServerListener
+    //************************************************
+    @Override // TcpHostServer.ServerListener
+    public void onPlayerConnected(String name) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onPlayerConnected(" + name + ')');
+        }
+        if (players.containsKey(name)) {
+            Log.d(TAG, "Player name already used: " + name);
+            gameViewModel.setHostStateLiveData(Constants.HostState.DUPLICATE_PLAYER_NAME);
+        } else {
+            if (leftPlayers.containsKey(name)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "player " + name + " re-connecting");
+                }
+                players.put(name, leftPlayers.put(name, leftPlayers.get(name)));
+                leftPlayers.remove(name);
+            } else {
+                Player player = new Player(name);
+                players.put(name, player);
+            }
+            lastJoinedPlayerName = name;
+            new Handler(Looper.getMainLooper()).post(() -> {
+                playerJoiningEvent.setValue(
+                        new PlayerJoinedData(lastJoinedPlayerName, players.size()));
+            });
+        }
+    }
+    @Override // TcpHostServer.ServerListener
+    public void onPlayerDisconnected(String playerName) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onPlayerDisconnected(" + playerName + ")");
+        }
+        if (!gameEnding && playerName != null) {
+            if (players.containsKey(playerName)) { // check not already removed
+                leftPlayers.put(playerName, players.get(playerName));
+                players.remove(playerName);
+                HostState hostState = hostStateLiveData.getValue();
+                if (hostState == HostState.AWAITING_CT_ANSWERS) {
+                    checkForAllAnswers();
+                } else if (hostState == HostState.AWAITING_CT_VOTES) {
+                    checkForAllVotes();
+                }
+            }
+        }
+    }
+    public void sendNextQuestion() {
+        nextQuestionEvent.setValue(getNextQuestion());
+        waitingForAnswers();
+    }
+    public String getNextQuestion() {
+        try {
+            currentQA = questionManager.getQuestionAnswer(questionSequence);
+        } catch (EndOfQuestionsException e) {
+            try {
+                questionSequence = 0;
+                currentQA = questionManager.getQuestionAnswer(questionSequence);
+            } catch (EndOfQuestionsException e2) {
+                throw new RuntimeException(e2);
+            }
+        }
+        String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type +
+                '|' + currentQA.question;
+        ++questionSequence;
+        prefs.edit()
+                .putInt(QUESTION_SEQUENCE_KEY, questionSequence)
+                .apply();
+        for (Player player: players.values()) {
+            player.reset();
+        }
+        return nextQuestion;
+    }
+    @Override // TcpHostServer.ServerListener
+    public void onServerStarted() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onServerStarted()");
+        }
+    }
+    private String getAllAnswersMessage() {
+        shuffledNameList.clear();
+        shuffledNameList.add(CORRECT);
+        shuffledNameList.addAll(players.keySet());
+        Collections.shuffle(shuffledNameList);
+        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
+        for (String name : shuffledNameList) {
+            if (name.equals(CORRECT)) {
+                buffer.append('|' + currentQA.answer);
+            } else {
+                buffer.append('|' + players.get(name).getAnswer());
+            }
+        }
+        return buffer.toString();
+    }
+    public String getNamedAnswersMessage() {
+        List<Player> playerList = new ArrayList<>(players.values());
+        playerList.sort((p1, p2) ->
+                Integer.compare(p2.getScore(), p1.getScore()));
+        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
+        buffer.append('|' + CORRECT + '|' + currentQA.answer);
+        if (currentQA.comment != null) {
+            buffer.append(". " + currentQA.comment);
+        }
+        for (Player player: playerList) {
+            buffer.append('|' + player.getName() + '|' + player.getNameVotedFor() +
+                    '|' + player.getScore() + '|' + player.getAnswer());
+        }
+        return buffer.toString();
+    }
+    public int getNotAnsweredCount() {
+        return players.size() - getAnswersCt();
+    }
+    public int getNotVotedCount() {
+        return (players.size() - getVotesCt());
+    }
+    public int getPlayersCount() {
+        return (players.size());
+    }
+    private int getVotesCt() {
+        int votesCt = 0;
+        for (Player playerN : players.values()) {
+            if (playerN.getNameVotedFor() != null) {
+                votesCt++;
+            }
+        }
+        return votesCt;
+    }
+    private int getAnswersCt() {
+        int answersCt = 0;
+        for (Player playerN : players.values()) {
+            if (playerN.getAnswer() != null) {
+                answersCt++;
+            }
+        }
+        return answersCt;
+    }
+
+    //************************************************
+    // code to implement TcpHostServer.ServerListener
+    //************************************************
     @Override // TcpPlayerClient.ClientListener
     public void onHostFound(String hostIp, int port) {
         if (BuildConfig.DEBUG) {
@@ -230,8 +451,8 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
             return TcpService.this;
         }
     }
-    public void startHosting(TcpHostServer.ServerListener serverListener) {
-        tcpHostServer = new TcpHostServer(serverListener);
+    public void startHosting(/*!!TcpHostServer.ServerListener serverListener*/) {
+        tcpHostServer = new TcpHostServer(this);
         tcpHostServer.start();
     }
     public void connect(String hostIp, String playerName,
