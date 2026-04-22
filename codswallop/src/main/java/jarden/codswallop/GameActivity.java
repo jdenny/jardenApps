@@ -101,6 +101,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             TcpService.LocalBinder binder = (TcpService.LocalBinder) service;
             tcpService = binder.getService();
             isBound = true;
+            tcpService.attachViewModel(gameViewModel, isBound, playerName);
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -282,11 +283,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
+        /*!!
         gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
             if (isBound && tcpService != null && !tcpService.isConnectedToHost()) {
                 tcpService.connect(hostIpAddress, playerName, gameViewModel);
             }
         });
+         */
         gameViewModel.getNextQuestionEvent().observe(this, question -> {
             if (question != null && tcpService != null) {
                 tcpService.sendToAll(question);

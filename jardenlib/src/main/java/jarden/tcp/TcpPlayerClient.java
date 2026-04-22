@@ -26,10 +26,14 @@ public class TcpPlayerClient {
     private static final String TAG = "TcpPlayerClient";
 
     public interface Listener {
-        void onHostFound(String hostIp, int port);
+        //!! void onHostFound(String hostIp, int port);
         void onConnected();
         void onMessageToClient(String message);
         void onDisconnected();
+        void onError(Exception e);
+    }
+    public interface ClientListener {
+        void onHostFound(String hostIp, int port);
         void onError(Exception e);
     }
     private ExecutorService udpExecutor =
@@ -127,7 +131,7 @@ public class TcpPlayerClient {
             }
         });
     }
-    public void listenForHostBroadcast(WifiManager wifi, Listener callback) {
+    public void listenForHostBroadcast(WifiManager wifi, ClientListener callback) {
         if (udpExecutor == null ||
                 udpExecutor.isShutdown() ||
                 udpExecutor.isTerminated()) {

@@ -55,8 +55,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> listenForHostBroadcastLiveData =
             new MutableLiveData<>();
-    private final MutableLiveData<String> hostFoundEvent =
-            new MutableLiveData<>();
+    //!! private final MutableLiveData<String> hostFoundEvent = new MutableLiveData<>();
     // AllAnswers (named or not) now available
     private final MutableLiveData<String> nextQuestionEvent =
             new MutableLiveData<>();
@@ -155,9 +154,11 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<String> getAnswersEvent() {
         return answersEventLiveData;
     }
+    /*!!
     public LiveData<String> getHostFoundEvent() {
         return hostFoundEvent;
     }
+     */
     public LiveData<Boolean> getListenForHostBroadcastLiveData() {
         return listenForHostBroadcastLiveData;
     }
@@ -511,6 +512,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             });
         }
     }
+    /*!!
     @Override // TcpPlayerClient.Listener
     public void onHostFound(String hostIp, int port) {
         if (BuildConfig.DEBUG) {
@@ -520,6 +522,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             hostFoundEvent.setValue(hostIp);
         });
     }
+     */
     @Override
     protected void onCleared() {
         if (BuildConfig.DEBUG) {

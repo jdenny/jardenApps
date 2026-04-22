@@ -1,4 +1,4 @@
-package jarden.tcp;
+package jarden.codswallop;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,14 +10,18 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import com.jardenconsulting.jardenlib.BuildConfig;
 
 import androidx.core.app.NotificationCompat;
+import jarden.tcp.TcpHostServer;
+import jarden.tcp.TcpPlayerClient;
 
-public class TcpService extends Service {
+public class TcpService extends Service implements TcpPlayerClient.ClientListener {
     private static final String TAG = "TcpService";
     public static final String CHANNEL_ID = "codswallop_network";
     private final IBinder binder = new LocalBinder();
@@ -71,7 +75,7 @@ public class TcpService extends Service {
         tcpPlayerClient.sendVote(questionSequence, position);
     }
     public void listenForHostBroadcast(WifiManager wifi, TcpPlayerClient.Listener listener) {
-        tcpPlayerClient.listenForHostBroadcast(wifi, listener);
+        tcpPlayerClient.listenForHostBroadcast(wifi, /*!!listener*/ this);
     }
     public void sendToAll(String message) {
         tcpHostServer.sendToAll(message);
@@ -94,6 +98,57 @@ public class TcpService extends Service {
         }
         tcpHostServer.sendMultipleHostBroadcasts(hostIpAddress, count);
     }
+
+    /*
+    Network event (host found) -> TcpService.onHostFound() -> connect()
+    Network event (connected to host) -> TcpService.connected() ->
+        update ViewModel (state only) -> Activity observes -> updates UI
+     */
+    @Override // TcpPlayerClient.ClientListener
+    public void onHostFound(String hostIp, int port) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
+        }
+        if (isBound && !isConnectedToHost()) {
+            connect(hostIpAddress, playerName, gameViewModel);
+        }
+        // Update UI state
+        if (gameViewModel != null) {
+            gameViewModel.setHostIp(hostIp);
+            //!! gameViewModel.setConnectionState(CONNECTING);
+        }
+    }
+    @Override // TcpPlayerClient.ClientListener
+    public void onError(Exception e) {
+        if (BuildConfig.DEBUG) {
+            Log.e(TAG, e.toString());
+        }
+        if (!isPlayerLeaving) {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                onPlayerLeaving();
+                exceptionLiveData.setValue(e);
+            });
+        }
+    }
+
+    public void attachViewModel(GameViewModel gameViewModel, boolean isBound, String playerName) {
+    }
+
+
+    /*!! not yet implemented
+    @Override
+    public void onConnected() {
+
+    }
+    @Override
+    public void onMessageToClient(String message) {
+
+    }
+    @Override
+    public void onDisconnected() {
+
+    }
+     */
     public class LocalBinder extends Binder {
         public TcpService getService() {
             return TcpService.this;
@@ -103,13 +158,10 @@ public class TcpService extends Service {
         tcpHostServer = new TcpHostServer(serverListener);
         tcpHostServer.start();
     }
-    public void connect(String hostIp,
-                         String playerName,
-                         TcpPlayerClient.Listener listener) {
-        tcpPlayerClient.connect(hostIp,
-                TcpHostServer.TCP_PORT,
-                playerName,
-                listener);
+    public void connect(String hostIp, String playerName,
+                        TcpPlayerClient.Listener listener) {
+        tcpPlayerClient.connect(hostIp, TcpHostServer.TCP_PORT,
+                playerName, listener);
     }
     public boolean isConnectedToHost() {
         return tcpPlayerClient.isConnectedToHost();
