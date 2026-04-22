@@ -16,10 +16,10 @@
       </SelectionState>
       <SelectionState runConfigName="codswallop">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-04-20T17:02:09.917176Z">
+        <DropdownSelection timestamp="2026-04-22T09:56:21.484384Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=MWUBB18612202175" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=ZY2277JX6V" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -196,7 +196,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public void setQuestionSequence(int questionSequence) {
         this.questionSequence = questionSequence;
     }
-    @Override  // TcpHostServer.MessageListener
+    @Override  // TcpHostServer.ServerListener
     // i.e. message sent from player to host
     public void onMessageToServer(String playerName, String message) {
         if (BuildConfig.DEBUG) {
@@ -329,7 +329,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         return lastJoinedPlayerName;
     }
      */
-    @Override // TcpHostServer.Listener
+    @Override // TcpHostServer.ServerListener
     public void onPlayerConnected(String name) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerConnected(" + name + ')');
@@ -373,7 +373,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             }
         }
     }
-    @Override // TcpHostServer.MessageListener
+    @Override // TcpHostServer.ServerListener
     public void onServerStarted() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onServerStarted()");
