@@ -111,6 +111,9 @@ public class TcpService extends Service {
                 playerName,
                 listener);
     }
+    public boolean isConnectedToHost() {
+        return tcpPlayerClient.isConnectedToHost();
+    }
 
     // =========================
     // STOP NETWORKING

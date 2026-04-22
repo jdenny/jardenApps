@@ -100,6 +100,9 @@ public class TcpPlayerClient {
             } catch (IOException ignored) {}
         }
     }
+    public boolean isConnectedToHost() {
+        return connectedToHost;
+    }
 
     // ----------------------------
     // Send messages

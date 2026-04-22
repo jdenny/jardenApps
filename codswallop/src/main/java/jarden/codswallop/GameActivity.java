@@ -90,9 +90,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private OnBackPressedCallback backPressedCallback;
     private GameViewModel gameViewModel;
     private TcpService tcpService;
+    private boolean isBound = false;
     private String playerName;
     private boolean isHost = false;
-    private boolean isBound = false;
     private SpannableStringBuilder scoresWaitText;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -117,9 +117,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             String message = "onCreate(" + ((savedInstanceState == null) ? "null" : "not null") + ")";
             Log.d(TAG, message);
         }
+        /*!!
         Intent intent = new Intent(this, TcpService.class);
         startService(intent);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+         */
         setContentView(R.layout.activity_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -156,6 +158,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setHostViews();
     }
     @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, TcpService.class);
+        startService(intent);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isBound) {
+            unbindService(serviceConnection);
+            isBound = false;
+        }
+    }    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
@@ -271,23 +287,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.show(getSupportFragmentManager(), "game_end");
         });
         gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
-            if (answer != null) {
-                // note: questionSequence not used for this event, so sending zero
-                // for consistency with other events; similarly sendVote()
+            // note: questionSequence not used for this event, so sending zero
+            // for consistency with other events; similarly sendVote()
+            if (answer != null && tcpService != null) {
                 tcpService.sendAnswer(0, answer);
             }
         });
         gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
-            tcpService.connect(hostIpAddress, playerName, gameViewModel);
+            if (isBound && tcpService != null && !tcpService.isConnectedToHost()) {
+                tcpService.connect(hostIpAddress, playerName, gameViewModel);
+            }
         });
         gameViewModel.getNextQuestionEvent().observe(this, question -> {
-            tcpService.sendToAll(question);
+            if (question != null && tcpService != null) {
+                tcpService.sendToAll(question);
+            }
         });
         gameViewModel.getAnswersEvent().observe(this, answers -> {
-            tcpService.sendToAll(answers);
+            if (answers != null && tcpService != null) {
+                tcpService.sendToAll(answers);
+            }
         });
         gameViewModel.getSubmitVoteEvent().observe(this, position -> {
-            if (position != null) {
+            if (position != null && tcpService != null) {
                 tcpService.sendVote(0, position);
             }
         });
@@ -304,14 +326,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         gameViewModel.getHostLeavingEvent().observe(this, hostLeaving -> {
-            if (tcpService != null) {
+            if (hostLeaving != null && tcpService != null) {
                 tcpService.sendToAll(Constants.Protocol.END_GAME.name());
             }
         });
         gameViewModel.getListenForHostBroadcastLiveData().observe(this, listen -> {
-            WifiManager wifi =
-                    (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
-            tcpService.listenForHostBroadcast(wifi, gameViewModel);
+            if (listen != null && tcpService != null) {
+                WifiManager wifi =
+                        (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
+                tcpService.listenForHostBroadcast(wifi, gameViewModel);
+            }
         });
     }
     private void requestShowFragment(String fragmentTag) {
