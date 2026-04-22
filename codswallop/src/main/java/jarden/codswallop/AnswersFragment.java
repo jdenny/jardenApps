@@ -1,5 +1,6 @@
 package jarden.codswallop;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +25,13 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
     private AnswersAdapter answersAdapter;
     private GameViewModel gameViewModel;
     private Constants.PlayerState playerState;
+    private GameServiceProvider serviceProvider;
 
+    @Override // Fragment
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        serviceProvider = (GameServiceProvider) context;
+    }
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,7 +85,7 @@ public class AnswersFragment extends Fragment implements AdapterView.OnItemClick
             Log.d(TAG, "onItemClick(position=" + position + ')');
         }
         if (playerState == Constants.PlayerState.SUPPLY_VOTE) {
-            gameViewModel.setSelectedAnswer(position);
+            serviceProvider.submitVote(position);
         } else {
             Toast.makeText(getContext(),
                     R.string.already_cast_vote,

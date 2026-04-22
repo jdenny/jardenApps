@@ -70,8 +70,8 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
     private final MutableLiveData<String> questionLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> gameEndedEvent = new MutableLiveData<>();
-    private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
-    private final MutableLiveData<Integer> submitVoteEvent = new MutableLiveData<>();
+    //!! private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
+    //!! private final MutableLiveData<Integer> submitVoteEvent = new MutableLiveData<>();
     private final MutableLiveData<Integer> missingAnswerCtLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> missingVoteCtLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingAnswerLiveData =
@@ -141,12 +141,14 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<String> getQuestionLiveData() {
         return questionLiveData;
     }
+    /*//
     public LiveData<String> getSubmitAnswerEvent() {
         return submitAnswerEvent;
     }
     public LiveData<Integer> getSubmitVoteEvent() {
         return submitVoteEvent;
     }
+     */
     public LiveData<Integer> getGameEndedEvent() {
         return gameEndedEvent;
     }
@@ -162,18 +164,18 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<Boolean> getHostLeavingEvent() {
         return hostLeavingEvent;
     }
-    public void setAnswer(String answer) {
-        if (answer != null && !answer.isEmpty()) {
-            submitAnswerEvent.setValue(answer);
+    public void answerSent() {
+        //!! if (answer != null && !answer.isEmpty()) {
+            //!! submitAnswerEvent.setValue(answer);
             awaitingAnswerLiveData.setValue(false);
             playerStateLiveData.setValue(PlayerState.AWAITING_ANSWERS);
-        }
+        //!! }
     }
     public LiveData<AllAnswers> getAnswersLiveData() {
         return answersLiveData;
     }
-    public void setSelectedAnswer(int position) {
-        submitVoteEvent.setValue(position);
+    public void voteSent() {
+        //!! submitVoteEvent.setValue(position);
         playerStateLiveData.setValue(PlayerState.AWAITING_VOTES);
     }
     public void setHostStateLiveData(HostState hostState) {
@@ -188,7 +190,6 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         players = new ConcurrentHashMap<>();
         leftPlayers = new ConcurrentHashMap<>();
         questionManager = new QuestionManager(getApplication().getResources(), this);
-        //!! questionsLoadedEvent.setValue(questionManager.getQuestionCount());
         isHost = true;
         questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
     }

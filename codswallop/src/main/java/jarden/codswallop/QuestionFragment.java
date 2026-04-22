@@ -1,5 +1,6 @@
 package jarden.codswallop;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,13 @@ public class QuestionFragment extends Fragment {
     private GameViewModel gameViewModel;
     private int lastRenderedQuestionId = -1;
 
+    private GameServiceProvider serviceProvider;
+
+    @Override // Fragment
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        serviceProvider = (GameServiceProvider) context;
+    }
     @Override // Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,9 +51,7 @@ public class QuestionFragment extends Fragment {
                 Toast.makeText(getContext(), "supply an answer first!",
                         Toast.LENGTH_LONG).show();
             } else {
-                if (gameViewModel.getAwaitingAnswerLiveData().getValue()) {
-                    gameViewModel.setAnswer(answer);
-                }
+                serviceProvider.submitAnswer(answer);
             }
         });
         return rootView;
@@ -72,6 +78,6 @@ public class QuestionFragment extends Fragment {
     }
     private static int getQuestionSequence(String question) {
         int i = question.indexOf('.');
-        return  (i < 0) ? -1 : Integer.valueOf(question.substring(0, i));
+        return  (i < 0) ? -1 : Integer.parseInt(question.substring(0, i));
     }
 }

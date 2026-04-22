@@ -64,7 +64,8 @@ import static jarden.codswallop.Constants.QUESTION;
 
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener,
-        LoginDialogFragment.LoginDialogListener, GameEndedDialog.Listener {
+        LoginDialogFragment.LoginDialogListener, GameEndedDialog.Listener,
+        GameServiceProvider {
     public static final String TAG = "GameActivity";
 
     // Host fields: ***************************
@@ -92,7 +93,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TcpService tcpService;
     private boolean isBound = false;
     private String playerName;
-    private boolean isHost = false;
     private SpannableStringBuilder scoresWaitText;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -117,11 +117,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             String message = "onCreate(" + ((savedInstanceState == null) ? "null" : "not null") + ")";
             Log.d(TAG, message);
         }
-        /*!!
-        Intent intent = new Intent(this, TcpService.class);
-        startService(intent);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-         */
         setContentView(R.layout.activity_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -136,7 +131,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                int confirmMessage = isHost ?
+                int confirmMessage = gameViewModel.getIsHost() ?
                         R.string.confirm_host_leaving : R.string.confirm_leaving;
                 showAlertDialog(confirmMessage,
                         new AlertDialogListener() {
@@ -186,6 +181,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             case R.id.sendIPAddress:
                 tcpService.sendMultipleHostBroadcasts(5);
+                nextQuestionButton.setVisibility(View.VISIBLE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -286,13 +282,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-        gameViewModel.getSubmitAnswerEvent().observe(this, answer -> {
-            // note: questionSequence not used for this event, so sending zero
-            // for consistency with other events; similarly sendVote()
-            if (answer != null && tcpService != null) {
-                tcpService.sendAnswer(0, answer);
-            }
-        });
         gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
             if (isBound && tcpService != null && !tcpService.isConnectedToHost()) {
                 tcpService.connect(hostIpAddress, playerName, gameViewModel);
@@ -306,11 +295,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         gameViewModel.getAnswersEvent().observe(this, answers -> {
             if (answers != null && tcpService != null) {
                 tcpService.sendToAll(answers);
-            }
-        });
-        gameViewModel.getSubmitVoteEvent().observe(this, position -> {
-            if (position != null && tcpService != null) {
-                tcpService.sendVote(0, position);
             }
         });
         gameViewModel.getMissingVoteCtLiveData().observe(this, missingVoteCt -> {
@@ -413,13 +397,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
         this.playerName = playerName;
-        this.isHost = true;
         gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
         tcpService.startHosting(gameViewModel);
     }
     private void setHostViews() {
-        if (isHost) {
+        if (gameViewModel.getIsHost()) {
             hostViewsLayout.setVisibility(View.VISIBLE);
             setTitle(R.string.host_control);
         }
@@ -443,7 +426,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             isBound = false;
         }
     }
-
     @Override
     public void onGameEndedAcknowledged() {
         if (BuildConfig.DEBUG) {
@@ -451,7 +433,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         finish();
     }
-
+    @Override
+    public boolean isServiceReady() {
+        return isBound && tcpService != null;
+    }
+    @Override
+    public void submitAnswer(String answer) {
+        if (answer != null && isServiceReady()) {
+            // note: questionSequence not used for this event, so sending zero
+            // for consistency with other events; similarly sendVote()
+            tcpService.sendAnswer(0, answer);
+            gameViewModel.answerSent();
+        }
+    }
+    @Override
+    public void submitVote(int position) {
+        if (isServiceReady()) {
+            tcpService.sendVote(0, position);
+            gameViewModel.voteSent();
+        }
+    }
     public interface AlertDialogListener {
         void onAlertDialogPositive();
     }
