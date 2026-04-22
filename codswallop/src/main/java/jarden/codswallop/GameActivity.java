@@ -399,11 +399,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
         /*!!gameViewModel*/tcpService.onPlayerSignedIn(playerName, true);
+        gameViewModel.setIsHost(true);
         setHostViews();
         tcpService.startHosting();
     }
     private void setHostViews() {
-        if (tcpService.getIsHost()) {
+        if (gameViewModel.getIsHost()) {
             hostViewsLayout.setVisibility(View.VISIBLE);
             setTitle(R.string.host_control);
         }

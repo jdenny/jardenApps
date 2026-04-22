@@ -19,6 +19,7 @@ import static jarden.codswallop.Constants.QUESTION;
  */
 public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServer.ServerListener,
         QuestionManager.QuestionListener*/ {
+
     /*!!
     public Player getPlayer(String playerName) {
         return players.get(playerName);
@@ -59,7 +60,7 @@ public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServe
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
      */
-    //!! private boolean isHost;
+    private boolean isHost;
     //!! private boolean gameEnding = false;
     //!! private boolean iChoseToLeave = false;
     //!! private String thisPlayerName;
@@ -148,6 +149,12 @@ public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServe
         return submitVoteEvent;
     }
      */
+    public boolean getIsHost() {
+        return isHost;
+    }
+    public void setIsHost(boolean isHost) {
+        this.isHost = isHost;
+    }
     public LiveData<Integer> getGameEndedEvent() {
         return gameEndedEvent;
     }
@@ -315,9 +322,6 @@ public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServe
                     '|' + player.getScore() + '|' + player.getAnswer());
         }
         return buffer.toString();
-    }
-    public boolean getIsHost() {
-        return isHost;
     }
     public int getNotAnsweredCount() {
         return players.size() - getAnswersCt();

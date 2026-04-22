@@ -373,7 +373,9 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
     }
     @Override // QuestionManager.QuestionListener
     public void onQuestionsLoaded(int questionCount) {
-        Toast.makeText(this, questionCount + " questions loaded", Toast.LENGTH_LONG).show();
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Toast.makeText(this, questionCount + " questions loaded", Toast.LENGTH_LONG).show();
+        });
     }
     @Override // QuestionManager.QuestionListener
     public void onError(String message) {
