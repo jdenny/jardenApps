@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.InputType;
@@ -318,7 +317,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 tcpService.sendToAll(Constants.Protocol.END_GAME.name());
             }
         });
-         */
         gameViewModel.getListenForHostBroadcastLiveData().observe(this, listen -> {
             if (listen != null && tcpService != null) {
                 WifiManager wifi =
@@ -326,6 +324,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 tcpService.listenForHostBroadcast(wifi);
             }
         });
+         */
     }
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {

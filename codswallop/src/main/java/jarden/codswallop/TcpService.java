@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
@@ -33,6 +34,7 @@ import jarden.tcp.TcpPlayerClient;
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.ANSWER;
 import static jarden.codswallop.Constants.CORRECT;
+import static jarden.codswallop.Constants.GAME_PREFS;
 import static jarden.codswallop.Constants.NAMED_ANSWERS;
 import static jarden.codswallop.Constants.QUESTION;
 import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
@@ -47,6 +49,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         TcpPlayerClient.ClientListener, QuestionManager.QuestionListener {
     private static final String TAG = "TcpService";
     public static final String CHANNEL_ID = "codswallop_network";
+    private SharedPreferences preferences;
     private final IBinder binder = new LocalBinder();
     private TcpHostServer tcpHostServer;
     private TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
@@ -81,6 +84,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
                 WifiManager.WIFI_MODE_FULL_HIGH_PERF,
                 "Codswallop:WifiLock");
         wifiLock.acquire();
+        preferences = getSharedPreferences(GAME_PREFS, Context.MODE_PRIVATE);
     }
     @Override // Service
     public IBinder onBind(Intent intent) {
@@ -280,7 +284,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         String nextQuestion = QUESTION + '|' + questionSequence + '|' + currentQA.type +
                 '|' + currentQA.question;
         ++questionSequence;
-        prefs.edit()
+        preferences.edit()
                 .putInt(QUESTION_SEQUENCE_KEY, questionSequence)
                 .apply();
         for (Player player: players.values()) {
@@ -356,13 +360,16 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         leftPlayers = new ConcurrentHashMap<>();
         questionManager = new QuestionManager(getApplication().getResources(), this);
         isHost = true;
-        questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
+        questionSequence = preferences.getInt(QUESTION_SEQUENCE_KEY, 0);
     }
     public boolean getIsHost() {
         return isHost;
     }
     public void setQuestionSequence(int questionSequence) {
         this.questionSequence = questionSequence;
+    }
+    public String getPlayerName() {
+        return thisPlayerName;
     }
     @Override // QuestionManager.QuestionListener
     public void onQuestionsLoaded(int questionCount) {
@@ -381,7 +388,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
         }
-        this.thisPlayerName = gameViewModel.getPlayerName();
+        //!! this.thisPlayerName = gameViewModel.getPlayerName();
         if (!isConnectedToHost()) {
             connect(hostIp, thisPlayerName, this);
         }

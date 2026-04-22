@@ -1,8 +1,8 @@
 package jarden.codswallop;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +11,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import static jarden.codswallop.Constants.GAME_PREFS;
 import static jarden.codswallop.Constants.HostState;
 import static jarden.codswallop.Constants.PlayerState;
 import static jarden.codswallop.Constants.QUESTION;
@@ -63,7 +62,7 @@ public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServe
     //!! private boolean isHost;
     //!! private boolean gameEnding = false;
     //!! private boolean iChoseToLeave = false;
-    private String thisPlayerName;
+    //!! private String thisPlayerName;
     //!! private boolean isPlayerLeaving = false;
     //!! private Map<String, Player> players;
     //!! private Map<String, Player> leftPlayers;
@@ -72,12 +71,11 @@ public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServe
     //!! private final List<String> shuffledNameList = new ArrayList<>();
     private final static String TAG = "GameViewModel";
     //!! private String lastJoinedPlayerName;
-    private final SharedPreferences prefs;
+    //!! private final SharedPreferences prefs;
 
     public GameViewModel(@NotNull Application application) {
         super(application);
-        prefs = application.getSharedPreferences(
-                GAME_PREFS, Context.MODE_PRIVATE);
+        //!! prefs = application.getSharedPreferences(GAME_PREFS, Context.MODE_PRIVATE);
     }
     /*!!
     public LiveData<Integer> getQuestionsLoadedEvent() {
@@ -428,10 +426,10 @@ public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServe
         }
         gameEndedEvent.setValue(messageId);
     }
-    */
     public String getPlayerName() {
         return thisPlayerName;
     }
+    */
     @Override
     protected void onCleared() {
         if (BuildConfig.DEBUG) {
