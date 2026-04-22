@@ -19,7 +19,7 @@ import jarden.tcp.HttpClient;
  * Created by john.denny@gmail.com on 12/01/2026.
  */
 public class QuestionManager {
-    public interface Listener {
+    public interface QuestionListener {
         void onError(String message);
         void onQuestionsLoaded(int questionCount);
     }
@@ -39,10 +39,10 @@ public class QuestionManager {
         }
     }
     private final String TAG = "QuestionManager";
-    private final Listener listener;
+    private final QuestionListener questionListener;
     private final List<QuestionAnswer> questionList = new ArrayList<>();
-    public QuestionManager(Resources resources, Listener listener) {
-        this.listener = listener;
+    public QuestionManager(Resources resources, QuestionListener questionListener) {
+        this.questionListener = questionListener;
         int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
         try (InputStream is =
                      resources.openRawResource(qaFileId)) {
@@ -59,6 +59,8 @@ public class QuestionManager {
                 } catch (IOException | URISyntaxException e) {
                     Log.e(TAG,
                             String.valueOf(e));
+                } finally {
+                    questionListener.onQuestionsLoaded(questionList.size());
                 }
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "loaded " + questionList.size() +
@@ -68,9 +70,7 @@ public class QuestionManager {
         } catch (IOException e) {
             String message = "Failure during load questions: " + e;
             Log.e(TAG, message);
-            listener.onError(message);
-        } finally {
-            listener.onQuestionsLoaded(questionList.size());
+            questionListener.onError(message);
         }
     }
     private void getQuestionsFromStrings(List<String> lines) {

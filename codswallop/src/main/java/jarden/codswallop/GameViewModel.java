@@ -3,15 +3,9 @@ package jarden.codswallop;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -21,18 +15,17 @@ import static jarden.codswallop.Constants.GAME_PREFS;
 import static jarden.codswallop.Constants.HostState;
 import static jarden.codswallop.Constants.PlayerState;
 import static jarden.codswallop.Constants.QUESTION;
-import static jarden.codswallop.Constants.QUESTION_SEQUENCE_KEY;
 /**
  * Created by john.denny@gmail.com on 11/02/2026.
  */
-public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer.ServerListener,*/
-        QuestionManager.Listener {
+public class GameViewModel extends AndroidViewModel /*!! implements TcpHostServer.ServerListener,
+        QuestionManager.QuestionListener*/ {
     /*!!
     public Player getPlayer(String playerName) {
         return players.get(playerName);
     } */
 
-    public final class PlayerJoinedData {
+    public final static class PlayerJoinedData {
         public String joinedPlayerName;
         public int playerCount;
         public PlayerJoinedData(String joinedPlayerName, int playerCount) {
@@ -40,16 +33,12 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
             this.playerCount = playerCount;
         }
     }
-    private final MutableLiveData<Integer> questionsLoadedEvent =
-            new MutableLiveData<>();
+    //!! private final MutableLiveData<Integer> questionsLoadedEvent = new MutableLiveData<>();
     private final MutableLiveData<PlayerJoinedData> playerJoiningEvent =
             new MutableLiveData<>();
-    private final MutableLiveData<Boolean> hostLeavingEvent =
-            new MutableLiveData<>();
-    private final MutableLiveData<Boolean> listenForHostBroadcastLiveData =
-            new MutableLiveData<>();
-    private final MutableLiveData<String> nextQuestionEvent =
-            new MutableLiveData<>();
+    //!! private final MutableLiveData<Boolean> hostLeavingEvent = new MutableLiveData<>();
+    //!! private final MutableLiveData<Boolean> listenForHostBroadcastLiveData = new MutableLiveData<>();
+    //!! private final MutableLiveData<String> nextQuestionEvent = new MutableLiveData<>();
     private final MutableLiveData<AllAnswers> answersLiveData =
             new MutableLiveData<>();
     //!! private final MutableLiveData<String> answersEventLiveData = new MutableLiveData<>();
@@ -71,18 +60,18 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
     private QuestionManager.QuestionAnswer currentQA;
     private String currentQuestion;
      */
-    private boolean isHost;
-    private boolean gameEnding = false;
-    private boolean iChoseToLeave = false;
+    //!! private boolean isHost;
+    //!! private boolean gameEnding = false;
+    //!! private boolean iChoseToLeave = false;
     private String thisPlayerName;
-    private boolean isPlayerLeaving = false;
+    //!! private boolean isPlayerLeaving = false;
     //!! private Map<String, Player> players;
     //!! private Map<String, Player> leftPlayers;
-    private QuestionManager questionManager;
-    private int questionSequence = 21;
+    //!! private QuestionManager questionManager;
+    //!! private int questionSequence = 21;
     //!! private final List<String> shuffledNameList = new ArrayList<>();
     private final static String TAG = "GameViewModel";
-    private String lastJoinedPlayerName;
+    //!! private String lastJoinedPlayerName;
     private final SharedPreferences prefs;
 
     public GameViewModel(@NotNull Application application) {
@@ -90,18 +79,28 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
         prefs = application.getSharedPreferences(
                 GAME_PREFS, Context.MODE_PRIVATE);
     }
+    /*!!
     public LiveData<Integer> getQuestionsLoadedEvent() {
         return questionsLoadedEvent;
     }
+     */
     public LiveData<Exception> getExceptionLiveData() {
         return exceptionLiveData;
+    }
+    public void setExceptionLiveData(Exception e) {
+        exceptionLiveData.setValue(e);
     }
     public LiveData<PlayerJoinedData> getPlayerJoiningEvent() {
         return playerJoiningEvent;
     }
+    public void setPlayerJoiningEvent(PlayerJoinedData playerData) {
+        playerJoiningEvent.setValue(playerData);
+    }
+    /*!!
     public LiveData<String> getNextQuestionEvent() {
         return nextQuestionEvent;
     }
+     */
     public LiveData<Boolean> getAwaitingAnswerLiveData() {
         return awaitingAnswerLiveData;
     }
@@ -154,6 +153,9 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
     public LiveData<Integer> getGameEndedEvent() {
         return gameEndedEvent;
     }
+    public void setGameEndedEvent(int messageId) {
+        gameEndedEvent.setValue(messageId);
+    }
     /*!!
     public LiveData<String> getAnswersEvent() {
         return answersEventLiveData;
@@ -161,13 +163,13 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
     public void setAnswersEvent(String answersMessage) {
         answersEventLiveData.setValue(answersMessage);
     }
-     */
     public LiveData<Boolean> getListenForHostBroadcastLiveData() {
         return listenForHostBroadcastLiveData;
     }
     public LiveData<Boolean> getHostLeavingEvent() {
         return hostLeavingEvent;
     }
+     */
     public void answerSent() {
         awaitingAnswerLiveData.setValue(false);
         playerStateLiveData.setValue(PlayerState.AWAITING_ANSWERS);
@@ -189,6 +191,7 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
     public MutableLiveData<HostState> getHostStateLiveData() {
         return hostStateLiveData;
     }
+    /*!!
     public void startHost() {
         players = new ConcurrentHashMap<>();
         leftPlayers = new ConcurrentHashMap<>();
@@ -199,7 +202,6 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
     public void setQuestionSequence(int questionSequence) {
         this.questionSequence = questionSequence;
     }
-    /*!!
     @Override  // TcpHostServer.ServerListener
     // i.e. message sent from player to host
     public void onMessageToServer(String playerName, String message) {
@@ -316,11 +318,9 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
         }
         return buffer.toString();
     }
-     */
     public boolean getIsHost() {
         return isHost;
     }
-    /*!!
     public int getNotAnsweredCount() {
         return players.size() - getAnswersCt();
     }
@@ -414,7 +414,6 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
         }
         return nextQuestion;
     }
-     */
     public void endGame() {
         isPlayerLeaving = true;
         int messageId;
@@ -429,6 +428,7 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
         }
         gameEndedEvent.setValue(messageId);
     }
+    */
     public String getPlayerName() {
         return thisPlayerName;
     }
@@ -438,6 +438,7 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
             Log.d(TAG, "onCleared()");
         }
     }
+    /*!!
     public void onPlayerSignedIn(String playerName, boolean host) {
         thisPlayerName = playerName;
         if (host) {
@@ -445,6 +446,9 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
         }
         listenForHostBroadcastLiveData.setValue(true);
     }
+     */
+
+    /*!!
     public void onPlayerLeaving() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onPlayerLeaving(); isPlayerLeaving=" + isPlayerLeaving);
@@ -460,12 +464,13 @@ public class GameViewModel extends AndroidViewModel implements /*!!TcpHostServer
             }
         }
     }
-    @Override // QuestionManager.Listener
+    @Override // QuestionManager.QuestionListener
     public void onError(String message) {
         Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
     }
-    @Override // QuestionManager.Listener
+    @Override // QuestionManager.QuestionListener
     public void onQuestionsLoaded(int questionCount) {
         questionsLoadedEvent.setValue(questionCount);
     }
+     */
 }

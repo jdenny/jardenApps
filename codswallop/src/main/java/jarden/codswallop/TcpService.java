@@ -14,13 +14,16 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jardenconsulting.jardenlib.BuildConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.core.app.NotificationCompat;
 import jarden.quiz.EndOfQuestionsException;
@@ -41,7 +44,7 @@ import static jarden.codswallop.Constants.VOTE;
         update ViewModel (state only) -> Activity observes -> updates UI
      */
 public class TcpService extends Service implements TcpHostServer.ServerListener,
-        TcpPlayerClient.ClientListener {
+        TcpPlayerClient.ClientListener, QuestionManager.QuestionListener {
     private static final String TAG = "TcpService";
     public static final String CHANNEL_ID = "codswallop_network";
     private final IBinder binder = new LocalBinder();
@@ -56,9 +59,15 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
     private String currentQuestion;
     private final List<String> shuffledNameList = new ArrayList<>();
     private QuestionManager.QuestionAnswer currentQA;
+    private QuestionManager questionManager;
     private Map<String, Player> players;
     private Map<String, Player> leftPlayers;
-
+    private String lastJoinedPlayerName;
+    private boolean isPlayerLeaving = false;
+    private int questionSequence = 21;
+    private boolean gameEnding = false;
+    private boolean iChoseToLeave = false;
+    private boolean isHost;
     @Override // Service
     public void onCreate() {
         super.onCreate();
@@ -89,6 +98,16 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         stopNetworking();
         releaseWifiLock();
         super.onDestroy();
+    }
+    public void onPlayerSignedIn(String playerName, boolean host) {
+        thisPlayerName = playerName;
+        if (host) {
+            startHost();
+        }
+        //!! gameViewModel.listenForHostBroadcastLiveData.setValue(true);
+        WifiManager wifi =
+                (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
+        listenForHostBroadcast(wifi);
     }
     //************************************************
     // code to implement TcpHostServer.ServerListener
@@ -132,7 +151,6 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
             Log.d(TAG, "checkForAllAnswers");
         }
         new Handler(Looper.getMainLooper()).post(() -> {
-
             if (getAnswersCt() >= (players.size())) {
                 sendToAll(getAllAnswersMessage());
                 waitingForVotes();
@@ -147,8 +165,8 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         }
         new Handler(Looper.getMainLooper()).post(() -> {
             if (getVotesCt() >= (players.size())) {
-                answersEventLiveData.setValue(getNamedAnswersMessage());
-                hostStateLiveData.setValue(HostState.READY_FOR_NEXT_QUESTION);
+                sendToAll(getNamedAnswersMessage());
+                gameViewModel.setHostStateLiveData(Constants.HostState.READY_FOR_NEXT_QUESTION);
             } else {
                 waitingForVotes();
             }
@@ -221,8 +239,8 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
             }
             lastJoinedPlayerName = name;
             new Handler(Looper.getMainLooper()).post(() -> {
-                playerJoiningEvent.setValue(
-                        new PlayerJoinedData(lastJoinedPlayerName, players.size()));
+                gameViewModel.setPlayerJoiningEvent(
+                        new GameViewModel.PlayerJoinedData(lastJoinedPlayerName, players.size()));
             });
         }
     }
@@ -235,17 +253,17 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
             if (players.containsKey(playerName)) { // check not already removed
                 leftPlayers.put(playerName, players.get(playerName));
                 players.remove(playerName);
-                HostState hostState = hostStateLiveData.getValue();
-                if (hostState == HostState.AWAITING_CT_ANSWERS) {
+                Constants.HostState hostState = gameViewModel.getHostStateLiveData().getValue();
+                if (hostState == Constants.HostState.AWAITING_CT_ANSWERS) {
                     checkForAllAnswers();
-                } else if (hostState == HostState.AWAITING_CT_VOTES) {
+                } else if (hostState == Constants.HostState.AWAITING_CT_VOTES) {
                     checkForAllVotes();
                 }
             }
         }
     }
     public void sendNextQuestion() {
-        nextQuestionEvent.setValue(getNextQuestion());
+        sendToAll(getNextQuestion());
         waitingForAnswers();
     }
     public String getNextQuestion() {
@@ -333,6 +351,27 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         }
         return answersCt;
     }
+    public void startHost() {
+        players = new ConcurrentHashMap<>();
+        leftPlayers = new ConcurrentHashMap<>();
+        questionManager = new QuestionManager(getApplication().getResources(), this);
+        isHost = true;
+        questionSequence = prefs.getInt(QUESTION_SEQUENCE_KEY, 0);
+    }
+    public boolean getIsHost() {
+        return isHost;
+    }
+    public void setQuestionSequence(int questionSequence) {
+        this.questionSequence = questionSequence;
+    }
+    @Override // QuestionManager.QuestionListener
+    public void onQuestionsLoaded(int questionCount) {
+        Toast.makeText(this, questionCount + " questions loaded", Toast.LENGTH_LONG).show();
+    }
+    @Override // QuestionManager.QuestionListener
+    public void onError(String message) {
+        Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
+    }
 
     //************************************************
     // code to implement TcpHostServer.ServerListener
@@ -352,14 +391,12 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         if (BuildConfig.DEBUG) {
             Log.e(TAG, e.toString());
         }
-        /*!!??
         if (!isPlayerLeaving) {
             new Handler(Looper.getMainLooper()).post(() -> {
                 onPlayerLeaving();
-                exceptionLiveData.setValue(e);
+                gameViewModel.setExceptionLiveData(e);
             });
         }
-         */
     }
     public void attachViewModel(GameViewModel gameViewModel) {
         this.gameViewModel = gameViewModel;
@@ -403,7 +440,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
                 gameViewModel.setAwaitingAnswerLiveData(true);
                 gameViewModel.setPlayerStateLiveData(Constants.PlayerState.SUPPLY_ANSWER);
             } else if (message.startsWith(Constants.Protocol.END_GAME.name())) {
-                gameViewModel.endGame();
+                endGame();
             } else {
                 if (jarden.codswallop.BuildConfig.DEBUG) {
                     Log.d(TAG, "unrecognised message received by player: " + message);
@@ -463,7 +500,35 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
     public boolean isConnectedToHost() {
         return tcpPlayerClient.isConnectedToHost();
     }
-
+    public void onPlayerLeaving() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onPlayerLeaving(); isPlayerLeaving=" + isPlayerLeaving);
+        }
+        if (!isPlayerLeaving) {
+            isPlayerLeaving = true;
+            iChoseToLeave = true;
+            if (isHost) {
+                this.gameEnding = true;
+                sendToAll(Constants.Protocol.END_GAME.name());
+            } else {
+                endGame();
+            }
+        }
+    }
+    public void endGame() {
+        isPlayerLeaving = true;
+        int messageId;
+        if (iChoseToLeave) {
+            if (isHost) {
+                messageId = R.string.youEndedGame;
+            } else {
+                messageId = R.string.playerLeft;
+            }
+        } else {
+            messageId = R.string.endedByHost;
+        }
+        gameViewModel.setGameEndedEvent(messageId);
+    }
     // =========================
     // STOP NETWORKING
     // =========================

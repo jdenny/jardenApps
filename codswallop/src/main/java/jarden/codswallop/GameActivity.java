@@ -131,13 +131,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         backPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                int confirmMessage = gameViewModel.getIsHost() ?
+                int confirmMessage = tcpService.getIsHost() ?
                         R.string.confirm_host_leaving : R.string.confirm_leaving;
                 showAlertDialog(confirmMessage,
                         new AlertDialogListener() {
                             @Override
                             public void onAlertDialogPositive() {
-                                gameViewModel.onPlayerLeaving();
+                                tcpService.onPlayerLeaving();
                                 backPressedCallback.setEnabled(false); // Stops it being a recursive onBackPressed()!
                             }
                         }, R.drawable.leaving_fish_transparent);
@@ -202,7 +202,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             String value = input.getText().toString().trim();
             if (!value.isEmpty()) {
                 int questionNumber = Integer.parseInt(value);
-                gameViewModel.setQuestionSequence(questionNumber);
+                tcpService.setQuestionSequence(questionNumber);
             }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -220,9 +220,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void makeObservations() {
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        /*!!
         gameViewModel.getQuestionsLoadedEvent().observe(this, qaCount -> {
             Toast.makeText(this, qaCount + " questions loaded", Toast.LENGTH_LONG).show();
         });
+         */
         gameViewModel.getHostStateLiveData().observe(
                 this,
                 hostState -> {
@@ -286,12 +288,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
+        /*!!
         gameViewModel.getNextQuestionEvent().observe(this, question -> {
             if (question != null && tcpService != null) {
                 tcpService.sendToAll(question);
             }
         });
-        /*!!
         gameViewModel.getAnswersEvent().observe(this, answers -> {
             if (answers != null && tcpService != null) {
                 tcpService.sendToAll(answers);
@@ -310,11 +312,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         missingAnswerCt));
             }
         });
+        /*!!
         gameViewModel.getHostLeavingEvent().observe(this, hostLeaving -> {
             if (hostLeaving != null && tcpService != null) {
                 tcpService.sendToAll(Constants.Protocol.END_GAME.name());
             }
         });
+         */
         gameViewModel.getListenForHostBroadcastLiveData().observe(this, listen -> {
             if (listen != null && tcpService != null) {
                 WifiManager wifi =
@@ -395,12 +399,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        gameViewModel.onPlayerSignedIn(playerName, true);
+        /*!!gameViewModel*/tcpService.onPlayerSignedIn(playerName, true);
         setHostViews();
         tcpService.startHosting();
     }
     private void setHostViews() {
-        if (gameViewModel.getIsHost()) {
+        if (tcpService.getIsHost()) {
             hostViewsLayout.setVisibility(View.VISIBLE);
             setTitle(R.string.host_control);
         }
@@ -410,7 +414,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        gameViewModel.onPlayerSignedIn(playerName, false);
+        /*!!gameViewModel*/tcpService.onPlayerSignedIn(playerName, false);
     }
     @Override // Activity
     protected void onDestroy() {
