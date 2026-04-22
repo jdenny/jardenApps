@@ -11,7 +11,6 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpHostServer;
-import jarden.tcp.TcpPlayerClient;
 
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.ANSWER;
@@ -38,7 +36,7 @@ import static jarden.codswallop.Constants.VOTE;
  * Created by john.denny@gmail.com on 11/02/2026.
  */
 public class GameViewModel extends AndroidViewModel implements TcpHostServer.ServerListener,
-        TcpPlayerClient.Listener, QuestionManager.Listener {
+        QuestionManager.Listener {
     public final class PlayerJoinedData {
         public String joinedPlayerName;
         public int playerCount;
@@ -55,8 +53,6 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> listenForHostBroadcastLiveData =
             new MutableLiveData<>();
-    //!! private final MutableLiveData<String> hostFoundEvent = new MutableLiveData<>();
-    // AllAnswers (named or not) now available
     private final MutableLiveData<String> nextQuestionEvent =
             new MutableLiveData<>();
     private final MutableLiveData<AllAnswers> answersLiveData =
@@ -69,13 +65,9 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             new MutableLiveData<>(PlayerState.AWAITING_HOST_IP);
     private final MutableLiveData<String> questionLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> gameEndedEvent = new MutableLiveData<>();
-    //!! private final MutableLiveData<String> submitAnswerEvent = new MutableLiveData<>();
-    //!! private final MutableLiveData<Integer> submitVoteEvent = new MutableLiveData<>();
     private final MutableLiveData<Integer> missingAnswerCtLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> missingVoteCtLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> awaitingAnswerLiveData =
-            new MutableLiveData<>();
-    private final MutableLiveData<Boolean> awaitingVoteLiveData =
             new MutableLiveData<>();
     private final MutableLiveData<HostState> hostStateLiveData =
             new MutableLiveData<>(HostState.AWAITING_PLAYERS);
@@ -117,6 +109,9 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<Boolean> getAwaitingAnswerLiveData() {
         return awaitingAnswerLiveData;
     }
+    public void setAwaitingAnswerLiveData(boolean value) {
+        awaitingAnswerLiveData.setValue(value);
+    }
     public LiveData<Integer> getMissingVoteCtLiveData() {
         return missingVoteCtLiveData;
     }
@@ -126,8 +121,14 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<PlayerState> getPlayerStateLiveData() {
         return playerStateLiveData;
     }
+    public void setPlayerStateLiveData(PlayerState state) {
+        playerStateLiveData.setValue(state);
+    }
     public LiveData<String> getCurrentFragmentTagLiveData() {
         return currentFragmentTagLiveData;
+    }
+    public void setCurrentFragmentTagLiveData(String tagLiveData) {
+        currentFragmentTagLiveData.setValue(tagLiveData);
     }
     public void setQuestionLiveData(String question) {
         if (question != null && !question.isEmpty()) {
@@ -154,11 +155,6 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
     public LiveData<String> getAnswersEvent() {
         return answersEventLiveData;
     }
-    /*!!
-    public LiveData<String> getHostFoundEvent() {
-        return hostFoundEvent;
-    }
-     */
     public LiveData<Boolean> getListenForHostBroadcastLiveData() {
         return listenForHostBroadcastLiveData;
     }
@@ -166,17 +162,16 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         return hostLeavingEvent;
     }
     public void answerSent() {
-        //!! if (answer != null && !answer.isEmpty()) {
-            //!! submitAnswerEvent.setValue(answer);
-            awaitingAnswerLiveData.setValue(false);
-            playerStateLiveData.setValue(PlayerState.AWAITING_ANSWERS);
-        //!! }
+        awaitingAnswerLiveData.setValue(false);
+        playerStateLiveData.setValue(PlayerState.AWAITING_ANSWERS);
     }
     public LiveData<AllAnswers> getAnswersLiveData() {
         return answersLiveData;
     }
+    public void setAnswersLiveData(AllAnswers allAnwers){
+        answersLiveData.setValue(allAnwers);
+    }
     public void voteSent() {
-        //!! submitVoteEvent.setValue(position);
         playerStateLiveData.setValue(PlayerState.AWAITING_VOTES);
     }
     public void setHostStateLiveData(HostState hostState) {
@@ -406,72 +401,7 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         }
         return nextQuestion;
     }
-    private void showAnswers(String message) {
-        // ALL_ANSWERS|2|a pig trough|dollop|
-        int index = message.indexOf('|');
-        int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
-        String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
-        List<String> answersList = Arrays.asList(answers);
-        currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        answersLiveData.setValue(new AllAnswers(currentQuestion, answersList, false));
-    }
-    private void showNamedAnswers(String message) {
-        String[] tokens = message.split("\\|");
-        List<String> answersList = new ArrayList<>();
-        List<Integer> linesVotedForMe = new ArrayList<>();
-        answersList.add(tokens[2] + ": " + tokens[3]);
-        int tokenIndex = 4;
-        boolean isCorrect = false;
-        String currentPlayerName;
-        String nameVotedFor;
-        while ((tokenIndex + 3) < tokens.length) {
-            currentPlayerName = tokens[tokenIndex];
-            nameVotedFor = tokens[tokenIndex + 1];
-            if (currentPlayerName.equals(thisPlayerName)) {
-                isCorrect = CORRECT.equals(nameVotedFor);
-            }
-            answersList.add(currentPlayerName + " (" +
-                    tokens[tokenIndex + 2] + "): " + tokens[tokenIndex + 3]);
-            if (nameVotedFor.equals(thisPlayerName)) {
-                linesVotedForMe.add(answersList.size() - 1);
-            }
-            tokenIndex += 4;
-        }
-        currentFragmentTagLiveData.setValue(ALL_ANSWERS);
-        answersLiveData.setValue(new AllAnswers(currentQuestion, answersList, true, isCorrect,
-                linesVotedForMe));
-    }
-    @Override // TcpPlayerClient.Listener; message sent from host to player
-    public void onMessageToClient(String message) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "from host to player: " + thisPlayerName + " onMessageToClient(" + message + ")");
-        }
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (message.startsWith(ALL_ANSWERS)) {
-                showAnswers(message);
-                awaitingVoteLiveData.setValue(true);
-                playerStateLiveData.setValue(PlayerState.SUPPLY_VOTE);
-            } else if (message.startsWith(NAMED_ANSWERS)) {
-                showNamedAnswers(message);
-                awaitingVoteLiveData.setValue(false);
-                playerStateLiveData.setValue(PlayerState.AWAITING_NEXT_QUESTION);
-            } else if (message.startsWith(QUESTION)) {
-                String[] tqa = message.split("\\|", 4);
-                currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
-                currentFragmentTagLiveData.setValue(QUESTION);
-                setQuestionLiveData(currentQuestion);
-                awaitingAnswerLiveData.setValue(true);
-                playerStateLiveData.setValue(PlayerState.SUPPLY_ANSWER);
-            } else if (message.startsWith(Constants.Protocol.END_GAME.name())) {
-                endGame();
-            } else {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "unrecognised message received by player: " + message);
-                }
-            }
-        });
-    }
-    private void endGame() {
+    public void endGame() {
         isPlayerLeaving = true;
         int messageId;
         if (iChoseToLeave) {
@@ -485,47 +415,9 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
         }
         gameEndedEvent.setValue(messageId);
     }
-    @Override // TcpPlayerClient.Listener
-    public void onConnected() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Now connected to the game host");
-        }
-        new Handler(Looper.getMainLooper()).post(() -> {
-            playerStateLiveData.setValue(PlayerState.AWAITING_FIRST_QUESTION);
-        });
-    }
-    @Override // TcpPlayerClient.Listener
-    public void onDisconnected() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Now disconnected from the game server");
-        }
-    }
-    @Override // TcpPlayerClient.Listener
-    public void onError(Exception e) {
-        if (BuildConfig.DEBUG) {
-            Log.e(TAG, e.toString());
-        }
-        if (!isPlayerLeaving) {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                onPlayerLeaving();
-                exceptionLiveData.setValue(e);
-            });
-        }
-    }
     public String getPlayerName() {
         return thisPlayerName;
     }
-    /*!!
-    @Override // TcpPlayerClient.Listener
-    public void onHostFound(String hostIp, int port) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
-        }
-        new Handler(Looper.getMainLooper()).post(() -> {
-            hostFoundEvent.setValue(hostIp);
-        });
-    }
-     */
     @Override
     protected void onCleared() {
         if (BuildConfig.DEBUG) {

@@ -91,7 +91,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private GameViewModel gameViewModel;
     private TcpService tcpService;
     private boolean isBound = false;
-    //!! private String playerName;
     private SpannableStringBuilder scoresWaitText;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -125,11 +124,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
-        /*!!
-        Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
-        sendHostAddressButton.setOnClickListener(this);
-
-         */
         hostPromptView = findViewById(R.id.hostPromptView);
         playerPromptView = findViewById(R.id.playerPromptView);
         hostViewsLayout = findViewById(R.id.hostLayout);
@@ -185,17 +179,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection.
-        switch (item.getItemId()) {
-            case R.id.setQuestionNumber:
-                showQuestionNumberDialog();
-                return true;
-            case R.id.sendIPAddress:
-                tcpService.sendMultipleHostBroadcasts(5);
-                nextQuestionButton.setVisibility(View.VISIBLE);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        boolean returnVal = true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.setQuestionNumber) {
+            showQuestionNumberDialog();
+        } else if (itemId == R.id.sendIPAddress) {
+            tcpService.sendMultipleHostBroadcasts(5);
+            nextQuestionButton.setVisibility(View.VISIBLE);
+        } else {
+            returnVal = super.onOptionsItemSelected(item);
         }
+        return returnVal;
     }
     private void showQuestionNumberDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -292,13 +286,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-        /*!!
-        gameViewModel.getHostFoundEvent().observe(this, hostIpAddress -> {
-            if (isBound && tcpService != null && !tcpService.isConnectedToHost()) {
-                tcpService.connect(hostIpAddress, playerName, gameViewModel);
-            }
-        });
-         */
         gameViewModel.getNextQuestionEvent().observe(this, question -> {
             if (question != null && tcpService != null) {
                 tcpService.sendToAll(question);
@@ -330,7 +317,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             if (listen != null && tcpService != null) {
                 WifiManager wifi =
                         (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
-                tcpService.listenForHostBroadcast(wifi, gameViewModel);
+                tcpService.listenForHostBroadcast(wifi);
             }
         });
     }
@@ -391,18 +378,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 sendNextQuestion();
             }
-        /*!!
-        } else if (viewId == R.id.broadcastHostButton) {
-            tcpService.sendMultipleHostBroadcasts(5);
-            nextQuestionButton.setVisibility(View.VISIBLE);
-         */
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
         }
     }
     private void sendNextQuestion() {
-        //! tcpService.sendToAll(gameViewModel.getNextQuestion());
+        // TODO: why isn't this tcpService.sendNextQuestion()?
         gameViewModel.sendNextQuestion();
     }
     @Override // LoginDialogListener
@@ -410,7 +392,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        //!! this.playerName = playerName;
         gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
         tcpService.startHosting(gameViewModel);
@@ -426,7 +407,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        //!! this.playerName = playerName;
         gameViewModel.onPlayerSignedIn(playerName, false);
     }
     @Override // Activity

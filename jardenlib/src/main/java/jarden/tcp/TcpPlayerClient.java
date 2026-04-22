@@ -23,26 +23,22 @@ import java.util.concurrent.Executors;
  * Created by john.denny@gmail.com on 03/01/2026.
  */
 public class TcpPlayerClient {
-    private static final String TAG = "TcpPlayerClient";
-
-    public interface Listener {
-        //!! void onHostFound(String hostIp, int port);
+    public interface ClientListener {
+        void onHostFound(String hostIp, int port);
         void onConnected();
         void onMessageToClient(String message);
         void onDisconnected();
         void onError(Exception e);
     }
-    public interface ClientListener {
-        void onHostFound(String hostIp, int port);
-        void onError(Exception e);
-    }
+
+    private static final String TAG = "TcpPlayerClient";
     private ExecutorService udpExecutor =
             Executors.newSingleThreadExecutor();
     private final ExecutorService readExecutor =
             Executors.newSingleThreadExecutor();
     private final ExecutorService writeExecutor =
             Executors.newSingleThreadExecutor();
-    private Listener listener;
+    private ClientListener clientListener;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
@@ -56,8 +52,8 @@ public class TcpPlayerClient {
             String hostAddress,
             int port,
             String playerName,
-            Listener listener) {
-        this.listener = listener;
+            ClientListener clientListener) {
+        this.clientListener = clientListener;
 
         readExecutor.execute(() -> {
             try {
@@ -74,13 +70,13 @@ public class TcpPlayerClient {
                 // Send JOIN immediately
                 out.println("JOIN|" + playerName);
                 connectedToHost = true;
-                listener.onConnected();
+                clientListener.onConnected();
                 String line;
                 while (connectedToHost && (line = in.readLine()) != null) {
-                    listener.onMessageToClient(line);
+                    clientListener.onMessageToClient(line);
                 }
             } catch (Exception e) {
-                listener.onError(e);
+                clientListener.onError(e);
             } finally {
                 disconnect();
             }
@@ -98,7 +94,7 @@ public class TcpPlayerClient {
             if (udpExecutor != null) {
                 udpExecutor.shutdownNow();
             }
-            listener.onDisconnected();
+            clientListener.onDisconnected();
             try {
                 if (socket != null) socket.close();
             } catch (IOException ignored) {}
@@ -132,6 +128,7 @@ public class TcpPlayerClient {
         });
     }
     public void listenForHostBroadcast(WifiManager wifi, ClientListener callback) {
+        this.clientListener = callback;
         if (udpExecutor == null ||
                 udpExecutor.isShutdown() ||
                 udpExecutor.isTerminated()) {

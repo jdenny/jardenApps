@@ -10,14 +10,25 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import com.jardenconsulting.jardenlib.BuildConfig;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import androidx.core.app.NotificationCompat;
 import jarden.tcp.TcpHostServer;
 import jarden.tcp.TcpPlayerClient;
+
+import static jarden.codswallop.Constants.ALL_ANSWERS;
+import static jarden.codswallop.Constants.CORRECT;
+import static jarden.codswallop.Constants.NAMED_ANSWERS;
+import static jarden.codswallop.Constants.QUESTION;
 
 public class TcpService extends Service implements TcpPlayerClient.ClientListener {
     private static final String TAG = "TcpService";
@@ -30,7 +41,8 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
     private boolean netWorkRunning = true;
     private String hostIpAddress;
     private GameViewModel gameViewModel;
-    private String playerName;
+    private String thisPlayerName;
+    private String currentQuestion;
 
     @Override
     public void onCreate() {
@@ -74,8 +86,8 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
     public void sendVote(int questionSequence, int position) {
         tcpPlayerClient.sendVote(questionSequence, position);
     }
-    public void listenForHostBroadcast(WifiManager wifi, TcpPlayerClient.Listener listener) {
-        tcpPlayerClient.listenForHostBroadcast(wifi, /*!!listener*/ this);
+    public void listenForHostBroadcast(WifiManager wifi) {
+        tcpPlayerClient.listenForHostBroadcast(wifi, this);
     }
     public void sendToAll(String message) {
         tcpHostServer.sendToAll(message);
@@ -109,18 +121,10 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
         }
-        this.playerName = gameViewModel.getPlayerName();
+        this.thisPlayerName = gameViewModel.getPlayerName();
         if (!isConnectedToHost()) {
-            connect(hostIp, playerName, gameViewModel);
+            connect(hostIp, thisPlayerName, this);
         }
-        /*!! ??
-        // Update UI state
-        if (gameViewModel != null) {
-            gameViewModel.setHostIp(hostIp);
-            //!! gameViewModel.setConnectionState(CONNECTING);
-        }
-
-         */
     }
     @Override // TcpPlayerClient.ClientListener
     public void onError(Exception e) {
@@ -134,32 +138,93 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
                 exceptionLiveData.setValue(e);
             });
         }
-
          */
     }
-
     public void attachViewModel(GameViewModel gameViewModel) {
         this.gameViewModel = gameViewModel;
     }
     public void detachViewModel() {
         this.gameViewModel = null;
     }
-
-
-    /*!! not yet implemented
-    @Override
+    @Override // TcpPLayerClient.ClientListener
     public void onConnected() {
-
-    }
-    @Override
-    public void onMessageToClient(String message) {
-
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Now connected to the game host");
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            gameViewModel.setPlayerStateLiveData(
+                    Constants.PlayerState.AWAITING_FIRST_QUESTION);
+        });
     }
     @Override
     public void onDisconnected() {
-
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Now disconnected from the game server");
+        }
     }
-     */
+    @Override
+    public void onMessageToClient(String message) {
+        if (jarden.codswallop.BuildConfig.DEBUG) {
+            Log.d(TAG, "from host to player: " + thisPlayerName + " onMessageToClient(" + message + ")");
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (message.startsWith(ALL_ANSWERS)) {
+                showAnswers(message);
+                gameViewModel.setPlayerStateLiveData(Constants.PlayerState.SUPPLY_VOTE);
+            } else if (message.startsWith(NAMED_ANSWERS)) {
+                showNamedAnswers(message);
+                gameViewModel.setPlayerStateLiveData(Constants.PlayerState.AWAITING_NEXT_QUESTION);
+            } else if (message.startsWith(QUESTION)) {
+                String[] tqa = message.split("\\|", 4);
+                currentQuestion = tqa[1] + ". " + tqa[2] + ": " + tqa[3];
+                gameViewModel.setCurrentFragmentTagLiveData(QUESTION);
+                gameViewModel.setQuestionLiveData(currentQuestion);
+                gameViewModel.setAwaitingAnswerLiveData(true);
+                gameViewModel.setPlayerStateLiveData(Constants.PlayerState.SUPPLY_ANSWER);
+            } else if (message.startsWith(Constants.Protocol.END_GAME.name())) {
+                gameViewModel.endGame();
+            } else {
+                if (jarden.codswallop.BuildConfig.DEBUG) {
+                    Log.d(TAG, "unrecognised message received by player: " + message);
+                }
+            }
+        });
+    }
+    private void showAnswers(String message) {
+        // ALL_ANSWERS|2|a pig trough|dollop|
+        int index = message.indexOf('|');
+        int indexOfFirstAnswer = message.indexOf('|', index + 1) + 1;
+        String[] answers = message.substring(indexOfFirstAnswer).split("\\|");
+        List<String> answersList = Arrays.asList(answers);
+        gameViewModel.setCurrentFragmentTagLiveData(ALL_ANSWERS);
+        gameViewModel.setAnswersLiveData(new AllAnswers(currentQuestion, answersList, false));
+    }
+    private void showNamedAnswers(String message) {
+        String[] tokens = message.split("\\|");
+        List<String> answersList = new ArrayList<>();
+        List<Integer> linesVotedForMe = new ArrayList<>();
+        answersList.add(tokens[2] + ": " + tokens[3]);
+        int tokenIndex = 4;
+        boolean isCorrect = false;
+        String currentPlayerName;
+        String nameVotedFor;
+        while ((tokenIndex + 3) < tokens.length) {
+            currentPlayerName = tokens[tokenIndex];
+            nameVotedFor = tokens[tokenIndex + 1];
+            if (currentPlayerName.equals(thisPlayerName)) {
+                isCorrect = CORRECT.equals(nameVotedFor);
+            }
+            answersList.add(currentPlayerName + " (" +
+                    tokens[tokenIndex + 2] + "): " + tokens[tokenIndex + 3]);
+            if (nameVotedFor.equals(thisPlayerName)) {
+                linesVotedForMe.add(answersList.size() - 1);
+            }
+            tokenIndex += 4;
+        }
+        gameViewModel.setCurrentFragmentTagLiveData(ALL_ANSWERS);
+        gameViewModel.setAnswersLiveData(new AllAnswers(currentQuestion, answersList, true, isCorrect,
+                linesVotedForMe));
+    }
     public class LocalBinder extends Binder {
         public TcpService getService() {
             return TcpService.this;
@@ -170,7 +235,7 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
         tcpHostServer.start();
     }
     public void connect(String hostIp, String playerName,
-                        TcpPlayerClient.Listener listener) {
+                        TcpPlayerClient.ClientListener listener) {
         tcpPlayerClient.connect(hostIp, TcpHostServer.TCP_PORT,
                 playerName, listener);
     }
