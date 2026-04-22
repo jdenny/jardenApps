@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name="jarden.tcp.TcpService"
+            android:name=".TcpService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
     </application>

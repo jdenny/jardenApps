@@ -31,7 +31,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import jarden.tcp.TcpService;
 
 import static jarden.codswallop.Constants.ALL_ANSWERS;
 import static jarden.codswallop.Constants.LOGIN_DIALOG;
@@ -92,16 +91,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private GameViewModel gameViewModel;
     private TcpService tcpService;
     private boolean isBound = false;
-    private String playerName;
+    //!! private String playerName;
     private SpannableStringBuilder scoresWaitText;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "onServiceConnected()");
+            }
             TcpService.LocalBinder binder = (TcpService.LocalBinder) service;
             tcpService = binder.getService();
             isBound = true;
-            tcpService.attachViewModel(gameViewModel, isBound, playerName);
+            tcpService.attachViewModel(gameViewModel);
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -123,8 +125,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         nextQuestionButton.setOnClickListener(this);
+        /*!!
         Button sendHostAddressButton = findViewById(R.id.broadcastHostButton);
         sendHostAddressButton.setOnClickListener(this);
+
+         */
         hostPromptView = findViewById(R.id.hostPromptView);
         playerPromptView = findViewById(R.id.playerPromptView);
         hostViewsLayout = findViewById(R.id.hostLayout);
@@ -155,6 +160,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     protected void onStart() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onStart()");
+        }
         super.onStart();
         Intent intent = new Intent(this, TcpService.class);
         startService(intent);
@@ -164,6 +172,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         if (isBound) {
+            tcpService.detachViewModel();
             unbindService(serviceConnection);
             isBound = false;
         }
@@ -382,9 +391,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 sendNextQuestion();
             }
+        /*!!
         } else if (viewId == R.id.broadcastHostButton) {
             tcpService.sendMultipleHostBroadcasts(5);
             nextQuestionButton.setVisibility(View.VISIBLE);
+         */
         } else {
             Toast.makeText(this, "unknown button pressed: " + view,
                     Toast.LENGTH_LONG).show();
@@ -399,7 +410,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        this.playerName = playerName;
+        //!! this.playerName = playerName;
         gameViewModel.onPlayerSignedIn(playerName, true);
         setHostViews();
         tcpService.startHosting(gameViewModel);
@@ -415,7 +426,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        this.playerName = playerName;
+        //!! this.playerName = playerName;
         gameViewModel.onPlayerSignedIn(playerName, false);
     }
     @Override // Activity

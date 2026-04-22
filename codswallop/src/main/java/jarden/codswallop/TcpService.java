@@ -10,9 +10,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
 import com.jardenconsulting.jardenlib.BuildConfig;
@@ -31,6 +29,8 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
     private WifiManager.WifiLock wifiLock;
     private boolean netWorkRunning = true;
     private String hostIpAddress;
+    private GameViewModel gameViewModel;
+    private String playerName;
 
     @Override
     public void onCreate() {
@@ -109,29 +109,40 @@ public class TcpService extends Service implements TcpPlayerClient.ClientListene
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
         }
-        if (isBound && !isConnectedToHost()) {
-            connect(hostIpAddress, playerName, gameViewModel);
+        this.playerName = gameViewModel.getPlayerName();
+        if (!isConnectedToHost()) {
+            connect(hostIp, playerName, gameViewModel);
         }
+        /*!! ??
         // Update UI state
         if (gameViewModel != null) {
             gameViewModel.setHostIp(hostIp);
             //!! gameViewModel.setConnectionState(CONNECTING);
         }
+
+         */
     }
     @Override // TcpPlayerClient.ClientListener
     public void onError(Exception e) {
         if (BuildConfig.DEBUG) {
             Log.e(TAG, e.toString());
         }
+        /*!!??
         if (!isPlayerLeaving) {
             new Handler(Looper.getMainLooper()).post(() -> {
                 onPlayerLeaving();
                 exceptionLiveData.setValue(e);
             });
         }
+
+         */
     }
 
-    public void attachViewModel(GameViewModel gameViewModel, boolean isBound, String playerName) {
+    public void attachViewModel(GameViewModel gameViewModel) {
+        this.gameViewModel = gameViewModel;
+    }
+    public void detachViewModel() {
+        this.gameViewModel = null;
     }
 
 

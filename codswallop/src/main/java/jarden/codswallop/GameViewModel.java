@@ -512,6 +512,9 @@ public class GameViewModel extends AndroidViewModel implements TcpHostServer.Ser
             });
         }
     }
+    public String getPlayerName() {
+        return thisPlayerName;
+    }
     /*!!
     @Override // TcpPlayerClient.Listener
     public void onHostFound(String hostIp, int port) {
