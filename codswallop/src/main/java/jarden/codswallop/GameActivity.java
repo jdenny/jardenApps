@@ -184,7 +184,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             showQuestionNumberDialog();
         } else if (itemId == R.id.sendIPAddress) {
             tcpService.sendMultipleHostBroadcasts(5);
-            nextQuestionButton.setVisibility(View.VISIBLE);
         } else {
             returnVal = super.onOptionsItemSelected(item);
         }
@@ -219,11 +218,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void makeObservations() {
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
-        /*!!
-        gameViewModel.getQuestionsLoadedEvent().observe(this, qaCount -> {
-            Toast.makeText(this, qaCount + " questions loaded", Toast.LENGTH_LONG).show();
+        gameViewModel.getHostBroadcastSentLiveData().observe(this, sent -> {
+            if (sent) {
+                nextQuestionButton.setEnabled(true);
+            }
         });
-         */
         gameViewModel.getHostStateLiveData().observe(
                 this,
                 hostState -> {
@@ -287,18 +286,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setArguments(b);
             dialog.show(getSupportFragmentManager(), "game_end");
         });
-        /*!!
-        gameViewModel.getNextQuestionEvent().observe(this, question -> {
-            if (question != null && tcpService != null) {
-                tcpService.sendToAll(question);
-            }
-        });
-        gameViewModel.getAnswersEvent().observe(this, answers -> {
-            if (answers != null && tcpService != null) {
-                tcpService.sendToAll(answers);
-            }
-        });
-         */
         gameViewModel.getMissingVoteCtLiveData().observe(this, missingVoteCt -> {
             if (missingVoteCt != null) {
                 hostPromptView.setText(getString(R.string.waiting_for_ct_votes,
@@ -311,20 +298,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         missingAnswerCt));
             }
         });
-        /*!!
-        gameViewModel.getHostLeavingEvent().observe(this, hostLeaving -> {
-            if (hostLeaving != null && tcpService != null) {
-                tcpService.sendToAll(Constants.Protocol.END_GAME.name());
-            }
-        });
-        gameViewModel.getListenForHostBroadcastLiveData().observe(this, listen -> {
-            if (listen != null && tcpService != null) {
-                WifiManager wifi =
-                        (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
-                tcpService.listenForHostBroadcast(wifi);
-            }
-        });
-         */
     }
     private void requestShowFragment(String fragmentTag) {
         if (fragmentTag != null) {
@@ -389,8 +362,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     private void sendNextQuestion() {
-        // TODO: why isn't this tcpService.sendNextQuestion()?
-        //!!?? gameViewModel.sendNextQuestion();
         tcpService.sendNextQuestion();
     }
     @Override // LoginDialogListener
@@ -398,7 +369,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostButton(" + playerName + ')');
         }
-        /*!!gameViewModel*/tcpService.onPlayerSignedIn(playerName, true);
+        tcpService.onPlayerSignedIn(playerName, true);
         gameViewModel.setIsHost(true);
         setHostViews();
         tcpService.startHosting();
@@ -414,7 +385,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onJoinButton(" + playerName + ')');
         }
-        /*!!gameViewModel*/tcpService.onPlayerSignedIn(playerName, false);
+        tcpService.onPlayerSignedIn(playerName, false);
     }
     @Override // Activity
     protected void onDestroy() {

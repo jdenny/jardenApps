@@ -108,7 +108,6 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         if (host) {
             startHost();
         }
-        //!! gameViewModel.listenForHostBroadcastLiveData.setValue(true);
         WifiManager wifi =
                 (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
         listenForHostBroadcast(wifi);
@@ -209,6 +208,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
                     (ipInt >> 24 & 0xff));
         }
         tcpHostServer.sendMultipleHostBroadcasts(hostIpAddress, count);
+        gameViewModel.setHostBroadcastSentLiveData(true);
     }
     private void waitingForAnswers() {
         gameViewModel.setMissingAnswerCtLiveData(getNotAnsweredCount());
@@ -390,7 +390,6 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onHostFound(" + hostIp + ", " + port + ')');
         }
-        //!! this.thisPlayerName = gameViewModel.getPlayerName();
         if (!isConnectedToHost()) {
             connect(hostIp, thisPlayerName, this);
         }
@@ -497,7 +496,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
             return TcpService.this;
         }
     }
-    public void startHosting(/*!!TcpHostServer.ServerListener serverListener*/) {
+    public void startHosting() {
         tcpHostServer = new TcpHostServer(this);
         tcpHostServer.start();
     }
