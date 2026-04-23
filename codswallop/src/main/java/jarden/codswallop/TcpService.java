@@ -1,6 +1,5 @@
 package jarden.codswallop;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import androidx.core.app.NotificationCompat;
 import jarden.quiz.EndOfQuestionsException;
 import jarden.tcp.TcpHostServer;
 import jarden.tcp.TcpPlayerClient;
@@ -53,7 +51,6 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
     private final IBinder binder = new LocalBinder();
     private TcpHostServer tcpHostServer;
     private TcpPlayerClient tcpPlayerClient = new TcpPlayerClient();
-    private boolean isForeground = false;
     private WifiManager.WifiLock wifiLock;
     private boolean netWorkRunning = true;
     private String hostIpAddress;
@@ -88,10 +85,6 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
     }
     @Override // Service
     public IBinder onBind(Intent intent) {
-        if (!isForeground) {
-            startForegroundServiceNotification();
-            isForeground = true;
-        }
         return binder;
     }
     @Override  // Service
@@ -112,9 +105,9 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
                 (WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE);
         listenForHostBroadcast(wifi);
     }
-    //************************************************
+    //================================================
     // code to implement TcpHostServer.ServerListener
-    //************************************************
+    //================================================
     @Override  // TcpHostServer.ServerListener
     // i.e. message sent from player to host
     public void onMessageToServer(String playerName, String message) {
@@ -219,9 +212,9 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         gameViewModel.setHostStateLiveData(Constants.HostState.AWAITING_CT_VOTES);
     }
 
-    //************************************************
+    //================================================
     // code to implement TcpHostServer.ServerListener
-    //************************************************
+    //================================================
     @Override // TcpHostServer.ServerListener
     public void onPlayerConnected(String name) {
         if (BuildConfig.DEBUG) {
@@ -555,26 +548,9 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
                 tcpHostServer = null;
             }
             releaseWifiLock();
-            stopForeground(true);
             stopSelf();
             netWorkRunning = false;
         }
-    }
-
-    // =========================
-    // FOREGROUND NOTIFICATION
-    // =========================
-
-    private void startForegroundServiceNotification() {
-
-        Notification notification =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
-                        .setContentTitle("Codswallop")
-                        .setContentText("Game connection active")
-                      //??  .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setOngoing(true)
-                        .build();
-        startForeground(1, notification);
     }
 
     // =========================

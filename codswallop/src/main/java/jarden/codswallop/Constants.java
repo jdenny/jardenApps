@@ -19,7 +19,8 @@ public class Constants {
     }
     public enum PlayerState {
         // used by QuestionFragment
-        AWAITING_HOST_IP, AWAITING_FIRST_QUESTION,
+        AWAITING_HOST_IP,
+        AWAITING_FIRST_QUESTION,
         SUPPLY_ANSWER, AWAITING_ANSWERS,
         // used by AnswerFragment
         SUPPLY_VOTE, AWAITING_VOTES, AWAITING_NEXT_QUESTION
