@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,39 +40,33 @@ public class QuestionManager {
         }
     }
     private final String TAG = "QuestionManager";
-    private final QuestionListener questionListener;
-    private final List<QuestionAnswer> questionList = new ArrayList<>();
+    //!! private final QuestionListener questionListener;
+    private final List<QuestionAnswer> questionList =
+            Collections.synchronizedList(new ArrayList<>());
     public QuestionManager(Resources resources, QuestionListener questionListener) {
-        this.questionListener = questionListener;
         int qaFileId = BuildConfig.DEBUG ? R.raw.test_questions : R.raw.questions;
-        try (InputStream is =
-                     resources.openRawResource(qaFileId)) {
-            List<String> lines = EngSpaUtils.getLinesFromStream(is);
-            getQuestionsFromStrings(lines);
-            ExecutorService udpExecutor =
-                    Executors.newSingleThreadExecutor();
-            String uriStr =
+        ExecutorService udpExecutor =
+                Executors.newSingleThreadExecutor();
+        udpExecutor.execute(() -> {
+            try (InputStream is = resources.openRawResource(qaFileId)) {
+                List<String> lines = EngSpaUtils.getLinesFromStream(is);
+                getQuestionsFromStrings(lines);
+                String uriStr =
                     "https://raw.githubusercontent.com/jdenny/jardenApps/refs/heads/master/questions.txt";
-            udpExecutor.execute(() -> {
-                try {
-                    List<String> lines2 = new HttpClient().downloadQuestions(uriStr);
-                    getQuestionsFromStrings(lines2);
-                } catch (IOException | URISyntaxException e) {
-                    Log.e(TAG,
-                            String.valueOf(e));
-                } finally {
-                    questionListener.onQuestionsLoaded(questionList.size());
-                }
+                List<String> lines2 = new HttpClient().downloadQuestions(uriStr);
+                getQuestionsFromStrings(lines2);
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "loaded " + questionList.size() +
                             " questions from R.raw.questions & gitHub raw file");
                 }
-            });
-        } catch (IOException e) {
-            String message = "Failure during load questions: " + e;
-            Log.e(TAG, message);
-            questionListener.onError(message);
-        }
+            } catch (IOException | URISyntaxException e) {
+                String message = "Failure during load questions: " + e;
+                Log.e(TAG, message);
+                questionListener.onError(message);
+            } finally {
+                questionListener.onQuestionsLoaded(questionList.size());
+            }
+        });
     }
     private void getQuestionsFromStrings(List<String> lines) {
         for (String line : lines) {
@@ -95,8 +90,5 @@ public class QuestionManager {
         } else {
             throw new EndOfQuestionsException();
         }
-    }
-    public int getQuestionCount() {
-        return questionList.size();
     }
 }

@@ -6,7 +6,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiInfo;
+import android.net.ConnectivityManager;
+import android.net.LinkAddress;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
@@ -16,8 +20,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.jardenconsulting.jardenlib.BuildConfig;
-
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -189,20 +193,52 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
     }
     public void sendMultipleHostBroadcasts(int count) {
         if (hostIpAddress == null) {
-            WifiManager wifi =
-                    (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo info = wifi.getConnectionInfo();
-            int ipInt = info.getIpAddress();
-            hostIpAddress = String.format(
-                    "%d.%d.%d.%d",
-                    (ipInt & 0xff),
-                    (ipInt >> 8 & 0xff),
-                    (ipInt >> 16 & 0xff),
-                    (ipInt >> 24 & 0xff));
+            hostIpAddress = getLocalIpAddress();
         }
-        tcpHostServer.sendMultipleHostBroadcasts(hostIpAddress, count);
-        gameViewModel.setHostBroadcastSentLiveData(true);
+        if (hostIpAddress != null) {
+            tcpHostServer.sendMultipleHostBroadcasts(hostIpAddress, count);
+            gameViewModel.setHostBroadcastSentLiveData(true);
+        } else {
+            Log.e(TAG, "Could not obtain local IP address");
+            Toast.makeText(this, "Could not obtain local IP address", Toast.LENGTH_SHORT).show();
+        }
     }
+
+    private String getLocalIpAddress() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return null;
+
+        // Try active network first
+        Network activeNetwork = cm.getActiveNetwork();
+        if (activeNetwork != null) {
+            String ip = getIpFromNetwork(cm, activeNetwork);
+            if (ip != null) return ip;
+        }
+
+        // Otherwise, iterate over all networks to find a Wi-Fi one
+        for (Network network : cm.getAllNetworks()) {
+            NetworkCapabilities nc = cm.getNetworkCapabilities(network);
+            if (nc != null && nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                String ip = getIpFromNetwork(cm, network);
+                if (ip != null) return ip;
+            }
+        }
+        return null;
+    }
+
+    private String getIpFromNetwork(ConnectivityManager cm, Network network) {
+        LinkProperties lp = cm.getLinkProperties(network);
+        if (lp != null) {
+            for (LinkAddress la : lp.getLinkAddresses()) {
+                InetAddress address = la.getAddress();
+                if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
+                    return address.getHostAddress();
+                }
+            }
+        }
+        return null;
+    }
+
     private void waitingForAnswers() {
         gameViewModel.setMissingAnswerCtLiveData(getNotAnsweredCount());
         gameViewModel.setHostStateLiveData(Constants.HostState.AWAITING_CT_ANSWERS);
@@ -228,7 +264,8 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "player " + name + " re-connecting");
                 }
-                players.put(name, leftPlayers.put(name, leftPlayers.get(name)));
+                Player player = leftPlayers.get(name);
+                players.put(name, player);
                 leftPlayers.remove(name);
             } else {
                 Player player = new Player(name);
@@ -296,7 +333,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         shuffledNameList.add(CORRECT);
         shuffledNameList.addAll(players.keySet());
         Collections.shuffle(shuffledNameList);
-        StringBuffer buffer = new StringBuffer(ALL_ANSWERS + '|' + questionSequence);
+        StringBuilder buffer = new StringBuilder(ALL_ANSWERS + '|' + questionSequence);
         for (String name : shuffledNameList) {
             if (name.equals(CORRECT)) {
                 buffer.append('|' + currentQA.answer);
@@ -310,7 +347,7 @@ public class TcpService extends Service implements TcpHostServer.ServerListener,
         List<Player> playerList = new ArrayList<>(players.values());
         playerList.sort((p1, p2) ->
                 Integer.compare(p2.getScore(), p1.getScore()));
-        StringBuffer buffer = new StringBuffer(NAMED_ANSWERS + '|' + questionSequence);
+        StringBuilder buffer = new StringBuilder(NAMED_ANSWERS + '|' + questionSequence);
         buffer.append('|' + CORRECT + '|' + currentQA.answer);
         if (currentQA.comment != null) {
             buffer.append(". " + currentQA.comment);
