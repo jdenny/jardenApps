@@ -1,9 +1,17 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls' ]
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'junit:junit:4.13.2'
     implementation project(path: ':jardenjavalib')
-    implementation project(path: ':jardenjavalib')
 }
+
 sourceSets.main.resources.srcDirs = ["resources/"]
