@@ -1,3236 +1,2980 @@
 a
+abandon
+ability
+able
+abroad
+absolute
+absolutely
+academic
+accept
+acceptable
+access
+accident
+accommodation
+accompany
+according
+account
+accurate
+accuse
+achieve
+achievement
+acknowledge
+acquire
+act
+active
 activity
 actor
 actress
+actual
+actually
+ad
+adapt
 add
+addition
+additional
 address
+administration
+admire
+admit
+adopt
 adult
-advice,n.
-afraid,adj.
-after,prep.
-afternoon,n.
-again,adv.
-age n.
-ago adv.
-agree v.
-air n.
-airport n.
-all det., pron.
-also adv.
-always adv.
-amazing adj.
+advance
+advanced
+advantage
+adventure
+advertise
+advertisement
+advertising
+advice
+advise
+affair
+affect
+afford
+afraid
+after
+afternoon
+afterwards
+again
+against
+age
+aged
+agency
+agenda
+agent
+aggressive
+ago
+agree
+agreement
+ah
+ahead
+aid
+aim
+air
+aircraft
+airline
+airport
+alarm
+alcohol
+alcoholic
+alive
+all
+allow
+almost
+alone
+along
+already
+also
+alter
+alternative
+although
+always
+amazed
+amazing
+ambition
+ambitious
+among
+amount
 an
-and conj.
-angry adj.
-animal n.
-another det./pron.
-answer n., v.
-any det., pron. a
-nyone pron.
-anything pron.
-apartment n.
-apple n.
-April n.
-area n.
-arm n.
-around prep., adv.
-arrive v.
-art n.
-article n.
-artist n.
-as prep.
-ask v.
-at prep.
-August n.
-aunt n.
-autumn n.
-away adv.
-baby n.
-back n., adv.
-bad adj.
-bag n.
-ball n.
-banana n.
-band n.
-bank (money) n.
-bath n.
-bathroom n.
-be v.,
-auxiliary v.
-beach n.
-beautiful adj.
-because conj.
-become v.
-bed n.
-bedroom n.
-beer n.
-before prep.
-begin v.
-beginning n.
-behind prep., adv.
-believe v.
-below adv., prep.
-best adj.
-better adj.
-between prep.
-bicycle n.
-big adj.
-bike n.
-bill n.
-bird n.
-birthday n.
-black adj., n.
-blog n.
-blonde adj.
-blue adj., n.
-boat n.
-body n.
-book n.
-boot n.
-bored adj.
-boring adj.
-born v.
-both det./pron.
-bottle n.
-box n.
-boy n.
-boyfriend n.
-bread n.
-break v., n.
-breakfast n.
-bring v.
-brother n.
-brown adj., n.
-build v.
-building n.
-bus n.
-business n.
-busy adj.
-but conj.
-butter n.
-buy v.
-by prep.
-bye exclam.
-cafe n.
-cake n.
-call v., n.
-camera n.
-can1 modal v.
-cannot modal v.
-capital n., adj.
-car n.
-card n.
-career n.
-carrot n.
-carry v.
-cat n.
-CD n.
-cent n.
-centre n.
-century n.
-chair n.
-change v., n.
-chart n.
-cheap adj.
-check v.
-cheese n.
-chicken n.
-child n.
-chocolate n.
-choose v.
-cinema n. c
-ity n.
-class n.
-classroom n.
-clean adj., v.
-climb v.
-clock n.
-close1 v.
-clothes n.
-club n.
-coat n.
-coffee n.
-cold adj., n.
-college n.
-colour n.
-come v.
-common adj.
-company n.
-compare v.
-complete adj., v.
-computer n.
-concert n.
-conversation n.
-cook v.
-cooking n.
-cool adj. c
-orrect adj., v.
-cost n., v.
-could modal v.
-country n.
-course n.
-cousin n.
-cow n.
-cream n.
-create v.
-culture n.
-cup n.
-customer n.
-cut v.
-dad n.
-dance n., v.
-dancer n.
-dancing n.
-dangerous adj.
-dark adj.
-date n.
-daughter n.
-day n.
-dear adj.
-December n.
-decide v.
-delicious adj.
-describe v.
-description n.
-design n., v.
-desk n.
-detail n.
-dialogue n.
-dictionary n.
-die v.
-diet n.
-difference n.
-different adj.
-difficult adj.
-dinner n.
-dirty adj.
-discuss v.
-dish n.
-do1 v., auxiliary v.
-doctor n.
-dog n.
-dollar n.
-door n.
-down adv., prep.
-downstairs adv.
-draw v.
-dress n., v.
-drink n., v.
-drive v.
-driver n.
-during prep.
-DVD n.
-each det./pron./adv.
-ear n.
-early adj., adv.
-east n., adj., adv.
-easy adj.
-eat v.
-egg n.
-eight number
-eighteen number
-eighty number
-elephant n.
-eleven number
-else adv.
-email n., v.
-end n., v.
-enjoy v.
-enough det., pron., adv.
-euro n.
-even adv.
-evening n.
-event n.
-ever adv.
-every det.
-everybody pron.
-everyone pron.
-everything pron.
-exam n.
-example n.
-excited adj.
-exciting adj.
-exercise n., v.
-expensive adj.
-explain v.
-extra adj.
-eye n.
-face n.
-fact n.
-fall v.
-false adj.
-family n., adj.
-famous adj.
-fantastic adj.
-far adv.
-farm n.
-farmer n.
-fast adj., adv.
-fat adj.
-father n.
-favourite adj., n.
-February n.
-feel v.
-feeling n.
-festival n.
-few det./adj., pron.
-fifteen number
-fifth number
-fifty number
-fill v.
-film n.
-final adj.
-find v.
-fine adj.
-finish v.
-fire n.
-first det./number, adv.
-fish n.
-five number
-flat n.
-flight n.
-floor n.
-flower n.
-fly v.
-follow v.
-food n.
-foot n.
-football n.
-for prep.
-forget v.
-form n., v.
-forty number
-four number
-fourteen number
-fourth number
-free adj.
-Friday n.
-friend n.
-friendly adj.
-from prep.
-front n., adj.
-fruit n.
-full adj.
-fun n.
-funny adj.
-future n.
-game n.
-garden n.
-geography n.
-get v.
-girl n.
-girlfriend n.
-give v.
-glass n.
-go v.
-good adj.
-goodbye exclam./n.
-grandfather n.
-grandmother n.
-grandparent n.
-
-great adj.
-green adj., n.
-grey adj., n.
-group n.
-grow v.
-guess v., n.
-guitar n.
-gym n.
-hair n.
-half n., det./pron. hand n.
-happen v.
-happy adj.
-hard adj., adv.
-hat n.
-hate v.
-have v.
-have to modal v.
-he pron.
-head n.
-health n.
-healthy adj.
-hear v.
-hello exclam./n.
-help v., n.
-her pron., det.
-here adv.
-hey exclam.
-hi exclam.
-high adj.
-him pron.
-his det.
-history n.
-hobby n.
-holiday n.
-home n., adv.
-homework n.
-hope v.
-horse n.
-hospital n.
-hot adj.
-hotel n.
-hour n.
-house n.
-how adv.
-however adv.
-hundred number
-hungry adj.
-husband n.
-I pron.
-ice n.
-ice cream n.
-idea n.
-if conj.
-imagine v.
-important adj.
-improve v.
-in prep., adv.
-include v.
-information n.
-interest n., v.
-interested adj.
-interesting adj.
-internet n.
-interview n., v.
-into prep.
-introduce v.
-island n.
-it pron.
-its det.
-jacket n.
-January n.
-jeans n.
-job n.
-join v.
-journey n.
-juice n.
-July n.
-June n.
-just adv.
-keep v.
-key n., adj.
-kilometre n.
-kind (type) n.
-kitchen n.
-know v.
-land n.
-language n.
-large adj.
-last1 (final) det.
-late adj., adv.
-later adv.
-laugh v., n.
-learn v.
-leave v.
-left adj., adv., n.
-leg n.
-lesson n.
-let v.
-letter n.
-library n.
-lie1 v.
-life n.
-light (from the sun/a lamp) n.,
-adj.
-like (similar) prep.
-like (find sb/sth pleasant) v.
-line n.
-lion n.
-list n., v.
-listen v.
-little adj., det./pron.
-live1 v.
-local adj.
-long1 adj., adv.
-look v.
-lose v.
-lot pron., det., adv.
-love n., v.
-lunch n.
-machine n.
-magazine n.
-main adj.
-make v.
-man n.
-many det./pron.
-map n.
-March n.
-market n.
-married adj.
-match (contest/correspond) n., v.
-May n.
-maybe adv. me pron.
-meal n.
-mean v.
-meaning n. meat n. meet v.
-meeting n.
-member n.
-menu n.
-message n.
-metre n.
-midnight n.
-mile n.
-milk n.
-million number
-minute 1 n.
-miss v.
-mistake n.
-model n.
-modern adj.
-moment n.
-Monday n.
-money n.
-month n.
-more det./pron., adv.
-morning n.
-most det./pron., adv.
-mother n.
-mountain n.
-mouse n.
-mouth n.
-move v.
-movie n.
-much det./pron., adv. mum n.
-museum n.
-music n.
-must modal v.
-my det.
-name n., v.
-natural adj.
-near prep., adj., adv.
-need v.
-negative adj.
-neighbour n.
-never adv.
-new adj.
-news n.
-newspaper n.
-next adj., adv.
-nice adj.
-night n.
-nine number
-nineteen number
-ninety number
-no exclam., det.
-nobody pron.
-north n., adj., adv.
-nose n.
-not adv.
-note n.
-nothing pron.
-November n.
-now adv. number n.
-nurse n. object n. o’clock adv.
-October n.
-of prep.
-off adv., prep.
-office n.
-often adv.
-oh exclam.
-OK exclam., adj./adv.
-old adj.
-on prep., adv.
-once adv.
-one number/det., pron.
-onion n.
-online adj., adv.
-only adj., adv.
-open adj., v.
-opinion n.
-opposite adj., n., prep., adv. or conj.
-orange n., adj.
-order n., v.
-other adj./pron.
-our det.
-out adv./prep.
-outside adv.
-over prep., adv.
-own adj./pron.
-page n.
-paint v., n.
-painting n.
-pair n.
-paper n.
-paragraph n.
-parent n.
-park n., v.
-part n.
-partner n.
-party n.
-passport n.
-past adj., n., prep.
-pay v.
-pen n.
-pencil n.
-people n.
-pepper n.
-perfect adj.
-period n.
-person n.
-personal adj.
-phone n., v.
-photo n.
-photograph n.
-phrase n.
-piano n.
-picture n.
-piece n.
-pig n.
-pink adj., n.
-place n.
-plan n., v. plane n.
-plant n.
-play v., n.
-player n.
-please exclam.
-point n.
-police n.
-policeman n.
-pool n.
-poor adj.
-popular adj.
-positive adj.
-possible adj.
-post n., v.
-potato n.
-pound n.
-practice n.
-practise v.
-prefer v.
-prepare v.
-present adj., n.
-pretty adj., adv.
-price n.
-probably adv.
-problem n.
-product n.
-programme n.
-project n.
-purple adj., n.
-put v.
-quarter n.
-question n.
-quick adj.
-quickly adv.
-quiet adj.
-quite adv.
-radio n.
-rain n., v.
-read v.
-reader n.
-reading n.
-ready adj.
-real adj.
-really adv.
-reason n.
-red adj., n.
-relax v.
-remember v.
-repeat v.
-report n.
-restaurant n.
-result n.
-return v., n.
-rice n.
-rich adj.
-ride v.
-right adj., adv., n.
-river n.
-road n.
-room n.
-routine n.
-rule n.
-run v.
-sad adj.
-salad n.
-salt n.
-same adj., pron., adv.
-sandwich n.
-Saturday n.
-sayv.
-school n.
-science n.
-scientist n.
-sea n.
-second
-see v.
-sell v.
-send v.
-sentence n.
-September n.
-seven number
-seventeen number
-seventy number
-share v.
-she pron.
-sheep n.
-shirt n.
-shoe n.
-shop n., v.
-shopping n.
-short adj.
-should modal v.
-show v., n.
-shower n.
-sick adj.
-similar adj.
-sing v.
-singer n.
-sister n.
-sit v.
-situation n.
-six number
-sixteen number
-sixty number
-skill n.
-skirt n.
-sleep v.
-slow adj.
-small adj.
-snake n.
-snow n., v.
-so adv., conj.
-some det., pron.
-somebody pron.
-someone pron.
-something pron.
-sometimes adv.
-son n.
-song n.
-soon adv.
-sorry adj., exclam.
-sound n., v.
-soup n.
-south n., adj., adv.
-space n.
-speak v.
-special adj.
-spell v.
-spelling n.
-spend v.
-sport n.
-spring n.
-stand v.
-star n.
-start v.
-statement n.
-station n.
-stay v.
-still adv.
-stop v., n.
-story n.
-street n.
-strong adj.
-student n.
-study n., v.
-style n.
-subject n.
-success n.
-sugar n.
-summer n.
-sun n.
-Sunday n.
-supermarket n.
-sure adj.
-sweater n.
-swim v.
-swimming n.
-table n.
-take v.
-talk v.
-tall adj.
-taxi n.
-tea n.
-teach v.
-teacher n.
-team n.
-teenager n.
-telephone n., v.
-television n.
-tell v.
-ten number
-tennis n.
-terrible adj.
-test n., v.
-text n.
-than conj.
-thank v.
-thanks exclam., n.
-that det., pron., conj.
-the definite article
-theatre n.
-their det.
-them pron.
-then adv.
-there adv.
-they pron.
-thing n.
-think v.
-third number
-thirsty adj.
-thirteen number
-thirty number
-this det./pron.
-thousand number
-three number
-through prep., adv.
-Thursday n.
-ticket n.
-time n.
-tired adj.
-title n.
-to prep., infinitive marker
-today adv., n.
-together adv.
-toilet n.
-tomato n.
-tomorrow adv., n.
-tonight adv., n.
-too adv.
-tooth n.
-topic n.
-tourist n.
-town n.
-traffic n.
-train n.
-travel v., n.
-tree n.
-trip n.
-trousers n.
-true adj.
-try v.
-T-shirt n.
-Tuesday n.
-turn v., n.
-TV n.
-twelve number
-twenty number
-twice adv.
-two number
-type n.
-umbrella n.
-uncle n.
-under prep., adv.
-understand v.
-university n.
-until conj./prep.
-up adv., prep.
-upstairs adv.
-us pron.
-use v.
-useful adj.
-usually adv.
-vacation n.
-vegetable n.
-very adv.
-video n.
-village n.
-visit v., n.
-visitor n.
-wait v.
-waiter n.
-wake v.
-walk v., n.
-wall n.
-want v.
-warm adj.
-wash v.
-watch v., n.
-water n.
-way n.
-we pron.
-wear v.
-weather n.
-website n.
-Wednesday n.
-week n.
-weekend n.
-welcome exclam., v., adj.
-well adv., adj., exclam.
-west n., adj., adv.
-what pron./det.
-when adv., pron., conj.
-where adv., conj.
-which pron./det.
-white adj., n.
-who pron. why adv.
-wife n.
-will modal v.
-win v.
-window n.
-wine n.
-winter n.
-with prep.
-without prep.
-woman n.
-wonderful adj.
-word n.
-work v., n.
-worker n.
-world n.
-would modal v.
-write v.
-writer n.
-writing n. wrong adj.
-yeah exclam.
-year n.
-yellow adj., n.
-yes exclam.
-yesterday adv., n.
-you pron.
-young adj.
-your det.
-yourself pron.
-ability n.
-able adj.
-abroad adv.
-accept v.
-accident n.
-according to prep.
-achieve v.
-actv.
-active adj.
-actually adv.
-adult adj.
-advantage n.
-adventure n.
-advertise v.
-advertisement n.
-advertising n.
-affect v.
-after conj., adv.
-against prep.
-ah exclam.
-airline n.
-alive adj.
-all adv.
-allow v.
-almost adv.
-alone adj./adv.
-along prep., adv.
-already adv.
-alternative n.
-although conj.
-among prep.
-amount n.
-ancient adj.
-ankle n.
-any adv.
-anybody pron.
-any more adv.
-anyway adv.
-anywhere adv., pron.
-app n.
-appear v.
-appearance n.
-apply v.
-architect n.
-architecture n.
-argue v.
-argument n.
-army n.
-arrange v.
-arrangement n.
-as adv., conj.
-asleep adj.
-assistant n., adj.
-athlete n.
-attack n., v.
-attend v.
-attention n.,
-exclam. attractive adj.
-audience n.
-author n.
-available adj.
-average adj., n.
-avoid v.
-award n.
-awful adj.
-back adj.
-background n.
-badly adv.
-bar n.
-baseball n.
-based adj.
-basketball n.
-bean n.
-bear (animal) n.
-beat v.
-beef n.
-before conj., adv.
-behave v.
-behaviour n.
-belong v.
-belt n.
-benefit n.
-best adv., n.
-better adv.
-between adv.
-billion number bin n.
-biology n.
-birth n.
-biscuit n.
-bit n.
-blank adj., n.
-blood n.
-blow v.
-board n.
-boil v.
-bone n.
-book v.
-borrow v.
-boss n.
-bottom n., adj.
-bowl n.
-brain n.
-bridge n.
-bright adj.
-brilliant adj.
-broken adj.
-brush v., n.
-burn v.
-businessman n.
-button n.
-camp n., v.
-camping n.
-can2 n.
-care n., v.
-careful adj.
-carefully adv.
-carpet n.
-cartoon n.
-case n.
-cash n.
-castle n.
-catch v.
-cause n., v.
-celebrate v.
-celebrity n.
-certain adj.
-certainly adv.
-chance n.
-character n.
-charity n.
-chat v., n.
-check n.
-chef n.
-chemistry n.
-chip n.
-choice n.
-church n.
-cigarette n.
-circle n., v.
-classical adj.
-clear adj.
-clearly adv.
-clever adj.
-climate n.
-close2 adj.
-closed adj.
-clothing n.
-cloud n.
-coach n.
-coast n.
-code n. colleague n. collect v. column n. comedy n. comfortable adj. comment n. communicate v. community n. compete v. competition n. complain v. completely adv. condition n. conference n. connect v. connected adj. consider v. contain v. context n. continent n. continue v. control n., v. cook n.
-cooker n. copy n., v. corner n. correctly adv. count v. couple n. cover v. crazy adj. creative adj. credit n. crime n. criminal n. cross v., n. crowd n. crowded adj. cry v. cupboard n. curly adj. cycle n., v. daily adj. danger n. dark n.
-data n.
-dead adj.
-deal v.
-dear exclam.
-death n.
-decision n.
-deep adj.
-definitely adv.
-degree n.
-dentist n.
-department n.
-depend v.
-desert n.
-designer n.
-destroy v.
-detective n.
-develop v.
-device n.
-diary n.
-differently adv.
-digital adj.
-direct adj.
-direction n.
-director n.
-disagree v.
-disappear v.
-disaster n.
-discover v.
-discovery n.
-discussion n.
-disease n.
-distance n.
-divorced adj.
-document n.
-double adj.,
-det., pron., v.
-download v., n.
-downstairs adj.
-drama n.
-drawing n.
-dream n., v.
-drive n.
-driving n.
-drop v.
-drug n.
-dry adj., v.
-earn v.
-earth n.
-easily adv.
-education n.
-effect n.
-either det./pron., adv.
-electric adj.
-electrical adj.
-electricity n.
-electronic adj.
-employ v.
-employee n.
-employer n.
-empty adj.
-ending n.
-energy n.
-engine n.
-engineer n.
-enormous adj.
-enter v.
-environment n.
-equipment n.
-error n.
-especially adv.
-essay n.
-everyday adj.
-everywhere adv.
-evidence n.
-exact adj.
-exactly adv.
-excellent adj.
-except prep.
-exist v.
-expect v.
-experience n.
-experiment n.
-expert n.,adj.
-explanation n.
-express v.
-expression n.
-extreme adj.
-extremely adv.
-factor n.
-factory n.
-fail v.
-fair adj.
-fall n.
-fan n.
-farm v.
-farming n.
-fashion n.
-fat n.
-fear n.
-feature n.
-feed v.
-female adj., n.
-fiction n.
-field n.
-fight v., n.
-figure n.
-film v.
-final n.
-finally adv.
-finger n.
-finish n.
-first n.
-firstly adv.
-fish v.
-fishing n.
-fit v., adj.
-fixv.
-flat adj.
-flu n.
-fly n.
-flying n., adj.
-focus v., n.
-following adj.
-foreign adj.
-forest n.
-fork n.
-formal adj.
-fortunately adv.
-forward adv.
-free adv.
-fresh adj.
-fridge n.
-frog n.
-fun adj.
-furniture n.
-further adj.
-future adj.
-gallery n.
-gap n.
-gas n.
-gate n.
-general adj. gift n.
-goal n.
-god n.
-gold n., adj. golf n.
-good n.
-government n.
-grass n.
-greet v.
-ground n.
-guest n.
-guide n., v.
-gun n.
-guy n.
-habit n.
-half adv.
-hall n.
-happily adv.
-have auxiliary v.
-headache n.
-heart n.
-heat n., v.
-heavy adj.
-height n.
-helpful adj.
-hero n.
-hers pron.
-herself pron.
-hide v.
-high adv.
-hill n.
-himself pron.
-his pron.
-hit v., n.
-hockey n.
-hold v.
-hole n.
-home adj.
-hope n.
-huge adj.
-human adj., n.
-hurt v., adj.
-ideal adj.
-identify v.
-ill adj.
-illness n.
-image n.
-immediately adv.
-impossible adj.
-included adj.
-including prep.
-increase v., n.
-incredible adj.
-independent adj.
-individual n., adj.
-industry n.
-informal adj.
-injury n.
-insect n.
-inside prep., adv., n., adj.
-instead adv.
-instruction n.
-instructor n.
-instrument n.
-intelligent adj.
-international adj.
-introduction n.
-invent v.
-invention n.
-invitation n.
-invite v.
-involve v.
-item n.
-itself pron.
-jam n.
-jazz n.
-jewellery n.
-joke n., v.
-journalist n.
-jump v., n.
-kid n.
-kill v.
-king n.
-knee n.
-knife n.
-knock v.
-knowledge n.
-lab n.
-lady n.
-lake n.
-lamp n.
-land v.
-laptop n.
-last
-later adj.
-laughter n.
-law n.
-lawyer n.
-lazy adj.
-lead1 v.
-leader n.
-learning n.
-least det./pron., adv.
-lecture n., v.
-lemon n.
-lend v.
-less det./pron., adv.
-level n.
-lifestyle n.
-lift v., n.
-light
-likely adj.
-link n., v.
-listener n.
-little adv.
-lock v., n.
-look n.
-lorry n.
-lost adj.
-loud adj., adv.
-loudly adv.
-lovely adj.
-low adj., adv.
-luck n.
-lucky adj.
-mail n., v.
-major adj.
-male adj., n.
-manage v.
-manager n.
-manner n.
-mark v., n.
-marry v.
-material n.
-mathematics n.
-maths n.
-matter n., v.
-may modal v.
-media n.
-medical adj.
-medicine n.
-memory n.
-mention v.
-metal n.
-method n.
-middle n., adj.
-might modal v.
-mind n., v.
-mine (belongs to me) pron.
-mirror n.
-missing adj.
-mobile adj., n.
-monkey n.
-moon n.
-mostly adv.
-motorcycle n.
-movement n.
-musical adj.
-musician n.
-myself pron.
-narrow adj.
-national adj.
-nature n.
-nearly adv.
-necessary adj.
-neck n.
-need n.
-neither det./pron.
-nervous adj.
-network n.
-noise n.
-noisy adj.
-none pron.
-normal adj.
-normally adv.
-notice v., n.
-novel n.
-nowhere adv.
-number v.
-nut n.
-ocean n.
-offer v., n.
-officer n.
-oil n.
-onto prep.
-opportunity n.
-option n.
-ordinary adj.
-organization n.
-organize v.
-original adj.
-ourselves pron.
-outside prep., n., adj.
-oven n.
-own v.
-owner n.
-pack v.
-pain n.
-painter n.
-palace n.
-pants n.
-parking n.
-particular adj.
-pass v.
-passenger n.
-past adv.
-patient n.
-pattern n.
-pay n.
-peace n.
-penny n.
-per prep.
-percent n., adj./adv.
-perform v.
-perhaps adv.
-permission n.
-personality n.
-pet n.
-petrol n.
-photograph v.
-physical adj.
-physics n.
-pick v.
-pilot n.
-planet n.
-plant v.
-plastic n., adj.
-plate n.
-platform n.
-please v.
-pleased adj.
-pocket n.
-polite adj.
-pollution n.
-pop n., adj.
-population n.
-position n.
-possession n.
-possibility n.
-poster n.
-power n.
-predict v.
-present v.
-president n.
-prevent v.
-print v.
-printer n.
-prison n.
-prize n.
-process n.
-produce v.
-professional adj.
-professor n.
-profile n.
-program n.
-progress n.
-promise v., n.
-pronounce v.
-protect v.
-provide v.
-pub n.
-public adj., n.
-publish v.
-pull v.
-purpose n.
-push v.
-quality n.
-quantity n.
-queen n.
-question v.
-quietly adv.
-race (competition) n., v.
-railway n.
-raise v.
-rate n.
-rather adv.
-reach v.
-react v.
-realize v.
-receive v.
-recent adj.
-recently adv.
-reception n.
-recipe n.
-recognize v.
-recommend v.
-record n., v.
-recording n.
-recycle v.
-reduce v.
-refer v.
-refuse1 v.
-region n.
-regular adj.
-relationship n.
-remove v.
-repair v.
-replace v.
-reply v., n.
-report v.
-reporter n.
-request n.
-research n., v.
-researcher n.
-respond v.
-response n.
-rest (remaining part) n.
-review n., v.
-ride n.
-ring1 n.
-ring2 v.
-rise v.
-rock (stone)
-role n.
-roof n.
-round adj., adv., prep.
-route n.
-rubbish n.
-rude adj.
-run n.
-runner n.
-running n.
-sadly adv.
-safe adj.
-sail v.
-sailing n.
-salary n.
-sale n.
-sauce n.
-save v.
-scared adj.
-scary adj.
-scene n.
-schedule n.
-score v., n.
-screen n.
-search n., v.
-season n.
-seat n.
-second
-secondly adv.
-secret adj., n.
-secretary n.
-seem v.
-sense n.
-separate adj.
-series n.
-serious adj.
-serve v.
-service n.
-several det./pron.
-shake v.
-shall modal v.
-shape n.
-sheet n.
-ship n.
-shoulder n.
-shout v., n.
-shut v., adj.
-side n.
-sign n., v.
-silver n., adj.
-simple adj.
-since prep., conj.
-singing n.
-single adj., n.
-sir n.
-site n.
-size n.
-ski v., adj., n.
-skiing n.
-skin n.
-sky n.
-sleep n.
-slowly adv.
-smartphone n.
-smell v., n.
-smile v., n.
-smoke n., v.
-smoking n.
-soap n.
-soccer n.
-social adj.
-society n.
-sock n.
-soft adj.
-soldier n.
-solution n.
-solve v.
-somewhere adv., pron.
-sort n.
-source n.
-speaker n.
-specific adj.
-speech n.
-speed n.
-spider n.
-spoon n.
-square adj., n.
-stage n.
-stair n.
-stamp n.
-star v.
-start n.
-state n.
-stay n.
-steal v.
-step n.
-stomach n.
-stone n.
-store n.
-storm n.
-straight adv., adj.
-strange adj.
-strategy n.
-stress n., v.
-structure n.
-stupid adj.
-succeed v.
-successful adj.
-such det./pron.
-suddenly adv.
-suggest v.
-suggestion n.
-suit n.
-support v., n.
-suppose v.
-sure adv.
-surprise n., v.
-surprised adj.
-surprising adj.
-survey n.
-sweet adj., n.
-symbol n.
-system n.
-tablet n.
-talk n.
-target n.
-task n.
-taste n., v.
-teaching n.
-technology n.
-teenage adj.
-temperature n.
-term n.
-text v.
-themselves pron.
-thick adj.
-thief n.
-thin adj.
-thinking n.
-third n.
-thought n.
-throw v.
-tidy adj., v.
-tie v., n.
-tip n.
-tool n.
-top n., adj.
-touch v.
-tour n.
-tourism n.
-towards prep.
-towel n.
-tower n.
-toy n., adj.
-track n.
-tradition n.
-traditional adj.
-train v.
-trainer n.
-training n.
-transport n.
-traveller n.
-trouble n.
-truck n.
-twin n., adj.
-typical adj.
-underground adj., adv.
-understanding n.
-unfortunately adv.
-unhappy adj.
-uniform n.
-unit n.
-united adj.
-unusual adj.
-upstairs adj.
-use n.
-used to
-modal v.
-user n.
-usual adj.
-valley n.
-van n.
-variety n.
-vehicle n.
-view n.
-virus n.
-voice n.
-wait n.
-war n.
-wash n.
-washing n.
-wave n.
-weak adj.
-web n.
-wedding n.
-weight n.
-welcome n.
-wet adj.
-wheel n.
-while conj.
-whole adj.
-whose det./pron.
-wide adj.
-wild adj.
-wind n.
-winner n.
-wish v., n.
-wood n.
-wooden adj.
-working adj.
-worried adj.
-worry v.
-worse adj.
-worst adj.
-wow exclam.
-yet adv.
-yours pron.
-zero number
-absolutely adv.
-academic adj.
-access n., v.
-accommodation n.
-account n.
-achievement n.
-act n.
-ad n.
-addition n.
-admire v.
-admit v.
-advanced adj.
-advise v.
-afford v.
-age v.
-aged adj.
-agent n.
-agreement n.
-ahead adv.
-aim v., n.
-alarm n.
-album n.
-alcohol n.
-alcoholic adj.
-alternative adj.
-amazed adj.
-ambition n.
-ambitious adj.
-analyse v.
-analysis n.
-announce v.
-announcement n.
-annoy v.
-annoyed adj.
-annoying adj.
-apart adv.
-apologize v.
-application n.
-appointment n.
-appreciate v.
-approximately adv.
-arrest v., n.
-arrival n.
-assignment n.
-assist v.
-atmosphere n.
-attach v.
-attitude n.
-attract v.
-attraction n.
-authority n.
-average v.
-award v.
-aware adj.
-backwards adv.
-bake v.
-balance n., v.
-ban v., n.
-bank (river) n.
-base n., v.
-basic adj.
-basis n.
-battery n.
-battle n.
-beauty n.
-bee n.
-belief n.
-bell n.
-bend v., n.
-benefit v.
-better n.
-bite v., n.
-block n., v.
-board v.
-bomb n., v.
-border n.
-bother v.
-branch n.
-brand n., v.
-brave adj.
-breath n.
-breathe v.
-breathing n.
-bride n.
-bubble n.
-bury v.
-by adv.
-calm adj., v., n.
-campaign n., v.
-campus n.
-candidate n.
-cap n.
-captain n.
-careless adj.
-category n.
-ceiling n.
-celebration n.
-central adj.
-centre v.
-ceremony n.
-chain n.
-challenge n.
-champion n.
-channel n.
-chapter n.
-charge n., v.
-cheap adv.
-cheat v., n.
-cheerful adj.
-chemical adj., n.
-chest n.
-childhood n.
-claim v., n.
-clause n.
-clear v.
-click v., n.
-client n.
-climb n.
-close2 adv.
-cloth n.
-clue n.
-coach v.
-coal n.
-coin n.
-collection n.
-coloured adj.
-combine v.
-comment v.
-commercial adj., n.
-commit v.
-communication n.
-comparison n.
-competitor n.
-competitive adj.
-complaint n.
-complex adj.
-concentrate v.
-conclude v.
-conclusion n.
-confident adj.
-confirm v.
-confuse v.
-confused adj.
-connection n.
-consequence n.
-consist v.
-consume v.
-consumer n.
-contact n., v.
-container n.
-content n.
-continuous adj.
-contrast n., v.
-convenient adj.
-convince v.
-cool v.
-costume n.
-cottage n.
-cotton n.
-count n.
-countryside n.
-court n.
-cover n.
-covered adj.
-cream adj.
-criminal adj.
-cruel adj.
-cultural adj.
-currency n.
-current adj.
-currently adv.
-curtain n.
-custom n.
-cut n.
-daily adv.
-damage n., v.
-deal n.
-decade n.
-decorate v.
-deep adv.
-define v.
-definite adj.
-definition n.
-deliver v.
-departure n.
-despite prep.
-destination n.
-determine v.
-determined adj.
-development n.
-diagram n.
-diamond n.
-difficulty n.
-direct v., adv.
-directly adv.
-dirt n.
-disadvantage n.
-disappointed adj.
-disappointing adj.
-discount n.
-dislike v., n.
-divide v.
-documentary n.
-donate v.
-double adv.
-doubt n., v.
-dressed adj.
-drop n.
-drum n.
-drunk adj.
-due adj.
-dust n.
-duty n.
-earthquake n.
-eastern adj.
-economic adj.
-economy n.
-edge n.
-editor n.
-educate v.
-educated adj.
-educational adj.
-effective adj.
-effectively adv.
-effort n.
-election n.
-element n.
-embarrassed adj.
-embarrassing adj.
-emergency n.
-emotion n.
-employment n.
-empty v.
-encourage v.
-enemy n.
-engaged adj.
-engineering n.
-entertain v.
-entertainment n.
-entrance n.
-entry n.
-environmental adj.
-episode n.
-equal adj., v.
-equally adv.
-escape v., n.
-essential adj.
-eventually adv.
-examine v.
-except conj.
-exchange n., v.
-excitement n.
-exhibition n.
-expand v.
-expected adj.
-expedition n.
-experience v.
-experienced adj.
-experiment v.
-explode v.
-explore v.
-explosion n.
-export n., v.
-extra n., adv.
-face v.
-fairly adv.
-familiar adj.
-fancy v., adj.
-far adj.
-fascinating adj.
-fashionable adj.
-fasten v.
-favour n.
-fear v.
-feature v.
-fence n.
-fighting n.
-file n.
-financial adj.
-fire v.
-fitness n.
-fixed adj.
-flag n.
-flood n., v.
-flour n.
-flow v., n.
-fold v.
-folk n., adj.
-following n.
-force n., v.
-forever adv.
-frame n., v.
-freeze v.
+analyse
+analysis
+ancient
+and
+anger
+angle
+angry
+animal
+ankle
+anniversary
+announce
+announcement
+annoy
+annoyed
+annoying
+annual
+another
+answer
+anxious
+any
+anybody
+anyone
+anything
+anyway
+anywhere
+apart
+apartment
+apologize
+app
+apparent
+apparently
+appeal
+appear
+appearance
+apple
+application
+apply
+appointment
+appreciate
+approach
+appropriate
+approval
+approve
+approximately
+april
+architect
+architecture
+area
+argue
+argument
+arise
+arm
+armed
+arms
+army
+around
+arrange
+arrangement
+arrest
+arrival
+arrive
+art
+article
+artificial
+artist
+artistic
+as
+ashamed
+ask
+asleep
+aspect
+assess
+assessment
+assignment
+assist
+assistant
+associate
+associated
+association
+assume
+at
+athlete
+atmosphere
+attach
+attack
+attempt
+attend
+attention
+attitude
+attract
+attraction
+audience
+august
+aunt
+author
+authority
+autumn
+auxiliary
+available
+average
+average
+avoid
+award
+award
+aware
+away
+awful
+baby
+back
+background
+backwards
+bacteria
+bad
+badly
+bag
+bake
+balance
+ball
+ban
+banana
+band
+bank
+bank
+bar
+bar
+barrier
+base
+baseball
+based
+basic
+basically
+basis
+basketball
+bath
+bathroom
+battery
+battle
+be
+beach
+bean
+bear
+beat
+beat
+beautiful
+beauty
+because
+become
+bed
+bedroom
+bee
+beef
+beer
+before
+beg
+begin
+beginning
+behave
+behaviour
+behind
+being
+belief
+believe
+bell
+belong
+below
+belt
+bend
+benefit
+bent
+best
+best
+bet
+better
+between
+beyond
+bicycle
+big
+bike
+bill
+billion
+biology
+bird
+birth
+birthday
+biscuit
+bit
+bite
+bitter
+black
+blame
+blank
+blind
+block
+blog
+blonde
+blood
+blow
+blue
+board
+boat
+body
+boil
+bomb
+bond
+bone
+book
+boot
+border
+bored
+boring
+born
+borrow
+boss
+both
+bother
+bottle
+bottom
+bowl
+box
+boy
+boyfriend
+brain
+branch
+brand
+brave
+bread
+break
+breakfast
+breast
+breath
+breathe
+breathing
+bride
+bridge
+brief
+bright
+brilliant
+bring
+broad
+broadcast
+broken
+brother
+brown
+brush
+bubble
+budget
+build
+building
+bullet
+bunch
+burn
+burn
+bury
+bus
+bush
+business
+businessman
+busy
+but
+butter
+button
+buy
+by
+by
+bye
+cable
+cafe
+cake
+calculate
+call
+calm
+camera
+camp
+campaign
+camping
+campus
+can
+cancel
+cancer
+candidate
+cannot
+cap
+capable
+capacity
+capital
+captain
+capture
+car
+card
+care
+career
+careful
+carefully
+careless
+carpet
+carrot
+carry
+cartoon
+case
+cash
+cast
+castle
+cat
+catch
+catch
+category
+cause
+cd
+ceiling
+celebrate
+celebration
+celebrity
+cell
+cent
+central
+centre
+centre
+century
+ceremony
+certain
+certainly
+chain
+chain
+chair
+chairman
+challenge
+champion
+chance
+change
+channel
+chapter
+character
+characteristic
+charge
+charity
+chart
+chat
+cheap
+cheat
+check
+cheerful
+cheese
+chef
+chemical
+chemistry
+chest
+chicken
+chief
+child
+childhood
+chip
+chocolate
+choice
+choose
+church
+cigarette
+cinema
+circle
+circumstance
+cite
+citizen
+civil
+claim
+class
+classic
+classical
+classroom
+clause
+clean
+clear
+clearly
+clever
+click
+client
+climate
+climb
+clock
+close
+closed
+closely
+cloth
+clothes
+clothing
+cloud
+club
+clue
+coach
+coal
+coast
+coat
+code
+coffee
+coin
+cold
+collapse
+collection
+college
+colour
+coloured
+combination
+combine
+come
+comfort
+command
+comment
+commercial
+commission
+commit
+commitment
+committee
+common
+commonly
+communication
+company
+compare
+comparison
+competitive
+competitor
+complaint
+complete
+complex
+complicated
+component
+computer
+concentrate
+concentration
+concept
+concern
+concerned
+concert
+conclude
+conclusion
+conduct
+confidence
+confident
+confirm
+conflict
+confuse
+confused
+confusing
+connection
+conscious
+consequence
+conservative
+consideration
+consist
+consistent
+constant
+constantly
+construct
+construction
+consume
+consumer
+contact
+container
+contemporary
+content
+contest
+continuous
+contract
+contrast
+contribute
+contribution
+convenient
+conversation
+convert
+convince
+convinced
+cook
+cooker
+cooking
+cool
+cool
+core
+corporate
+cost
+costume
+cottage
+cotton
+could
+council
+count
+country
+countryside
+county
+courage
+course
+court
+cousin
+cover
+covered
+cow
+crash
+cream
+cream
+create
+creation
+creature
+credit
+crew
+criminal
+crisis
+criterion
+critic
+critical
+criticism
+criticize
+crop
+crucial
+cruel
+cry
+cultural
+culture
+cup
+cure
+currency
+current
+current
+currently
+curtain
+curve
+curved
+custom
+customer
+cut
+cut
+dad
+daily
+damage
+dance
+dancer
+dancing
+dangerous
+dark
+data
+date
+daughter
+day
+dead
+deal
+dear
+death
+debate
+debt
+decade
+december
+decent
+decide
+decision
+declare
+decline
+decorate
+decoration
+decrease
+deep
+deep
+deeply
+defeat
+defence
+defend
+define
+definite
+definitely
+definition
+degree
+delay
+deliberate
+deliberately
+delicious
+delight
+delighted
+deliver
+delivery
+demand
+demonstrate
+dentist
+deny
+department
+departure
+depend
+depressed
+depressing
+depth
+describe
+description
+desert
+deserve
+design
+designer
+desire
+desk
+desperate
+despite
+destination
+destroy
+detail
+detailed
+detect
+detective
+determine
+determined
+develop
+development
+device
+diagram
+dialogue
+diamond
+diary
+dictionary
+die
+diet
+difference
+different
+differently
+difficult
+difficulty
+dig
+digital
+dinner
+direct
+direct
+direction
+directly
+director
+dirt
+dirty
+disadvantage
+disagree
+disappear
+disappointed
+disappointing
+disaster
+disc
+discipline
+discount
+discover
+discovery
+discuss
+discussion
+disease
+dish
+dishonest
+dislike
+dismiss
+display
+distance
+distribute
+distribution
+district
+divide
+divide
+division
+divorced
+do
+doctor
+document
+document
+documentary
+dog
+dollar
+domestic
+dominate
+donate
+door
+double
+doubt
+down
+download
+downstairs
+downwards
+dozen
+draft
+drag
+drama
+dramatic
+draw
+drawing
+dream
+dress
+dressed
+drink
+drive
+driver
+driving
+drop
+drug
+drum
+drunk
+dry
+due
+during
+dust
+duty
+dvd
+each
+ear
+early
+earn
+earth
+earthquake
+easily
+east
+eastern
+easy
+eat
+economic
+economy
+edge
+edit
+edition
+editor
+educate
+educated
+education
+educational
+effect
+effective
+effectively
+efficient
+effort
+egg
+eight
+eighteen
+eighty
+either
+elderly
+elect
+election
+electric
+electrical
+electricity
+electronic
+element
+elephant
+eleven
+else
+elsewhere
+email
+embarrassed
+embarrassing
+emerge
+emergency
+emotion
+emotional
+emphasis
+emphasize
+employ
+employee
+employer
+employment
+empty
+enable
+encounter
+encourage
+end
+ending
+enemy
+energy
+engage
+engaged
+engine
+engineer
+engineering
+enhance
+enjoy
+enormous
+enough
+enquiry
+ensure
+enter
+entertain
+entertainment
+enthusiasm
+enthusiastic
+entire
+entirely
+entrance
+entry
+environment
+environmental
+episode
+equal
+equal
+equally
+equipment
+error
+escape
+especially
+essay
+essential
+establish
+estate
+estimate
+ethical
+euro
+evaluate
+even
+evening
+event
+eventually
+ever
+every
+everybody
+everyday
+everyone
+everything
+everywhere
+evidence
+evil
+exact
+exactly
+exam
+examination
+examine
+example
+excellent
+except
+except
+exchange
+excited
+excitement
+exciting
+exclaim
+exclamation
+excuse
+executive
+exercise
+exhibition
+exist
+existence
+expand
+expect
+expectation
+expected
+expedition
+expense
+expensive
+experience
+experience
+experienced
+experiment
+expert
+explain
+explanation
+explode
+exploration
+explore
+explosion
+export
+expose
+express
+expression
+extend
+extent
+external
+extra
+extra
+extraordinary
+extreme
+extreme
+extremely
+eye
+face
+facility
+fact
+factor
+factory
+fail
+failure
+fair
+fairly
+faith
+fall
+false
+familiar
+family
+famous
+fan
+fancy
+fantastic
+far
+farm
+farmer
+farming
+fascinating
+fashion
+fashionable
+fast
+fasten
+fat
+father
+fault
+favour
+favourite
+fear
+feather
+feature
+february
+fee
+feed
+feedback
+feel
+feeling
+fellow
+female
+fence
+festival
+few
+fiction
+field
+fifteen
+fifth
+fifty
+fight
+fighting
+figure
+file
+file
+fill
+film
+final
+finally
+finance
+financial
+find
+finding
+fine
+finger
+finish
+fire
+firm
+first
+firstly
+fish
+fishing
+fit
+fitness
+five
+fix
+fixed
+flag
+flame
+flash
+flat
+flat
+flexible
+flight
+float
+flood
+flour
+flow
+flower
+flu
+fly
+flying
+focus
+fold
+folding
+folk
+follow
+following
+food
+foot
+football
+for
+force
+foreign
+forest
+forever
+forget
+forgive
+fork
+form
+formal
+former
+fortunately
+fortune
+forty
+forward
+found
+four
+fourteen
+fourth
+frame
+free
+freedom
+freeze
+frequency
 frequently
-friendship n.
-frighten v.
-frightened adj.
-frightening adj.
-frozen adj.
-fry v.
-fuel n.
-function n.
-fur n.
-further adv.
-garage n.
-gather v.
-generally adv.
-generation n.
-generous adj.
-gentle adj.
-gentleman n.
-ghost n.
-giant adj., n.
-glad adj.
-global adj.
-glove n.
-go n.
-goods n.
-grade n.
-graduate n., v.
-grain n.
-grateful adj.
-growth n.
-guard n., v.
-guilty adj.
-hand v.
-hang v.
-happiness n.
-hardly adv.
-hate n.
-head v.
-headline n.
-heating n.
-heavily adv.
-helicopter n.
-highlight v., n.
-highly adv.
-hire v.
-historic adj.
-historical adj.
-honest adj.
-horrible adj.
-horror n.
-host n.
-hunt v.
-hurricane n.
-hurry n., v.
-identity n.
-ignore v.
-illegal adj.
-imaginary adj.
-immediate adj.
-immigrant n.
-impact n., v.
-import n., v.
-importance n.
-impression n.
-impressive adj.
-improvement n.
-incredibly adv.
-indeed adv.
-indicate v.
-indirect adj.
-indoor adj.
-indoors adv.
-influence n., v.
-ingredient n.
-injure v.
-injured adj.
-innocent adj.
-intelligence n.
-intend v.
-intention n.
-invest v.
-investigate v.
-involved adj.
-iron n., v.
-issue n.
-IT n.
-journal n.
-judge n., v.
-keen adj.
-key v.
-keyboard n.
-kick v., n.
-killing n.
-kind (caring) adj.
-kiss v., n.
-knock n.
-label n., v.
-laboratory n.
-lack n., v.
-latest adj.
-lay v.
-layer n.
-lead1 n.
-leading adj.
-leaf n.
-leather n.
-legal adj.
-leisure n.
-length n.
-level adj.
-lie (tell a lie) v., n.
-like (find sb/sth pleasant) n.
-limit n., v.
-lip n.
-liquid n., adj.
-literature n.
-live2 adj., adv.
-living adj., n.
-local n.
-locate v.
-located adj.
-location n.
-lonely adj.
-loss n.
-luxury n.
-mad adj.
-magic n., adj.
-mainly adv.
-mall n.
-management n.
-market v.
-marketing n.
-marriage n.
-meanwhile adv.
-measure v., n.
-medium adj.
-mental adj.
-mention n.
-mess n.
-mild adj.
-mine (hole in the ground) n.
-mix v., n.
-mixture n.
-mood n.
-move n.
-mud n.
-murder n., v.
-muscle n.
-musical n.
-mystery n.
-nail n.
-narrative n., adj.
-nation n.
-native adj., n.
-naturally adv.
-necessarily adv.
-need modal v.
-needle n.
-neighbourhood n.
-neither adv.
-net n.
-next n.
-nor conj./adv.
-normal n.
-northern adj.
-note v.
-now conj.
-nuclear adj.
-obvious adj.
-obviously adv.
-occasion n.
-occur v.
-odd adj.
-official adj.
-old-fashioned adj.
-once conj.
-operation n.
-organized adj.
-organizer n.
-original n.
-originally adv.
-ought modal v.
-ours pron.
-outdoor adj.
-outdoors adv.
-pack n.
-package n.
-painful adj.
-pale adj.
-pan n.
-participate v.
-particularly adv.
-pass n.
-passion n.
-path n.
-payment n.
-peaceful adj.
-percentage n.
-perfectly adv.
-performance n.
-personally adv.
-persuade v.
-photographer n.
-photography n.
-pin n., v.
-pipe n.
-place v.
-planning n.
-pleasant adj.
-pleasure n. p
-lenty pron.
-plot n.
-plus1 prep.
-poem n.
-poet n.
-poetry n.
-point v.
-poison n., v.
-poisonous adj.
-policy n.
-political adj.
-politician n.
-politics n.
-port n.
-portrait n.
-possibly adv.
-pot n.
-pour v.
-poverty n.
-powder n.
-powerful adj.
-practical adj.
-pray v.
-prayer n.
-prediction n.
-prepared adj.
-presentation n.
-press n., v.
-pressure n.
-pretend v.
-previous adj.
-previously adv.
-priest n.
-primary adj.
-prince n.
-princess n.
-printing n.
-prisoner n.
-private adj.
-producer n.
-production n.
-profession n.
-profit n.
-program v.
-promote v.
-proper adj.
-properly adv.
-property n.
-protest n., v.
-proud adj.
-prove v.
-pull n.
-punish v.
-punishment n.
-push n.
-qualification n.
-qualified adj.
-qualify v.
-queue n., v.
-quit v.
-quotation n.
-quote v., n.
-race (people) n.
-racing n.
-range n.
-rare adj.
-rarely adv.
-reaction n.
-reality n.
-receipt n.
-recommendation n.
-reference n.
-reflect v.
-regularly adv.
-reject v.
-relate v.
-related adj.
-relation n.
-relative adj., n.
-relaxed adj.
-relaxing adj.
-release v., n.
-reliable adj.
-religion n.
-religious adj.
-remain v.
-remind v.
-remote adj.
-rent n., v.
-repair n.
-repeat n.
-repeated adj.
-represent v.
-request v.
-require v.
-reservation n.
-resource n.
-respect n., v.
-responsibility n.
-responsible adj.
-result v.
-retire v.
-retired adj.
-revise v.
-ring2 n.
-rise n.
-risk n., v.
-robot n.
-roll v., n.
-romantic adj.
-rope n.
-rough adj.
-row1 n.
-royal adj.
-rugby n.
-rule v.
-safety n.
-sail n.
-sailor n.
-sample n.
-sand n.
-scan v.
-scientific adj.
-script n.
-sculpture n.
-secondary adj.
-security n.
-seed n.
-sensible adj.
-separate v.
-seriously adv.
-servant n. set (put) v..
-setting n.
-sex n.
-sexual adj.
-shake n.
-share n.
-sharp adj.
-shelf n.
-shell n.
-shift n.
-shine v.
-shiny adj.
-shoot v.
-shy adj.
-sight n.
-signal n., v.
-silent adj.
-silly adj.
-similarity n.
-similarly adv.
-simply adv.
-since adv.
-sink v.
-slice n., v.
-slightly adv.
-slow v.
-smart adj.
-smooth adj.
-software n.
-soil n.
-solid adj., n.
-sort v.
-southern adj.
-specifically adv.
-spending n.
-spicy adj.
-spirit n.
-spoken adj.
-spot n.
-spread v.
-spring v.
-stadium n.
-staff n.
-standard n., adj.
-state adj., v.
-statistic n.
-statue n.
-stick (push into/attach) v.
-stick (piece of wood) n.
-still adj.
-store v.
-stranger n.
-strength n.
-string n.
-strongly adv.
-studio n.
-stuff n.
-substance n.
-successfully adv.
-sudden adj.
-suffer v.
-suit v.
-suitable adj.
-summarize v.
-summary n.
-supply n., v.
-supporter n.
-surely adv.
-surface n.
-survive v.
-swim n.
-switch v.
-symptom n.
-tail n.
-talent n.
-talented adj.
-tape n.
-tax n., v.
-technical adj.
-technique n.
-tend v.
-tent n.
-that adv.
-theirs pron.
-theme n.
-theory n.
-therefore adv.
-this adv.
-though conj., adv.
-throat n.
-throughout prep./adv.
-tight adj.
-till conj./prep.
-tin n.
-tiny adj.
-tip v.
-toe n.
-tongue n.
-total adj., n.
-totally adv.
-touch n.
-tour v.
-trade n., v.
-translate v.
-translation n.
-transport v.
-treat v.
-treatment n.
-trend n.
-trick n., v.
-truth n.
-tube n.
-type v.
-typically adv.
-tyre n.
-ugly adj.
-unable adj.
-uncomfortable adj.
-underwear n.
-unemployed adj.
-unemployment n.
-unfair adj.
-union n.
-unless conj.
-unlike prep.
-unlikely adj.
-unnecessary adj.
-unpleasant adj.
-update v., n.
-upon prep.
-upset adj., v.
-used1 adj.
-used2 adj.
-valuable adj.
-value n.
-various adj.
-version n.
-victim n.
-view v.
-viewer n.
-violent adj.
-volunteer n., v.
-vote n., v.
-warm v.
-warn v.
-warning n.
-waste n., v., adj.
-water v.
-wave v.
-weapon n.
-weigh v.
-western adj.
-whatever det./pron.
-whenever conj.
-whether conj.
-while n.
-whole n.
-will n.
-win n.
-wing n.
-within prep.
-wonder v., n.
-wool n.
-worldwide adj., adv.
-worry n.
-worse adv.
-worst adv.
-worth adj.
-written adj.
-wrong adv.
-yard n.
-young n.
-youth n.
-abandon v.
-absolute adj.
-academic n.
-acceptable adj.
-accompany v.
-account v.
-accurate adj.
-accuse v.
-acknowledge v.
-acquire v.
-actual adj.
-adapt v.
-additional adj.
-address v.
-administration n.
-adopt v.
-advance n., v., adj.
-affair n.
-afterwards adv.
-agency n.
-agenda n.
-aggressive adj.
-aid n., v.
-aircraft n.
-alarm v.
-alter v.
-amount v.
-anger n.
-angle n.
-anniversary n.
-annual adj.
-anxious adj.
-apparent adj.
-apparently adv.
-appeal n., v.
-approach n., v.
-appropriate adj.
-approval n.
-approve v.
-arise v.
-armed adj.
-arms n.
-artificial adj.
-artistic adj.
-ashamed adj.
-aspect n.
-assess v.
-assessment n.
-associate v.
-associated adj.
-association n.
-assume v.
-attempt n., v.
-back v.
-bacteria n.
-bar v.
-barrier n.
-basically adv.
-battle v.
-bear (deal with) v.
-beat n.
-beg v.
-being n.
-bent adj.
-bet v., n.
-beyond prep., adv.
-bill v.
-bitter adj.
-blame v., n.
-blind adj.
-bond n.
-border v.
-breast n.
-brief adj.
-broad adj.
-broadcast v., n.
-budget n.
-bullet n.
-bunch n.
-burn n.
-bush n.
-but prep.
-cable n.
-calculate v.
-cancel v.
-cancer n.
-capable adj.
-capacity n.
-capture v., n.
-cast n., v.
-catch n.
-cell n.
-chain v.
-chair v.
-chairman n.
-challenge v.
-characteristic n., adj.
-chart v.
-chief adj., n.
-circumstance n.
-cite v.
-citizen n.
-civil adj.
-classic adj., n.
-close1 n.
-closely adv.
-collapse v., n.
-combination n.
-comfort n., v.
-command n., v.
-commission n., v.
-commitment n.
-committee n.
-commonly adv.
-complex n.
-complicated adj.
-component n.
-concentration n.
-concept n.
-concern n., v.
-concerned adj.
-conduct v., n.
-confidence n.
-conflict n., v.
-confusing adj.
-conscious adj.
-conservative adj., n.
-consideration n.
-consistent adj.
-constant adj.
-constantly adv.
-construct v.
-construction n.
-contemporary adj.
-contest n.,
-contract n., v.
-contribute v.
-contribution n.
-convert v.
-convinced adj.
-core n., adj.
-corporate adj.
-council n.
-county n.
-courage n.
-crash n., v.
-creation n.
-creature n.
-credit v.
-crew n.
-crisis n.
-criterion n.
-critic n.
-critical adj.
-criticism n.
-criticize v.
-crop n.
-crucial adj.
-cry n.
-cure v., n.
-current n.
-curve n., v.
-curved adj.
-date v.
-debate n., v.
-debt n.
-decent adj.
-declare v.
-decline v., n.
-decoration n.
-decrease v., n.
-deeply adv.
-defeat v., n.
-defence n.
-defend v.
-delay v., n.
-deliberate adj.
-deliberately adv.
-delight v., n.
-delighted adj.
-delivery n.
-demand n., v.
-demonstrate v.
-deny v.
-depressed adj.
-depressing adj.
-depth n.
-desert v.
-deserve v.
-desire n., v.
-desperate adj.
-detail v.
-detailed adj.
-detect v.
-dig v.
-disc n.
-discipline n.
-discount v.
-dishonest adj.
-dismiss v.
-display v., n.
-distribute v.
-distribution n.
-district n.
-divide n.
-division n.
-document v.
-domestic adj.
-dominate v.
-downwards adv.
-dozen n., det.
-draft n., v.
-drag v.
-dramatic adj.
-edit v.
-edition n.
-efficient adj.
-elderly adj.
-elect v.
-elsewhere adv.
-emerge v.
-emotional adj
-emphasis n.
-emphasize v.
-enable v.
-encounter v., n.
-engage v.
-enhance v.
-enquiry n.
-ensure v.
-enthusiasm n.
-enthusiastic adj.
-entire adj.
-entirely adv.
-equal n.
-establish v.
-estate n.
-estimate v., n.
-ethical adj.
-evaluate v.
-even adj.
-evil adj., n.
-examination n.
-excuse n., v.
-executive n., adj.
-existence n.
-expectation n.
-expense n.
-exploration n.
-expose v.
-extend v.
-extent n.
-external adj.
-extraordinary adj.
-extreme n.
-facility n.
-failure n.
-faith n.
-fault n.
-favour v.
-feather n.
-fee n.
-feed n.
-feedback n.
-feel n.
-fellow adj.
-figure v.
-file v.
-finance n., v.
-finding n.
-firm n.
-fix n.
-flame n.
-flash n., v.
-flexible adj.
-float v.
-fold n.
-folding adj.
-following prep.
-forgive v.
-former adj.
-fortune n.
-forward adj.
-found v.
-free v.
-freedom n.
-frequency n.
-fuel v.
-fully adv.
-function v.
-fund n., v.
-fundamental adj.
-funding n.
-furthermore adv.
-gain v., n.
-gang n.
-generate v.
-genre n.
-govern v.
-grab v.
-grade v.
-gradually adv.
-grand adj.
-grant v., n.
-guarantee v., n.
-handle v., n.
-harm n., v.
-harmful adj.
-hearing n.
-heaven n.
-heel n.
-hell n.
-hesitate v.
-high n.
-hire n.
-hold n.
-hollow adj.
-holy adj.
-honour n., v.
-host v.
-house v.
-household n.
-housing n.
-humorous adj.
-humour n.
-hunt n.
-hunting n.
-hurt n.
-ideal n.
-illustrate v.
-illustration n.
-imagination n.
-impatient adj.
-imply v.
-impose v.
-impress v.
-impressed adj.
-inch n.
-incident n.
-income n.
-increasingly adv.
-industrial adj.
-infection n.
-inform v.
-initial adj.
-initially adv.
-initiative n.
-inner adj.
-insight n.
-insist v.
-inspire v.
-install v.
-instance n.
-institute n.
-institution n.
-insurance n.
-intended adj.
-intense adj.
-internal adj.
-interpret v.
-interrupt v.
-investigation n.
-investment n.
-issue v.
-joy n.
-judgement n.
-junior adj.
-justice n.
-justify v.
-labour n.
-landscape n.
-largely adv.
-latest n.
-launch v., n.
-leadership n.
-league n.
-lean v.
-leave n.
-level v.
-licence n.
-limited adj.
-line v.
-lively adj.
-load n., v.
-loan n.
-logical adj,
-loose adj.
-lord n.
-low n.
-lower v.
-lung n.
-maintain v.
-majority n.
-make n.
-map v.
-mass n., adj.
-massive adj.
-master n., v.
-matching adj.
-material adj.
-maximum adj., n.
-means n.
-measurement n.
-medium n.
-melt v.
-military adj., n.
-mineral n.
-minimum adj., n.
-minister n.
-minor adj.
-minority n.
-mission n.
-mistake v.
-mixed adj.
-model v.
-modify v.
-monitor n., v.
-moral adj., n.
-motor n., adj.
-mount v. multiple adj.
-multiply v.
-mysterious adj.
-narrow v.
-national n.
-neat adj.
-negative n.
-nerve n.
-nevertheless adv.
-nightmare n.
-notion n.
-numerous adj.
-obey v.
-object v.
-objective n., adj.
-obligation n.
-observation n.
-observe v.
-obtain v.
-occasionally adv.
-offence n.
-offend v.
-offensive adj.
-official n.
-opening n.
-operate v.
-opponent n.
-oppose v.
-opposed adj.
-opposition n.
-organ n.
-origin n.
-otherwise adv.
-outcome n.
-outer adj.
-outline n., v.
-overall adj., adv.
-owe v.
-pace n., v.
-package v.
-panel n.
-parliament n.
-participant n.
-partly adv.
-passage n.
-patient adj.
-pension1 n.
-permanent adj.
-permit v., n.
-perspective n.
-phase n.
-phenomenon n.
-philosophy n.
-pick n.
-picture v.
-pile n., v.
-pitch n.
-plain adj.
-plot v.
-plus adj., n., conj.
-pointed adj.
-popularity n.
-pose v.
-position v.
-positive n.
-possess v.
-potential adj., n.
-power v.
-praise n., v.
-pregnant adj.
-preparation n.
-presence n.
-preserve v.
-price v.
-prime adj.
-principle n.
-print n.
-priority n.
-privacy n.
-procedure n.
-process v.
-produce n.
-professional n.
-progress v.
-project v.
-proof n.
-proposal n.
-propose v.
-prospect n.
-protection n.
-psychologist n.
-psychology n.
-publication n.
-pupil n.
-purchase n., v.
-pure adj.
-pursue v.
-range v.
-rank n., v.
-rapid adj.
-rapidly adv.
-rate v.
-raw adj.
-reach n.
-realistic adj.
-reasonable adj.
-recall v.
-recover v.
-reduction n.
-regard v., n.
-regional adj.
-register v., n.
-regret v., n.
-regulation n.
-relatively adv.
-relevant adj.
-relief n.
-rely v.
-remark n., v.
-representative n., adj.
-reputation n.
-requirement n.
-rescue v., n.
-reserve n., v.
-resident n., adj.
-resist v.
-resolve v.
-resort n.
-retain v.
-reveal v.
-revolution n.
-reward n., v.
-rhythm n.
-rid v.
-root n.
-round n.
-routine adj.
-rub v.
-rubber n., adj.
-rural adj.
-rush v., n.
-sample v.
-satellite n.
-satisfied adj.
-satisfy v.
-saving n.
-scale n.
-schedule v.
-scheme n.
-scream v., n.
-screen v.
-seat v.
-sector n.
-secure v., adj.
-seek v.
-select v.
-selection n.
-self n.
-senior adj.
-sense v.
-sensitive adj.
-sentence v.
-sequence n.
-session n.
-settle v.
-severe adj.
-shade n.
-shadow n.
-shallow adj.
-shame n.
-shape v.
-shelter n., v.
-shift v.
-ship v.
-shock n., v.
-shocked adj.
-shooting n.
-shot n.
-significant adj.
-significantly adv.
-silence n.
-silk n.
-sincere adj.
-slave n.
-slide v., n.
-slight adj.
-slip v.
-slope n., v.
-solar adj.
-somewhat adv.
-soul n.
-specialist n., adj.
-species n.
-speed v.
-spiritual adj.
-split v., n.
-sponsor v., n.
-spot v.
-spread n.
-stable adj.
-stage v.
-stand n.
-stare v.
-status n.
-steady adj.
-steel n.
-steep adj.
-step v.
-sticky adj.
-stiff adj.
-stock n.
-stream n.
-stretch v., n.
-strict adj.
-strike v., n.
-structure v.
-struggle v., n.
-stuff v.
-subject adj.
-submit v.
-sum n., v.
-surgery n.
-surround v.
-surrounding adj.
-survey v.
-suspect v., n.
-swear v.
-sweep v.
-switch n.
-sympathy n.
-tale n.
-tank n.
-target v.
+fresh
+friday
+fridge
+friend
+friendly
+friendship
+frighten
+frightened
+frightening
+frog
+from
+front
+frozen
+fruit
+fry
+fuel
+fuel
+full
+fully
+fun
+function
+fund
+fundamental
+funding
+funny
+fur
+furniture
+further
+furthermore
+future
+gain
+gallery
+game
+gang
+gap
+garage
+garden
+gas
+gate
+gather
+general
+generally
+generate
+generation
+generous
+genre
+gentle
+gentleman
+geography
+get
+ghost
+giant
+girl
+girlfriend
+give
+glad
+glass
+global
+glove
+go
+goal
+god
+gold
+good
+goodbye
+goods
+govern
+government
+grab
+grade
+gradually
+graduate
+grain
+grand
+grandfather
+grandmother
+grandparent
+grant
+grass
+grateful
+great
+green
+greet
+grey
+ground
+group
+grow
+growth
+guarantee
+guard
+guess
+guest
+guide
+guilty
+guitar
+gun
+guy
+gym
+habit
+hair
+half
+hall
+hand
+handle
+hang
+happen
+happily
+happiness
+happy
+hard
+hardly
+harm
+harmful
+hat
+hate
+have
+he
+head
+headache
+headline
+health
+healthy
+hear
+hearing
+heart
+heat
+heating
+heaven
+heavily
+heavy
+heel
+height
+helicopter
+hell
+hello
+help
+helpful
+her
+here
+hero
+hers
+herself
+hesitate
+hey
+hi
+hide
+high
+highlight
+highly
+hill
+him
+himself
+hire
+his
+historic
+historical
+history
+hit
+hobby
+hockey
+hold
+hole
+holiday
+hollow
+holy
+home
+homework
+honest
+honour
+hope
+horrible
+horror
+horse
+hospital
+host
+hot
+hotel
+hour
+house
+household
+housing
+how
+however
+huge
+human
+humorous
+humour
+hundred
+hungry
+hunt
+hunting
+hurricane
+hurry
+hurt
+hurt
+husband
+i
+ice
+ice
+idea
+ideal
+identity
+if
+ignore
+ill
+illegal
+illness
+illustrate
+illustration
+image
+imaginary
+imagination
+imagine
+immediate
+immediately
+immigrant
+impact
+impatient
+imply
+import
+importance
+important
+impose
+impossible
+impress
+impressed
+impression
+impressive
+improve
+improvement
+in
+inch
+incident
+include
+included
+including
+income
+increase
+increasingly
+incredible
+incredibly
+indeed
+independent
+indicate
+indirect
+individual
+indoor
+indoors
+industrial
+industry
+infection
+influence
+inform
+informal
+information
+ingredient
+initial
+initially
+initiative
+injure
+injured
+injury
+inner
+innocent
+insect
+inside
+insight
+insist
+inspire
+install
+instance
+instead
+institute
+institution
+instruction
+instructor
+instrument
+insurance
+intelligence
+intelligent
+intend
+intended
+intense
+intention
+interest
+interested
+interesting
+internal
+international
+internet
+interpret
+interrupt
+interview
+into
+introduce
+introduction
+invent
+invention
+invest
+investigate
+investigation
+investment
+invitation
+invite
+involve
+involved
+iron
+island
+issue
+it
+item
+its
+itself
+ity
+jacket
+jam
+january
+jazz
+jeans
+jewellery
+job
+join
+joke
+journal
+journalist
+journey
+joy
+judge
+judgement
+juice
+july
+jump
+june
+junior
+just
+justice
+justify
+keen
+keep
+key
+keyboard
+kick
+kid
+kill
+killing
+kilometre
+kind
+king
+kiss
+kitchen
+knee
+knife
+knock
+know
+knowledge
+lab
+label
+laboratory
+labour
+lack
+lady
+lake
+lamp
+land
+landscape
+language
+laptop
+large
+largely
+last
+late
+later
+latest
+laugh
+laughter
+launch
+law
+lawyer
+lay
+layer
+lazy
+lead
+leader
+leadership
+leading
+leaf
+league
+lean
+learn
+learning
+least
+leather
+leave
+lecture
+left
+leg
+legal
+leisure
+lemon
+lend
+length
+lenty
+less
+lesson
+let
+letter
+level
+library
+licence
+lie
+life
+lifestyle
+lift
+light
+like
+likely
+limit
+limited
+line
+link
+lion
+lip
+liquid
+list
+listen
+listener
+literature
+little
+live
+lively
+living
+load
+loan
+local
+locate
+located
+location
+lock
+logical
+lonely
+long
+look
+loose
+lord
+lorry
+lose
+loss
+lost
+lot
+loud
+loudly
+love
+lovely
+low
+lower
+luck
+lucky
+lunch
+lung
+luxury
+machine
+mad
+magazine
+magic
+mail
+main
+mainly
+maintain
+major
+majority
+make
+male
+mall
+man
+manage
+management
+manager
+manner
+many
+map
+map
+march
+mark
+market
+marketing
+marriage
+married
+marry
+mass
+massive
+master
+match
+matching
+material
+mathematics
+maths
+matter
+maximum
+may
+maybe
+meal
+mean
+meaning
+means
+meanwhile
+measure
+measurement
+media
+medical
+medicine
+medium
+meeting
+melt
+member
+memory
+mental
+mention
+menu
+mess
+message
+metal
+method
+metre
+middle
+midnight
+might
+mild
+mile
+military
+milk
+million
+mind
+mine
+mineral
+minimum
+minister
+minor
+minority
+minute
+mirror
+miss
+missing
+mission
+mistake
+mix
+mixed
+mixture
+mobile
+modal
+model
+modern
+modify
+moment
+monday
+money
+monitor
+monkey
+month
+mood
+moon
+moral
+more
+morning
+most
+mostly
+mother
+motor
+motorcycle
+mount
+mountain
+mouse
+mouth
+move
+move
+movement
+movie
+much
+mud
+multiply
+murder
+muscle
+museum
+music
+musical
+musical
+musician
+must
+my
+myself
+mysterious
+mystery
+nail
+name
+narrative
+narrow
+nation
+national
+native
+natural
+naturally
+nature
+near
+nearly
+neat
+necessarily
+necessary
+neck
+need
+needle
+negative
+neighbour
+neighbourhood
+neither
+nerve
+nervous
+net
+network
+never
+nevertheless
+new
+news
+newspaper
+next
+nice
+night
+nightmare
+nine
+nineteen
+ninety
+no
+nobody
+noise
+noisy
+none
+nor
+normal
+normally
+north
+northern
+nose
+not
+note
+nothing
+notice
+notion
+novel
+november
+now
+now
+nowhere
+nuclear
+number
+numerous
+nurse
+nut
+obey
+object
+objective
+obligation
+observation
+observe
+obtain
+obvious
+obviously
+occasion
+occasionally
+occur
+ocean
+october
+odd
+of
+off
+offence
+offend
+offensive
+offer
+office
+officer
+official
+often
+oh
+oil
+ok
+old
+oldfashioned
+on
+once
+one
+onion
+online
+only
+onto
+open
+opening
+operate
+operation
+opinion
+opponent
+opportunity
+oppose
+opposed
+opposite
+opposition
+option
+orange
+order
+ordinary
+organ
+organization
+organize
+organized
+organizer
+origin
+original
+originally
+orrect
+other
+otherwise
+ought
+our
+ours
+ourselves
+out
+outcome
+outdoor
+outdoors
+outer
+outline
+outside
+oven
+over
+overall
+owe
+own
+own
+owner
+pace
+pack
+pack
+package
+page
+pain
+painful
+paint
+painter
+painting
+pair
+palace
+pale
+pan
+panel
+pants
+paper
+paragraph
+parent
+park
+parking
+parliament
+part
+participant
+participate
+particular
+particularly
+partly
+partner
+party
+pass
+passage
+passenger
+passion
+passport
+past
+path
+patient
+pattern
+pay
+payment
+peace
+peaceful
+pen
+pencil
+penny
+pension
+people
+pepper
+per
+percent
+percentage
+perfect
+perfectly
+perform
+performance
+perhaps
+period
+permanent
+permission
+permit
+person
+personal
+personality
+personally
+perspective
+persuade
+pet
+petrol
+phase
+phenomenon
+philosophy
+phone
+photo
+photograph
+photographer
+photography
+phrase
+physical
+physics
+piano
+pick
+picture
+piece
+pig
+pile
+pilot
+pin
+pink
+pipe
+pitch
+place
+plain
+plan
+planet
+planning
+plant
+plastic
+plate
+platform
+play
+player
+pleasant
+please
+pleased
+pleasure
+plot
+plot
+plus
+pocket
+poem
+poet
+poetry
+point
+pointed
+poison
+poisonous
+police
+policeman
+policy
+polite
+political
+politician
+politics
+pollution
+pool
+poor
+pop
+popular
+popularity
+population
+port
+portrait
+pose
+position
+positive
+positive
+possess
+possession
+possibility
+possible
+possibly
+post
+poster
+pot
+potato
+potential
+pound
+pour
+poverty
+powder
+power
+powerful
+practical
+practice
+practise
+praise
+pray
+prayer
+predict
+prediction
+prefer
+pregnant
+preparation
+prepare
+prepared
+presence
+present
+presentation
+preserve
+president
+press
+pressure
+pretend
+pretty
+prevent
+previous
+previously
+price
+priest
+primary
+prime
+prince
+princess
+principle
+print
+printer
+printing
+priority
+prison
+prisoner
+privacy
+private
+prize
+probably
+problem
+procedure
+process
+produce
+produce
+producer
+product
+production
+profession
+professional
+professor
+profile
+profit
+program
+programme
+progress
+project
+promise
+promote
+pronounce
+proof
+proper
+properly
+property
+proposal
+propose
+prospect
+protect
+protection
+protest
+proud
+prove
+provide
+psychologist
+psychology
+pub
+public
+publication
+publish
+pull
+punish
+punishment
+pupil
+purchase
+pure
+purple
+purpose
+pursue
+push
+put
+qualification
+qualified
+qualify
+quality
+quantity
+quarter
+queen
+question
+queue
+quick
+quickly
+quiet
+quietly
+quit
+quite
+quotation
+quote
+race
+racing
+radio
+railway
+rain
+raise
+range
+range
+rank
+rapid
+rapidly
+rare
+rarely
+rate
+rate
+rather
+raw
+reach
+react
+reaction
+read
+reader
+reading
+ready
+real
+realistic
+reality
+realize
+really
+reason
+reasonable
+recall
+receipt
+receive
+recent
+recently
+reception
+recipe
+recognize
+recommend
+recommendation
+record
+recording
+recover
+recycle
+red
+reduce
+reduction
+refer
+reference
+reflect
+refuse
+regard
+region
+regional
+register
+regret
+regular
+regularly
+regulation
+reject
+relate
+related
+relation
+relationship
+relative
+relatively
+relax
+relaxed
+relaxing
+release
+relevant
+reliable
+relief
+religion
+religious
+rely
+remain
+remark
+remember
+remind
+remote
+remove
+rent
+repair
+repeat
+repeated
+replace
+reply
+report
+report
+reporter
+represent
+representative
+reputation
+request
+request
+require
+requirement
+rescue
+research
+researcher
+reservation
+reserve
+resident
+resist
+resolve
+resort
+resource
+respect
+respond
+response
+responsibility
+responsible
+rest
+restaurant
+result
+retain
+retire
+retired
+return
+reveal
+review
+revise
+revolution
+reward
+rhythm
+rice
+rich
+rid
+ride
+ride
+right
+ring
+rise
+risk
+river
+road
+robot
+rock
+role
+roll
+romantic
+roof
+room
+root
+rope
+rough
+round
+round
+route
+routine
+row
+royal
+rub
+rubber
+rubbish
+rude
+rugby
+rule
+rule
+run
+run
+runner
+running
+rural
+rush
+sad
+sadly
+safe
+safety
+sail
+sail
+sailing
+sailor
+salad
+salary
+sale
+salt
+same
+sample
+sand
+sandwich
+satellite
+satisfied
+satisfy
+saturday
+sauce
+save
+saving
+say
+scale
+scan
+scared
+scary
+scene
+schedule
+scheme
+school
+science
+scientific
+scientist
+score
+scream
+screen
+script
+sculpture
+sea
+search
+season
+seat
+second
+secondary
+secondly
+secret
+secretary
+sector
+secure
+security
+see
+seed
+seek
+seem
+select
+selection
+self
+sell
+send
+senior
+sense
+sense
+sensible
+sensitive
+sentence
+sentence
+separate
+september
+sequence
+series
+serious
+seriously
+servant
+serve
+service
+session
+setting
+settle
+seven
+seventeen
+seventy
+several
+severe
+sex
+sexual
+shade
+shadow
+shake
+shall
+shallow
+shame
+shape
+share
+sharp
+she
+sheep
+sheet
+shelf
+shell
+shelter
+shift
+shine
+shiny
+ship
+shirt
+shock
+shocked
+shoe
+shoot
+shooting
+shop
+shopping
+short
+shot
+should
+shoulder
+shout
+show
+shower
+shut
+shy
+sick
+side
+sight
+sign
+signal
+significant
+significantly
+silence
+silent
+silk
+silly
+silver
+similar
+similarity
+similarly
+simple
+simply
+since
+sincere
+sing
+singer
+singing
+single
+sink
+sir
+sister
+sit
+site
+situation
+six
+sixteen
+sixty
+size
+ski
+skiing
+skill
+skin
+skirt
+sky
+slave
+sleep
+slice
+slide
+slight
+slightly
+slip
+slope
+slow
+slowly
+small
+smart
+smartphone
+smell
+smile
+smoke
+smoking
+smooth
+snake
+snow
+so
+soap
+soccer
+social
+society
+sock
+soft
+software
+soil
+solar
+soldier
+solid
+solution
+solve
+some
+somebody
+someone
+something
+sometimes
+somewhat
+somewhere
+son
+song
+soon
+sorry
+sort
+soul
+sound
+soup
+source
+south
+southern
+space
+speak
+speaker
+special
+specialist
+species
+specific
+specifically
+speech
+speed
+speed
+spell
+spelling
+spend
+spending
+spicy
+spider
+spirit
+spiritual
+split
+spoken
+sponsor
+spoon
+sport
+spot
+spread
+spring
+square
+stable
+stadium
+staff
+stage
+stage
+stair
+stamp
+stand
+standard
+star
+stare
+start
+state
+statement
+station
+statistic
+statue
+status
+stay
+steady
+steal
+steel
+steep
+step
+stick
+sticky
+stiff
+still
+still
+stock
+stomach
+stone
+stop
+store
+storm
+story
+straight
+strange
+stranger
+strategy
+stream
+street
+strength
+stress
+stretch
+strict
+strike
+string
+strong
+strongly
+structure
+struggle
+student
+studio
+study
+stuff
+stupid
+style
+subject
+subject
+submit
+substance
+succeed
+success
+successful
+successfully
+such
+sudden
+suddenly
+suffer
+sugar
+suggest
+suggestion
+suit
+suitable
+sum
+summarize
+summary
+summer
+sun
+Sunday
+supermarket
+supply
+support
+supporter
+suppose
+sure
+sure
+surely
+surface
+surgery
+surprise
+surprised
+surprising
+surround
+surrounding
+survey
+survey
+survive
+suspect
+swear
+sweater
+sweep
+sweet
+swim
+swimming
+switch
+symbol
+sympathy
+symptom
+system
+tshirt
+table
+tablet
+tail
+take
+tale
+talent
+talented
+talk
+tall
+tank
+tape
+target
+task
+taste
+tax
+taxi
+tea
+teach
+teacher
+teaching
+team
 tear
-term v.
-therapy n.
-threat n.
-threaten v.
-thus adv.
-time v.
-title v.
-tone n.
-tough adj.
-track v.
-transfer v., n.
-transform v.
-transition n.
-trial n.
-trip v.
-tropical adj.
-trouble v.
-truly adv.
-trust n., v.
-try n.
-tune n.
-tunnel n.
-ultimately adv.
-unconscious adj.
-unexpected adj.
-unique adj.
-universe n.
-unknown adj.
-upper adj.
-upwards adv.
-urban adj.
-urge v.
-value v.
-varyv.
-vast adj.
-venue n.
-very adj.
-via prep.
-victory n.
-violence n.
-virtual adj.
-vision n.
-visual adj.
-vital adj.
-vitamin n.
-volume n.
-wage n.
-way adv.
-weakness n.
-wealth n.
-wealthy adj.
-whereas conj.
-wherever conj.
-whisper v., n.
-whom pron.
-widely adv.
-wildlife n.
-willing adj.
-wind2 v.
-wire n.
-wise adj.
-witness n., v.
-worse n.
-worst n.
-worth n.
-wound n., v.
-wrap v.
-wrong n.
-yet conj.
-zone n.
+technical
+technique
+technology
+teenage
+teenager
+telephone
+television
+tell
+temperature
+ten
+tend
+tennis
+tent
+term
+term
+terrible
+test
+text
+than
+thank
+thanks
+that
+the
+theatre
+their
+theirs
+them
+theme
+themselves
+then
+theory
+therapy
+there
+therefore
+they
+thick
+thief
+thin
+thing
+think
+thinking
+third
+thirsty
+thirteen
+thirty
+this
+though
+thought
+thousand
+threat
+threaten
+three
+throat
+through
+throughout
+throw
+thursday
+thus
+ticket
+tidy
+tie
+tight
+till
+time
+time
+tin
+tiny
+tip
+tip
+tired
+title
+to
+today
+toe
+together
+toilet
+tomato
+tomorrow
+tone
+tongue
+tonight
+too
+tool
+tooth
+top
+topic
+total
+totally
+touch
+tough
+tour
+tourism
+tourist
+towards
+towel
+tower
+town
+toy
+track
+trade
+tradition
+traditional
+traffic
+train
+trainer
+training
+transfer
+transform
+transition
+translate
+translation
+transport
+travel
+traveller
+treat
+treatment
+tree
+trend
+trial
+trick
+trip
+tropical
+trouble
+trousers
+truck
+true
+truly
+trust
+truth
+try
+tube
+tuesday
+tune
+tunnel
+turn
+tv
+twelve
+twenty
+twice
+twin
+two
+type
+type
+typical
+typically
+tyre
+ugly
+ultimately
+umbrella
+unable
+uncle
+uncomfortable
+unconscious
+under
+underground
+understand
+understanding
+underwear
+unemployed
+unemployment
+unexpected
+unfair
+unfortunately
+unhappy
+uniform
+union
+unique
+unit
+united
+universe
+university
+unknown
+unless
+unlike
+unlikely
+unnecessary
+unpleasant
+until
+unusual
+up
+update
+upon
+upper
+upset
+upstairs
+upstairs
+upwards
+urban
+urge
+us
+use
+used
+useful
+user
+usual
+usually
+vacation
+valley
+valuable
+value
+van
+variety
+various
+vary
+vast
+vegetable
+vehicle
+venue
+version
+very
+via
+victim
+victory
+video
+view
+viewer
+village
+violence
+violent
+virtual
+virus
+vision
+visit
+visitor
+visual
+vital
+vitamin
+voice
+volume
+volunteer
+vote
+wage
+wait
+waiter
+wake
+walk
+wall
+want
+war
+warm
+warn
+warning
+wash
+wash
+washing
+waste
+watch
+water
+water
+wave
+way
+we
+weak
+weakness
+wealth
+wealthy
+weapon
+wear
+weather
+web
+website
+wedding
+Wednesday
+week
+weekend
+weigh
+weight
+welcome
+well
+west
+western
+wet
+what
+whatever
+wheel
+when
+whenever
+where
+whereas
+wherever
+whether
+which
+while
+whisper
+white
+who
+whole
+whom
+whose
+wide
+widely
+wife
+wild
+wildlife
+will
+willing
+win
+wind
+window
+wine
+wing
+winner
+winter
+wire
+wise
+wish
+with
+within
+without
+witness
+woman
+wonder
+wonderful
+wood
+wooden
+wool
+word
+work
+worker
+working
+world
+worldwide
+worried
+worry
+worry
+worse
+worst
+worth
+would
+wound
+wow
+wrap
+write
+writer
+writing
+written
+wrong
+yard
+yeah
+year
+yellow
+yes
+yesterday
+yet
+you
+young
+young
+your
+yours
+yourself
+youth
+zero
+zone
