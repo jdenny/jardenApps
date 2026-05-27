@@ -1,11 +1,19 @@
 package evolvingwords;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 /**
  * Created by john.denny@gmail.com on 16/05/2026.
+    start with a few simple ScrabbleWord objects
+    for each ScrabbleWord:
+        start a new thread
+        mutate word
+        if word is a Scrabble word:
+            if value is >= parent.value:
+                create new ScrabbleWord object, linked to parent and add to this loop
  */
 public class EvolveWords {
     private String[] wordArrary = {
@@ -21,12 +29,33 @@ public class EvolveWords {
     private Set<String> wordSet = new HashSet<>();
 
     public static void main(String[] args) {
-        new EvolveWords().run();
+        new EvolveWords()/*.run()*/;
     }
     public EvolveWords() {
+        /*
         for (String word : wordArrary) {
             wordSet.add(word);
         }
+         */
+        String fileName = "./life/resources/docs/words.txt";
+                // "/Users/john/AndroidStudioProjects/jardenApps/life/resources/docs/words.txt";
+        File file = new File(fileName);
+        System.out.println("absolute path =" + file.getAbsolutePath());
+        if (!file.isFile()) {
+            System.out.println("file not found: " + fileName);
+            return;
+        } else {
+            System.out.println("file found: " + fileName);
+        }
+        /*
+
+        try (InputStream is = resources.openRawResource(qaFileId)) {
+            List<String> lines = EngSpaUtils.getLinesFromStream(is);
+        } catch (IOException e) {
+
+        }
+
+         */
     }
     private void run() {
         String firstWord = "aid";
