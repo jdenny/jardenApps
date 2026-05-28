@@ -17,41 +17,58 @@ for each ScrabbleWord:
     if word is a Scrabble word:
         if value is >= parent.value:
             create new ScrabbleWord object, linked to parent and add it to this loop
- Observations so far:
+Todo: continue to find more mutations after finding one for a particular word
+ add lines to printTree
+ Threads?
+Observations so far:
     harmless mutations often mutate back to the original word
+    some words soon reach a dead-end - there is no single change that is a word with a higher value
  */
 public class EvolveWords {
     private final static boolean debug = false;
+    // private final ExecutorService executor = Executors.newCachedThreadPool();
     private final static char[] letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    private Set<String> wordSet = new HashSet<>();
+    private final Set<String> wordSet = new HashSet<>();
+    //!! private final List<ScrabWord> wordList = new ArrayList<>();
+    private static final ScrabWord adamWord = new ScrabWord("WARM");
 
-    public static void main(String[] args) {
-        new EvolveWords().run();
+    public static void main(String[] args) throws IOException {
+        new EvolveWords();
     }
-    public EvolveWords() {
+    public EvolveWords() throws IOException {
         String fileName = // "./life/resources/docs/wordladder.txt";
                 "./life/resources/docs/scrabbleWords.txt";
                 // "/Users/john/AndroidStudioProjects/jardenApps/life/resources/docs/scrabbleWords.txt";
         File file = new File(fileName); // useful methods: file.getAbsolutePath(); file.isFile();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                wordSet.add(line);
-            }
-        } catch (IOException e) {
-            System.out.println("error reading file: " + fileName);
-            e.printStackTrace();
+        String line;
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        while ((line = reader.readLine()) != null) {
+            wordSet.add(line);
         }
         System.out.println("words loaded: " + wordSet.size());
+        run();
+        // executor.shutdown();
+        printTree(adamWord, "");
     }
+
+    public static void printTree(ScrabWord node, String indent) {
+        System.out.println(indent + node.getWord());
+        for (ScrabWord child : node.getChildren()) {
+            printTree(child, indent + "  ");
+        }
+    }
+
     private void run() {
-        ScrabWord parentWord = new ScrabWord("WARM");
+        ScrabWord parentWord = adamWord;
         String nextWord;
+        ScrabWord nextScrab;
         for (int i = 0; i < 10; i++) {
+            //!! wordList.add(parentWord);
             try {
                 nextWord = findNextWord(parentWord, 80);
-                System.out.println("next word found: " + nextWord);
-                parentWord = new ScrabWord(nextWord, parentWord);
+                nextScrab = new ScrabWord(nextWord);
+                parentWord.addChild(nextScrab);
+                parentWord = nextScrab;
             } catch (NoSuitableWordFoundException e) {
                 System.out.println("no suitable word found");
                 return;
@@ -73,7 +90,6 @@ public class EvolveWords {
                             " >= parent value " + parentValue);
                     return nextWord;
                 }
-                return nextWord;
             }
         }
         throw new NoSuitableWordFoundException();
@@ -83,7 +99,7 @@ public class EvolveWords {
         Random random = new Random();
         int a = random.nextInt(3);
         if (a == 0) { // add letter
-            int b = random.nextInt(word.length()+ 1);
+            int b = random.nextInt(word.length() + 1);
             char c = getRandomLetter();
             mutated = word.substring(0, b) + c + word.substring(b);
             if (debug) System.out.println("added " + c + " to position " + b);

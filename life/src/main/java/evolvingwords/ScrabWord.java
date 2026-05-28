@@ -1,13 +1,15 @@
 package evolvingwords;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by john.denny@gmail.com on 27/05/2026.
  */
 public class ScrabWord {
-    private static Map<Character, Integer> LETTER_VALUES = new HashMap<>();
+    private final static Map<Character, Integer> LETTER_VALUES = new HashMap<>();
     static {
         LETTER_VALUES.put('A', 1);
         LETTER_VALUES.put('E', 1);
@@ -36,16 +38,20 @@ public class ScrabWord {
         LETTER_VALUES.put('Q', 10);
         LETTER_VALUES.put('Z', 10);
     }
-    private String word;
-    private int value;
+    private final String word;
+    private final int value;
     private ScrabWord parent;
+    private final List<ScrabWord> children = new ArrayList<>();
     public ScrabWord(String word) {
         this.word = word;
         this.value = calculateValue(word);
     }
-    public ScrabWord(String word, ScrabWord parent) {
-        this(word);
-        this.parent = parent;
+    public void addChild(ScrabWord child) {
+        child.parent = this;
+        children.add(child);
+    }
+    public List<ScrabWord> getChildren() {
+        return children;
     }
     public String getWord() {
         return word;
