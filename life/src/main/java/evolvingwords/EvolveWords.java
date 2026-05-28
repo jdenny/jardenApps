@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -18,8 +19,10 @@ for each ScrabbleWord:
         if value is >= parent.value:
             create new ScrabbleWord object, linked to parent and add it to this loop
 Todo: continue to find more mutations after finding one for a particular word
+    I think starting a new Thread should help?
  add lines to printTree
  Threads?
+ Add score to each word of ScrabWord
 Observations so far:
     harmless mutations often mutate back to the original word
     some words soon reach a dead-end - there is no single change that is a word with a higher value
@@ -29,8 +32,7 @@ public class EvolveWords {
     // private final ExecutorService executor = Executors.newCachedThreadPool();
     private final static char[] letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private final Set<String> wordSet = new HashSet<>();
-    //!! private final List<ScrabWord> wordList = new ArrayList<>();
-    private static final ScrabWord adamWord = new ScrabWord("WARM");
+    private static final ScrabWord adamScrab = new ScrabWord("WARM");
 
     public static void main(String[] args) throws IOException {
         new EvolveWords();
@@ -48,27 +50,40 @@ public class EvolveWords {
         System.out.println("words loaded: " + wordSet.size());
         run();
         // executor.shutdown();
-        printTree(adamWord, "");
+        printTree3(adamScrab, "");
     }
-
-    public static void printTree(ScrabWord node, String indent) {
-        System.out.println(indent + node.getWord());
-        for (ScrabWord child : node.getChildren()) {
-            printTree(child, indent + "  ");
+    public static void printTree3(ScrabWord scrabWord, String prefix) {
+        System.out.println(prefix + (prefix.isEmpty() ? "" : "|_") +
+                scrabWord.getWord());
+        List<ScrabWord> children = scrabWord.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            printTree3(children.get(i), prefix + "  ");
+        }
+    }
+    public static void printTree(ScrabWord scrabWord, String prefix) {
+        System.out.println(prefix + scrabWord.getWord());
+        for (ScrabWord child : scrabWord.getChildren()) {
+            printTree(child, prefix + "  ");
+        }
+    }
+    public static void printTree2(ScrabWord scrabWord, String prefix) {
+        System.out.println(prefix + scrabWord.getWord());
+        List<ScrabWord> children = scrabWord.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            printTree2(children.get(i), prefix + "  ");
         }
     }
 
     private void run() {
-        ScrabWord parentWord = adamWord;
+        ScrabWord parentScrab = adamScrab;
         String nextWord;
         ScrabWord nextScrab;
         for (int i = 0; i < 10; i++) {
-            //!! wordList.add(parentWord);
             try {
-                nextWord = findNextWord(parentWord, 80);
+                nextWord = findNextWord(parentScrab, 80);
                 nextScrab = new ScrabWord(nextWord);
-                parentWord.addChild(nextScrab);
-                parentWord = nextScrab;
+                parentScrab.addChild(nextScrab);
+                parentScrab = nextScrab;
             } catch (NoSuitableWordFoundException e) {
                 System.out.println("no suitable word found");
                 return;
