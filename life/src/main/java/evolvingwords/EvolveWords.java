@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,21 +21,26 @@ for each ScrabbleWord:
     if word is a Scrabble word:
         if value is >= parent.value:
             create new ScrabbleWord object, linked to parent and add it to this loop
-Todo: continue to find more mutations after finding one for a particular word
-    I think starting a new Thread should help?
- add lines to printTree
- Threads?
- Add score to each word of ScrabWord
+Todo:
+ Add score to each word of scrableWords.txt
+ what proportion of scrabblewords can be reached
+ in the tree
+    highlight dead-ends; can only tell in systematic mode
+    show how many failed mutations from that word
+ runtime option to mutate randomly or systematically
 Observations so far:
     harmless mutations often mutate back to the original word
     some words soon reach a dead-end - there is no single change that is a word with a higher value
  */
 public class EvolveWords {
-    private final static boolean debug = false;
+    private static final boolean debug = false;
+    private static final ScrabWord adamScrab = new ScrabWord("A");
     private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final PauseController controller = new PauseController();
     private final static char[] letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private final Set<String> wordSet = new HashSet<>();
-    private static final ScrabWord adamScrab = new ScrabWord("WARM");
+    private final Scanner scanner = new Scanner(System.in);
+    private int scrabWordCountDown = 20;
 
     public static void main(String[] args) throws IOException {
         new EvolveWords();
@@ -50,13 +56,34 @@ public class EvolveWords {
             wordSet.add(line);
         }
         System.out.println("words loaded: " + wordSet.size());
-        //!! run();
-        executor.shutdown();
-        printTree3(adamScrab, "");
+        executor.execute(new EvolveOneWord(adamScrab));
+    }
+    private synchronized void decrementScrabWordCountDown() {
+        --scrabWordCountDown;
+        if (scrabWordCountDown == 0) {
+            controller.pause();
+            System.out.println("waiting for pause to reach the threads");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+            printTree3(adamScrab, "");
+            System.out.println("'y' to continue, else quit: ");
+            if (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("y")) {
+                    scrabWordCountDown = 20;
+                    controller.resume();
+                } else {
+                    executor.shutdownNow();
+                }
+            }
+        }
     }
     public static void printTree3(ScrabWord scrabWord, String prefix) {
         System.out.println(prefix + (prefix.isEmpty() ? "" : "|_") +
-                scrabWord.getWord());
+                scrabWord.getWord() + ' ' + scrabWord.getValue());
         List<ScrabWord> children = scrabWord.getChildren();
         for (int i = 0; i < children.size(); i++) {
             printTree3(children.get(i), prefix + "  ");
@@ -85,17 +112,20 @@ public class EvolveWords {
         public void run() {
             String nextWord;
             ScrabWord nextScrab;
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 4; i++) { // each parent can have up to 4 children
                 try {
+                    controller.waitIfPaused();
                     nextWord = findNextWord(parentScrab, 80);
                     nextScrab = new ScrabWord(nextWord);
                     parentScrab.addChild(nextScrab);
                     EvolveOneWord child = new EvolveOneWord(nextScrab);
                     executor.execute(child);
-                    //!! parentScrab = nextScrab;
+                    decrementScrabWordCountDown();
                 } catch (NoSuitableWordFoundException e) {
-                    System.out.println("no suitable word found");
+                    System.out.println("no suitable mutation found for " + parentScrab.getWord());
                     return;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }
@@ -123,16 +153,18 @@ public class EvolveWords {
         private String mutate(String word) {
             String mutated;
             Random random = new Random();
-            int a = random.nextInt(3);
+            int a = random.nextInt(2);
             if (a == 0) { // add letter
                 int b = random.nextInt(word.length() + 1);
                 char c = getRandomLetter();
                 mutated = word.substring(0, b) + c + word.substring(b);
                 if (debug) System.out.println("added " + c + " to position " + b);
+            /* removing a letter cannot improve the value of a word
             } else if (a == 1) { // remove letter
                 int b = random.nextInt(word.length());
                 mutated = word.substring(0, b) + word.substring(b + 1);
                 if (debug) System.out.println("removed letter at position " + b);
+                 */
             } else { // replace letter
                 int b = random.nextInt(word.length());
                 char c = getRandomLetter(word.charAt(b));
